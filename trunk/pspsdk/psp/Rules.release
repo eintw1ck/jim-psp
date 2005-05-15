@@ -1,0 +1,82 @@
+# _____     ___ ____     ___ ____
+#  ____|   |    ____|   |        | |____|
+# |     ___|   |____ ___|    ____| |    \    PS2DEV Open Source Project.
+#-----------------------------------------------------------------------
+# Copyright 2001-2004, ps2dev - http://www.ps2dev.org
+# Licenced under Academic Free License version 2.0
+# Review ps2sdk README & LICENSE files for further details.
+#
+# $Id$
+
+
+
+#
+# Creates the base ee directory structure in target directory.
+#
+
+RELEASE_PSP_DIRS = / /include/ /lib/ /bin/ /startup 
+RELEASE_PSP_DIRS := $(RELEASE_PSP_DIRS:%=$(PSPSDK)/%)
+
+
+release-dirs:
+	$(MKDIR) -p $(RELEASE_PSP_DIRS)
+
+
+#
+# Most targets will only have a single PSP_LIB target.  if the file
+# exists then copy it to the ee/lib directory.
+#
+
+release-lib: 
+	@if test $(PSP_LIB) ; then \
+	   $(ECHO) Installing $(PSP_LIB) to $(PSPSDK)/lib ; \
+	   cp -f $(PSP_LIB) $(PSPSDK)/lib ; \
+	   chmod 644 $(PSPSDK)/$(PSP_LIB) ; \
+	fi;
+
+
+#
+# Any elf files should go to ee/bin
+#
+
+release-bin: 
+	@if test $(PSP_BIN) ; then \
+	   $(ECHO) Installing $(PSP_BIN) to $(PSPSDK)/bin ; \
+	   cp -f $(PSP_BIN) $(PSPSDK)/bin ; \
+	   chmod 644 $(PSPSDK)/$(PSP_BIN) ; \
+	fi;
+
+#
+# Any file in the include directory will be copied to the ee/include
+# directory.  This does not currently handle subdirectories. 
+#
+
+release-include:
+	@if test -d include ; then \
+	   for file in include/*; do \
+	      if test -f $$file ; then \
+	         $(ECHO) Installing $$file to $(PSPSDK)/include ; \
+	         cp -f $$file $(PSPSDK)/include ; \
+	         chmod 644 $(PSPSDK)/$$file ; \
+	      fi \
+	   done; \
+	fi;
+	
+
+#
+# If there is a smples directory.  Call makefile.
+# Samples use their own release target based on the samples/Rules.sample
+# makefile.
+#
+
+release-samples:
+	@if test -d samples ; then \
+	   $(GNUMAKE) -C samples release ; \
+	fi;
+
+
+release: release-dirs release-lib release-bin release-include release-samples
+
+release-clean:
+	rm -f $(PSPSDK)/include/*.*
+	rm -f $(PSPSDK)/lib/*.*
