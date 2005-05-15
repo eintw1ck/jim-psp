@@ -26,7 +26,7 @@
   FILE *infile, *outfile; void *filedata[8]; int filesize[8];
 
   // Check the argument count.
-  if (argc != 10) { printf("USAGE: %s <output.pbp> <param.sfo> <icon.png> <icon1.pmf> <unknown.png> <pic1.png> <unknown.psp> <unknown.psar>\n", argv[0]); return -1; }
+  if (argc != 10) { printf("USAGE: %s <output.pbp> <param.sfo> <icon.png> <icon1.pmf> <unknown.png> <pic1.png> <snd0.at3> <unknown.psp> <unknown.psar>\n", argv[0]); return -1; }
 
   // For each file...
   for (loop0=0;loop0<8;loop0++) {
