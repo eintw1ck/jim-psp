@@ -1,8 +1,40 @@
 #ifndef __DISPLAY_H__
 #define __DISPLAY_H__
 
+/**
+ * Wait for vertical blank
+ *
+ * @par Example1:
+ * @code
+ * @endcode
+ *
+ */
 void sceDisplayWaitVblankStart();
-void sceDisplaySetMode(long,long,long);
-void sceDisplaySetFrameBuf(char *topaddr,long linesize,long pixelsize,long);
+/**
+ * Set display mode
+ *
+ * @par Example1:
+ * @code
+ * @endcode
+ *
+ * @param a
+ * @param b
+ * @param c
+ */
+void sceDisplaySetMode(long a, long b, long c);
+/**
+ * Display set framebuf
+ *
+ * @par Example1:
+ * @code
+ * @endcode
+ *
+ * @param topaddr*
+ * @param linesize*
+ * @param pixelsize*
+ * @param d
+ */
+void sceDisplaySetFrameBuf(char *topaddr, long linesize, long pixelsize, long
+	d);
 
 #endif

@@ -28,8 +28,37 @@ typedef struct _ctrl_data
    u32 unused;
 } ctrl_data_t; 
 
+
+/**
+ * Set ctrl sample rate
+ *
+ * @par Example1:
+ * @code
+ * @endcode
+ *
+ * @param arg
+ */
 void sceCtrlSetSamplingCycle(int arg);
+/**
+ * Set analog mode
+ *
+ * @par Example1:
+ * @code
+ * @endcode
+ *
+ * @param on
+ */
 void CtrlSetAnalogMode(int on);
+/**
+ * Read buffer positive
+ *
+ * @par Example1:
+ * @code
+ * @endcode
+ *
+ * @param pad_data
+ * @param option
+ */
 void sceCtrlReadBufferPositive(ctrl_data_t *pad_data, int option);
 
 #endif
