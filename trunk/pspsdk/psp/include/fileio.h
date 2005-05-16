@@ -112,8 +112,8 @@ int sceIoRmDir(const char *path);
  * @code
  * @endcode
  *
- * @param from*
- * @param to*
+ * @param oldname*
+ * @param newname*
  * @return Returns the value 0 if its succesful otherwise -1
  */
 int sceIoRename(const char *oldname, const char *newname);
