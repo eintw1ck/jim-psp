@@ -8,19 +8,19 @@
 #
 # $Id$
 
-PSP_INCS := $(PSP_INCS) -I$(PSPSDKSRC)/ee/kernel/include -I$(PSPSDKSRC)/common/include -I$(PSPSDKSRC)/ee/libc/include -Iinclude
+PSP_INCS := $(PSP_INCS) -I$(PSPSDKSRC)/psp/include -I$(PSPSDKSRC)/psp/libc/include -Iinclude
 
 # C compiler flags
-PSP_CFLAGS :=  -O2 -G0 -Wall -march=r4000 -mgp32 -mlong32 $(PSP_CFLAGS)
+PSP_CFLAGS :=  -O2 -G0 -Wall -mdivide-breaks -march=r4000 -mgp32 -mlong32 -fshort-double $(PSP_CFLAGS)
 
 # C++ compiler flags
-PSP_CXXFLAGS :=  -O2 -G0 -Wall -march=r4000 -mgp32 -mlong32 $(PSP_CXXFLAGS)
+PSP_CXXFLAGS :=  -O2 -G0 -Wall -mdivide-breaks -march=r4000 -mgp32 -mlong32 -fshort-double $(PSP_CXXFLAGS)
 
 # Linker flags
 #PSP_LDFLAGS := $(PSP_LDFLAGS)
 
 # Assembler flags
-PSP_ASFLAGS := -G0 -march=r4000 -mgp32 $(PSP_ASFLAGS)
+PSP_ASFLAGS := -G0 --break -march=r4000 -mgp32 $(PSP_ASFLAGS)
 
 # Externally defined variables: PSP_BIN, PSP_OBJS, PSP_LIB
 
@@ -50,9 +50,9 @@ $(PSP_BIN_DIR):
 $(PSP_OBJS_DIR):
 	$(MKDIR) -p $(PSP_OBJS_DIR)
 
-$(PSP_BIN) : $(PSP_OBJS) $(PSPSDKSRC)/ee/startup/obj/crt0.o
-	$(PSP_CC) -mno-crt0 -T$(PSPSDKSRC)/ee/startup/src/linkfile $(PSP_LDFLAGS) \
-		-o $(PSP_BIN) $(PSPSDKSRC)/ee/startup/obj/crt0.o $(PSP_OBJS) $(PSP_LIBS)
+$(PSP_BIN) : $(PSP_OBJS) $(PSPSDKSRC)/psp/startup/obj/crt0.o
+	$(PSP_CC) -mno-crt0 -T$(PSPSDKSRC)/psp/startup/src/linkfile $(PSP_LDFLAGS) \
+		-o $(PSP_BIN) $(PSPSDKSRC)/psp/startup/obj/crt0.o $(PSP_OBJS) $(PSP_LIBS)
 
 $(PSP_LIB) : $(PSP_OBJS)
 	$(PSP_AR) cru $(PSP_LIB) $(PSP_OBJS)
