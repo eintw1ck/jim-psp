@@ -1,5 +1,3 @@
-// Hello World for PSP
-// Created 2005.04.30  by nem 
 
 
 #include <kernel.h>
@@ -15,7 +13,7 @@ void CallbackThread(void *arg)
 {
 	int cbid;
 
-	cbid = sceKernelCreateCallback("Exit Callback", exit_callback);
+	cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
 	sceKernelRegisterExitCallback(cbid);
 
 	sceKernelPollCallbacks();

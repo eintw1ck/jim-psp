@@ -3,6 +3,11 @@
 #ifndef __KERNEL_H__
 #define __KERNEL_H__
 
+/** @defgroup Kernel PSP Kernel Import Library */
+
+#include <stddef.h>
+#include <stdarg.h>
+
 #include <tamtypes.h>
 #include <ctrl.h>
 #include <display.h>
@@ -10,5 +15,6 @@
 #include <loadexec.h>
 #include <modload.h>
 #include <threadman.h>
+#include <utils.h>
 
 #endif

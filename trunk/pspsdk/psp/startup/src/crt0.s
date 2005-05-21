@@ -6,12 +6,24 @@
 
 		.extern main
 
+#include "as_reg_compat.h"
+
 
 ##############################################################################
 
+		# Support for _init() and _fini().
+		.global _init
+		.global _fini
+		.type	_init, @function
+		.type	_fini, @function
 
+		# The .weak keyword ensures there's no error if
+		# _init/_fini aren't defined.
+		.weak	_init
+		.weak	_fini
+
+		.global _start
 		.ent _start
-		.weak _start
 
 _start:
 		addiu 	$sp, -0x10
@@ -44,19 +56,70 @@ _start:
 
 		.end _start
 
+# Second stage main function
 		.ent _main
 _main:
 		# Do mainy stuff ;)
 		addiu	$sp, -0x10
 		sw		$ra, 0($sp)
+		sw		$s0, 4($sp)
+		sw		$s1, 8($sp)
+
+		move	$s0, $a0
+		move	$s1, $a1
+		
+		la		$t0, _fbss
+		la		$t1, _end
+
+# Clear BSS
+	loop:
+		sw		$0,0($t0)
+		sltu	$v0, $t0, $t1
+		bne		$v0, $0, loop
+		addiu	$t0, $t0, 4
+
 		la		$gp, _gp
-		jal		main
+# Call libc initialisation
+
+		jal		_pspsdk_libc_init
 		nop
+
+		la		$t0, _init
+		beqz	$t0, 1f
+		nop
+		jalr	$t0
+		nop
+1:
+
+		move	$a0, $s0
+		jal		main
+		move	$a1, $s1
+		.end _main
+
+		.global _exit
+		.ent _exit
+
+_exit:
+# Exit
+		la		$t0, _fini
+		beqz	$t0, 2f
+		nop
+
+		jalr	$t0
+		nop
+2:
+
+# Call libc deinit
+		jal _pspsdk_libc_deinit
+		nop
+
+		lw		$s1, 8($sp)
+		lw		$s0, 4($sp)
 		lw		$ra, 0($sp)
 		jr		$ra
 		addiu	$sp, 0x10
 			
-		.end _main
+		.end _exit
 
 _main_thread_name:
 		.asciiz	"user_main"
@@ -103,7 +166,7 @@ __moduleinfo:
 
 ##############################################################################
 
-		.section	.rodata.entrytable,"wa",@progbits
+		.section	.rodata.entrytable,"a",@progbits
 __entrytable:
 		.word 0xD632ACDB
 		.word 0xF01D73A7
