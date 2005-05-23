@@ -1,6 +1,10 @@
 #ifndef __DISPLAY_H__
 #define __DISPLAY_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Wait for vertical blank
  *
@@ -36,5 +40,9 @@ void sceDisplaySetMode(long a, long b, long c);
  */
 void sceDisplaySetFrameBuf(char *topaddr, long linesize, long pixelsize, long
 	d);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

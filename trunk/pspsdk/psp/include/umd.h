@@ -1,6 +1,10 @@
 #ifndef __UMD_H__
 #define __UMD_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup UMD UMD Kernel Library */
 /*@{*/
 
@@ -72,5 +76,9 @@ int UmdSendCommand(int cmd);
 int sceUmdRegisterUMDCallBack(int cbid);
 
 /*@}*/
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

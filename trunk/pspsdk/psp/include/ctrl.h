@@ -1,6 +1,10 @@
 #ifndef __CTRL_H__
 #define __CTRL_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup Ctrl Controller Kernel Library */
 /*@{*/
 
@@ -87,5 +91,9 @@ void CtrlSetAnalogMode(int on);
 void sceCtrlReadBufferPositive(ctrl_data_t *pad_data, int option);
 
 /*@}*/
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

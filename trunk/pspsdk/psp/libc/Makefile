@@ -21,7 +21,7 @@ PSP_INC_DIR = include/
 PSP_LIB = $(LIBC_LIB)
 
 
-CORE_OBJS = sbrk.o terminate.o setjmp.o qsort.o init.o
+CORE_OBJS = sbrk.o terminate.o setjmp.o qsort.o init.o cxx.o
 CORE_OBJS := $(CORE_OBJS:%=$(PSP_OBJS_DIR)%)
 
 ALLOC_OBJS = malloc.o realloc.o calloc.o memalign.o free.o __builtin_alloc.o __alloc_internals.o __mem_walk.o

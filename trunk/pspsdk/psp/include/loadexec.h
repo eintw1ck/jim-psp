@@ -3,6 +3,10 @@
 
 /** @defgroup LoadExec LoadExec Library */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup LoadExec */
 
 /*@{*/
@@ -33,6 +37,10 @@ int sceKernelRegisterExitCallback(int cbid);
  *
  */
 void sceKernelExitGame(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 /*@}*/
 

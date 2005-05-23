@@ -1,6 +1,10 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @defgroup Utils Utils Library */
 
 /** @addtogroup Utils */
@@ -31,5 +35,9 @@ int sceKernelGettimeofday(struct timeval *tp, struct timezone *tzp);
 void sceKernelDcacheWritebackAll(void);
 
 /*@}*/
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

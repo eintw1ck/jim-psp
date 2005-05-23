@@ -5,6 +5,10 @@
   * Library imports for the kernel threading library.
   */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup ThreadMan */
 
 /*@{*/
@@ -135,5 +139,9 @@ void sceKernelPollCallbacks(void);
 int sceKernelGetThreadId(void);
 
 /*@}*/
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

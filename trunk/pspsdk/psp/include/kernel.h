@@ -5,6 +5,10 @@
 
 /** @defgroup Kernel PSP Kernel Import Library */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 #include <stdarg.h>
 
@@ -16,5 +20,9 @@
 #include <modload.h>
 #include <threadman.h>
 #include <utils.h>
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

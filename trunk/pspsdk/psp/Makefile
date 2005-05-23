@@ -8,7 +8,7 @@
 #
 # $Id$
 
-SUBDIRS = kernel libc startup
+SUBDIRS = kernel libc debug startup
 
 include $(PSPSDKSRC)/Defs.make
 include $(PSPSDKSRC)/Rules.make

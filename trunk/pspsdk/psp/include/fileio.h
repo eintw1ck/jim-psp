@@ -5,6 +5,10 @@
  *  This module contains the imports for the kernel's IO routines.
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @addtogroup FileIO File IO Library */
 /*@{*/
 
@@ -207,6 +211,10 @@ int sceIoDevctl(const char *dev, u32 cmd, void *indata, int inlen, void *outdata
 int sceIoAssign(const char *dev1, const char *dev2, const char *dev3, long, long, long);
 
 /*@}*/
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif
