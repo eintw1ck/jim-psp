@@ -14,7 +14,7 @@ PSP_INCS := $(PSP_INCS) -I$(PSPSDKSRC)/psp/include -I$(PSPSDKSRC)/psp/libc/inclu
 PSP_CFLAGS :=  -O2 -G0 -Wall -mdivide-breaks -march=r4000 -mgp32 -mlong32 -fshort-double $(PSP_CFLAGS)
 
 # C++ compiler flags
-PSP_CXXFLAGS :=  -O2 -G0 -Wall -mdivide-breaks -march=r4000 -mgp32 -mlong32 -fshort-double $(PSP_CXXFLAGS)
+PSP_CXXFLAGS :=  -O2 -G0 -Wall -mdivide-breaks -march=r4000 -mgp32 -mlong32 -fshort-double -fno-exceptions $(PSP_CXXFLAGS)
 
 # Linker flags
 #PSP_LDFLAGS := $(PSP_LDFLAGS)

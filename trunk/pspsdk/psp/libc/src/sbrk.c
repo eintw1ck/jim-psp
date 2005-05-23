@@ -20,11 +20,11 @@
 /* Define a heap size of 16 megs */
 #define HEAP_SIZE	(16*1024*1024)
 
-extern void * _end;
+extern void _end;
 
 void *EndOfHeap(void)
 {
-	return ((u8 *) _end) + HEAP_SIZE;
+	return ((u8 *) &_end) + HEAP_SIZE;
 }
 
 void *ps2_sbrk(size_t increment)
