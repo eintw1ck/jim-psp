@@ -26,6 +26,13 @@
 
    Then you're done!
 
+  ======================
+   HOW DO I CONTRIBUTE?
+  ======================
+
+   If you're interested in hacking on any part of the PSP toolchain,
+   please read devel/README.TXT before getting started.
+
   =============
    THE CREDITS
   =============
@@ -33,3 +40,4 @@
    Add yourself here, or be anonymous:
 
    Dan Peori (peori@oopo.net) - Created the script, patch maintenance.
+   Marcus R. Brown (mrbrown@0xd6.org) - Drop-in tree, toolchain.
