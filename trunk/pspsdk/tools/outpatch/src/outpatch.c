@@ -6,6 +6,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#ifdef HAVE_MALLOC_H 
+#include <malloc.h> 
+#endif 
 
 #define str_modulename "PSPSDK"
 #define str_scemoduleinfo_pre "xodata.sceModuleInfo"

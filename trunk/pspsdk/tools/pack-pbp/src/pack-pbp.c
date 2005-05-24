@@ -17,7 +17,10 @@
 
  #include <stdio.h>
  #include <string.h>
-#include <stdlib.h>
+ #include <stdlib.h> 
+ #ifdef HAVE_MALLOC_H 
+ #include <malloc.h> 
+ #endif 
 
  struct { char signature[4]; char version[4]; int offset[8]; } header =
   { { 0x00, 0x50, 0x42, 0x50 }, { 0x00, 0x00, 0x01, 0x00 }, { 40, 0, 0, 0, 0, 0, 0, 0 } };
