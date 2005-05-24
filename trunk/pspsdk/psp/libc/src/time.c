@@ -12,16 +12,28 @@
 */
 
 #include <time.h>
+#include <kernel.h>
 
-/* According to the POSIX standard, if the process time can't be determined
- * clock should return (clock_t)-1
- */
+#ifdef F_clock
+/* Simple remapping of the kernel functions */
 clock_t clock(void) 
 {
-	/* POSIX standard require clock() to return -1 if process time
-	 * cannot be determined.
-	 */
-	return (clock_t)-1;
+    return sceKernelLibcClock();
 }
+#endif
 
+#ifdef F_time
+/* Simple remapping of the kernel functions */
+time_t time(time_t *tloc)
+{
+    return sceKernelLibcTime(tloc);
+}
+#endif
 
+#ifdef F_gettimeofday
+/* Simple remapping of the kernel functions */
+int gettimeofday(struct timeval *tp, struct timezone *tzp)
+{
+    return sceKernelGettimeofday(tp, tzp);
+}
+#endif

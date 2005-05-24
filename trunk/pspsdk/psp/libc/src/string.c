@@ -189,6 +189,8 @@ int memcmp(const void *b1, const void *b2, size_t len)
 			break;
 		}
 	}
+
+	return val;
 }
 #endif
 
@@ -201,7 +203,7 @@ void *memcpy(void *dst, const void *src, size_t len)
 
 	while(len > 0)
 	{
-		*udst++ = *udst;
+		*udst++ = *usrc++;
 		len--;
 	}
 
@@ -263,6 +265,7 @@ void *memchr(const void *b, int c, size_t len)
 	void *pRet = NULL;
 	const unsigned char *ub;
 
+	ub = (void *) b;
 	while(len > 0)
 	{
 		if(*ub == (unsigned char) c)

@@ -14,10 +14,7 @@
 #ifndef _TIME_H
 #define _TIME_H
 
-#ifndef __clock_t_defined
-typedef unsigned long clock_t;
-#define __clock_t_defined
-#endif
+#include <sys/time.h>
 
 struct tm
 {
@@ -33,5 +30,6 @@ struct tm
 };
 
 clock_t clock();
+time_t  time(time_t *tloc);
 
 #endif  // TIME_H

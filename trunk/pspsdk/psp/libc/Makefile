@@ -55,7 +55,7 @@ STDLIB_OBJS = abs.o atexit.o atof.o bsearch.o div.o getenv.o _itoa.o labs.o \
 # mblen.o mbstowcs.o mbtowc.o wcstombs.o wctomb.o
 STDLIB_OBJS := $(STDLIB_OBJS:%=$(PSP_OBJS_DIR)%)
 
-TIME_OBJS = clock.o
+TIME_OBJS = clock.o time.o gettimeofday.o
 TIME_OBJS := $(TIME_OBJS:%=$(PSP_OBJS_DIR)%)
 
 MULT_OBJS = $(XPRINTF_OBJS) $(ALLOC_OBJS) $(STRING_C_OBJS) $(STDIO_OBJS) $(STDLIB_OBJS) $(TIME_OBJS)
