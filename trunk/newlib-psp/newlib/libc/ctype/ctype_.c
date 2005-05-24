@@ -88,7 +88,7 @@ static _CONST char _ctype_b[128 + 256] = {
 extern _CONST char __declspec(dllexport) _ctype_[1 + 256] __attribute__ ((alias ("_ctype_b+127")));
 _CONST char __declspec(dllexport) *__ctype_ptr = _ctype_b + 128;
 #else
-extern _CONST char _ctype_[1 + 256] __attribute__ ((alias ("_ctype_b+127")));
+extern _CONST char _ctype_[1 + 256]; // __attribute__ ((alias ("_ctype_b+127")));
 _CONST char *__ctype_ptr = _ctype_b + 128;
 #endif
 
