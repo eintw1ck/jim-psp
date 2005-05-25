@@ -442,6 +442,8 @@ struct mips_opcode
 #define INSN_5400		  0x01000000
 /* NEC VR5500 instruction.  */
 #define INSN_5500		  0x02000000
+/* Sony Allegrex instruction.  */
+#define INSN_ALLEGREX		  0x10000000
 
 /* MIPS ISA defines, use instead of hardcoding ISA level.  */
 
@@ -489,6 +491,7 @@ struct mips_opcode
 #define CPU_MIPS64      64
 #define CPU_MIPS64R2	65
 #define CPU_SB1         12310201        /* octal 'SB', 01.  */
+#define CPU_ALLEGREX    10111431        /* octal 'AL', 31.  */
 
 /* Test for membership in an ISA including chip specific ISAs.  INSN
    is pointer to an element of the opcode table; ISA is the specified
@@ -510,6 +513,7 @@ struct mips_opcode
      || (cpu == CPU_VR4120 && ((insn)->membership & INSN_4120) != 0)	\
      || (cpu == CPU_VR5400 && ((insn)->membership & INSN_5400) != 0)	\
      || (cpu == CPU_VR5500 && ((insn)->membership & INSN_5500) != 0)	\
+     || (cpu == CPU_ALLEGREX && ((insn)->membership & INSN_ALLEGREX) != 0)	\
      || 0)	/* Please keep this term for easier source merging.  */
 
 /* This is a list of macro expanded instructions.
