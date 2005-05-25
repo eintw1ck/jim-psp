@@ -4537,6 +4537,9 @@ _ACEOF
 	  mips64vr | mips64vrel)
 	    mips_cpu=vr4100
 	    ;;
+	  mipsallegrex | mipsallegrexel)
+	    mips_cpu=allegrex
+	    ;;
 	  mipsisa32r2* | mipsisa64r2*)
 	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
 	    ;;

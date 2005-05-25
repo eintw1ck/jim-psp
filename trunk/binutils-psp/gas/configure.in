@@ -222,6 +222,9 @@ for this_target in $target $canon_targets ; do
 	  mips64vr | mips64vrel)
 	    mips_cpu=vr4100
 	    ;;
+	  mipsallegrex | mipsallegrexel)
+	    mips_cpu=allegrex
+	    ;;
 	  mipsisa32r2* | mipsisa64r2*)
 changequote(,)dnl
 	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`

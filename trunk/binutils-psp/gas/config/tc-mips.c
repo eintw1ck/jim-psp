@@ -13743,6 +13743,8 @@ static const struct mips_cpu_info mips_cpu_info_table[] =
 
   /* MIPS II */
   { "r6000",          0,      ISA_MIPS2,      CPU_R6000 },
+  /* Sony PSP "Allegrex" CPU core */
+  { "allegrex",       0,      ISA_MIPS2,      CPU_ALLEGREX },
 
   /* MIPS III */
   { "r4000",          0,      ISA_MIPS3,      CPU_R4000 },
