@@ -138,6 +138,17 @@ void sceKernelPollCallbacks(void);
   */
 int sceKernelGetThreadId(void);
 
+/**
+  * Delay the current thread by a specified number of microseconds
+  *
+  * @param delay - Delay in microseconds.
+  *
+  * @par Example:
+  * @code
+  * sceKernelDelayThread(1000000); // Delay for a second
+  */
+void sceKernelDelayThread(int delay);
+
 /*@}*/
 
 #ifdef __cplusplus

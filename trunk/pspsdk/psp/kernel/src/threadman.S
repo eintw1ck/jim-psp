@@ -2,7 +2,7 @@
 
 #include "common.s"
 
-	STUB_START	"ThreadManForUser",0x40010000,0x340005
+	STUB_START	"ThreadManForUser",0x40010000,0x360005
 	STUB_FUNC	0x446D8DE6,sceKernelCreateThread
 	STUB_FUNC	0xF475845D,sceKernelStartThread
 	STUB_FUNC	0xAA73C935,sceKernelExitThread
@@ -56,4 +56,5 @@
 	STUB_FUNC	0xE9B3061E,sceKernelSendMbx
 	STUB_FUNC	0x18260574,sceKernelReceiveMbx
 	STUB_FUNC	0xD59EAD2F,sceKernelWakeupThread
+	STUB_FUNC	0xceadeb47,sceKernelDelayThread
 	STUB_END

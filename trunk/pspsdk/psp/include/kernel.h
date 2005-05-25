@@ -20,6 +20,7 @@ extern "C" {
 #include <modload.h>
 #include <threadman.h>
 #include <utils.h>
+#include <umd.h>
 
 #ifdef __cplusplus
 }

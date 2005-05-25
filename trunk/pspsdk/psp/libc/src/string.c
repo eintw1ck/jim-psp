@@ -188,6 +188,9 @@ int memcmp(const void *b1, const void *b2, size_t len)
 			val = (int) *u1 - (int) *u2;
 			break;
 		}
+		u1++;
+		u2++;
+		len--;
 	}
 
 	return val;
@@ -226,6 +229,7 @@ void *memmove(void *dst, const void* src, size_t len)
 		while(len > 0)
 		{
 			*udst++ = *usrc++;
+			len--;
 		}
 	}
 	else
@@ -236,6 +240,7 @@ void *memmove(void *dst, const void* src, size_t len)
 		while(len > 0)
 		{
 			*udst-- = *usrc--;
+			len--;
 		}
 	}
 	
@@ -251,7 +256,7 @@ void *memset(void *b, int c, size_t len)
 
 	while(len > 0)
 	{
-		*ub = (unsigned char) c;
+		*ub++ = (unsigned char) c;
 		len--;
 	}
 

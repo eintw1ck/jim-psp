@@ -45,7 +45,6 @@ rebuild: env_build_check $(subdir_clean) $(subdir_list)
 
 $(PSPSDK)/include:
 	$(MKDIR) -p $(PSPSDK)/include
-	cp -rf $(PSPSDKSRC)/psp/include/* $(PSPSDK)/include/
 
 $(PSPSDK)/ports:
 	$(MKDIR) -p $(PSPSDK)/ports
@@ -53,6 +52,7 @@ $(PSPSDK)/ports:
 install: release
 
 release: build release_base $(PSPSDK)/include $(PSPSDK)/ports $(subdir_release) 
+	cp -rf $(PSPSDKSRC)/psp/include/* $(PSPSDK)/include/
 
 
 release_base: env_release_check
