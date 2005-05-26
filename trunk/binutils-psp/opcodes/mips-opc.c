@@ -109,6 +109,7 @@ Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  *
 #define N5	(INSN_5400 | INSN_5500)
 #define N54	INSN_5400
 #define N55	INSN_5500
+#define AL	INSN_ALLEGREX
 
 #define G1      (T3             \
                  )

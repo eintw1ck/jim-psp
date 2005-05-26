@@ -359,6 +359,8 @@ const struct mips_arch_choice mips_arch_choices[] = {
     mips_cp0_names_numeric, NULL, 0, mips_hwr_names_numeric },
   { "mips5",	1, bfd_mach_mips5, CPU_MIPS5, ISA_MIPS5,
     mips_cp0_names_numeric, NULL, 0, mips_hwr_names_numeric },
+  { "allegrex", 1, bfd_mach_mips_allegrex, CPU_ALLEGREX, ISA_MIPS2,
+    mips_cp0_names_numeric, NULL, 0, mips_hwr_names_numeric },
 
   /* For stock MIPS32, disassemble all applicable MIPS-specified ASEs.
      Note that MIPS-3D and MDMX are not applicable to MIPS32.  (See
