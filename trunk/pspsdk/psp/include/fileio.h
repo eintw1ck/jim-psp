@@ -98,7 +98,7 @@ int sceIoWrite(int fd, const void *data, int size);
  *
  * @return The position in the file after the seek. 
  */
-int sceIoLseek(int fd, int offset, int whence);
+int sceIoLseek(int fd, long long offset, int whence);
 
 /**
  * Remove directory entry
