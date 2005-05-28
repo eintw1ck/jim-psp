@@ -9,6 +9,17 @@
 extern "C" {
 #endif
 
+/** @addtogroup Kernel */
+/*@{*/
+
+/** Define the elf name variable, contains a pointer to the boot elf path */
+extern const char* g_elf_name;
+
+/** Define the elf name size variable */
+extern int g_elf_namesize;
+
+/*@}*/
+
 #include <stddef.h>
 #include <stdarg.h>
 

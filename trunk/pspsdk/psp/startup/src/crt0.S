@@ -62,11 +62,11 @@ _main:
 		# Do mainy stuff ;)
 		addiu	$sp, -0x10
 		sw		$ra, 0($sp)
-		sw		$s0, 4($sp)
-		sw		$s1, 8($sp)
 
-		move	$s0, $a0
-		move	$s1, $a1
+		la		$t0, g_elf_namesize
+		sw		$a0, 0($t0)
+		la		$t0, g_elf_name
+		sw		$a1, 0($t0)
 		
 		la		$t0, _fbss
 		la		$t1, _end
@@ -90,10 +90,9 @@ _main:
 		jalr	$t0
 		nop
 1:
-
-		move	$a0, $s0
 		jal		main
-		move	$a1, $s1
+		nop
+
 		.end _main
 
 		.global _exit
@@ -113,8 +112,6 @@ _exit:
 		jal _pspsdk_libc_deinit
 		nop
 
-		lw		$s1, 8($sp)
-		lw		$s0, 4($sp)
 		lw		$ra, 0($sp)
 		jr		$ra
 		addiu	$sp, 0x10
@@ -179,7 +176,10 @@ __entrytable:
 ###############################################################################
 
 		.data
-
+		.global g_elf_name
+g_elf_name: .word 0
+		.global g_elf_namesize
+g_elf_namesize: .word 0
 
 ###############################################################################
 

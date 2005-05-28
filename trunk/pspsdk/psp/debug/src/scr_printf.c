@@ -21,30 +21,31 @@
 #define PSP_SCREEN_HEIGHT 272
 #define PSP_LINE_SIZE 512
 #define PSP_PIXEL_FORMAT 3
-#define PSP_VRAM_BASE	0x04000000
 
 /* baseado nas libs do Duke... */
 
 static int X = 0, Y = 0;
 static int MX=60, MY=34;
 static u32 bg_col = 0, fg_col = 0xFFFFFFFF;
+static u32* g_vram_base = (u32 *) 0x04000000;
 
 static void clear_screen(u32 color)
 {
     int x;
-    u32 *vram = (u32 *) PSP_VRAM_BASE;
+    u32 *vram = g_vram_base;
 
     for(x = 0; x < (PSP_LINE_SIZE * PSP_SCREEN_HEIGHT); x++)
     {
-	*vram++ = color; 
+		*vram++ = color; 
     }
 }
 
 void pspDebugScreenInit()
 {
    X = Y = 0;
+   g_vram_base = (void *) sceGeEdramGetAddr();
    sceDisplaySetMode(0, PSP_SCREEN_WIDTH, PSP_SCREEN_HEIGHT);
-   sceDisplaySetFrameBuf((void *) PSP_VRAM_BASE, PSP_LINE_SIZE, PSP_PIXEL_FORMAT, 1);
+   sceDisplaySetFrameBuf((void *) g_vram_base, PSP_LINE_SIZE, PSP_PIXEL_FORMAT, 1);
    clear_screen(bg_col);
 }
 
@@ -68,15 +69,15 @@ pspDebugScreenPutChar( int x, int y, u32 color, u8 ch)
    u8	*font;
    u32  pixel;
    u32 *vram_ptr;
-   u32 *vram_base;
+   u32 *vram;
 
-   vram_base = (u32 *) PSP_VRAM_BASE + x;
-   vram_base += (y * PSP_LINE_SIZE);
+   vram = g_vram_base + x;
+   vram += (y * PSP_LINE_SIZE);
    
    font = &msx[ (int)ch * 8];
    for (i=l=0; i < 8; i++, l+= 8, font++)
    {
-      vram_ptr  = vram_base;
+      vram_ptr  = vram;
       for (j=0; j < 8; j++)
 	{
           if ((*font & (128 >> j)))
@@ -86,7 +87,7 @@ pspDebugScreenPutChar( int x, int y, u32 color, u8 ch)
 
           *vram_ptr++ = pixel; 
 	}
-      vram_base += PSP_LINE_SIZE;
+      vram += PSP_LINE_SIZE;
    }
 }
 

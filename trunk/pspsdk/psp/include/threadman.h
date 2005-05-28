@@ -13,6 +13,35 @@ extern "C" {
 
 /*@{*/
 
+/** Structure to hold the status information for a thread
+  * @see sceKernelReferThreadStatus
+  */
+typedef struct _ThreadStatus
+{
+	/** Size of the structure */
+	u32 size;
+	/** Nul terminated name of the thread */
+	char name[32];
+	/** Unknown */
+	u32  unk0; // ?
+	/** Unknown */
+	u32  unk1;
+	/** Address of the the thread (likely start address) */
+	u32  th_addr;
+	/** Base of the stack */
+	u32  stack_addr;
+	/** Stack size */
+	u32  stack_size;
+	/** gp */
+	u32 gp;
+	/** Initial priority */
+	u32 init_pri;
+	/** Current priority */
+	u32 curr_pri;
+	/** More unknown */
+	u32 unk2[9];
+} ThreadStatus;
+
 /**
  * Creates a new semaphore
  *
@@ -146,8 +175,45 @@ int sceKernelGetThreadId(void);
   * @par Example:
   * @code
   * sceKernelDelayThread(1000000); // Delay for a second
+  * @endcode
   */
 void sceKernelDelayThread(int delay);
+
+/**
+  * Change the threads current priority.
+  * 
+  * @param thid - The ID of the thread (from sceKernelCreateThread or sceKernelGetThreadId)
+  * @param priority - The new priority (the lower the number the higher the priority)
+  *
+  * @par Example:
+  * @code
+  * int thid = sceKernelGetThreadId();
+  * // Change priority of current thread to 16
+  * sceKernelChangeThreadPriority(thid, 16);
+  * @endcode
+  *
+  * @return 0 if successful, otherwise the error code.
+  */
+int sceKernelChangeThreadPriority(int thid, int priority);
+
+/** 
+  * Get the status information for the specified thread.
+  * 
+  * @param thid - Id of the thread to get status
+  * @param status - Pointer to the status structure to receive the data.
+  * Note: The structures size field should be set to sizeof(ThreadStatus) 
+  * before calling this function.
+  *
+  * @par Example:
+  * @code
+  * ThreadStatus status;
+  * status.size = sizeof(ThreadStatus);
+  * if(sceKernelReferThreadStatus(thid, &status) == 0)
+  * { Do something... }
+  * @endcode 
+  * @return 0 if successful, otherwise the error code.
+  */
+int sceKernelReferThreadStatus(int thid, ThreadStatus *status);
 
 /*@}*/
 

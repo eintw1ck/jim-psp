@@ -32,7 +32,7 @@ void pspDebugScreenInit(void);
   * Do a printf to the debug screen.
   *
   * @param fmt - Format string to print
-  * ... - Arguments
+  * @param ... - Arguments
   */
 void pspDebugScreenPrintf(const char *fmt, ...) __attribute__((format(printf,1,2)));
 
