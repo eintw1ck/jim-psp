@@ -49,7 +49,7 @@
 	STUB_FUNC	0xDB738F35,ThreadMan_34
 	STUB_FUNC	0x6652B8CA,sceKernelSetAlarm
 	STUB_FUNC	0x7E65B999,sceKernelCancelAlarm
-	STUB_FUNC	0x349D6D6C,ThreadMan_37
+	STUB_FUNC	0x349D6D6C,sceKernelCheckCallback
 	STUB_FUNC	0x94AA61EE,ThreadMan_38
 	STUB_FUNC	0x8125221D,sceKernelCreateMbx
 	STUB_FUNC	0x86255ADA,sceKernelDeleteMbx
