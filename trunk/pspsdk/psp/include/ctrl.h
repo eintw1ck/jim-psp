@@ -1,3 +1,14 @@
+/*
+# _____     ___ ____     ___ ____ 
+#  ____|   |    ____|   |        | |____|    
+# |     ___|   |     ___|    ____| |    \    PSPDEV Open Source Project. 
+#-----------------------------------------------------------------------
+# Copyright 2001-2005, ps2dev - http://www.ps2dev.org
+# Licenced under Academic Free License version 2.0
+# Review ps2sdk README & LICENSE files for further details. 
+# $Id$
+# Header file for the controller library.
+*/
 #ifndef __CTRL_H__
 #define __CTRL_H__
 

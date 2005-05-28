@@ -21,6 +21,7 @@ extern "C" {
 #include <threadman.h>
 #include <utils.h>
 #include <umd.h>
+#include <ge.h>
 
 #ifdef __cplusplus
 }
