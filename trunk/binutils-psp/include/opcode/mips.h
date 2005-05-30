@@ -148,6 +148,19 @@ Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  *
 #define OP_MASK_EXTMSBD		0x1f	/* "ext" MSBD.  */
 #define OP_SH_EXTMSBD		11
 
+#define OP_SH_VFPU_DELTA	0
+#define OP_MASK_VFPU_DELTA	0xfffc
+#define OP_SH_VFPU_IMM3		16
+#define OP_MASK_VFPU_IMM3	0x7
+#define OP_SH_VFPU_IMM5		16
+#define OP_MASK_VFPU_IMM5	0x1f
+#define OP_SH_VFPU_IMM8		16
+#define OP_MASK_VFPU_IMM8	0xff
+#define OP_SH_VFPU_CC		18
+#define OP_MASK_VFPU_CC		0x7
+#define OP_SH_VFPU_CONST	16
+#define OP_MASK_VFPU_CONST	0x1f
+
 #define	OP_OP_COP0		0x10
 #define	OP_OP_COP1		0x11
 #define	OP_OP_COP2		0x12
