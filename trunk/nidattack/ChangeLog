@@ -1,3 +1,5 @@
 2005-05-31  Marcus R. Brown  <mrbrown@0xd6.org>
 
+	* src/main.c (main): Make the prefix optional.
+
 	Initial import of adresd's SHA1 hash dictionary attack source.

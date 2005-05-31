@@ -438,28 +438,31 @@ int main(int argc, char **argv)
 
 	char *ptr, *ptr0, *ptr1, *ptr2, *ptr3, *ptr4;
 
-	char *prefix;
-	int prefixlen;
+	char *prefix = "";
+	int prefixlen = 0;
 
 	printf("SHA1 hash dictionary attack v1.0 by adresd\n");
 	printf("based on the original by djhuevo\n");
 
-	if (argc < 4) {
-		printf("usage:\n\t%s <prefix> <hash_list> <dictionary>\n", argv[0]);
+	if (argc < 3) {
+		printf("usage:\n\t%s <hash_list> <dictionary> [prefix]\n", argv[0]);
 		return 1;
 	}
-	prefix = argv[1];
-	strcpy(buffer, prefix);
-	prefixlen = strlen(prefix);
 
-	if (load_hash_list(argv[2]) < 0) {
+	if (load_hash_list(argv[1]) < 0) {
 		fprintf(stderr, "can't open the file %s", argv[2]);
 		return 2;
 	}
 
-	if (load_dictionary(argv[3]) < 0) {
+	if (load_dictionary(argv[2]) < 0) {
 		fprintf(stderr, "can't open the file %s", argv[3]);
 		return 3;
+	}
+
+	if (argc > 3) {
+		prefix = argv[3];
+		strcpy(buffer, prefix);
+		prefixlen = strlen(prefix);
 	}
 
 	if (hash_count < 1 || dict_count < 1) {
@@ -472,7 +475,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	printf("\nprefix : '%s'\n", prefix);
+	printf("\nprefix : '%s'\n", prefix != "" ? prefix : "<None>");
 	printf("hash count : %d\n", hash_count);
 	printf("dictionary words: %d\n\n", dict_count);
 
@@ -480,7 +483,7 @@ int main(int argc, char **argv)
 
 	printf("\nsearching...\n\n");
 	time(&start);
-	ptr = buffer + strlen(prefix);
+	ptr = buffer + prefixlen;
 	colisiones = 0;
 	// First Word
 	for (x = 0; x < dict_count; x++) {
