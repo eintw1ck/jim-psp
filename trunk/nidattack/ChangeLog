@@ -3,3 +3,10 @@
 	* src/main.c (main): Make the prefix optional.
 
 	Initial import of adresd's SHA1 hash dictionary attack source.
+
+2005-05-31  Dan Peori <peori@oopo.net>
+
+	Fixed various compiler warnings.
+	Fixed the &buffer problem in load_dictionary().
+	Updated the ChangeLog file.
+	Committed the ChangeLog file.
