@@ -1,6 +1,7 @@
 2005-05-31  Marcus R. Brown  <mrbrown@0xd6.org>
 
 	* src/main.c (main): Make the prefix optional.
+	Add fflush() after some file output for Win32 systems.
 
 	Initial import of adresd's SHA1 hash dictionary attack source.
 

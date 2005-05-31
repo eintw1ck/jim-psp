@@ -422,6 +422,8 @@ int findhash(char *buffer, SHA1_CTX * context, int size, int prefixlen)
 				if (hashvalue == hash[h]) {	// If equal, found
 					printf("Found : %-40s 0x%08x\n", buffer, hashvalue);
 					fprintf(fout, "<FUNC><NAME>%s</NAME><NID>0x%08x</NID></FUNC>\n", buffer, hashvalue);
+					fflush(stdout);
+					fflush(fout);
 					return 1;
 				} else			// If not, reject as above
 					return 0;
@@ -487,6 +489,7 @@ int main(int argc, char **argv)
 	fillsearchtable();
 
 	printf("\nsearching...\n\n");
+	fflush(stdout);
 	time(&start);
 	ptr = buffer + prefixlen;
 	colisiones = 0;
@@ -498,6 +501,7 @@ int main(int argc, char **argv)
 		}
 		*(ptr0) = 0;
 		printf("// processing word: %s\n", buffer);
+		fflush(stdout);
 		// Second word
 		for (y = 0; y < dict_count; y++) {
 			ptr1 = ptr0;
