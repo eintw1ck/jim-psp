@@ -51,3 +51,21 @@ bfd_getb16 (const void *p)
   const bfd_byte *addr = p;
   return (addr[0] << 8) | addr[1];
 }
+
+/*
+FUNCTION
+	bfd_get_arch
+
+SYNOPSIS
+	enum bfd_architecture bfd_get_arch (bfd *abfd);
+
+DESCRIPTION
+	Return the enumerated type which describes the BFD @var{abfd}'s
+	architecture.
+*/
+
+enum bfd_architecture
+bfd_get_arch (bfd *abfd)
+{
+  return abfd->arch_info->arch;
+}

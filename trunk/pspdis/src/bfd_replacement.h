@@ -25,5 +25,6 @@ bfd_vma bfd_getl32 (const void *p);
 bfd_vma bfd_getb32 (const void *p);
 bfd_vma bfd_getl16 (const void *p);
 bfd_vma bfd_getb16 (const void *p);
+enum bfd_architecture bfd_get_arch (bfd *abfd);
 
 #endif

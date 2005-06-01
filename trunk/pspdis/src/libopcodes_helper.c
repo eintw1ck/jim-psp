@@ -24,7 +24,7 @@
      Returns an errno value or 0 for success.  */
 int libopcodes_read_mem(bfd_vma memaddr, bfd_byte *myaddr, unsigned int length, struct disassemble_info *info) {
 	void * result;
-	printf("disasm is trying to read %d bytes from 0x%08lX (dest contains 0x%08X)\n", length, memaddr, *(int *)&myaddr[0]);
+	//printf("disasm is trying to read %d bytes from 0x%08lX (dest contains 0x%08X)\n", length, memaddr, *(int *)&myaddr[0]);
 	result = memcpy(myaddr, (void *)(u32)memaddr, length);
 	//printf("src: 0x%08X dest: 0x%08X\n",*(int *)&((u8 *)(u32)memaddr)[0], *(int *)&myaddr[0]);
 	if (result == myaddr)

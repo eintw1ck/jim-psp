@@ -15,6 +15,10 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 
 #define makehexchar(i) (i<=9) ? '0'+i : 'A'+(i-10)
@@ -24,5 +28,9 @@ typedef unsigned short u16;
 typedef unsigned long u32;
 
 void hexdump(const u8* data, size_t length);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

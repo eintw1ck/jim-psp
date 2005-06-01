@@ -1,0 +1,8 @@
+June 1 2005 - John_K
+	- Changed pspdis.c to C++ to use STL and to prepare for wxWidgets
+	- Added a note to branch offsets in disassembly that libopcodes bases off of filebuffer
+	  memory address. Does anyone know how to remedy this properly?
+	- Added xref tracking and report
+	
+June 1 2005 - John_K
+	- Initial Version
