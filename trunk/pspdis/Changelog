@@ -1,3 +1,8 @@
+June 2 2005 - John_K
+	- Properly fixed previous branch offsets problem by providing section vma to disasssembly
+	  info struct and letting libopcodes use it's own memory read function.
+	- Fixed erroneous xrefs to 0x00000000, althought current method may weed out certain valid xrefs to 0.
+	
 June 1 2005 - John_K
 	- Changed pspdis.c to C++ to use STL and to prepare for wxWidgets
 	- Added a note to branch offsets in disassembly that libopcodes bases off of filebuffer

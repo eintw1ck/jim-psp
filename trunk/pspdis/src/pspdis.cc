@@ -38,6 +38,7 @@ int main(int argc, char *argv[]) {
 	u8 *sceResident = NULL;
 	u8 *text = NULL;
 	u32 textSize = 0;
+	sectionHeader * textSection = NULL;
 	u32 *sceNid = NULL;
 	u32 i;
 	size_t elfDataSize = 0;
@@ -135,6 +136,7 @@ int main(int argc, char *argv[]) {
 		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".text") == 0) {
 			text = &elfData[sHeaders[i].offset];
 			textSize = sHeaders[i].size;
+			textSection = &sHeaders[i];
 		}
 	}
 	
@@ -163,39 +165,37 @@ int main(int argc, char *argv[]) {
 	dinfo.arch = (bfd_architecture) bfd_mach_mips_allegrex;
 	dinfo.mach = bfd_mach_mips_allegrex;
 	disassemble_init_for_target(&dinfo);
-	dinfo.read_memory_func = libopcodes_read_mem;
+	
+	printf("data at 0x%08X, section vma is 0x%08X, length is %d\n", text, textSection->address, textSize);
+	dinfo.buffer = text;
+	dinfo.buffer_vma = textSection->address;
+	dinfo.buffer_length = textSize;
+
 	dinfo.print_address_func = libopcodes_print_addr;
 	//don't need these functions yet.
 	/*
-	dinfo.memory_error_func = libopcodes_mem_error;
 	dinfo.symbol_at_address_func = libopcodes_symbol_at_addr;
 	dinfo.symbol_is_valid = libopcodes_symbol_is_valid;
 	*/
 	int bytecount = 0;
 	while (bytecount < textSize) {
+		int increment = 0;
 		printf("\n0x%08X: ", bytecount);
 		dinfo.insn_info_valid = 0;
-		bytecount += print_insn_little_mips((bfd_vma)(u32)&text[bytecount], &dinfo);
+		increment += print_insn_little_mips((bfd_vma)bytecount, &dinfo);
 		if (dinfo.insn_info_valid != 0) {
-			if (dinfo.insn_type == dis_condbranch) {
-				printf("\treal branch addr: ");
-				libopcodes_print_addr(dinfo.target-(u32)text, NULL);
-				
-				//add an xref if it isn't pointing to 0
-				if (dinfo.target-(u32)text != 0)
-					xrefs[dinfo.target-(u32)text].push_back(bytecount);
-				if (dinfo.target2 != 0) {
-					printf(" ");
-					libopcodes_print_addr(dinfo.target2, NULL);
-				}
-			} else if (dinfo.insn_type != dis_nonbranch) {
-				//add an xref if it isn't pointing to 0
-				if (dinfo.target != 0)
+			if (dinfo.insn_type == dis_branch ||
+			    dinfo.insn_type == dis_condbranch ||
+			    dinfo.insn_type == dis_jsr ||
+			    dinfo.insn_type == dis_condjsr) {
+			    	//ignore xrefs to 0x00000000 unless they're straight to 0 or a relative jump to 0 (todo)
+			    	int instr = *(u32*)&text[bytecount];
+			    	if(dinfo.target != 0 || dinfo.target == 0 && (instr & 0x00FFFFFF) == 0) {
 					xrefs[dinfo.target].push_back(bytecount);
+				}
 			}
-				
 		}
-//		printf("\ndisasm ate %d bytes\n", );
+		bytecount += increment;
 	}
 	
 	//print xrefs
