@@ -11,3 +11,8 @@
 	Fixed the &buffer problem in load_dictionary().
 	Updated the ChangeLog file.
 	Committed the ChangeLog file.
+	
+2005-06-01	Adresd
+
+	Fixed invalid values in searchtable, to remove some missed positive checks.
+	Added dic and hash size values at end for viewing with timers.

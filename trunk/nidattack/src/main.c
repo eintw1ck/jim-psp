@@ -329,11 +329,11 @@ FILE *fout;
 // what we do, is pre-sort the hashlist, so they are in order AABBCCDD
 // Then index each byte into the list, hence cutting down the search space considerably
 typedef struct {
-	unsigned int number;
-	unsigned int next[256];
+	int number;
+	int next[256];
 } search_space_t2;
 typedef struct {
-	unsigned int number;
+	int number;
 	search_space_t2 next[256];
 } search_space_t;
 search_space_t searchtable[256];
@@ -385,21 +385,21 @@ void fillsearchtable()
 						if ((hash[hashpos3] & 0xffffff00) == searchval) {
 							searchtable[count].next[count2].next[count3] = hashpos3;
 						} else {	// Higher number
-							searchtable[count].next[count2].next[count3] = 0;
+							searchtable[count].next[count2].next[count3] = -1;
 						}
 					}
 				} else {		// Higher number
-					searchtable[count].next[count2].number = 0;
+					searchtable[count].next[count2].number = -1;
 					for (count3 = 0; count3 < 256; count3++)
-						searchtable[count].next[count2].next[count3] = 0;
+						searchtable[count].next[count2].next[count3] = -1;
 				}
 			}
 		} else {				// Higher number
 			searchtable[count].number = 0;
 			for (count2 = 0; count2 < 256; count2++) {
-				searchtable[count].next[count2].number = 0;
+				searchtable[count].next[count2].number = -1;
 				for (count3 = 0; count3 < 256; count3++)
-					searchtable[count].next[count2].next[count3] = 0;
+					searchtable[count].next[count2].next[count3] = -1;
 			}
 		}
 	}
@@ -412,11 +412,11 @@ int findhash(char *buffer, SHA1_CTX * context, int size, int prefixlen)
 	unsigned int index1 = (hashvalue & 0xff000000) >> 24;
 	unsigned int index2 = (hashvalue & 0x00ff0000) >> 16;
 	unsigned int index3 = (hashvalue & 0x0000ff00) >> 8;
-	unsigned int pos;
+	int pos;
 	// Get threebyte position
 	pos = searchtable[index1].next[index2].next[index3];
 
-	if (pos != 0) {				// Found a position, so search from here
+	if (pos != -1) {				// Found a position, so search from here
 		for (h = pos; h < hash_count; h++) {
 			if (hashvalue >= hash[h]) {
 				if (hashvalue == hash[h]) {	// If equal, found
@@ -556,6 +556,8 @@ int main(int argc, char **argv)
 		findhash(buffer, &context, ptr0 - buffer, prefixlen);
 	}
 	time(&end);
+	printf("\n\nhash count : %d\n", hash_count);
+	printf("dictionary words: %d\n\n", dict_count);
 	printf("\n\ntime : %f seconds.", difftime(end, start));
 
 	fclose(fout);
