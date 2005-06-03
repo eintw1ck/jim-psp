@@ -14,10 +14,10 @@
 #
 [ "$#" -ne "2" ] && echo "Usage: $0 <drop in tree> <kernel tree>" && exit 1
 
-PWD=`which pwd`
-ODIR=`$PWD`
+CPWD=`which pwd`
+ODIR=`$CPWD`
 cd $1 || exit 1
-LDIR=`$PWD`
+LDIR=`$CPWD`
 echo -n "Building file list ... "
 LIST=`find * \( -type d -name CVS -prune \) -o -type f -print`
 echo -e "done."
