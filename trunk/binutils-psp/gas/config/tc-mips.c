@@ -7817,6 +7817,30 @@ validate_mips_insn (const struct mips_opcode *opc)
       case '%': USE_BITS (OP_MASK_VECALIGN,	OP_SH_VECALIGN); break;
       case '[': break;
       case ']': break;
+      case '?':
+	/* MRB TODO: Fix this for the VFPU extensions. */
+	switch (c = *p++)
+	  {
+	  case 'f':
+	    /* MRB HACK: Skip the next character. */
+	    p++;
+	    break;
+	  case 'd':
+	  case 'm':
+	  case 'n':
+	  case 's':
+	  case 't':
+	  case 'v':
+	  case 'x':
+	    /* MRB HACK: Skip the next two characters. */
+	    p++;
+	    p++;
+	    break;
+	  default: break;
+	  }
+	/* MRB HACK: Set all used bits. */
+	used_bits = 0xffffffff;
+	break;
       default:
 	as_bad (_("internal: bad mips opcode (unknown operand type `%c'): %s %s"),
 		c, opc->name, opc->args);
