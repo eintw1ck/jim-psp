@@ -59,7 +59,8 @@ enum processor_type {
   PROCESSOR_R8000,
   PROCESSOR_R9000,
   PROCESSOR_SB1,
-  PROCESSOR_SR71000
+  PROCESSOR_SR71000,
+  PROCESSOR_ALLEGREX
 };
 
 /* Which ABI to use.  ABI_32 (original 32, or o32), ABI_N32 (n32),
@@ -308,6 +309,7 @@ extern const struct mips_cpu_info *mips_tune_info;
 #define TARGET_MIPS9000             (mips_arch == PROCESSOR_R9000)
 #define TARGET_SB1                  (mips_arch == PROCESSOR_SB1)
 #define TARGET_SR71K                (mips_arch == PROCESSOR_SR71000)
+#define TARGET_ALLEGREX             (mips_arch == PROCESSOR_ALLEGREX)
 
 /* Scheduling target defines.  */
 #define TUNE_MIPS3000               (mips_tune == PROCESSOR_R3000)
@@ -322,6 +324,7 @@ extern const struct mips_cpu_info *mips_tune_info;
 #define TUNE_MIPS7000               (mips_tune == PROCESSOR_R7000)
 #define TUNE_MIPS9000               (mips_tune == PROCESSOR_R9000)
 #define TUNE_SB1                    (mips_tune == PROCESSOR_SB1)
+#define TUNE_ALLEGREX               (mips_tune == PROCESSOR_ALLEGREX)
 
 /* True if the pre-reload scheduler should try to create chains of
    multiply-add or multiply-subtract instructions.  For example,
