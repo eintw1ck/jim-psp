@@ -38,7 +38,7 @@
    /* MIPS III */
    { "r4000", PROCESSOR_R4000, 3 },
 --- gcc-4.0.0.orig/gcc/config/mips/mips.h	2005-04-15 00:00:18.000000000 -0700
-+++ gcc-psp/gcc/config/mips/mips.h	2005-06-03 14:27:47.702633328 -0700
++++ gcc-psp/gcc/config/mips/mips.h	2005-06-04 10:01:45.622784264 -0700
 @@ -59,7 +59,8 @@
    PROCESSOR_R8000,
    PROCESSOR_R9000,
@@ -65,6 +65,40 @@
  
  /* True if the pre-reload scheduler should try to create chains of
     multiply-add or multiply-subtract instructions.  For example,
+@@ -889,7 +892,8 @@
+ 
+ /* ISA has conditional trap instructions.  */
+ #define ISA_HAS_COND_TRAP	(!ISA_MIPS1				\
+-				 && !TARGET_MIPS16)
++				 && !TARGET_MIPS16			\
++				 && !TARGET_ALLEGREX) 
+ 
+ /* ISA has integer multiply-accumulate instructions, madd and msub.  */
+ #define ISA_HAS_MADD_MSUB       ((ISA_MIPS32				\
+@@ -907,6 +911,7 @@
+ #define ISA_HAS_CLZ_CLO         ((ISA_MIPS32				\
+                                   || ISA_MIPS32R2			\
+                                   || ISA_MIPS64				\
++                                  || TARGET_ALLEGREX			\
+                                  ) && !TARGET_MIPS16)
+ 
+ /* ISA has double-word count leading zeroes/ones instruction (not
+@@ -954,6 +959,7 @@
+                                      || TARGET_MIPS5400                 \
+                                      || TARGET_MIPS5500                 \
+                                      || TARGET_SR71K                    \
++                                     || TARGET_ALLEGREX                 \
+                                      ))
+ 
+ /* ISA has 64-bit rotate right instruction.  */
+@@ -987,6 +993,7 @@
+ /* ISA includes the MIPS32r2 seb and seh instructions.  */
+ #define ISA_HAS_SEB_SEH         (!TARGET_MIPS16                        \
+                                  && (ISA_MIPS32R2                      \
++                                     || TARGET_ALLEGREX                \
+                                      ))
+ 
+ /* True if the result of a load is not available to the next instruction.
 --- gcc-4.0.0.orig/gcc/config/mips/t-allegrex	1969-12-31 16:00:00.000000000 -0800
 +++ gcc-psp/gcc/config/mips/t-allegrex	2005-06-03 14:25:39.002198768 -0700
 @@ -0,0 +1,51 @@
