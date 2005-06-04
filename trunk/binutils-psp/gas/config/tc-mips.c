@@ -365,11 +365,15 @@ static int mips_32bitmode = 0;
 #define CPU_HAS_MDMX(cpu)	(FALSE                 \
 				 )
 
+/* True if the given CPU belongs to the Allegrex family.  */
+#define CPU_IS_ALLEGREX(CPU)	((CPU) == CPU_ALLEGREX	\
+    				 )
+
 /* True if CPU has a dror instruction.  */
 #define CPU_HAS_DROR(CPU)	((CPU) == CPU_VR5400 || (CPU) == CPU_VR5500)
 
 /* True if CPU has a ror instruction.  */
-#define CPU_HAS_ROR(CPU)	CPU_HAS_DROR (CPU)
+#define CPU_HAS_ROR(CPU)	CPU_HAS_DROR (CPU) || CPU_IS_ALLEGREX (CPU)
 
 /* True if mflo and mfhi can be immediately followed by instructions
    which write to the HI and LO registers.
@@ -8509,6 +8513,7 @@ do_msbd:
 
 		  if ((regno & 1) != 0
 		      && HAVE_32BIT_FPRS
+		      && ! CPU_IS_ALLEGREX (mips_opts.arch)
 		      && ! (strcmp (str, "mtc1") == 0
 			    || strcmp (str, "mfc1") == 0
 			    || strcmp (str, "lwc1") == 0
