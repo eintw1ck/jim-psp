@@ -1,20 +1,34 @@
-diff -burN orig.newlib-1.13.0/config.sub newlib-1.13.0/config.sub
---- orig.newlib-1.13.0/config.sub	2004-11-15 21:18:39.000000000 -0400
-+++ newlib-1.13.0/config.sub	2005-05-23 02:33:28.000000000 -0300
-@@ -665,6 +665,10 @@
+--- newlib-1.13.0.orig/config.sub	2004-11-15 17:18:39.000000000 -0800
++++ newlib-psp/config.sub	2005-06-03 13:48:01.000000000 -0700
+@@ -253,6 +253,7 @@
+ 	| mipsisa64sb1 | mipsisa64sb1el \
+ 	| mipsisa64sr71k | mipsisa64sr71kel \
+ 	| mipstx39 | mipstx39el \
++	| mipsallegrex | mipsallegrexel \
+ 	| mn10200 | mn10300 \
+ 	| msp430 \
+ 	| ns16k | ns32k \
+@@ -326,6 +327,7 @@
+ 	| mipsisa64sb1-* | mipsisa64sb1el-* \
+ 	| mipsisa64sr71k-* | mipsisa64sr71kel-* \
+ 	| mipstx39-* | mipstx39el-* \
++	| mipsallegrex-* | mipsallegrexel-* \
+ 	| mmix-* \
+ 	| msp430-* \
+ 	| none-* | np1-* | ns16k-* | ns32k-* \
+@@ -665,6 +667,10 @@
  		basic_machine=m68k-atari
  		os=-mint
  		;;
 +	psp)
-+		basic_machine=mipsel-unknown
++		basic_machine=mipsallegrexel-unknown
 +		os=-elf
 +		;;
  	mips3*-*)
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
-diff -burN orig.newlib-1.13.0/newlib/libc/ctype/ctype_.c newlib-1.13.0/newlib/libc/ctype/ctype_.c
---- orig.newlib-1.13.0/newlib/libc/ctype/ctype_.c	2003-05-13 06:46:47.000000000 -0300
-+++ newlib-1.13.0/newlib/libc/ctype/ctype_.c	2005-05-23 02:33:50.000000000 -0300
+--- newlib-1.13.0.orig/newlib/libc/ctype/ctype_.c	2003-05-13 02:46:47.000000000 -0700
++++ newlib-psp/newlib/libc/ctype/ctype_.c	2005-05-23 23:40:50.000000000 -0700
 @@ -88,7 +88,7 @@
  extern _CONST char __declspec(dllexport) _ctype_[1 + 256] __attribute__ ((alias ("_ctype_b+127")));
  _CONST char __declspec(dllexport) *__ctype_ptr = _ctype_b + 128;
