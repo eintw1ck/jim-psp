@@ -892,7 +892,8 @@ extern const struct mips_cpu_info *mips_tune_info;
 
 /* ISA has conditional trap instructions.  */
 #define ISA_HAS_COND_TRAP	(!ISA_MIPS1				\
-				 && !TARGET_MIPS16)
+				 && !TARGET_MIPS16			\
+				 && !TARGET_ALLEGREX) 
 
 /* ISA has integer multiply-accumulate instructions, madd and msub.  */
 #define ISA_HAS_MADD_MSUB       ((ISA_MIPS32				\
@@ -910,6 +911,7 @@ extern const struct mips_cpu_info *mips_tune_info;
 #define ISA_HAS_CLZ_CLO         ((ISA_MIPS32				\
                                   || ISA_MIPS32R2			\
                                   || ISA_MIPS64				\
+                                  || TARGET_ALLEGREX			\
                                  ) && !TARGET_MIPS16)
 
 /* ISA has double-word count leading zeroes/ones instruction (not
@@ -957,6 +959,7 @@ extern const struct mips_cpu_info *mips_tune_info;
                                      || TARGET_MIPS5400                 \
                                      || TARGET_MIPS5500                 \
                                      || TARGET_SR71K                    \
+                                     || TARGET_ALLEGREX                 \
                                      ))
 
 /* ISA has 64-bit rotate right instruction.  */
@@ -990,6 +993,7 @@ extern const struct mips_cpu_info *mips_tune_info;
 /* ISA includes the MIPS32r2 seb and seh instructions.  */
 #define ISA_HAS_SEB_SEH         (!TARGET_MIPS16                        \
                                  && (ISA_MIPS32R2                      \
+                                     || TARGET_ALLEGREX                \
                                      ))
 
 /* True if the result of a load is not available to the next instruction.
