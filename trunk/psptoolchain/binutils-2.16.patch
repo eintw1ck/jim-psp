@@ -133,8 +133,39 @@
  changequote(,)dnl
  	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
 --- binutils-2.16.orig/gas/config/tc-mips.c	2005-04-20 11:41:36.000000000 -0700
-+++ binutils-psp/gas/config/tc-mips.c	2005-05-25 01:41:56.000000000 -0700
-@@ -13743,6 +13743,8 @@
++++ binutils-psp/gas/config/tc-mips.c	2005-06-03 15:21:55.608876528 -0700
+@@ -7817,6 +7817,30 @@
+       case '%': USE_BITS (OP_MASK_VECALIGN,	OP_SH_VECALIGN); break;
+       case '[': break;
+       case ']': break;
++      case '?':
++	/* MRB TODO: Fix this for the VFPU extensions. */
++	switch (c = *p++)
++	  {
++	  case 'f':
++	    /* MRB HACK: Skip the next character. */
++	    p++;
++	    break;
++	  case 'd':
++	  case 'm':
++	  case 'n':
++	  case 's':
++	  case 't':
++	  case 'v':
++	  case 'x':
++	    /* MRB HACK: Skip the next two characters. */
++	    p++;
++	    p++;
++	    break;
++	  default: break;
++	  }
++	/* MRB HACK: Set all used bits. */
++	used_bits = 0xffffffff;
++	break;
+       default:
+ 	as_bad (_("internal: bad mips opcode (unknown operand type `%c'): %s %s"),
+ 		c, opc->name, opc->args);
+@@ -13743,6 +13767,8 @@
  
    /* MIPS II */
    { "r6000",          0,      ISA_MIPS2,      CPU_R6000 },
@@ -164,7 +195,7 @@
  /* Processor specific section indices.  These sections do not actually
     exist.  Symbols with a st_shndx field corresponding to one of these
 --- binutils-2.16.orig/include/opcode/mips.h	2005-03-03 03:58:10.000000000 -0800
-+++ binutils-psp/include/opcode/mips.h	2005-05-29 17:34:03.742960792 -0700
++++ binutils-psp/include/opcode/mips.h	2005-05-29 17:34:03.000000000 -0700
 @@ -148,6 +148,19 @@
  #define OP_MASK_EXTMSBD		0x1f	/* "ext" MSBD.  */
  #define OP_SH_EXTMSBD		11
@@ -211,7 +242,7 @@
  
  /* This is a list of macro expanded instructions.
 --- binutils-2.16.orig/opcodes/mips-dis.c	2005-03-03 03:49:50.000000000 -0800
-+++ binutils-psp/opcodes/mips-dis.c	2005-05-29 19:22:09.619667672 -0700
++++ binutils-psp/opcodes/mips-dis.c	2005-05-29 19:22:09.000000000 -0700
 @@ -140,6 +140,139 @@
    "c0_taglo",     "c0_taghi",     "c0_errorepc",  "c0_desave",
  };
