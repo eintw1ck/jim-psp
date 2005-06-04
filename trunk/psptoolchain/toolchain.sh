@@ -7,19 +7,19 @@
  ########################
 
   ## Main pspdev settings.
-  export PSPDEV="/usr/local/pspdev"
-  export PSPSDK="$PSPDEV/pspsdk"
-  export CVSROOT=":pserver:anonymous@cvs.ps2dev.org:/home/pspcvs"
-  export PATH="$PATH:$PSPDEV/bin:$PSPDEV/psp/bin:$PSPSDK/bin"
+  PSPDEV="/usr/local/pspdev"
+  PSPSDK="$PSPDEV/pspsdk"
+  CVSROOT=":pserver:anonymous@cvs.ps2dev.org:/home/pspcvs"
+  PATH="$PATH:$PSPDEV/bin:$PSPDEV/psp/bin:$PSPSDK/bin"
 
   ## Set the directories.
-  export SRCDIR="`pwd`"
-  export TMPDIR="/tmp/pspdev"
+  SRCDIR="`pwd`"
+  TMPDIR="/tmp/pspdev"
 
   ## Source code versions.
-  export BINUTILS="binutils-2.16"
-  export GCC="gcc-4.0.0"
-  export NEWLIB="newlib-1.13.0"
+  BINUTILS="binutils-2.16"
+  GCC="gcc-4.0.0"
+  NEWLIB="newlib-1.13.0"
 
   ## CVS configuration.
   # if [ -z "`cat ~/.cvspass | grep $CVSROOT`" ]; then
@@ -32,7 +32,7 @@
  ###########################
 
   ## Check for which make to use.
-  export MAKE="gmake"; $MAKE -v || { export MAKE="make"; }
+  MAKE="gmake"; $MAKE -v || { MAKE="make"; }
 
   ## Check for make.
   $MAKE -v || { echo "ERROR: Please make sure you have GNU 'make' installed."; exit; }
