@@ -1731,51 +1731,51 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA513BB12</NID>
-						<NAME>sceNand_driver_A513BB12</NAME>
+						<NAME>sceNandInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD305870E</NID>
-						<NAME>sceNand_driver_D305870E</NAME>
+						<NAME>sceNandEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x73A68408</NID>
-						<NAME>sceNand_driver_73A68408</NAME>
+						<NAME>sceNandSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0F9BBBBD</NID>
-						<NAME>sceNand_driver_0F9BBBBD</NAME>
+						<NAME>sceNandResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x84EE5D76</NID>
-						<NAME>sceNand_driver_84EE5D76</NAME>
+						<NAME>sceNandSetWriteProtect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAE4438C7</NID>
-						<NAME>sceNand_driver_AE4438C7</NAME>
+						<NAME>sceNandLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x41FFA822</NID>
-						<NAME>sceNand_driver_41FFA822</NAME>
+						<NAME>sceNandUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE41A11DE</NID>
-						<NAME>sceNand_driver_E41A11DE</NAME>
+						<NAME>sceNandReadStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7AF7B77A</NID>
-						<NAME>sceNand_driver_7AF7B77A</NAME>
+						<NAME>sceNandReset</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFCDF7610</NID>
-						<NAME>sceNand_driver_FCDF7610</NAME>
+						<NAME>sceNandReadId</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89BDCA08</NID>
-						<NAME>sceNand_driver_89BDCA08</NAME>
+						<NAME>sceNandReadPages</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8AF0AB9F</NID>
-						<NAME>sceNand_driver_8AF0AB9F</NAME>
+						<NAME>sceNandWritePages</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE05AE88D</NID>
@@ -1795,31 +1795,31 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x766756EF</NID>
-						<NAME>sceNand_driver_766756EF</NAME>
+						<NAME>sceNandReadAccess</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0ADC8686</NID>
-						<NAME>sceNand_driver_0ADC8686</NAME>
+						<NAME>sceNandWriteAccess</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB0A0022</NID>
-						<NAME>sceNand_driver_EB0A0022</NAME>
+						<NAME>sceNandEraseBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5182C394</NID>
-						<NAME>sceNand_driver_5182C394</NAME>
+						<NAME>sceNandReadExtraOnly</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEF55F193</NID>
-						<NAME>sceNand_driver_EF55F193</NAME>
+						<NAME>sceNandCalcEcc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x18B78661</NID>
-						<NAME>sceNand_driver_18B78661</NAME>
+						<NAME>sceNandVerifyEcc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB795D2ED</NID>
-						<NAME>sceNand_driver_B795D2ED</NAME>
+						<NAME>sceNandCollectEcc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD897C343</NID>
@@ -1827,39 +1827,39 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCE9843E6</NID>
-						<NAME>sceNand_driver_CE9843E6</NAME>
+						<NAME>sceNandGetPageSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB07C41D4</NID>
-						<NAME>sceNand_driver_B07C41D4</NAME>
+						<NAME>sceNandGetPagesPerBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC1376222</NID>
-						<NAME>sceNand_driver_C1376222</NAME>
+						<NAME>sceNandGetTotalBlocks</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x716CD2B2</NID>
-						<NAME>sceNand_driver_716CD2B2</NAME>
+						<NAME>sceNandWriteBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2B021E5</NID>
-						<NAME>sceNand_driver_B2B021E5</NAME>
+						<NAME>sceNandWriteBlockWithVerify</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC32EA051</NID>
-						<NAME>sceNand_driver_C32EA051</NAME>
+						<NAME>sceNandReadBlockWithRetry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5AC02755</NID>
-						<NAME>sceNand_driver_5AC02755</NAME>
+						<NAME>sceNandVerifyBlockWithRetry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8933B2E0</NID>
-						<NAME>sceNand_driver_8933B2E0</NAME>
+						<NAME>sceNandEraseBlockWithRetry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x01F09203</NID>
-						<NAME>sceNand_driver_01F09203</NAME>
+						<NAME>sceNandIsBadBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC29DA136</NID>
@@ -1879,11 +1879,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2674CFFE</NID>
-						<NAME>sceNand_driver_2674CFFE</NAME>
+						<NAME>sceNandEraseAllBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9B2AC433</NID>
-						<NAME>sceNand_driver_9B2AC433</NAME>
+						<NAME>sceNandTestBlock</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
