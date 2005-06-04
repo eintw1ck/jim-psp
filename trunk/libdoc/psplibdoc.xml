@@ -9719,55 +9719,55 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x476FD94A</NID>
-						<NAME>SysclibForKernel_476FD94A</NAME>
+						<NAME>strcat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89B79CB1</NID>
-						<NAME>SysclibForKernel_89B79CB1</NAME>
+						<NAME>strcspn</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1CD40E5</NID>
-						<NAME>SysclibForKernel_D1CD40E5</NAME>
+						<NAME>index</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x243665ED</NID>
-						<NAME>SysclibForKernel_243665ED</NAME>
+						<NAME>rindex</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x90C5573D</NID>
-						<NAME>SysclibForKernel_90C5573D</NAME>
+						<NAME>strnlen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0DFB7B6C</NID>
-						<NAME>SysclibForKernel_0DFB7B6C</NAME>
+						<NAME>strpbrk</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x62AE052F</NID>
-						<NAME>SysclibForKernel_62AE052F</NAME>
+						<NAME>strspn</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0D188658</NID>
-						<NAME>SysclibForKernel_0D188658</NAME>
+						<NAME>strstr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87F8D2DA</NID>
-						<NAME>SysclibForKernel_87F8D2DA</NAME>
+						<NAME>strtok</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1AB53A58</NID>
-						<NAME>SysclibForKernel_1AB53A58</NAME>
+						<NAME>strtok_r</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x47DD934D</NID>
-						<NAME>SysclibForKernel_47DD934D</NAME>
+						<NAME>strtol</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1D83F344</NID>
-						<NAME>SysclibForKernel_1D83F344</NAME>
+						<NAME>atob</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6A7900E1</NID>
-						<NAME>SysclibForKernel_6A7900E1</NAME>
+						<NAME>strtoul</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8AF6B8F8</NID>
@@ -9787,103 +9787,103 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC0AB8932</NID>
-						<NAME>SysclibForKernel_C0AB8932</NAME>
+						<NAME>strcmp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEC6F1CF2</NID>
-						<NAME>SysclibForKernel_EC6F1CF2</NAME>
+						<NAME>strcpy</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB1DC2AE8</NID>
-						<NAME>SysclibForKernel_B1DC2AE8</NAME>
+						<NAME>strchr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C0E0274</NID>
-						<NAME>SysclibForKernel_4C0E0274</NAME>
+						<NAME>strrchr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7AB35214</NID>
-						<NAME>SysclibForKernel_7AB35214</NAME>
+						<NAME>strncmp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB49A7697</NID>
-						<NAME>SysclibForKernel_B49A7697</NAME>
+						<NAME>strncpy</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x52DF196C</NID>
-						<NAME>SysclibForKernel_52DF196C</NAME>
+						<NAME>strlen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD3D1A3B9</NID>
-						<NAME>SysclibForKernel_D3D1A3B9</NAME>
+						<NAME>strncat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68A78817</NID>
-						<NAME>SysclibForKernel_68A78817</NAME>
+						<NAME>memchr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAB7592FF</NID>
-						<NAME>SysclibForKernel_AB7592FF</NAME>
+						<NAME>memcpy</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x10F3BB61</NID>
-						<NAME>SysclibForKernel_10F3BB61</NAME>
+						<NAME>memset</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x81D0D1F7</NID>
-						<NAME>SysclibForKernel_81D0D1F7</NAME>
+						<NAME>memcmp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA48D2592</NID>
-						<NAME>SysclibForKernel_A48D2592</NAME>
+						<NAME>memmove</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x097049BD</NID>
-						<NAME>SysclibForKernel_097049BD</NAME>
+						<NAME>bcopy</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7F8A6F23</NID>
-						<NAME>SysclibForKernel_7F8A6F23</NAME>
+						<NAME>bcmp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x86FEFCE9</NID>
-						<NAME>SysclibForKernel_86FEFCE9</NAME>
+						<NAME>bzero</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCE2F7487</NID>
-						<NAME>SysclibForKernel_CE2F7487</NAME>
+						<NAME>toupper</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3EC5BBF6</NID>
-						<NAME>SysclibForKernel_3EC5BBF6</NAME>
+						<NAME>tolower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x32C767F2</NID>
-						<NAME>SysclibForKernel_32C767F2</NAME>
+						<NAME>look_ctype_table</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD887CACD</NID>
-						<NAME>SysclibForKernel_D887CACD</NAME>
+						<NAME>get_ctype_table</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87C78FB6</NID>
-						<NAME>SysclibForKernel_87C78FB6</NAME>
+						<NAME>prnt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7661E728</NID>
-						<NAME>SysclibForKernel_7661E728</NAME>
+						<NAME>sprintf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x909C228B</NID>
-						<NAME>SysclibForKernel_909C228B</NAME>
+						<NAME>setjmp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x18FE80DB</NID>
-						<NAME>SysclibForKernel_18FE80DB</NAME>
+						<NAME>longjmp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1493EBD9</NID>
-						<NAME>SysclibForKernel_1493EBD9</NAME>
+						<NAME>wmemset</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
