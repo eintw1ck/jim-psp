@@ -133,8 +133,25 @@
  changequote(,)dnl
  	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
 --- binutils-2.16.orig/gas/config/tc-mips.c	2005-04-20 11:41:36.000000000 -0700
-+++ binutils-psp/gas/config/tc-mips.c	2005-06-03 15:21:55.608876528 -0700
-@@ -7817,6 +7817,30 @@
++++ binutils-psp/gas/config/tc-mips.c	2005-06-04 11:15:56.464153528 -0700
+@@ -365,11 +365,15 @@
+ #define CPU_HAS_MDMX(cpu)	(FALSE                 \
+ 				 )
+ 
++/* True if the given CPU belongs to the Allegrex family.  */
++#define CPU_IS_ALLEGREX(CPU)	((CPU) == CPU_ALLEGREX	\
++    				 )
++
+ /* True if CPU has a dror instruction.  */
+ #define CPU_HAS_DROR(CPU)	((CPU) == CPU_VR5400 || (CPU) == CPU_VR5500)
+ 
+ /* True if CPU has a ror instruction.  */
+-#define CPU_HAS_ROR(CPU)	CPU_HAS_DROR (CPU)
++#define CPU_HAS_ROR(CPU)	CPU_HAS_DROR (CPU) || CPU_IS_ALLEGREX (CPU)
+ 
+ /* True if mflo and mfhi can be immediately followed by instructions
+    which write to the HI and LO registers.
+@@ -7817,6 +7821,30 @@
        case '%': USE_BITS (OP_MASK_VECALIGN,	OP_SH_VECALIGN); break;
        case '[': break;
        case ']': break;
@@ -165,7 +182,15 @@
        default:
  	as_bad (_("internal: bad mips opcode (unknown operand type `%c'): %s %s"),
  		c, opc->name, opc->args);
-@@ -13743,6 +13767,8 @@
+@@ -8485,6 +8513,7 @@
+ 
+ 		  if ((regno & 1) != 0
+ 		      && HAVE_32BIT_FPRS
++		      && ! CPU_IS_ALLEGREX (mips_opts.arch)
+ 		      && ! (strcmp (str, "mtc1") == 0
+ 			    || strcmp (str, "mfc1") == 0
+ 			    || strcmp (str, "lwc1") == 0
+@@ -13743,6 +13772,8 @@
  
    /* MIPS II */
    { "r6000",          0,      ISA_MIPS2,      CPU_R6000 },
@@ -195,7 +220,7 @@
  /* Processor specific section indices.  These sections do not actually
     exist.  Symbols with a st_shndx field corresponding to one of these
 --- binutils-2.16.orig/include/opcode/mips.h	2005-03-03 03:58:10.000000000 -0800
-+++ binutils-psp/include/opcode/mips.h	2005-05-29 17:34:03.000000000 -0700
++++ binutils-psp/include/opcode/mips.h	2005-06-04 11:18:46.310332984 -0700
 @@ -148,6 +148,19 @@
  #define OP_MASK_EXTMSBD		0x1f	/* "ext" MSBD.  */
  #define OP_SH_EXTMSBD		11
