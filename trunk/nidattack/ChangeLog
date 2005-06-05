@@ -16,3 +16,10 @@
 
 	Fixed invalid values in searchtable, to remove some missed positive checks.
 	Added dic and hash size values at end for viewing with timers.
+	
+2005-06-05	Adresd
+
+	Major overhaul of findhash.
+	On a dic run of 74 words, the % time spent in it went from 18% to 6% (roughly).
+	This gave a time of 102 secs versus 91 secs for the new version.
+	Mainly making it more cache friendly.

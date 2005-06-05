@@ -1,5 +1,5 @@
 /*
-SHA1 dictionary attack program v1.0 (c) 2005 adresd
+SHA1 dictionary attack program v2.0 (c) 2005 adresd
 based on original by djhuevo
 
 hash searchtable and other mods by adresd
@@ -328,109 +328,116 @@ FILE *fout;
 // 32 bit value, 4 bytes
 // what we do, is pre-sort the hashlist, so they are in order AABBCCDD
 // Then index each byte into the list, hence cutting down the search space considerably
-typedef struct {
-	int number;
-	int next[256];
-} search_space_t2;
-typedef struct {
-	int number;
-	search_space_t2 next[256];
-} search_space_t;
-search_space_t searchtable[256];
+#define VER2_SIZE  256
+// midsearch should hopefully fit in cache, so will
+// help quite a lot with rejection testing.
+int midsearch[VER2_SIZE*VER2_SIZE];
+// bigsearch is really a cop out, will not fit in cache, but still quicker
+// than checking many elements.
+int bigsearch[VER2_SIZE*VER2_SIZE*VER2_SIZE];
 
 void fillsearchtable()
 {
-	unsigned int searchval;
-	int hashpos, hashpos2, hashpos3;
-	int count, count2, count3;
-	// Firstly Sort the hashlist, order AABBCCDD
-	int found = 1;
-	printf("Sorting Hashlist\n");
-	while (found == 1) {
-		found = 0;
-		for (count = 0; count < (hash_count - 1); count++) {
-			if (hash[count] > hash[count + 1]) {	// swap entries if wrong way around
-				unsigned int temp = hash[count + 1];
-				hash[count + 1] = hash[count];
-				hash[count] = temp;
-				found = 1;
-			}
-		}
-	}
-	printf("Building Search Tree\n");
-	// Now build the toplevel (first) byte
-	for (count = 0; count < 256; count++) {	// Find the first firstbyte in the hashlist that matches this value
-		hashpos = 0;
-		searchval = (count << 24);
-		while ((hash[hashpos++] & 0xff000000) < searchval);
-		hashpos--;
-		if ((hash[hashpos] & 0xff000000) == searchval) {	// Add this entry
-			searchtable[count].number = hashpos;
+  unsigned int searchval;
+  int hashpos,hashpos2,hashpos3;
+  int count,count2,count3;
+  // Firstly Sort the hashlist, order AABBCCDD
+  int found = 1;
+  printf("Sorting Hashlist\n");
+  while (found == 1)
+  {
+    found = 0;
+    for (count=0;count<(hash_count-1);count++)
+    {
+      if (hash[count] > hash[count+1])
+      { //  swap entries if wrong way around
+        unsigned int temp = hash[count+1];
+        hash[count+1] = hash[count];
+        hash[count] = temp;
+        found = 1;
+      }
+    }
+  }
+  printf("Clearing Search Tree\n");
+  // Really lazy slow clear array, but who cares only done once
+  for (count=0;count<(VER2_SIZE*VER2_SIZE);count++)
+  {
+    midsearch[count] = -1;
+  }
+  for (count=0;count<(VER2_SIZE*VER2_SIZE*VER2_SIZE);count++)
+  {
+    bigsearch[count] = -1;
+  }
+  printf("Building Search Tree\n");
+  // Now build the toplevel (first) byte
+  for (count=0;count<256;count++)
+  { //  Find the first firstbyte in the hashlist that matches this value
+    hashpos = 0;
+    searchval = (count<<24);
+    while ((hash[hashpos++]&0xff000000) < searchval);
+    hashpos--;
+    if ((hash[hashpos]&0xff000000) == searchval)
+    { 
+      // Now Search for a twobyte combo
+      for (count2=0;count2<256;count2++)
+      { //  Find the first secondbyte in the hashlist from this pos
+        hashpos2 = hashpos;
+        searchval = (count<<24) | (count2<<16);
+        while ((hash[hashpos2++]&0xffff0000) < searchval);
+        hashpos2--;
+        if ((hash[hashpos2]&0xffff0000) == searchval)
+        { //  Add this entry
+          midsearch[(count<<8)+count2] = hashpos2;
 
-			// Now Search for a twobyte combo
-			for (count2 = 0; count2 < 256; count2++) {	// Find the first secondbyte in the hashlist from this pos
-				hashpos2 = hashpos;
-				searchval = (count << 24) | (count2 << 16);
-				while ((hash[hashpos2++] & 0xffff0000) < searchval);
-				hashpos2--;
-				if ((hash[hashpos2] & 0xffff0000) == searchval) {	// Add this entry
-					searchtable[count].next[count2].number = hashpos2;
-
-					// Now Search for a threebyte combo
-					for (count3 = 0; count3 < 256; count3++) {	// Find the first thirdbyte in the hashlist from this pos
-						hashpos3 = hashpos2;
-						searchval = (count << 24) | (count2 << 16) | (count3 << 8);
-						while ((hash[hashpos3++] & 0xffffff00) < searchval);
-						hashpos3--;
-						if ((hash[hashpos3] & 0xffffff00) == searchval) {
-							searchtable[count].next[count2].next[count3] = hashpos3;
-						} else {	// Higher number
-							searchtable[count].next[count2].next[count3] = -1;
-						}
-					}
-				} else {		// Higher number
-					searchtable[count].next[count2].number = -1;
-					for (count3 = 0; count3 < 256; count3++)
-						searchtable[count].next[count2].next[count3] = -1;
-				}
-			}
-		} else {				// Higher number
-			searchtable[count].number = 0;
-			for (count2 = 0; count2 < 256; count2++) {
-				searchtable[count].next[count2].number = -1;
-				for (count3 = 0; count3 < 256; count3++)
-					searchtable[count].next[count2].next[count3] = -1;
-			}
-		}
-	}
+          // Now Search for a threebyte combo
+          for (count3=0;count3<256;count3++)
+          { //  Find the first thirdbyte in the hashlist from this pos
+            hashpos3 = hashpos2;
+            searchval = (count<<24) | (count2<<16) | (count3<<8);
+            while ((hash[hashpos3++]&0xffffff00) < searchval);
+            hashpos3--;
+            if ((hash[hashpos3]&0xffffff00) == searchval)
+            { //  Add this entry
+              bigsearch[(count<<16)+(count2<<8)+count3] = hashpos2;
+            }
+          }
+        }
+      }
+    }
+  }
 }
-
-int findhash(char *buffer, SHA1_CTX * context, int size, int prefixlen)
+int findhash(char *buffer, SHA1_CTX *context, int size,int prefixlen)
 {
-	int h;
-	unsigned int hashvalue = hashSHA1(buffer, context, size);
-	unsigned int index1 = (hashvalue & 0xff000000) >> 24;
-	unsigned int index2 = (hashvalue & 0x00ff0000) >> 16;
-	unsigned int index3 = (hashvalue & 0x0000ff00) >> 8;
-	int pos;
-	// Get threebyte position
-	pos = searchtable[index1].next[index2].next[index3];
-
-	if (pos != -1) {				// Found a position, so search from here
-		for (h = pos; h < hash_count; h++) {
-			if (hashvalue >= hash[h]) {
-				if (hashvalue == hash[h]) {	// If equal, found
-					printf("Found : %-40s 0x%08x\n", buffer, hashvalue);
-					fprintf(fout, "<FUNC><NAME>%s</NAME><NID>0x%08x</NID></FUNC>\n", buffer, hashvalue);
-					fflush(stdout);
-					fflush(fout);
-					return 1;
-				} else			// If not, reject as above
-					return 0;
-			}
-		}
-	}
-	return 0;
+  int h;
+  unsigned int hashvalue = hashSHA1(buffer, context, size);
+  unsigned int index1 = (hashvalue & 0xff000000)>>24;
+  unsigned int index2 = (hashvalue & 0x00ff0000)>>16;
+  unsigned int index3 = (hashvalue & 0x0000ff00)>>8;
+  int pos;
+  //  Not sure if this really helps or not, should do.. on early rejection
+  //  memory accesses if nothing else
+  pos = midsearch[(index1<<8)+index2];
+  if (pos != -1)
+  {
+    // Get threebyte position
+    pos = bigsearch[(index1<<16)+(index2<<8)+index3];
+    if (pos != -1)
+    { // Found a position, so search from here
+      for(h=pos; h<hash_count; h++) 
+      {
+        if (hashvalue >= hash[h])
+          if(hashvalue == hash[h]) 
+          { //  If equal, found
+            printf("Found : 0x%08x  %s  \n",hashvalue,buffer);
+            fprintf(fout,"<FUNC><NID>0x%08x</NID><NAME>%s</NAME></FUNC>\n",hashvalue,buffer);
+            return 1;
+          } 
+          else  //  If not, reject as above
+            return 0;
+      }
+    }
+  }
+  return 0;
 }
 
 int main(int argc, char **argv)
@@ -447,7 +454,7 @@ int main(int argc, char **argv)
 	char *prefix = "";
 	int prefixlen = 0;
 
-	printf("SHA1 hash dictionary attack v1.0 by adresd\n");
+	printf("SHA1 hash dictionary attack v2.0 by adresd\n");
 	printf("based on the original by djhuevo\n");
 
 	if (argc < 3) {
