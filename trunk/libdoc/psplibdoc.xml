@@ -567,15 +567,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5B37EB1D</NID>
-						<NAME>sceAudiocodec_5B37EB1D</NAME>
+						<NAME>sceAudiocodecInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x70A703F8</NID>
-						<NAME>sceAudiocodec_70A703F8</NAME>
+						<NAME>sceAudiocodecDecode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8ACA11D5</NID>
-						<NAME>sceAudiocodec_8ACA11D5</NAME>
+						<NAME>sceAudiocodecGetInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6CD2A861</NID>
@@ -3437,7 +3437,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA12A0514</NID>
-						<NAME>IoFileMgrForUser_A12A0514</NAME>
+						<NAME>sceIoSetAsyncCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x810C4BC3</NID>
@@ -3449,11 +3449,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x109F50BC</NID>
-						<NAME>IoFileMgrForUser_109F50BC</NAME>
+						<NAME>sceIoOpen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89AA9906</NID>
-						<NAME>IoFileMgrForUser_89AA9906</NAME>
+						<NAME>sceIoOpenAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6A638D83</NID>
@@ -3549,7 +3549,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2A628C1</NID>
-						<NAME>IoFileMgrForUser_B2A628C1</NAME>
+						<NAME>sceIoAssign</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D08A871</NID>
@@ -4658,11 +4658,16 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05572A5F</NID>
-						<NAME>LoadExecForUser_05572A5F</NAME>
+						<NAME>sceKernelExitGame</NAME>
+						<RETURNTYPE>void</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4AC57943</NID>
-						<NAME>LoadExecForUser_4AC57943</NAME>
+						<NAME>sceKernelRegisterExitCallback</NAME>
+						<RETURNTYPE>void</RETURNTYPE>
+						<ARGS>
+							<ARG><name>cbid</NAME><TYPE>u32</TYPE></ARG>
+						</ARGS>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -6003,7 +6008,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x977DE386</NID>
-						<NAME>ModuleMgrForUser_977DE386</NAME>
+						<NAME>sceKernelLoadMoule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x710F61B5</NID>
@@ -6015,11 +6020,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x50F0C1EC</NID>
-						<NAME>ModuleMgrForUser_50F0C1EC</NAME>
+						<NAME>sceKernelStartModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1FF982A</NID>
-						<NAME>ModuleMgrForUser_D1FF982A</NAME>
+						<NAME>sceKernelStopModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2E0911AA</NID>
@@ -6805,7 +6810,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC69BEBCE</NID>
-						<NAME>sceOpenPSID_C69BEBCE</NAME>
+						<NAME>sceOpenPSIDGetOpenPSID</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -6814,7 +6819,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC69BEBCE</NID>
-						<NAME>sceOpenPSID_driver_C69BEBCE</NAME>
+						<NAME>sceOpenPSIDGetOpenPSID</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7043,7 +7048,12 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x04B7766E</NID>
-						<NAME>scePower_04B7766E</NAME>
+						<NAME>scePowerRegisterCallback</NAME>
+						<RETURNTYPE>void</RETURNTYPE>
+						<ARGS>
+							<ARG><name>zero</name><TYPE>u32</TYPE></ARG>
+							<ARG><name>cbid</name><TYPE>u32</TYPE></ARG>
+						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDFA8BAF8</NID>
@@ -7370,11 +7380,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x39AF39A6</NID>
-						<NAME>sceNet_39AF39A6</NAME>
+						<NAME>sceNetInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x281928A9</NID>
-						<NAME>sceNet_281928A9</NAME>
+						<NAME>sceNetTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x50647530</NID>
@@ -7821,11 +7831,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE1D621D7</NID>
-						<NAME>sceNetAdhoc_E1D621D7</NAME>
+						<NAME>sceNetAdhocInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA62C6F57</NID>
-						<NAME>sceNetAdhoc_A62C6F57</NAME>
+						<NAME>sceNetAdhocTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7A662D6B</NID>
@@ -8271,15 +8281,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE26F226E</NID>
-						<NAME>sceNetAdhocctl_E26F226E</NAME>
+						<NAME>sceNetAdhocctlInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9D689E13</NID>
-						<NAME>sceNetAdhocctl_9D689E13</NAME>
+						<NAME>sceNetAdhocctlTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0AD043ED</NID>
-						<NAME>sceNetAdhocctl_0AD043ED</NAME>
+						<NAME>sceNetAdhocctlConnect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEC0635C1</NID>
@@ -8295,15 +8305,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x34401D65</NID>
-						<NAME>sceNetAdhocctl_34401D65</NAME>
+						<NAME>sceNetAdhocctlDisconnect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x20B317A0</NID>
-						<NAME>sceNetAdhocctl_20B317A0</NAME>
+						<NAME>sceNetAdhocctlAddHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6402490B</NID>
-						<NAME>sceNetAdhocctl_6402490B</NAME>
+						<NAME>sceNetAdhocctlDelHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x75ECD386</NID>
@@ -12029,7 +12039,12 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE81CAF8F</NID>
-						<NAME>ThreadManForUser_E81CAF8F</NAME>
+						<NAME>sceKernelCreateCallback</NAME>
+						<RETURNTYPE>u32</RETURNTYPE>
+						<ARGS>
+							<ARG><name>name</NAME><TYPE>const char *</TYPE></ARG>
+							<ARG><name>func</NAME><TYPE>void *</TYPE></ARG
+						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEDBA5844</NID>
@@ -12061,7 +12076,8 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82826F70</NID>
-						<NAME>ThreadManForUser_82826F70</NAME>
+						<NAME>KernelPollCallbacks</NAME>
+						<RETURNTYPE>void</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD59EAD2F</NID>
@@ -12105,19 +12121,42 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD6DA4BA1</NID>
-						<NAME>ThreadManForUser_D6DA4BA1</NAME>
+						<NAME>sceKernelCreateSema</NAME>
+						<RETURNTYPE>u32</RETURNTYPE>
+						<ARGS>
+							<ARG><name>name</NAME><TYPE>const char *</TYPE></ARG>
+							<ARG><NAME>flags</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>value</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>max</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><name>p</NAME><TYPE>const void *</TYPE></ARG>
+						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28B6489C</NID>
-						<NAME>ThreadManForUser_28B6489C</NAME>
+						<NAME>sceKernelDeleteSema</NAME>
+						<RETURNTYPE>u32</RETURNTYPE>
+						<ARGS>
+							<ARG><name>uid</name><TYPE>u32</TYPE></ARG>
+						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3F53E640</NID>
-						<NAME>ThreadManForUser_3F53E640</NAME>
+						<NAME>sceKernelSignalSema</NAME>
+						<RETURNTYPE>u32</RETURNTYPE>
+						<ARGS>
+							<ARG><name>uid</name><TYPE>u32</TYPE></ARG>
+							<ARG><name>count</name><TYPE>u32</TYPE></ARG>
+						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4E3A1105</NID>
-						<NAME>ThreadManForUser_4E3A1105</NAME>
+						<NAME>sceKernelWaitSema</NAME>
+						<RETURNTYPE>u32</RETURNTYPE>
+						<ARGS>
+							<ARG><name>uid</name><TYPE>u32</TYPE></ARG>
+							<ARG><name>count</name><TYPE>u32</TYPE></ARG>
+							<ARG><name>p</name><TYPE>void *</TYPE></ARG>
+						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D212BAC</NID>
@@ -12125,7 +12164,12 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x58B1F937</NID>
-						<NAME>ThreadManForUser_58B1F937</NAME>
+						<NAME>sceKernelPollSema</NAME>
+						<RETURNTYPE>u32</RETURNTYPE>
+						<ARGS>
+							<ARG><name>uid</name><TYPE>u32</TYPE></ARG>
+							<ARG><name>count</name><TYPE>u32</TYPE></ARG>
+						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8FFDF9A2</NID>
@@ -12469,7 +12513,8 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x293B45B8</NID>
-						<NAME>ThreadManForUser_293B45B8</NAME>
+						<NAME>sceKernelGetThreadId</NAME>
+						<RETURNTYPE>u32</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x94AA61EE</NID>
@@ -14006,11 +14051,13 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x092968F4</NID>
-						<NAME>Kernel_Library_092968F4</NAME>
+						<NAME>sceKernelCpuSuspendIntr</NAME>
+						<RETURNTYPE>u32</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5F10D406</NID>
-						<NAME>Kernel_Library_5F10D406</NAME>
+						<NAME>sceKernelCpuResumeIntr</NAME>
+						<RETURNTYPE>u32</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3B84732D</NID>
@@ -14774,23 +14821,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC01EC829</NID>
-						<NAME>sceVideocodec_C01EC829</NAME>
+						<NAME>sceVideocodecOpen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x17099F0A</NID>
-						<NAME>sceVideocodec_17099F0A</NAME>
+						<NAME>sceVideocodecInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDBA273FA</NID>
-						<NAME>sceVideocodec_DBA273FA</NAME>
+						<NAME>sceVideocodecDecode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA2F0564E</NID>
-						<NAME>sceVideocodec_A2F0564E</NAME>
+						<NAME>sceVideocodecStop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x307E6E1C</NID>
-						<NAME>sceVideocodec_307E6E1C</NAME>
+						<NAME>sceVideocodecDelete</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x745A7B7A</NID>
