@@ -4650,11 +4650,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBD2F1094</NID>
-						<NAME>LoadExecForUser_BD2F1094</NAME>
+						<NAME>sceKernelLoadExec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2AC9954B</NID>
-						<NAME>LoadExecForUser_2AC9954B</NAME>
+						<NAME>sceKernelExitGameWithStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05572A5F</NID>
@@ -4676,15 +4676,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBD2F1094</NID>
-						<NAME>LoadExecForKernel_BD2F1094</NAME>
+						<NAME>sceKernelLoadExec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2AC9954B</NID>
-						<NAME>LoadExecForKernel_2AC9954B</NAME>
+						<NAME>sceKernelExitGameWithStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05572A5F</NID>
-						<NAME>LoadExecForKernel_05572A5F</NAME>
+						<NAME>sceKernelExitGame</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAC085B9E</NID>
@@ -4720,7 +4720,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA3D5E142</NID>
-						<NAME>LoadExecForKernel_A3D5E142</NAME>
+						<NAME>sceKernelExitVSHVSH</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x62C459E1</NID>
@@ -4744,7 +4744,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4AC57943</NID>
-						<NAME>LoadExecForKernel_4AC57943</NAME>
+						<NAME>sceKernelRegisterExitCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD9739B89</NID>
@@ -4756,7 +4756,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x62A27008</NID>
-						<NAME>LoadExecForKernel_62A27008</NAME>
+						<NAME>sceKernelInvokeExitCallback</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -12135,7 +12135,7 @@
 						<NAME>sceKernelDeleteSema</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><NAME>uid</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>uid</NAME><TYPE>int</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
@@ -12143,7 +12143,7 @@
 						<NAME>sceKernelSignalSema</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><NAME>uid</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>uid</NAME><TYPE>int</TYPE></ARG>
 							<ARG><NAME>count</NAME><TYPE>u32</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
@@ -12152,7 +12152,7 @@
 						<NAME>sceKernelWaitSema</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><NAME>uid</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>uid</NAME><TYPE>int</TYPE></ARG>
 							<ARG><NAME>count</NAME><TYPE>u32</TYPE></ARG>
 							<ARG><NAME>p</NAME><TYPE>void *</TYPE></ARG>
 						</ARGS>
@@ -12166,7 +12166,7 @@
 						<NAME>sceKernelPollSema</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><NAME>uid</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>uid</NAME><TYPE>int</TYPE></ARG>
 							<ARG><NAME>count</NAME><TYPE>u32</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
