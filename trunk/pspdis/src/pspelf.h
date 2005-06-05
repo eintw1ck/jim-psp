@@ -116,9 +116,11 @@ typedef struct {
 // the .lib.ent section, and is referenced by
 // the module info
 typedef struct {
-    unsigned long l1; // 0x00000000 ?
-    unsigned long l2; // 0x80000000 ?
-    unsigned long l3; // 0x00010104 ?
+    const char *libname;	/* Library name. */
+    unsigned int flags;		/* Flags. */
+    unsigned char ent_len;	/* Number of DWORDs in this entry. The size of the entry is ent_len * 4. */
+    unsigned char var_ent_count; /* Number of variable entries following function entries. */
+    unsigned short func_ent_count; /* Number of function entries. */
     // addr of start of .rodata.sceResident, which has 4
     // longs (and one 0 long) before module name strings start,
     // which includes things like a ptr to _start
