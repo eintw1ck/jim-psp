@@ -4659,14 +4659,14 @@
 					<FUNCTION>
 						<NID>0x05572A5F</NID>
 						<NAME>sceKernelExitGame</NAME>
-						<RETURNTYPE>void</RETURNTYPE>
+						<RETURNTYPE>int</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4AC57943</NID>
 						<NAME>sceKernelRegisterExitCallback</NAME>
-						<RETURNTYPE>void</RETURNTYPE>
+						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>cbid</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><name>uid</NAME><TYPE>int</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 				</FUNCTIONS>
@@ -7049,10 +7049,10 @@
 					<FUNCTION>
 						<NID>0x04B7766E</NID>
 						<NAME>scePowerRegisterCallback</NAME>
-						<RETURNTYPE>void</RETURNTYPE>
+						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
 							<ARG><name>zero</name><TYPE>u32</TYPE></ARG>
-							<ARG><name>cbid</name><TYPE>u32</TYPE></ARG>
+							<ARG><name>uid</name><TYPE>int</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
@@ -12040,10 +12040,10 @@
 					<FUNCTION>
 						<NID>0xE81CAF8F</NID>
 						<NAME>sceKernelCreateCallback</NAME>
-						<RETURNTYPE>u32</RETURNTYPE>
+						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
 							<ARG><name>name</NAME><TYPE>const char *</TYPE></ARG>
-							<ARG><name>func</NAME><TYPE>void *</TYPE></ARG
+							<ARG><name>func</NAME><TYPE>void *</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
@@ -12076,8 +12076,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82826F70</NID>
-						<NAME>KernelPollCallbacks</NAME>
-						<RETURNTYPE>void</RETURNTYPE>
+						<NAME>ThreadManForUser_82826F70</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD59EAD2F</NID>
@@ -12122,7 +12121,7 @@
 					<FUNCTION>
 						<NID>0xD6DA4BA1</NID>
 						<NAME>sceKernelCreateSema</NAME>
-						<RETURNTYPE>u32</RETURNTYPE>
+						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
 							<ARG><name>name</NAME><TYPE>const char *</TYPE></ARG>
 							<ARG><NAME>flags</NAME><TYPE>u32</TYPE></ARG>
@@ -12134,26 +12133,26 @@
 					<FUNCTION>
 						<NID>0x28B6489C</NID>
 						<NAME>sceKernelDeleteSema</NAME>
-						<RETURNTYPE>u32</RETURNTYPE>
+						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>uid</name><TYPE>u32</TYPE></ARG>
+							<ARG><name>uid</name><TYPE>int</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3F53E640</NID>
 						<NAME>sceKernelSignalSema</NAME>
-						<RETURNTYPE>u32</RETURNTYPE>
+						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>uid</name><TYPE>u32</TYPE></ARG>
+							<ARG><name>uid</name><TYPE>int</TYPE></ARG>
 							<ARG><name>count</name><TYPE>u32</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4E3A1105</NID>
 						<NAME>sceKernelWaitSema</NAME>
-						<RETURNTYPE>u32</RETURNTYPE>
+						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>uid</name><TYPE>u32</TYPE></ARG>
+							<ARG><name>uid</name><TYPE>int</TYPE></ARG>
 							<ARG><name>count</name><TYPE>u32</TYPE></ARG>
 							<ARG><name>p</name><TYPE>void *</TYPE></ARG>
 						</ARGS>
@@ -12165,9 +12164,9 @@
 					<FUNCTION>
 						<NID>0x58B1F937</NID>
 						<NAME>sceKernelPollSema</NAME>
-						<RETURNTYPE>u32</RETURNTYPE>
+						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>uid</name><TYPE>u32</TYPE></ARG>
+							<ARG><name>uid</name><TYPE>int</TYPE></ARG>
 							<ARG><name>count</name><TYPE>u32</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
@@ -12514,7 +12513,7 @@
 					<FUNCTION>
 						<NID>0x293B45B8</NID>
 						<NAME>sceKernelGetThreadId</NAME>
-						<RETURNTYPE>u32</RETURNTYPE>
+						<RETURNTYPE>int</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x94AA61EE</NID>
