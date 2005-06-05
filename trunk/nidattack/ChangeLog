@@ -1,9 +1,21 @@
-2005-05-31  Marcus R. Brown  <mrbrown@0xd6.org>
+2005-06-05  Marcus R. Brown  <mrbrown@0xd6.org>
 
-	* src/main.c (main): Make the prefix optional.
-	Add fflush() after some file output for Win32 systems.
+	* src/main.c: Remvoe the original SHA1 source and replace it with
+	the version used in djhuevo's attack02 source.
 
-	Initial import of adresd's SHA1 hash dictionary attack source.
+	* ChangeLog: Rearrange this, as it was in the wrong order.
+
+2005-06-05	Adresd
+
+	Major overhaul of findhash.
+	On a dic run of 74 words, the % time spent in it went from 18% to 6% (roughly).
+	This gave a time of 102 secs versus 91 secs for the new version.
+	Mainly making it more cache friendly.
+
+2005-06-01	Adresd
+
+	Fixed invalid values in searchtable, to remove some missed positive checks.
+	Added dic and hash size values at end for viewing with timers.
 
 2005-05-31  Dan Peori <peori@oopo.net>
 
@@ -11,15 +23,10 @@
 	Fixed the &buffer problem in load_dictionary().
 	Updated the ChangeLog file.
 	Committed the ChangeLog file.
-	
-2005-06-01	Adresd
 
-	Fixed invalid values in searchtable, to remove some missed positive checks.
-	Added dic and hash size values at end for viewing with timers.
-	
-2005-06-05	Adresd
+2005-05-31  Marcus R. Brown  <mrbrown@0xd6.org>
 
-	Major overhaul of findhash.
-	On a dic run of 74 words, the % time spent in it went from 18% to 6% (roughly).
-	This gave a time of 102 secs versus 91 secs for the new version.
-	Mainly making it more cache friendly.
+	* src/main.c (main): Make the prefix optional.
+	Add fflush() after some file output for Win32 systems.
+
+	Initial import of adresd's SHA1 hash dictionary attack source.
