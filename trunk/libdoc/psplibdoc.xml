@@ -882,19 +882,19 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6A2774F3</NID>
-						<NAME>sceCtrl_6A2774F3</NAME>
+						<NAME>sceCtrlSetSamplingCycle</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x02BAAD91</NID>
-						<NAME>sceCtrl_02BAAD91</NAME>
+						<NAME>sceCtrlGetSamplingCycle</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1F4011E6</NID>
-						<NAME>sceCtrl_1F4011E6</NAME>
+						<NAME>sceCtrlSetSamplingMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDA6B76A1</NID>
-						<NAME>sceCtrl_DA6B76A1</NAME>
+						<NAME>sceCtrlGetSamplingMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A622550</NID>
@@ -943,7 +943,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3E65A0EA</NID>
-						<NAME>sceCtrl_driver_3E65A0EA</NAME>
+						<NAME>sceCtrlInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE03956E9</NID>
@@ -951,27 +951,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC3F607F3</NID>
-						<NAME>sceCtrl_driver_C3F607F3</NAME>
+						<NAME>sceCtrlSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC245B57B</NID>
-						<NAME>sceCtrl_driver_C245B57B</NAME>
+						<NAME>sceCtrlResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6A2774F3</NID>
-						<NAME>sceCtrl_driver_6A2774F3</NAME>
+						<NAME>sceCtrlSetSamplingCycle</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x02BAAD91</NID>
-						<NAME>sceCtrl_driver_02BAAD91</NAME>
+						<NAME>sceCtrlGetSamplingCycle</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1F4011E6</NID>
-						<NAME>sceCtrl_driver_1F4011E6</NAME>
+						<NAME>sceCtrlSetSamplingMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDA6B76A1</NID>
-						<NAME>sceCtrl_driver_DA6B76A1</NAME>
+						<NAME>sceCtrlGetSamplingMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A622550</NID>
@@ -2011,7 +2011,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x71FCD1D6</NID>
-						<NAME>sceGe_driver_71FCD1D6</NAME>
+						<NAME>sceGeInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9F2C2948</NID>
@@ -2019,7 +2019,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8F185DF7</NID>
-						<NAME>sceGe_driver_8F185DF7</NAME>
+						<NAME>sceGeEdramInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1F6752AD</NID>
@@ -2027,7 +2027,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE47E40E4</NID>
-						<NAME>sceGe_driver_E47E40E4</NAME>
+						<NAME>sceGeEdramGetAddr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB77905EA</NID>
@@ -2067,31 +2067,31 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE0D68148</NID>
-						<NAME>sceGe_driver_E0D68148</NAME>
+						<NAME>sceGeListUpdateStallAddr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x03444EB4</NID>
-						<NAME>sceGe_driver_03444EB4</NAME>
+						<NAME>sceGeListSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB287BD61</NID>
-						<NAME>sceGe_driver_B287BD61</NAME>
+						<NAME>sceGeDrawSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB448EC0D</NID>
-						<NAME>sceGe_driver_B448EC0D</NAME>
+						<NAME>sceGeBreak</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C06E472</NID>
-						<NAME>sceGe_driver_4C06E472</NAME>
+						<NAME>sceGeContinue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA4FC06A4</NID>
-						<NAME>sceGe_driver_A4FC06A4</NAME>
+						<NAME>sceGeSetCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05DB22CE</NID>
-						<NAME>sceGe_driver_05DB22CE</NAME>
+						<NAME>sceGeUnsetCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9DA4A75F</NID>
@@ -2112,7 +2112,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE47E40E4</NID>
-						<NAME>sceGe_user_E47E40E4</NAME>
+						<NAME>sceGeEdramGetAddr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB77905EA</NID>
@@ -2148,31 +2148,31 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE0D68148</NID>
-						<NAME>sceGe_user_E0D68148</NAME>
+						<NAME>sceGeListUpdateStallAddr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x03444EB4</NID>
-						<NAME>sceGe_user_03444EB4</NAME>
+						<NAME>sceGeListSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB287BD61</NID>
-						<NAME>sceGe_user_B287BD61</NAME>
+						<NAME>sceGeDrawSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB448EC0D</NID>
-						<NAME>sceGe_user_B448EC0D</NAME>
+						<NAME>sceGeBreak</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C06E472</NID>
-						<NAME>sceGe_user_4C06E472</NAME>
+						<NAME>sceGeContinue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA4FC06A4</NID>
-						<NAME>sceGe_user_A4FC06A4</NAME>
+						<NAME>sceGeSetCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05DB22CE</NID>
-						<NAME>sceGe_user_05DB22CE</NAME>
+						<NAME>sceGeUnsetCallback</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
