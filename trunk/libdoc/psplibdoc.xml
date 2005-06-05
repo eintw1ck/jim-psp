@@ -70,7 +70,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AA3FA39</NID>
-						<NAME>sceAta_driver_3AA3FA39</NAME>
+						<NAME>sceAtaSelectDevice</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xACCEE63F</NID>
@@ -4666,7 +4666,7 @@
 						<NAME>sceKernelRegisterExitCallback</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>uid</NAME><TYPE>int</TYPE></ARG>
+							<ARG><NAME>cbid</NAME><TYPE>u32</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 				</FUNCTIONS>
@@ -6928,11 +6928,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7F30B3B1</NID>
-						<NAME>scePower_7F30B3B1</NAME>
+						<NAME>scePowerIdleTimerEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x972CE941</NID>
-						<NAME>scePower_972CE941</NAME>
+						<NAME>scePowerIdleTimerDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27F3292C</NID>
@@ -7012,15 +7012,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD6D016EF</NID>
-						<NAME>scePower_D6D016EF</NAME>
+						<NAME>scePowerLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCA3D34C1</NID>
-						<NAME>scePower_CA3D34C1</NAME>
+						<NAME>scePowerUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB62C9CF</NID>
-						<NAME>scePower_DB62C9CF</NAME>
+						<NAME>scePowerCancelRequest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7FA406DD</NID>
@@ -7040,7 +7040,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3951AF53</NID>
-						<NAME>scePower_3951AF53</NAME>
+						<NAME>scePowerEncodeUBattery</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0074EF9B</NID>
@@ -7051,13 +7051,13 @@
 						<NAME>scePowerRegisterCallback</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>zero</name><TYPE>u32</TYPE></ARG>
-							<ARG><name>uid</name><TYPE>int</TYPE></ARG>
+							<ARG><NAME>zero</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>cbid</NAME><TYPE>u32</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDFA8BAF8</NID>
-						<NAME>scePower_DFA8BAF8</NAME>
+						<NAME>scePowerUnregisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB9D28DD</NID>
@@ -7106,7 +7106,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9CE06934</NID>
-						<NAME>scePower_driver_9CE06934</NAME>
+						<NAME>scePowerInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAD5BB433</NID>
@@ -7146,11 +7146,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7F30B3B1</NID>
-						<NAME>scePower_driver_7F30B3B1</NAME>
+						<NAME>scePowerIdleTimerEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x972CE941</NID>
-						<NAME>scePower_driver_972CE941</NAME>
+						<NAME>scePowerIdleTimerDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27F3292C</NID>
@@ -7238,19 +7238,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD6D016EF</NID>
-						<NAME>scePower_driver_D6D016EF</NAME>
+						<NAME>scePowerLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCA3D34C1</NID>
-						<NAME>scePower_driver_CA3D34C1</NAME>
+						<NAME>scePowerUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x79DB9421</NID>
-						<NAME>scePower_driver_79DB9421</NAME>
+						<NAME>scePowerRebootStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB62C9CF</NID>
-						<NAME>scePower_driver_DB62C9CF</NAME>
+						<NAME>scePowerCancelRequest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7FA406DD</NID>
@@ -7286,7 +7286,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDFA8BAF8</NID>
-						<NAME>scePower_driver_DFA8BAF8</NAME>
+						<NAME>scePowerUnregisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB9D28DD</NID>
@@ -10700,27 +10700,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEADB1BD7</NID>
-						<NAME>sceSuspendForKernel_EADB1BD7</NAME>
+						<NAME>sceKernelPowerLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB53B2147</NID>
-						<NAME>sceSuspendForKernel_B53B2147</NAME>
+						<NAME>sceKernelPowerLockForUser</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AEE7261</NID>
-						<NAME>sceSuspendForKernel_3AEE7261</NAME>
+						<NAME>sceKernelPowerUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7C928C7</NID>
-						<NAME>sceSuspendForKernel_C7C928C7</NAME>
+						<NAME>sceKernelPowerUnlockForUser</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x090CCB3F</NID>
-						<NAME>sceSuspendForKernel_090CCB3F</NAME>
+						<NAME>scePowerAsleepShutdownSharing</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x98A1D061</NID>
-						<NAME>sceSuspendForKernel_98A1D061</NAME>
+						<NAME>sceKernelPowerRebootStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91A77137</NID>
@@ -10753,15 +10753,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xEADB1BD7</NID>
-						<NAME>sceSuspendForUser_EADB1BD7</NAME>
+						<NAME>sceKernelPowerLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AEE7261</NID>
-						<NAME>sceSuspendForUser_3AEE7261</NAME>
+						<NAME>sceKernelPowerUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x090CCB3F</NID>
-						<NAME>sceSuspendForUser_090CCB3F</NAME>
+						<NAME>scePowerAsleepShutdownSharing</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -12042,8 +12042,8 @@
 						<NAME>sceKernelCreateCallback</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>name</NAME><TYPE>const char *</TYPE></ARG>
-							<ARG><name>func</NAME><TYPE>void *</TYPE></ARG>
+							<ARG><NAME>name</NAME><TYPE>const char *</TYPE></ARG>
+							<ARG><NAME>func</NAME><TYPE>void *</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
@@ -12123,11 +12123,11 @@
 						<NAME>sceKernelCreateSema</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>name</NAME><TYPE>const char *</TYPE></ARG>
+							<ARG><NAME>name</NAME><TYPE>const char *</TYPE></ARG>
 							<ARG><NAME>flags</NAME><TYPE>u32</TYPE></ARG>
 							<ARG><NAME>value</NAME><TYPE>u32</TYPE></ARG>
 							<ARG><NAME>max</NAME><TYPE>u32</TYPE></ARG>
-							<ARG><name>p</NAME><TYPE>const void *</TYPE></ARG>
+							<ARG><NAME>p</NAME><TYPE>const void *</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
@@ -12135,7 +12135,7 @@
 						<NAME>sceKernelDeleteSema</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>uid</name><TYPE>int</TYPE></ARG>
+							<ARG><NAME>uid</NAME><TYPE>u32</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
@@ -12143,8 +12143,8 @@
 						<NAME>sceKernelSignalSema</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>uid</name><TYPE>int</TYPE></ARG>
-							<ARG><name>count</name><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>uid</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>count</NAME><TYPE>u32</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
@@ -12152,9 +12152,9 @@
 						<NAME>sceKernelWaitSema</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>uid</name><TYPE>int</TYPE></ARG>
-							<ARG><name>count</name><TYPE>u32</TYPE></ARG>
-							<ARG><name>p</name><TYPE>void *</TYPE></ARG>
+							<ARG><NAME>uid</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>count</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>p</NAME><TYPE>void *</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
@@ -12166,8 +12166,8 @@
 						<NAME>sceKernelPollSema</NAME>
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
-							<ARG><name>uid</name><TYPE>int</TYPE></ARG>
-							<ARG><name>count</name><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>uid</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>count</NAME><TYPE>u32</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
