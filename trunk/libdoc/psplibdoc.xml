@@ -3417,23 +3417,23 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3251EA56</NID>
-						<NAME>IoFileMgrForUser_3251EA56</NAME>
+						<NAME>sceIoPollAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE23EEC33</NID>
-						<NAME>IoFileMgrForUser_E23EEC33</NAME>
+						<NAME>sceIoWaitAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x35DBD746</NID>
-						<NAME>IoFileMgrForUser_35DBD746</NAME>
+						<NAME>sceIoWaitAsyncCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCB05F8D6</NID>
-						<NAME>IoFileMgrForUser_CB05F8D6</NAME>
+						<NAME>sceIoGetAsyncStat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB293727F</NID>
-						<NAME>IoFileMgrForUser_B293727F</NAME>
+						<NAME>sceIoChangeAsyncPriority</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA12A0514</NID>
@@ -3441,11 +3441,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x810C4BC3</NID>
-						<NAME>IoFileMgrForUser_810C4BC3</NAME>
+						<NAME>sceIoClose</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFF5940B6</NID>
-						<NAME>IoFileMgrForUser_FF5940B6</NAME>
+						<NAME>sceIoCloseAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x109F50BC</NID>
@@ -3457,95 +3457,95 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6A638D83</NID>
-						<NAME>IoFileMgrForUser_6A638D83</NAME>
+						<NAME>sceIoRead</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA0B5A7C2</NID>
-						<NAME>IoFileMgrForUser_A0B5A7C2</NAME>
+						<NAME>sceIoReadAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42EC03AC</NID>
-						<NAME>IoFileMgrForUser_42EC03AC</NAME>
+						<NAME>sceIoWrite</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0FACAB19</NID>
-						<NAME>IoFileMgrForUser_0FACAB19</NAME>
+						<NAME>sceIoWriteAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27EB27B8</NID>
-						<NAME>IoFileMgrForUser_27EB27B8</NAME>
+						<NAME>sceIoLseek</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71B19E77</NID>
-						<NAME>IoFileMgrForUser_71B19E77</NAME>
+						<NAME>sceIoLseekAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68963324</NID>
-						<NAME>IoFileMgrForUser_68963324</NAME>
+						<NAME>sceIoLseek32</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1B385D8F</NID>
-						<NAME>IoFileMgrForUser_1B385D8F</NAME>
+						<NAME>sceIoLseek32Async</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x63632449</NID>
-						<NAME>IoFileMgrForUser_63632449</NAME>
+						<NAME>sceIoIoctl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE95A012B</NID>
-						<NAME>IoFileMgrForUser_E95A012B</NAME>
+						<NAME>sceIoIoctlAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB29DDF9C</NID>
-						<NAME>IoFileMgrForUser_B29DDF9C</NAME>
+						<NAME>sceIoDopen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE3EB004C</NID>
-						<NAME>IoFileMgrForUser_E3EB004C</NAME>
+						<NAME>sceIoDread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB092469</NID>
-						<NAME>IoFileMgrForUser_EB092469</NAME>
+						<NAME>sceIoDclose</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF27A9C51</NID>
-						<NAME>IoFileMgrForUser_F27A9C51</NAME>
+						<NAME>sceIoRemove</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x06A70004</NID>
-						<NAME>IoFileMgrForUser_06A70004</NAME>
+						<NAME>sceIoMkdir</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1117C65F</NID>
-						<NAME>IoFileMgrForUser_1117C65F</NAME>
+						<NAME>sceIoRmdir</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55F4717D</NID>
-						<NAME>IoFileMgrForUser_55F4717D</NAME>
+						<NAME>sceIoChdir</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAB96437F</NID>
-						<NAME>IoFileMgrForUser_AB96437F</NAME>
+						<NAME>sceIoSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xACE946E8</NID>
-						<NAME>IoFileMgrForUser_ACE946E8</NAME>
+						<NAME>sceIoGetstat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB8A740F4</NID>
-						<NAME>IoFileMgrForUser_B8A740F4</NAME>
+						<NAME>sceIoChstat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x779103A0</NID>
-						<NAME>IoFileMgrForUser_779103A0</NAME>
+						<NAME>sceIoRename</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x54F5FB11</NID>
-						<NAME>IoFileMgrForUser_54F5FB11</NAME>
+						<NAME>sceIoDevctl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x08BD7374</NID>
-						<NAME>IoFileMgrForUser_08BD7374</NAME>
+						<NAME>sceIoGetDevType</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2A628C1</NID>
@@ -3553,11 +3553,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D08A871</NID>
-						<NAME>IoFileMgrForUser_6D08A871</NAME>
+						<NAME>sceIoUnassign</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE8BC6571</NID>
-						<NAME>IoFileMgrForUser_E8BC6571</NAME>
+						<NAME>sceIoCancel</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -3566,171 +3566,171 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3251EA56</NID>
-						<NAME>IoFileMgrForKernel_3251EA56</NAME>
+						<NAME>sceIoPollAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE23EEC33</NID>
-						<NAME>IoFileMgrForKernel_E23EEC33</NAME>
+						<NAME>sceIoWaitAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x35DBD746</NID>
-						<NAME>IoFileMgrForKernel_35DBD746</NAME>
+						<NAME>sceIoWaitAsyncCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCB05F8D6</NID>
-						<NAME>IoFileMgrForKernel_CB05F8D6</NAME>
+						<NAME>sceIoGetAsyncStat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB293727F</NID>
-						<NAME>IoFileMgrForKernel_B293727F</NAME>
+						<NAME>sceIoChangeAsyncPriority</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA12A0514</NID>
-						<NAME>IoFileMgrForKernel_A12A0514</NAME>
+						<NAME>sceIoSetAsyncCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x810C4BC3</NID>
-						<NAME>IoFileMgrForKernel_810C4BC3</NAME>
+						<NAME>sceIoClose</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFF5940B6</NID>
-						<NAME>IoFileMgrForKernel_FF5940B6</NAME>
+						<NAME>sceIoCloseAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA905B705</NID>
-						<NAME>IoFileMgrForKernel_A905B705</NAME>
+						<NAME>sceIoCloseAll</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x109F50BC</NID>
-						<NAME>IoFileMgrForKernel_109F50BC</NAME>
+						<NAME>sceIoOpen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89AA9906</NID>
-						<NAME>IoFileMgrForKernel_89AA9906</NAME>
+						<NAME>sceIoOpenAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3C54E908</NID>
-						<NAME>IoFileMgrForKernel_3C54E908</NAME>
+						<NAME>sceIoReopen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6A638D83</NID>
-						<NAME>IoFileMgrForKernel_6A638D83</NAME>
+						<NAME>sceIoRead</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA0B5A7C2</NID>
-						<NAME>IoFileMgrForKernel_A0B5A7C2</NAME>
+						<NAME>sceIoReadAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42EC03AC</NID>
-						<NAME>IoFileMgrForKernel_42EC03AC</NAME>
+						<NAME>sceIoWrite</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0FACAB19</NID>
-						<NAME>IoFileMgrForKernel_0FACAB19</NAME>
+						<NAME>sceIoWriteAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27EB27B8</NID>
-						<NAME>IoFileMgrForKernel_27EB27B8</NAME>
+						<NAME>sceIoLseek</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71B19E77</NID>
-						<NAME>IoFileMgrForKernel_71B19E77</NAME>
+						<NAME>sceIoLseekAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68963324</NID>
-						<NAME>IoFileMgrForKernel_68963324</NAME>
+						<NAME>sceIoLseek32</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1B385D8F</NID>
-						<NAME>IoFileMgrForKernel_1B385D8F</NAME>
+						<NAME>sceIoLseek32Async</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x63632449</NID>
-						<NAME>IoFileMgrForKernel_63632449</NAME>
+						<NAME>sceIoIoctl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE95A012B</NID>
-						<NAME>IoFileMgrForKernel_E95A012B</NAME>
+						<NAME>sceIoIoctlAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB29DDF9C</NID>
-						<NAME>IoFileMgrForKernel_B29DDF9C</NAME>
+						<NAME>sceIoDopen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE3EB004C</NID>
-						<NAME>IoFileMgrForKernel_E3EB004C</NAME>
+						<NAME>sceIoDread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB092469</NID>
-						<NAME>IoFileMgrForKernel_EB092469</NAME>
+						<NAME>sceIoDclose</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF27A9C51</NID>
-						<NAME>IoFileMgrForKernel_F27A9C51</NAME>
+						<NAME>sceIoRemove</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x06A70004</NID>
-						<NAME>IoFileMgrForKernel_06A70004</NAME>
+						<NAME>sceIoMkdir</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1117C65F</NID>
-						<NAME>IoFileMgrForKernel_1117C65F</NAME>
+						<NAME>sceIoRmdir</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55F4717D</NID>
-						<NAME>IoFileMgrForKernel_55F4717D</NAME>
+						<NAME>sceIoChdir</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAB96437F</NID>
-						<NAME>IoFileMgrForKernel_AB96437F</NAME>
+						<NAME>sceIoSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xACE946E8</NID>
-						<NAME>IoFileMgrForKernel_ACE946E8</NAME>
+						<NAME>sceIoGetstat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB8A740F4</NID>
-						<NAME>IoFileMgrForKernel_B8A740F4</NAME>
+						<NAME>sceIoChstat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x779103A0</NID>
-						<NAME>IoFileMgrForKernel_779103A0</NAME>
+						<NAME>sceIoRename</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x54F5FB11</NID>
-						<NAME>IoFileMgrForKernel_54F5FB11</NAME>
+						<NAME>sceIoDevctl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x08BD7374</NID>
-						<NAME>IoFileMgrForKernel_08BD7374</NAME>
+						<NAME>sceIoGetDevType</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2A628C1</NID>
-						<NAME>IoFileMgrForKernel_B2A628C1</NAME>
+						<NAME>sceIoAssign</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D08A871</NID>
-						<NAME>IoFileMgrForKernel_6D08A871</NAME>
+						<NAME>sceIoUnassign</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x411106BA</NID>
-						<NAME>IoFileMgrForKernel_411106BA</NAME>
+						<NAME>sceIoGetThreadCwd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCB0A151F</NID>
-						<NAME>IoFileMgrForKernel_CB0A151F</NAME>
+						<NAME>sceIoChangeThreadCwd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE8BC6571</NID>
-						<NAME>IoFileMgrForKernel_E8BC6571</NAME>
+						<NAME>sceIoCancel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8E982A74</NID>
-						<NAME>IoFileMgrForKernel_8E982A74</NAME>
+						<NAME>sceIoAddDrv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7F35804</NID>
-						<NAME>IoFileMgrForKernel_C7F35804</NAME>
+						<NAME>sceIoDelDrv</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
