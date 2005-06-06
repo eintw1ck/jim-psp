@@ -630,7 +630,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6216FF5D</NID>
-						<NAME>sceBLK_driver_6216FF5D</NAME>
+						<NAME>sceBLKInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x06CD0A03</NID>
@@ -642,7 +642,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x39150835</NID>
-						<NAME>sceBLK_driver_39150835</NAME>
+						<NAME>sceBLKStop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x550511CE</NID>
@@ -734,11 +734,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x29160F5D</NID>
-						<NAME>sceClockgen_driver_29160F5D</NAME>
+						<NAME>sceClockgenInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x36F9B49D</NID>
-						<NAME>sceClockgen_driver_36F9B49D</NAME>
+						<NAME>sceClockgenEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x32C8CA86</NID>
