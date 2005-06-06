@@ -249,10 +249,19 @@ void fillsearchtable()
 int findhash(char *buffer, int size)
 {
   int h;
-  unsigned int hashvalue = fastSHA1(buffer, size);
-  unsigned int index1 = (hashvalue & 0xff000000)>>24;
-  unsigned int index2 = (hashvalue & 0x00ff0000)>>16;
-  unsigned int index3 = (hashvalue & 0x0000ff00)>>8;
+  unsigned int hashvalue;
+  unsigned int index1;
+  unsigned int index2;
+  unsigned int index3;
+  //fastSHA1 doesn't support strings larger than 63 bytes
+  //and chances are unlikely that function names are that
+  //long anyway so reject them before doing processing
+  if (size > 63)
+  	return 0;
+  hashvalue = fastSHA1(buffer, size);
+  index1 = (hashvalue & 0xff000000)>>24;
+  index2 = (hashvalue & 0x00ff0000)>>16;
+  index3 = (hashvalue & 0x0000ff00)>>8;
   int pos;
   //  Not sure if this really helps or not, should do.. on early rejection
   //  memory accesses if nothing else
