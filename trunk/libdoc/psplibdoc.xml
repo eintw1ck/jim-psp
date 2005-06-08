@@ -4748,11 +4748,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD9739B89</NID>
-						<NAME>LoadExecForKernel_D9739B89</NAME>
+						<NAME>sceKernelUnregisterExitCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x659188E1</NID>
-						<NAME>LoadExecForKernel_659188E1</NAME>
+						<NAME>sceKernelCheckExitCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x62A27008</NID>
@@ -6920,7 +6920,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEFD3C963</NID>
-						<NAME>scePower_EFD3C963</NAME>
+						<NAME>scePowerTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEDC13FE5</NID>
@@ -6948,15 +6948,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87440F5E</NID>
-						<NAME>scePower_87440F5E</NAME>
+						<NAME>scePowerIsPowerOnline</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0AFD0D8B</NID>
-						<NAME>scePower_0AFD0D8B</NAME>
+						<NAME>scePowerIsBatteryExist</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1E490401</NID>
-						<NAME>scePower_1E490401</NAME>
+						<NAME>scePowerIsBatteryCharging</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB4432BC8</NID>
@@ -6964,7 +6964,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD3075926</NID>
-						<NAME>scePower_D3075926</NAME>
+						<NAME>scePowerIsLowBattery</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x78A1A796</NID>
@@ -6980,11 +6980,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2085D15D</NID>
-						<NAME>scePower_2085D15D</NAME>
+						<NAME>scePowerGetBatteryLifePercent</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8EFB3FA2</NID>
-						<NAME>scePower_8EFB3FA2</NAME>
+						<NAME>scePowerGetBatteryLifeTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28E12023</NID>
@@ -7065,19 +7065,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x843FBF43</NID>
-						<NAME>scePower_843FBF43</NAME>
+						<NAME>scePowerSetCpuClockFrequency</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB8D7B3FB</NID>
-						<NAME>scePower_B8D7B3FB</NAME>
+						<NAME>scePowerSetBusClockFrequency</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFEE03A2F</NID>
-						<NAME>scePower_FEE03A2F</NAME>
+						<NAME>scePowerGetCpuClockFrequency</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x478FE6F5</NID>
-						<NAME>scePower_478FE6F5</NAME>
+						<NAME>scePowerGetBusClockFrequency</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFDB5BFE9</NID>
@@ -7097,7 +7097,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x737486F2</NID>
-						<NAME>scePower_737486F2</NAME>
+						<NAME>scePowerSetClockFrequency</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7134,7 +7134,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEFD3C963</NID>
-						<NAME>scePower_driver_EFD3C963</NAME>
+						<NAME>scePowerTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEDC13FE5</NID>
@@ -7174,15 +7174,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87440F5E</NID>
-						<NAME>scePower_driver_87440F5E</NAME>
+						<NAME>scePowerIsPowerOnline</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0AFD0D8B</NID>
-						<NAME>scePower_driver_0AFD0D8B</NAME>
+						<NAME>scePowerIsBatteryExist</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1E490401</NID>
-						<NAME>scePower_driver_1E490401</NAME>
+						<NAME>scePowerIsBatteryCharging</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB4432BC8</NID>
@@ -7190,7 +7190,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD3075926</NID>
-						<NAME>scePower_driver_D3075926</NAME>
+						<NAME>scePowerIsLowBattery</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x78A1A796</NID>
@@ -7206,11 +7206,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2085D15D</NID>
-						<NAME>scePower_driver_2085D15D</NAME>
+						<NAME>scePowerGetBatteryLifePercent</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8EFB3FA2</NID>
-						<NAME>scePower_driver_8EFB3FA2</NAME>
+						<NAME>scePowerGetBatteryLifeTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28E12023</NID>
@@ -7282,7 +7282,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x04B7766E</NID>
-						<NAME>scePower_driver_04B7766E</NAME>
+						<NAME>scePowerRegisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDFA8BAF8</NID>
@@ -7306,19 +7306,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x843FBF43</NID>
-						<NAME>scePower_driver_843FBF43</NAME>
+						<NAME>scePowerSetCpuClockFrequency</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB8D7B3FB</NID>
-						<NAME>scePower_driver_B8D7B3FB</NAME>
+						<NAME>scePowerSetBusClockFrequency</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFEE03A2F</NID>
-						<NAME>scePower_driver_FEE03A2F</NAME>
+						<NAME>scePowerGetCpuClockFrequency</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x478FE6F5</NID>
-						<NAME>scePower_driver_478FE6F5</NAME>
+						<NAME>scePowerGetBusClockFrequency</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFDB5BFE9</NID>
@@ -7338,7 +7338,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x737486F2</NID>
-						<NAME>scePower_driver_737486F2</NAME>
+						<NAME>scePowerSetClockFrequency</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE0B7A95D</NID>
@@ -9598,63 +9598,63 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x2CCF071A</NID>
-						<NAME>StdioForKernel_2CCF071A</NAME>
+						<NAME>fdprintf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCAB439DF</NID>
-						<NAME>StdioForKernel_CAB439DF</NAME>
+						<NAME>printf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4F78930A</NID>
-						<NAME>StdioForKernel_4F78930A</NAME>
+						<NAME>fdputc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD768752A</NID>
-						<NAME>StdioForKernel_D768752A</NAME>
+						<NAME>putchar</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x36B23B8B</NID>
-						<NAME>StdioForKernel_36B23B8B</NAME>
+						<NAME>fdputs</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD97C8CB9</NID>
-						<NAME>StdioForKernel_D97C8CB9</NAME>
+						<NAME>puts</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD2B2A2A7</NID>
-						<NAME>StdioForKernel_D2B2A2A7</NAME>
+						<NAME>fdgetc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7E338487</NID>
-						<NAME>StdioForKernel_7E338487</NAME>
+						<NAME>getchar</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x11A5127A</NID>
-						<NAME>StdioForKernel_11A5127A</NAME>
+						<NAME>fdgets</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBFF7E760</NID>
-						<NAME>StdioForKernel_BFF7E760</NAME>
+						<NAME>gets</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x172D316E</NID>
-						<NAME>StdioForKernel_172D316E</NAME>
+						<NAME>sceKernelStdin</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA6BAB2E9</NID>
-						<NAME>StdioForKernel_A6BAB2E9</NAME>
+						<NAME>sceKernelStdout</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF78BA90A</NID>
-						<NAME>StdioForKernel_F78BA90A</NAME>
+						<NAME>sceKernelStderr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x98220F3E</NID>
-						<NAME>StdioForKernel_98220F3E</NAME>
+						<NAME>sceKernelStdoutReopen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFB5380C5</NID>
-						<NAME>StdioForKernel_FB5380C5</NAME>
+						<NAME>sceKernelStderrReopen</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -9663,39 +9663,39 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3054D478</NID>
-						<NAME>StdioForUser_3054D478</NAME>
+						<NAME>sceKernelStdioRead</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0CBB0571</NID>
-						<NAME>StdioForUser_0CBB0571</NAME>
+						<NAME>sceKernelStdioLseek</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA46785C9</NID>
-						<NAME>StdioForUser_A46785C9</NAME>
+						<NAME>sceKernelStdioSendChar</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA3B931DB</NID>
-						<NAME>StdioForUser_A3B931DB</NAME>
+						<NAME>sceKernelStdioWrite</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9D061C19</NID>
-						<NAME>StdioForUser_9D061C19</NAME>
+						<NAME>sceKernelStdioClose</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x924ABA61</NID>
-						<NAME>StdioForUser_924ABA61</NAME>
+						<NAME>sceKernelStdioOpen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x172D316E</NID>
-						<NAME>StdioForUser_172D316E</NAME>
+						<NAME>sceKernelStdin</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA6BAB2E9</NID>
-						<NAME>StdioForUser_A6BAB2E9</NAME>
+						<NAME>sceKernelStdout</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF78BA90A</NID>
-						<NAME>StdioForUser_F78BA90A</NAME>
+						<NAME>sceKernelStderr</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -10770,15 +10770,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE7A3874D</NID>
-						<NAME>KDebugForKernel_E7A3874D</NAME>
+						<NAME>sceKernelRegisterAssertHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2FF4E9F9</NID>
-						<NAME>KDebugForKernel_2FF4E9F9</NAME>
+						<NAME>sceKernelAssert</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9B868276</NID>
-						<NAME>KDebugForKernel_9B868276</NAME>
+						<NAME>sceKernelGetDebugPutchar</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE146606D</NID>
@@ -10790,23 +10790,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x84F370BC</NID>
-						<NAME>KDebugForKernel_84F370BC</NAME>
+						<NAME>Kprintf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5CE9838B</NID>
-						<NAME>KDebugForKernel_5CE9838B</NAME>
+						<NAME>sceKernelDebugWrite</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x66253C4E</NID>
-						<NAME>KDebugForKernel_66253C4E</NAME>
+						<NAME>sceKernelRegisterDebugWrite</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDBB5597F</NID>
-						<NAME>KDebugForKernel_DBB5597F</NAME>
+						<NAME>sceKernelDebugRead</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE6554FDA</NID>
-						<NAME>KDebugForKernel_E6554FDA</NAME>
+						<NAME>sceKernelRegisterDebugRead</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB9C643C9</NID>
