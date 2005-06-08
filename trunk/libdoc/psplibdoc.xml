@@ -7052,7 +7052,7 @@
 						<RETURNTYPE>int</RETURNTYPE>
 						<ARGS>
 							<ARG><NAME>zero</NAME><TYPE>u32</TYPE></ARG>
-							<ARG><NAME>cbid</NAME><TYPE>u32</TYPE></ARG>
+							<ARG><NAME>uid</NAME><TYPE>int</TYPE></ARG>
 						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
@@ -9955,7 +9955,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF281805D</NID>
-						<NAME>sceSysconDataSysPhysicalPage</NAME>
+						<NAME>sceSyscon_driver_F281805D</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA068B3D0</NID>
@@ -10457,7 +10457,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA2A65F0E</NID>
-						<NAME>SysMemForKernel_A2A65F0E</NAME>
+						<NAME>sceKernelFillFreeBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x237DBD4F</NID>
@@ -10473,7 +10473,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5EBE73DE</NID>
-						<NAME>SysMemForKernel_5EBE73DE</NAME>
+						<NAME>sceKernelJointMemoryBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x915EF4AC</NID>
@@ -10497,7 +10497,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9D9A5BA1</NID>
-						<NAME>SysMemForKernel_9D9A5BA1</NAME>
+						<NAME>sceKernelGetBlockHeadAddr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2F3B7611</NID>
@@ -10505,7 +10505,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6C1DCD41</NID>
-						<NAME>SysMemForKernel_6C1DCD41</NAME>
+						<NAME>sceKernelCallUIDFunction</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5367923C</NID>
@@ -10517,7 +10517,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6CD838EC</NID>
-						<NAME>SysMemForKernel_6CD838EC</NAME>
+						<NAME>sceKernelLookupUIDFunction</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAD09C397</NID>
@@ -10525,15 +10525,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFEFC8666</NID>
-						<NAME>SysMemForKernel_FEFC8666</NAME>
+						<NAME>sceKernelCreateUIDtype</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1BAB054</NID>
-						<NAME>SysMemForKernel_D1BAB054</NAME>
+						<NAME>sceKernelDeleteUIDtype</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1C221A08</NID>
-						<NAME>SysMemForKernel_1C221A08</NAME>
+						<NAME>sceKernelGetUIDname</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2E3402CC</NID>
@@ -10541,7 +10541,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x39357F07</NID>
-						<NAME>SysMemForKernel_39357F07</NAME>
+						<NAME>sceKernelGetUIDtype</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89A74008</NID>
@@ -10569,7 +10569,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDFAEBD5B</NID>
-						<NAME>SysMemForKernel_DFAEBD5B</NAME>
+						<NAME>sceKernelIsHold</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7BE95FA0</NID>
@@ -10581,7 +10581,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBD5941B4</NID>
-						<NAME>SysMemForKernel_BD5941B4</NAME>
+						<NAME>sceKernelSysmemIsValidAccess</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x80F25772</NID>
@@ -10601,7 +10601,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x621037F5</NID>
-						<NAME>SysMemForKernel_621037F5</NAME>
+						<NAME>sceKernelSysMemDumpTail</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE400FDB0</NID>
@@ -10658,7 +10658,8 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9D9A5BA1</NID>
-						<NAME>SysMemUserForUser_9D9A5BA1</NAME>
+						<NAME>sceKernelGetBlockHeadAddr</NAME>
+						<FUNCNAME>sceKernelGetBlockHeadAddrForUser</FUNCNAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3FC9AE6A</NID>
@@ -10671,7 +10672,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xAEB300AE</NID>
-						<NAME>sceSysEventForKernel_AEB300AE</NAME>
+						<NAME>sceKernelIsRegisterSysEventHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCD9E4BB5</NID>
@@ -10687,7 +10688,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68D55505</NID>
-						<NAME>sceSysEventForKernel_68D55505</NAME>
+						<NAME>sceKernelReferSysEventHandler</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -10696,7 +10697,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBDE686CD</NID>
-						<NAME>sceSuspendForKernel_BDE686CD</NAME>
+						<NAME>sceKernelRegisterPowerHandlers</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEADB1BD7</NID>
@@ -10716,7 +10717,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x090CCB3F</NID>
-						<NAME>scePowerAsleepShutdownSharing</NAME>
+						<NAME>sceKernelPowerTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x98A1D061</NID>
@@ -10724,11 +10725,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91A77137</NID>
-						<NAME>sceSuspendForKernel_91A77137</NAME>
+						<NAME>sceKernelRegisterSuspendHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB43D1A8C</NID>
-						<NAME>sceSuspendForKernel_B43D1A8C</NAME>
+						<NAME>sceKernelRegisterResumeHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x67B59042</NID>
@@ -10740,11 +10741,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8F58B1EC</NID>
-						<NAME>sceSuspendForKernel_8F58B1EC</NAME>
+						<NAME>sceKernelDispatchSuspendHandlers</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0AB0C6F3</NID>
-						<NAME>sceSuspendForKernel_0AB0C6F3</NAME>
+						<NAME>sceKernelDispatchResumeHandlers</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -10754,14 +10755,16 @@
 					<FUNCTION>
 						<NID>0xEADB1BD7</NID>
 						<NAME>sceKernelPowerLock</NAME>
+						<FUNCNAME>sceKernelPowerLockForUser</FUNCNAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AEE7261</NID>
 						<NAME>sceKernelPowerUnlock</NAME>
+						<FUNCNAME>sceKernelPowerUnlockForUser</FUNCNAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x090CCB3F</NID>
-						<NAME>scePowerAsleepShutdownSharing</NAME>
+						<NAME>sceKernelPowerTick</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -10782,11 +10785,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE146606D</NID>
-						<NAME>KDebugForKernel_E146606D</NAME>
+						<NAME>sceKernelRegisterDebugPutchar</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7CEB2C09</NID>
-						<NAME>KDebugForKernel_7CEB2C09</NAME>
+						<NAME>sceKernelRegisterKprintfHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x84F370BC</NID>
@@ -11331,7 +11334,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF2DEAA14</NID>
-						<NAME>sceSysreg_driver_F2DEAA14</NAME>
+						<NAME>sceSysregEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE88B77ED</NID>
@@ -11715,19 +11718,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBC68D9B6</NID>
-						<NAME>sceSysreg_driver_BC68D9B6</NAME>
+						<NAME>sceSysregUsbIoEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA3C8E075</NID>
-						<NAME>sceSysreg_driver_A3C8E075</NAME>
+						<NAME>sceSysregUsbIoDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x79338EA3</NID>
-						<NAME>sceSysreg_driver_79338EA3</NAME>
+						<NAME>sceSysregAtaIoEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCADB92AA</NID>
-						<NAME>sceSysreg_driver_CADB92AA</NAME>
+						<NAME>sceSysregAtaIoDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD74F1D48</NID>
@@ -11847,11 +11850,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x32471457</NID>
-						<NAME>sceSysreg_driver_32471457</NAME>
+						<NAME>sceSysregUsbQueryIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x692F31FF</NID>
-						<NAME>sceSysreg_driver_692F31FF</NAME>
+						<NAME>sceSysregAcquireIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD43E98F6</NID>
@@ -11867,19 +11870,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x25673620</NID>
-						<NAME>sceSysreg_driver_25673620</NAME>
+						<NAME>sceSysregIntrInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4EE8E2C8</NID>
-						<NAME>sceSysreg_driver_4EE8E2C8</NAME>
+						<NAME>sceSysregIntrEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x61BFF85F</NID>
-						<NAME>sceSysreg_driver_61BFF85F</NAME>
+						<NAME>sceSysregInterruptToOther</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9FC87ED4</NID>
-						<NAME>sceSysreg_driver_9FC87ED4</NAME>
+						<NAME>sceSysregSemaTryLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8BE2D520</NID>
@@ -13132,23 +13135,23 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xD00E3D06</NID>
-						<NAME>Uart4ForKernel_D00E3D06</NAME>
+						<NAME>sceKernelUart4Init</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA68555F7</NID>
-						<NAME>Uart4ForKernel_A68555F7</NAME>
+						<NAME>sceKernelUart4SetBps</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC703109F</NID>
-						<NAME>Uart4ForKernel_C703109F</NAME>
+						<NAME>sceKernelUart4PostChar</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC0BE3133</NID>
-						<NAME>Uart4ForKernel_C0BE3133</NAME>
+						<NAME>sceKernelUart4SendChar</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD91079E3</NID>
-						<NAME>Uart4ForKernel_D91079E3</NAME>
+						<NAME>sceKernelUart4SendBytes</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x69BCBEF1</NID>
@@ -13734,39 +13737,39 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xAE5DE6AF</NID>
-						<NAME>sceUsb_AE5DE6AF</NAME>
+						<NAME>sceUsbStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC2464FA0</NID>
-						<NAME>sceUsb_C2464FA0</NAME>
+						<NAME>sceUsbStop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC21645A4</NID>
-						<NAME>sceUsb_C21645A4</NAME>
+						<NAME>sceUsbGetState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4E537366</NID>
-						<NAME>sceUsb_4E537366</NAME>
+						<NAME>sceUsbGetDrvList</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x112CC951</NID>
-						<NAME>sceUsb_112CC951</NAME>
+						<NAME>sceUsbGetDrvState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x586DB82C</NID>
-						<NAME>sceUsb_586DB82C</NAME>
+						<NAME>sceUsbActivate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC572A9C8</NID>
-						<NAME>sceUsb_C572A9C8</NAME>
+						<NAME>sceUsbDeactivate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5BE0E002</NID>
-						<NAME>sceUsb_5BE0E002</NAME>
+						<NAME>sceUsbWaitState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1C360735</NID>
-						<NAME>sceUsb_1C360735</NAME>
+						<NAME>sceUsbWaitCancel</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -13775,39 +13778,39 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xAE5DE6AF</NID>
-						<NAME>sceUsb_driver_AE5DE6AF</NAME>
+						<NAME>sceUsbStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC2464FA0</NID>
-						<NAME>sceUsb_driver_C2464FA0</NAME>
+						<NAME>sceUsbStop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC21645A4</NID>
-						<NAME>sceUsb_driver_C21645A4</NAME>
+						<NAME>sceUsbGetState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4E537366</NID>
-						<NAME>sceUsb_driver_4E537366</NAME>
+						<NAME>sceUsbGetDrvList</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x112CC951</NID>
-						<NAME>sceUsb_driver_112CC951</NAME>
+						<NAME>sceUsbGetDrvState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x586DB82C</NID>
-						<NAME>sceUsb_driver_586DB82C</NAME>
+						<NAME>sceUsbActivate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC572A9C8</NID>
-						<NAME>sceUsb_driver_C572A9C8</NAME>
+						<NAME>sceUsbDeactivate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5BE0E002</NID>
-						<NAME>sceUsb_driver_5BE0E002</NAME>
+						<NAME>sceUsbWaitState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1C360735</NID>
-						<NAME>sceUsb_driver_1C360735</NAME>
+						<NAME>sceUsbWaitCancel</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -13816,35 +13819,35 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC21645A4</NID>
-						<NAME>sceUsbBus_driver_C21645A4</NAME>
+						<NAME>sceUsbGetState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB1644BE7</NID>
-						<NAME>sceUsbBus_driver_B1644BE7</NAME>
+						<NAME>sceUsbbdRegister</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC1E2A540</NID>
-						<NAME>sceUsbBus_driver_C1E2A540</NAME>
+						<NAME>sceUsbbdUnregister</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x951A24CC</NID>
-						<NAME>sceUsbBus_driver_951A24CC</NAME>
+						<NAME>sceUsbbdClearFIFO</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE65441C1</NID>
-						<NAME>sceUsbBus_driver_E65441C1</NAME>
+						<NAME>sceUsbbdStall</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x23E51D8F</NID>
-						<NAME>sceUsbBus_driver_23E51D8F</NAME>
+						<NAME>sceUsbbdReqSend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x913EC15D</NID>
-						<NAME>sceUsbBus_driver_913EC15D</NAME>
+						<NAME>sceUsbbdReqRecv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCC57EC9D</NID>
-						<NAME>sceUsbBus_driver_CC57EC9D</NAME>
+						<NAME>sceUsbbdReqCancel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC5E53685</NID>
@@ -14098,11 +14101,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xF062AEA6</NID>
-						<NAME>sceUtility_driver_F062AEA6</NAME>
+						<NAME>sceUtilityInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x20C68C34</NID>
-						<NAME>sceUtility_driver_20C68C34</NAME>
+						<NAME>sceUtilityEnd</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -14111,19 +14114,19 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC492F751</NID>
-						<NAME>sceUtility_C492F751</NAME>
+						<NAME>sceUtilityGameSharingInitStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEFC6F80F</NID>
-						<NAME>sceUtility_EFC6F80F</NAME>
+						<NAME>sceUtilityGameSharingShutdownStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7853182D</NID>
-						<NAME>sceUtility_7853182D</NAME>
+						<NAME>sceUtilityGameSharingUpdate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x946963F3</NID>
-						<NAME>sceUtility_946963F3</NAME>
+						<NAME>sceUtilityGameSharingGetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AD50AE7</NID>
@@ -14359,7 +14362,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBFA98062</NID>
-						<NAME>UtilsForUser_BFA98062</NAME>
+						<NAME>sceKernelDcacheInvalidateRange</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8186A58</NID>
@@ -14411,19 +14414,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91E4F6A7</NID>
-						<NAME>UtilsForUser_91E4F6A7</NAME>
+						<NAME>sceKernelLibcClock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27CC57F0</NID>
-						<NAME>UtilsForUser_27CC57F0</NAME>
+						<NAME>sceKernelLibcTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71EC4271</NID>
-						<NAME>UtilsForUser_71EC4271</NAME>
+						<NAME>sceKernelLibcGettimeofday</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x79D1C3FA</NID>
-						<NAME>UtilsForUser_79D1C3FA</NAME>
+						<NAME>sceKernelDcacheWritebackAll</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB435DEC5</NID>
@@ -14460,7 +14463,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x80FE032E</NID>
-						<NAME>UtilsForKernel_80FE032E</NAME>
+						<NAME>sceUtilsKernelDcacheWBinvRange</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8186A58</NID>
@@ -14528,19 +14531,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91E4F6A7</NID>
-						<NAME>UtilsForKernel_91E4F6A7</NAME>
+						<NAME>sceKernelLibcClock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27CC57F0</NID>
-						<NAME>UtilsForKernel_27CC57F0</NAME>
+						<NAME>sceKernelLibcTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71EC4271</NID>
-						<NAME>UtilsForKernel_71EC4271</NAME>
+						<NAME>sceKernelLibcGettimeofday</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x79D1C3FA</NID>
-						<NAME>UtilsForKernel_79D1C3FA</NAME>
+						<NAME>sceKernelDcacheWritebackAll</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB435DEC5</NID>
@@ -14588,19 +14591,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x78934841</NID>
-						<NAME>UtilsForKernel_78934841</NAME>
+						<NAME>sceKernelGzipDecompress</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE0CE3E29</NID>
-						<NAME>UtilsForKernel_E0CE3E29</NAME>
+						<NAME>sceKernelGzipIsValid</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB0E9C31F</NID>
-						<NAME>UtilsForKernel_B0E9C31F</NAME>
+						<NAME>sceKernelGzipGetInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE0E6BA96</NID>
-						<NAME>UtilsForKernel_E0E6BA96</NAME>
+						<NAME>sceKernelGzipGetName</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8C1FBE04</NID>
