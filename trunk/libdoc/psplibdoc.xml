@@ -2023,7 +2023,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1F6752AD</NID>
-						<NAME>sceGe_driver_1F6752AD</NAME>
+						<NAME>sceGeEdramGetSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE47E40E4</NID>
@@ -2035,11 +2035,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB415364D</NID>
-						<NAME>sceGe_driver_B415364D</NAME>
+						<NAME>sceGeGetReg</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDC93CFEF</NID>
-						<NAME>sceGe_driver_DC93CFEF</NAME>
+						<NAME>sceGeGetCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57C8945B</NID>
@@ -2108,7 +2108,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x1F6752AD</NID>
-						<NAME>sceGe_user_1F6752AD</NAME>
+						<NAME>sceGeEdramGetSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE47E40E4</NID>
@@ -2120,7 +2120,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDC93CFEF</NID>
-						<NAME>sceGe_user_DC93CFEF</NAME>
+						<NAME>sceGeGetCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57C8945B</NID>
@@ -2644,7 +2644,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x30F69334</NID>
-						<NAME>sceNetIfhandle_lib_30F69334</NAME>
+						<NAME>sceNetIfhandleInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB9096E48</NID>
@@ -6004,7 +6004,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB7F46618</NID>
-						<NAME>ModuleMgrForUser_B7F46618</NAME>
+						<NAME>sceKernelLoadModuleByID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x977DE386</NID>
@@ -6012,7 +6012,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x710F61B5</NID>
-						<NAME>ModuleMgrForUser_710F61B5</NAME>
+						<NAME>sceKernelLoadModuleMs</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF9275D98</NID>
@@ -6028,7 +6028,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2E0911AA</NID>
-						<NAME>ModuleMgrForUser_2E0911AA</NAME>
+						<NAME>sceKernelUnloadModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD675EBB8</NID>
@@ -6040,7 +6040,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x748CBED9</NID>
-						<NAME>ModuleMgrForUser_748CBED9</NAME>
+						<NAME>sceKernelQueryModuleInfo</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -6053,11 +6053,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBA889C07</NID>
-						<NAME>ModuleMgrForKernel_BA889C07</NAME>
+						<NAME>sceKernelLoadModuleBuffer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7F46618</NID>
-						<NAME>ModuleMgrForKernel_B7F46618</NAME>
+						<NAME>sceKernelLoadModuleByID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x437214AE</NID>
@@ -6065,23 +6065,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x977DE386</NID>
-						<NAME>ModuleMgrForKernel_977DE386</NAME>
+						<NAME>sceKernelLoadModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x710F61B5</NID>
-						<NAME>ModuleMgrForKernel_710F61B5</NAME>
+						<NAME>sceKernelLoadModuleMs</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91B87FAE</NID>
-						<NAME>ModuleMgrForKernel_91B87FAE</NAME>
+						<NAME>sceKernelLoadModuleVSHByID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA4370E7C</NID>
-						<NAME>ModuleMgrForKernel_A4370E7C</NAME>
+						<NAME>sceKernelLoadModuleVSH</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x23425E93</NID>
-						<NAME>ModuleMgrForKernel_23425E93</NAME>
+						<NAME>sceKernelLoadModuleVSHPlain</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF9275D98</NID>
@@ -6089,19 +6089,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF0CAC59E</NID>
-						<NAME>ModuleMgrForKernel_F0CAC59E</NAME>
+						<NAME>sceKernelLoadModuleBufferVSH</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x50F0C1EC</NID>
-						<NAME>ModuleMgrForKernel_50F0C1EC</NAME>
+						<NAME>sceKernelStartModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1FF982A</NID>
-						<NAME>ModuleMgrForKernel_D1FF982A</NAME>
+						<NAME>sceKernelStopModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2E0911AA</NID>
-						<NAME>ModuleMgrForKernel_2E0911AA</NAME>
+						<NAME>sceKernelUnloadModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD675EBB8</NID>
@@ -6121,7 +6121,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x748CBED9</NID>
-						<NAME>ModuleMgrForKernel_748CBED9</NAME>
+						<NAME>sceKernelQueryModuleInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5F0CC575</NID>
@@ -6167,27 +6167,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x611E9E11</NID>
-						<NAME>sceMpeg_611E9E11</NAME>
+						<NAME>sceMpegQueryStreamSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x682A619B</NID>
-						<NAME>sceMpeg_682A619B</NAME>
+						<NAME>sceMpegInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x874624D6</NID>
-						<NAME>sceMpeg_874624D6</NAME>
+						<NAME>sceMpegFinish</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC132E22F</NID>
-						<NAME>sceMpeg_C132E22F</NAME>
+						<NAME>sceMpegQueryMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD8C5F121</NID>
-						<NAME>sceMpeg_D8C5F121</NAME>
+						<NAME>sceMpegCreate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x606A4649</NID>
-						<NAME>sceMpeg_606A4649</NAME>
+						<NAME>sceMpegDelete</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42560F23</NID>
@@ -6199,11 +6199,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA780CF7E</NID>
-						<NAME>sceMpeg_A780CF7E</NAME>
+						<NAME>sceMpegMallocAvcEsBuf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCEB870B1</NID>
-						<NAME>sceMpeg_CEB870B1</NAME>
+						<NAME>sceMpegFreeAvcEsBuf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF8DCB679</NID>
@@ -6239,15 +6239,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x500F0429</NID>
-						<NAME>sceMpeg_500F0429</NAME>
+						<NAME>sceMpegFlushStream</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x707B7629</NID>
-						<NAME>sceMpeg_707B7629</NAME>
+						<NAME>sceMpegFlushAllStream</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0E3C2E9D</NID>
-						<NAME>sceMpeg_0E3C2E9D</NAME>
+						<NAME>sceMpegAvcDecode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0F6C18D7</NID>
@@ -6255,15 +6255,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA11C7026</NID>
-						<NAME>sceMpeg_A11C7026</NAME>
+						<NAME>sceMpegAvcDecodeMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x740FCCD1</NID>
-						<NAME>sceMpeg_740FCCD1</NAME>
+						<NAME>sceMpegAvcDecodeStop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x800C44DF</NID>
-						<NAME>sceMpeg_800C44DF</NAME>
+						<NAME>sceMpegAtracDecode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD7A29F46</NID>
@@ -6382,7 +6382,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x27A2982F</NID>
-						<NAME>sceMpegbase_driver_27A2982F</NAME>
+						<NAME>sceMpegBaseInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBEA18F91</NID>
@@ -13885,7 +13885,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x60066CFE</NID>
-						<NAME>sceUsbstor_60066CFE</NAME>
+						<NAME>sceUsbstorGetStatus</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -13894,7 +13894,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x60066CFE</NID>
-						<NAME>sceUsbstor_driver_60066CFE</NAME>
+						<NAME>sceUsbstorGetStatus</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -13903,11 +13903,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xDC1A5833</NID>
-						<NAME>sceUsbstor_internal_DC1A5833</NAME>
+						<NAME>sceUsbstorSendData</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFC4D0080</NID>
-						<NAME>sceUsbstor_internal_FC4D0080</NAME>
+						<NAME>sceUsbstorRecvData</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x489E6BF1</NID>
@@ -13919,7 +13919,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x50F99EAD</NID>
-						<NAME>sceUsbstor_internal_50F99EAD</NAME>
+						<NAME>sceUsbstorGetString</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -13957,19 +13957,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x594BBF95</NID>
-						<NAME>sceUsbstorBoot_594BBF95</NAME>
+						<NAME>sceUsbstorBootSetLoadAddr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D865ECD</NID>
-						<NAME>sceUsbstorBoot_6D865ECD</NAME>
+						<NAME>sceUsbstorBootGetDataSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA1119F0D</NID>
-						<NAME>sceUsbstorBoot_A1119F0D</NAME>
+						<NAME>sceUsbstorBootSetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1F080078</NID>
-						<NAME>sceUsbstorBoot_1F080078</NAME>
+						<NAME>sceUsbstorBootRegisterNotify</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA55C9E16</NID>
