@@ -9927,7 +9927,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x0A771482</NID>
-						<NAME>sceSyscon_driver_0A771482</NAME>
+						<NAME>sceSysconInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x92D16FC7</NID>
@@ -9935,11 +9935,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x081826B4</NID>
-						<NAME>sceSyscon_driver_081826B4</NAME>
+						<NAME>sceSysconSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x56931095</NID>
-						<NAME>sceSyscon_driver_56931095</NAME>
+						<NAME>sceSysconResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5EE92F3C</NID>
@@ -9955,11 +9955,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF281805D</NID>
-						<NAME>sceSyscon_driver_F281805D</NAME>
+						<NAME>sceSysconDataSysPhysicalPage</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA068B3D0</NID>
-						<NAME>sceSyscon_driver_A068B3D0</NAME>
+						<NAME>sceSysconSetAlarmCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE540E532</NID>
@@ -9991,19 +9991,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5B9ACC97</NID>
-						<NAME>sceSyscon_driver_5B9ACC97</NAME>
+						<NAME>sceSysconCmdExec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AC3D2A4</NID>
-						<NAME>sceSyscon_driver_3AC3D2A4</NAME>
+						<NAME>sceSysconCmdExecAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1602ED0D</NID>
-						<NAME>sceSyscon_driver_1602ED0D</NAME>
+						<NAME>sceSysconCmdCancel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF350F666</NID>
-						<NAME>sceSyscon_driver_F350F666</NAME>
+						<NAME>sceSysconCmdSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x86D4CAD8</NID>
@@ -10115,19 +10115,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC4D66C1D</NID>
-						<NAME>sceSyscon_driver_C4D66C1D</NAME>
+						<NAME>sceSysconReadClock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7634A7A</NID>
-						<NAME>sceSyscon_driver_C7634A7A</NAME>
+						<NAME>sceSysconWriteClock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7A805EE4</NID>
-						<NAME>sceSyscon_driver_7A805EE4</NAME>
+						<NAME>sceSysconReadAlarm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6C911742</NID>
-						<NAME>sceSyscon_driver_6C911742</NAME>
+						<NAME>sceSysconWriteAlarm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x65EB6096</NID>
@@ -10139,11 +10139,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x992C22C2</NID>
-						<NAME>sceSyscon_driver_992C22C2</NAME>
+						<NAME>sceSysconSendSetParam</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x08234E6D</NID>
-						<NAME>sceSyscon_driver_08234E6D</NAME>
+						<NAME>sceSysconReceiveSetParam</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x882F0AAB</NID>
@@ -10155,7 +10155,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8CBC7987</NID>
-						<NAME>sceSyscon_driver_8CBC7987</NAME>
+						<NAME>sceSysconResetDevice</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x00E7B6C2</NID>
@@ -10171,7 +10171,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91E183CB</NID>
-						<NAME>sceSyscon_driver_91E183CB</NAME>
+						<NAME>sceSysconPowerSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE7E87741</NID>
@@ -10187,19 +10187,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBE27FE66</NID>
-						<NAME>sceSyscon_driver_BE27FE66</NAME>
+						<NAME>sceSysconCtrlPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x09721F7F</NID>
-						<NAME>sceSyscon_driver_09721F7F</NAME>
+						<NAME>sceSysconGetPowerStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x18BFBE65</NID>
-						<NAME>sceSyscon_driver_18BFBE65</NAME>
+						<NAME>sceSysconCtrlLED</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1B501E8</NID>
-						<NAME>sceSyscon_driver_D1B501E8</NAME>
+						<NAME>sceSysconsceResolverPowerdown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3DE38336</NID>
@@ -10207,15 +10207,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2B9E6A06</NID>
-						<NAME>sceSyscon_driver_2B9E6A06</NAME>
+						<NAME>sceSysconGetPowerError</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8A4519F5</NID>
-						<NAME>sceSyscon_driver_8A4519F5</NAME>
+						<NAME>sceSysconCtrlLeptonPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x99BBB24C</NID>
-						<NAME>sceSyscon_driver_99BBB24C</NAME>
+						<NAME>sceSysconCtrlMsPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF0ED3255</NID>
@@ -10405,11 +10405,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x1C1FBFE7</NID>
-						<NAME>SysMemForKernel_1C1FBFE7</NAME>
+						<NAME>sceKernelCreateHeap</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC9805775</NID>
-						<NAME>SysMemForKernel_C9805775</NAME>
+						<NAME>sceKernelDeleteHeap</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB7A74DB</NID>
@@ -10417,15 +10417,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x636C953B</NID>
-						<NAME>SysMemForKernel_636C953B</NAME>
+						<NAME>sceKernelAllocHeapMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7B749390</NID>
-						<NAME>SysMemForKernel_7B749390</NAME>
+						<NAME>sceKernelFreeHeapMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA823047E</NID>
-						<NAME>SysMemForKernel_A823047E</NAME>
+						<NAME>sceKernelHeapTotalFreeSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2163AA1</NID>
@@ -10441,19 +10441,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2DB687E9</NID>
-						<NAME>SysMemForKernel_2DB687E9</NAME>
+						<NAME>sceKernelIsValidHeap</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55A40B2C</NID>
-						<NAME>SysMemForKernel_55A40B2C</NAME>
+						<NAME>sceKernelQueryMemoryPartitionInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE6581468</NID>
-						<NAME>SysMemForKernel_E6581468</NAME>
+						<NAME>sceKernelPartitionMaxFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9697CD32</NID>
-						<NAME>SysMemForKernel_9697CD32</NAME>
+						<NAME>sceKernelPartitionTotalFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA2A65F0E</NID>
@@ -10461,15 +10461,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x237DBD4F</NID>
-						<NAME>SysMemForKernel_237DBD4F</NAME>
+						<NAME>sceKernelAllocPartitionMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEE867074</NID>
-						<NAME>SysMemForKernel_EE867074</NAME>
+						<NAME>sceKernelSizeLockMemoryBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCE5544F4</NID>
-						<NAME>SysMemForKernel_CE5544F4</NAME>
+						<NAME>sceKernelResizeMemoryBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5EBE73DE</NID>
@@ -10481,19 +10481,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6D61D02</NID>
-						<NAME>SysMemForKernel_B6D61D02</NAME>
+						<NAME>sceKernelFreePartitionMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2A3E5280</NID>
-						<NAME>SysMemForKernel_2A3E5280</NAME>
+						<NAME>sceKernelQueryMemoryInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB4C0E1B</NID>
-						<NAME>SysMemForKernel_EB4C0E1B</NAME>
+						<NAME>sceKernelQueryBlockSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82CCA14F</NID>
-						<NAME>SysMemForKernel_82CCA14F</NAME>
+						<NAME>sceKernelQueryMemoryBlockInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9D9A5BA1</NID>
@@ -10537,7 +10537,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2E3402CC</NID>
-						<NAME>SysMemForKernel_2E3402CC</NAME>
+						<NAME>sceKernelRenameUID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x39357F07</NID>
@@ -10545,11 +10545,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89A74008</NID>
-						<NAME>SysMemForKernel_89A74008</NAME>
+						<NAME>sceKernelCreateUID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8F20C4C0</NID>
-						<NAME>SysMemForKernel_8F20C4C0</NAME>
+						<NAME>sceKernelDeleteUID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55BFD686</NID>
@@ -10573,11 +10573,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7BE95FA0</NID>
-						<NAME>SysMemForKernel_7BE95FA0</NAME>
+						<NAME>sceKernelHoldUID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFE8DEBE0</NID>
-						<NAME>SysMemForKernel_FE8DEBE0</NAME>
+						<NAME>sceKernelReleaseUID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBD5941B4</NID>
@@ -10585,19 +10585,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x80F25772</NID>
-						<NAME>SysMemForKernel_80F25772</NAME>
+						<NAME>sceKernelIsValidUserAccess</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3905D956</NID>
-						<NAME>SysMemForKernel_3905D956</NAME>
+						<NAME>sceKernelSysMemCheckCtlBlk</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26F96157</NID>
-						<NAME>SysMemForKernel_26F96157</NAME>
+						<NAME>sceKernelSysMemDump</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D6200DD</NID>
-						<NAME>SysMemForKernel_6D6200DD</NAME>
+						<NAME>sceKernelSysMemDumpBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x621037F5</NID>
@@ -10605,23 +10605,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE400FDB0</NID>
-						<NAME>SysMemForKernel_E400FDB0</NAME>
+						<NAME>sceKernelSysMemInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1890BE9C</NID>
-						<NAME>SysMemForKernel_1890BE9C</NAME>
+						<NAME>sceKernelSysMemMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x03072750</NID>
-						<NAME>SysMemForKernel_03072750</NAME>
+						<NAME>sceKernelSysMemMaxFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x811BED79</NID>
-						<NAME>SysMemForKernel_811BED79</NAME>
+						<NAME>sceKernelSysMemTotalFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF6C10E27</NID>
-						<NAME>SysMemForKernel_F6C10E27</NAME>
+						<NAME>sceKernelGetSysMemoryInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCDA3A2F7</NID>
@@ -10633,7 +10633,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3FC9AE6A</NID>
-						<NAME>SysMemForKernel_3FC9AE6A</NAME>
+						<NAME>sceKernelDevkitVersion</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -10642,7 +10642,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA291F107</NID>
-						<NAME>SysMemUserForUser_A291F107</NAME>
+						<NAME>sceKernelMaxFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF919F628</NID>
@@ -10650,11 +10650,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x237DBD4F</NID>
-						<NAME>SysMemUserForUser_237DBD4F</NAME>
+						<NAME>sceKernelAllocPartitionMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6D61D02</NID>
-						<NAME>SysMemUserForUser_B6D61D02</NAME>
+						<NAME>sceKernelFreePartitionMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9D9A5BA1</NID>
@@ -10662,7 +10662,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3FC9AE6A</NID>
-						<NAME>SysMemUserForUser_3FC9AE6A</NAME>
+						<NAME>sceKernelDevkitVersion</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -10675,15 +10675,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCD9E4BB5</NID>
-						<NAME>sceSysEventForKernel_CD9E4BB5</NAME>
+						<NAME>sceKernelRegisterSysEventHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD7D3FDCD</NID>
-						<NAME>sceSysEventForKernel_D7D3FDCD</NAME>
+						<NAME>sceKernelUnregisterSysEventHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x36331294</NID>
-						<NAME>sceSysEventForKernel_36331294</NAME>
+						<NAME>sceKernelSysEventDispatch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68D55505</NID>
@@ -10876,11 +10876,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x1C1FBFE7</NID>
-						<NAME>SysMemForKernel_1C1FBFE7</NAME>
+						<NAME>sceKernelCreateHeap</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC9805775</NID>
-						<NAME>SysMemForKernel_C9805775</NAME>
+						<NAME>sceKernelDeleteHeap</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB7A74DB</NID>
@@ -10888,15 +10888,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x636C953B</NID>
-						<NAME>SysMemForKernel_636C953B</NAME>
+						<NAME>sceKernelAllocHeapMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7B749390</NID>
-						<NAME>SysMemForKernel_7B749390</NAME>
+						<NAME>sceKernelFreeHeapMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA823047E</NID>
-						<NAME>SysMemForKernel_A823047E</NAME>
+						<NAME>sceKernelHeapTotalFreeSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2163AA1</NID>
@@ -10912,19 +10912,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2DB687E9</NID>
-						<NAME>SysMemForKernel_2DB687E9</NAME>
+						<NAME>sceKernelIsValidHeapc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55A40B2C</NID>
-						<NAME>SysMemForKernel_55A40B2C</NAME>
+						<NAME>sceKernelQueryMemoryPartitionInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE6581468</NID>
-						<NAME>SysMemForKernel_E6581468</NAME>
+						<NAME>sceKernelPartitionMaxFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9697CD32</NID>
-						<NAME>SysMemForKernel_9697CD32</NAME>
+						<NAME>sceKernelPartitionTotalFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA2A65F0E</NID>
@@ -10932,15 +10932,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x237DBD4F</NID>
-						<NAME>SysMemForKernel_237DBD4F</NAME>
+						<NAME>sceKernelAllocPartitionMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEE867074</NID>
-						<NAME>SysMemForKernel_EE867074</NAME>
+						<NAME>sceKernelSizeLockMemoryBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCE5544F4</NID>
-						<NAME>SysMemForKernel_CE5544F4</NAME>
+						<NAME>sceKernelResizeMemoryBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5EBE73DE</NID>
@@ -10952,19 +10952,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6D61D02</NID>
-						<NAME>SysMemForKernel_B6D61D02</NAME>
+						<NAME>sceKernelFreePartitionMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2A3E5280</NID>
-						<NAME>SysMemForKernel_2A3E5280</NAME>
+						<NAME>sceKernelQueryMemoryInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB4C0E1B</NID>
-						<NAME>SysMemForKernel_EB4C0E1B</NAME>
+						<NAME>sceKernelQueryBlockSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82CCA14F</NID>
-						<NAME>SysMemForKernel_82CCA14F</NAME>
+						<NAME>sceKernelQueryMemoryBlockInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9D9A5BA1</NID>
@@ -11008,7 +11008,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2E3402CC</NID>
-						<NAME>SysMemForKernel_2E3402CC</NAME>
+						<NAME>sceKernelRenameUID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x39357F07</NID>
@@ -11016,11 +11016,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89A74008</NID>
-						<NAME>SysMemForKernel_89A74008</NAME>
+						<NAME>sceKernelCreateUID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8F20C4C0</NID>
-						<NAME>SysMemForKernel_8F20C4C0</NAME>
+						<NAME>sceKernelDeleteUID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55BFD686</NID>
@@ -11040,35 +11040,35 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDFAEBD5B</NID>
-						<NAME>SysMemForKernel_DFAEBD5B</NAME>
+						<NAME>sceKernelIsHold</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7BE95FA0</NID>
-						<NAME>SysMemForKernel_7BE95FA0</NAME>
+						<NAME>sceKernelHoldUID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFE8DEBE0</NID>
-						<NAME>SysMemForKernel_FE8DEBE0</NAME>
+						<NAME>sceKernelReleaseUID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE400FDB0</NID>
-						<NAME>SysMemForKernel_E400FDB0</NAME>
+						<NAME>sceKernelSysMemInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1890BE9C</NID>
-						<NAME>SysMemForKernel_1890BE9C</NAME>
+						<NAME>sceKernelSysMemMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x03072750</NID>
-						<NAME>SysMemForKernel_03072750</NAME>
+						<NAME>sceKernelSysMemMaxFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x811BED79</NID>
-						<NAME>SysMemForKernel_811BED79</NAME>
+						<NAME>sceKernelSysMemTotalFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF6C10E27</NID>
-						<NAME>SysMemForKernel_F6C10E27</NAME>
+						<NAME>sceKernelGetSysMemoryInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCDA3A2F7</NID>
@@ -11080,7 +11080,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3FC9AE6A</NID>
-						<NAME>SysMemForKernel_3FC9AE6A</NAME>
+						<NAME>sceKernelDevkitVersion</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -11089,7 +11089,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA291F107</NID>
-						<NAME>SysMemUserForUser_A291F107</NAME>
+						<NAME>sceKernelMaxFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF919F628</NID>
@@ -11097,11 +11097,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x237DBD4F</NID>
-						<NAME>SysMemUserForUser_237DBD4F</NAME>
+						<NAME>sceKernelAllocPartitionMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6D61D02</NID>
-						<NAME>SysMemUserForUser_B6D61D02</NAME>
+						<NAME>sceKernelFreePartitionMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9D9A5BA1</NID>
@@ -11109,7 +11109,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3FC9AE6A</NID>
-						<NAME>SysMemUserForUser_3FC9AE6A</NAME>
+						<NAME>sceKernelDevkitVersion</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -11126,11 +11126,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD7D3FDCD</NID>
-						<NAME>sceSysEventForKernel_D7D3FDCD</NAME>
+						<NAME>sceKernelUnregisterSysEventHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x36331294</NID>
-						<NAME>sceSysEventForKernel_36331294</NAME>
+						<NAME>sceKernelSysEventDispatch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68D55505</NID>
@@ -11147,15 +11147,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEADB1BD7</NID>
-						<NAME>sceSuspendForKernel_EADB1BD7</NAME>
+						<NAME>sceKernelPowerLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB53B2147</NID>
-						<NAME>sceSuspendForKernel_B53B2147</NAME>
+						<NAME>sceKernelPowerLockForUser</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AEE7261</NID>
-						<NAME>sceSuspendForKernel_3AEE7261</NAME>
+						<NAME>sceKernelPowerUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7C928C7</NID>
@@ -11167,15 +11167,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x98A1D061</NID>
-						<NAME>sceSuspendForKernel_98A1D061</NAME>
+						<NAME>sceKernelPowerRebootStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91A77137</NID>
-						<NAME>sceSuspendForKernel_91A77137</NAME>
+						<NAME>sceKernelRegisterSuspendHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB43D1A8C</NID>
-						<NAME>sceSuspendForKernel_B43D1A8C</NAME>
+						<NAME>sceKernelRegisterResumeHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x67B59042</NID>
@@ -11200,11 +11200,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xEADB1BD7</NID>
-						<NAME>sceSuspendForUser_EADB1BD7</NAME>
+						<NAME>sceKernelPowerLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AEE7261</NID>
-						<NAME>sceSuspendForUser_3AEE7261</NAME>
+						<NAME>sceKernelPowerUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x090CCB3F</NID>
@@ -11327,7 +11327,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9C863542</NID>
-						<NAME>sceSysreg_driver_9C863542</NAME>
+						<NAME>sceSysregInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF2DEAA14</NID>
@@ -11363,15 +11363,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDC6139A4</NID>
-						<NAME>sceSysreg_driver_DC6139A4</NAME>
+						<NAME>sceSysregScResetEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDE59DACB</NID>
-						<NAME>sceSysreg_driver_DE59DACB</NAME>
+						<NAME>sceSysregMeResetEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2DB0EB28</NID>
-						<NAME>sceSysreg_driver_2DB0EB28</NAME>
+						<NAME>sceSysregMeResetDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26283A6F</NID>
@@ -11395,23 +11395,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFD6C562B</NID>
-						<NAME>sceSysreg_driver_FD6C562B</NAME>
+						<NAME>sceSysregAvcResetDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCD4FB614</NID>
-						<NAME>sceSysreg_driver_CD4FB614</NAME>
+						<NAME>sceSysregUsbResetEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x69EECBE5</NID>
-						<NAME>sceSysreg_driver_69EECBE5</NAME>
+						<NAME>sceSysregUsbResetDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF5B80837</NID>
-						<NAME>sceSysreg_driver_F5B80837</NAME>
+						<NAME>sceSysregAtaResetEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8075303F</NID>
-						<NAME>sceSysreg_driver_8075303F</NAME>
+						<NAME>sceSysregAtaResetDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x00C2628E</NID>
@@ -11739,19 +11739,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x63B1AADF</NID>
-						<NAME>sceSysreg_driver_63B1AADF</NAME>
+						<NAME>sceSysregLcdcIoEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF74F14E9</NID>
-						<NAME>sceSysreg_driver_F74F14E9</NAME>
+						<NAME>sceSysregLcdcIoDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBB26CF1F</NID>
-						<NAME>sceSysreg_driver_BB26CF1F</NAME>
+						<NAME>sceSysregAudioIoEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8E2FB536</NID>
-						<NAME>sceSysreg_driver_8E2FB536</NAME>
+						<NAME>sceSysregAudioIoDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0436B60F</NID>
@@ -11763,11 +11763,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C49A8BC</NID>
-						<NAME>sceSysreg_driver_4C49A8BC</NAME>
+						<NAME>sceSysregSircsIoEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26FA0928</NID>
-						<NAME>sceSysreg_driver_26FA0928</NAME>
+						<NAME>sceSysregSircsIoDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF844DDF3</NID>
@@ -11779,27 +11779,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x77DED992</NID>
-						<NAME>sceSysreg_driver_77DED992</NAME>
+						<NAME>sceSysregKeyIoEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6879790B</NID>
-						<NAME>sceSysreg_driver_6879790B</NAME>
+						<NAME>sceSysregKeyIoDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7A5D2D15</NID>
-						<NAME>sceSysreg_driver_7A5D2D15</NAME>
+						<NAME>sceSysregPwmIoEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x25B0AC52</NID>
-						<NAME>sceSysreg_driver_25B0AC52</NAME>
+						<NAME>sceSysregPwmIoDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7FD7A631</NID>
-						<NAME>sceSysreg_driver_7FD7A631</NAME>
+						<NAME>sceSysregUartIoEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBB823481</NID>
-						<NAME>sceSysreg_driver_BB823481</NAME>
+						<NAME>sceSysregUartIoDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8C5C53DE</NID>
@@ -11811,11 +11811,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB627582E</NID>
-						<NAME>sceSysreg_driver_B627582E</NAME>
+						<NAME>sceSysregGpioIoEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1E9C3607</NID>
-						<NAME>sceSysreg_driver_1E9C3607</NAME>
+						<NAME>sceSysregGpioIoDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55B18B84</NID>
@@ -11883,19 +11883,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8BE2D520</NID>
-						<NAME>sceSysreg_driver_8BE2D520</NAME>
+						<NAME>sceSysregSemaUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x083F56E2</NID>
-						<NAME>sceSysreg_driver_083F56E2</NAME>
+						<NAME>sceSysregEnableIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7C5B543C</NID>
-						<NAME>sceSysreg_driver_7C5B543C</NAME>
+						<NAME>sceSysregDisableIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3EA188AD</NID>
-						<NAME>sceSysreg_driver_3EA188AD</NAME>
+						<NAME>sceSysregRequestIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5664F8B5</NID>
