@@ -6049,7 +6049,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xABE84F8A</NID>
-						<NAME>ModuleMgrForKernel_ABE84F8A</NAME>
+						<NAME>sceKernelLoadModuleBufferWithApitype</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBA889C07</NID>
@@ -6061,7 +6061,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x437214AE</NID>
-						<NAME>ModuleMgrForKernel_437214AE</NAME>
+						<NAME>sceKernelLoadModuleWithApitype</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x977DE386</NID>
