@@ -356,7 +356,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x80F1F7E0</NID>
-						<NAME>sceAudio_driver_80F1F7E0</NAME>
+						<NAME>sceAudioInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x210567F7</NID>
@@ -412,11 +412,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x95FD0C2D</NID>
-						<NAME>sceAudio_driver_95FD0C2D</NAME>
+						<NAME>sceAudioChangeChannelConfig</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7E1D8E7</NID>
-						<NAME>sceAudio_driver_B7E1D8E7</NAME>
+						<NAME>sceAudioChangeChannelVolume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x38553111</NID>
@@ -436,7 +436,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D4BEC68</NID>
-						<NAME>sceAudio_driver_6D4BEC68</NAME>
+						<NAME>sceAudioInput</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA708C6A6</NID>
@@ -448,7 +448,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7DE61688</NID>
-						<NAME>sceAudio_driver_7DE61688</NAME>
+						<NAME>sceAudioInputInit</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -493,11 +493,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x95FD0C2D</NID>
-						<NAME>sceAudio_95FD0C2D</NAME>
+						<NAME>sceAudioChangeChannelConfig</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7E1D8E7</NID>
-						<NAME>sceAudio_B7E1D8E7</NAME>
+						<NAME>sceAudioChangeChannelVolume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x38553111</NID>
@@ -517,7 +517,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D4BEC68</NID>
-						<NAME>sceAudio_6D4BEC68</NAME>
+						<NAME>sceAudioInput</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA708C6A6</NID>
@@ -529,7 +529,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7DE61688</NID>
-						<NAME>sceAudio_7DE61688</NAME>
+						<NAME>sceAudioInputInit</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -600,7 +600,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x62518B7E</NID>
-						<NAME>sceAudiocodec_driver_62518B7E</NAME>
+						<NAME>sceAudiocodecStartEntry</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -1158,11 +1158,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x432D133F</NID>
-						<NAME>sceDisplay_driver_432D133F</NAME>
+						<NAME>sceDisplayEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x681EE6A7</NID>
-						<NAME>sceDisplay_driver_681EE6A7</NAME>
+						<NAME>sceDisplayDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7ED59BC4</NID>
@@ -2206,7 +2206,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xEABDB328</NID>
-						<NAME>sceGpio_driver_EABDB328</NAME>
+						<NAME>sceGpioInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4A992B24</NID>
@@ -2214,23 +2214,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x17DAA8C2</NID>
-						<NAME>sceGpio_driver_17DAA8C2</NAME>
+						<NAME>sceGpioSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x64CD4536</NID>
-						<NAME>sceGpio_driver_64CD4536</NAME>
+						<NAME>sceGpioResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4250D44A</NID>
-						<NAME>sceGpio_driver_4250D44A</NAME>
+						<NAME>sceGpioPortRead</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x310F0CCF</NID>
-						<NAME>sceGpio_driver_310F0CCF</NAME>
+						<NAME>sceGpioPortSet</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x103C3EB2</NID>
-						<NAME>sceGpio_driver_103C3EB2</NAME>
+						<NAME>sceGpioPortClear</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x95135905</NID>
@@ -2238,7 +2238,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x317D9D2C</NID>
-						<NAME>sceGpio_driver_317D9D2C</NAME>
+						<NAME>sceGpioSetPortMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCA8BE2EA</NID>
@@ -2246,7 +2246,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x37C8DADC</NID>
-						<NAME>sceGpio_driver_37C8DADC</NAME>
+						<NAME>sceGpioSetIntrMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF856CE46</NID>
@@ -2254,15 +2254,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x785206CD</NID>
-						<NAME>sceGpio_driver_785206CD</NAME>
+						<NAME>sceGpioEnableIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x95D7F3B8</NID>
-						<NAME>sceGpio_driver_95D7F3B8</NAME>
+						<NAME>sceGpioDisableIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x31F34AE6</NID>
-						<NAME>sceGpio_driver_31F34AE6</NAME>
+						<NAME>sceGpioQueryIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBE77D1D0</NID>
@@ -2345,7 +2345,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x1C5BC5A0</NID>
-						<NAME>sceHprm_driver_1C5BC5A0</NAME>
+						<NAME>sceHprmInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x588845DA</NID>
@@ -2353,15 +2353,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x526BB7F4</NID>
-						<NAME>sceHprm_driver_526BB7F4</NAME>
+						<NAME>sceHprmSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2C7B8B05</NID>
-						<NAME>sceHprm_driver_2C7B8B05</NAME>
+						<NAME>sceHprmResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD22913DB</NID>
-						<NAME>sceHprm_driver_D22913DB</NAME>
+						<NAME>sceHprmSetConnectCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7154136</NID>
@@ -2385,11 +2385,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4D1E622C</NID>
-						<NAME>sceHprm_driver_4D1E622C</NAME>
+						<NAME>sceHprmReset</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7B038374</NID>
-						<NAME>sceHprm_driver_7B038374</NAME>
+						<NAME>sceHprmGetInternalState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF04591FA</NID>
@@ -2401,7 +2401,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBAD0828E</NID>
-						<NAME>sceHprm_driver_BAD0828E</NAME>
+						<NAME>sceHprmGetModel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1910B327</NID>
@@ -2447,7 +2447,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x20ADF12A</NID>
-						<NAME>sceI2c_driver_20ADF12A</NAME>
+						<NAME>sceI2cInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4809D85F</NID>
@@ -2455,11 +2455,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x21A8282C</NID>
-						<NAME>sceI2c_driver_21A8282C</NAME>
+						<NAME>sceI2cSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB952BA65</NID>
-						<NAME>sceI2c_driver_B952BA65</NAME>
+						<NAME>sceI2cResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB6C4F9B</NID>
@@ -2471,11 +2471,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x17B0DA59</NID>
-						<NAME>sceI2c_driver_17B0DA59</NAME>
+						<NAME>sceI2cReset</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD6E9836A</NID>
-						<NAME>sceI2c_driver_D6E9836A</NAME>
+						<NAME>sceI2cSetClock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE9463B99</NID>
@@ -2521,7 +2521,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xAB129D20</NID>
-						<NAME>sceIdStorage_driver_AB129D20</NAME>
+						<NAME>sceIdStorageInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2CE0BE69</NID>
@@ -2529,11 +2529,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF77565B6</NID>
-						<NAME>sceIdStorage_driver_F77565B6</NAME>
+						<NAME>sceIdStorageSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFE51173D</NID>
-						<NAME>sceIdStorage_driver_FE51173D</NAME>
+						<NAME>sceIdStorageResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB830733</NID>
@@ -2545,15 +2545,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2D633688</NID>
-						<NAME>sceIdStorage_driver_2D633688</NAME>
+						<NAME>sceIdStorageIsReadOnly</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB9069BAD</NID>
-						<NAME>sceIdStorage_driver_B9069BAD</NAME>
+						<NAME>sceIdStorageIsDirty</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x958089DB</NID>
-						<NAME>sceIdStorage_driver_958089DB</NAME>
+						<NAME>sceIdStorageFormat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF4BCB3EE</NID>
@@ -2585,19 +2585,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x31E08AFB</NID>
-						<NAME>sceIdStorage_driver_31E08AFB</NAME>
+						<NAME>sceIdStorageEnumId</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6FE062D1</NID>
-						<NAME>sceIdStorage_driver_6FE062D1</NAME>
+						<NAME>sceIdStorageLookup</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x683AAC10</NID>
-						<NAME>sceIdStorage_driver_683AAC10</NAME>
+						<NAME>sceIdStorageUpdate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AD32523</NID>
-						<NAME>sceIdStorage_driver_3AD32523</NAME>
+						<NAME>sceIdStorageFlush</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -2648,7 +2648,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB9096E48</NID>
-						<NAME>sceNetIfhandle_lib_B9096E48</NAME>
+						<NAME>sceNetIfhandleTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB8188F96</NID>
@@ -2660,15 +2660,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB1F5BB87</NID>
-						<NAME>sceNetIfhandle_lib_B1F5BB87</NAME>
+						<NAME>sceNetIfhandleIfStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8FCB05A1</NID>
-						<NAME>sceNetIfhandle_lib_8FCB05A1</NAME>
+						<NAME>sceNetIfhandleIfUp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEAD3A759</NID>
-						<NAME>sceNetIfhandle_lib_EAD3A759</NAME>
+						<NAME>sceNetIfhandleIfDown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0296C7D6</NID>
@@ -2680,15 +2680,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x30602CE9</NID>
-						<NAME>sceNetIfhandle_lib_30602CE9</NAME>
+						<NAME>sceNetIfhandleSignalSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD5DA7B3C</NID>
-						<NAME>sceNetIfhandle_lib_D5DA7B3C</NAME>
+						<NAME>sceNetIfhandleWaitSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2162EE67</NID>
-						<NAME>sceNetIfhandle_lib_2162EE67</NAME>
+						<NAME>sceNetIfhandlePollSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0C391E9F</NID>
@@ -2789,11 +2789,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x30F69334</NID>
-						<NAME>sceNetIfhandle_driver_30F69334</NAME>
+						<NAME>sceNetIfhandleInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB9096E48</NID>
-						<NAME>sceNetIfhandle_driver_B9096E48</NAME>
+						<NAME>sceNetIfhandleTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB8188F96</NID>
@@ -2805,19 +2805,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB1F5BB87</NID>
-						<NAME>sceNetIfhandle_driver_B1F5BB87</NAME>
+						<NAME>sceNetIfhandleIfStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8FCB05A1</NID>
-						<NAME>sceNetIfhandle_driver_8FCB05A1</NAME>
+						<NAME>sceNetIfhandleIfUp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEAD3A759</NID>
-						<NAME>sceNetIfhandle_driver_EAD3A759</NAME>
+						<NAME>sceNetIfhandleIfDown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0296C7D6</NID>
-						<NAME>sceNetIfhandle_driver_0296C7D6</NAME>
+						<NAME>sceNetIfhandleIfIoctl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE440A7D8</NID>
@@ -2825,15 +2825,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x30602CE9</NID>
-						<NAME>sceNetIfhandle_driver_30602CE9</NAME>
+						<NAME>sceNetIfhandleSignalSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD5DA7B3C</NID>
-						<NAME>sceNetIfhandle_driver_D5DA7B3C</NAME>
+						<NAME>sceNetIfhandleWaitSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2162EE67</NID>
-						<NAME>sceNetIfhandle_driver_2162EE67</NAME>
+						<NAME>sceNetIfhandlePollSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x16042084</NID>
@@ -3040,7 +3040,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBDBC42A6</NID>
-						<NAME>sceImpose_driver_BDBC42A6</NAME>
+						<NAME>sceImposeInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7E36CC7</NID>
@@ -3048,27 +3048,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1AEED8FE</NID>
-						<NAME>sceImpose_driver_1AEED8FE</NAME>
+						<NAME>sceImposeSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x86924032</NID>
-						<NAME>sceImpose_driver_86924032</NAME>
+						<NAME>sceImposeResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1B6E3400</NID>
-						<NAME>sceImpose_driver_1B6E3400</NAME>
+						<NAME>sceImposeGetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9C8C6C81</NID>
-						<NAME>sceImpose_driver_9C8C6C81</NAME>
+						<NAME>sceImposeSetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x531C9778</NID>
-						<NAME>sceImpose_driver_531C9778</NAME>
+						<NAME>sceImposeGetParam</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x810FB7FB</NID>
-						<NAME>sceImpose_driver_810FB7FB</NAME>
+						<NAME>sceImposeSetParam</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB415FC59</NID>
@@ -3794,7 +3794,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB55500A3</NID>
-						<NAME>sceLcdc_driver_B55500A3</NAME>
+						<NAME>sceLcdcInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0E8E8774</NID>
@@ -3802,31 +3802,31 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDCD51769</NID>
-						<NAME>sceLcdc_driver_DCD51769</NAME>
+						<NAME>sceLcdcSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC6F10C77</NID>
-						<NAME>sceLcdc_driver_C6F10C77</NAME>
+						<NAME>sceLcdcResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA182B32C</NID>
-						<NAME>sceLcdc_driver_A182B32C</NAME>
+						<NAME>sceLcdcEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA0032C3D</NID>
-						<NAME>sceLcdc_driver_A0032C3D</NAME>
+						<NAME>sceLcdcDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x73A3A01D</NID>
-						<NAME>sceLcdc_driver_73A3A01D</NAME>
+						<NAME>sceLcdcCheckMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0BC2B5E2</NID>
-						<NAME>sceLcdc_driver_0BC2B5E2</NAME>
+						<NAME>sceLcdcSetMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA2E70DA6</NID>
-						<NAME>sceLcdc_driver_A2E70DA6</NAME>
+						<NAME>sceLcdcReset</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x965D1633</NID>
@@ -3888,7 +3888,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB0B6A883</NID>
-						<NAME>sceLed_driver_B0B6A883</NAME>
+						<NAME>sceLedInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA8542C48</NID>
@@ -3896,15 +3896,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDE91D3A4</NID>
-						<NAME>sceLed_driver_DE91D3A4</NAME>
+						<NAME>sceLedSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA13B3D38</NID>
-						<NAME>sceLed_driver_A13B3D38</NAME>
+						<NAME>sceLedResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEA24BE03</NID>
-						<NAME>sceLed_driver_EA24BE03</NAME>
+						<NAME>sceLedSetMode</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
