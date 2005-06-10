@@ -40,6 +40,26 @@ ifndef PSP_EBOOT_ICON
 PSP_EBOOT_ICON = $(PSPSDK)/build/res/ICON0.PNG
 endif
 
+ifndef PSP_EBOOT_ICON1
+PSP_EBOOT_ICON1 = NULL
+endif
+
+ifndef PSP_EBOOT_UNKPNG
+PSP_EBOOT_UNKPNG = NULL
+endif
+
+ifndef PSP_EBOOT_PIC1
+PSP_EBOOT_PIC1 = NULL
+endif
+
+ifndef PSP_EBOOT_SND0
+PSP_EBOOT_SND0 = NULL
+endif
+
+ifndef PSP_EBOOT_PSAR
+PSP_EBOOT_PSAR = NULL
+endif
+
 # Externally defined variables: PSP_BIN, PSP_OBJS, PSP_LIB
 
 # These macros can be used to simplify certain build rules.
@@ -70,4 +90,6 @@ $(PSP_LIB) : $(PSP_OBJS)
 	$(PSP_AR) cru $(PSP_LIB) $(PSP_OBJS)
 
 $(PSP_EBOOT) : $(PSP_BIN) $(PSP_EBOOT_SFO)
-	$(PSPSDK)/bin/pack-pbp EBOOT.PBP $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON) NULL NULL NULL NULL $(PSP_BIN) NULL
+	$(PSPSDK)/bin/pack-pbp EBOOT.PBP $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
+		     $(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
+			 $(PSP_EBOOT_SND0)  $(PSP_BIN) $(PSP_EBOOT_PSAR)
