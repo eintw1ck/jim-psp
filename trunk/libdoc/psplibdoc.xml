@@ -8925,7 +8925,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x72E280A8</NID>
-						<NAME>RebootForKernel_72E280A8</NAME>
+						<NAME>sceKernelReboot</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -10413,7 +10413,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB7A74DB</NID>
-						<NAME>SysMemForKernel_EB7A74DB</NAME>
+						<NAME>sceKernelAllocHeapMemoryWithOption</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x636C953B</NID>
@@ -10429,7 +10429,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2163AA1</NID>
-						<NAME>SysMemForKernel_B2163AA1</NAME>
+						<NAME>sceKernelGetHeapTypeCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEFF0C6DD</NID>
@@ -10509,7 +10509,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5367923C</NID>
-						<NAME>SysMemForKernel_5367923C</NAME>
+						<NAME>sceKernelCallUIDObjFunction</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCE05CCB7</NID>
@@ -10553,11 +10553,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55BFD686</NID>
-						<NAME>SysMemForKernel_55BFD686</NAME>
+						<NAME>sceKernelSearchUIDbyName</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCF4DE78C</NID>
-						<NAME>SysMemForKernel_CF4DE78C</NAME>
+						<NAME>sceKernelGetUIDcontrolBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x41FFC7F9</NID>
@@ -10646,7 +10646,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF919F628</NID>
-						<NAME>SysMemUserForUser_F919F628</NAME>
+						<NAME>sceKernelTotalFreeMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x237DBD4F</NID>
@@ -11964,11 +11964,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC99073E3</NID>
-						<NAME>SysTimerForKernel_C99073E3</NAME>
+						<NAME>sceSTimerAlloc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC105CF38</NID>
-						<NAME>SysTimerForKernel_C105CF38</NAME>
+						<NAME>sceSTimerFree</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB53534B4</NID>
@@ -11976,23 +11976,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x975D8E84</NID>
-						<NAME>SysTimerForKernel_975D8E84</NAME>
+						<NAME>sceSTimerSetHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA95143E2</NID>
-						<NAME>SysTimerForKernel_A95143E2</NAME>
+						<NAME>sceSTimerStartCount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4A01F9D3</NID>
-						<NAME>SysTimerForKernel_4A01F9D3</NAME>
+						<NAME>sceSTimerStopCount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x54BB5DB4</NID>
-						<NAME>SysTimerForKernel_54BB5DB4</NAME>
+						<NAME>sceSTimerResetCount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x228EDAE4</NID>
-						<NAME>SysTimerForKernel_228EDAE4</NAME>
+						<NAME>sceSTimerGetCount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x53231A15</NID>
