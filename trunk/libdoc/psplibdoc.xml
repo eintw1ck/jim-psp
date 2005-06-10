@@ -5672,7 +5672,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x94561901</NID>
-						<NAME>sceDbsvr_driver_94561901</NAME>
+						<NAME>sceDbsvrGetData</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -12026,19 +12026,19 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6E9EA350</NID>
-						<NAME>ThreadManForUser_6E9EA350</NAME>
+						<NAME>_sceKernelReturnFromCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0C106E53</NID>
-						<NAME>ThreadManForUser_0C106E53</NAME>
+						<NAME>sceKernelRegisterThreadEventHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x72F3C145</NID>
-						<NAME>ThreadManForUser_72F3C145</NAME>
+						<NAME>sceKernelReleaseThreadEventHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x369EEB6B</NID>
-						<NAME>ThreadManForUser_369EEB6B</NAME>
+						<NAME>sceKernelReferThreadEventHandlerStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE81CAF8F</NID>
@@ -12051,51 +12051,51 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEDBA5844</NID>
-						<NAME>ThreadManForUser_EDBA5844</NAME>
+						<NAME>sceKernelDeleteCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC11BA8C4</NID>
-						<NAME>ThreadManForUser_C11BA8C4</NAME>
+						<NAME>sceKernelNotifyCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBA4051D6</NID>
-						<NAME>ThreadManForUser_BA4051D6</NAME>
+						<NAME>sceKernelCancelCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2A3D44FF</NID>
-						<NAME>ThreadManForUser_2A3D44FF</NAME>
+						<NAME>sceKernelGetCallbackCount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x349D6D6C</NID>
-						<NAME>ThreadManForUser_349D6D6C</NAME>
+						<NAME>sceKernelCheckCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x730ED8BC</NID>
-						<NAME>ThreadManForUser_730ED8BC</NAME>
+						<NAME>sceKernelReferCallbackStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9ACE131E</NID>
-						<NAME>ThreadManForUser_9ACE131E</NAME>
+						<NAME>sceKernelSleepThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82826F70</NID>
-						<NAME>ThreadManForUser_82826F70</NAME>
+						<NAME>sceKernelSleepThreadCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD59EAD2F</NID>
-						<NAME>ThreadManForUser_D59EAD2F</NAME>
+						<NAME>sceKernelWakeupThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFCCFAD26</NID>
-						<NAME>ThreadManForUser_FCCFAD26</NAME>
+						<NAME>sceKernelCancelWakeupThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9944F31F</NID>
-						<NAME>ThreadManForUser_9944F31F</NAME>
+						<NAME>sceKernelSuspendThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x75156E8F</NID>
-						<NAME>ThreadManForUser_75156E8F</NAME>
+						<NAME>sceKernelResumeThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x278C0DF5</NID>
@@ -12103,23 +12103,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x840E8133</NID>
-						<NAME>ThreadManForUser_840E8133</NAME>
+						<NAME>sceKernelWaitThreadEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCEADEB47</NID>
-						<NAME>ThreadManForUser_CEADEB47</NAME>
+						<NAME>sceKernelDelayThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68DA9E36</NID>
-						<NAME>ThreadManForUser_68DA9E36</NAME>
+						<NAME>sceKernelDelayThreadCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBD123D9E</NID>
-						<NAME>ThreadManForUser_BD123D9E</NAME>
+						<NAME>sceKernelDelaySysClockThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1181E963</NID>
-						<NAME>ThreadManForUser_1181E963</NAME>
+						<NAME>sceKernelDelaySysClockThreadCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD6DA4BA1</NID>
@@ -12162,7 +12162,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D212BAC</NID>
-						<NAME>ThreadManForUser_6D212BAC</NAME>
+						<NAME>sceKernelWaitSemaCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x58B1F937</NID>
@@ -12175,183 +12175,183 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8FFDF9A2</NID>
-						<NAME>ThreadManForUser_8FFDF9A2</NAME>
+						<NAME>sceKernelCancelSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBC6FEBC5</NID>
-						<NAME>ThreadManForUser_BC6FEBC5</NAME>
+						<NAME>sceKernelReferSemaStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55C20A00</NID>
-						<NAME>ThreadManForUser_55C20A00</NAME>
+						<NAME>sceKernelCreateEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEF9E4C70</NID>
-						<NAME>ThreadManForUser_EF9E4C70</NAME>
+						<NAME>sceKernelDeleteEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1FB15A32</NID>
-						<NAME>ThreadManForUser_1FB15A32</NAME>
+						<NAME>sceKernelSetEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x812346E4</NID>
-						<NAME>ThreadManForUser_812346E4</NAME>
+						<NAME>sceKernelClearEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x402FCF22</NID>
-						<NAME>ThreadManForUser_402FCF22</NAME>
+						<NAME>sceKernelWaitEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x328C546A</NID>
-						<NAME>ThreadManForUser_328C546A</NAME>
+						<NAME>sceKernelWaitEventFlagCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x30FD48F0</NID>
-						<NAME>ThreadManForUser_30FD48F0</NAME>
+						<NAME>sceKernelPollEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCD203292</NID>
-						<NAME>ThreadManForUser_CD203292</NAME>
+						<NAME>sceKernelCancelEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA66B0120</NID>
-						<NAME>ThreadManForUser_A66B0120</NAME>
+						<NAME>sceKernelReferEventFlagStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8125221D</NID>
-						<NAME>ThreadManForUser_8125221D</NAME>
+						<NAME>sceKernelCreateMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x86255ADA</NID>
-						<NAME>ThreadManForUser_86255ADA</NAME>
+						<NAME>sceKernelDeleteMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE9B3061E</NID>
-						<NAME>ThreadManForUser_E9B3061E</NAME>
+						<NAME>sceKernelSendMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x18260574</NID>
-						<NAME>ThreadManForUser_18260574</NAME>
+						<NAME>sceKernelReceiveMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF3986382</NID>
-						<NAME>ThreadManForUser_F3986382</NAME>
+						<NAME>sceKernelReceiveMbxCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0D81716A</NID>
-						<NAME>ThreadManForUser_0D81716A</NAME>
+						<NAME>sceKernelPollMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87D4DD36</NID>
-						<NAME>ThreadManForUser_87D4DD36</NAME>
+						<NAME>sceKernelCancelReceiveMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA8E8C846</NID>
-						<NAME>ThreadManForUser_A8E8C846</NAME>
+						<NAME>sceKernelReferMbxStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7C0DC2A0</NID>
-						<NAME>ThreadManForUser_7C0DC2A0</NAME>
+						<NAME>sceKernelCreateMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF0B7DA1C</NID>
-						<NAME>ThreadManForUser_F0B7DA1C</NAME>
+						<NAME>sceKernelDeleteMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x876DBFAD</NID>
-						<NAME>ThreadManForUser_876DBFAD</NAME>
+						<NAME>sceKernelSendMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7C41F2C2</NID>
-						<NAME>ThreadManForUser_7C41F2C2</NAME>
+						<NAME>sceKernelSendMsgPipeCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x884C9F90</NID>
-						<NAME>ThreadManForUser_884C9F90</NAME>
+						<NAME>sceKernelTrySendMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x74829B76</NID>
-						<NAME>ThreadManForUser_74829B76</NAME>
+						<NAME>sceKernelReceiveMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFBFA697D</NID>
-						<NAME>ThreadManForUser_FBFA697D</NAME>
+						<NAME>sceKernelReceiveMsgPipeCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDF52098F</NID>
-						<NAME>ThreadManForUser_DF52098F</NAME>
+						<NAME>sceKernelTryReceiveMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x349B864D</NID>
-						<NAME>ThreadManForUser_349B864D</NAME>
+						<NAME>sceKernelCancelMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x33BE4024</NID>
-						<NAME>ThreadManForUser_33BE4024</NAME>
+						<NAME>sceKernelReferMsgPipeStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x56C039B5</NID>
-						<NAME>ThreadManForUser_56C039B5</NAME>
+						<NAME>sceKernelCreateVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89B3D48C</NID>
-						<NAME>ThreadManForUser_89B3D48C</NAME>
+						<NAME>sceKernelDeleteVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBED27435</NID>
-						<NAME>ThreadManForUser_BED27435</NAME>
+						<NAME>sceKernelAllocateVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEC0A693F</NID>
-						<NAME>ThreadManForUser_EC0A693F</NAME>
+						<NAME>sceKernelAllocateVplCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAF36D708</NID>
-						<NAME>ThreadManForUser_AF36D708</NAME>
+						<NAME>sceKernelTryAllocateVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB736E9FF</NID>
-						<NAME>ThreadManForUser_B736E9FF</NAME>
+						<NAME>sceKernelFreeVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1D371B8A</NID>
-						<NAME>ThreadManForUser_1D371B8A</NAME>
+						<NAME>sceKernelCancelVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x39810265</NID>
-						<NAME>ThreadManForUser_39810265</NAME>
+						<NAME>sceKernelReferVplStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC07BB470</NID>
-						<NAME>ThreadManForUser_C07BB470</NAME>
+						<NAME>sceKernelCreateFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xED1410E0</NID>
-						<NAME>ThreadManForUser_ED1410E0</NAME>
+						<NAME>sceKernelDeleteFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD979E9BF</NID>
-						<NAME>ThreadManForUser_D979E9BF</NAME>
+						<NAME>sceKernelAllocateFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE7282CB6</NID>
-						<NAME>ThreadManForUser_E7282CB6</NAME>
+						<NAME>sceKernelAllocateFplCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x623AE665</NID>
-						<NAME>ThreadManForUser_623AE665</NAME>
+						<NAME>sceKernelTryAllocateFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF6414A71</NID>
-						<NAME>ThreadManForUser_F6414A71</NAME>
+						<NAME>sceKernelFreeFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA8AA591F</NID>
-						<NAME>ThreadManForUser_A8AA591F</NAME>
+						<NAME>sceKernelCancelFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD8199E4C</NID>
-						<NAME>ThreadManForUser_D8199E4C</NAME>
+						<NAME>sceKernelReferFplStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0E927AED</NID>
@@ -12359,159 +12359,159 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x110DEC9A</NID>
-						<NAME>ThreadManForUser_110DEC9A</NAME>
+						<NAME>sceKernelUSec2SysClock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8CD158C</NID>
-						<NAME>ThreadManForUser_C8CD158C</NAME>
+						<NAME>sceKernelUSec2SysClockWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBA6B92E2</NID>
-						<NAME>ThreadManForUser_BA6B92E2</NAME>
+						<NAME>sceKernelSysClock2USec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE1619D7C</NID>
-						<NAME>ThreadManForUser_E1619D7C</NAME>
+						<NAME>sceKernelSysClock2USecWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB738F35</NID>
-						<NAME>ThreadManForUser_DB738F35</NAME>
+						<NAME>sceKernelGetSystemTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82BC5777</NID>
-						<NAME>ThreadManForUser_82BC5777</NAME>
+						<NAME>sceKernelGetSystemTimeWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x369ED59D</NID>
-						<NAME>ThreadManForUser_369ED59D</NAME>
+						<NAME>sceKernelGetSystemTimeLow</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6652B8CA</NID>
-						<NAME>ThreadManForUser_6652B8CA</NAME>
+						<NAME>sceKernelSetAlarm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2C25152</NID>
-						<NAME>ThreadManForUser_B2C25152</NAME>
+						<NAME>sceKernelSetSysClockAlarm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7E65B999</NID>
-						<NAME>ThreadManForUser_7E65B999</NAME>
+						<NAME>sceKernelCancelAlarm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDAA3F564</NID>
-						<NAME>ThreadManForUser_DAA3F564</NAME>
+						<NAME>sceKernelReferAlarmStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x20FFF560</NID>
-						<NAME>ThreadManForUser_20FFF560</NAME>
+						<NAME>sceKernelCreateVTimer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x328F9E52</NID>
-						<NAME>ThreadManForUser_328F9E52</NAME>
+						<NAME>sceKernelDeleteVTimer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB3A59970</NID>
-						<NAME>ThreadManForUser_B3A59970</NAME>
+						<NAME>sceKernelGetVTimerBase</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7C18B77</NID>
-						<NAME>ThreadManForUser_B7C18B77</NAME>
+						<NAME>sceKernelGetVTimerBaseWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x034A921F</NID>
-						<NAME>ThreadManForUser_034A921F</NAME>
+						<NAME>sceKernelGetVTimerTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC0B3FFD2</NID>
-						<NAME>ThreadManForUser_C0B3FFD2</NAME>
+						<NAME>sceKernelGetVTimerTimeWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x542AD630</NID>
-						<NAME>ThreadManForUser_542AD630</NAME>
+						<NAME>sceKernelSetVTimerTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFB6425C3</NID>
-						<NAME>ThreadManForUser_FB6425C3</NAME>
+						<NAME>sceKernelSetVTimerTimeWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC68D9437</NID>
-						<NAME>ThreadManForUser_C68D9437</NAME>
+						<NAME>sceKernelStartVTimer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD0AEEE87</NID>
-						<NAME>ThreadManForUser_D0AEEE87</NAME>
+						<NAME>sceKernelStopVTimer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD8B299AE</NID>
-						<NAME>ThreadManForUser_D8B299AE</NAME>
+						<NAME>sceKernelSetVTimerHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x53B00E9A</NID>
-						<NAME>ThreadManForUser_53B00E9A</NAME>
+						<NAME>sceKernelSetVTimerHandlerWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD2D615EF</NID>
-						<NAME>ThreadManForUser_D2D615EF</NAME>
+						<NAME>sceKernelCancelVTimerHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5F32BEAA</NID>
-						<NAME>ThreadManForUser_5F32BEAA</NAME>
+						<NAME>sceKernelReferVTimerStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x446D8DE6</NID>
-						<NAME>ThreadManForUser_446D8DE6</NAME>
+						<NAME>sceKernelCreateThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9FA03CD3</NID>
-						<NAME>ThreadManForUser_9FA03CD3</NAME>
+						<NAME>sceKernelDeleteThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF475845D</NID>
-						<NAME>ThreadManForUser_F475845D</NAME>
+						<NAME>sceKernelStartThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x532A522E</NID>
-						<NAME>ThreadManForUser_532A522E</NAME>
+						<NAME>_sceKernelExitThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAA73C935</NID>
-						<NAME>ThreadManForUser_AA73C935</NAME>
+						<NAME>sceKernelExitThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x809CE29B</NID>
-						<NAME>ThreadManForUser_809CE29B</NAME>
+						<NAME>sceKernelExitDeleteThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x616403BA</NID>
-						<NAME>ThreadManForUser_616403BA</NAME>
+						<NAME>sceKernelTerminateThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x383F7BCC</NID>
-						<NAME>ThreadManForUser_383F7BCC</NAME>
+						<NAME>sceKernelTerminateDeleteThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AD58B8C</NID>
-						<NAME>ThreadManForUser_3AD58B8C</NAME>
+						<NAME>sceKernelSuspendDispatchThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27E22EC2</NID>
-						<NAME>ThreadManForUser_27E22EC2</NAME>
+						<NAME>sceKernelResumeDispatchThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEA748E31</NID>
-						<NAME>ThreadManForUser_EA748E31</NAME>
+						<NAME>sceKernelChangeCurrentThreadAttr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71BC9871</NID>
-						<NAME>ThreadManForUser_71BC9871</NAME>
+						<NAME>sceKernelChangeThreadPriority</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x912354A7</NID>
-						<NAME>ThreadManForUser_912354A7</NAME>
+						<NAME>sceKernelRotateThreadReadyQueue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2C34E053</NID>
-						<NAME>ThreadManForUser_2C34E053</NAME>
+						<NAME>sceKernelReleaseWaitThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x293B45B8</NID>
@@ -12520,47 +12520,47 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x94AA61EE</NID>
-						<NAME>ThreadManForUser_94AA61EE</NAME>
+						<NAME>sceKernelGetThreadCurrentPriority</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3B183E26</NID>
-						<NAME>ThreadManForUser_3B183E26</NAME>
+						<NAME>sceKernelGetThreadExitStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD13BDE95</NID>
-						<NAME>ThreadManForUser_D13BDE95</NAME>
+						<NAME>sceKernelCheckThreadStack</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x52089CA1</NID>
-						<NAME>ThreadManForUser_52089CA1</NAME>
+						<NAME>sceKernelGetThreadStackFreeSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x17C1684E</NID>
-						<NAME>ThreadManForUser_17C1684E</NAME>
+						<NAME>sceKernelReferThreadStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFFC36A14</NID>
-						<NAME>ThreadManForUser_FFC36A14</NAME>
+						<NAME>sceKernelReferThreadRunStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x627E6F3A</NID>
-						<NAME>ThreadManForUser_627E6F3A</NAME>
+						<NAME>sceKernelReferSystemStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x94416130</NID>
-						<NAME>ThreadManForUser_94416130</NAME>
+						<NAME>sceKernelGetThreadmanIdList</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57CF62DD</NID>
-						<NAME>ThreadManForUser_57CF62DD</NAME>
+						<NAME>sceKernelGetThreadmanIdType</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x64D4540E</NID>
-						<NAME>ThreadManForUser_64D4540E</NAME>
+						<NAME>sceKernelReferThreadProfiler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8218B4DD</NID>
-						<NAME>ThreadManForUser_8218B4DD</NAME>
+						<NAME>sceKernelReferGlobalProfiler</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -12569,67 +12569,67 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x0C106E53</NID>
-						<NAME>ThreadManForKernel_0C106E53</NAME>
+						<NAME>sceKernelRegisterThreadEventHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x72F3C145</NID>
-						<NAME>ThreadManForKernel_72F3C145</NAME>
+						<NAME>sceKernelReleaseThreadEventHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x369EEB6B</NID>
-						<NAME>ThreadManForKernel_369EEB6B</NAME>
+						<NAME>sceKernelReferThreadEventHandlerStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE81CAF8F</NID>
-						<NAME>ThreadManForKernel_E81CAF8F</NAME>
+						<NAME>sceKernelCreateCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEDBA5844</NID>
-						<NAME>ThreadManForKernel_EDBA5844</NAME>
+						<NAME>sceKernelDeleteCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC11BA8C4</NID>
-						<NAME>ThreadManForKernel_C11BA8C4</NAME>
+						<NAME>sceKernelNotifyCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBA4051D6</NID>
-						<NAME>ThreadManForKernel_BA4051D6</NAME>
+						<NAME>sceKernelCancelCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2A3D44FF</NID>
-						<NAME>ThreadManForKernel_2A3D44FF</NAME>
+						<NAME>sceKernelGetCallbackCount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x349D6D6C</NID>
-						<NAME>ThreadManForKernel_349D6D6C</NAME>
+						<NAME>sceKernelCheckCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x730ED8BC</NID>
-						<NAME>ThreadManForKernel_730ED8BC</NAME>
+						<NAME>sceKernelReferCallbackStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9ACE131E</NID>
-						<NAME>ThreadManForKernel_9ACE131E</NAME>
+						<NAME>sceKernelSleepThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82826F70</NID>
-						<NAME>ThreadManForKernel_82826F70</NAME>
+						<NAME>sceKernelSleepThreadCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD59EAD2F</NID>
-						<NAME>ThreadManForKernel_D59EAD2F</NAME>
+						<NAME>sceKernelWakeupThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFCCFAD26</NID>
-						<NAME>ThreadManForKernel_FCCFAD26</NAME>
+						<NAME>sceKernelCancelWakeupThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9944F31F</NID>
-						<NAME>ThreadManForKernel_9944F31F</NAME>
+						<NAME>sceKernelSuspendThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x75156E8F</NID>
-						<NAME>ThreadManForKernel_75156E8F</NAME>
+						<NAME>sceKernelResumeThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8FD9F70C</NID>
@@ -12637,347 +12637,347 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x278C0DF5</NID>
-						<NAME>ThreadManForKernel_278C0DF5</NAME>
+						<NAME>sceKernelWaitThreadEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x840E8133</NID>
-						<NAME>ThreadManForKernel_840E8133</NAME>
+						<NAME>sceKernelWaitThreadEndCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCEADEB47</NID>
-						<NAME>ThreadManForKernel_CEADEB47</NAME>
+						<NAME>sceKernelDelayThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68DA9E36</NID>
-						<NAME>ThreadManForKernel_68DA9E36</NAME>
+						<NAME>sceKernelDelayThreadCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBD123D9E</NID>
-						<NAME>ThreadManForKernel_BD123D9E</NAME>
+						<NAME>sceKernelDelaySysClockThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1181E963</NID>
-						<NAME>ThreadManForKernel_1181E963</NAME>
+						<NAME>sceKernelDelaySysClockThreadCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD6DA4BA1</NID>
-						<NAME>ThreadManForKernel_D6DA4BA1</NAME>
+						<NAME>sceKernelCreateSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28B6489C</NID>
-						<NAME>ThreadManForKernel_28B6489C</NAME>
+						<NAME>sceKernelDeleteSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3F53E640</NID>
-						<NAME>ThreadManForKernel_3F53E640</NAME>
+						<NAME>sceKernelSignalSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4E3A1105</NID>
-						<NAME>ThreadManForKernel_4E3A1105</NAME>
+						<NAME>sceKernelWaitSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D212BAC</NID>
-						<NAME>ThreadManForKernel_6D212BAC</NAME>
+						<NAME>sceKernelWaitSemaCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x58B1F937</NID>
-						<NAME>ThreadManForKernel_58B1F937</NAME>
+						<NAME>sceKernelPollSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8FFDF9A2</NID>
-						<NAME>ThreadManForKernel_8FFDF9A2</NAME>
+						<NAME>sceKernelCancelSema</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBC6FEBC5</NID>
-						<NAME>ThreadManForKernel_BC6FEBC5</NAME>
+						<NAME>sceKernelReferSemaStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55C20A00</NID>
-						<NAME>ThreadManForKernel_55C20A00</NAME>
+						<NAME>sceKernelCreateEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEF9E4C70</NID>
-						<NAME>ThreadManForKernel_EF9E4C70</NAME>
+						<NAME>sceKernelDeleteEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1FB15A32</NID>
-						<NAME>ThreadManForKernel_1FB15A32</NAME>
+						<NAME>sceKernelSetEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x812346E4</NID>
-						<NAME>ThreadManForKernel_812346E4</NAME>
+						<NAME>sceKernelClearEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x402FCF22</NID>
-						<NAME>ThreadManForKernel_402FCF22</NAME>
+						<NAME>sceKernelWaitEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x328C546A</NID>
-						<NAME>ThreadManForKernel_328C546A</NAME>
+						<NAME>sceKernelWaitEventFlagCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x30FD48F0</NID>
-						<NAME>ThreadManForKernel_30FD48F0</NAME>
+						<NAME>sceKernelPollEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCD203292</NID>
-						<NAME>ThreadManForKernel_CD203292</NAME>
+						<NAME>sceKernelCancelEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA66B0120</NID>
-						<NAME>ThreadManForKernel_A66B0120</NAME>
+						<NAME>sceKernelReferEventFlagStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8125221D</NID>
-						<NAME>ThreadManForKernel_8125221D</NAME>
+						<NAME>sceKernelCreateMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x86255ADA</NID>
-						<NAME>ThreadManForKernel_86255ADA</NAME>
+						<NAME>sceKernelDeleteMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE9B3061E</NID>
-						<NAME>ThreadManForKernel_E9B3061E</NAME>
+						<NAME>sceKernelSendMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x18260574</NID>
-						<NAME>ThreadManForKernel_18260574</NAME>
+						<NAME>sceKernelReceiveMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF3986382</NID>
-						<NAME>ThreadManForKernel_F3986382</NAME>
+						<NAME>sceKernelReceiveMbxCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0D81716A</NID>
-						<NAME>ThreadManForKernel_0D81716A</NAME>
+						<NAME>sceKernelPollMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87D4DD36</NID>
-						<NAME>ThreadManForKernel_87D4DD36</NAME>
+						<NAME>sceKernelCancelReceiveMbx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA8E8C846</NID>
-						<NAME>ThreadManForKernel_A8E8C846</NAME>
+						<NAME>sceKernelReferMbxStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7C0DC2A0</NID>
-						<NAME>ThreadManForKernel_7C0DC2A0</NAME>
+						<NAME>sceKernelCreateMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF0B7DA1C</NID>
-						<NAME>ThreadManForKernel_F0B7DA1C</NAME>
+						<NAME>sceKernelDeleteMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x876DBFAD</NID>
-						<NAME>ThreadManForKernel_876DBFAD</NAME>
+						<NAME>sceKernelSendMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7C41F2C2</NID>
-						<NAME>ThreadManForKernel_7C41F2C2</NAME>
+						<NAME>sceKernelSendMsgPipeCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x884C9F90</NID>
-						<NAME>ThreadManForKernel_884C9F90</NAME>
+						<NAME>sceKernelTrySendMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x74829B76</NID>
-						<NAME>ThreadManForKernel_74829B76</NAME>
+						<NAME>sceKernelReceiveMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFBFA697D</NID>
-						<NAME>ThreadManForKernel_FBFA697D</NAME>
+						<NAME>sceKernelReceiveMsgPipeCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDF52098F</NID>
-						<NAME>ThreadManForKernel_DF52098F</NAME>
+						<NAME>sceKernelTryReceiveMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x349B864D</NID>
-						<NAME>ThreadManForKernel_349B864D</NAME>
+						<NAME>sceKernelCancelMsgPipe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x33BE4024</NID>
-						<NAME>ThreadManForKernel_33BE4024</NAME>
+						<NAME>sceKernelReferMsgPipeStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x56C039B5</NID>
-						<NAME>ThreadManForKernel_56C039B5</NAME>
+						<NAME>sceKernelCreateVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89B3D48C</NID>
-						<NAME>ThreadManForKernel_89B3D48C</NAME>
+						<NAME>sceKernelDeleteVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBED27435</NID>
-						<NAME>ThreadManForKernel_BED27435</NAME>
+						<NAME>sceKernelAllocateVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEC0A693F</NID>
-						<NAME>ThreadManForKernel_EC0A693F</NAME>
+						<NAME>sceKernelAllocateVplCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAF36D708</NID>
-						<NAME>ThreadManForKernel_AF36D708</NAME>
+						<NAME>sceKernelTryAllocateVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB736E9FF</NID>
-						<NAME>ThreadManForKernel_B736E9FF</NAME>
+						<NAME>sceKernelFreeVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1D371B8A</NID>
-						<NAME>ThreadManForKernel_1D371B8A</NAME>
+						<NAME>sceKernelCancelVpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x39810265</NID>
-						<NAME>ThreadManForKernel_39810265</NAME>
+						<NAME>sceKernelReferVplStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC07BB470</NID>
-						<NAME>ThreadManForKernel_C07BB470</NAME>
+						<NAME>sceKernelCreateFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xED1410E0</NID>
-						<NAME>ThreadManForKernel_ED1410E0</NAME>
+						<NAME>sceKernelDeleteFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD979E9BF</NID>
-						<NAME>ThreadManForKernel_D979E9BF</NAME>
+						<NAME>sceKernelAllocateFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE7282CB6</NID>
-						<NAME>ThreadManForKernel_E7282CB6</NAME>
+						<NAME>sceKernelAllocateFplCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x623AE665</NID>
-						<NAME>ThreadManForKernel_623AE665</NAME>
+						<NAME>sceKernelTryAllocateFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF6414A71</NID>
-						<NAME>ThreadManForKernel_F6414A71</NAME>
+						<NAME>sceKernelFreeFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA8AA591F</NID>
-						<NAME>ThreadManForKernel_A8AA591F</NAME>
+						<NAME>sceKernelCancelFpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD8199E4C</NID>
-						<NAME>ThreadManForKernel_D8199E4C</NAME>
+						<NAME>sceKernelReferFplStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x110DEC9A</NID>
-						<NAME>ThreadManForKernel_110DEC9A</NAME>
+						<NAME>sceKernelUSec2SysClock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8CD158C</NID>
-						<NAME>ThreadManForKernel_C8CD158C</NAME>
+						<NAME>sceKernelUSec2SysClockWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBA6B92E2</NID>
-						<NAME>ThreadManForKernel_BA6B92E2</NAME>
+						<NAME>sceKernelSysClock2USec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE1619D7C</NID>
-						<NAME>ThreadManForKernel_E1619D7C</NAME>
+						<NAME>sceKernelSysClock2USecWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB738F35</NID>
-						<NAME>ThreadManForKernel_DB738F35</NAME>
+						<NAME>sceKernelGetSystemTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82BC5777</NID>
-						<NAME>ThreadManForKernel_82BC5777</NAME>
+						<NAME>sceKernelGetSystemTimeWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x369ED59D</NID>
-						<NAME>ThreadManForKernel_369ED59D</NAME>
+						<NAME>sceKernelGetSystemTimeLow</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6652B8CA</NID>
-						<NAME>ThreadManForKernel_6652B8CA</NAME>
+						<NAME>sceKernelSetAlarm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2C25152</NID>
-						<NAME>ThreadManForKernel_B2C25152</NAME>
+						<NAME>sceKernelSetSysClockAlarm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7E65B999</NID>
-						<NAME>ThreadManForKernel_7E65B999</NAME>
+						<NAME>sceKernelCancelAlarm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDAA3F564</NID>
-						<NAME>ThreadManForKernel_DAA3F564</NAME>
+						<NAME>sceKernelReferAlarmStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x20FFF560</NID>
-						<NAME>ThreadManForKernel_20FFF560</NAME>
+						<NAME>sceKernelCreateVTimer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x328F9E52</NID>
-						<NAME>ThreadManForKernel_328F9E52</NAME>
+						<NAME>sceKernelDeleteVTimer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB3A59970</NID>
-						<NAME>ThreadManForKernel_B3A59970</NAME>
+						<NAME>sceKernelGetVTimerBase</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7C18B77</NID>
-						<NAME>ThreadManForKernel_B7C18B77</NAME>
+						<NAME>sceKernelGetVTimerBaseWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x034A921F</NID>
-						<NAME>ThreadManForKernel_034A921F</NAME>
+						<NAME>sceKernelGetVTimerTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC0B3FFD2</NID>
-						<NAME>ThreadManForKernel_C0B3FFD2</NAME>
+						<NAME>sceKernelGetVTimerTimeWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x542AD630</NID>
-						<NAME>ThreadManForKernel_542AD630</NAME>
+						<NAME>sceKernelSetVTimerTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFB6425C3</NID>
-						<NAME>ThreadManForKernel_FB6425C3</NAME>
+						<NAME>sceKernelSetVTimerTimeWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC68D9437</NID>
-						<NAME>ThreadManForKernel_C68D9437</NAME>
+						<NAME>sceKernelStartVTimer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD0AEEE87</NID>
-						<NAME>ThreadManForKernel_D0AEEE87</NAME>
+						<NAME>sceKernelStopVTimer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD8B299AE</NID>
-						<NAME>ThreadManForKernel_D8B299AE</NAME>
+						<NAME>sceKernelSetVTimerHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x53B00E9A</NID>
-						<NAME>ThreadManForKernel_53B00E9A</NAME>
+						<NAME>sceKernelSetVTimerHandlerWide</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD2D615EF</NID>
-						<NAME>ThreadManForKernel_D2D615EF</NAME>
+						<NAME>sceKernelCancelVTimerHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5F32BEAA</NID>
-						<NAME>ThreadManForKernel_5F32BEAA</NAME>
+						<NAME>sceKernelReferVTimerStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x04E72261</NID>
-						<NAME>ThreadManForKernel_04E72261</NAME>
+						<NAME>sceKernelAllocateKTLS</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD198B811</NID>
-						<NAME>ThreadManForKernel_D198B811</NAME>
+						<NAME>sceKernelFreeKTLS</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AD875C3</NID>
-						<NAME>ThreadManForKernel_3AD875C3</NAME>
+						<NAME>sceKernelGetThreadKTLS</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA249EAAE</NID>
-						<NAME>ThreadManForKernel_A249EAAE</NAME>
+						<NAME>sceKernelGetKTLS</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB50F4E46</NID>
@@ -12985,67 +12985,67 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x446D8DE6</NID>
-						<NAME>ThreadManForKernel_446D8DE6</NAME>
+						<NAME>sceKernelCreateThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9FA03CD3</NID>
-						<NAME>ThreadManForKernel_9FA03CD3</NAME>
+						<NAME>sceKernelDeleteThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF475845D</NID>
-						<NAME>ThreadManForKernel_F475845D</NAME>
+						<NAME>sceKernelStartThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAA73C935</NID>
-						<NAME>ThreadManForKernel_AA73C935</NAME>
+						<NAME>sceKernelExitThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x809CE29B</NID>
-						<NAME>ThreadManForKernel_809CE29B</NAME>
+						<NAME>sceKernelExitDeleteThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x616403BA</NID>
-						<NAME>ThreadManForKernel_616403BA</NAME>
+						<NAME>sceKernelTerminateThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x383F7BCC</NID>
-						<NAME>ThreadManForKernel_383F7BCC</NAME>
+						<NAME>sceKernelTerminateDeleteThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AD58B8C</NID>
-						<NAME>ThreadManForKernel_3AD58B8C</NAME>
+						<NAME>sceKernelSuspendDispatchThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27E22EC2</NID>
-						<NAME>ThreadManForKernel_27E22EC2</NAME>
+						<NAME>sceKernelResumeDispatchThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEA748E31</NID>
-						<NAME>ThreadManForKernel_EA748E31</NAME>
+						<NAME>sceKernelChangeCurrentThreadAttr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71BC9871</NID>
-						<NAME>ThreadManForKernel_71BC9871</NAME>
+						<NAME>sceKernelChangeThreadPriority</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x912354A7</NID>
-						<NAME>ThreadManForKernel_912354A7</NAME>
+						<NAME>sceKernelRotateThreadReadyQueue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2C34E053</NID>
-						<NAME>ThreadManForKernel_2C34E053</NAME>
+						<NAME>sceKernelReleaseWaitThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x293B45B8</NID>
-						<NAME>ThreadManForKernel_293B45B8</NAME>
+						<NAME>sceKernelGetThreadId</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x94AA61EE</NID>
-						<NAME>ThreadManForKernel_94AA61EE</NAME>
+						<NAME>sceKernelGetThreadCurrentPriority</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3B183E26</NID>
-						<NAME>ThreadManForKernel_3B183E26</NAME>
+						<NAME>sceKernelGetThreadExitStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF6427665</NID>
@@ -13053,15 +13053,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x85A2A5BF</NID>
-						<NAME>ThreadManForKernel_85A2A5BF</NAME>
+						<NAME>sceKernelIsUserModeThread</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDD55A192</NID>
-						<NAME>ThreadManForKernel_DD55A192</NAME>
+						<NAME>sceKernelGetSyscallRA</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBC31C1B9</NID>
-						<NAME>ThreadManForKernel_BC31C1B9</NAME>
+						<NAME>sceKernelExtendKernelStack</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4FE44D5E</NID>
@@ -13069,11 +13069,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD13BDE95</NID>
-						<NAME>ThreadManForKernel_D13BDE95</NAME>
+						<NAME>sceKernelCheckThreadStack</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x52089CA1</NID>
-						<NAME>ThreadManForKernel_52089CA1</NAME>
+						<NAME>sceKernelGetThreadStackFreeSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD890B370</NID>
@@ -13081,11 +13081,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x17C1684E</NID>
-						<NAME>ThreadManForKernel_17C1684E</NAME>
+						<NAME>sceKernelReferThreadStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFFC36A14</NID>
-						<NAME>ThreadManForKernel_FFC36A14</NAME>
+						<NAME>sceKernelReferThreadRunStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2D69D086</NID>
@@ -13093,19 +13093,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFCB5EB49</NID>
-						<NAME>ThreadManForKernel_FCB5EB49</NAME>
+						<NAME>sceKernelGetSystemStatusFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x627E6F3A</NID>
-						<NAME>ThreadManForKernel_627E6F3A</NAME>
+						<NAME>sceKernelReferSystemStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x94416130</NID>
-						<NAME>ThreadManForKernel_94416130</NAME>
+						<NAME>sceKernelGetThreadmanIdList</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57CF62DD</NID>
-						<NAME>ThreadManForKernel_57CF62DD</NAME>
+						<NAME>sceKernelGetThreadmanIdType</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
