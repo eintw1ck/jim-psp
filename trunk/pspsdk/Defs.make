@@ -1,23 +1,19 @@
 # _____     ___ ____     ___ ____
 #  ____|   |    ____|   |        | |____|
-# |     ___|   |____ ___|    ____| |    \    PS2DEV Open Source Project.
+# |     ___|   |     ___|    ____| |    \    PSPDEV Open Source Project.
 #-----------------------------------------------------------------------
-# Copyright 2001-2004, ps2dev - http://www.ps2dev.org
-# Licenced under Academic Free License version 2.0
-# Review ps2sdk README & LICENSE files for further details.
+# Review pspsdk README & LICENSE files for further details.
 #
 # $Id$
 
  
 # You can override the following options on the make command line, or manually
-# edit them below.  Please see the file INSTALL for details on building
-# ps2sdk.
+# edit them below.  
 
 #
 # Definitions for the PSP toolchain.
 #
 
-#PSP_TOOL_PREFIX = ee-
 PSP_TOOL_PREFIX = psp-
 PSP_CC = $(PSP_TOOL_PREFIX)gcc
 PSP_CXX = $(PSP_TOOL_PREFIX)g++

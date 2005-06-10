@@ -24,7 +24,7 @@
 	STUB_FUNC	0x27E22EC2,sceKernelResumeDispatchThread
 	STUB_FUNC	0x71BC9871,sceKernelChangeThreadPriority
 	STUB_FUNC	0xD13BDE95,sceKernelCheckThreadStack
-	STUB_FUNC	0x82826F70,sceKernelPollCallbacks
+	STUB_FUNC	0x82826F70,sceKernelSleepThreadCB
 	STUB_FUNC	0x9944F31F,sceKernelSuspendThread
 	STUB_FUNC	0x75156E8F,sceKernelResumeThread
 	STUB_FUNC	0x278C0DF5,ThreadMan_25
@@ -34,7 +34,7 @@
 	STUB_FUNC	0x28B6489C,sceKernelDeleteSema
 	STUB_FUNC	0x3F53E640,sceKernelSignalSema
 	STUB_FUNC	0x4E3A1105,sceKernelWaitSema
-	STUB_FUNC	0x6D212BAC,ThreadMan_28Sema
+	STUB_FUNC	0x6D212BAC,sceKernelWaitSemaCB
 	STUB_FUNC	0x58B1F937,sceKernelPollSema
 	STUB_FUNC	0x55C20A00,sceKernelCreateEventFlag
 	STUB_FUNC	0xEF9E4C70,sceKernelDeleteEventFlag

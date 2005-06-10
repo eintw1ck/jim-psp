@@ -9,7 +9,7 @@
 # $Id$
 
 
-SUBDIRS = bin2s bin2c bin2o outpatch pack-pbp unpack-pbp
+SUBDIRS = bin2s bin2c bin2o outpatch pack-pbp unpack-pbp mksfo
 
 include $(PSPSDKSRC)/Defs.make
 include $(PSPSDKSRC)/Rules.make

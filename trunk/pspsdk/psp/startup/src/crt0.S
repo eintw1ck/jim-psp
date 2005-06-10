@@ -22,10 +22,10 @@
 		.weak	_init
 		.weak	_fini
 
-		.global _start
-		.ent _start
+		.global module_start
+		.ent module_start
 
-_start:
+module_start:
 		addiu 	$sp, -0x10
 		sw		$ra, 0($sp)	
 		sw		$s0, 4($sp)
@@ -54,7 +54,7 @@ _start:
 		jr 		$ra
 		addiu	$sp, 0x10
 
-		.end _start
+		.end module_start
 
 # Second stage main function
 		.ent _main
@@ -124,6 +124,7 @@ _main_thread_name:
 
 
 		.section	.lib.ent,"wa",@progbits
+		.global     __lib_ent_top
 __lib_ent_top:
 		.word 0
 		.word 0x80000000
@@ -132,34 +133,20 @@ __lib_ent_top:
 
 
 		.section	.lib.ent.btm,"wa",@progbits
+		.global     __lib_ent_bottom
 __lib_ent_bottom:
 		.word	0
 
 
 		.section	.lib.stub,"wa",@progbits
+		.global     __lib_stub_top
 __lib_stub_top:
 
 
 		.section	.lib.stub.btm,"wa",@progbits
+		.global     __lib_stub_bottom
 __lib_stub_bottom:
 		.word	0
-
-
-##############################################################################
-
-		.section	".xodata.sceModuleInfo","wa",@progbits
-
-__moduleinfo:
-		.byte	0,0,1,1
-
-		.ascii	"PSPSDK"		#up to 28 char
-		.align	5
-
-		.word	_gp
-		.word	__lib_ent_top
-		.word	__lib_ent_bottom
-		.word	__lib_stub_top
-		.word	__lib_stub_bottom
 
 ##############################################################################
 
@@ -167,8 +154,8 @@ __moduleinfo:
 __entrytable:
 		.word 0xD632ACDB
 		.word 0xF01D73A7
-		.word _start
-		.word __moduleinfo
+		.word module_start
+		.word module_info
 		.word 0
 
 

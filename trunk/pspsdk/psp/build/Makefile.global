@@ -1,10 +1,8 @@
 # _____     ___ ____     ___ ____
-#  ____|   |    ____|   |        | |____|
-# |     ___|   |____ ___|    ____| |    \    PS2DEV Open Source Project.
+#  ____|   |   |____|   |        | |____|
+# |     ___|   |     ___|    ____| |    \    PSPDEV Open Source Project.
 #-----------------------------------------------------------------------
-# Copyright 2001-2004, ps2dev - http://www.ps2dev.org
-# Licenced under Academic Free License version 2.0
-# Review ps2sdk README & LICENSE files for further details.
+# Review pspsdk README & LICENSE files for further details.
 #
 # $Id$
 
@@ -18,7 +16,7 @@ PSP_CFLAGS := -O2 -G0 -Wall -mdivide-breaks -march=r4000 -mgp32 -mlong32 $(PSP_C
 PSP_CXXFLAGS := -O2 -G0 -Wall -mdivide-breaks -march=r4000 -mgp32 -mlong32 $(PSP_CXXFLAGS)
 
 # Linker flags
-PSP_LDFLAGS := -O0 -G0 -L$(PSPSDK)/lib -Ttext 8900000 -q $(PSP_LDFLAGS)
+PSP_LDFLAGS := -O0 -G0 -L$(PSPSDK)/lib -T$(PSPSDK)/startup/linkfile -Ttext 8900000 -q $(PSP_LDFLAGS)
 
 # Assembler flags
 PSP_ASFLAGS := -G0 $(PSP_ASFLAGS)
@@ -29,8 +27,13 @@ PSP_ASFLAGS := -G0 $(PSP_ASFLAGS)
 PSP_LIBS += -lc -lkernel
 
 # Define the overridable parameters for the EBOOT
+
+ifndef PSP_EBOOT_TITLE
+PSP_EBOOT_TITLE = PSPSDK
+endif
+
 ifndef PSP_EBOOT_SFO
-PSP_EBOOT_SFO = $(PSPSDK)/build/res/PARAM.SFO
+PSP_EBOOT_SFO = PARAM.SFO
 endif
 
 ifndef PSP_EBOOT_ICON
@@ -55,13 +58,16 @@ PSP_CXX_COMPILE = $(PSP_CXX) $(PSP_CXXFLAGS) $(PSP_INCS)
 %.o : %.s
 	$(PSP_AS) $(PSP_ASFLAGS) $< -o $@
 
+%.SFO : 
+	$(PSPSDK)/bin/mksfo '$(PSP_EBOOT_TITLE)' $(PSP_EBOOT_SFO)
+
 $(PSP_BIN) : $(PSP_OBJS) $(PSPSDK)/startup/crt0.o
 	$(PSP_LD) $(PSP_LDFLAGS) -o $(PSP_BIN).fix $(PSPSDK)/startup/crt0.o $(PSP_OBJS) $(PSP_LIBS)
-	$(PSPSDK)/bin/outpatch $(PSP_BIN).fix $(PSP_BIN)
+	$(PSPSDK)/bin/prxtool -p -o $(PSP_BIN) $(PSP_BIN).fix 
 	rm -f $(PSP_BIN).fix
 
 $(PSP_LIB) : $(PSP_OBJS)
 	$(PSP_AR) cru $(PSP_LIB) $(PSP_OBJS)
 
-$(PSP_EBOOT) : $(PSP_BIN)
+$(PSP_EBOOT) : $(PSP_BIN) $(PSP_EBOOT_SFO)
 	$(PSPSDK)/bin/pack-pbp EBOOT.PBP $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON) NULL NULL NULL NULL $(PSP_BIN) NULL

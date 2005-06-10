@@ -148,17 +148,15 @@ int sceKernelStartThread(int thid, void *arg1, void *arg2);
 int sceKernelCreateCallback(const char *name, void *func, void *arg);
 
 /**
- * Poll callbacks
+ * Sleep thread but service any callbacks as necessary
  *
- * @note This function must be called in order for callbacks to work. It should also be
- * noted that it will then block indefinetly so it should be called in a seperate thread
  * @par Example:
  * @code
  * // Once all callbacks have been setup call this function
- * sceKernelPollCallbacks();
+ * sceKernelSleepThreadCB
  * @endcode
  */
-void sceKernelPollCallbacks(void);
+void sceKernelSleepThreadCB(void);
 
 /** 
   * Get the current thread Id

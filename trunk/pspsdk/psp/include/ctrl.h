@@ -75,14 +75,14 @@ typedef struct _ctrl_data
  */
 void sceCtrlSetSamplingCycle(int arg);
 /**
- * Set analog mode
+ * Set the sampling mode
  *
  * @par Example:
  * @see sceCtrlReadBufferPositive
  *
  * @param on - Pass 1 to enable analogue mode
  */
-void CtrlSetAnalogMode(int on);
+void sceCtrlSetSamplingMode(int on);
 /**
  * Read buffer positive
  *
@@ -91,7 +91,7 @@ void CtrlSetAnalogMode(int on);
  * ctrl_data_t pad;
 
  * sceCtrlSetSamplingCycle(0);
- * CtrlSetAnalogMode(1);
+ * sceCtrlSetSamplingMode(1);
  * sceCtrlReadBufferPositive(&pad, 1); 
  * // Do something with the read controller data
  * @endcode

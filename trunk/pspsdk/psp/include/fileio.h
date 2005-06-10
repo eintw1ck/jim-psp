@@ -123,7 +123,7 @@ int sceIoRemove(const char *file);
  * @param mode
  * @return Returns the value 0 if its succesful otherwise -1
  */
-int sceIoMkDir(const char *dir, int mode);
+int sceIoMkdir(const char *dir, int mode);
 
 /**
  * Remove a directory file
@@ -135,7 +135,7 @@ int sceIoMkDir(const char *dir, int mode);
  * @param path Removes a directory file pointed by the string path
  * @return Returns the value 0 if its succesful otherwise -1
  */
-int sceIoRmDir(const char *path);
+int sceIoRmdir(const char *path);
 
 /**
  * Change the name of a file

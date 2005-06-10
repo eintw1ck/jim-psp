@@ -12,16 +12,15 @@ TOOLS_BIN_DIR = bin/
 TOOLS_SRC_DIR = src/
 TOOLS_INC_DIR = include/
 
-TOOLS_OBJS = bin2s.o
+TOOLS_OBJS = mksfo.o
 TOOLS_OBJS := $(TOOLS_OBJS:%=$(TOOLS_OBJS_DIR)%)
 
-TOOLS_BIN = $(TOOLS_BIN_DIR)bin2s
+TOOLS_BIN = $(TOOLS_BIN_DIR)mksfo
 
 all: $(TOOLS_OBJS_DIR) $(TOOLS_BIN_DIR) $(TOOLS_BIN)
 
 clean:
 	rm -f -r $(TOOLS_OBJS_DIR) $(TOOLS_BIN_DIR)
-
 
 include $(PSPSDKSRC)/Defs.make
 include $(PSPSDKSRC)/tools/Rules.make

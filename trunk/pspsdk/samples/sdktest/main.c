@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Define the module info section */
+MODULE_INFO("SDKTEST", 0x01010000)
+
 /* Define printf, just to make typing easier */
 #define printf	pspDebugScreenPrintf
 
@@ -26,7 +29,7 @@ void CallbackThread(void *arg)
 	cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
 	sceKernelRegisterExitCallback(cbid);
 
-	sceKernelPollCallbacks();
+	sceKernelSleepThreadCB();
 }
 
 /* Dump the current thread's status */
