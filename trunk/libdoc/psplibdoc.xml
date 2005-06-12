@@ -14460,15 +14460,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA5628F0D</NID>
-						<NAME>sceVshBridge_A5628F0D</NAME>
+						<NAME>vshKernelLoadModuleVSH</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x41C54ADF</NID>
-						<NAME>sceVshBridge_41C54ADF</NAME>
+						<NAME>vshKernelLoadModuleVSHByID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC9626587</NID>
-						<NAME>sceVshBridge_C9626587</NAME>
+						<NAME>vshKernelLoadModuleBufferVSH</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5C2983C2</NID>
@@ -14528,7 +14528,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2380DC08</NID>
-						<NAME>sceVshBridge_2380DC08</NAME>
+						<NAME>vshIoDevctl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4DB43867</NID>
@@ -14652,19 +14652,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8399A8AA</NID>
-						<NAME>sceVshBridge_8399A8AA</NAME>
+						<NAME>vshKernelLoadExecBufferPlain</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE614F45F</NID>
-						<NAME>sceVshBridge_E614F45F</NAME>
+						<NAME>vshKernelLoadExecFromHost</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEEFB02BB</NID>
-						<NAME>sceVshBridge_EEFB02BB</NAME>
+						<NAME>vshKernelLoadExec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9929DDA5</NID>
-						<NAME>sceVshBridge_9929DDA5</NAME>
+						<NAME>vshKernelExitVSH</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7C46DCA</NID>
@@ -14692,7 +14692,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x40716012</NID>
-						<NAME>sceVshBridge_40716012</NAME>
+						<NAME>vshKernelExitVSHVSH</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x88DA81A5</NID>
