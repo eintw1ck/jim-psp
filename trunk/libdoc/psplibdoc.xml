@@ -10915,7 +10915,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2DB687E9</NID>
-						<NAME>sceKernelIsValidHeapc</NAME>
+						<NAME>sceKernelIsValidHeap</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x55A40B2C</NID>
@@ -12633,7 +12633,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8FD9F70C</NID>
-						<NAME>ThreadManForKernel_8FD9F70C</NAME>
+						<NAME>sceKernelSuspendAllUserThreads</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x278C0DF5</NID>
@@ -14366,51 +14366,51 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8186A58</NID>
-						<NAME>UtilsForUser_C8186A58</NAME>
+						<NAME>sceKernelUtilsMd5Digest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9E5C5086</NID>
-						<NAME>UtilsForUser_9E5C5086</NAME>
+						<NAME>sceKernelUtilsMd5BlockInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x61E1E525</NID>
-						<NAME>UtilsForUser_61E1E525</NAME>
+						<NAME>sceKernelUtilsMd5BlockUpdate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB8D24E78</NID>
-						<NAME>UtilsForUser_B8D24E78</NAME>
+						<NAME>sceKernelUtilsMd5BlockResult</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x840259F1</NID>
-						<NAME>UtilsForUser_840259F1</NAME>
+						<NAME>sceKernelUtilsSha1Digest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF8FCD5BA</NID>
-						<NAME>UtilsForUser_F8FCD5BA</NAME>
+						<NAME>sceKernelUtilsSha1BlockInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x346F6DA8</NID>
-						<NAME>UtilsForUser_346F6DA8</NAME>
+						<NAME>sceKernelUtilsSha1BlockUpdate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x585F1C09</NID>
-						<NAME>UtilsForUser_585F1C09</NAME>
+						<NAME>sceKernelUtilsSha1BlockResult</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE860E75E</NID>
-						<NAME>UtilsForUser_E860E75E</NAME>
+						<NAME>sceKernelUtilsMt19937Init</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x06FB8A63</NID>
-						<NAME>UtilsForUser_06FB8A63</NAME>
+						<NAME>sceKernelUtilsMt19937UInt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x37FB5C42</NID>
-						<NAME>UtilsForUser_37FB5C42</NAME>
+						<NAME>sceKernelGetGPI</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6AD345D7</NID>
-						<NAME>UtilsForUser_6AD345D7</NAME>
+						<NAME>sceKernelSetGPO</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91E4F6A7</NID>
@@ -14430,31 +14430,31 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB435DEC5</NID>
-						<NAME>UtilsForUser_B435DEC5</NAME>
+						<NAME>sceKernelDcacheWritebackInvalidateAll</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3EE30821</NID>
-						<NAME>UtilsForUser_3EE30821</NAME>
+						<NAME>sceKernelDcacheWritebackRange</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x34B9FA9E</NID>
-						<NAME>UtilsForUser_34B9FA9E</NAME>
+						<NAME>sceKernelDcacheWritebackInvalidateRange</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x80001C4C</NID>
-						<NAME>UtilsForUser_80001C4C</NAME>
+						<NAME>sceKernelDcacheProbe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x16641D70</NID>
-						<NAME>UtilsForUser_16641D70</NAME>
+						<NAME>sceKernelDcacheReadTag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4FD31C9D</NID>
-						<NAME>UtilsForUser_4FD31C9D</NAME>
+						<NAME>sceKernelIcacheProbe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFB05FAD0</NID>
-						<NAME>UtilsForUser_FB05FAD0</NAME>
+						<NAME>sceKernelIcacheReadTag</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -14467,43 +14467,43 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8186A58</NID>
-						<NAME>UtilsForKernel_C8186A58</NAME>
+						<NAME>sceKernelUtilsMd5Digest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9E5C5086</NID>
-						<NAME>UtilsForKernel_9E5C5086</NAME>
+						<NAME>sceKernelUtilsMd5BlockInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x61E1E525</NID>
-						<NAME>UtilsForKernel_61E1E525</NAME>
+						<NAME>sceKernelUtilsMd5BlockUpdate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB8D24E78</NID>
-						<NAME>UtilsForKernel_B8D24E78</NAME>
+						<NAME>sceKernelUtilsMd5BlockResult</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x840259F1</NID>
-						<NAME>UtilsForKernel_840259F1</NAME>
+						<NAME>sceKernelUtilsSha1Digest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF8FCD5BA</NID>
-						<NAME>UtilsForKernel_F8FCD5BA</NAME>
+						<NAME>sceKernelUtilsSha1BlockInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x346F6DA8</NID>
-						<NAME>UtilsForKernel_346F6DA8</NAME>
+						<NAME>sceKernelUtilsSha1BlockUpdate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x585F1C09</NID>
-						<NAME>UtilsForKernel_585F1C09</NAME>
+						<NAME>sceKernelUtilsSha1BlockResult</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE860E75E</NID>
-						<NAME>UtilsForKernel_E860E75E</NAME>
+						<NAME>sceKernelUtilsMt19937Init</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x06FB8A63</NID>
-						<NAME>UtilsForKernel_06FB8A63</NAME>
+						<NAME>sceKernelUtilsMt19937UInt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x193D4036</NID>
@@ -14515,19 +14515,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x37FB5C42</NID>
-						<NAME>UtilsForKernel_37FB5C42</NAME>
+						<NAME>sceKernelGetGPI</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6AD345D7</NID>
-						<NAME>UtilsForKernel_6AD345D7</NAME>
+						<NAME>sceKernelSetGPO</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7B7ED3FD</NID>
-						<NAME>UtilsForKernel_7B7ED3FD</NAME>
+						<NAME>sceKernelRegisterLibcRtcFunc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6151A7C3</NID>
-						<NAME>UtilsForKernel_6151A7C3</NAME>
+						<NAME>sceKernelReleaseLibcRtcFunc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91E4F6A7</NID>
@@ -14547,47 +14547,47 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB435DEC5</NID>
-						<NAME>UtilsForKernel_B435DEC5</NAME>
+						<NAME>sceKernelDcacheWritebackInvalidateAll</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x864A9D72</NID>
-						<NAME>UtilsForKernel_864A9D72</NAME>
+						<NAME>sceKernelDcacheInvalidateAll</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3EE30821</NID>
-						<NAME>UtilsForKernel_3EE30821</NAME>
+						<NAME>sceKernelDcacheWritebackRange</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x34B9FA9E</NID>
-						<NAME>UtilsForKernel_34B9FA9E</NAME>
+						<NAME>sceKernelDcacheWritebackInvalidateRange</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBFA98062</NID>
-						<NAME>UtilsForKernel_BFA98062</NAME>
+						<NAME>sceKernelDcacheInvalidateRange</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x80001C4C</NID>
-						<NAME>UtilsForKernel_80001C4C</NAME>
+						<NAME>sceKernelDcacheProbe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x16641D70</NID>
-						<NAME>UtilsForKernel_16641D70</NAME>
+						<NAME>sceKernelDcacheReadTag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x920F104A</NID>
-						<NAME>UtilsForKernel_920F104A</NAME>
+						<NAME>sceKernelIcacheInvalidateAll</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC2DF770E</NID>
-						<NAME>UtilsForKernel_C2DF770E</NAME>
+						<NAME>sceKernelIcacheInvalidateRange</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4FD31C9D</NID>
-						<NAME>UtilsForKernel_4FD31C9D</NAME>
+						<NAME>sceKernelIcacheProbe</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFB05FAD0</NID>
-						<NAME>UtilsForKernel_FB05FAD0</NAME>
+						<NAME>sceKernelIcacheReadTag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x78934841</NID>
@@ -15881,19 +15881,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2D564AF6</NID>
-						<NAME>sceVshCommonUtil_2D564AF6</NAME>
+						<NAME>sceSystemFileGetIndex</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6B332472</NID>
-						<NAME>sceVshCommonUtil_6B332472</NAME>
+						<NAME>sceSystemFileGetIndexInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF857F095</NID>
-						<NAME>sceVshCommonUtil_F857F095</NAME>
+						<NAME>sceSystemFileGetValue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9A2C3824</NID>
-						<NAME>sceVshCommonUtil_9A2C3824</NAME>
+						<NAME>sceSystemFileGetValuePtr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x46931A6C</NID>
@@ -15901,11 +15901,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6E7804E</NID>
-						<NAME>sceVshCommonUtil_B6E7804E</NAME>
+						<NAME>sceSystemFileLoadAll</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE55CADD9</NID>
-						<NAME>sceVshCommonUtil_E55CADD9</NAME>
+						<NAME>sceSystemFileLoadIndex</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x024CEB82</NID>
@@ -18187,7 +18187,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x294BEB21</NID>
-						<NAME>scePSAR_driver_294BEB21</NAME>
+						<NAME>_scePSARModuleStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF4DB5ABE</NID>
@@ -18246,15 +18246,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xEE7EB563</NID>
-						<NAME>sceIplUpdate_EE7EB563</NAME>
+						<NAME>sceIplUpdateSetIpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26093B04</NID>
-						<NAME>sceIplUpdate_26093B04</NAME>
+						<NAME>sceIplUpdateClearIpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x446B75E3</NID>
-						<NAME>sceIplUpdate_446B75E3</NAME>
+						<NAME>sceIplUpdateUpdateIpl</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -18263,15 +18263,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xEE7EB563</NID>
-						<NAME>sceIplUpdate_driver_EE7EB563</NAME>
+						<NAME>sceIplUpdateSetIpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26093B04</NID>
-						<NAME>sceIplUpdate_driver_26093B04</NAME>
+						<NAME>sceIplUpdateClearIpl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x446B75E3</NID>
-						<NAME>sceIplUpdate_driver_446B75E3</NAME>
+						<NAME>sceIplUpdateUpdateIpl</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
