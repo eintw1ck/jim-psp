@@ -14492,23 +14492,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0E10922A</NID>
-						<NAME>sceVshBridge_0E10922A</NAME>
+						<NAME>vshDisplaySetHoldMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCA719C34</NID>
-						<NAME>sceVshBridge_CA719C34</NAME>
+						<NAME>vshImposeGetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4E4E4DA3</NID>
-						<NAME>sceVshBridge_4E4E4DA3</NAME>
+						<NAME>vshImposeSetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x639C3CB3</NID>
-						<NAME>sceVshBridge_639C3CB3</NAME>
+						<NAME>vshImposeGetParam</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4A596D2D</NID>
-						<NAME>sceVshBridge_4A596D2D</NAME>
+						<NAME>vshImposeSetParam</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5894C339</NID>
@@ -14532,7 +14532,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4DB43867</NID>
-						<NAME>sceVshBridge_4DB43867</NAME>
+						<NAME>vshIdStorageLookup</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7B67394E</NID>
