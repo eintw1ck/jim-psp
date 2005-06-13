@@ -3072,7 +3072,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB415FC59</NID>
-						<NAME>sceImpose_driver_B415FC59</NAME>
+						<NAME>sceImposeChanges</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68676C0A</NID>
@@ -4820,11 +4820,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x63463F66</NID>
-						<NAME>sceMeWrapper_driver_63463F66</NAME>
+						<NAME>sceMeWrapperInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC3A1D6B2</NID>
-						<NAME>sceMeWrapper_driver_C3A1D6B2</NAME>
+						<NAME>sceMeWrapperEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB655AD4E</NID>
@@ -4868,15 +4868,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA177798D</NID>
-						<NAME>sceMeWrapper_driver_A177798D</NAME>
+						<NAME>sceMeMalloc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC86500E3</NID>
-						<NAME>sceMeWrapper_driver_C86500E3</NAME>
+						<NAME>sceMeCalloc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5AD660FA</NID>
-						<NAME>sceMeWrapper_driver_5AD660FA</NAME>
+						<NAME>sceMeFree</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1EA3DFD</NID>
@@ -4888,11 +4888,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x04AFF68E</NID>
-						<NAME>sceMeWrapper_driver_04AFF68E</NAME>
+						<NAME>sceMeRpcLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB97B15D7</NID>
-						<NAME>sceMeWrapper_driver_B97B15D7</NAME>
+						<NAME>sceMeRpcUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4794C05C</NID>
@@ -4975,15 +4975,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA177798D</NID>
-						<NAME>sceMeMemory_driver_A177798D</NAME>
+						<NAME>sceMeMalloc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC86500E3</NID>
-						<NAME>sceMeMemory_driver_C86500E3</NAME>
+						<NAME>sceMeCalloc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5AD660FA</NID>
-						<NAME>sceMeMemory_driver_5AD660FA</NAME>
+						<NAME>sceMeFree</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -5000,11 +5000,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x04AFF68E</NID>
-						<NAME>sceMeCore_driver_04AFF68E</NAME>
+						<NAME>sceMeRpcLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB97B15D7</NID>
-						<NAME>sceMeCore_driver_B97B15D7</NAME>
+						<NAME>sceMeRpcUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4794C05C</NID>
@@ -14512,7 +14512,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5894C339</NID>
-						<NAME>sceVshBridge_5894C339</NAME>
+						<NAME>vshImposeChanges</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0FA48729</NID>
@@ -14640,11 +14640,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCBDA2613</NID>
-						<NAME>sceVshBridge_CBDA2613</NAME>
+						<NAME>vshMeRpcLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA7F0E8E0</NID>
-						<NAME>sceVshBridge_A7F0E8E0</NAME>
+						<NAME>vshMeRpcUnlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x98B4117E</NID>
@@ -15422,15 +15422,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x15AF8184</NID>
-						<NAME>sceVshCommonUtil_15AF8184</NAME>
+						<NAME>sceSystemFileAddIndexW</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27627379</NID>
-						<NAME>sceVshCommonUtil_27627379</NAME>
+						<NAME>sceSystemFileCalcSizeW</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEDED68FB</NID>
-						<NAME>sceVshCommonUtil_EDED68FB</NAME>
+						<NAME>sceSystemFileFree</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2D564AF6</NID>
@@ -15450,7 +15450,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x46931A6C</NID>
-						<NAME>sceVshCommonUtil_46931A6C</NAME>
+						<NAME>sceSystemFileInitFormatW</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6E7804E</NID>
