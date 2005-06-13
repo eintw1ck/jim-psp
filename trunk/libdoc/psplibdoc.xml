@@ -1272,7 +1272,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x1C46158A</NID>
-						<NAME>DmacManForKernel_1C46158A</NAME>
+						<NAME>sceKernelDmaExit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD8BC3120</NID>
@@ -1284,35 +1284,35 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7B9634E1</NID>
-						<NAME>DmacManForKernel_7B9634E1</NAME>
+						<NAME>sceKernelDmaSoftRequest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x59615199</NID>
-						<NAME>DmacManForKernel_59615199</NAME>
+						<NAME>sceKernelDmaOpAlloc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x745E19EF</NID>
-						<NAME>DmacManForKernel_745E19EF</NAME>
+						<NAME>sceKernelDmaOpFree</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF64BAB99</NID>
-						<NAME>DmacManForKernel_F64BAB99</NAME>
+						<NAME>sceKernelDmaOpAssign</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3BDEA96C</NID>
-						<NAME>DmacManForKernel_3BDEA96C</NAME>
+						<NAME>sceKernelDmaOpEnQueue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x92700CCD</NID>
-						<NAME>DmacManForKernel_92700CCD</NAME>
+						<NAME>sceKernelDmaOpDeQueue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA84B084B</NID>
-						<NAME>DmacManForKernel_A84B084B</NAME>
+						<NAME>sceKernelDmaOpAllCancel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD0358BE9</NID>
-						<NAME>DmacManForKernel_D0358BE9</NAME>
+						<NAME>sceKernelDmaOpSetCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3FAD5844</NID>
@@ -1324,11 +1324,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7D21A2EF</NID>
-						<NAME>DmacManForKernel_7D21A2EF</NAME>
+						<NAME>sceKernelDmaOpSetupLink</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB286D65</NID>
-						<NAME>DmacManForKernel_DB286D65</NAME>
+						<NAME>sceKernelDmaOpSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5AF32783</NID>
@@ -1340,7 +1340,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x904110FC</NID>
-						<NAME>DmacManForKernel_904110FC</NAME>
+						<NAME>sceKernelDmaOpAssignMultiple</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD3F62265</NID>
@@ -1348,7 +1348,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA893DA2C</NID>
-						<NAME>DmacManForKernel_A893DA2C</NAME>
+						<NAME>sceKernelDmaOpFreeLink</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -1382,11 +1382,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x617F3FE6</NID>
-						<NAME>sceDmac_617F3FE6</NAME>
+						<NAME>sceDmacMemcpy</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD97F94D8</NID>
-						<NAME>sceDmac_D97F94D8</NAME>
+						<NAME>sceDmacTryMemcpy</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -1395,39 +1395,39 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xDF32F547</NID>
-						<NAME>sceDmacplus_driver_DF32F547</NAME>
+						<NAME>sceDmacplusInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE6219C61</NID>
-						<NAME>sceDmacplus_driver_E6219C61</NAME>
+						<NAME>sceDmacplusEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC748491D</NID>
-						<NAME>sceDmacplus_driver_C748491D</NAME>
+						<NAME>sceDmacplusQuerySuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x853C5EC6</NID>
-						<NAME>sceDmacplus_driver_853C5EC6</NAME>
+						<NAME>sceDmacplusSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD49A5922</NID>
-						<NAME>sceDmacplus_driver_D49A5922</NAME>
+						<NAME>sceDmacplusResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA7B05225</NID>
-						<NAME>sceDmacplus_driver_A7B05225</NAME>
+						<NAME>sceDmacplusEnableIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBF939272</NID>
-						<NAME>sceDmacplus_driver_BF939272</NAME>
+						<NAME>sceDmacplusDisableIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6AA3D654</NID>
-						<NAME>sceDmacplus_driver_6AA3D654</NAME>
+						<NAME>sceDmacplusQueryIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0DA570C1</NID>
-						<NAME>sceDmacplus_driver_0DA570C1</NAME>
+						<NAME>sceDmacplusAcquireIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFE3F3228</NID>
@@ -1511,11 +1511,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFD8B15BC</NID>
-						<NAME>sceDmacplus_driver_FD8B15BC</NAME>
+						<NAME>sceDmacplusSc2MeInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF7DEC189</NID>
-						<NAME>sceDmacplus_driver_F7DEC189</NAME>
+						<NAME>sceDmacplusSc2MeEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD0464B29</NID>
@@ -1523,11 +1523,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFEE3392C</NID>
-						<NAME>sceDmacplus_driver_FEE3392C</NAME>
+						<NAME>sceDmacplusSc2MeSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC5B75E09</NID>
-						<NAME>sceDmacplus_driver_C5B75E09</NAME>
+						<NAME>sceDmacplusSc2MeResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4B980588</NID>
@@ -1535,19 +1535,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3438DA0B</NID>
-						<NAME>sceDmacplus_driver_3438DA0B</NAME>
+						<NAME>sceDmacplusSc2MeLLI</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x58DE4914</NID>
-						<NAME>sceDmacplus_driver_58DE4914</NAME>
+						<NAME>sceDmacplusSc2MeSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1F5A80D0</NID>
-						<NAME>sceDmacplus_driver_1F5A80D0</NAME>
+						<NAME>sceDmacplusMe2ScInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1E1567E</NID>
-						<NAME>sceDmacplus_driver_D1E1567E</NAME>
+						<NAME>sceDmacplusMe2ScEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9393B40D</NID>
@@ -1555,11 +1555,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D4F8BD7</NID>
-						<NAME>sceDmacplus_driver_6D4F8BD7</NAME>
+						<NAME>sceDmacplusMe2ScSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x78A55D62</NID>
-						<NAME>sceDmacplus_driver_78A55D62</NAME>
+						<NAME>sceDmacplusMe2ScResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBE693828</NID>
@@ -1567,19 +1567,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2D5940FF</NID>
-						<NAME>sceDmacplus_driver_2D5940FF</NAME>
+						<NAME>sceDmacplusMe2ScLLI</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAB49D2CB</NID>
-						<NAME>sceDmacplus_driver_AB49D2CB</NAME>
+						<NAME>sceDmacplusMe2ScSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6592A56</NID>
-						<NAME>sceDmacplus_driver_B6592A56</NAME>
+						<NAME>sceDmacplusSc128Init</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4F1B8D26</NID>
-						<NAME>sceDmacplus_driver_4F1B8D26</NAME>
+						<NAME>sceDmacplusSc128End</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x410ED0DD</NID>
@@ -1587,11 +1587,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3DB353DB</NID>
-						<NAME>sceDmacplus_driver_3DB353DB</NAME>
+						<NAME>sceDmacplusSc128Suspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x97DCBBBF</NID>
-						<NAME>sceDmacplus_driver_97DCBBBF</NAME>
+						<NAME>sceDmacplusSc128Resume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7D33466</NID>
@@ -1603,7 +1603,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFD183BCF</NID>
-						<NAME>sceDmacplus_driver_FD183BCF</NAME>
+						<NAME>sceDmacplusSc128LLI</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -1633,31 +1633,31 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x17D39E17</NID>
-						<NAME>sceDdr_driver_17D39E17</NAME>
+						<NAME>sceDdrInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8698F5DA</NID>
-						<NAME>sceDdr_driver_8698F5DA</NAME>
+						<NAME>sceDdrEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x623A233F</NID>
-						<NAME>sceDdr_driver_623A233F</NAME>
+						<NAME>sceDdrSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x92289EC0</NID>
-						<NAME>sceDdr_driver_92289EC0</NAME>
+						<NAME>sceDdrResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD7C6C313</NID>
-						<NAME>sceDdr_driver_D7C6C313</NAME>
+						<NAME>sceDdrSetup</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4CE55E76</NID>
-						<NAME>sceDdr_driver_4CE55E76</NAME>
+						<NAME>sceDdrChangePllClock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87D86769</NID>
-						<NAME>sceDdr_driver_87D86769</NAME>
+						<NAME>sceDdrFlush</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x286E1372</NID>
@@ -1693,7 +1693,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91CD8F94</NID>
-						<NAME>sceDdr_driver_91CD8F94</NAME>
+						<NAME>sceDdrResetDevice</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB5694ECD</NID>
@@ -1913,27 +1913,27 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3FB264FC</NID>
-						<NAME>ExceptionManagerForKernel_3FB264FC</NAME>
+						<NAME>sceKernelRegisterExceptionHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5A837AD4</NID>
-						<NAME>ExceptionManagerForKernel_5A837AD4</NAME>
+						<NAME>sceKernelRegisterPriorityExceptionHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x565C0B0E</NID>
-						<NAME>ExceptionManagerForKernel_565C0B0E</NAME>
+						<NAME>sceKernelRegisterDefaultExceptionHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1AA6CFFA</NID>
-						<NAME>ExceptionManagerForKernel_1AA6CFFA</NAME>
+						<NAME>sceKernelReleaseExceptionHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDF83875E</NID>
-						<NAME>ExceptionManagerForKernel_DF83875E</NAME>
+						<NAME>sceKernelGetActiveDefaultExceptionHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x291FF031</NID>
-						<NAME>ExceptionManagerForKernel_291FF031</NAME>
+						<NAME>sceKernelReleaseDefaultExceptionHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x15ADC862</NID>
@@ -1947,7 +1947,7 @@
 				<VARIABLES>
 					<VARIABLE>
 						<NID>0x8B65A2F3</NID>
-						<NAME>ExceptionManagerForKernel_8B65A2F3</NAME>
+						<NAME>ExcepManCB</NAME>
 					</VARIABLE>
 				</VARIABLES>
 			</LIBRARY>
@@ -2210,7 +2210,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4A992B24</NID>
-						<NAME>sceGpio_driver_4A992B24</NAME>
+						<NAME>sceGpioEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x17DAA8C2</NID>
@@ -2242,7 +2242,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCA8BE2EA</NID>
-						<NAME>sceGpio_driver_CA8BE2EA</NAME>
+						<NAME>sceGpioGetPortMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x37C8DADC</NID>
@@ -2250,7 +2250,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF856CE46</NID>
-						<NAME>sceGpio_driver_F856CE46</NAME>
+						<NAME>sceGpioGetIntrMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x785206CD</NID>
@@ -2266,7 +2266,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBE77D1D0</NID>
-						<NAME>sceGpio_driver_BE77D1D0</NAME>
+						<NAME>sceGpioAcquireIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC6928224</NID>
@@ -2308,7 +2308,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC7154136</NID>
-						<NAME>sceHprm_C7154136</NAME>
+						<NAME>sceHprmRegisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x444ED0B7</NID>
@@ -2349,7 +2349,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x588845DA</NID>
-						<NAME>sceHprm_driver_588845DA</NAME>
+						<NAME>sceHprmEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x526BB7F4</NID>
@@ -2365,7 +2365,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7154136</NID>
-						<NAME>sceHprm_driver_C7154136</NAME>
+						<NAME>sceHprmRegisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x444ED0B7</NID>
@@ -2451,7 +2451,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4809D85F</NID>
-						<NAME>sceI2c_driver_4809D85F</NAME>
+						<NAME>sceI2cEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x21A8282C</NID>
@@ -2479,15 +2479,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE9463B99</NID>
-						<NAME>sceI2c_driver_E9463B99</NAME>
+						<NAME>sceI2cMasterTransmit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF87D1ED6</NID>
-						<NAME>sceI2c_driver_F87D1ED6</NAME>
+						<NAME>sceI2cMasterReceive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6536B1B6</NID>
-						<NAME>sceI2c_driver_6536B1B6</NAME>
+						<NAME>sceI2cMasterTransmitReceive</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -2525,7 +2525,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2CE0BE69</NID>
-						<NAME>sceIdStorage_driver_2CE0BE69</NAME>
+						<NAME>sceIdStorageEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF77565B6</NID>
@@ -2561,19 +2561,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB00C509</NID>
-						<NAME>sceIdStorage_driver_EB00C509</NAME>
+						<NAME>sceIdStorageReadLeaf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1FA4D135</NID>
-						<NAME>sceIdStorage_driver_1FA4D135</NAME>
+						<NAME>sceIdStorageWriteLeaf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x08A471A6</NID>
-						<NAME>sceIdStorage_driver_08A471A6</NAME>
+						<NAME>sceIdStorageCreateLeaf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2C97AB36</NID>
-						<NAME>sceIdStorage_driver_2C97AB36</NAME>
+						<NAME>sceIdStorageDeleteLeaf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x99ACCB71</NID>
@@ -3114,19 +3114,19 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x2C6E9FE9</NID>
-						<NAME>InitForKernel_2C6E9FE9</NAME>
+						<NAME>sceKernelGetChunk</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1D3256BA</NID>
-						<NAME>InitForKernel_1D3256BA</NAME>
+						<NAME>sceKernelRegisterChunk</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCE88E870</NID>
-						<NAME>InitForKernel_CE88E870</NAME>
+						<NAME>sceKernelReleaseChunk</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7A2333AD</NID>
-						<NAME>InitForKernel_7A2333AD</NAME>
+						<NAME>sceKernelInitApitype</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27932388</NID>
@@ -3134,7 +3134,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA6E71B93</NID>
-						<NAME>InitForKernel_A6E71B93</NAME>
+						<NAME>sceKernelInitFileName</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
