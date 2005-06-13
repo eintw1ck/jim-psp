@@ -6008,7 +6008,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x977DE386</NID>
-						<NAME>sceKernelLoadMoule</NAME>
+						<NAME>sceKernelLoadModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x710F61B5</NID>
