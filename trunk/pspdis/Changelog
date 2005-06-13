@@ -1,3 +1,7 @@
+June 12 2005 - John_K
+	- Removed routine to find string tables, I was blind and missed the fact that the index to it
+	  in the sections list is in the elf header.
+	
 June 2 2005 - John_K
 	- Properly fixed previous branch offsets problem by providing section vma to disasssembly
 	  info struct and letting libopcodes use it's own memory read function.

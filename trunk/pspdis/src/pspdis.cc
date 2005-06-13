@@ -95,26 +95,10 @@ int main(int argc, char *argv[]) {
 	}
 	printf("File is %s with %d sections\n", elfType, header->numSectionHeaderEntries);
 	
-	//find string tables
-	for (i = 0; i < header->numSectionHeaderEntries; i++)
-		if (sHeaders[i].type == stringTable) {
-			dprintf("Found string table @ index %d with size %d @0x%08X.\n", i, sHeaders[i].size,sHeaders[i].offset );
-			//check to see if this is .strtab or .shstrtab
-			if (sHeaders[i].nameIndex <= sHeaders[i].size) {
-				//dprintf("%d <= %d\n", sHeaders[i].nameIndex,sHeaders[i].size);
-				sectionStringTable = &elfData[sHeaders[i].offset];
-				//if our name is not .shstrtab then we're .strtab
-				if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".shstrtab") != 0) {
-					//dprintf("we're not shstrtab (%s)\n", &sectionStringTable[sHeaders[i].nameIndex]);
-					elfStringTable = sectionStringTable;
-					sectionStringTable = NULL;
-				}
-			} else {
-				elfStringTable = &elfData[sHeaders[i].offset];
-			}
-		}
-
-	//determine name of executable
+	//get section header string table (.shstrtab)
+	sectionStringTable = &elfData[sHeaders[header->sectionHeaderStringTableIndex].offset];
+	
+	//determine module name
 	for (i = 0; i < header->numSectionHeaderEntries; i++) {
 		if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".rodata.sceModuleInfo") == 0) {
 			moduleInfo = (SceModuleInfo*)&elfData[sHeaders[i].offset];
@@ -137,6 +121,9 @@ int main(int argc, char *argv[]) {
 			text = &elfData[sHeaders[i].offset];
 			textSize = sHeaders[i].size;
 			textSection = &sHeaders[i];
+			printf("Found .text section at offset 0x%08X with length %d\n", sHeaders[i].offset, sHeaders[i].size);
+		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], "sdgsdg") == 0) {
+		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], "dsfgsd") == 0) {
 		}
 	}
 	
@@ -166,14 +153,14 @@ int main(int argc, char *argv[]) {
 	dinfo.mach = bfd_mach_mips_allegrex;
 	disassemble_init_for_target(&dinfo);
 	
-	printf("data at 0x%08X, section vma is 0x%08X, length is %d\n", text, textSection->address, textSize);
+	printf("data in buffer at 0x%08X, section vma is 0x%08X, length is %d\n", text, textSection->address, textSize);
 	dinfo.buffer = text;
 	dinfo.buffer_vma = textSection->address;
 	dinfo.buffer_length = textSize;
 
 	dinfo.print_address_func = libopcodes_print_addr;
-	//don't need these functions yet.
 	/*
+	//don't need these functions yet.
 	dinfo.symbol_at_address_func = libopcodes_symbol_at_addr;
 	dinfo.symbol_is_valid = libopcodes_symbol_is_valid;
 	*/
@@ -188,6 +175,7 @@ int main(int argc, char *argv[]) {
 			    dinfo.insn_type == dis_condbranch ||
 			    dinfo.insn_type == dis_jsr ||
 			    dinfo.insn_type == dis_condjsr) {
+			    	//fixme: msotly special cased atm
 			    	//ignore xrefs to 0x00000000 unless they're straight to 0 or a relative jump to 0 (todo)
 			    	int instr = *(u32*)&text[bytecount];
 			    	if(dinfo.target != 0 || dinfo.target == 0 && (instr & 0x00FFFFFF) == 0) {

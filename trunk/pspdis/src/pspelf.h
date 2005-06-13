@@ -121,10 +121,11 @@ typedef struct {
     unsigned char ent_len;	/* Number of DWORDs in this entry. The size of the entry is ent_len * 4. */
     unsigned char var_ent_count; /* Number of variable entries following function entries. */
     unsigned short func_ent_count; /* Number of function entries. */
+    // func_ent_count pointers to 
     // addr of start of .rodata.sceResident, which has 4
     // longs (and one 0 long) before module name strings start,
     // which includes things like a ptr to _start
-    unsigned long sceResidentAddr;
+    //unsigned long sceResidentAddr;
 } SceLibEntData;
 
 // this struct is pointed to by SceLibEntData, and appears at the
