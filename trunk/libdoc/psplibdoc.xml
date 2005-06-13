@@ -8971,7 +8971,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDEDA92BF</NID>
-						<NAME>sceReg_DEDA92BF</NAME>
+						<NAME>sceRegRemoveRegistry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1D8A762E</NID>
@@ -14704,7 +14704,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x74DA9D25</NID>
-						<NAME>sceVshBridge_74DA9D25</NAME>
+						<NAME>vshLflashFatfmtStartFatfmt</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -17664,7 +17664,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x182745AF</NID>
-						<NAME>vsh_182745AF</NAME>
+						<NAME>vvvGetVersion</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x58925420</NID>
