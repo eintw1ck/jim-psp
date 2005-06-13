@@ -11407,7 +11407,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x692F31FF</NID>
-						<NAME>sceSysregAcquireIntr</NAME>
+						<NAME>sceSysregUsbAcquireIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD43E98F6</NID>
@@ -11656,7 +11656,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x840E8133</NID>
-						<NAME>sceKernelWaitThreadEnd</NAME>
+						<NAME>sceKernelWaitThreadEndCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCEADEB47</NID>
