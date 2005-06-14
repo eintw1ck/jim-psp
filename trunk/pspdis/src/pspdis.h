@@ -15,8 +15,14 @@
 #ifndef _PSPDIS_H_
 #define _PSPDIS_H_
 
+#include <vector>
+#include <map>
+#include "util.h"
+
 #define PSPDISVER 0.1
 #define dprintf(a...)	if(VERBOSE > 0) printf(a);
 #define VERBOSE 1
+
+typedef std::map<u32, std::vector<u32> > xref_type;
 
 #endif

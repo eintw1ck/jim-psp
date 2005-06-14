@@ -20,8 +20,10 @@ extern "C" {
 #endif
 
 #include <stddef.h>
+#include <stdio.h>
+#include <ctype.h>
 
-#define makehexchar(i) (i<=9) ? '0'+i : 'A'+(i-10)
+#define makehexchar(i) (i<=9) ? '0'+(i) : 'A'+((i)-10)
 
 typedef unsigned char u8;
 typedef unsigned short u16;

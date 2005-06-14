@@ -3,7 +3,7 @@
 .SUFFIXES: .c .o .s .exe
 
 BIN  = ../pspdis.exe
-OBJS = util.o bfd_replacement.o libopcodes_helper.o pspdis.o 
+OBJS = util.o bfd_replacement.o libopcodes_helper.o pspdis.o nidDb.o tinyxml/tinyxml.o tinyxml/tinystr.o tinyxml/tinyxmlparser.o tinyxml/tinyxmlerror.o
 INCS = -I. -I../libopcodes
 LIBS =  -lopcodes -lintl
 LDFLAGS = -L../libopcodes
@@ -12,6 +12,9 @@ CFLAGS = -O2 -g -c -Wall $(INCS)
 $(BIN) : $(OBJS)
 	g++ $(LDFLAGS) -o $(BIN) $(OBJS) $(LIBS)
 
+$(OBJS_DIR)%.o : %.cpp
+	g++ $(CFLAGS) $< -o $@
+	
 $(OBJS_DIR)%.o : %.cc
 	g++ $(CFLAGS) $< -o $@
 		
@@ -27,4 +30,4 @@ $(OBJS_DIR)%.o : %.S
 all: $(BIN)
 	
 clean:
-	rm -f -r $(BIN) $(OBJS)
+	rm -rf $(BIN) $(OBJS)

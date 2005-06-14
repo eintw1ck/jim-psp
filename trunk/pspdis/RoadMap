@@ -1,0 +1,30 @@
+                           ____  _     
+         ____  _________  / __ \(_)____
+        / __ \/ ___/ __ \/ / / / / ___/
+       / /_/ (__  ) /_/ / /_/ / (__  ) 
+      / .___/____/ .___/_____/_/____/  
+     /_/        /_/
+     
+Roadmap
+=========================================
+
+v0.4
+-----------------------------------------
+	- Suppport for relocations
+	- Function detection and processing
+	
+v0.3
+-----------------------------------------
+	- Preliminary wxWidgets based GUI
+	
+v0.2
+-----------------------------------------
+	- Resolve NIDs to Function names using psplibdoc.xml
+	- Save disassembly to xml datafile
+	- Strings list
+	
+v0.1 - Reached June 6th 2005
+-----------------------------------------
+	- Static disassembly of PSP executables
+	- keep track of code xrefs
+

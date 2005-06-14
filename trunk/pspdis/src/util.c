@@ -30,7 +30,7 @@ void hexdump(const u8* data, size_t length) {
 		int ci=0;
 		for (line_i=0; i<length && line_i<16; i++, line_i++) {
 			line[bi++]=makehexchar(*data>>4);
-			line[bi++]=makehexchar(*data & 0x0f);
+			line[bi++]=makehexchar((*data & 0x0f));
 			line[bi++]=' ';
 			line[char_offset+(ci++)]=(isprint(*data) ? *data : '.');
 			data++;
