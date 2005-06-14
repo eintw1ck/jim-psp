@@ -174,7 +174,7 @@ int mcSync(int mode, int *cmd, int *result);
 */
 int fflush(FILE *stream)
 {
-  int ret;
+  int ret = EOF; // Same as default case below.
 
   switch(stream->type) {
     case STD_IOBUF_TYPE_GE:
@@ -544,8 +544,10 @@ int fputs(const char *s, FILE *stream)
 {
   size_t len;
 
-  len = ((fwrite(s, 1, (len = strlen(s)), stream) == len) ? (int)len : EOF);
-  
+  int temp = strlen(s);
+
+  len = ((fwrite(s, 1, temp, stream) == temp) ? temp : EOF);
+
   if (len != EOF) {
     fputc('\n', stream);
   }
