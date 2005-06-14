@@ -4014,103 +4014,103 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xD1F59FDB</NID>
-						<NAME>sceAtrac3plus_D1F59FDB</NAME>
+						<NAME>sceAtracStartEntry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD5C28CC0</NID>
-						<NAME>sceAtrac3plus_D5C28CC0</NAME>
+						<NAME>sceAtracEndEntry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x780F88D1</NID>
-						<NAME>sceAtrac3plus_780F88D1</NAME>
+						<NAME>sceAtracGetAtracID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x61EB33F5</NID>
-						<NAME>sceAtrac3plus_61EB33F5</NAME>
+						<NAME>sceAtracReleaseAtracID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0E2A73AB</NID>
-						<NAME>sceAtrac3plus_0E2A73AB</NAME>
+						<NAME>sceAtracSetData</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3F6E26B5</NID>
-						<NAME>sceAtrac3plus_3F6E26B5</NAME>
+						<NAME>sceAtracSetHalfwayBuffer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7A20E7AF</NID>
-						<NAME>sceAtrac3plus_7A20E7AF</NAME>
+						<NAME>sceAtracSetDataAndGetID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0FAE370E</NID>
-						<NAME>sceAtrac3plus_0FAE370E</NAME>
+						<NAME>sceAtracSetHalfwayBufferAndGetID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6A8C3CD5</NID>
-						<NAME>sceAtrac3plus_6A8C3CD5</NAME>
+						<NAME>sceAtracDecodeData</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9AE849A7</NID>
-						<NAME>sceAtrac3plus_9AE849A7</NAME>
+						<NAME>sceAtracGetRemainFrame</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5D268707</NID>
-						<NAME>sceAtrac3plus_5D268707</NAME>
+						<NAME>sceAtracGetStreamDataInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7DB31251</NID>
-						<NAME>sceAtrac3plus_7DB31251</NAME>
+						<NAME>sceAtracAddStreamData</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x83E85EA0</NID>
-						<NAME>sceAtrac3plus_83E85EA0</NAME>
+						<NAME>sceAtracGetSecondBufferInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x83BF7AFD</NID>
-						<NAME>sceAtrac3plus_83BF7AFD</NAME>
+						<NAME>sceAtracSetSecondBuffer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE23E3A35</NID>
-						<NAME>sceAtrac3plus_E23E3A35</NAME>
+						<NAME>sceAtracGetNextDecodePosition</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA2BBA8BE</NID>
-						<NAME>sceAtrac3plus_A2BBA8BE</NAME>
+						<NAME>sceAtracGetSoundSample</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x31668BAA</NID>
-						<NAME>sceAtrac3plus_31668BAA</NAME>
+						<NAME>sceAtracGetChannel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD6A5F2F7</NID>
-						<NAME>sceAtrac3plus_D6A5F2F7</NAME>
+						<NAME>sceAtracGetMaxSample</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x36FAABFB</NID>
-						<NAME>sceAtrac3plus_36FAABFB</NAME>
+						<NAME>sceAtracGetNextSample</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA554A158</NID>
-						<NAME>sceAtrac3plus_A554A158</NAME>
+						<NAME>sceAtracGetBitrate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFAA4F89B</NID>
-						<NAME>sceAtrac3plus_FAA4F89B</NAME>
+						<NAME>sceAtracGetLoopStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x868120B5</NID>
-						<NAME>sceAtrac3plus_868120B5</NAME>
+						<NAME>sceAtracSetLoopNum</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCA3CA3D2</NID>
-						<NAME>sceAtrac3plus_CA3CA3D2</NAME>
+						<NAME>sceAtracGetBufferInfoForReseting</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x644E5607</NID>
-						<NAME>sceAtrac3plus_644E5607</NAME>
+						<NAME>sceAtracResetPlayPosition</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE88F759B</NID>
-						<NAME>sceAtrac3plus_E88F759B</NAME>
+						<NAME>sceAtracGetInternalErrorInfo</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
