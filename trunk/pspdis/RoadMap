@@ -8,22 +8,26 @@
 Roadmap
 =========================================
 
+v0.5
+-----------------------------------------
+	- Strings list
+	- GUI improvements (disasm text control improvements)
+	
 v0.4
 -----------------------------------------
-	- Suppport for relocations
+	- Relocations suppport
 	- Function detection and processing
+	- Save disassembly to XML datafile
 	
 v0.3
 -----------------------------------------
 	- Preliminary wxWidgets based GUI
 	
-v0.2
+v0.2 - Reached on June 14th 2005
 -----------------------------------------
 	- Resolve NIDs to Function names using psplibdoc.xml
-	- Save disassembly to xml datafile
-	- Strings list
 	
-v0.1 - Reached June 6th 2005
+v0.1 - Reached on June 6th 2005
 -----------------------------------------
 	- Static disassembly of PSP executables
 	- keep track of code xrefs

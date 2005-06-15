@@ -105,7 +105,7 @@ typedef struct {
     // 28 bytes of module name, packed with 0's.
     // (might be less with 0 longs after)
     char name[28];
-    unsigned long ptr1;         /* ptr to somewhere after executable */
+    unsigned long gp;         /* ptr to somewhere after executable */
     unsigned long libent;       /* ptr to .lib.ent section */
     unsigned long libentend;    /* ptr to end of .lib.ent section */
     unsigned long libstub;      /* ptr to .lib.stub section */

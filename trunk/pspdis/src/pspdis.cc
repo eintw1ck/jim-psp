@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
 	u8 *sectionStringTable = NULL;
 	u8 *libStub = NULL;
 	u8 *libStubBtm = NULL;
+	u8 *libEntBtm;
 	u8 *sceResident = NULL;
 	u8 *text = NULL;
 	u32 textSize = 0;
@@ -42,7 +43,7 @@ int main(int argc, char *argv[]) {
 	xref_type xrefs;
 	nidDb nids;
 	
-	printf("pspDis v%0.1f\n\n", PSPDISVER);
+	printf("pspDis v%s by Warren\n\n", PSPDISVER);
 	if (argc != 2) {
 		printf("Usage: %s <elf file>\n", argv[0]);
 		return 1;
@@ -92,6 +93,7 @@ int main(int argc, char *argv[]) {
 	printf("File is %s with %d sections\n", elfType, header->numSectionHeaderEntries);
 	
 	//Load XML NID List
+	printf("Loading NID definitions...\n");
 	nids.loadFromXml("../libdoc/psplibdoc.xml");
 	//get section header string table (.shstrtab)
 	sectionStringTable = &elfData[sHeaders[header->sectionHeaderStringTableIndex].offset];
@@ -119,7 +121,8 @@ int main(int argc, char *argv[]) {
 			text = &elfData[sHeaders[i].offset];
 			textSize = sHeaders[i].size;
 			textSection = &sHeaders[i];
-		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], "sdgsdg") == 0) {
+		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".lib.ent.btm") == 0) {
+			libEntBtm = &elfData[sHeaders[i].offset];
 		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], "dsfgsd") == 0) {
 		}
 	}
@@ -139,6 +142,17 @@ int main(int argc, char *argv[]) {
 			}
 			printf("\n");
 			stubPos += sizeof(SceLibStubEntry);
+		}
+	}
+	
+	//print out exports for PRXs
+	if(header->elfType == PSPelfTypePRX) {
+		u16 numExports = *(u16*)&libEntBtm[-6];
+		u32 exportsOffset = *(u32*)&libEntBtm[-4];
+		u32 libNameOffset = *(u32*)&libEntBtm[-16];
+		printf("Found %d exports for library %s:\n", numExports, (char*)&text[libNameOffset]);
+		for(u32 i = 0; i < numExports; i++) {
+			printf("\t\t0x%08X %s (%s)\n", *(unsigned int*)&text[exportsOffset+4*i], nids.resolveNid((char*)&text[libNameOffset], *(u32*)&text[exportsOffset+4*i]), nids.getNidType((char*)&text[libNameOffset], *(u32*)&text[exportsOffset+4*i]) == nidType_Function ? "Function" : "Variable");
 		}
 	}
 	

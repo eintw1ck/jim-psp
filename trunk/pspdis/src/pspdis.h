@@ -19,7 +19,7 @@
 #include <map>
 #include "util.h"
 
-#define PSPDISVER 0.1
+#define PSPDISVER "0.2pre"
 #define dprintf(a...)	if(VERBOSE > 0) printf(a);
 #define VERBOSE 1
 
