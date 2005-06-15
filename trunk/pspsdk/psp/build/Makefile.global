@@ -10,10 +10,10 @@
 PSP_INCS := -I$(PSPSDK)/include -I. $(PSP_INCS)
 
 # C compiler flags
-PSP_CFLAGS := -O2 -G0 -Wall -mdivide-breaks -march=r4000 -mgp32 -mlong32 $(PSP_CFLAGS)
+PSP_CFLAGS := -O2 -G0 -Wall -mdivide-breaks -march=allegrex -mgp32 -mlong32 $(PSP_CFLAGS)
 
 # C++ compiler flags
-PSP_CXXFLAGS := -O2 -G0 -Wall -mdivide-breaks -march=r4000 -mgp32 -mlong32 $(PSP_CXXFLAGS)
+PSP_CXXFLAGS := -O2 -G0 -Wall -mdivide-breaks -march=allegrex -mgp32 -mlong32 $(PSP_CXXFLAGS)
 
 # Linker flags
 PSP_LDFLAGS := -O0 -G0 -L$(PSPSDK)/lib -T$(PSPSDK)/startup/linkfile -Ttext 8900000 -q $(PSP_LDFLAGS)
