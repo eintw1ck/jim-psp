@@ -16,7 +16,7 @@ PSP_CFLAGS := -O2 -G0 -Wall -mdivide-breaks -march=allegrex -mgp32 -mlong32 $(PS
 PSP_CXXFLAGS := -O2 -G0 -Wall -mdivide-breaks -march=allegrex -mgp32 -mlong32 $(PSP_CXXFLAGS)
 
 # Linker flags
-PSP_LDFLAGS := -O0 -G0 -L$(PSPSDK)/lib -T$(PSPSDK)/startup/linkfile -Ttext 8900000 -q $(PSP_LDFLAGS)
+PSP_LDFLAGS := -O0 -G0 -L$(PSPSDK)/lib -L$(PSPDEV)/psp/lib/gcc/psp/4.0.0 -T$(PSPSDK)/startup/linkfile -Ttext 8900000 -q $(PSP_LDFLAGS)
 
 # Assembler flags
 PSP_ASFLAGS := -G0 $(PSP_ASFLAGS)
@@ -24,7 +24,7 @@ PSP_ASFLAGS := -G0 $(PSP_ASFLAGS)
 # Link with following libraries.  This is a special case, and instead of
 # allowing the user to override the library order, we always make sure
 # libkernel is the last library to be linked.
-PSP_LIBS += -lc -lkernel
+PSP_LIBS += -lc -lgcc -lkernel
 
 # Define the overridable parameters for the EBOOT
 
