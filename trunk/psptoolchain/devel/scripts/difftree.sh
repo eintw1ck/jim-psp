@@ -26,7 +26,7 @@ rm -f $PATCH
 
 echo -n "Generating patch ..... "
 for file in $LIST; do
-	diff -burN $1/$file $2/$file >> $PATCH 2> /dev/null
+	diff -burN $2/$file $1/$file >> $PATCH 2> /dev/null
 done
 echo -e "done."
 
