@@ -898,27 +898,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A622550</NID>
-						<NAME>sceCtrl_3A622550</NAME>
+						<NAME>sceCtrlPeekBufferPositive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC152080A</NID>
-						<NAME>sceCtrl_C152080A</NAME>
+						<NAME>sceCtrlPeekBufferNegative</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1F803938</NID>
-						<NAME>sceCtrl_1F803938</NAME>
+						<NAME>sceCtrlReadBufferPositive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x60B81F86</NID>
-						<NAME>sceCtrl_60B81F86</NAME>
+						<NAME>sceCtrlReadBufferNegative</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB1D0E5CD</NID>
-						<NAME>sceCtrl_B1D0E5CD</NAME>
+						<NAME>sceCtrlPeekLatch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0B588501</NID>
-						<NAME>sceCtrl_0B588501</NAME>
+						<NAME>sceCtrlReadLatch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x348D99D4</NID>
@@ -947,7 +947,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE03956E9</NID>
-						<NAME>sceCtrl_driver_E03956E9</NAME>
+						<NAME>sceCtrlEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC3F607F3</NID>
@@ -975,27 +975,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A622550</NID>
-						<NAME>sceCtrl_driver_3A622550</NAME>
+						<NAME>sceCtrlPeekBufferPositive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC152080A</NID>
-						<NAME>sceCtrl_driver_C152080A</NAME>
+						<NAME>sceCtrlPeekBufferNegative</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1F803938</NID>
-						<NAME>sceCtrl_driver_1F803938</NAME>
+						<NAME>sceCtrlReadBufferPositive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x60B81F86</NID>
-						<NAME>sceCtrl_driver_60B81F86</NAME>
+						<NAME>sceCtrlReadBufferNegative</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB1D0E5CD</NID>
-						<NAME>sceCtrl_driver_B1D0E5CD</NAME>
+						<NAME>sceCtrlPeekLatch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0B588501</NID>
-						<NAME>sceCtrl_driver_0B588501</NAME>
+						<NAME>sceCtrlReadLatch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA88E8D22</NID>
@@ -1073,7 +1073,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDBA6C4C4</NID>
-						<NAME>sceDisplay_DBA6C4C4</NAME>
+						<NAME>sceDisplayGetFramePerSec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7ED59BC4</NID>
@@ -1093,7 +1093,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB4F378FA</NID>
-						<NAME>sceDisplay_B4F378FA</NAME>
+						<NAME>sceDisplayIsForeground</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x31C4BAA8</NID>
@@ -1101,7 +1101,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9C6EAAD7</NID>
-						<NAME>sceDisplay_9C6EAAD7</NAME>
+						<NAME>sceDisplayGetVcount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4D4E10EC</NID>
@@ -1121,15 +1121,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x46F186C3</NID>
-						<NAME>sceDisplay_46F186C3</NAME>
+						<NAME>sceDisplayWaitVblankStartCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x773DD3A3</NID>
-						<NAME>sceDisplay_773DD3A3</NAME>
+						<NAME>sceDisplayGetCurrentHcount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x210EAB3A</NID>
-						<NAME>sceDisplay_210EAB3A</NAME>
+						<NAME>sceDisplayGetAccumulatedHcount</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -1138,11 +1138,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x206276C2</NID>
-						<NAME>sceDisplay_driver_206276C2</NAME>
+						<NAME>sceDisplayInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7A10289D</NID>
-						<NAME>sceDisplay_driver_7A10289D</NAME>
+						<NAME>sceDisplayEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0E20F177</NID>
@@ -1154,7 +1154,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDBA6C4C4</NID>
-						<NAME>sceDisplay_driver_DBA6C4C4</NAME>
+						<NAME>sceDisplayGetFramePerSec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x432D133F</NID>
@@ -1190,7 +1190,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB4F378FA</NID>
-						<NAME>sceDisplay_driver_B4F378FA</NAME>
+						<NAME>sceDisplayIsForeground</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAC14F1FF</NID>
@@ -1206,7 +1206,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9C6EAAD7</NID>
-						<NAME>sceDisplay_driver_9C6EAAD7</NAME>
+						<NAME>sceDisplayGetVcount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4D4E10EC</NID>
@@ -1230,15 +1230,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x46F186C3</NID>
-						<NAME>sceDisplay_driver_46F186C3</NAME>
+						<NAME>sceDisplayWaitVblankStartCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x773DD3A3</NID>
-						<NAME>sceDisplay_driver_773DD3A3</NAME>
+						<NAME>sceDisplayGetCurrentHcount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x210EAB3A</NID>
-						<NAME>sceDisplay_driver_210EAB3A</NAME>
+						<NAME>sceDisplayGetAccumulatedHcount</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -2015,7 +2015,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9F2C2948</NID>
-						<NAME>sceGe_driver_9F2C2948</NAME>
+						<NAME>sceGeEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8F185DF7</NID>
@@ -2047,23 +2047,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x438A385A</NID>
-						<NAME>sceGe_driver_438A385A</NAME>
+						<NAME>sceGeSaveContext</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0BF608FB</NID>
-						<NAME>sceGe_driver_0BF608FB</NAME>
+						<NAME>sceGeRestoreContext</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAB49E76A</NID>
-						<NAME>sceGe_driver_AB49E76A</NAME>
+						<NAME>sceGeListEnQueue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1C0D95A6</NID>
-						<NAME>sceGe_driver_1C0D95A6</NAME>
+						<NAME>sceGeListEnQueueHead</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5FB86AB0</NID>
-						<NAME>sceGe_driver_5FB86AB0</NAME>
+						<NAME>sceGeListDeQueue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE0D68148</NID>
@@ -2128,23 +2128,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x438A385A</NID>
-						<NAME>sceGe_user_438A385A</NAME>
+						<NAME>sceGeSaveContext</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0BF608FB</NID>
-						<NAME>sceGe_user_0BF608FB</NAME>
+						<NAME>sceGeRestoreContext</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAB49E76A</NID>
-						<NAME>sceGe_user_AB49E76A</NAME>
+						<NAME>sceGeListEnQueue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1C0D95A6</NID>
-						<NAME>sceGe_user_1C0D95A6</NAME>
+						<NAME>sceGeListEnQueueHead</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5FB86AB0</NID>
-						<NAME>sceGe_user_5FB86AB0</NAME>
+						<NAME>sceGeListDeQueue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE0D68148</NID>
@@ -3798,7 +3798,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0E8E8774</NID>
-						<NAME>sceLcdc_driver_0E8E8774</NAME>
+						<NAME>sceLcdcEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDCD51769</NID>
@@ -3892,7 +3892,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA8542C48</NID>
-						<NAME>sceLed_driver_A8542C48</NAME>
+						<NAME>sceLedEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDE91D3A4</NID>
@@ -3980,7 +3980,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB7A424A4</NID>
-						<NAME>LflashFatfmt_B7A424A4</NAME>
+						<NAME>sceLflashFatfmtStartFatfmt</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
