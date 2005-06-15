@@ -4556,7 +4556,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0DE1F600</NID>
-						<NAME>LoadCoreForKernel_0DE1F600</NAME>
+						<NAME>sceKernelLinkLibraryEntriesForUser</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDA1B09AA</NID>
@@ -5706,39 +5706,39 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xECBC76EF</NID>
-						<NAME>sceMgr_driver_ECBC76EF</NAME>
+						<NAME>sceMgrInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB1160A2</NID>
-						<NAME>sceMgr_driver_DB1160A2</NAME>
+						<NAME>sceMgrEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x604EF590</NID>
-						<NAME>sceMgr_driver_604EF590</NAME>
+						<NAME>sceMgrReset</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBB36AD19</NID>
-						<NAME>sceMgr_driver_BB36AD19</NAME>
+						<NAME>sceMgrLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x62BF32DD</NID>
-						<NAME>sceMgr_driver_62BF32DD</NAME>
+						<NAME>sceMgrPollLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDBEDF631</NID>
-						<NAME>sceMgr_driver_DBEDF631</NAME>
+						<NAME>sceMgrUnLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF30E22CF</NID>
-						<NAME>sceMgr_driver_F30E22CF</NAME>
+						<NAME>sceMgrAllocKeyReg</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1B8F3192</NID>
-						<NAME>sceMgr_driver_1B8F3192</NAME>
+						<NAME>sceMgrFreeKeyReg</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x896EEE57</NID>
-						<NAME>sceMgr_driver_896EEE57</NAME>
+						<NAME>sceMgrGetLeafID</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x733917D9</NID>
@@ -5750,15 +5750,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x782EB996</NID>
-						<NAME>sceMgr_driver_782EB996</NAME>
+						<NAME>sceMgrInitSeed</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9ACFEAF6</NID>
-						<NAME>sceMgr_driver_9ACFEAF6</NAME>
+						<NAME>sceMgrRandom</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4985A5A8</NID>
-						<NAME>sceMgr_driver_4985A5A8</NAME>
+						<NAME>sceMgrCreateKc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x62F480BF</NID>
@@ -5770,7 +5770,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC3677CF4</NID>
-						<NAME>sceMgr_driver_C3677CF4</NAME>
+						<NAME>sceMgrDecryptEKB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8407D6DC</NID>
@@ -5782,27 +5782,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26EAC6A5</NID>
-						<NAME>sceMgr_driver_26EAC6A5</NAME>
+						<NAME>sceMgrEncryptKc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x02F7AB01</NID>
-						<NAME>sceMgr_driver_02F7AB01</NAME>
+						<NAME>sceMgrDecryptKc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5576E156</NID>
-						<NAME>sceMgr_driver_5576E156</NAME>
+						<NAME>sceMgrEncryptKicv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE22F96A0</NID>
-						<NAME>sceMgr_driver_E22F96A0</NAME>
+						<NAME>sceMgrDecryptKicv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC408E3C0</NID>
-						<NAME>sceMgr_driver_C408E3C0</NAME>
+						<NAME>sceMgrGenerateKb</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x59894938</NID>
-						<NAME>sceMgr_driver_59894938</NAME>
+						<NAME>sceMgrGenerateICV</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0846B97A</NID>
@@ -5818,7 +5818,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5A260472</NID>
-						<NAME>sceMgr_driver_5A260472</NAME>
+						<NAME>sceMgrGenerateKse</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4AC11456</NID>
@@ -5842,27 +5842,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF5DFD97B</NID>
-						<NAME>sceMgr_driver_F5DFD97B</NAME>
+						<NAME>sceMgrDESDecrypt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2DAD213D</NID>
-						<NAME>sceMgr_driver_2DAD213D</NAME>
+						<NAME>sceMgrDESEncrypt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3583068E</NID>
-						<NAME>sceMgr_driver_3583068E</NAME>
+						<NAME>sceMgrDESDecryptBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC507A285</NID>
-						<NAME>sceMgr_driver_C507A285</NAME>
+						<NAME>sceMgrDESEncryptBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3054F8F1</NID>
-						<NAME>sceMgr_driver_3054F8F1</NAME>
+						<NAME>sceMgrAESDecrypt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8A916574</NID>
-						<NAME>sceMgr_driver_8A916574</NAME>
+						<NAME>sceMgrAESEncrypt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD46CF098</NID>
@@ -5970,7 +5970,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x194C594A</NID>
-						<NAME>sceMgr_driver_194C594A</NAME>
+						<NAME>sceMgrGetHwVersion</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -13506,7 +13506,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE58818A8</NID>
-						<NAME>sceUsbstorBoot_E58818A8</NAME>
+						<NAME>sceUsbstorBootSetCapacity</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x594BBF95</NID>
@@ -13526,7 +13526,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA55C9E16</NID>
-						<NAME>sceUsbstorBoot_A55C9E16</NAME>
+						<NAME>sceUsbstorBootUnregisterNotify</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
