@@ -28,7 +28,7 @@
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
 --- newlib-1.13.0.orig/configure	2004-12-16 11:51:28.000000000 -0800
-+++ newlib-psp/configure	2005-06-14 21:58:20.783668856 -0700
++++ newlib-psp/configure	2005-06-14 21:58:20.000000000 -0700
 @@ -1507,6 +1507,9 @@
    mips*-*-linux*)
      noconfigdirs="$noconfigdirs target-newlib target-libgloss"
@@ -40,7 +40,7 @@
      noconfigdirs="$noconfigdirs gprof ${libgcj}"
      ;;
 --- newlib-1.13.0.orig/configure.in	2004-12-16 11:51:28.000000000 -0800
-+++ newlib-psp/configure.in	2005-06-14 21:57:15.303623336 -0700
++++ newlib-psp/configure.in	2005-06-14 21:57:15.000000000 -0700
 @@ -716,6 +716,9 @@
    mips*-*-linux*)
      noconfigdirs="$noconfigdirs target-newlib target-libgloss"
@@ -62,3 +62,16 @@
  _CONST char *__ctype_ptr = _ctype_b + 128;
  #endif
  
+--- newlib-1.13.0.orig/newlib/configure.host	2004-10-05 12:44:24.000000000 -0700
++++ newlib-psp/newlib/configure.host	2005-06-15 23:13:08.657527728 -0700
+@@ -569,6 +569,10 @@
+ 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
+ 	;;
+   mips*-*-elf*)
++	case "${host}" in
++	  mipsallegrex*)
++		newlib_cflags="${newlib_cflags} -DPREFER_SIZE_OVER_SPEED" ;;
++	esac
+ 	default_newlib_io_long_long="yes"
+ 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
+ 	;;
