@@ -569,6 +569,10 @@ case "${host}" in
 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
 	;;
   mips*-*-elf*)
+	case "${host}" in
+	  mipsallegrex*)
+		newlib_cflags="${newlib_cflags} -DPREFER_SIZE_OVER_SPEED" ;;
+	esac
 	default_newlib_io_long_long="yes"
 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
 	;;
