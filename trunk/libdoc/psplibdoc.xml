@@ -6936,7 +6936,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27F3292C</NID>
-						<NAME>scePower_27F3292C</NAME>
+						<NAME>scePowerBatteryUpdateInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE8E4E204</NID>
@@ -6960,7 +6960,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB4432BC8</NID>
-						<NAME>scePower_B4432BC8</NAME>
+						<NAME>scePowerGetBatteryChargingStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD3075926</NID>
@@ -6988,15 +6988,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28E12023</NID>
-						<NAME>scePower_28E12023</NAME>
+						<NAME>scePowerGetBatteryTemp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x862AE1A6</NID>
-						<NAME>scePower_862AE1A6</NAME>
+						<NAME>scePowerGetBatteryElec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x483CE86B</NID>
-						<NAME>scePower_483CE86B</NAME>
+						<NAME>scePowerGetBatteryVolt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x23436A4A</NID>
@@ -13699,35 +13699,35 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4DB1E739</NID>
-						<NAME>sceUtility_4DB1E739</NAME>
+						<NAME>sceUtilityNetconfInitStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF88155F6</NID>
-						<NAME>sceUtility_F88155F6</NAME>
+						<NAME>sceUtilityNetconfShutdownStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91E70E35</NID>
-						<NAME>sceUtility_91E70E35</NAME>
+						<NAME>sceUtilityNetconfUpdate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6332AA39</NID>
-						<NAME>sceUtility_6332AA39</NAME>
+						<NAME>sceUtilityNetconfGetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x50C4CD57</NID>
-						<NAME>sceUtility_50C4CD57</NAME>
+						<NAME>sceUtilitySavedataInitStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9790B33C</NID>
-						<NAME>sceUtility_9790B33C</NAME>
+						<NAME>sceUtilitySavedataShutdownStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD4B95FFB</NID>
-						<NAME>sceUtility_D4B95FFB</NAME>
+						<NAME>sceUtilitySavedataUpdate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8874DBE0</NID>
-						<NAME>sceUtility_8874DBE0</NAME>
+						<NAME>sceUtilitySavedataGetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2995D020</NID>
@@ -13763,19 +13763,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF6269B82</NID>
-						<NAME>sceUtility_F6269B82</NAME>
+						<NAME>sceUtilityOskInitStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3DFAEBA9</NID>
-						<NAME>sceUtility_3DFAEBA9</NAME>
+						<NAME>sceUtilityOskShutdownStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4B85C861</NID>
-						<NAME>sceUtility_4B85C861</NAME>
+						<NAME>sceUtilityOskUpdate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF3F76017</NID>
-						<NAME>sceUtility_F3F76017</NAME>
+						<NAME>sceUtilityOskGetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x45C18506</NID>
@@ -13791,15 +13791,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x34B78343</NID>
-						<NAME>sceUtility_34B78343</NAME>
+						<NAME>sceUtilityGetSystemParamString</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5EEE6548</NID>
-						<NAME>sceUtility_5EEE6548</NAME>
+						<NAME>sceUtilityCheckNetParam</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x434D4B3A</NID>
-						<NAME>sceUtility_434D4B3A</NAME>
+						<NAME>sceUtilityGetNetParam</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
