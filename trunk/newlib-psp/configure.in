@@ -716,6 +716,9 @@ case "${target}" in
   mips*-*-linux*)
     noconfigdirs="$noconfigdirs target-newlib target-libgloss"
     ;;
+  mipsallegrex*-*-*)
+    noconfigdirs="$noconfigdirs target-libgloss"
+    ;;
   mips*-*-*)
     noconfigdirs="$noconfigdirs gprof ${libgcj}"
     ;;
