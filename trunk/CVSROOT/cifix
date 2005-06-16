@@ -23,6 +23,8 @@ def main():
 		match = re_isascii.match(head)
 		if match:
 			matchlen = match.end() - match.start()
+		else:
+			os.exit(0)
 		if len(head) == matchlen:
 			data = head + fp.read()
 			fp.close()
