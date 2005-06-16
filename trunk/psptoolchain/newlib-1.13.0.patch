@@ -27,6 +27,30 @@
  	mips3*-*)
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
+--- newlib-1.13.0.orig/configure	2004-12-16 11:51:28.000000000 -0800
++++ newlib-psp/configure	2005-06-14 21:58:20.783668856 -0700
+@@ -1507,6 +1507,9 @@
+   mips*-*-linux*)
+     noconfigdirs="$noconfigdirs target-newlib target-libgloss"
+     ;;
++  mipsallegrex*-*-*)
++    noconfigdirs="$noconfigdirs target-libgloss"
++    ;;
+   mips*-*-*)
+     noconfigdirs="$noconfigdirs gprof ${libgcj}"
+     ;;
+--- newlib-1.13.0.orig/configure.in	2004-12-16 11:51:28.000000000 -0800
++++ newlib-psp/configure.in	2005-06-14 21:57:15.303623336 -0700
+@@ -716,6 +716,9 @@
+   mips*-*-linux*)
+     noconfigdirs="$noconfigdirs target-newlib target-libgloss"
+     ;;
++  mipsallegrex*-*-*)
++    noconfigdirs="$noconfigdirs target-libgloss"
++    ;;
+   mips*-*-*)
+     noconfigdirs="$noconfigdirs gprof ${libgcj}"
+     ;;
 --- newlib-1.13.0.orig/newlib/libc/ctype/ctype_.c	2003-05-13 02:46:47.000000000 -0700
 +++ newlib-psp/newlib/libc/ctype/ctype_.c	2005-05-23 23:40:50.000000000 -0700
 @@ -88,7 +88,7 @@
