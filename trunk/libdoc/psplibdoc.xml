@@ -5742,11 +5742,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x733917D9</NID>
-						<NAME>sceMgr_driver_733917D9</NAME>
+						<NAME>sceMgrGetInitialEKB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4B166A14</NID>
-						<NAME>sceMgr_driver_4B166A14</NAME>
+						<NAME>sceMgrGetDefaultEKB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x782EB996</NID>
@@ -5774,7 +5774,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8407D6DC</NID>
-						<NAME>sceMgr_driver_8407D6DC</NAME>
+						<NAME>sceMgrDecryptLocalEKB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB434A376</NID>
@@ -5822,11 +5822,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4AC11456</NID>
-						<NAME>sceMgr_driver_4AC11456</NAME>
+						<NAME>sceMgrEncryptWithKse</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2DA3D191</NID>
-						<NAME>sceMgr_driver_2DA3D191</NAME>
+						<NAME>sceMgrDecryptWithKse</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2BC130E3</NID>
@@ -5838,7 +5838,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x54166582</NID>
-						<NAME>sceMgr_driver_54166582</NAME>
+						<NAME>sceMgrStartSession</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF5DFD97B</NID>
@@ -5866,15 +5866,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD46CF098</NID>
-						<NAME>sceMgr_driver_D46CF098</NAME>
+						<NAME>sceMgrMSInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9C886B02</NID>
-						<NAME>sceMgr_driver_9C886B02</NAME>
+						<NAME>sceMgrMSReset</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC9B02F91</NID>
-						<NAME>sceMgr_driver_C9B02F91</NAME>
+						<NAME>sceMgrMSEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC655D92B</NID>
@@ -5898,11 +5898,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91C76957</NID>
-						<NAME>sceMgr_driver_91C76957</NAME>
+						<NAME>sceMgrMSMount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8380898</NID>
-						<NAME>sceMgr_driver_C8380898</NAME>
+						<NAME>sceMgrMSAuth</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4F4AE686</NID>
