@@ -6,6 +6,7 @@
 # Written by Tim Styer.
 
 import re, string
+from sets import Set as set
 
 re_nid = re.compile('<NID>(.*)</NID>')
 re_name = re.compile('<NAME>(.*)</NAME>')
