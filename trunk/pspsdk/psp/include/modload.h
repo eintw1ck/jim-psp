@@ -15,6 +15,7 @@ struct load_t
    u32 e;   // Set to 0x01000000
 };
 int sceKernelLoadModule(const char *path, u32 zero, struct load_t* mod);
+int sceKernelLoadModuleMs(const char *path, u32 zero, struct load_t* mod);
 int sceKernelStartModule(int modid, u32 zero1, u32 zero2, u32 *status, u32 zero3);
 
 #ifdef __cplusplus
