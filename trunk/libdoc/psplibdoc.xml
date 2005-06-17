@@ -8610,7 +8610,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCDA85C99</NID>
-						<NAME>sceNetInet_CDA85C99</NAME>
+						<NAME>sceNetInetRecv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC91142E4</NID>
@@ -9142,11 +9142,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC41C2853</NID>
-						<NAME>sceRtc_C41C2853</NAME>
+						<NAME>sceRtcGetTickResolution</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3F7AD767</NID>
-						<NAME>sceRtc_3F7AD767</NAME>
+						<NAME>sceRtcGetCurrentTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x029CA3B3</NID>
@@ -9154,7 +9154,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4CFA57B0</NID>
-						<NAME>sceRtc_4CFA57B0</NAME>
+						<NAME>sceRtcGetCurrentClock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE7C27D1B</NID>
@@ -9182,7 +9182,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4B1B5E82</NID>
-						<NAME>sceRtc_4B1B5E82</NAME>
+						<NAME>sceRtcCheckValid</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A807CC8</NID>
@@ -9210,11 +9210,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7ED29E40</NID>
-						<NAME>sceRtc_7ED29E40</NAME>
+						<NAME>sceRtcSetTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6FF40ACC</NID>
-						<NAME>sceRtc_6FF40ACC</NAME>
+						<NAME>sceRtcGetTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9ED0AE87</NID>
@@ -9230,7 +9230,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF2A4AFE5</NID>
-						<NAME>sceRtc_F2A4AFE5</NAME>
+						<NAME>sceRtcTickAddSeconds</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE6605BCA</NID>
@@ -9287,19 +9287,19 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x912BEE56</NID>
-						<NAME>sceRtc_driver_912BEE56</NAME>
+						<NAME>sceRtcInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCE27DE2F</NID>
-						<NAME>sceRtc_driver_CE27DE2F</NAME>
+						<NAME>sceRtcEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9CC2797E</NID>
-						<NAME>sceRtc_driver_9CC2797E</NAME>
+						<NAME>sceRtcSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x48D07D70</NID>
-						<NAME>sceRtc_driver_48D07D70</NAME>
+						<NAME>sceRtcResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF0B5571C</NID>
@@ -9311,7 +9311,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC41C2853</NID>
-						<NAME>sceRtc_driver_C41C2853</NAME>
+						<NAME>sceRtcGetTickResolution</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9763C138</NID>
@@ -9323,7 +9323,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3F7AD767</NID>
-						<NAME>sceRtc_driver_3F7AD767</NAME>
+						<NAME>sceRtcGetCurrentTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB44BDAED</NID>
@@ -9335,7 +9335,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4CFA57B0</NID>
-						<NAME>sceRtc_driver_4CFA57B0</NAME>
+						<NAME>sceRtcGetCurrentClock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE7C27D1B</NID>
@@ -9371,7 +9371,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4B1B5E82</NID>
-						<NAME>sceRtc_driver_4B1B5E82</NAME>
+						<NAME>sceRtcCheckValid</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A807CC8</NID>
@@ -9399,11 +9399,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7ED29E40</NID>
-						<NAME>sceRtc_driver_7ED29E40</NAME>
+						<NAME>sceRtcSetTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6FF40ACC</NID>
-						<NAME>sceRtc_driver_6FF40ACC</NAME>
+						<NAME>sceRtcGetTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9ED0AE87</NID>
@@ -9419,7 +9419,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF2A4AFE5</NID>
-						<NAME>sceRtc_driver_F2A4AFE5</NAME>
+						<NAME>sceRtcTickAddSeconds</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE6605BCA</NID>
@@ -9551,7 +9551,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x71EEF62D</NID>
-						<NAME>sceSircs_71EEF62D</NAME>
+						<NAME>sceSircsSend</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -9560,15 +9560,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x62411801</NID>
-						<NAME>sceSircs_driver_62411801</NAME>
+						<NAME>sceSircsInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x19155A2F</NID>
-						<NAME>sceSircs_driver_19155A2F</NAME>
+						<NAME>sceSircsEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71EEF62D</NID>
-						<NAME>sceSircs_driver_71EEF62D</NAME>
+						<NAME>sceSircsSend</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -14746,11 +14746,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD7763699</NID>
-						<NAME>sceWlanDrv_D7763699</NAME>
+						<NAME>sceWlanGetSwitchState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0C622081</NID>
-						<NAME>sceWlanDrv_0C622081</NAME>
+						<NAME>sceWlanGetEtherAddr</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -14759,11 +14759,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x482CAE9A</NID>
-						<NAME>sceWlanDrv_lib_482CAE9A</NAME>
+						<NAME>sceWlanDevAttach</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC9A8CAB7</NID>
-						<NAME>sceWlanDrv_lib_C9A8CAB7</NAME>
+						<NAME>sceWlanDevDetach</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x19E51F54</NID>
@@ -14836,19 +14836,19 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6D89822C</NID>
-						<NAME>sceWlanDrv_driver_6D89822C</NAME>
+						<NAME>sceWlanDevInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEC9232F0</NID>
-						<NAME>sceWlanDrv_driver_EC9232F0</NAME>
+						<NAME>sceWlanDevEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x482CAE9A</NID>
-						<NAME>sceWlanDrv_driver_482CAE9A</NAME>
+						<NAME>sceWlanDevAttach</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC9A8CAB7</NID>
-						<NAME>sceWlanDrv_driver_C9A8CAB7</NAME>
+						<NAME>sceWlanDevDetach</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x93440B11</NID>
