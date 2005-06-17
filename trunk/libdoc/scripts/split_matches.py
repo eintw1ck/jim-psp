@@ -1,5 +1,9 @@
 #!/bin/sh
-""""exec ${PYTHON:-python} -tu `cygpath -ma $0` "$@";" """
+""""exec ${PYTHON:-python} -tu $0 "$@";" """
+#
+# split_matches.py - Split each NID match into multiple words.
+#
+# Written by Tim Styer.
 
 import re, string
 
