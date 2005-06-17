@@ -22,7 +22,7 @@ re_name = re.compile('<NAME>(.*)</NAME>')
 
 lowercase = string.lowercase
 uppercase = string.uppercase
-digits = string.digits
+digits = string.digits + '_'
 
 
 def split_name (name):
@@ -34,7 +34,7 @@ def split_name (name):
 		if lowercase.find(name[i])>=0 and uppercase.find(name[i+1])>=0:
 			splits.add(i+1)
 
-	# SPLIT digit SPLIT
+	# SPLIT digit|underscore SPLIT
 	for i in xrange(len(name)):
 		if digits.find(name[i])>=0:
 			splits.add(i)
