@@ -5,8 +5,17 @@
 #
 # Written by Tim Styer.
 
-import re, string
-from sets import Set as set
+import re, string, sys
+
+try:
+    test_set = set()
+except NameError:
+    try:
+        from sets import Set as set
+    except:
+        print "You need a version of Python that supports sets."
+        sys.exit(1)
+test_set = None
 
 re_nid = re.compile('<NID>(.*)</NID>')
 re_name = re.compile('<NAME>(.*)</NAME>')
