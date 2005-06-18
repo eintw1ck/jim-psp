@@ -10,7 +10,7 @@
   PSPDEV="/usr/local/pspdev"
   PSPSDK="$PSPDEV/pspsdk"
   CVSROOT=":pserver:anonymous@cvs.ps2dev.org:/home/pspcvs"
-  PATH="$PATH:$PSPDEV/bin:$PSPDEV/psp/bin:$PSPSDK/bin"
+  PATH="$PATH:$PSPDEV/bin"
 
   ## Set the directories.
   SRCDIR="`pwd`"
@@ -82,7 +82,7 @@
    cd build-$TARGET
 
    ## Configure the source.
-   ../configure --prefix=$PSPDEV/$TARGET --target=$TARGET || { echo "ERROR CONFIGURING BINUTILS ($BINUTILS $TARGET)"; exit; }
+   ../configure --prefix=$PSPDEV --target=$TARGET || { echo "ERROR CONFIGURING BINUTILS ($BINUTILS $TARGET)"; exit; }
 
    ## Build the source.
    $MAKE clean; $MAKE || { echo "ERROR BUILDING BINUTILS ($BINUTILS $TARGET)"; exit; }
@@ -119,7 +119,7 @@
    cd build-$TARGET
 
    ## Configure the source.
-   ../configure --prefix=$PSPDEV/$TARGET --target=$TARGET --enable-languages="c" --with-newlib --without-headers || { echo "ERROR CONFIGURING GCC ($GCC $TARGET)"; exit; }
+   ../configure --prefix=$PSPDEV --target=$TARGET --enable-languages="c" --with-newlib --without-headers || { echo "ERROR CONFIGURING GCC ($GCC $TARGET)"; exit; }
 
    ## Build the source.
    $MAKE clean; $MAKE || { echo "ERROR BUILDING GCC ($GCC $TARGET)"; exit; }
@@ -156,7 +156,7 @@
    cd build-$TARGET
 
    ## Configure the source.
-   ../configure --prefix=$PSPDEV/$TARGET --target=$TARGET || { echo "ERROR CONFIGURING NEWLIB ($NEWLIB $TARGET)"; exit; }
+   ../configure --prefix=$PSPDEV --target=$TARGET || { echo "ERROR CONFIGURING NEWLIB ($NEWLIB $TARGET)"; exit; }
 
    ## Build the source.
    $MAKE clean; CPPFLAGS="-G0" $MAKE || { echo "ERROR BUILDING NEWLIB ($NEWLIB $TARGET)"; exit; }
@@ -193,7 +193,7 @@
    cd build-$TARGET-c++
 
    ## Configure the source.
-   ../configure --prefix=$PSPDEV/$TARGET --target=$TARGET --enable-languages="c,c++" --with-newlib --with-headers=$PSPDEV/$TARGET/$TARGET/include --enable-cxx-flags="-G0" || { echo "ERROR CONFIGURING GCC ($GCC $TARGET C++)"; exit; }
+   ../configure --prefix=$PSPDEV --target=$TARGET --enable-languages="c,c++" --with-newlib --with-headers=$PSPDEV/$TARGET/include --enable-cxx-flags="-G0" || { echo "ERROR CONFIGURING GCC ($GCC $TARGET C++)"; exit; }
 
    ## Build the source.
    $MAKE clean; $MAKE CFLAGS_FOR_TARGET="-G0" || { echo "ERROR BUILDING GCC ($GCC $TARGET C++)"; exit; }
