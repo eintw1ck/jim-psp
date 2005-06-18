@@ -461,19 +461,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x136CAF51</NID>
-						<NAME>sceAudio_136CAF51</NAME>
+						<NAME>sceAudioOutputBlocking</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE2D56B2D</NID>
-						<NAME>sceAudio_E2D56B2D</NAME>
+						<NAME>sceAudioOutputPanned</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x13F592BC</NID>
-						<NAME>sceAudio_13F592BC</NAME>
+						<NAME>sceAudioOutputPannedBlocking</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5EC81C55</NID>
-						<NAME>sceAudio_5EC81C55</NAME>
+						<NAME>sceAudioChReserve</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x41EFADE7</NID>
@@ -481,15 +481,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6FC46853</NID>
-						<NAME>sceAudio_6FC46853</NAME>
+						<NAME>sceAudioChRelease</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE9D97901</NID>
-						<NAME>sceAudio_E9D97901</NAME>
+						<NAME>sceAudioGetChannelRestLen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCB2E439E</NID>
-						<NAME>sceAudio_CB2E439E</NAME>
+						<NAME>sceAudioSetChannelDataLen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x95FD0C2D</NID>
