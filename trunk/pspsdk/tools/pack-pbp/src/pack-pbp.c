@@ -7,6 +7,7 @@
 # Licenced under Academic Free License version 2.0
 # Review pspsdk README & LICENSE files for further details.
 #
+# $Id$
 */
 
 #ifdef __BIG_ENDIAN__

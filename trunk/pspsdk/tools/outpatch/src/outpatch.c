@@ -2,6 +2,7 @@
 // patches elf header and section name
 // Original written by nem
 // Modded by tyranid
+// $Id$
 
 #include <stdio.h>
 #include <string.h>
