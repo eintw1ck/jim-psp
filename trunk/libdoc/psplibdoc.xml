@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <?xml-stylesheet type="text/xsl" href="psplibdocdisplay.xsl" ?>
 <PSPLIBDOC>
 	<PRXFILES>
@@ -7,22 +7,8 @@
 		<PRXNAME>sceATA_ATAPI_driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceAta_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB176BB2E</NID>
@@ -329,30 +315,8 @@
 		<PRXNAME>sceAudio_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceAudio_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x80F1F7E0</NID>
@@ -454,6 +418,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceAudio</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8C1009B2</NID>
@@ -540,26 +505,8 @@
 		<PRXNAME>sceAudiocodec_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceAudiocodec</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9D3F790C</NID>
@@ -597,6 +544,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceAudiocodec_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x62518B7E</NID>
@@ -611,22 +559,8 @@
 		<PRXNAME>sceBLK_driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceBLK_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6216FF5D</NID>
@@ -677,26 +611,8 @@
 		<PRXNAME>sceChkreg</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceChkreg_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x54495B19</NID>
@@ -711,26 +627,8 @@
 		<PRXNAME>sceClockgen_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceClockgen_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x29160F5D</NID>
@@ -781,22 +679,8 @@
 		<PRXNAME>sceWM8750_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceCodec_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBD8E0977</NID>
@@ -859,26 +743,8 @@
 		<PRXNAME>sceController_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceCtrl</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6A2774F3</NID>
@@ -940,6 +806,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceCtrl_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3E65A0EA</NID>
@@ -1042,26 +909,8 @@
 		<PRXNAME>sceDisplay_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceDisplay</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x0E20F177</NID>
@@ -1135,6 +984,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceDisplay_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x206276C2</NID>
@@ -1249,26 +1099,8 @@
 		<PRXNAME>sceDMAManager</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>DmacManForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x1C46158A</NID>
@@ -1359,26 +1191,8 @@
 		<PRXNAME>sceDMACPLUS_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceDmac</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x617F3FE6</NID>
@@ -1392,6 +1206,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceDmacplus_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xDF32F547</NID>
@@ -1614,22 +1429,8 @@
 		<PRXNAME>sceDDR_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceDdr_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x17D39E17</NID>
@@ -1708,26 +1509,8 @@
 		<PRXNAME>sceNAND_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNand_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA513BB12</NID>
@@ -1894,22 +1677,8 @@
 		<PRXNAME>sceExceptionManager</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>ExceptionManagerForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3FB264FC</NID>
@@ -1958,22 +1727,8 @@
 		<PRXNAME>sceMSFAT_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceFatMS_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBCB9DEDB</NID>
@@ -1988,26 +1743,8 @@
 		<PRXNAME>sceGE_Manager</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceGe_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x71FCD1D6</NID>
@@ -2105,6 +1842,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceGe_user</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x1F6752AD</NID>
@@ -2183,26 +1921,8 @@
 		<PRXNAME>sceGPIO_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceGpio_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xEABDB328</NID>
@@ -2285,26 +2005,8 @@
 		<PRXNAME>sceHP_Remote_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceHprm</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC7154136</NID>
@@ -2342,6 +2044,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceHprm_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x1C5BC5A0</NID>
@@ -2424,26 +2127,8 @@
 		<PRXNAME>sceI2C_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceI2c_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x20ADF12A</NID>
@@ -2498,26 +2183,8 @@
 		<PRXNAME>sceIdStorage_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceIdStorage_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xAB129D20</NID>
@@ -2608,26 +2275,8 @@
 		<PRXNAME>sceNetIfhandle_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNetIfhandle</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC80181A2</NID>
@@ -2641,6 +2290,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceNetIfhandle_lib</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x30F69334</NID>
@@ -2786,6 +2436,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceNetIfhandle_driver</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x30F69334</NID>
@@ -3004,26 +2655,8 @@
 		<PRXNAME>sceImpose_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceImpose</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x68676C0A</NID>
@@ -3037,6 +2670,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceImpose_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBDBC42A6</NID>
@@ -3091,26 +2725,8 @@
 		<PRXNAME>sceInit</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>InitForKernel</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x2C6E9FE9</NID>
@@ -3145,22 +2761,8 @@
 		<PRXNAME>sceInterruptManager</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>InterruptManagerForKernel</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x092968F4</NID>
@@ -3348,6 +2950,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>InterruptManager</NAME>
+				<FLAGS>0x40000000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xCA04A2B9</NID>
@@ -3394,26 +2997,8 @@
 		<PRXNAME>sceIOFileManager</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>IoFileMgrForUser</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3251EA56</NID>
@@ -3563,6 +3148,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>IoFileMgrForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3251EA56</NID>
@@ -3741,22 +3327,8 @@
 		<PRXNAME>sceIsofs_driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceIsofs_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x19F9734D</NID>
@@ -3771,26 +3343,8 @@
 		<PRXNAME>sceLCDC_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceLcdc_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB55500A3</NID>
@@ -3865,26 +3419,8 @@
 		<PRXNAME>sceLED_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceLed_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB0B6A883</NID>
@@ -3915,34 +3451,8 @@
 		<PRXNAME>sceLFatFs_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-					<VARIABLE>
-						<NID>0x0F7C276C</NID>
-						<NAME>syslib_0F7C276C</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceLFatFs_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x933F6E29</NID>
@@ -3961,22 +3471,8 @@
 		<PRXNAME>sceLflashFatfmt</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>LflashFatfmt</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB7A424A4</NID>
@@ -3991,26 +3487,8 @@
 		<PRXNAME>sceATRAC3plus_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceAtrac3plus</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xD1F59FDB</NID>
@@ -4121,26 +3599,8 @@
 		<PRXNAME>SceHttp_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceHttp</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xAB1ABE07</NID>
@@ -4331,26 +3791,8 @@
 		<PRXNAME>SceParseHTTPheader_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceParseHttp</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8077A433</NID>
@@ -4369,26 +3811,8 @@
 		<PRXNAME>SceParseURI_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceParseUri</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x49E950EC</NID>
@@ -4415,26 +3839,8 @@
 		<PRXNAME>SceUpdateDL_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceLibUpdateDL</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xFC1AB540</NID>
@@ -4485,22 +3891,8 @@
 		<PRXNAME>sceLoaderCore</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>LoadCoreForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xACE23476</NID>
@@ -4631,22 +4023,8 @@
 		<PRXNAME>sceLoadExec</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>LoadExecForUser</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBD2F1094</NID>
@@ -4659,20 +4037,16 @@
 					<FUNCTION>
 						<NID>0x05572A5F</NID>
 						<NAME>sceKernelExitGame</NAME>
-						<RETURNTYPE>int</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4AC57943</NID>
 						<NAME>sceKernelRegisterExitCallback</NAME>
-						<RETURNTYPE>int</RETURNTYPE>
-						<ARGS>
-							<ARG><NAME>cbid</NAME><TYPE>u32</TYPE></ARG>
-						</ARGS>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>LoadExecForKernel</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBD2F1094</NID>
@@ -4767,22 +4141,8 @@
 		<PRXNAME>me_for_vsh</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMe4VSH_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x99CBCF35</NID>
@@ -4797,26 +4157,8 @@
 		<PRXNAME>sceMeCodecWrapper</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMeWrapper_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x63463F66</NID>
@@ -4922,6 +4264,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceMeVideo_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB655AD4E</NID>
@@ -4951,6 +4294,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceMeAudio_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC00D873B</NID>
@@ -4972,6 +4316,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceMeMemory_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA177798D</NID>
@@ -4989,6 +4334,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceMeCore_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xD1EA3DFD</NID>
@@ -5014,6 +4360,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceMePower_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x55F11AF6</NID>
@@ -5044,22 +4391,8 @@
 		<PRXNAME>sceMeBooter</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMeBooter_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3BCB751E</NID>
@@ -5074,22 +4407,8 @@
 		<PRXNAME>sceMeBooter</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMeBooter_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3BCB751E</NID>
@@ -5104,22 +4423,8 @@
 		<PRXNAME>sceUmd_driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceUmd</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3342000C</NID>
@@ -5297,6 +4602,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceUmdUser</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x46EBB729</NID>
@@ -5350,21 +4656,6 @@
 		<PRX>kd/mediasync.prx</PRX>
 		<PRXNAME>sceMediaSync</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
@@ -5372,26 +4663,8 @@
 		<PRXNAME>sceMemab</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMemab_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x01FD1BA0</NID>
@@ -5446,26 +4719,8 @@
 		<PRXNAME>sceMemlmd</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>memlmd</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8BDB1A3E</NID>
@@ -5479,6 +4734,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>semaphore</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x00EEC06A</NID>
@@ -5505,22 +4761,8 @@
 		<PRXNAME>sceMesgLed</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMesgLed_driver</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x84A04017</NID>
@@ -5590,6 +4832,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceResmap_driver</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE5659590</NID>
@@ -5603,6 +4846,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceDbman_driver</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB2B8C3F9</NID>
@@ -5616,6 +4860,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceNwman_driver</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9555D68D</NID>
@@ -5625,6 +4870,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceResmgr_driver</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9DC14891</NID>
@@ -5634,6 +4880,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceResmgr</NAME>
+				<FLAGS>0x40090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9DC14891</NID>
@@ -5643,6 +4890,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceMesgd_driver</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x102DC8AF</NID>
@@ -5656,6 +4904,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceWmd_driver</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x7A0E484C</NID>
@@ -5669,6 +4918,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceDbsvr_driver</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x94561901</NID>
@@ -5683,26 +4933,8 @@
 		<PRXNAME>sceMgr_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMgr_driver</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xECBC76EF</NID>
@@ -5981,26 +5213,8 @@
 		<PRXNAME>sceModuleManager</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>ModuleMgrForUser</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB7F46618</NID>
@@ -6046,6 +5260,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>ModuleMgrForKernel</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xABE84F8A</NID>
@@ -6140,26 +5355,8 @@
 		<PRXNAME>sceMpeg_library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMpeg</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x21FF80E4</NID>
@@ -6322,26 +5519,8 @@
 		<PRXNAME>sceMpegbase_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMpegbase</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBEA18F91</NID>
@@ -6379,6 +5558,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceMpegbase_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x27A2982F</NID>
@@ -6425,26 +5605,8 @@
 		<PRXNAME>sceMsAudio_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMSAudio_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x757F4FD3</NID>
@@ -6535,30 +5697,8 @@
 		<PRXNAME>sceMScm_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMScm_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x4E923738</NID>
@@ -6753,26 +5893,8 @@
 		<PRXNAME>sceMSstor_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceMSstor_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6FC1E8AE</NID>
@@ -6791,22 +5913,8 @@
 		<PRXNAME>sceOpenPSID_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceOpenPSID</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC69BEBCE</NID>
@@ -6816,6 +5924,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceOpenPSID_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC69BEBCE</NID>
@@ -6830,22 +5939,8 @@
 		<PRXNAME>scePEQ_Library_driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>scePEQ_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x213DE849</NID>
@@ -6867,6 +5962,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>scePEQ</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xFC45514B</NID>
@@ -6889,26 +5985,8 @@
 		<PRXNAME>scePower_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>scePower</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x2B51FE2F</NID>
@@ -7049,11 +6127,6 @@
 					<FUNCTION>
 						<NID>0x04B7766E</NID>
 						<NAME>scePowerRegisterCallback</NAME>
-						<RETURNTYPE>int</RETURNTYPE>
-						<ARGS>
-							<ARG><NAME>zero</NAME><TYPE>u32</TYPE></ARG>
-							<ARG><NAME>uid</NAME><TYPE>int</TYPE></ARG>
-						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDFA8BAF8</NID>
@@ -7103,6 +6176,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>scePower_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9CE06934</NID>
@@ -7357,26 +6431,8 @@
 		<PRXNAME>sceNet_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNet</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x39AF39A6</NID>
@@ -7414,6 +6470,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceNet_lib</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3B617AA0</NID>
@@ -7808,26 +6865,8 @@
 		<PRXNAME>sceNetAdhoc_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNetAdhoc</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE1D621D7</NID>
@@ -7933,6 +6972,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceNetAdhoc_lib</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x67346A2A</NID>
@@ -7959,26 +6999,8 @@
 		<PRXNAME>sceNetAdhocAuth_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNetAdhocAuth_lib</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x86004235</NID>
@@ -8020,6 +7042,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceNetAdhocAuth_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x86004235</NID>
@@ -8066,26 +7089,8 @@
 		<PRXNAME>sceNetAdhocDownload_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNetAdhocDownload</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA21FEF45</NID>
@@ -8180,26 +7185,8 @@
 		<PRXNAME>sceNetAdhocMatching_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNetAdhocMatching</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x2A2A1E07</NID>
@@ -8258,26 +7245,8 @@
 		<PRXNAME>sceNetAdhocctl_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNetAdhocctl</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE26F226E</NID>
@@ -8363,6 +7332,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceNetAdhocctl_lib</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xEFA6AEAF</NID>
@@ -8389,26 +7359,8 @@
 		<PRXNAME>sceNetApDialogDummy_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNetApDialogDummy</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBB73FF67</NID>
@@ -8435,26 +7387,8 @@
 		<PRXNAME>sceNetApctl_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNetApctl</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE2F91F9B</NID>
@@ -8492,6 +7426,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceNetApctl_lib</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB3CF6849</NID>
@@ -8517,6 +7452,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceNetApctl_internal_user</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE9B2E5E6</NID>
@@ -8539,26 +7475,8 @@
 		<PRXNAME>sceNetInet_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNetInet</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x17943399</NID>
@@ -8684,6 +7602,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceNetInet_lib</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6A046357</NID>
@@ -8782,26 +7701,8 @@
 		<PRXNAME>sceNetResolver_Library</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceNetResolver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xF3370E61</NID>
@@ -8840,26 +7741,8 @@
 		<PRXNAME>scePWM_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>scePwm_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x68BA9CC1</NID>
@@ -8906,22 +7789,8 @@
 		<PRXNAME>sceReboot</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>RebootForKernel</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x72E280A8</NID>
@@ -8936,26 +7805,8 @@
 		<PRXNAME>sceRegistry_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceReg</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9B25EDF1</NID>
@@ -9033,6 +7884,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceReg_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x98279CF1</NID>
@@ -9119,26 +7971,8 @@
 		<PRXNAME>sceRTC_Service</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceRtc</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC41C2853</NID>
@@ -9284,6 +8118,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceRtc_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x912BEE56</NID>
@@ -9478,26 +8313,8 @@
 		<PRXNAME>sceSemawm</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceSemawm</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x77C42467</NID>
@@ -9528,26 +8345,8 @@
 		<PRXNAME>sceSIRCS_IrDA_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceSircs</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x71EEF62D</NID>
@@ -9557,6 +8356,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceSircs_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x62411801</NID>
@@ -9579,22 +8379,8 @@
 		<PRXNAME>sceStdio</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>StdioForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x2CCF071A</NID>
@@ -9660,6 +8446,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>StdioForUser</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x3054D478</NID>
@@ -9706,26 +8493,8 @@
 		<PRXNAME>sceSysclib</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>SysclibForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x476FD94A</NID>
@@ -9904,26 +8673,8 @@
 		<PRXNAME>sceSYSCON_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceSyscon_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x0A771482</NID>
@@ -10386,22 +9137,8 @@
 		<PRXNAME>sceSystemMemoryManager</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>SysMemForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x1C1FBFE7</NID>
@@ -10639,6 +9376,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>SysMemUserForUser</NAME>
+				<FLAGS>0x40000000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA291F107</NID>
@@ -10659,7 +9397,6 @@
 					<FUNCTION>
 						<NID>0x9D9A5BA1</NID>
 						<NAME>sceKernelGetBlockHeadAddr</NAME>
-						<FUNCNAME>sceKernelGetBlockHeadAddrForUser</FUNCNAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3FC9AE6A</NID>
@@ -10669,6 +9406,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceSysEventForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xAEB300AE</NID>
@@ -10694,6 +9432,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceSuspendForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBDE686CD</NID>
@@ -10751,16 +9490,15 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceSuspendForUser</NAME>
+				<FLAGS>0x40000000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xEADB1BD7</NID>
 						<NAME>sceKernelPowerLock</NAME>
-						<FUNCNAME>sceKernelPowerLockForUser</FUNCNAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AEE7261</NID>
 						<NAME>sceKernelPowerUnlock</NAME>
-						<FUNCNAME>sceKernelPowerUnlockForUser</FUNCNAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x090CCB3F</NID>
@@ -10770,6 +9508,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>KDebugForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE7A3874D</NID>
@@ -10860,26 +9599,8 @@
 		<PRXNAME>sceSYSREG_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceSysreg_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9C863542</NID>
@@ -11494,26 +10215,8 @@
 		<PRXNAME>sceSystimer</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>SysTimerForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC99073E3</NID>
@@ -11560,22 +10263,8 @@
 		<PRXNAME>sceThreadManager</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>ThreadManForUser</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6E9EA350</NID>
@@ -11596,11 +10285,6 @@
 					<FUNCTION>
 						<NID>0xE81CAF8F</NID>
 						<NAME>sceKernelCreateCallback</NAME>
-						<RETURNTYPE>int</RETURNTYPE>
-						<ARGS>
-							<ARG><NAME>name</NAME><TYPE>const char *</TYPE></ARG>
-							<ARG><NAME>func</NAME><TYPE>void *</TYPE></ARG>
-						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEDBA5844</NID>
@@ -11677,41 +10361,18 @@
 					<FUNCTION>
 						<NID>0xD6DA4BA1</NID>
 						<NAME>sceKernelCreateSema</NAME>
-						<RETURNTYPE>int</RETURNTYPE>
-						<ARGS>
-							<ARG><NAME>name</NAME><TYPE>const char *</TYPE></ARG>
-							<ARG><NAME>flags</NAME><TYPE>u32</TYPE></ARG>
-							<ARG><NAME>value</NAME><TYPE>u32</TYPE></ARG>
-							<ARG><NAME>max</NAME><TYPE>u32</TYPE></ARG>
-							<ARG><NAME>p</NAME><TYPE>const void *</TYPE></ARG>
-						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28B6489C</NID>
 						<NAME>sceKernelDeleteSema</NAME>
-						<RETURNTYPE>int</RETURNTYPE>
-						<ARGS>
-							<ARG><NAME>uid</NAME><TYPE>int</TYPE></ARG>
-						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3F53E640</NID>
 						<NAME>sceKernelSignalSema</NAME>
-						<RETURNTYPE>int</RETURNTYPE>
-						<ARGS>
-							<ARG><NAME>uid</NAME><TYPE>int</TYPE></ARG>
-							<ARG><NAME>count</NAME><TYPE>u32</TYPE></ARG>
-						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4E3A1105</NID>
 						<NAME>sceKernelWaitSema</NAME>
-						<RETURNTYPE>int</RETURNTYPE>
-						<ARGS>
-							<ARG><NAME>uid</NAME><TYPE>int</TYPE></ARG>
-							<ARG><NAME>count</NAME><TYPE>u32</TYPE></ARG>
-							<ARG><NAME>p</NAME><TYPE>void *</TYPE></ARG>
-						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D212BAC</NID>
@@ -11720,11 +10381,6 @@
 					<FUNCTION>
 						<NID>0x58B1F937</NID>
 						<NAME>sceKernelPollSema</NAME>
-						<RETURNTYPE>int</RETURNTYPE>
-						<ARGS>
-							<ARG><NAME>uid</NAME><TYPE>int</TYPE></ARG>
-							<ARG><NAME>count</NAME><TYPE>u32</TYPE></ARG>
-						</ARGS>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8FFDF9A2</NID>
@@ -12069,7 +10725,6 @@
 					<FUNCTION>
 						<NID>0x293B45B8</NID>
 						<NAME>sceKernelGetThreadId</NAME>
-						<RETURNTYPE>int</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x94AA61EE</NID>
@@ -12119,6 +10774,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>ThreadManForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x0C106E53</NID>
@@ -12669,22 +11325,8 @@
 		<PRXNAME>sceUart4</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>Uart4ForKernel</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xD00E3D06</NID>
@@ -12727,22 +11369,8 @@
 		<PRXNAME>sceUmd9660_driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceUmd9660_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x85F6776E</NID>
@@ -12793,26 +11421,8 @@
 		<PRXNAME>sceUmdMan_driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceUmdMan_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xD27D050E</NID>
@@ -13263,30 +11873,8 @@
 		<PRXNAME>sceUSB_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceUsb</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xAE5DE6AF</NID>
@@ -13328,6 +11916,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceUsb_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xAE5DE6AF</NID>
@@ -13369,6 +11958,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceUsbBus_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC21645A4</NID>
@@ -13415,26 +12005,8 @@
 		<PRXNAME>sceUSB_Stor_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceUsbstor</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x60066CFE</NID>
@@ -13444,6 +12016,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceUsbstor_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x60066CFE</NID>
@@ -13453,6 +12026,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceUsbstor_internal</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xDC1A5833</NID>
@@ -13483,26 +12057,8 @@
 		<PRXNAME>sceUSB_Stor_Boot_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceUsbstorBoot</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE58818A8</NID>
@@ -13536,50 +12092,12 @@
 		<PRX>kd/usbstormgr.prx</PRX>
 		<PRXNAME>sceUSB_Stor_Mgr_Driver</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>kd/usbstorms.prx</PRX>
 		<PRXNAME>sceUSB_Stor_Ms_Driver</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
@@ -13587,32 +12105,16 @@
 		<PRXNAME>sceKernelLibrary</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>Kernel_Library</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x092968F4</NID>
 						<NAME>sceKernelCpuSuspendIntr</NAME>
-						<RETURNTYPE>u32</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5F10D406</NID>
 						<NAME>sceKernelCpuResumeIntr</NAME>
-						<RETURNTYPE>u32</RETURNTYPE>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3B84732D</NID>
@@ -13635,22 +12137,8 @@
 		<PRXNAME>sceUtility_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceUtility_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xF062AEA6</NID>
@@ -13664,6 +12152,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceUtility</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC492F751</NID>
@@ -13805,6 +12294,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceUtility_private</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x17CB4D96</NID>
@@ -13870,6 +12360,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceUtility_netparam_internal</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x072DEBF2</NID>
@@ -13896,22 +12387,8 @@
 		<PRXNAME>sceKernelUtils</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD3744BE0</NID>
-						<NAME>syslib_D3744BE0</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>UtilsForUser</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBFA98062</NID>
@@ -14013,6 +12490,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>UtilsForKernel</NAME>
+				<FLAGS>0x00090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x80FE032E</NID>
@@ -14179,26 +12657,8 @@
 		<PRXNAME>sceVaudio_driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceVaudio_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x5A7435B7</NID>
@@ -14236,6 +12696,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceVaudio</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8986295E</NID>
@@ -14262,26 +12723,8 @@
 		<PRXNAME>sceVaudio_driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceVaudio_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x5A7435B7</NID>
@@ -14319,6 +12762,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceVaudio</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8986295E</NID>
@@ -14345,26 +12789,8 @@
 		<PRXNAME>sceVideocodec_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceVideocodec</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x2D31F5B1</NID>
@@ -14410,6 +12836,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceVideocodec_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE76D65FE</NID>
@@ -14428,22 +12855,8 @@
 		<PRXNAME>sceVshBridge_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceVshBridge_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x39B14120</NID>
@@ -14457,6 +12870,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceVshBridge</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA5628F0D</NID>
@@ -14715,30 +13129,8 @@
 		<PRXNAME>sceWlan_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceWlanDrv</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x93440B11</NID>
@@ -14756,6 +13148,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceWlanDrv_lib</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x482CAE9A</NID>
@@ -14833,6 +13226,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceWlanDrv_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6D89822C</NID>
@@ -14926,25 +13320,6 @@
 		<PRX>vsh/auth_plugin.prx</PRX>
 		<PRXNAME>auth_plugin_module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
@@ -14952,26 +13327,8 @@
 		<PRXNAME>sceChnnlsv</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceChnnlsv</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE7833020</NID>
@@ -15001,6 +13358,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceChnnlsv_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE7833020</NID>
@@ -15035,30 +13393,8 @@
 		<PRXNAME>sceVshCommonGui_Module</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-					<VARIABLE>
-						<NID>0x0F7C276C</NID>
-						<NAME>syslib_0F7C276C</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceVshCommonGui</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x473110B6</NID>
@@ -15299,30 +13635,8 @@
 		<PRXNAME>sceVshCommonUtil_Module</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-					<VARIABLE>
-						<NID>0x0F7C276C</NID>
-						<NAME>syslib_0F7C276C</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceVshCommonUtil</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x7A1C6D74</NID>
@@ -15554,54 +13868,12 @@
 		<PRX>vsh/dialogmain.prx</PRX>
 		<PRXNAME>sceDialogmain_Module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/game_plugin.prx</PRX>
 		<PRXNAME>game_plugin_module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
@@ -15609,30 +13881,8 @@
 		<PRXNAME>scePafHeaparea_Module</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-					<VARIABLE>
-						<NID>0x0F7C276C</NID>
-						<NAME>syslib_0F7C276C</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>scePafHeaparea</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xF50AAE41</NID>
@@ -15651,30 +13901,8 @@
 		<PRXNAME>scePafHeaparea_Module</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-					<VARIABLE>
-						<NID>0x0F7C276C</NID>
-						<NAME>syslib_0F7C276C</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>scePafHeaparea</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xF50AAE41</NID>
@@ -15692,225 +13920,54 @@
 		<PRX>vsh/impose_plugin.prx</PRX>
 		<PRXNAME>impose_plugin_module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/msgdialog_plugin.prx</PRX>
 		<PRXNAME>sceVshMSDPlugin_Module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/msvideo_plugin.prx</PRX>
 		<PRXNAME>msvideo_plugin_module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/music_plugin.prx</PRX>
 		<PRXNAME>music_plugin_module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/netconf_plugin.prx</PRX>
 		<PRXNAME>sceVshNetconf_Module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/netplay_client_plugin.prx</PRX>
 		<PRXNAME>sceVshGSPlugin_Module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/netplay_server_utility.prx</PRX>
 		<PRXNAME>sceVshGSUtility_Module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/opening_plugin.prx</PRX>
 		<PRXNAME>opening_plugin_module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/osk_plugin.prx</PRX>
 		<PRXNAME>sceVshOSK_Module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
@@ -15918,30 +13975,8 @@
 		<PRXNAME>scePaf_Module</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-					<VARIABLE>
-						<NID>0x0F7C276C</NID>
-						<NAME>syslib_0F7C276C</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>scePaf</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC9831AFF</NID>
@@ -16646,30 +14681,8 @@
 		<PRXNAME>scePaf_Module</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-					<VARIABLE>
-						<NID>0x0F7C276C</NID>
-						<NAME>syslib_0F7C276C</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>scePaf</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC9831AFF</NID>
@@ -17373,175 +15386,42 @@
 		<PRX>vsh/photo_plugin.prx</PRX>
 		<PRXNAME>photo_plugin_module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/savedata_auto_dialog.prx</PRX>
 		<PRXNAME>sceVshSDAuto_Module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/savedata_plugin.prx</PRX>
 		<PRXNAME>sceVshSDPlugin_Module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/savedata_utility.prx</PRX>
 		<PRXNAME>sceVshSDUtility_Module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/sysconf_plugin.prx</PRX>
 		<PRXNAME>sysconf_plugin_module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/update_plugin.prx</PRX>
 		<PRXNAME>update_plugin_module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
 		<PRX>vsh/video_plugin.prx</PRX>
 		<PRXNAME>video_plugin_module</PRXNAME>
 		<LIBRARIES>
-			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
@@ -17549,30 +15429,8 @@
 		<PRXNAME>vsh_module</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-					<VARIABLE>
-						<NID>0x0F7C276C</NID>
-						<NAME>syslib_0F7C276C</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>vsh</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x0B8DE38E</NID>
@@ -17709,67 +15567,62 @@
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
-		<PRX>psardrv.prx</PRX>
-		<PRXNAME>scePSAR_Driver</PRXNAME>
+		<PRX>chkpkg.prx</PRX>
+		<PRXNAME>sceChkuppkg</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
+				<NAME>sceChkuppkg_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
+						<NID>0xE409CCC6</NID>
+						<NAME>sceChkuppkg_driver_E409CCC6</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
+						<NID>0x56481562</NID>
+						<NAME>sceChkuppkg_driver_56481562</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0x2F064FA6</NID>
-						<NAME>syslib_2F064FA6</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
-				<NAME>scePSAR_driver</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0x294BEB21</NID>
-						<NAME>_scePSARModuleStart</NAME>
+						<NID>0xF4DB6542</NID>
+						<NAME>sceChkuppkg_driver_F4DB6542</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0xF4DB5ABE</NID>
-						<NAME>scePSAR_driver_F4DB5ABE</NAME>
+						<NID>0x7B6790C3</NID>
+						<NAME>sceChkuppkg_driver_7B6790C3</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0x3F7C1EDC</NID>
-						<NAME>scePSAR_driver_3F7C1EDC</NAME>
+						<NID>0x63F0C3D4</NID>
+						<NAME>sceChkuppkg_driver_63F0C3D4</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0xE564B1DA</NID>
-						<NAME>scePSAR_driver_E564B1DA</NAME>
+						<NID>0x38C255EF</NID>
+						<NAME>sceChkuppkg_driver_38C255EF</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
 			<LIBRARY>
-				<NAME>scePSAR</NAME>
+				<NAME>sceChkuppkg</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
-						<NID>0xF4DB5ABE</NID>
-						<NAME>scePSAR_F4DB5ABE</NAME>
+						<NID>0xFDB62E25</NID>
+						<NAME>sceChkuppkg_FDB62E25</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0x3F7C1EDC</NID>
-						<NAME>scePSAR_3F7C1EDC</NAME>
+						<NID>0x4F8EC9C8</NID>
+						<NAME>sceChkuppkg_4F8EC9C8</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0xE564B1DA</NID>
-						<NAME>scePSAR_E564B1DA</NAME>
+						<NID>0xC9BB329E</NID>
+						<NAME>sceChkuppkg_C9BB329E</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xB81FD229</NID>
+						<NAME>sceChkuppkg_B81FD229</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xFEF9EB1E</NID>
+						<NAME>sceChkuppkg_FEF9EB1E</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -17780,22 +15633,8 @@
 		<PRXNAME>IplUpdater</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceIplUpdate</NAME>
+				<FLAGS>0x40010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xEE7EB563</NID>
@@ -17813,6 +15652,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceIplUpdate_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xEE7EB563</NID>
@@ -17831,30 +15671,230 @@
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
+		<PRX>lepton.prx</PRX>
+		<PRXNAME>LeptonUpdater</PRXNAME>
+		<LIBRARIES>
+			<LIBRARY>
+				<NAME>sceLeptonUpdate</NAME>
+				<FLAGS>0x40010000</FLAGS>
+				<FUNCTIONS>
+					<FUNCTION>
+						<NID>0xE593B09C</NID>
+						<NAME>sceLeptonUpdate_E593B09C</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xF30C2D7A</NID>
+						<NAME>sceLeptonUpdate_F30C2D7A</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x7E2759BB</NID>
+						<NAME>sceLeptonUpdate_7E2759BB</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x006D3BF8</NID>
+						<NAME>sceLeptonUpdate_006D3BF8</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x14847053</NID>
+						<NAME>sceLeptonUpdate_14847053</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x281E8901</NID>
+						<NAME>sceLeptonUpdate_281E8901</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xFE2B6671</NID>
+						<NAME>sceLeptonUpdate_FE2B6671</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x231A4635</NID>
+						<NAME>sceLeptonUpdate_231A4635</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x40EF92EC</NID>
+						<NAME>sceLeptonUpdate_40EF92EC</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xB6B2405D</NID>
+						<NAME>sceLeptonUpdate_B6B2405D</NAME>
+					</FUNCTION>
+				</FUNCTIONS>
+			</LIBRARY>
+			<LIBRARY>
+				<NAME>sceLeptonUpdate_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
+				<FUNCTIONS>
+					<FUNCTION>
+						<NID>0xE593B09C</NID>
+						<NAME>sceLeptonUpdate_driver_E593B09C</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xF30C2D7A</NID>
+						<NAME>sceLeptonUpdate_driver_F30C2D7A</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x7E2759BB</NID>
+						<NAME>sceLeptonUpdate_driver_7E2759BB</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x006D3BF8</NID>
+						<NAME>sceLeptonUpdate_driver_006D3BF8</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x14847053</NID>
+						<NAME>sceLeptonUpdate_driver_14847053</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x281E8901</NID>
+						<NAME>sceLeptonUpdate_driver_281E8901</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xFE2B6671</NID>
+						<NAME>sceLeptonUpdate_driver_FE2B6671</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x231A4635</NID>
+						<NAME>sceLeptonUpdate_driver_231A4635</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x40EF92EC</NID>
+						<NAME>sceLeptonUpdate_driver_40EF92EC</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xB6B2405D</NID>
+						<NAME>sceLeptonUpdate_driver_B6B2405D</NAME>
+					</FUNCTION>
+				</FUNCTIONS>
+			</LIBRARY>
+		</LIBRARIES>
+		</PRXFILE>
+		<PRXFILE>
+		<PRX>libfont.prx</PRX>
+		<PRXNAME>SceFont_Library</PRXNAME>
+		<LIBRARIES>
+			<LIBRARY>
+				<NAME>sceLibFont</NAME>
+				<FLAGS>0x00010000</FLAGS>
+				<FUNCTIONS>
+					<FUNCTION>
+						<NID>0x67F17ED7</NID>
+						<NAME>sceLibFont_67F17ED7</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x574B6FBC</NID>
+						<NAME>sceLibFont_574B6FBC</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x48293280</NID>
+						<NAME>sceLibFont_48293280</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x27F6E642</NID>
+						<NAME>sceLibFont_27F6E642</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xBC75D85B</NID>
+						<NAME>sceLibFont_BC75D85B</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x099EF33C</NID>
+						<NAME>sceLibFont_099EF33C</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x681E61A7</NID>
+						<NAME>sceLibFont_681E61A7</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x2F67356A</NID>
+						<NAME>sceLibFont_2F67356A</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x5333322D</NID>
+						<NAME>sceLibFont_5333322D</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xA834319D</NID>
+						<NAME>sceLibFont_A834319D</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x57FCB733</NID>
+						<NAME>sceLibFont_57FCB733</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xBB8E7FE6</NID>
+						<NAME>sceLibFont_BB8E7FE6</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x3AEA8CB6</NID>
+						<NAME>sceLibFont_3AEA8CB6</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x0DA7535E</NID>
+						<NAME>sceLibFont_0DA7535E</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xDCC80C2F</NID>
+						<NAME>sceLibFont_DCC80C2F</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x5C3E4A9E</NID>
+						<NAME>sceLibFont_5C3E4A9E</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x980F4895</NID>
+						<NAME>sceLibFont_980F4895</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xCA1E6945</NID>
+						<NAME>sceLibFont_CA1E6945</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x74B21701</NID>
+						<NAME>sceLibFont_74B21701</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xF8F0752E</NID>
+						<NAME>sceLibFont_F8F0752E</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x472694CD</NID>
+						<NAME>sceLibFont_472694CD</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x3C4B7E82</NID>
+						<NAME>sceLibFont_3C4B7E82</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xEE232411</NID>
+						<NAME>sceLibFont_EE232411</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xAA3DE7B5</NID>
+						<NAME>sceLibFont_AA3DE7B5</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x48B06520</NID>
+						<NAME>sceLibFont_48B06520</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x568BE516</NID>
+						<NAME>sceLibFont_568BE516</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x5DCF6858</NID>
+						<NAME>sceLibFont_5DCF6858</NAME>
+					</FUNCTION>
+				</FUNCTIONS>
+			</LIBRARY>
+		</LIBRARIES>
+		</PRXFILE>
+		<PRXFILE>
 		<PRX>libssl.prx</PRX>
 		<PRXNAME>sceSsl_Module</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
-				<FUNCTIONS>
-					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
-					</FUNCTION>
-				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
-			</LIBRARY>
-			<LIBRARY>
 				<NAME>sceSsl</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x957ECBE2</NID>
@@ -17868,6 +15908,7 @@
 			</LIBRARY>
 			<LIBRARY>
 				<NAME>sceSsl_lib</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9A789D37</NID>
@@ -18542,138 +16583,100 @@
 		</LIBRARIES>
 		</PRXFILE>
 		<PRXFILE>
-		<PRX>libfont.prx</PRX>
-		<PRXNAME>SceFont_Library</PRXNAME>
+		<PRX>psardrv.prx</PRX>
+		<PRXNAME>scePSAR_Driver</PRXNAME>
 		<LIBRARIES>
 			<LIBRARY>
-				<NAME>syslib</NAME>
+				<NAME>scePSAR_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
-						<NID>0xD632ACDB</NID>
-						<NAME>syslib_D632ACDB</NAME>
+						<NID>0x294BEB21</NID>
+						<NAME>_scePSARModuleStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0xCEE8593C</NID>
-						<NAME>syslib_CEE8593C</NAME>
+						<NID>0xF4DB5ABE</NID>
+						<NAME>scePSAR_driver_F4DB5ABE</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x3F7C1EDC</NID>
+						<NAME>scePSAR_driver_3F7C1EDC</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xE564B1DA</NID>
+						<NAME>scePSAR_driver_E564B1DA</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
-				<VARIABLES>
-					<VARIABLE>
-						<NID>0xF01D73A7</NID>
-						<NAME>syslib_F01D73A7</NAME>
-					</VARIABLE>
-				</VARIABLES>
 			</LIBRARY>
 			<LIBRARY>
-				<NAME>sceLibFont</NAME>
+				<NAME>scePSAR</NAME>
+				<FLAGS>0x40090000</FLAGS>
 				<FUNCTIONS>
 					<FUNCTION>
-						<NID>0x67F17ED7</NID>
-						<NAME>sceLibFont_67F17ED7</NAME>
+						<NID>0xF4DB5ABE</NID>
+						<NAME>scePSAR_F4DB5ABE</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0x574B6FBC</NID>
-						<NAME>sceLibFont_574B6FBC</NAME>
+						<NID>0x3F7C1EDC</NID>
+						<NAME>scePSAR_3F7C1EDC</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0x48293280</NID>
-						<NAME>sceLibFont_48293280</NAME>
+						<NID>0xE564B1DA</NID>
+						<NAME>scePSAR_E564B1DA</NAME>
+					</FUNCTION>
+				</FUNCTIONS>
+			</LIBRARY>
+		</LIBRARIES>
+		</PRXFILE>
+		<PRXFILE>
+		<PRX>suspcane.prx</PRX>
+		<PRXNAME>sceSuspendCaneler</PRXNAME>
+		<LIBRARIES>
+			<LIBRARY>
+				<NAME>sceSuspendCancler</NAME>
+				<FLAGS>0x40010000</FLAGS>
+				<FUNCTIONS>
+					<FUNCTION>
+						<NID>0xBD2F51C1</NID>
+						<NAME>sceSuspendCancler_BD2F51C1</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0x27F6E642</NID>
-						<NAME>sceLibFont_27F6E642</NAME>
+						<NID>0x558C30C8</NID>
+						<NAME>sceSuspendCancler_558C30C8</NAME>
+					</FUNCTION>
+				</FUNCTIONS>
+			</LIBRARY>
+			<LIBRARY>
+				<NAME>sceSuspendCancler_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
+				<FUNCTIONS>
+					<FUNCTION>
+						<NID>0xBD2F51C1</NID>
+						<NAME>sceSuspendCancler_driver_BD2F51C1</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0xBC75D85B</NID>
-						<NAME>sceLibFont_BC75D85B</NAME>
+						<NID>0x558C30C8</NID>
+						<NAME>sceSuspendCancler_driver_558C30C8</NAME>
+					</FUNCTION>
+				</FUNCTIONS>
+			</LIBRARY>
+		</LIBRARIES>
+		</PRXFILE>
+		<PRXFILE>
+		<PRX>testmode.prx</PRX>
+		<PRXNAME>sceTestMode_driver</PRXNAME>
+		<LIBRARIES>
+			<LIBRARY>
+				<NAME>sceTestMode_driver</NAME>
+				<FLAGS>0x00010000</FLAGS>
+				<FUNCTIONS>
+					<FUNCTION>
+						<NID>0x2342B106</NID>
+						<NAME>sceTestMode_driver_2342B106</NAME>
 					</FUNCTION>
 					<FUNCTION>
-						<NID>0x099EF33C</NID>
-						<NAME>sceLibFont_099EF33C</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x681E61A7</NID>
-						<NAME>sceLibFont_681E61A7</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x2F67356A</NID>
-						<NAME>sceLibFont_2F67356A</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x5333322D</NID>
-						<NAME>sceLibFont_5333322D</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xA834319D</NID>
-						<NAME>sceLibFont_A834319D</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x57FCB733</NID>
-						<NAME>sceLibFont_57FCB733</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xBB8E7FE6</NID>
-						<NAME>sceLibFont_BB8E7FE6</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x3AEA8CB6</NID>
-						<NAME>sceLibFont_3AEA8CB6</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x0DA7535E</NID>
-						<NAME>sceLibFont_0DA7535E</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xDCC80C2F</NID>
-						<NAME>sceLibFont_DCC80C2F</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x5C3E4A9E</NID>
-						<NAME>sceLibFont_5C3E4A9E</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x980F4895</NID>
-						<NAME>sceLibFont_980F4895</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xCA1E6945</NID>
-						<NAME>sceLibFont_CA1E6945</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x74B21701</NID>
-						<NAME>sceLibFont_74B21701</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xF8F0752E</NID>
-						<NAME>sceLibFont_F8F0752E</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x472694CD</NID>
-						<NAME>sceLibFont_472694CD</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x3C4B7E82</NID>
-						<NAME>sceLibFont_3C4B7E82</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xEE232411</NID>
-						<NAME>sceLibFont_EE232411</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0xAA3DE7B5</NID>
-						<NAME>sceLibFont_AA3DE7B5</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x48B06520</NID>
-						<NAME>sceLibFont_48B06520</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x568BE516</NID>
-						<NAME>sceLibFont_568BE516</NAME>
-					</FUNCTION>
-					<FUNCTION>
-						<NID>0x5DCF6858</NID>
-						<NAME>sceLibFont_5DCF6858</NAME>
+						<NID>0xB347D587</NID>
+						<NAME>sceTestMode_driver_B347D587</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
