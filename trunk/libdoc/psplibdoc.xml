@@ -10336,7 +10336,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x278C0DF5</NID>
-						<NAME>ThreadManForUser_278C0DF5</NAME>
+						<NAME>sceKernelWaitThreadEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x840E8133</NID>
