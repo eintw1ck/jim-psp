@@ -106,10 +106,10 @@ typedef struct {
     // (might be less with 0 longs after)
     char name[28];
     unsigned long gp;         /* ptr to somewhere after executable */
-    unsigned long libent;       /* ptr to .lib.ent section */
-    unsigned long libentend;    /* ptr to end of .lib.ent section */
-    unsigned long libstub;      /* ptr to .lib.stub section */
-    unsigned long libstubend;   /* ptr to end of .lib.stub section */
+    unsigned long libEnt;       /* ptr to .lib.ent section */
+    unsigned long libEntBtm;    /* ptr to end of .lib.ent section */
+    unsigned long libStub;      /* ptr to .lib.stub section */
+    unsigned long libStubBtm;   /* ptr to end of .lib.stub section */
 } __attribute__((packed)) SceModuleInfo;
 
 // this struct seems to appear as the data in

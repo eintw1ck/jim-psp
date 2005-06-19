@@ -28,14 +28,9 @@ int main(int argc, char *argv[]) {
 	u8 *elfData;
 	char elfType[32];
 	u8 *sectionStringTable = NULL;
-	u8 *libStub = NULL;
-	u8 *libStubBtm = NULL;
-	u8 *libEntBtm;
-	u8 *sceResident = NULL;
 	u8 *text = NULL;
 	u32 textSize = 0;
 	sectionHeader * textSection = NULL;
-	u32 *sceNid = NULL;
 	u32 i;
 	size_t elfDataSize = 0;
 	SceModuleInfo *moduleInfo = NULL;
@@ -43,7 +38,7 @@ int main(int argc, char *argv[]) {
 	xref_type xrefs;
 	nidDb nids;
 	
-	printf("pspDis v%s by Warren\n\n", PSPDISVER);
+	printf("pspDis v%s\n\n", PSPDISVER);
 	if (argc != 2) {
 		printf("Usage: %s <elf file>\n", argv[0]);
 		return 1;
@@ -85,7 +80,7 @@ int main(int argc, char *argv[]) {
 		else
 			sprintf(elfType, "an unrecognized ELF type 0x%02X", header->elfType);
 	else {
-		printf("File is not a valid PSP ELF (%s)\n", header->ident);
+		printf("File is not a valid PSP ELF (0x%08X)\n", (unsigned int)header->ident);
 		fclose(in);
 		free(elfData);
 		return 1;
@@ -95,61 +90,65 @@ int main(int argc, char *argv[]) {
 	//Load XML NID List
 	printf("Loading NID definitions...\n");
 	nids.loadFromXml("../libdoc/psplibdoc.xml");
+	
 	//get section header string table (.shstrtab)
 	sectionStringTable = &elfData[sHeaders[header->sectionHeaderStringTableIndex].offset];
 	
-	//determine module name
+	//read ModuleInfo
 	for (i = 0; i < header->numSectionHeaderEntries; i++) {
 		if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".rodata.sceModuleInfo") == 0) {
 			moduleInfo = (SceModuleInfo*)&elfData[sHeaders[i].offset];
 			printf("Module name: %s\n", moduleInfo->name);
 		}
 	}
-	
+	if (!moduleInfo) {
+		printf("Could not find .rodata.sceModuleInfo section, aborting.\n");
+		fclose(in);
+		free(elfData);
+		return 1;
+	}
 	//enumerate section headers
 	for (i = 0; i < header->numSectionHeaderEntries; i++) {
 		dprintf("Section %u: '%s' (%u bytes)\n", (unsigned int)i, &sectionStringTable[sHeaders[i].nameIndex], (unsigned int)sHeaders[i].size);
-		if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".lib.stub") == 0) {
-			libStub = &elfData[sHeaders[i].offset];
-		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".lib.stub.btm") == 0) {
-			libStubBtm = &elfData[sHeaders[i].offset];
-		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".rodata.sceResident") == 0) {
-			sceResident = &elfData[sHeaders[i].offset];
-		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".rodata.sceNid") == 0) {
-			sceNid = (u32*)&elfData[sHeaders[i].offset];
-		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".text") == 0) {
+		if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".text") == 0) {
 			text = &elfData[sHeaders[i].offset];
 			textSize = sHeaders[i].size;
 			textSection = &sHeaders[i];
-		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".lib.ent.btm") == 0) {
-			libEntBtm = &elfData[sHeaders[i].offset];
-		} else if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], "dsfgsd") == 0) {
 		}
+	}
+	if (!text) {
+		printf("Could not find .text section, aborting.\n");
+		fclose(in);
+		free(elfData);
+		return 1;
 	}
 	
 	//print out imports
-	printf("Found %d imports:\n", (int)(libStubBtm-libStub)/sizeof(SceLibStubEntry));
-	u8 *stubPos = libStub;
+	//printf("moduleinfo: stub: 0x%08X, libent: 0x%08X\n", moduleInfo->libStub, moduleInfo->libEnt);
+	printf("Found %d imports:\n", (int)(moduleInfo->libStubBtm-moduleInfo->libStub)/sizeof(SceLibStubEntry));
+	
+	u8 *stubPos = &text[moduleInfo->libStub];
 	SceLibStubEntry* stubEntry;
 	if (stubPos) {
-		while (stubPos < libStubBtm) {
+		while (stubPos < &text[moduleInfo->libStubBtm]) {
 			char *libName;
 			stubEntry = (SceLibStubEntry*)stubPos;
 			libName = (char *)&text[stubEntry->moduleNameSymbol];
 			printf("\t%s\n", libName);
 			for(i = 0; i < stubEntry->numFuncs; i++) {
 				printf("\t\t0x%08X %s (%s)\n", *(unsigned int*)&text[stubEntry->nidData+4*i], nids.resolveNid(libName, *(u32*)&text[stubEntry->nidData+4*i]), nids.getNidType(libName, *(u32*)&text[stubEntry->nidData+4*i]) == nidType_Function ? "Function" : "Variable");
+				fflush(stdin);
 			}
 			printf("\n");
 			stubPos += sizeof(SceLibStubEntry);
 		}
 	}
-	
+
 	//print out exports for PRXs
 	if(header->elfType == PSPelfTypePRX) {
-		u16 numExports = *(u16*)&libEntBtm[-6];
-		u32 exportsOffset = *(u32*)&libEntBtm[-4];
-		u32 libNameOffset = *(u32*)&libEntBtm[-16];
+		u16 numExports = *(u16*)&text[moduleInfo->libEntBtm-6];
+		u32 exportsOffset = *(u32*)&text[moduleInfo->libEntBtm-4];
+		u32 libNameOffset = *(u32*)&text[moduleInfo->libEntBtm-16];
 		printf("Found %d exports for library %s:\n", numExports, (char*)&text[libNameOffset]);
 		for(u32 i = 0; i < numExports; i++) {
 			printf("\t\t0x%08X %s (%s)\n", *(unsigned int*)&text[exportsOffset+4*i], nids.resolveNid((char*)&text[libNameOffset], *(u32*)&text[exportsOffset+4*i]), nids.getNidType((char*)&text[libNameOffset], *(u32*)&text[exportsOffset+4*i]) == nidType_Function ? "Function" : "Variable");

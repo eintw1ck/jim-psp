@@ -43,6 +43,6 @@ void hexdump(const u8* data, size_t length) {
 		line[char_offset+(ci++)]='\n';
 		line[char_offset+ci]=0;
 
-		printf("%s\n", line);
+		printf("%s", line);
 	}
 }
