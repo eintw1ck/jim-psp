@@ -12,11 +12,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB176BB2E</NID>
-						<NAME>sceAta_driver_B176BB2E</NAME>
+						<NAME>sceAtaInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x071D3D4D</NID>
-						<NAME>sceAta_driver_071D3D4D</NAME>
+						<NAME>sceAtaTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1E6E175</NID>
@@ -28,15 +28,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8BC8B83</NID>
-						<NAME>sceAta_driver_C8BC8B83</NAME>
+						<NAME>sceAtaStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCDC50BF0</NID>
-						<NAME>sceAta_driver_CDC50BF0</NAME>
+						<NAME>sceAtaStop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x52D9A4CA</NID>
-						<NAME>sceAta_driver_52D9A4CA</NAME>
+						<NAME>sceAtaGetAtaDrive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEBB91566</NID>
@@ -268,15 +268,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9AE67E14</NID>
-						<NAME>sceAta_driver_9AE67E14</NAME>
+						<NAME>sceAtaGetDriveStat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x110D3739</NID>
-						<NAME>sceAta_driver_110D3739</NAME>
+						<NAME>sceAtaSetDriveStat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7BBA095C</NID>
-						<NAME>sceAta_driver_7BBA095C</NAME>
+						<NAME>sceAtaClearDriveStat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A61BF97</NID>
@@ -292,7 +292,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD8E525CB</NID>
-						<NAME>sceAta_driver_D8E525CB</NAME>
+						<NAME>sceAtaGetIntrFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7F5B2CA</NID>
