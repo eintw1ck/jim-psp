@@ -11,6 +11,7 @@ AC_PSPDEV_PATH
 AM_INIT_AUTOMAKE([pspsdk], [PSPSDK_VERSION])
 
 # Checks for programs.
+AC_PSPDEV_TOOLCHAIN
 AC_PROG_CC
 
 # Checks for libraries.
