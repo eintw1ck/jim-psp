@@ -11,7 +11,7 @@
 # EE UGLY DEBUG ON SCREEN - FONT BASE
 */
 
-#include <tamtypes.h>
+#include <psptypes.h>
 
 u8 msx[]=
 "\x00\x00\x00\x00\x00\x00\x00\x00\x3c\x42\xa5\x81\xa5\x99\x42\x3c"

@@ -12,10 +12,10 @@
 */
 
 #include <stdio.h>
-#include <tamtypes.h>
-#include <kernel.h>
+#include <psptypes.h>
+#include <pspkernel.h>
 #include <stdarg.h>
-#include <debug.h>
+#include <pspdebug.h>
 
 #define PSP_SCREEN_WIDTH 480
 #define PSP_SCREEN_HEIGHT 272
