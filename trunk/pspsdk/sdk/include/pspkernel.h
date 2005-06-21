@@ -38,16 +38,16 @@ extern int g_elf_namesize;
 #include <stddef.h>
 #include <stdarg.h>
 
-#include <tamtypes.h>
-#include <ctrl.h>
-#include <display.h>
-#include <fileio.h>
-#include <loadexec.h>
-#include <modload.h>
-#include <threadman.h>
-#include <utils.h>
-#include <umd.h>
-#include <ge.h>
+#include <psptypes.h>
+#include <pspctrl.h>
+#include <pspdisplay.h>
+#include <pspiofilemgr.h>
+#include <psploadexec.h>
+#include <pspmodulemgr.h>
+#include <pspthreadman.h>
+#include <psputils.h>
+#include <pspumd.h>
+#include <pspge.h>
 
 #ifdef __cplusplus
 }

@@ -12,7 +12,7 @@ extern "C" {
 /** @addtogroup FileIO File IO Library */
 /*@{*/
 
-#include <tamtypes.h>
+#include <psptypes.h>
 #include <sys/fcntl.h>
 #include <sys/dirent.h>
 
