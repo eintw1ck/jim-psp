@@ -50,7 +50,6 @@ AC_SUBST(PSPSDK_LIBDIR)
 AC_CONFIG_FILES([Makefile
                  sdk/Makefile
                  sdk/include/Makefile
-                 sdk/src/Makefile
-                 sdk/src/debug/Makefile
+                 sdk/debug/Makefile
                  tools/Makefile])
 AC_OUTPUT
