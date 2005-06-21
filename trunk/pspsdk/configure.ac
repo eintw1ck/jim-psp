@@ -47,6 +47,15 @@ AC_SUBST(PSPSDK)
 AC_SUBST(PSPSDK_INCLUDEDIR)
 AC_SUBST(PSPSDK_LIBDIR)
 
+# CFLAGS used to build pspsdk libraries.
+PSPSDK_CFLAGS="$CFLAGS -G0 -Wall"
+AC_SUBST(PSPSDK_CFLAGS)
+
+# Turn on all warnings (for host programs).
+if test x$ac_compiler_gnu = xyes; then
+   CFLAGS="$CFLAGS -Wall"
+fi
+
 AC_CONFIG_FILES([Makefile
                  sdk/Makefile
                  sdk/base/Makefile
