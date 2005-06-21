@@ -6,7 +6,7 @@ dnl Check for a valid pspdev installation.
 AC_DEFUN(AC_PSPDEV_PATH,
 [
   AC_ARG_WITH(pspdev,
-              [  --with-pspdev=PATH       Path where the pspdev toolchain is installed (default is $PSPDEV)],
+              [  --with-pspdev=DIR       Path where the pspdev toolchain is installed (default is $PSPDEV)],
               pspdev="$withval", pspdev="$PSPDEV")
 
   AC_MSG_CHECKING(for pspdev)

@@ -26,6 +26,22 @@ AC_C_CONST
 AC_FUNC_MALLOC
 AC_FUNC_MEMCMP
 
+# Override the default prefix to point to where the pspdev tools should be installed.
+# The binaries will end up in $prefix/bin, but pspsdk itself will end up in $prefix/pspsdk.
+# TODO: We should see if the user will ever want to override this.
+prefix="$pspdev"
+
+# Create the pspsdk installation paths.
+pspsdk="$prefix/pspsdk"
+pspsdk_includedir="$pspsdk/include"
+pspsdk_libdir="$pspsdk/lib"
+PSPSDK="$pspsdk"
+PSPSDK_INCLUDEDIR="$pspsdk_includedir"
+PSPSDK_LIBDIR="$pspsdk_libdir"
+AC_SUBST(PSPSDK)
+AC_SUBST(PSPSDK_INCLUDEDIR)
+AC_SUBST(PSPSDK_LIBDIR)
+
 AC_CONFIG_FILES([Makefile
                  tools/Makefile])
 AC_OUTPUT
