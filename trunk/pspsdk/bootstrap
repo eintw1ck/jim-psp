@@ -82,6 +82,14 @@ generate)
       && echo timestamp > stamp-h.in
   )
   done
+
+  # HACK: Fixup the version in the generated configure script.  This would be less of
+  # hack if it wasn't pspsdk-specific.  I'm doing this because I don't want to look
+  # into how to do it the autoconf way.
+  version=`cat "$top_srcdir/VERSION"`
+  cat configure | sed "s/PSPSDK_VERSION/$version/g" > configure.out
+  cp -f configure.out configure
+  rm -f configure.out
   ;;
 
 clean)
