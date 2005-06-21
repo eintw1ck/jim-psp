@@ -5,7 +5,7 @@ CC = @PSP_CC@
 AR = @PSP_AR@
 RANLIB = @PSP_RANLIB@
 
-INCLUDES = -I$(srcdir) -I$(top_srcdir)/sdk/include
+INCLUDES = -I$(srcdir) -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 
 libpspdebugincludedir = @PSPSDK_INCLUDEDIR@
 libpspdebuginclude_HEADERS =	\
