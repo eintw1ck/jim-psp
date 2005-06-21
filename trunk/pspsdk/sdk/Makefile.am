@@ -1,1 +1,1 @@
-SUBDIRS = base include debug
+SUBDIRS = base debug kernel
