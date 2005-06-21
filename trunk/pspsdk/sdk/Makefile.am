@@ -1,1 +1,1 @@
-SUBDIRS = include debug
+SUBDIRS = base include debug

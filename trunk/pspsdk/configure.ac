@@ -49,6 +49,7 @@ AC_SUBST(PSPSDK_LIBDIR)
 
 AC_CONFIG_FILES([Makefile
                  sdk/Makefile
+                 sdk/base/Makefile
                  sdk/include/Makefile
                  sdk/debug/Makefile
                  tools/Makefile])
