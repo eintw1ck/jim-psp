@@ -193,7 +193,7 @@
    cd build-$TARGET-c++
 
    ## Configure the source.
-   ../configure --prefix=$PSPDEV --target=$TARGET --enable-languages="c,c++" --with-newlib --with-headers=$PSPDEV/$TARGET/include --enable-cxx-flags="-G0" || { echo "ERROR CONFIGURING GCC ($GCC $TARGET C++)"; exit; }
+   ../configure --prefix=$PSPDEV --target=$TARGET --enable-languages="c,c++" --with-newlib --enable-cxx-flags="-G0" || { echo "ERROR CONFIGURING GCC ($GCC $TARGET C++)"; exit; }
 
    ## Build the source.
    $MAKE clean; $MAKE CFLAGS_FOR_TARGET="-G0" || { echo "ERROR BUILDING GCC ($GCC $TARGET C++)"; exit; }
