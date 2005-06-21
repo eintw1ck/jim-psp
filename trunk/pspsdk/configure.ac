@@ -13,6 +13,10 @@ AM_INIT_AUTOMAKE([pspsdk], [PSPSDK_VERSION])
 # Checks for programs.
 AC_PSPDEV_TOOLCHAIN
 AC_PROG_CC
+# These will actually be overridden by the psp-specific counterparts.  They are
+# here mainly to shut automake up.
+AM_PROG_AS
+AC_PROG_RANLIB
 
 # Checks for libraries.
 
@@ -46,5 +50,7 @@ AC_SUBST(PSPSDK_LIBDIR)
 AC_CONFIG_FILES([Makefile
                  sdk/Makefile
                  sdk/include/Makefile
+                 sdk/src/Makefile
+                 sdk/src/debug/Makefile
                  tools/Makefile])
 AC_OUTPUT
