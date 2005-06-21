@@ -8,13 +8,13 @@ extern "C" {
 /** @addtogroup UMD UMD Kernel Library */
 /*@{*/
 
-/** Enumeration for UMD commands */
-enum UmdCommands
+/** Enumeration for UMD stats */
+enum UmdDriveStat
 {
-	/** Command to wait for a UMD disc to be inserted */
-	UMD_CMD_WAITFORDISC = 2,
-	/** Command to init the UMD so it can be accessed from the mapped drive */
-	UMD_CMD_INIT		= 0x20
+	/** Wait for disc to be inserted */
+	UMD_WAITFORDISC = 2,
+	/** Wait for the UMD to be initialised so it can be accessed from the mapped drive */
+	UMD_WAITFORINIT		= 0x20
 };
 
 /** UMD Callback function */
@@ -26,7 +26,7 @@ typedef int (*UmdCallback)(int unknown, int event);
   * @param a - Unknown function, set to 0
   * @return Returns 0 if no disc present, anything else indicates a disc is inserted.
   */
-int UmdCheckForDisc(int a);
+int sceUmdCheckMedium(int a);
 
 /** 
   * Activates the UMD drive
@@ -39,13 +39,13 @@ int UmdCheckForDisc(int a);
   * @code
   * // Wait for disc and mount to filesystem
   * int i;
-  * i = UmdCheckForDisc(0);
+  * i = sceUmdCheckMedium(0);
   * if(i == 0)
   * {
-  *    UmdSendCommand(UMD_CMD_WAITFORDISC);
+  *    sceUmdWaitDriveStat(UMD_WAITFORDISC);
   * }
   * sceUmdActivate(1, "disc0:"); // Mount UMD to disc0: file system
-  * UmdSendCommand(UMD_CMD_INIT);
+  * sceUmdWaitDriveStat(UMD_WAITFORINIT);
   * // Now you can access the UMD using standard sceIo functions
   * @endcode
   *
@@ -53,13 +53,13 @@ int UmdCheckForDisc(int a);
 int sceUmdActivate(int unit, const char *drive);
 
 /** 
-  * Send a command to the UMD drive.
+  * Wait for a drive to reach a certain state
   *
-  * @param cmd - Command to send to the drive. One of UmdCommands
+  * @param stat - The drive stat to wait for.
   * @return < 0 on error
   *
   */
-int UmdSendCommand(int cmd);
+int sceUmdWaitDriveStat(int stat);
 
 /** 
   * Register a callback for the UMD drive.

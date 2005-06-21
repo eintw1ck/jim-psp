@@ -42,6 +42,16 @@ typedef struct _ThreadStatus
 	u32 unk2[9];
 } ThreadStatus;
 
+/** Attribute for threads */
+enum ThreadAttributes
+{
+	/** Enable VFPU access for the thread */
+	THREAD_ATTR_VFPU = 0x00004000,
+	/** Start the thread in user mode (done automatically 
+	  if the thread creating it is in user mode) */
+	THREAD_ATTR_USER = 0x80000000,
+};
+
 /**
  * Creates a new semaphore
  *
@@ -59,64 +69,92 @@ typedef struct _ThreadStatus
  * @return A semaphore id
  */
 int sceKernelCreateSema(const char* name, int attr, int initVal, int maxVal, int option);
+
 /**
  * Destroy a semaphore
  *
- * @par Example:
- * @code
- * @endcode
- *
- * @param semaid
+ * @param semaid - The semaid returned from a previous create call.
  * @return Returns the value 0 if its succesful otherwise -1
  */
 int sceKernelDeleteSema(int semaid);
+
 /**
  * Send a signal to a semaphore
  *
  * @par Example:
  * @code
+ * // Signal the sema
+ * sceKernelSignalSema(semaid, 1);
  * @endcode
  *
- * @param semaid
- * @param signal
+ * @param semaid - The sema id returned from sceKernelCreateSema
+ * @param signal - The amount to signal the sema (i.e. if 2 then increment the sema by 2)
+ *
+ * @return < 0 On error.
  */
 int sceKernelSignalSema(int semaid, int signal);
+
 /**
  * Lock a semaphore
  *
- * @par Example1:
+ * @par Example:
  * @code
+ * sceKernelWaitSema(semaid, 1, 0);
  * @endcode
  *
- * @param semaid
- * @param signal
- * @param unknown
+ * @param semaid - The sema id returned from sceKernelCreateSema
+ * @param signal - The value to wait for (i.e. if 1 then wait till reaches a signal state of 1)
+ * @param unknown - Unknown.
+ *
+ * @return < 0 on error.
  */
 int sceKernelWaitSema(int semaid, int signal, int unknown);
+
+/**
+ * Lock a semaphore a handle callbacks if necessary.
+ *
+ * @par Example:
+ * @code
+ * sceKernelWaitSemaCB(semaid, 1, 0);
+ * @endcode
+ *
+ * @param semaid - The sema id returned from sceKernelCreateSema
+ * @param signal - The value to wait for (i.e. if 1 then wait till reaches a signal state of 1)
+ * @param unknown - Unknown.
+ *
+ * @return < 0 on error.
+ */
+int sceKernelWaitSemaCB(int semaid, int signal, int unknown);
+
+
 /**
  * Sleep thread
  *
- * @par Example1:
- * @code
- * @endcode
+ * @return < 0 on error.
  */
 int sceKernelSleepThread(void);
+
 /**
  * Create a thread
  *
- * @par Example1:
+ * @par Example:
  * @code
+ * int thid;
+ * this = sceKernelCreateThread("my_thread", threadFunc, 0x18, 0x10000, 0, 0);
  * @endcode
  *
- * @param name
- * @param func
- * @param initPriority
- * @param stacksize
- * @param attributes
- * @param option
+ * @param name - An arbitrary thread name.
+ * @param func - The thread function to run when started.
+ * @param initPriority - The initial priority of the thread. Less if higher priority.
+ * @param stacksize - The size of the initial stack.
+ * @param attributes - The thread attributes, zero or more of ThreadAttributes.
+ * @param option - An optional parameter (always 0?)
+
+ * @return < 0 on error, >= 0 Thread ID for use in subsequent functions.
  */
 int sceKernelCreateThread(const char* name, void *func, int initPriority, 
 						  int stacksize, int attributes, int option);
+
 /**
  * Start a created thread
  *
@@ -153,7 +191,7 @@ int sceKernelCreateCallback(const char *name, void *func, void *arg);
  * @par Example:
  * @code
  * // Once all callbacks have been setup call this function
- * sceKernelSleepThreadCB
+ * sceKernelSleepThreadCB();
  * @endcode
  */
 void sceKernelSleepThreadCB(void);
@@ -176,6 +214,18 @@ int sceKernelGetThreadId(void);
   * @endcode
   */
 void sceKernelDelayThread(int delay);
+
+/**
+  * Delay the current thread by a specified number of microseconds and handle any callbacks.
+  *
+  * @param delay - Delay in microseconds.
+  *
+  * @par Example:
+  * @code
+  * sceKernelDelayThread(1000000); // Delay for a second
+  * @endcode
+  */
+void sceKernelDelayThreadCB(int delay);
 
 /**
   * Change the threads current priority.
@@ -212,6 +262,53 @@ int sceKernelChangeThreadPriority(int thid, int priority);
   * @return 0 if successful, otherwise the error code.
   */
 int sceKernelReferThreadStatus(int thid, ThreadStatus *status);
+
+/** 
+  * Wait until a thread has ended.
+  *
+  * @param thid - Id of the thread to wait for.
+  * @param unk  - Unknown, set to 0.
+  *
+  * @return < 0 on error.
+  */
+int sceKernelWaitEndThread(int thid, void *unk);
+
+/** 
+  * Wait until a thread has ended and handle callbacks if necessary.
+  *
+  * @param thid - Id of the thread to wait for.
+  * @param unk  - Unknown, set to 0.
+  *
+  * @return < 0 on error.
+  */
+int sceKernelWaitEndThreadCB(int thid, void *unk);
+
+/** 
+  * Create an event flag.
+  *
+  * @param name - The name of the event flag.
+  * @param unk1 - Unknown, set to 0.
+  * @param bits - Initial bit pattern.
+  * @param unk3 - Unknown, set to 0.
+  * @return < 0 on error. >= 0 event flag id.
+  *
+  * @par Example:
+  * @code
+  * int evid;
+  * evid = sceKernelCreateEventFlag("wait_event", 0, 0, 0);
+  * @endcode
+  */
+int sceKernelCreateEventFlag(const char *name, int unk1, int bits, int unk3);
+
+/** 
+  * Set an event flag bit pattern.
+  *
+  * @param evid - The event id returned by sceKernelCreateEventFlag.
+  * @param bits - The bit pattern to set.
+  *
+  * @return < 0 On error
+  */
+int sceKernelSetEventFlag(int evid, u32 bits);
 
 /*@}*/
 

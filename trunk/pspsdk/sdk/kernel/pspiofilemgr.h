@@ -12,9 +12,17 @@ extern "C" {
 /** @addtogroup FileIO File IO Library */
 /*@{*/
 
-#include <psptypes.h>
 #include <sys/fcntl.h>
 #include <sys/dirent.h>
+
+/** Permission value for the sceIoAssign function */
+enum IoAssignPerms
+{
+	/** Assign the device read/write */
+	IOASSIGN_RDWR = 0,
+	/** Assign the device read only */
+	IOASSIGN_RDONLY = 1
+};
 
 /**
  * Open or create a file for reading or writing
@@ -98,7 +106,24 @@ int sceIoWrite(int fd, const void *data, int size);
  *
  * @return The position in the file after the seek. 
  */
-int sceIoLseek(int fd, long long offset, int whence);
+long long sceIoLseek(int fd, long long offset, int whence);
+
+/**
+ * Reposition read/write file descriptor offset (32bit mode)
+ *
+ * @par Example:
+ * @code
+ * pos = sceIoLseek32(fd, -10, SEEK_END);
+ * @endcode
+ *
+ * @param fd - Opened file descriptor with which to seek
+ * @param offset - Relative offset from the start position given by whence
+ * @param whence - Set to SEEK_SET to seek from the start of the file, SEEK_CUR
+ * seek from the current position and SEEK_END to seek from the end.
+ *
+ * @return The position in the file after the seek. 
+ */
+u32 sceIoLseek32(int fd, u32 offset, int whence);
 
 /**
  * Remove directory entry
@@ -189,7 +214,7 @@ int sceIoDclose(int fd);
 /** 
   * Send a devctl command to a device.
   *
-  * @par Example: Sending a simple command to a device
+  * @par Example: Sending a simple command to a device (not a real devctl)
   * @code
   * sceIoDevctl("ms0:", 0x200000, indata, 4, NULL, NULL); 
   * @endcode
@@ -206,9 +231,51 @@ int sceIoDevctl(const char *dev, u32 cmd, void *indata, int inlen, void *outdata
 
 /** 
   * Assigns one IO device to another (I guess)
-  * @note Parameters are currently unknown
+  * @param dev1 - The device name to assign.
+  * @param dev2 - The block device to assign from.
+  * @param dev3 - The filesystem device to mape the block device to dev1
+  * @param mode - Read/Write mode. One of IoAssignPerms.
+  * @param unk1 - Unknown, set to NULL.
+  * @param unk2 - Unknown, set to 0.
+  * @return < 0 on error.
+  *
+  * @par Example: Reassign flash0 in read/write mode.
+  * @code 
+  *	sceIoUnassign("flash0");
+  * sceIoAssign("flash0", "lflash0:0,0", "fatflash0:", IOASSIGN_RDWR, NULL, 0);
+  * 
   */
-int sceIoAssign(const char *dev1, const char *dev2, const char *dev3, long, long, long);
+int sceIoAssign(const char *dev1, const char *dev2, const char *dev3, IoAssignPerms mode, void* unk1, long unk2);
+
+/** 
+  * Unassign an IO device.
+  * @param dev - The device to unassign.
+  * @return < 0 on error
+  *
+  * @par Example: See ::sceIoAssign
+  */
+int sceIoUnassign(const char *dev);
+
+/** 
+  * Get the status of a file.
+  * 
+  * @param file - The path to the file.
+  * @param stat - A pointer to an io_stat_t structure.
+  * 
+  * @return < 0 on error.
+  */
+int sceIoGetStat(const char *file, io_stat_t *stat);
+
+/** 
+  * Change the status of a file.
+  *
+  * @param file - The path to the file.
+  * @param stat - A pointer to an io_stat_t structure.
+  * @param bits - Bitmask defining which bits to change.
+  *
+  * @return < 0 on error.
+  */
+int sceIoChStat(const char *file, io_stat_t *stat, int bits);
 
 /*@}*/
 

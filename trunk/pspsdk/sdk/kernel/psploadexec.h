@@ -38,6 +38,17 @@ int sceKernelRegisterExitCallback(int cbid);
  */
 void sceKernelExitGame(void);
 
+/** 
+  * Execute a new game executable (does not support ms)
+  * 
+  * @param file - The file to execute.
+  * @param unk  - Unknown, set to NULL.
+  *
+  * @return < 0 on error, probably.
+  *
+  */
+int sceKernelLoadExec(const char *file, void *unk);
+
 #ifdef __cplusplus
 }
 #endif

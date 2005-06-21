@@ -106,9 +106,7 @@ typedef struct {
 	/** Mode flags, zero or more of ::IOFileModes */
 	unsigned int mode;
 	/** Size of the file in bytes */
-	unsigned int size;
-	/** Unknown, seems to always be one */
-	unsigned int unk0;	 
+	long long size;
 	/** Creation time */
 	io_time_t ctime; 
 	/** Access time (possibly) */
