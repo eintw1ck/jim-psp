@@ -245,7 +245,7 @@ int sceIoDevctl(const char *dev, u32 cmd, void *indata, int inlen, void *outdata
   * sceIoAssign("flash0", "lflash0:0,0", "fatflash0:", IOASSIGN_RDWR, NULL, 0);
   * 
   */
-int sceIoAssign(const char *dev1, const char *dev2, const char *dev3, IoAssignPerms mode, void* unk1, long unk2);
+int sceIoAssign(const char *dev1, const char *dev2, const char *dev3, int mode, void* unk1, long unk2);
 
 /** 
   * Unassign an IO device.
