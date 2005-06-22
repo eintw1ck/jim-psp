@@ -23,6 +23,15 @@ AC_DEFUN(AC_PSPDEV_PATH,
 
   PSPDEV="$pspdev"
   AC_SUBST(PSPDEV)
+
+  # Fill out a few common directories for things that need it.
+  # Note: if we ever decide to support more than just the "psp" prefix, these will have to be updated.
+  pspdev_includedir="$pspdev/psp/include"
+  pspdev_libdir="$pspdev/psp/lib"
+  PSPDEV_INCLUDEDIR="$pspdev_includedir"
+  PSPDEV_LIBDIR="$pspdev_libdir"
+  AC_SUBST(PSPDEV_INCLUDEDIR)
+  AC_SUBST(PSPDEV_LIBDIR)
 ])
 
 dnl Check for a tool prefixed with "psp-".
