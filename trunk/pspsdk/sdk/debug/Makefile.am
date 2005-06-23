@@ -2,11 +2,13 @@
 libdir = @PSPSDK_LIBDIR@
 
 CC = @PSP_CC@
+CCAS = $(CC)
 AR = @PSP_AR@
 RANLIB = @PSP_RANLIB@
 
-INCLUDES = -I$(srcdir) -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
+INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 CFLAGS = @PSPSDK_CFLAGS@
+CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base
 
 libpspdebugincludedir = @PSPSDK_INCLUDEDIR@
 libpspdebuginclude_HEADERS =	\
