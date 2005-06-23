@@ -62,5 +62,6 @@ AC_CONFIG_FILES([Makefile
                  sdk/debug/Makefile
                  sdk/kernel/Makefile
                  sdk/libc/Makefile
+                 sdk/startup/Makefile
                  tools/Makefile])
 AC_OUTPUT
