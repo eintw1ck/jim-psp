@@ -1,5 +1,6 @@
 
 CC = @PSP_CC@
+CCAS = $(CC)
 AR = @PSP_AR@
 RANLIB = @PSP_RANLIB@
 
