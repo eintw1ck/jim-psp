@@ -1,1 +1,1 @@
-SUBDIRS = base debug kernel
+SUBDIRS = base debug kernel libc
