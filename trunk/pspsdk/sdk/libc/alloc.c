@@ -13,8 +13,8 @@
 
 /* This code is based on code contributed by Philip Joaqiun (jenova0). */
 
-#include <tamtypes.h>
-#include <kernel.h>
+#include <psptypes.h>
+#include <pspkernel.h>
 #include <malloc.h>
 #include <string.h>
 #ifdef DEBUG_ALLOC
@@ -31,6 +31,8 @@
 #ifdef DEBUG_ALLOC
 #define ALLOC_MAGIC 0xa110ca73
 #endif
+
+void * ps2_sbrk(int incr);
 
 void _pspsdk_alloc_init();
 void _pspsdk_alloc_deinit();

@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-#include <kernel.h>
 #include <string.h>
 #include <limits.h>
 
@@ -36,6 +35,10 @@ extern environvariable_t __stdlib_env[32];
 extern int __stdlib_mb_shift;
 extern unsigned int __stdlib_rand_seed;
 
+int isspace(int);
+int isdigit(int);
+int isalpha(int);
+int isupper(int);
 
 #ifdef F_abs
 /*

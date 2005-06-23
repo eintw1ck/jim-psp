@@ -12,7 +12,7 @@
 # Floating point support in.
 */
 
-#include "as_reg_compat.h"
+#include <as_reg_compat.h>
 
 #define O_S0	0x00
 #define O_S1	0x10

@@ -12,7 +12,7 @@
 */
 
 #include <time.h>
-#include <kernel.h>
+#include <psputils.h>
 
 #ifdef F_clock
 /* Simple remapping of the kernel functions */
@@ -22,7 +22,7 @@ clock_t clock(void)
 }
 #endif
 
-#ifdef F_time
+#ifdef F__time
 /* Simple remapping of the kernel functions */
 time_t time(time_t *tloc)
 {

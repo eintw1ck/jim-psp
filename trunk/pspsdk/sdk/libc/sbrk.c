@@ -13,7 +13,7 @@
 # Primary function to malloc - reserved
 */
 
-#include <kernel.h>
+#include <pspkernel.h>
 
 /* Let's do a quick bodge :P */
 

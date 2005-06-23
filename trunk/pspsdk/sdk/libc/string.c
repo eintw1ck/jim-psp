@@ -11,11 +11,26 @@
 # Standard ANSI string functions to complement the ASM funcs
 */
 
-#include <tamtypes.h>
-#include <kernel.h>
+#include <psptypes.h>
 #include <limits.h>
 #include <string.h>
 #include <malloc.h>
+
+/* Until a _ctype_ array exists in psplibc, don't include ctype.h and declare ctype.h
+   function prototypes. */
+int isalnum(int);
+int isalpha(int);
+int iscntrl(int);
+int isdigit(int);
+int isgraph(int);
+int islower(int);
+int isprint(int);
+int ispunct(int);
+int isspace(int);
+int isupper(int);
+int isxdigit(int);
+int tolower(int);
+int toupper(int);
 
 #ifdef F_strlen
 unsigned int strlen(const char *s)

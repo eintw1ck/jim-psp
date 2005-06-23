@@ -15,9 +15,9 @@
 /* This xprintf.c file on which this one is based is in public domain. */
 
 #include <stdio.h>
-#include <tamtypes.h>
-#include <kernel.h>
-#include <fileio.h>
+#include <psptypes.h>
+#include <pspkernel.h>
+#include <pspiofilemgr.h>
 #include <string.h>
 #include <malloc.h>
 
@@ -28,6 +28,15 @@
 ** The maximum number of digits of accuracy in a floating-point conversion.
 */
 #define MAXDIG 20
+
+/* The maximum string length. */
+#define PS2LIB_STR_MAX 4096
+
+/* Instead of including ctype.h, use the isdigit() prototype because psplibc doesn't
+   know about newlib, and newlib defines isdigit as a macro that uses _ctype_. */
+int isdigit(int __c);
+
+int vxprintf(void (*func)(char *, int, void *), void *arg, const char *format, va_list ap);
 
 #ifdef F_vxprintf
 /*
@@ -634,7 +643,7 @@ int vxprintf(func,arg,format,ap)
 } /* End of function */
 #endif
 
-#ifdef F_xprintf
+#ifdef F__xprintf
 /*
 ** This non-standard function is still occasionally useful....
 */
@@ -957,6 +966,10 @@ int vprintf(const char *format, va_list args)
 #endif
 
 #ifdef F_putchar
+/* Get rid of the newlib macro definition. */
+#ifdef putchar
+#undef putchar
+#endif
 int putchar( int chr )
 {
 	sceIoWrite(1, &chr, 1);

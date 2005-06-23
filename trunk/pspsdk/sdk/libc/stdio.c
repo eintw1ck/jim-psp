@@ -10,14 +10,14 @@
 # $Id$
 # Simple standard C library implementation.
 */
-	   
+
+#include <stdarg.h>
 #include <stdio.h>
-#include <tamtypes.h>
-#include <kernel.h>
-#include <fileio.h>
+#include <psptypes.h>
+#include <pspiofilemgr.h>
 #include <string.h>
 #include <limits.h>
-
+#include <errno.h>
 
 /* std I/O buffer type constants. */
 #define STD_IOBUF_TYPE_NONE            0
@@ -27,8 +27,44 @@
 #define STD_IOBUF_TYPE_HOST            8
 #define STD_IOBUF_TYPE_STDOUTHOST     16
 
+#define _NFILE 16
+
+#define _IOEOF                         0x0020
+#define _IOERR                         0x0040
+
+#define _IOREAD                        0x0001
+#define _IOWRT                         0x0002
+#define _IORW                          0x0200
+#define _IOMYBUF                       0x0010
+
+/* ensure FILE is defined. */
+/* This is specific to psplibc, so we have to make sure it doesn't conflict with
+   newlib's FILE definition. */;
+#ifndef __FILE_DEFINED
+#define __FILE_DEFINED
+typedef struct {
+        int  type;
+        int  fd;
+        int  cnt;
+        int  flag;
+        int  has_putback;
+        u8   putback;
+} __psplibc_FILE;
+#endif // __FILE_DEFINED
+
+/* Override newlib's definition of a FILE. */
+#define LOCAL_FILE(f) ((__psplibc_FILE *) (f))
+
+extern FILE __iob[_NFILE];
+
+/* Don't pull in macros from newlib's ctype.h that we don't support. */
+int isdigit(int);
 
 #ifdef F_clearerr
+/* Get rid of the newlib macro definition. */
+#ifdef clearerr
+#undef clearerr
+#endif
 /*
 **
 **  [func] - clearerr.
@@ -41,7 +77,7 @@
 */
 void clearerr(FILE *stream)
 {
-  stream->flag &= (~_IOERR);
+  LOCAL_FILE(stream)->flag &= (~_IOERR);
 }
 #endif
 
@@ -63,7 +99,7 @@ int fclose(FILE *stream)
   int ret;
 
   /* test the file stream type. */
-  switch(stream->type) {
+  switch(LOCAL_FILE(stream)->type) {
     case STD_IOBUF_TYPE_NONE:
     case STD_IOBUF_TYPE_GE:
     case STD_IOBUF_TYPE_STDOUTHOST:
@@ -74,11 +110,11 @@ int fclose(FILE *stream)
       ret = EOF;
       break;
     default:
-      if ((stream->fd >= 0) && (sceIoClose(stream->fd) >= 0)) {
-        stream->type = STD_IOBUF_TYPE_NONE;
-        stream->fd = -1;
-        stream->cnt = 0;
-        stream->flag = 0;
+      if ((LOCAL_FILE(stream)->fd >= 0) && (sceIoClose(LOCAL_FILE(stream)->fd) >= 0)) {
+        LOCAL_FILE(stream)->type = STD_IOBUF_TYPE_NONE;
+        LOCAL_FILE(stream)->fd = -1;
+        LOCAL_FILE(stream)->cnt = 0;
+        LOCAL_FILE(stream)->flag = 0;
         ret = 0;
       }
       else ret = EOF;
@@ -107,7 +143,7 @@ int fcloseall(void)
 
   /* process all open files except for stdout, stdin and stderr. */
   for (i = 3, iob = &__iob[3]; i < _NFILE; ++i, ++iob) {
-    if (iob->fd >= 0) {
+    if (LOCAL_FILE(iob)->fd >= 0) {
       /* attempt to close the current file. */
       if ((fclose(iob) == 0) && (ret >= 0)) ++ret;
       else ret = EOF;
@@ -119,6 +155,10 @@ int fcloseall(void)
 
 
 #ifdef F_feof
+/* Get rid of the newlib macro definition. */
+#ifdef feof
+#undef feof
+#endif
 /*
 **
 **  [func] - feof.
@@ -132,12 +172,16 @@ int fcloseall(void)
 */
 int feof(FILE *stream)
 {
-  return ((stream->flag & _IOEOF) != 0);
+  return ((LOCAL_FILE(stream)->flag & _IOEOF) != 0);
 }
 #endif
 
 
 #ifdef F_ferror
+/* Get rid of the newlib macro definition. */
+#ifdef ferror
+#undef ferror
+#endif
 /*
 **
 **  [func] - ferror.
@@ -151,7 +195,7 @@ int feof(FILE *stream)
 */
 int ferror(FILE *stream)
 {
-  return ((stream->flag & _IOERR) != 0);
+  return ((LOCAL_FILE(stream)->flag & _IOERR) != 0);
 }
 #endif
 
@@ -176,7 +220,7 @@ int fflush(FILE *stream)
 {
   int ret = EOF; // Same as default case below.
 
-  switch(stream->type) {
+  switch(LOCAL_FILE(stream)->type) {
     case STD_IOBUF_TYPE_GE:
     case STD_IOBUF_TYPE_STDOUTHOST:
       /* stdout & stderr are never buffered. */
@@ -185,7 +229,7 @@ int fflush(FILE *stream)
       ret = 0;
       break;
     case STD_IOBUF_TYPE_MS:
-      if (stream->flag & (_IOWRT | _IORW)) {
+      if (LOCAL_FILE(stream)->flag & (_IOWRT | _IORW)) {
         //if (ret != 0) ret = EOF;
 		  /* Need to implement sync or something */
       }
@@ -193,7 +237,7 @@ int fflush(FILE *stream)
       break;
     case STD_IOBUF_TYPE_HOST:
       /* flush host file write buffer. */
-      if (stream->flag & (_IOWRT | _IORW)) ret = 0;
+      if (LOCAL_FILE(stream)->flag & (_IOWRT | _IORW)) ret = 0;
       else ret = 0;
       break;
     default:
@@ -225,7 +269,7 @@ int _fflushall(void)
 
   /* process all open files except for stdout, stdin and stderr. */
   for (i = 3, iob = &__iob[3]; i < _NFILE; ++i, ++iob) {
-    if (iob->fd >= 0) {
+    if (LOCAL_FILE(iob)->fd >= 0) {
       /* attempt to flush the current file. */
       if ((fflush(iob) == 0) && (ret >= 0)) ++ret;
       else ret = EOF;
@@ -254,12 +298,12 @@ int fgetc(FILE *stream)
   char c;
   int  ret;
 
-  if (stream->has_putback) {
-    stream->has_putback = 0;
-    return stream->putback;
+  if (LOCAL_FILE(stream)->has_putback) {
+    LOCAL_FILE(stream)->has_putback = 0;
+    return LOCAL_FILE(stream)->putback;
   }
 
-  switch(stream->type) {
+  switch(LOCAL_FILE(stream)->type) {
     case STD_IOBUF_TYPE_GE:
     case STD_IOBUF_TYPE_STDOUTHOST:
       /* cannot read from stdout or stderr. */
@@ -320,7 +364,7 @@ char *fgets(char *buf, int n, FILE *stream)
   char *ret = buf;
   int  c, done;
 
-  switch(stream->type) {
+  switch(LOCAL_FILE(stream)->type) {
     case STD_IOBUF_TYPE_GE:
     case STD_IOBUF_TYPE_STDOUTHOST:
       /* cannot read from stdout or stderr. */
@@ -413,15 +457,15 @@ FILE *fopen(const char *fname, const char *mode)
         }
       }
       /* search for an available fd slot. */
-      for (i = 2; i < _NFILE; ++i) if (__iob[i].fd < 0) break;
+      for (i = 2; i < _NFILE; ++i) if (LOCAL_FILE(&__iob[i])->fd < 0) break;
       if (i < _NFILE) {
         /* attempt to open the fname file. */
         if ((fd = sceIoOpen((char *)fname, iomode, 0777)) >= 0) {
-          __iob[i].type = __stdio_get_fd_type(fname);
-          __iob[i].fd = fd;
-          __iob[i].cnt = 0;
-          __iob[i].flag = flag;
-          __iob[i].has_putback = 0;
+          LOCAL_FILE(&__iob[i])->type = __stdio_get_fd_type(fname);
+          LOCAL_FILE(&__iob[i])->fd = fd;
+          LOCAL_FILE(&__iob[i])->cnt = 0;
+          LOCAL_FILE(&__iob[i])->flag = flag;
+          LOCAL_FILE(&__iob[i])->has_putback = 0;
           ret = (__iob + i);
         }
       }
@@ -481,14 +525,14 @@ FILE *fdopen(int fd, const char *mode)
         }
       }
       /* search for an available fd slot. */
-      for (i = 2; i < _NFILE; ++i) if (__iob[i].fd < 0) break;
+      for (i = 2; i < _NFILE; ++i) if (LOCAL_FILE(&__iob[i])->fd < 0) break;
       if (i < _NFILE) {
         /* attempt to open the fname file. */
-        __iob[i].type = STD_IOBUF_TYPE_NONE;
-        __iob[i].fd = fd;
-        __iob[i].cnt = 0;
-        __iob[i].flag = flag;
-        __iob[i].has_putback = 0;
+        LOCAL_FILE(&__iob[i])->type = STD_IOBUF_TYPE_NONE;
+        LOCAL_FILE(&__iob[i])->fd = fd;
+        LOCAL_FILE(&__iob[i])->cnt = 0;
+        LOCAL_FILE(&__iob[i])->flag = flag;
+        LOCAL_FILE(&__iob[i])->has_putback = 0;
         ret = (__iob + i);
       }
     }
@@ -499,7 +543,7 @@ FILE *fdopen(int fd, const char *mode)
 
 #ifdef F_fileno
 int fileno(FILE * f) {
-    return f->fd;
+    return LOCAL_FILE(f)->fd;
 }
 #endif
 
@@ -576,7 +620,7 @@ size_t fread(void *buf, size_t r, size_t n, FILE *stream)
 {
   size_t ret;
 
-  switch(stream->type) {
+  switch(LOCAL_FILE(stream)->type) {
     case STD_IOBUF_TYPE_NONE:
     case STD_IOBUF_TYPE_GE:
     case STD_IOBUF_TYPE_STDOUTHOST:
@@ -585,7 +629,7 @@ size_t fread(void *buf, size_t r, size_t n, FILE *stream)
       break;
     default:
       /* attempt to read from the stream file. */
-      ret = (sceIoRead(stream->fd, buf, (int)(r * n)) / (int)r);
+      ret = (sceIoRead(LOCAL_FILE(stream)->fd, buf, (int)(r * n)) / (int)r);
   }
   return (ret);
 }
@@ -612,7 +656,7 @@ int fseek(FILE *stream, long offset, int origin)
 {
   int ret;
 
-  switch(stream->type) {
+  switch(LOCAL_FILE(stream)->type) {
     case STD_IOBUF_TYPE_NONE:
     case STD_IOBUF_TYPE_GE:
     case STD_IOBUF_TYPE_STDOUTHOST:
@@ -621,7 +665,7 @@ int fseek(FILE *stream, long offset, int origin)
       break;
     default:
       /* attempt to seek to offset from origin. */
-      ret = ((sceIoLseek(stream->fd, (int)offset, origin) >= 0) ? 0 : -1);
+      ret = ((sceIoLseek(LOCAL_FILE(stream)->fd, (int)offset, origin) >= 0) ? 0 : -1);
   }
   return (ret);
 }
@@ -666,7 +710,7 @@ long ftell(FILE *stream)
 {
   long n, ret;
 
-  switch(stream->type) {
+  switch(LOCAL_FILE(stream)->type) {
     case STD_IOBUF_TYPE_NONE:
     case STD_IOBUF_TYPE_GE:
     case STD_IOBUF_TYPE_STDOUTHOST:
@@ -675,12 +719,12 @@ long ftell(FILE *stream)
       ret = -1L;
       break;
     default:
-      if (stream->fd < 0) {
+      if (LOCAL_FILE(stream)->fd < 0) {
         /* file is not open. */
         errno = EBADF;
         ret = -1L;
       }
-      else ret = (((n = sceIoLseek(stream->fd, 0, SEEK_CUR)) >= 0) ? (long)n : -1L);
+      else ret = (((n = sceIoLseek(LOCAL_FILE(stream)->fd, 0, SEEK_CUR)) >= 0) ? (long)n : -1L);
   }
   return (ret);
 }
@@ -709,7 +753,7 @@ size_t fwrite(const void *buf, size_t r, size_t n, FILE *stream)
 
   /* attempt to write the stream file. */
   //ret = (sceIoWrite(stream->fd, (void *)buf, (int)(r * n)) / (int)r);
-  ret = (sceIoWrite(stream->fd, (void *)buf, (int)(r * n)) / (int) r);
+  ret = (sceIoWrite(LOCAL_FILE(stream)->fd, (void *)buf, (int)(r * n)) / (int) r);
 
   return (ret);
 }
@@ -717,6 +761,10 @@ size_t fwrite(const void *buf, size_t r, size_t n, FILE *stream)
 
 
 #ifdef F_getc
+/* Get rid of the newlib macro definition. */
+#ifdef getc
+#undef getc
+#endif
 /*
 **
 **  [func] - getc.
@@ -734,7 +782,7 @@ int getc(FILE *stream)
   char c;
   int  ret;
 
-  switch(stream->type) {
+  switch(LOCAL_FILE(stream)->type) {
     case STD_IOBUF_TYPE_NONE:
     case STD_IOBUF_TYPE_GE:
     case STD_IOBUF_TYPE_STDOUTHOST:
@@ -750,6 +798,10 @@ int getc(FILE *stream)
 
 
 #ifdef F_getchar
+/* Get rid of the newlib macro definition. */
+#ifdef getchar
+#undef getchar
+#endif
 /*
 **
 **  [func] - getchar.
@@ -815,10 +867,154 @@ char *gets(char *buf)
 
 
 #ifdef F_strerror
-#define E_USE_NAMES
-#include "errno.h"
+static const char * file_errors[] = {
+"",										//	0
+"Not super-user",								//	1
+"No such file or directory",						//	2
+"No such process",							//	3
+"Interrupted system call",						//	4
+"I/O error",								//	5
+"No such device or address",						//	6
+"Arg list too long",							//	7
+"Exec format error",							//	8
+"Bad file number",							//	9
+"No children",								//	10
+"No more processes",							//	11
+"Not enough core",							//	12
+"Permission denied",							//	13
+"Bad address",								//	14
+"Block device required",						//	15
+"Mount device busy",							//	16
+"File exists",								//	17
+"Cross-device link",							//	18
+"No such device",								//	19
+"Not a directory",							//	20
+"Is a directory",								//	21
+"Invalid argument",							//	22
+"Too many open files in system",					//	23
+"Too many open files",							//	24
+"Not a typewriter",							//	25
+"Text file busy",								//	26
+"File too large",								//	27
+"No space left on device",						//	28
+"Illegal seek",								//	29
+"Read only file system",						//	30
+"Too many links",								//	31
+"Broken pipe",								//	32
+"Math arg out of domain of func",					//	33
+"Math result not representable",					//	34
+"No message of desired type",						//	35
+"Identifier removed",							//	36
+"Channel number out of range",					//	37
+"Level 2 not synchronized",						//	38
+"Level 3 halted",								//	39
+"Level 3 reset",								//	40
+"Link number out of range",						//	41
+"Protocol driver not attached",					//	42
+"No CSI structure available",						//	43
+"Level 2 halted",								//	44
+"Deadlock condition",							//	45
+"No record locks available",						//	46
+"",										//	47
+"",										//	48
+"",										//	49
+"Invalid exchange",							//	50
+"Invalid request descriptor",						//	51
+"Exchange full",								//	52
+"No anode",									//	53
+"Invalid request code",							//	54
+"Invalid slot",								//	55
+"File locking deadlock error",					//	56
+"Bad font file fmt",							//	57
+"",										//	58
+"",										//	59
+"Device not a stream",							//	60
+"No data (for no delay io)",						//	61
+"Timer expired",								//	62
+"Out of streams resources",						//	63
+"Machine is not on the network",					//	64
+"Package not installed",						//	65
+"The object is remote",							//	66
+"The link has been severed",						//	67
+"Advertise error",							//	68
+"Srmount error",								//	69
+"Communication error on send",					//	70
+"Protocol error",								//	71
+"",										//	72
+"",										//	73
+"Multihop attempted",							//	74
+"Inode is remote (not really error)",				//	75
+
+
+"Cross mount point (not really error)",				//	76
+"Trying to read unreadable message",				//	77
+"",										//	78
+"Inappropriate file type or format",				//	79
+"Given log. name not unique",						//	80
+"f.d. invalid for this operation",					//	81
+"Remote address changed",						//	82
+"Can't access a needed shared lib",					//	83
+"Accessing a corrupted shared lib",					//	84
+".lib section in a.out corrupted",					//	85
+"Attempting to link in too many libs",				//	86
+"Attempting to exec a shared library",				//	87
+"Function not implemented",						//	88
+"No more files",								//	89
+"Directory not empty",							//	90
+"File or path name too long",						//	91
+"Too many symbolic links",						//	92
+"",										//	93
+"",										//	94
+"Operation not supported on transport endpoint",		//	95
+"Protocol family not supported",					//	96
+"",										//	97
+"",										//	98
+"",										//	99
+"",										//	100
+"",										//	101
+"",										//	102
+"",										//	103
+"Connection reset by peer",						//	104
+"No buffer space available",						//	105
+"Address family not supported by protocol family",		//	106
+"Protocol wrong type for socket",					//	107
+"Socket operation on non-socket",					//	108
+"Protocol not available",						//	109
+"Can't send after socket shutdown",					//	110
+"Connection refused",							//	111
+"Address already in use",						//	112
+"Connection aborted",							//	113
+"Network is unreachable",						//	114
+"Network interface is not configured",				//	115
+"Connection timed out",							//	116
+"Host is down",								//	117
+"Host is unreachable",							//	118
+"Connection already in progress",					//	119
+"Socket already connected",						//	120
+"Destination address required",					//	121
+"Message too long",							//	122
+"Unknown protocol",							//	123
+"Socket type not supported",						//	124
+"Address not available",						//	125
+"",										//	126
+"Socket is already connected",					//	127
+"Socket is not connected",						//	128
+"",										//	129
+"EPROCLIM",									//	130
+"EUSERS",									//	131
+"EDQUOT",									//	132
+"ESTALE",									//	133
+"Not supported",								//	134
+"No medium (in tape drive)",						//	135
+"No such host or network path",					//	136
+"Filename exists with different case",				//	137
+"EILSEQ",									//	138
+"Value too large for defined data type",				//	139
+""};
+#define error_to_string(errnum) (file_errors[errnum*-1])
+
 char * strerror(int err) {
-    return error_to_string(err);
+    return (char *) error_to_string(err);
 }
 #endif
 
@@ -847,6 +1043,10 @@ void perror(const char *s)
 
 
 #ifdef F_putc
+/* Get rid of the newlib macro definition. */
+#ifdef putc
+#undef putc
+#endif
 /* std I/O data variable. */
 #ifdef USE_GS
 extern int __stdio_stdout_xy[2];
@@ -874,7 +1074,7 @@ int putc(int c, FILE *stream)
   char ch;
   int  ret = 0;
 
-  switch(stream->type) {
+  switch(LOCAL_FILE(stream)->type) {
       break;
     default:
       /* write one character to the stream file. */
@@ -1040,7 +1240,7 @@ int sscanf(const char *buf, const char *format, ...)
 #endif
 
 
-#ifdef F_stdio
+#ifdef F__stdio
 /* stdio data variables. */
 FILE __iob[_NFILE] = {
   { -1,                 0, 0, 0 },     // stdin
@@ -1130,13 +1330,13 @@ int ungetc(int c, FILE *stream)
 {
   // int ret = EOF;
 
-  if (c == EOF || stream->has_putback) {
+  if (c == EOF || LOCAL_FILE(stream)->has_putback) {
     /* invalid input, or putback queue full */
     return EOF;
   }
 
-  stream->putback = (u8)c;
-  stream->has_putback = 1;
+  LOCAL_FILE(stream)->putback = (u8)c;
+  LOCAL_FILE(stream)->has_putback = 1;
   return c;
 }
 #endif

@@ -11,8 +11,8 @@
 */
 
 #include <stdio.h>
-#include <tamtypes.h>
-#include <kernel.h>
+#include <psptypes.h>
+#include <pspkernel.h>
 
 extern void _exit(int code);
 
