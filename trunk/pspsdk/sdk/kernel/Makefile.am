@@ -19,6 +19,8 @@ libpspkernelinclude_HEADERS =	\
 	pspdisplay.h		\
 	pspge.h			\
 	pspiofilemgr.h		\
+	pspiofilemgr_dirent.h	\
+	pspiofilemgr_fcntl.h	\
 	pspkernel.h		\
 	psploadexec.h		\
 	pspmodulemgr.h		\

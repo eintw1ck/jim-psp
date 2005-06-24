@@ -1,6 +1,9 @@
 #ifndef __FILEIO_H__
 #define __FILEIO_H__
 
+#include <pspiofilemgr_dirent.h>
+#include <pspiofilemgr_fcntl.h>
+
 /** @defgroup FileIO File IO Library 
  *  This module contains the imports for the kernel's IO routines.
  */
@@ -11,9 +14,6 @@ extern "C" {
 
 /** @addtogroup FileIO File IO Library */
 /*@{*/
-
-#include <sys/fcntl.h>
-#include <sys/dirent.h>
 
 /** Permission value for the sceIoAssign function */
 enum IoAssignPerms
