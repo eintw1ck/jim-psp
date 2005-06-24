@@ -159,7 +159,7 @@
    ../configure --prefix=$PSPDEV --target=$TARGET || { echo "ERROR CONFIGURING NEWLIB ($NEWLIB $TARGET)"; exit; }
 
    ## Build the source.
-   $MAKE clean; CPPFLAGS="-G0" $MAKE || { echo "ERROR BUILDING NEWLIB ($NEWLIB $TARGET)"; exit; }
+   $MAKE clean; $MAKE || { echo "ERROR BUILDING NEWLIB ($NEWLIB $TARGET)"; exit; }
 
    ## Install the result.
    $MAKE install || { echo "ERROR INSTALLING NEWLIB ($NEWLIB $TARGET)"; exit; }
