@@ -1,1 +1,1 @@
-SUBDIRS = base debug kernel libc startup
+SUBDIRS = audio base debug kernel libc startup

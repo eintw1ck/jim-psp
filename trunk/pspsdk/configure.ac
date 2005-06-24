@@ -58,6 +58,7 @@ fi
 
 AC_CONFIG_FILES([Makefile
                  sdk/Makefile
+                 sdk/audio/Makefile
                  sdk/base/Makefile
                  sdk/debug/Makefile
                  sdk/kernel/Makefile
