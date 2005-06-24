@@ -1,6 +1,8 @@
 #ifndef __THREADMAN_H__
 #define __THREADMAN_H__
 
+#include <psptypes.h>
+
 /** @defgroup ThreadMan Thread Manager Library
   * Library imports for the kernel threading library.
   */
@@ -156,6 +158,15 @@ int sceKernelCreateThread(const char* name, void *func, int initPriority,
 						  int stacksize, int attributes, int option);
 
 /**
+ * Delate a thread
+ *
+ * @param thid - UID of the thread to be deleted.
+ *
+ * @return < 0 on error.
+ */
+int sceKernelDeleteThread(int thid);
+
+/**
  * Start a created thread
  *
  * @par Example:
@@ -166,7 +177,14 @@ int sceKernelCreateThread(const char* name, void *func, int initPriority,
  * @param arg1
  * @param arg2
  */
-int sceKernelStartThread(int thid, void *arg1, void *arg2);
+int sceKernelStartThread(int thid, int arglen, void *args);
+
+/**
+ * Exit a thread
+ *
+ * @param status - Exit status.
+ */
+int sceKernelExitThread(int status);
 
 /**
  * Create callback
