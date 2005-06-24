@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #define PSP_NUM_AUDIO_CHANNELS 4
-#define PSP_AUDIO_SAMPLE_SIZE 1024
+#define PSP_NUM_AUDIO_SAMPLES 1024
 #define PSP_VOLUME_MAX 0x8000
 
 typedef struct {

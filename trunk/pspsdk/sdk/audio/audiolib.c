@@ -11,9 +11,9 @@
 #include "pspaudiolib.h"
 
 static int audio_ready=0;
-static short audio_sndbuf[AUDIO_CHANNELS][2][AUDIO_SAMPLES][2];
+static short audio_sndbuf[PSP_NUM_AUDIO_CHANNELS][2][PSP_NUM_AUDIO_SAMPLES][2];
 
-static psp_audio_channelinfo AudioStatus[AUDIO_CHANNELS];
+static psp_audio_channelinfo AudioStatus[PSP_NUM_AUDIO_CHANNELS];
 
 static volatile int audio_terminate=0;
 
@@ -23,9 +23,9 @@ void pspAudioSetVolume(int channel, int left, int right)
   AudioStatus[channel].volumeleft  = left;
 }
 
-void pspAudioChannelThreadCallback(int channel, void *buf, unsigned long reqn)
+void pspAudioChannelThreadCallback(int channel, void *buf, unsigned int reqn)
 {
-	void (*callback)(void *buf, unsigned long reqn);
+	void (*callback)(void *buf, unsigned int reqn);
 	callback=AudioStatus[channel].callback;
 }
 
@@ -35,7 +35,7 @@ void pspAudioSetChannelCallback(int channel, void *callback)
 	AudioStatus[channel].callback=callback;
 }
 
-int pspAudioOutBlocking(unsigned long channel,unsigned long vol1,unsigned long vol2,void *buf)
+int pspAudioOutBlocking(unsigned int channel, unsigned int vol1, unsigned int vol2, void *buf)
 {
 	if (!audio_ready) return -1;
 	if (channel>=PSP_NUM_AUDIO_CHANNELS) return -1;
@@ -51,14 +51,14 @@ static int AudioChannelThread(int args, void *argp)
 	
 	while (audio_terminate==0) {
 		void *bufptr=&audio_sndbuf[channel][bufidx];
-		void (*callback)(void *buf, unsigned long reqn);
+		void (*callback)(void *buf, unsigned int reqn);
 		callback=AudioStatus[channel].callback;
 		if (callback) {
-			callback(bufptr, PSP_AUDIO_SAMPLE_SIZE);
+			callback(bufptr, PSP_NUM_AUDIO_SAMPLES);
 		} else {
-			unsigned long *ptr=bufptr;
+			unsigned int *ptr=bufptr;
 			int i;
-			for (i=0; i<AUDIO_SAMPLES; ++i) *(ptr++)=0;
+			for (i=0; i<PSP_NUM_AUDIO_SAMPLES; ++i) *(ptr++)=0;
 		}
 		pspAudioOutBlocking(channel,AudioStatus[channel].volumeleft,AudioStatus[channel].volumeright,bufptr);
 		bufidx=(bufidx?0:1);
@@ -90,7 +90,7 @@ int pspAudioInit()
     AudioStatus[i].callback = 0;
 	}
 	for (i=0; i<PSP_NUM_AUDIO_CHANNELS; i++) {
-		if ((AudioStatus[i].handle = sceAudioChReserve(-1,PSP_AUDIO_SAMPLE_SIZE,0))<0) 
+		if ((AudioStatus[i].handle = sceAudioChReserve(-1,PSP_NUM_AUDIO_SAMPLES,0))<0) 
       failed=1;
 	}
 	if (failed) {
