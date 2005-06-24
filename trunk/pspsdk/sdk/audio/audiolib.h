@@ -5,27 +5,28 @@
 extern "C" {
 #endif
 
-#define AUDIO_CHANNELS 4
-#define AUDIO_SAMPLES 1024
-#define MAXVOLUME 0x8000
+#define PSP_NUM_AUDIO_CHANNELS 4
+#define PSP_AUDIO_SAMPLE_SIZE 1024
+#define PSP_VOLUME_MAX 0x8000
 
 typedef struct {
   int threadhandle;
   int handle;
   int volumeleft;
   int volumeright;
-  void (*callback)(void *buf, unsigned long reqn);
-} audio_channelinfo;
+  void (*callback)(void *buf, unsigned int reqn);
+} psp_audio_channelinfo;
 
-typedef int (*AudioThreadfunc_t)(int args, void *argp);
+typedef int (* pspAudioThreadfunc_t)(int args, void *argp);
 
-void AudioSetVolume(int channel, int left, int right);
-void AudioChannelThreadCallback(int channel, void *buf, unsigned long reqn);
-void AudioSetChannelCallback(int channel, void *callback);
-int AudioOutBlocking(unsigned long channel,unsigned long vol1,unsigned long vol2,void *buf);
-int AudioInit();
-void AudioEndPre();
-void AudioEnd();
+int  pspAudioInit();
+void pspAudioEndPre();
+void pspAudioEnd();
+
+void pspAudioSetVolume(int channel, int left, int right);
+void pspAudioChannelThreadCallback(int channel, void *buf, unsigned int reqn);
+void pspAudioSetChannelCallback(int channel, void *callback);
+int  pspAudioOutBlocking(unsigned int channel, unsigned int vol1, unsigned int vol2, void *buf);
 
 #ifdef __cplusplus
 }
