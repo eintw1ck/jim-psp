@@ -6,5 +6,6 @@ SUBDIRS = sdk tools
 noinst_SCRIPTS = bootstrap
 
 EXTRA_DIST =		\
+	$(ACLOCAL_FILES) \
 	LICENSE		\
 	VERSION
