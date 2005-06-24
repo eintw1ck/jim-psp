@@ -18,3 +18,6 @@ startup_DATA = crt0.o
 all: crt0.o
 
 CLEANFILES = crt0.o
+
+## How else do I add a dependency for this?
+EXTRA_DIST = crt0.S
