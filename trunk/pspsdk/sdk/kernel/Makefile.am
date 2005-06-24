@@ -10,6 +10,8 @@ INCLUDES = -I$(top_srcdir)/sdk/base
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base
 
+EXTRA_DIST = common.s
+
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
