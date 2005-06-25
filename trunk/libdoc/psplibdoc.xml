@@ -40,7 +40,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEBB91566</NID>
-						<NAME>sceAta_driver_EBB91566</NAME>
+						<NAME>sceAtaSetupAtaBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6C58F096</NID>
@@ -64,15 +64,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6E639701</NID>
-						<NAME>sceAta_driver_6E639701</NAME>
+						<NAME>sceAtaScanDevice</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB863FD83</NID>
-						<NAME>sceAta_driver_B863FD83</NAME>
+						<NAME>sceAtaCheckDeviceReady</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6BED47E</NID>
-						<NAME>sceAta_driver_B6BED47E</NAME>
+						<NAME>sceAtaAccessDataPort</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6DE1C65F</NID>
@@ -84,19 +84,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1DF6C4D2</NID>
-						<NAME>sceAta_driver_1DF6C4D2</NAME>
+						<NAME>sceAtaExecCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAB66789B</NID>
-						<NAME>sceAta_driver_AB66789B</NAME>
+						<NAME>sceAtaExecCmdIE</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC74F04B7</NID>
-						<NAME>sceAta_driver_C74F04B7</NAME>
+						<NAME>sceAtaExecPacketCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBDD30DEE</NID>
-						<NAME>sceAta_driver_BDD30DEE</NAME>
+						<NAME>sceAtaExecPacketCmdIE</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x010F750B</NID>
@@ -160,7 +160,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFCF939D9</NID>
-						<NAME>sceAta_driver_FCF939D9</NAME>
+						<NAME>sceAtaGetAtaCallBack</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x298DDC3D</NID>
@@ -244,7 +244,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA62258FD</NID>
-						<NAME>sceAta_driver_A62258FD</NAME>
+						<NAME>sceAtaBufferSelectSemaphore</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC10F87AB</NID>
@@ -296,7 +296,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7F5B2CA</NID>
-						<NAME>sceAta_driver_B7F5B2CA</NAME>
+						<NAME>sceAtaSetIntrFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x638EEA14</NID>
@@ -324,39 +324,39 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x210567F7</NID>
-						<NAME>sceAudio_driver_210567F7</NAME>
+						<NAME>sceAudioEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA2BEAA6C</NID>
-						<NAME>sceAudio_driver_A2BEAA6C</NAME>
+						<NAME>sceAudioInputDeAttach</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB61595C0</NID>
-						<NAME>sceAudio_driver_B61595C0</NAME>
+						<NAME>sceAudioLoopbackTest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x927AC32B</NID>
-						<NAME>sceAudio_driver_927AC32B</NAME>
+						<NAME>sceAudioSetVolumeOffset</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8C1009B2</NID>
-						<NAME>sceAudio_driver_8C1009B2</NAME>
+						<NAME>sceAudioOutput</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x136CAF51</NID>
-						<NAME>sceAudio_driver_136CAF51</NAME>
+						<NAME>sceAudioOutputBlocking</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE2D56B2D</NID>
-						<NAME>sceAudio_driver_E2D56B2D</NAME>
+						<NAME>sceAudioOutputPanned</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x13F592BC</NID>
-						<NAME>sceAudio_driver_13F592BC</NAME>
+						<NAME>sceAudioOutputPannedBlocking</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5EC81C55</NID>
-						<NAME>sceAudio_driver_5EC81C55</NAME>
+						<NAME>sceAudioChReserve</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x41EFADE7</NID>
@@ -364,15 +364,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6FC46853</NID>
-						<NAME>sceAudio_driver_6FC46853</NAME>
+						<NAME>sceAudioChRelease</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE9D97901</NID>
-						<NAME>sceAudio_driver_E9D97901</NAME>
+						<NAME>sceAudioGetChannelRestLen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCB2E439E</NID>
-						<NAME>sceAudio_driver_CB2E439E</NAME>
+						<NAME>sceAudioSetChannelDataLen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x95FD0C2D</NID>
@@ -396,7 +396,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x086E5895</NID>
-						<NAME>sceAudio_driver_086E5895</NAME>
+						<NAME>sceAudioInputBlocking</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D4BEC68</NID>
@@ -404,11 +404,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA708C6A6</NID>
-						<NAME>sceAudio_driver_A708C6A6</NAME>
+						<NAME>sceAudioGetInputLength</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87B2E651</NID>
-						<NAME>sceAudio_driver_87B2E651</NAME>
+						<NAME>sceAudioWaitInputEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7DE61688</NID>
@@ -422,7 +422,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8C1009B2</NID>
-						<NAME>sceAudio_8C1009B2</NAME>
+						<NAME>sceAudioOutput</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x136CAF51</NID>
@@ -478,7 +478,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x086E5895</NID>
-						<NAME>sceAudio_086E5895</NAME>
+						<NAME>sceAudioInputBlocking</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D4BEC68</NID>
@@ -486,11 +486,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA708C6A6</NID>
-						<NAME>sceAudio_A708C6A6</NAME>
+						<NAME>sceAudioGetInputLength</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87B2E651</NID>
-						<NAME>sceAudio_87B2E651</NAME>
+						<NAME>sceAudioWaitInputEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7DE61688</NID>
@@ -568,11 +568,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x06CD0A03</NID>
-						<NAME>sceBLK_driver_06CD0A03</NAME>
+						<NAME>sceBLKTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2FD88F7C</NID>
-						<NAME>sceBLK_driver_2FD88F7C</NAME>
+						<NAME>sceBLKStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x39150835</NID>
@@ -580,15 +580,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x550511CE</NID>
-						<NAME>sceBLK_driver_550511CE</NAME>
+						<NAME>sceBLKRegister</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x43AEEFB6</NID>
-						<NAME>sceBLK_driver_43AEEFB6</NAME>
+						<NAME>sceBLKUnRegister</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5E5285A5</NID>
-						<NAME>sceBLK_driver_5E5285A5</NAME>
+						<NAME>sceBLKGetDeviceData</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA86B6778</NID>
@@ -596,7 +596,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x46C91FF8</NID>
-						<NAME>sceBLK_driver_46C91FF8</NAME>
+						<NAME>sceBLKGetUnitNum</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDC4A18BC</NID>
@@ -644,7 +644,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB9716D48</NID>
-						<NAME>sceClockgen_driver_B9716D48</NAME>
+						<NAME>sceClockgenGetRegValue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4EB657D5</NID>
@@ -684,35 +684,35 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBD8E0977</NID>
-						<NAME>sceCodec_driver_BD8E0977</NAME>
+						<NAME>sceCodecInitEntry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x02133959</NID>
-						<NAME>sceCodec_driver_02133959</NAME>
+						<NAME>sceCodecStopEntry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x856E7487</NID>
-						<NAME>sceCodec_driver_856E7487</NAME>
+						<NAME>sceCodecOutputEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x359C2B9F</NID>
-						<NAME>sceCodec_driver_359C2B9F</NAME>
+						<NAME>sceCodecOutputDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC513C747</NID>
-						<NAME>sceCodec_driver_C513C747</NAME>
+						<NAME>sceCodecInputEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x31B2E41E</NID>
-						<NAME>sceCodec_driver_31B2E41E</NAME>
+						<NAME>sceCodecInputDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x261C6EE8</NID>
-						<NAME>sceCodec_driver_261C6EE8</NAME>
+						<NAME>sceCodecSetOutputVolume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D945509</NID>
-						<NAME>sceCodec_driver_6D945509</NAME>
+						<NAME>sceCodecNotifyAvcKick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x40D5C897</NID>
@@ -732,7 +732,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEEB91526</NID>
-						<NAME>sceCodec_driver_EEB91526</NAME>
+						<NAME>sceCodecSetVolumeOffset</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -1064,7 +1064,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x69B53541</NID>
-						<NAME>sceDisplay_driver_69B53541</NAME>
+						<NAME>sceDisplayGetVblankRest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x36CDFADE</NID>
@@ -1112,7 +1112,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2E3BC333</NID>
-						<NAME>DmacManForKernel_2E3BC333</NAME>
+						<NAME>sceKernelDmaChReserve</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7B9634E1</NID>
@@ -1176,7 +1176,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD3F62265</NID>
-						<NAME>DmacManForKernel_D3F62265</NAME>
+						<NAME>sceKernelDmaOnDebugMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA893DA2C</NID>
@@ -1246,23 +1246,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFE3F3228</NID>
-						<NAME>sceDmacplus_driver_FE3F3228</NAME>
+						<NAME>sceDmacplusLcdcInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCDB039A7</NID>
-						<NAME>sceDmacplus_driver_CDB039A7</NAME>
+						<NAME>sceDmacplusLcdcEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC3236D69</NID>
-						<NAME>sceDmacplus_driver_C3236D69</NAME>
+						<NAME>sceDmacplusLcdcQuerySuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8336549</NID>
-						<NAME>sceDmacplus_driver_C8336549</NAME>
+						<NAME>sceDmacplusLcdcSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42BEB349</NID>
-						<NAME>sceDmacplus_driver_42BEB349</NAME>
+						<NAME>sceDmacplusLcdcResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x29B50A82</NID>
@@ -1274,39 +1274,39 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8AE579CD</NID>
-						<NAME>sceDmacplus_driver_8AE579CD</NAME>
+						<NAME>sceDmacplusLcdcSetFormat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x241601AE</NID>
-						<NAME>sceDmacplus_driver_241601AE</NAME>
+						<NAME>sceDmacplusLcdcGetFormat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF8C7C180</NID>
-						<NAME>sceDmacplus_driver_F8C7C180</NAME>
+						<NAME>sceDmacplusLcdcEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x576522BC</NID>
-						<NAME>sceDmacplus_driver_576522BC</NAME>
+						<NAME>sceDmacplusLcdcDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBEC10779</NID>
-						<NAME>sceDmacplus_driver_BEC10779</NAME>
+						<NAME>sceDmacplusAvcInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7AAE5443</NID>
-						<NAME>sceDmacplus_driver_7AAE5443</NAME>
+						<NAME>sceDmacplusAvcEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1E7483D0</NID>
-						<NAME>sceDmacplus_driver_1E7483D0</NAME>
+						<NAME>sceDmacplusAvcQuerySuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x168836CF</NID>
-						<NAME>sceDmacplus_driver_168836CF</NAME>
+						<NAME>sceDmacplusAvcSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5E32C8AF</NID>
-						<NAME>sceDmacplus_driver_5E32C8AF</NAME>
+						<NAME>sceDmacplusAvcResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2EFA681</NID>
@@ -1322,7 +1322,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A98EE05</NID>
-						<NAME>sceDmacplus_driver_3A98EE05</NAME>
+						<NAME>sceDmacplusAvcSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFD8B15BC</NID>
@@ -1482,7 +1482,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x655A9AB0</NID>
-						<NAME>sceDdr_driver_655A9AB0</NAME>
+						<NAME>sceDdrWriteMaxAllocate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6955346C</NID>
@@ -1706,11 +1706,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x15ADC862</NID>
-						<NAME>ExceptionManagerForKernel_15ADC862</NAME>
+						<NAME>sceKernelRegisterNmiHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB15357C9</NID>
-						<NAME>ExceptionManagerForKernel_B15357C9</NAME>
+						<NAME>sceKernelReleaseNmiHandler</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 				<VARIABLES>
@@ -1768,7 +1768,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB77905EA</NID>
-						<NAME>sceGe_driver_B77905EA</NAME>
+						<NAME>sceGeEdramSetAddrTranslation</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB415364D</NID>
@@ -1780,7 +1780,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57C8945B</NID>
-						<NAME>sceGe_driver_57C8945B</NAME>
+						<NAME>sceGeGetMtx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x438A385A</NID>
@@ -1854,7 +1854,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB77905EA</NID>
-						<NAME>sceGe_user_B77905EA</NAME>
+						<NAME>sceGeEdramSetAddrTranslation</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDC93CFEF</NID>
@@ -1862,7 +1862,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57C8945B</NID>
-						<NAME>sceGe_user_57C8945B</NAME>
+						<NAME>sceGeGetMtx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x438A385A</NID>
@@ -2034,11 +2034,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2BCEC83E</NID>
-						<NAME>sceHprm_2BCEC83E</NAME>
+						<NAME>sceHprmPeekLatch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x40D2F9F0</NID>
-						<NAME>sceHprm_40D2F9F0</NAME>
+						<NAME>sceHprmReadLatch</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -2112,11 +2112,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2BCEC83E</NID>
-						<NAME>sceHprm_driver_2BCEC83E</NAME>
+						<NAME>sceHprmPeekLatch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x40D2F9F0</NID>
-						<NAME>sceHprm_driver_40D2F9F0</NAME>
+						<NAME>sceHprmReadLatch</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -2350,11 +2350,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x15CFE3C0</NID>
-						<NAME>sceNetIfhandle_lib_15CFE3C0</NAME>
+						<NAME>sceNetMallocInternal</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x76BAD213</NID>
-						<NAME>sceNetIfhandle_lib_76BAD213</NAME>
+						<NAME>sceNetFreeInternal</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C2886CB</NID>
@@ -2374,11 +2374,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBFF3CEA5</NID>
-						<NAME>sceNetIfhandle_lib_BFF3CEA5</NAME>
+						<NAME>sceNetMAdj</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3E8DD3F8</NID>
-						<NAME>sceNetIfhandle_lib_3E8DD3F8</NAME>
+						<NAME>sceNetMCat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1560F143</NID>
@@ -2402,7 +2402,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF8825DC4</NID>
-						<NAME>sceNetIfhandle_lib_F8825DC4</NAME>
+						<NAME>sceNetMFree</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF56FAC82</NID>
@@ -2410,7 +2410,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA493AA5F</NID>
-						<NAME>sceNetIfhandle_lib_A493AA5F</NAME>
+						<NAME>sceNetMGet</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x59F0D619</NID>
@@ -2540,11 +2540,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x15CFE3C0</NID>
-						<NAME>sceNetIfhandle_driver_15CFE3C0</NAME>
+						<NAME>sceNetMallocInternal</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x76BAD213</NID>
-						<NAME>sceNetIfhandle_driver_76BAD213</NAME>
+						<NAME>sceNetFreeInternal</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C2886CB</NID>
@@ -2564,11 +2564,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBFF3CEA5</NID>
-						<NAME>sceNetIfhandle_driver_BFF3CEA5</NAME>
+						<NAME>sceNetMAdj</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3E8DD3F8</NID>
-						<NAME>sceNetIfhandle_driver_3E8DD3F8</NAME>
+						<NAME>sceNetMCat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1560F143</NID>
@@ -2592,7 +2592,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF8825DC4</NID>
-						<NAME>sceNetIfhandle_driver_F8825DC4</NAME>
+						<NAME>sceNetMFree</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF56FAC82</NID>
@@ -2600,7 +2600,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA493AA5F</NID>
-						<NAME>sceNetIfhandle_driver_A493AA5F</NAME>
+						<NAME>sceNetMGet</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x59F0D619</NID>
@@ -2664,7 +2664,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x381BD9E7</NID>
-						<NAME>sceImpose_381BD9E7</NAME>
+						<NAME>sceImposeHomeButton</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -2678,7 +2678,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7E36CC7</NID>
-						<NAME>sceImpose_driver_C7E36CC7</NAME>
+						<NAME>sceImposeEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1AEED8FE</NID>
@@ -2714,7 +2714,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x381BD9E7</NID>
-						<NAME>sceImpose_driver_381BD9E7</NAME>
+						<NAME>sceImposeHomeButton</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -2746,7 +2746,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27932388</NID>
-						<NAME>InitForKernel_27932388</NAME>
+						<NAME>sceKernelBootFrom</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA6E71B93</NID>
@@ -2818,7 +2818,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB5A15B30</NID>
-						<NAME>InterruptManagerForKernel_B5A15B30</NAME>
+						<NAME>sceKernelSetIntrLevel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x43A7BBDC</NID>
@@ -2854,7 +2854,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27BC9A45</NID>
-						<NAME>InterruptManagerForKernel_27BC9A45</NAME>
+						<NAME>sceKernelWaitModuleManagerEnabled</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0E224D66</NID>
@@ -3332,7 +3332,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x19F9734D</NID>
-						<NAME>sceIsofs_driver_19F9734D</NAME>
+						<NAME>sceIsofsGetFileSystem</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -3396,7 +3396,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x551C5BC3</NID>
-						<NAME>sceLcdc_driver_551C5BC3</NAME>
+						<NAME>sceLcdcInsertDisplay_default</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFE5A8859</NID>
@@ -3604,163 +3604,163 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xAB1ABE07</NID>
-						<NAME>sceHttp_AB1ABE07</NAME>
+						<NAME>sceHttpInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1C8945E</NID>
-						<NAME>sceHttp_D1C8945E</NAME>
+						<NAME>sceHttpEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9B1F1F36</NID>
-						<NAME>sceHttp_9B1F1F36</NAME>
+						<NAME>sceHttpCreateTemplate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFCF8C055</NID>
-						<NAME>sceHttp_FCF8C055</NAME>
+						<NAME>sceHttpDeleteTemplate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8EEFD953</NID>
-						<NAME>sceHttp_8EEFD953</NAME>
+						<NAME>sceHttpCreateConnection</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCDF8ECB9</NID>
-						<NAME>sceHttp_CDF8ECB9</NAME>
+						<NAME>sceHttpCreateConnectionWithURL</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5152773B</NID>
-						<NAME>sceHttp_5152773B</NAME>
+						<NAME>sceHttpDeleteConnection</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x47347B50</NID>
-						<NAME>sceHttp_47347B50</NAME>
+						<NAME>sceHttpCreateRequest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB509B09E</NID>
-						<NAME>sceHttp_B509B09E</NAME>
+						<NAME>sceHttpCreateRequestWithURL</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA5512E01</NID>
-						<NAME>sceHttp_A5512E01</NAME>
+						<NAME>sceHttpDeleteRequest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x47940436</NID>
-						<NAME>sceHttp_47940436</NAME>
+						<NAME>sceHttpSetResolveTimeOut</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8ACD1F73</NID>
-						<NAME>sceHttp_8ACD1F73</NAME>
+						<NAME>sceHttpSetConnectTimeOut</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9988172D</NID>
-						<NAME>sceHttp_9988172D</NAME>
+						<NAME>sceHttpSetSendTimeOut</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1F0FC3E3</NID>
-						<NAME>sceHttp_1F0FC3E3</NAME>
+						<NAME>sceHttpSetRecvTimeOut</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x78A0D3EC</NID>
-						<NAME>sceHttp_78A0D3EC</NAME>
+						<NAME>sceHttpEnableKeepAlive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7EF2559</NID>
-						<NAME>sceHttp_C7EF2559</NAME>
+						<NAME>sceHttpDisableKeepAlive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0809C831</NID>
-						<NAME>sceHttp_0809C831</NAME>
+						<NAME>sceHttpEnableRedirect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1A0EBB69</NID>
-						<NAME>sceHttp_1A0EBB69</NAME>
+						<NAME>sceHttpDisableRedirect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9FC5F10D</NID>
-						<NAME>sceHttp_9FC5F10D</NAME>
+						<NAME>sceHttpEnableAuth</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAE948FEE</NID>
-						<NAME>sceHttp_AE948FEE</NAME>
+						<NAME>sceHttpDisableAuth</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0DAFA58F</NID>
-						<NAME>sceHttp_0DAFA58F</NAME>
+						<NAME>sceHttpEnableCookie</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0B12ABFB</NID>
-						<NAME>sceHttp_0B12ABFB</NAME>
+						<NAME>sceHttpDisableCookie</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA6800C34</NID>
-						<NAME>sceHttp_A6800C34</NAME>
+						<NAME>sceHttpInitCache</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x78B54C09</NID>
-						<NAME>sceHttp_78B54C09</NAME>
+						<NAME>sceHttpEndCache</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x59E6D16F</NID>
-						<NAME>sceHttp_59E6D16F</NAME>
+						<NAME>sceHttpEnableCache</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCCBD167A</NID>
-						<NAME>sceHttp_CCBD167A</NAME>
+						<NAME>sceHttpDisableCache</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBB70706F</NID>
-						<NAME>sceHttp_BB70706F</NAME>
+						<NAME>sceHttpSendRequest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC10B6BD9</NID>
-						<NAME>sceHttp_C10B6BD9</NAME>
+						<NAME>sceHttpAbortRequest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0282A3BD</NID>
-						<NAME>sceHttp_0282A3BD</NAME>
+						<NAME>sceHttpGetContentLength</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4CC7D78F</NID>
-						<NAME>sceHttp_4CC7D78F</NAME>
+						<NAME>sceHttpGetStatusCode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB266CCF</NID>
-						<NAME>sceHttp_DB266CCF</NAME>
+						<NAME>sceHttpGetAllHeader</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEDEEB999</NID>
-						<NAME>sceHttp_EDEEB999</NAME>
+						<NAME>sceHttpReadData</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF49934F6</NID>
-						<NAME>sceHttp_F49934F6</NAME>
+						<NAME>sceHttpSetMallocFunction</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2A6C3296</NID>
-						<NAME>sceHttp_2A6C3296</NAME>
+						<NAME>sceHttpSetAuthInfoCB</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x15540184</NID>
-						<NAME>sceHttp_15540184</NAME>
+						<NAME>sceHttpDeleteHeader</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3EABA285</NID>
-						<NAME>sceHttp_3EABA285</NAME>
+						<NAME>sceHttpAddExtraHeader</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF0F46C62</NID>
-						<NAME>sceHttp_F0F46C62</NAME>
+						<NAME>sceHttpSetProxy</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD70D4847</NID>
-						<NAME>sceHttp_D70D4847</NAME>
+						<NAME>sceHttpGetProxy</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD081EC8F</NID>
-						<NAME>sceHttp_D081EC8F</NAME>
+						<NAME>sceHttpGetNetworkErrno</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE4D21302</NID>
-						<NAME>sceHttp_E4D21302</NAME>
+						<NAME>sceHttpsInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68AB0F86</NID>
@@ -3772,15 +3772,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF9D8EB63</NID>
-						<NAME>sceHttp_F9D8EB63</NAME>
+						<NAME>sceHttpsEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBAC31BF1</NID>
-						<NAME>sceHttp_BAC31BF1</NAME>
+						<NAME>sceHttpsEnableOption</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB3FAF831</NID>
-						<NAME>sceHttp_B3FAF831</NAME>
+						<NAME>sceHttpsDisableOption</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -3796,11 +3796,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8077A433</NID>
-						<NAME>sceParseHttp_8077A433</NAME>
+						<NAME>sceParseHttpStatusLine</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAD7BFDEF</NID>
-						<NAME>sceParseHttp_AD7BFDEF</NAME>
+						<NAME>sceParseHttpResponseHeader</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -3816,19 +3816,19 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x49E950EC</NID>
-						<NAME>sceParseUri_49E950EC</NAME>
+						<NAME>sceUriEscape</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x062BB07E</NID>
-						<NAME>sceParseUri_062BB07E</NAME>
+						<NAME>sceUriUnescape</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x568518C9</NID>
-						<NAME>sceParseUri_568518C9</NAME>
+						<NAME>sceUriParse</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7EE318AF</NID>
-						<NAME>sceParseUri_7EE318AF</NAME>
+						<NAME>sceUriBuild</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -3960,7 +3960,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x616FCCCD</NID>
-						<NAME>LoadCoreForKernel_616FCCCD</NAME>
+						<NAME>sceKernelSetBootCallbackLevel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF32A2940</NID>
@@ -4106,7 +4106,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBB28E9B7</NID>
-						<NAME>LoadExecForKernel_BB28E9B7</NAME>
+						<NAME>sceKernelPrepareRegionFrame</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71A1D738</NID>
@@ -4254,11 +4254,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05B2C420</NID>
-						<NAME>sceMeWrapper_driver_05B2C420</NAME>
+						<NAME>sceMePowerControlAvcPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x579ACEA9</NID>
-						<NAME>sceMeWrapper_driver_579ACEA9</NAME>
+						<NAME>sceMePowerSelectAvcClock</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -4376,11 +4376,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05B2C420</NID>
-						<NAME>sceMePower_driver_05B2C420</NAME>
+						<NAME>sceMePowerControlAvcPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x579ACEA9</NID>
-						<NAME>sceMePower_driver_579ACEA9</NAME>
+						<NAME>sceMePowerSelectAvcClock</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -4524,11 +4524,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9CADBF19</NID>
-						<NAME>sceUmd_9CADBF19</NAME>
+						<NAME>sceUmdSetActivateData</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7F38693E</NID>
-						<NAME>sceUmd_7F38693E</NAME>
+						<NAME>sceUmdSetDeactivateData</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x075F1E0B</NID>
@@ -4536,7 +4536,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEB56097E</NID>
-						<NAME>sceUmd_EB56097E</NAME>
+						<NAME>sceUmdTableCodecBind</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x46EBB729</NID>
@@ -4544,15 +4544,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x230666E3</NID>
-						<NAME>sceUmd_230666E3</NAME>
+						<NAME>sceUmdSetDriveStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAE53DC2D</NID>
-						<NAME>sceUmd_AE53DC2D</NAME>
+						<NAME>sceUmdClearDriveStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD45D1FE6</NID>
-						<NAME>sceUmd_D45D1FE6</NAME>
+						<NAME>sceUmdGetDriveStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3D0DECD5</NID>
@@ -4568,7 +4568,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x003E3396</NID>
-						<NAME>sceUmd_003E3396</NAME>
+						<NAME>sceUmdGetUMDPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0F7E578A</NID>
@@ -4576,11 +4576,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9DCB2DA6</NID>
-						<NAME>sceUmd_9DCB2DA6</NAME>
+						<NAME>sceUmdSetResumeStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFD3878D6</NID>
-						<NAME>sceUmd_FD3878D6</NAME>
+						<NAME>sceUmdSetSuspendStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3CE40626</NID>
@@ -4724,7 +4724,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8BDB1A3E</NID>
-						<NAME>memlmd_8BDB1A3E</NAME>
+						<NAME>sceUtilsGetLoadModuleABLength</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x185F0A2A</NID>
@@ -4836,7 +4836,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE5659590</NID>
-						<NAME>sceResmap_driver_E5659590</NAME>
+						<NAME>sceResmapPrepare</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4434E59F</NID>
@@ -4850,7 +4850,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB2B8C3F9</NID>
-						<NAME>sceDbman_driver_B2B8C3F9</NAME>
+						<NAME>sceDbmanSelect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x34B53D46</NID>
@@ -5360,7 +5360,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x21FF80E4</NID>
-						<NAME>sceMpeg_21FF80E4</NAME>
+						<NAME>sceMpegQueryStreamOffset</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x611E9E11</NID>
@@ -5388,11 +5388,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42560F23</NID>
-						<NAME>sceMpeg_42560F23</NAME>
+						<NAME>sceMpegRegistStream</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x591A4AA2</NID>
-						<NAME>sceMpeg_591A4AA2</NAME>
+						<NAME>sceMpegUnRegistStream</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA780CF7E</NID>
@@ -5404,15 +5404,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF8DCB679</NID>
-						<NAME>sceMpeg_F8DCB679</NAME>
+						<NAME>sceMpegQueryAtracEsSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC02CF6B5</NID>
-						<NAME>sceMpeg_C02CF6B5</NAME>
+						<NAME>sceMpegQueryPcmEsSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x167AFD9E</NID>
-						<NAME>sceMpeg_167AFD9E</NAME>
+						<NAME>sceMpegInitAu</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x234586AE</NID>
@@ -5420,19 +5420,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9DCFB7EA</NID>
-						<NAME>sceMpeg_9DCFB7EA</NAME>
+						<NAME>sceMpegChangeGetAuMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFE246728</NID>
-						<NAME>sceMpeg_FE246728</NAME>
+						<NAME>sceMpegGetAvcAu</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8C1E027D</NID>
-						<NAME>sceMpeg_8C1E027D</NAME>
+						<NAME>sceMpegGetPcmAu</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE1CE83A7</NID>
-						<NAME>sceMpeg_E1CE83A7</NAME>
+						<NAME>sceMpegGetAtracAu</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x500F0429</NID>
@@ -5448,7 +5448,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0F6C18D7</NID>
-						<NAME>sceMpeg_0F6C18D7</NAME>
+						<NAME>sceMpegAvcDecodeDetail</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA11C7026</NID>
@@ -5464,23 +5464,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD7A29F46</NID>
-						<NAME>sceMpeg_D7A29F46</NAME>
+						<NAME>sceMpegRingbufferQueryMemSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x37295ED8</NID>
-						<NAME>sceMpeg_37295ED8</NAME>
+						<NAME>sceMpegRingbufferConstruct</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x13407F13</NID>
-						<NAME>sceMpeg_13407F13</NAME>
+						<NAME>sceMpegRingbufferDestruct</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB240A59E</NID>
-						<NAME>sceMpeg_B240A59E</NAME>
+						<NAME>sceMpegRingbufferPut</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB5F6DC87</NID>
-						<NAME>sceMpeg_B5F6DC87</NAME>
+						<NAME>sceMpegRingbufferAvailableSize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x11CAB459</NID>
@@ -5702,11 +5702,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x4E923738</NID>
-						<NAME>sceMScm_driver_4E923738</NAME>
+						<NAME>sceMScmStartModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68C14F25</NID>
-						<NAME>sceMScm_driver_68C14F25</NAME>
+						<NAME>sceMScmStopModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5BAAB238</NID>
@@ -5726,15 +5726,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x12BD8FEC</NID>
-						<NAME>sceMScm_driver_12BD8FEC</NAME>
+						<NAME>sceMScmRegisterCLD</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x08A1EC6B</NID>
-						<NAME>sceMScm_driver_08A1EC6B</NAME>
+						<NAME>sceMScmUnRegisterCLD</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4451D813</NID>
-						<NAME>sceMScm_driver_4451D813</NAME>
+						<NAME>sceMScmDetachCLD</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0D8D6A54</NID>
@@ -5750,7 +5750,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42A40895</NID>
-						<NAME>sceMScm_driver_42A40895</NAME>
+						<NAME>sceMScmReadMSReg</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0128147B</NID>
@@ -5810,19 +5810,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF1924A06</NID>
-						<NAME>sceMScm_driver_F1924A06</NAME>
+						<NAME>sceMScmSetSlotPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFCD92C74</NID>
-						<NAME>sceMScm_driver_FCD92C74</NAME>
+						<NAME>sceMScmGetSlotPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2AD0A649</NID>
-						<NAME>sceMScm_driver_2AD0A649</NAME>
+						<NAME>sceMScmGetSlotState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAA67D87A</NID>
-						<NAME>sceMScm_driver_AA67D87A</NAME>
+						<NAME>sceMScmResetHC</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x36921225</NID>
@@ -5898,7 +5898,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x6FC1E8AE</NID>
-						<NAME>sceMSstor_driver_6FC1E8AE</NAME>
+						<NAME>sceMSstorEntry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x714782D6</NID>
@@ -6002,7 +6002,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEDC13FE5</NID>
-						<NAME>scePower_EDC13FE5</NAME>
+						<NAME>scePowerGetIdleTimer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7F30B3B1</NID>
@@ -6102,15 +6102,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7FA406DD</NID>
-						<NAME>scePower_7FA406DD</NAME>
+						<NAME>scePowerIsRequest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2B7C7CF4</NID>
-						<NAME>scePower_2B7C7CF4</NAME>
+						<NAME>scePowerRequestStandby</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAC32C9CC</NID>
-						<NAME>scePower_AC32C9CC</NAME>
+						<NAME>scePowerRequestSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2875994B</NID>
@@ -6122,7 +6122,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0074EF9B</NID>
-						<NAME>scePower_0074EF9B</NAME>
+						<NAME>scePowerGetResumeCount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x04B7766E</NID>
@@ -6154,19 +6154,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFDB5BFE9</NID>
-						<NAME>scePower_FDB5BFE9</NAME>
+						<NAME>scePowerGetCpuClockFrequencyInt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBD681969</NID>
-						<NAME>scePower_BD681969</NAME>
+						<NAME>scePowerGetBusClockFrequencyInt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB1A52C83</NID>
-						<NAME>scePower_B1A52C83</NAME>
+						<NAME>scePowerGetCpuClockFrequencyFloat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9BADB3EB</NID>
-						<NAME>scePower_9BADB3EB</NAME>
+						<NAME>scePowerGetBusClockFrequencyFloat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x737486F2</NID>
@@ -6184,15 +6184,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAD5BB433</NID>
-						<NAME>scePower_driver_AD5BB433</NAME>
+						<NAME>scePowerEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6D2CA84B</NID>
-						<NAME>scePower_driver_6D2CA84B</NAME>
+						<NAME>scePowerWlanActivate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x23BB0A60</NID>
-						<NAME>scePower_driver_23BB0A60</NAME>
+						<NAME>scePowerWlanDeactivate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2B51FE2F</NID>
@@ -6212,11 +6212,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEDC13FE5</NID>
-						<NAME>scePower_driver_EDC13FE5</NAME>
+						<NAME>scePowerGetIdleTimer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1BA2FCAE</NID>
-						<NAME>scePower_driver_1BA2FCAE</NAME>
+						<NAME>scePowerSetIdleCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7F30B3B1</NID>
@@ -6228,7 +6228,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27F3292C</NID>
-						<NAME>scePower_driver_27F3292C</NAME>
+						<NAME>scePowerBatteryUpdateInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE8E4E204</NID>
@@ -6260,7 +6260,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB4432BC8</NID>
-						<NAME>scePower_driver_B4432BC8</NAME>
+						<NAME>scePowerGetBatteryChargingStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD3075926</NID>
@@ -6288,15 +6288,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28E12023</NID>
-						<NAME>scePower_driver_28E12023</NAME>
+						<NAME>scePowerGetBatteryTemp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x862AE1A6</NID>
-						<NAME>scePower_driver_862AE1A6</NAME>
+						<NAME>scePowerGetBatteryElec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x483CE86B</NID>
-						<NAME>scePower_driver_483CE86B</NAME>
+						<NAME>scePowerGetBatteryVolt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x23436A4A</NID>
@@ -6328,15 +6328,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7FA406DD</NID>
-						<NAME>scePower_driver_7FA406DD</NAME>
+						<NAME>scePowerIsRequest</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2B7C7CF4</NID>
-						<NAME>scePower_driver_2B7C7CF4</NAME>
+						<NAME>scePowerRequestStandby</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAC32C9CC</NID>
-						<NAME>scePower_driver_AC32C9CC</NAME>
+						<NAME>scePowerRequestSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2875994B</NID>
@@ -6348,7 +6348,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0074EF9B</NID>
-						<NAME>scePower_driver_0074EF9B</NAME>
+						<NAME>scePowerGetResumeCount</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF535D928</NID>
@@ -6372,7 +6372,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x35B7662E</NID>
-						<NAME>scePower_driver_35B7662E</NAME>
+						<NAME>scePowerGetSectionDescriptionEntry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF9B4DEA1</NID>
@@ -6396,19 +6396,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFDB5BFE9</NID>
-						<NAME>scePower_driver_FDB5BFE9</NAME>
+						<NAME>scePowerGetCpuClockFrequencyInt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBD681969</NID>
-						<NAME>scePower_driver_BD681969</NAME>
+						<NAME>scePowerGetBusClockFrequencyInt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB1A52C83</NID>
-						<NAME>scePower_driver_B1A52C83</NAME>
+						<NAME>scePowerGetCpuClockFrequencyFloat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9BADB3EB</NID>
-						<NAME>scePower_driver_9BADB3EB</NAME>
+						<NAME>scePowerGetBusClockFrequencyFloat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x737486F2</NID>
@@ -6448,7 +6448,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAD6844C6</NID>
-						<NAME>sceNet_AD6844C6</NAME>
+						<NAME>sceNetThreadAbort</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89360950</NID>
@@ -6460,11 +6460,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0BF0A3AE</NID>
-						<NAME>sceNet_0BF0A3AE</NAME>
+						<NAME>sceNetGetLocalEtherAddr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCC393E48</NID>
-						<NAME>sceNet_CC393E48</NAME>
+						<NAME>sceNetGetMallocStat</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -6586,7 +6586,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1858883D</NID>
-						<NAME>sceNet_lib_1858883D</NAME>
+						<NAME>sceNetRand</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x75D9985C</NID>
@@ -6878,95 +6878,95 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7A662D6B</NID>
-						<NAME>sceNetAdhoc_7A662D6B</NAME>
+						<NAME>sceNetAdhocPollSocket</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x73BFD52D</NID>
-						<NAME>sceNetAdhoc_73BFD52D</NAME>
+						<NAME>sceNetAdhocSetSocketAlert</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4D2CE199</NID>
-						<NAME>sceNetAdhoc_4D2CE199</NAME>
+						<NAME>sceNetAdhocGetSocketAlert</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6F92741B</NID>
-						<NAME>sceNetAdhoc_6F92741B</NAME>
+						<NAME>sceNetAdhocPdpCreate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xABED3790</NID>
-						<NAME>sceNetAdhoc_ABED3790</NAME>
+						<NAME>sceNetAdhocPdpSend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDFE53E03</NID>
-						<NAME>sceNetAdhoc_DFE53E03</NAME>
+						<NAME>sceNetAdhocPdpRecv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7F27BB5E</NID>
-						<NAME>sceNetAdhoc_7F27BB5E</NAME>
+						<NAME>sceNetAdhocPdpDelete</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC7C1FC57</NID>
-						<NAME>sceNetAdhoc_C7C1FC57</NAME>
+						<NAME>sceNetAdhocGetPdpStat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x877F6D66</NID>
-						<NAME>sceNetAdhoc_877F6D66</NAME>
+						<NAME>sceNetAdhocPtpOpen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFC6FC07B</NID>
-						<NAME>sceNetAdhoc_FC6FC07B</NAME>
+						<NAME>sceNetAdhocPtpConnect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE08BDAC1</NID>
-						<NAME>sceNetAdhoc_E08BDAC1</NAME>
+						<NAME>sceNetAdhocPtpListen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9DF81198</NID>
-						<NAME>sceNetAdhoc_9DF81198</NAME>
+						<NAME>sceNetAdhocPtpAccept</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4DA4C788</NID>
-						<NAME>sceNetAdhoc_4DA4C788</NAME>
+						<NAME>sceNetAdhocPtpSend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8BEA2B3E</NID>
-						<NAME>sceNetAdhoc_8BEA2B3E</NAME>
+						<NAME>sceNetAdhocPtpRecv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9AC2EEAC</NID>
-						<NAME>sceNetAdhoc_9AC2EEAC</NAME>
+						<NAME>sceNetAdhocPtpFlush</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x157E6225</NID>
-						<NAME>sceNetAdhoc_157E6225</NAME>
+						<NAME>sceNetAdhocPtpClose</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB9685118</NID>
-						<NAME>sceNetAdhoc_B9685118</NAME>
+						<NAME>sceNetAdhocGetPtpStat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7F75C338</NID>
-						<NAME>sceNetAdhoc_7F75C338</NAME>
+						<NAME>sceNetAdhocGameModeCreateMaster</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3278AB0C</NID>
-						<NAME>sceNetAdhoc_3278AB0C</NAME>
+						<NAME>sceNetAdhocGameModeCreateReplica</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x98C204C8</NID>
-						<NAME>sceNetAdhoc_98C204C8</NAME>
+						<NAME>sceNetAdhocGameModeUpdateMaster</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFA324B4E</NID>
-						<NAME>sceNetAdhoc_FA324B4E</NAME>
+						<NAME>sceNetAdhocGameModeUpdateReplica</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA0229362</NID>
-						<NAME>sceNetAdhoc_A0229362</NAME>
+						<NAME>sceNetAdhocGameModeDeleteMaster</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0B2228E9</NID>
-						<NAME>sceNetAdhoc_0B2228E9</NAME>
+						<NAME>sceNetAdhocGameModeDeleteReplica</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7004,11 +7004,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x86004235</NID>
-						<NAME>sceNetAdhocAuth_lib_86004235</NAME>
+						<NAME>sceNetAdhocAuthInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6074D8F1</NID>
-						<NAME>sceNetAdhocAuth_lib_6074D8F1</NAME>
+						<NAME>sceNetAdhocAuthTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89F2A732</NID>
@@ -7046,11 +7046,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x86004235</NID>
-						<NAME>sceNetAdhocAuth_driver_86004235</NAME>
+						<NAME>sceNetAdhocAuthInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6074D8F1</NID>
-						<NAME>sceNetAdhocAuth_driver_6074D8F1</NAME>
+						<NAME>sceNetAdhocAuthTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89F2A732</NID>
@@ -7094,19 +7094,19 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xA21FEF45</NID>
-						<NAME>sceNetAdhocDownload_A21FEF45</NAME>
+						<NAME>sceNetAdhocDownloadInitServer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x13DAB550</NID>
-						<NAME>sceNetAdhocDownload_13DAB550</NAME>
+						<NAME>sceNetAdhocDownloadCreateServer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2B6FB0DA</NID>
-						<NAME>sceNetAdhocDownload_2B6FB0DA</NAME>
+						<NAME>sceNetAdhocDownloadStartServer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF8FC359E</NID>
-						<NAME>sceNetAdhocDownload_F8FC359E</NAME>
+						<NAME>sceNetAdhocDownloadReplySession</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC421875C</NID>
@@ -7114,35 +7114,35 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD0189004</NID>
-						<NAME>sceNetAdhocDownload_D0189004</NAME>
+						<NAME>sceNetAdhocDownloadSend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA70FDFBE</NID>
-						<NAME>sceNetAdhocDownload_A70FDFBE</NAME>
+						<NAME>sceNetAdhocDownloadAbortSend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF76147B1</NID>
-						<NAME>sceNetAdhocDownload_F76147B1</NAME>
+						<NAME>sceNetAdhocDownloadStopServer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7A483F9E</NID>
-						<NAME>sceNetAdhocDownload_7A483F9E</NAME>
+						<NAME>sceNetAdhocDownloadDeleteServer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x117CA01A</NID>
-						<NAME>sceNetAdhocDownload_117CA01A</NAME>
+						<NAME>sceNetAdhocDownloadTermServer</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3082F4E2</NID>
-						<NAME>sceNetAdhocDownload_3082F4E2</NAME>
+						<NAME>sceNetAdhocDownloadInitClient</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57A51DD0</NID>
-						<NAME>sceNetAdhocDownload_57A51DD0</NAME>
+						<NAME>sceNetAdhocDownloadCreateClient</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x314ED31E</NID>
-						<NAME>sceNetAdhocDownload_314ED31E</NAME>
+						<NAME>sceNetAdhocDownloadStartClient</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x22C2BCC6</NID>
@@ -7150,7 +7150,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4E6029F1</NID>
-						<NAME>sceNetAdhocDownload_4E6029F1</NAME>
+						<NAME>sceNetAdhocDownloadRequestSession</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8A5500E0</NID>
@@ -7158,23 +7158,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8846D2B0</NID>
-						<NAME>sceNetAdhocDownload_8846D2B0</NAME>
+						<NAME>sceNetAdhocDownloadRecv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1AD5CC88</NID>
-						<NAME>sceNetAdhocDownload_1AD5CC88</NAME>
+						<NAME>sceNetAdhocDownloadAbortRecv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x469F6B83</NID>
-						<NAME>sceNetAdhocDownload_469F6B83</NAME>
+						<NAME>sceNetAdhocDownloadStopClient</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x378D4311</NID>
-						<NAME>sceNetAdhocDownload_378D4311</NAME>
+						<NAME>sceNetAdhocDownloadDeleteClient</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBF1433F0</NID>
-						<NAME>sceNetAdhocDownload_BF1433F0</NAME>
+						<NAME>sceNetAdhocDownloadTermClient</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7190,51 +7190,51 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x2A2A1E07</NID>
-						<NAME>sceNetAdhocMatching_2A2A1E07</NAME>
+						<NAME>sceNetAdhocMatchingInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7945ECDA</NID>
-						<NAME>sceNetAdhocMatching_7945ECDA</NAME>
+						<NAME>sceNetAdhocMatchingTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCA5EDA6F</NID>
-						<NAME>sceNetAdhocMatching_CA5EDA6F</NAME>
+						<NAME>sceNetAdhocMatchingCreate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x93EF3843</NID>
-						<NAME>sceNetAdhocMatching_93EF3843</NAME>
+						<NAME>sceNetAdhocMatchingStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x32B156B3</NID>
-						<NAME>sceNetAdhocMatching_32B156B3</NAME>
+						<NAME>sceNetAdhocMatchingStop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF16EAF4F</NID>
-						<NAME>sceNetAdhocMatching_F16EAF4F</NAME>
+						<NAME>sceNetAdhocMatchingDelete</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5E3D4B79</NID>
-						<NAME>sceNetAdhocMatching_5E3D4B79</NAME>
+						<NAME>sceNetAdhocMatchingSelectTarget</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEA3C6108</NID>
-						<NAME>sceNetAdhocMatching_EA3C6108</NAME>
+						<NAME>sceNetAdhocMatchingCancelTarget</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB58E61B7</NID>
-						<NAME>sceNetAdhocMatching_B58E61B7</NAME>
+						<NAME>sceNetAdhocMatchingSetHelloOpt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB5D96C2A</NID>
-						<NAME>sceNetAdhocMatching_B5D96C2A</NAME>
+						<NAME>sceNetAdhocMatchingGetHelloOpt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC58BCD9E</NID>
-						<NAME>sceNetAdhocMatching_C58BCD9E</NAME>
+						<NAME>sceNetAdhocMatchingGetMembers</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x40F8F435</NID>
-						<NAME>sceNetAdhocMatching_40F8F435</NAME>
+						<NAME>sceNetAdhocMatchingGetPoolMaxAlloc</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7262,15 +7262,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEC0635C1</NID>
-						<NAME>sceNetAdhocctl_EC0635C1</NAME>
+						<NAME>sceNetAdhocctlCreate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5E7F79C9</NID>
-						<NAME>sceNetAdhocctl_5E7F79C9</NAME>
+						<NAME>sceNetAdhocctlJoin</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x08FFF7A0</NID>
-						<NAME>sceNetAdhocctl_08FFF7A0</NAME>
+						<NAME>sceNetAdhocctlScan</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x34401D65</NID>
@@ -7286,47 +7286,47 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x75ECD386</NID>
-						<NAME>sceNetAdhocctl_75ECD386</NAME>
+						<NAME>sceNetAdhocctlGetState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x362CBE8F</NID>
-						<NAME>sceNetAdhocctl_362CBE8F</NAME>
+						<NAME>sceNetAdhocctlGetAdhocId</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE162CB14</NID>
-						<NAME>sceNetAdhocctl_E162CB14</NAME>
+						<NAME>sceNetAdhocctlGetPeerList</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x99560ABE</NID>
-						<NAME>sceNetAdhocctl_99560ABE</NAME>
+						<NAME>sceNetAdhocctlGetAddrByName</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8916C003</NID>
-						<NAME>sceNetAdhocctl_8916C003</NAME>
+						<NAME>sceNetAdhocctlGetNameByAddr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDED9D28E</NID>
-						<NAME>sceNetAdhocctl_DED9D28E</NAME>
+						<NAME>sceNetAdhocctlGetParameter</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x81AEE1BE</NID>
-						<NAME>sceNetAdhocctl_81AEE1BE</NAME>
+						<NAME>sceNetAdhocctlGetScanInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA5C055CE</NID>
-						<NAME>sceNetAdhocctl_A5C055CE</NAME>
+						<NAME>sceNetAdhocctlCreateEnterGameMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1FF89745</NID>
-						<NAME>sceNetAdhocctl_1FF89745</NAME>
+						<NAME>sceNetAdhocctlJoinEnterGameMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCF8E084D</NID>
-						<NAME>sceNetAdhocctl_CF8E084D</NAME>
+						<NAME>sceNetAdhocctlExitGameMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5A014CE0</NID>
-						<NAME>sceNetAdhocctl_5A014CE0</NAME>
+						<NAME>sceNetAdhocctlGetGameModeInfo</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7340,7 +7340,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1593C05D</NID>
-						<NAME>sceNetAdhocctl_lib_1593C05D</NAME>
+						<NAME>sceNetThreadExitDeleteEventFlag</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF8BABD85</NID>
@@ -7348,7 +7348,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1C679240</NID>
-						<NAME>sceNetAdhocctl_lib_1C679240</NAME>
+						<NAME>LinkDiscoverSkip</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7364,19 +7364,19 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBB73FF67</NID>
-						<NAME>sceNetApDialogDummy_BB73FF67</NAME>
+						<NAME>sceNetApDialogDummyInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF213BE65</NID>
-						<NAME>sceNetApDialogDummy_F213BE65</NAME>
+						<NAME>sceNetApDialogDummyTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3811281E</NID>
-						<NAME>sceNetApDialogDummy_3811281E</NAME>
+						<NAME>sceNetApDialogDummyConnect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCA9BE5BF</NID>
-						<NAME>sceNetApDialogDummy_CA9BE5BF</NAME>
+						<NAME>sceNetApDialogDummyGetState</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7392,35 +7392,35 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xE2F91F9B</NID>
-						<NAME>sceNetApctl_E2F91F9B</NAME>
+						<NAME>sceNetApctlInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB3EDD0EC</NID>
-						<NAME>sceNetApctl_B3EDD0EC</NAME>
+						<NAME>sceNetApctlTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2BEFDF23</NID>
-						<NAME>sceNetApctl_2BEFDF23</NAME>
+						<NAME>sceNetApctlGetInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8ABADD51</NID>
-						<NAME>sceNetApctl_8ABADD51</NAME>
+						<NAME>sceNetApctlAddHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5963991B</NID>
-						<NAME>sceNetApctl_5963991B</NAME>
+						<NAME>sceNetApctlDelHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCFB957C6</NID>
-						<NAME>sceNetApctl_CFB957C6</NAME>
+						<NAME>sceNetApctlConnect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x24FE91A1</NID>
-						<NAME>sceNetApctl_24FE91A1</NAME>
+						<NAME>sceNetApctlDisconnect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5DEAC81B</NID>
-						<NAME>sceNetApctl_5DEAC81B</NAME>
+						<NAME>sceNetApctlGetState</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7430,7 +7430,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xB3CF6849</NID>
-						<NAME>sceNetApctl_lib_B3CF6849</NAME>
+						<NAME>sceNetApctlScan</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0C7FFA5C</NID>
@@ -7438,7 +7438,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x96BEB231</NID>
-						<NAME>sceNetApctl_lib_96BEB231</NAME>
+						<NAME>sceKernelResizeSendpeek</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7CFAB990</NID>
@@ -7480,51 +7480,51 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x17943399</NID>
-						<NAME>sceNetInet_17943399</NAME>
+						<NAME>sceNetInetInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA9ED66B9</NID>
-						<NAME>sceNetInet_A9ED66B9</NAME>
+						<NAME>sceNetInetTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB094E1B</NID>
-						<NAME>sceNetInet_DB094E1B</NAME>
+						<NAME>sceNetInetAccept</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1A33F9AE</NID>
-						<NAME>sceNetInet_1A33F9AE</NAME>
+						<NAME>sceNetInetBind</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8D7284EA</NID>
-						<NAME>sceNetInet_8D7284EA</NAME>
+						<NAME>sceNetInetClose</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x805502DD</NID>
-						<NAME>sceNetInet_805502DD</NAME>
+						<NAME>sceNetInetCloseWithRST</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x410B34AA</NID>
-						<NAME>sceNetInet_410B34AA</NAME>
+						<NAME>sceNetInetConnect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE247B6D6</NID>
-						<NAME>sceNetInet_E247B6D6</NAME>
+						<NAME>sceNetInetGetpeername</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x162E6FD5</NID>
-						<NAME>sceNetInet_162E6FD5</NAME>
+						<NAME>sceNetInetGetsockname</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4A114C7C</NID>
-						<NAME>sceNetInet_4A114C7C</NAME>
+						<NAME>sceNetInetGetsockopt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD10A1A7A</NID>
-						<NAME>sceNetInet_D10A1A7A</NAME>
+						<NAME>sceNetInetListen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFAABB1DD</NID>
-						<NAME>sceNetInet_FAABB1DD</NAME>
+						<NAME>sceNetInetPoll</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCDA85C99</NID>
@@ -7532,47 +7532,47 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC91142E4</NID>
-						<NAME>sceNetInet_C91142E4</NAME>
+						<NAME>sceNetInetRecvfrom</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEECE61D2</NID>
-						<NAME>sceNetInet_EECE61D2</NAME>
+						<NAME>sceNetInetRecvmsg</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5BE8D595</NID>
-						<NAME>sceNetInet_5BE8D595</NAME>
+						<NAME>sceNetInetSelect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7AA671BC</NID>
-						<NAME>sceNetInet_7AA671BC</NAME>
+						<NAME>sceNetInetSend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05038FC7</NID>
-						<NAME>sceNetInet_05038FC7</NAME>
+						<NAME>sceNetInetSendto</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x774E36F4</NID>
-						<NAME>sceNetInet_774E36F4</NAME>
+						<NAME>sceNetInetSendmsg</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2FE71FE7</NID>
-						<NAME>sceNetInet_2FE71FE7</NAME>
+						<NAME>sceNetInetSetsockopt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4CFE4E56</NID>
-						<NAME>sceNetInet_4CFE4E56</NAME>
+						<NAME>sceNetInetShutdown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8B7B220F</NID>
-						<NAME>sceNetInet_8B7B220F</NAME>
+						<NAME>sceNetInetSocket</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x80A21ABD</NID>
-						<NAME>sceNetInet_80A21ABD</NAME>
+						<NAME>sceNetInetSocketAbort</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFBABE411</NID>
-						<NAME>sceNetInet_FBABE411</NAME>
+						<NAME>sceNetInetGetErrno</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB3888AD4</NID>
@@ -7584,19 +7584,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB75D5B0A</NID>
-						<NAME>sceNetInet_B75D5B0A</NAME>
+						<NAME>sceNetInetInetAddr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1BDF5D13</NID>
-						<NAME>sceNetInet_1BDF5D13</NAME>
+						<NAME>sceNetInetInetAton</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD0792666</NID>
-						<NAME>sceNetInet_D0792666</NAME>
+						<NAME>sceNetInetInetNtop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE30B8C19</NID>
-						<NAME>sceNetInet_E30B8C19</NAME>
+						<NAME>sceNetInetInetPton</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7706,31 +7706,31 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xF3370E61</NID>
-						<NAME>sceNetResolver_F3370E61</NAME>
+						<NAME>sceNetResolverInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6138194A</NID>
-						<NAME>sceNetResolver_6138194A</NAME>
+						<NAME>sceNetResolverTerm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x244172AF</NID>
-						<NAME>sceNetResolver_244172AF</NAME>
+						<NAME>sceNetResolverCreate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x94523E09</NID>
-						<NAME>sceNetResolver_94523E09</NAME>
+						<NAME>sceNetResolverDelete</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x224C5F44</NID>
-						<NAME>sceNetResolver_224C5F44</NAME>
+						<NAME>sceNetResolverStartNtoA</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x629E2FB7</NID>
-						<NAME>sceNetResolver_629E2FB7</NAME>
+						<NAME>sceNetResolverStartAtoN</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x808F6063</NID>
-						<NAME>sceNetResolver_808F6063</NAME>
+						<NAME>sceNetResolverStop</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7746,27 +7746,27 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x68BA9CC1</NID>
-						<NAME>scePwm_driver_68BA9CC1</NAME>
+						<NAME>scePwmInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB3169427</NID>
-						<NAME>scePwm_driver_B3169427</NAME>
+						<NAME>scePwmEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x526F94FC</NID>
-						<NAME>scePwm_driver_526F94FC</NAME>
+						<NAME>scePwmSuspend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE449F656</NID>
-						<NAME>scePwm_driver_E449F656</NAME>
+						<NAME>scePwmResume</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x850ED3D3</NID>
-						<NAME>scePwm_driver_850ED3D3</NAME>
+						<NAME>scePwmStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1FC555BE</NID>
-						<NAME>scePwm_driver_1FC555BE</NAME>
+						<NAME>scePwmStop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAB6D2E36</NID>
@@ -7778,7 +7778,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x93F30DAC</NID>
-						<NAME>scePwm_driver_93F30DAC</NAME>
+						<NAME>scePwmIsLoading</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -7810,7 +7810,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x9B25EDF1</NID>
-						<NAME>sceReg_9B25EDF1</NAME>
+						<NAME>sceRegExit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x92E41280</NID>
@@ -7842,27 +7842,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57641A81</NID>
-						<NAME>sceReg_57641A81</NAME>
+						<NAME>sceRegCreateKey</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x17768E14</NID>
-						<NAME>sceReg_17768E14</NAME>
+						<NAME>sceRegSetKeyValue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD4475AA8</NID>
-						<NAME>sceReg_D4475AA8</NAME>
+						<NAME>sceRegGetKeyInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28A8E98A</NID>
-						<NAME>sceReg_28A8E98A</NAME>
+						<NAME>sceRegGetKeyValue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2C0DB9DD</NID>
-						<NAME>sceReg_2C0DB9DD</NAME>
+						<NAME>sceRegGetKeysNum</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2D211135</NID>
-						<NAME>sceReg_2D211135</NAME>
+						<NAME>sceRegGetKeys</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4CA16893</NID>
@@ -7870,11 +7870,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3615BC87</NID>
-						<NAME>sceReg_3615BC87</NAME>
+						<NAME>sceRegRemoveKey</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC5768D02</NID>
-						<NAME>sceReg_C5768D02</NAME>
+						<NAME>sceRegKickBackDiscover</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x30BE0259</NID>
@@ -7888,11 +7888,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x98279CF1</NID>
-						<NAME>sceReg_driver_98279CF1</NAME>
+						<NAME>sceRegInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9B25EDF1</NID>
-						<NAME>sceReg_driver_9B25EDF1</NAME>
+						<NAME>sceRegExit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x92E41280</NID>
@@ -7924,27 +7924,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57641A81</NID>
-						<NAME>sceReg_driver_57641A81</NAME>
+						<NAME>sceRegCreateKey</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x17768E14</NID>
-						<NAME>sceReg_driver_17768E14</NAME>
+						<NAME>sceRegSetKeyValue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD4475AA8</NID>
-						<NAME>sceReg_driver_D4475AA8</NAME>
+						<NAME>sceRegGetKeyInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28A8E98A</NID>
-						<NAME>sceReg_driver_28A8E98A</NAME>
+						<NAME>sceRegGetKeyValue</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2C0DB9DD</NID>
-						<NAME>sceReg_driver_2C0DB9DD</NAME>
+						<NAME>sceRegGetKeysNum</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2D211135</NID>
-						<NAME>sceReg_driver_2D211135</NAME>
+						<NAME>sceRegGetKeys</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4CA16893</NID>
@@ -7952,11 +7952,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3615BC87</NID>
-						<NAME>sceReg_driver_3615BC87</NAME>
+						<NAME>sceRegRemoveKey</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC5768D02</NID>
-						<NAME>sceReg_driver_C5768D02</NAME>
+						<NAME>sceRegKickBackDiscover</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x30BE0259</NID>
@@ -7992,27 +7992,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE7C27D1B</NID>
-						<NAME>sceRtc_E7C27D1B</NAME>
+						<NAME>sceRtcGetCurrentClockLocalTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x34885E0D</NID>
-						<NAME>sceRtc_34885E0D</NAME>
+						<NAME>sceRtcConvertUtcToLocalTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x779242A2</NID>
-						<NAME>sceRtc_779242A2</NAME>
+						<NAME>sceRtcConvertLocalTimeToUTC</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42307A17</NID>
-						<NAME>sceRtc_42307A17</NAME>
+						<NAME>sceRtcIsLeapYear</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05EF322C</NID>
-						<NAME>sceRtc_05EF322C</NAME>
+						<NAME>sceRtcGetDaysInMonth</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57726BC1</NID>
-						<NAME>sceRtc_57726BC1</NAME>
+						<NAME>sceRtcGetDayOfWeek</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4B1B5E82</NID>
@@ -8020,27 +8020,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A807CC8</NID>
-						<NAME>sceRtc_3A807CC8</NAME>
+						<NAME>sceRtcSetTime_t</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27C4594C</NID>
-						<NAME>sceRtc_27C4594C</NAME>
+						<NAME>sceRtcGetTime_t</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF006F264</NID>
-						<NAME>sceRtc_F006F264</NAME>
+						<NAME>sceRtcSetDosTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x36075567</NID>
-						<NAME>sceRtc_36075567</NAME>
+						<NAME>sceRtcGetDosTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7ACE4C04</NID>
-						<NAME>sceRtc_7ACE4C04</NAME>
+						<NAME>sceRtcSetWin32FileTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCF561893</NID>
-						<NAME>sceRtc_CF561893</NAME>
+						<NAME>sceRtcGetWin32FileTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7ED29E40</NID>
@@ -8052,15 +8052,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9ED0AE87</NID>
-						<NAME>sceRtc_9ED0AE87</NAME>
+						<NAME>sceRtcCompareTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x44F45E05</NID>
-						<NAME>sceRtc_44F45E05</NAME>
+						<NAME>sceRtcTickAddTicks</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26D25A5D</NID>
-						<NAME>sceRtc_26D25A5D</NAME>
+						<NAME>sceRtcTickAddMicroseconds</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF2A4AFE5</NID>
@@ -8068,51 +8068,51 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE6605BCA</NID>
-						<NAME>sceRtc_E6605BCA</NAME>
+						<NAME>sceRtcTickAddMinutes</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26D7A24A</NID>
-						<NAME>sceRtc_26D7A24A</NAME>
+						<NAME>sceRtcTickAddHours</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE51B4B7A</NID>
-						<NAME>sceRtc_E51B4B7A</NAME>
+						<NAME>sceRtcTickAddDays</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCF3A2CA8</NID>
-						<NAME>sceRtc_CF3A2CA8</NAME>
+						<NAME>sceRtcTickAddWeeks</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDBF74F1B</NID>
-						<NAME>sceRtc_DBF74F1B</NAME>
+						<NAME>sceRtcTickAddMonths</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42842C77</NID>
-						<NAME>sceRtc_42842C77</NAME>
+						<NAME>sceRtcTickAddYears</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC663B3B9</NID>
-						<NAME>sceRtc_C663B3B9</NAME>
+						<NAME>sceRtcFormatRFC2822</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7DE6711B</NID>
-						<NAME>sceRtc_7DE6711B</NAME>
+						<NAME>sceRtcFormatRFC2822LocalTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0498FB3C</NID>
-						<NAME>sceRtc_0498FB3C</NAME>
+						<NAME>sceRtcFormatRFC3339</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27F98543</NID>
-						<NAME>sceRtc_27F98543</NAME>
+						<NAME>sceRtcFormatRFC3339LocalTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDFBC5F16</NID>
-						<NAME>sceRtc_DFBC5F16</NAME>
+						<NAME>sceRtcParseDateTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28E1E988</NID>
-						<NAME>sceRtc_28E1E988</NAME>
+						<NAME>sceRtcParseRFC3339</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -8138,7 +8138,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF0B5571C</NID>
-						<NAME>sceRtc_driver_F0B5571C</NAME>
+						<NAME>sceRtcSynchronize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x759937C5</NID>
@@ -8150,7 +8150,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9763C138</NID>
-						<NAME>sceRtc_driver_9763C138</NAME>
+						<NAME>sceRtcSetCurrentTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x17C26C00</NID>
@@ -8174,35 +8174,35 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE7C27D1B</NID>
-						<NAME>sceRtc_driver_E7C27D1B</NAME>
+						<NAME>sceRtcGetCurrentClockLocalTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x34885E0D</NID>
-						<NAME>sceRtc_driver_34885E0D</NAME>
+						<NAME>sceRtcConvertUtcToLocalTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x779242A2</NID>
-						<NAME>sceRtc_driver_779242A2</NAME>
+						<NAME>sceRtcConvertLocalTimeToUTC</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7D1FBED3</NID>
-						<NAME>sceRtc_driver_7D1FBED3</NAME>
+						<NAME>sceRtcSetAlarmTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC2DDBEB5</NID>
-						<NAME>sceRtc_driver_C2DDBEB5</NAME>
+						<NAME>sceRtcGetAlarmTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42307A17</NID>
-						<NAME>sceRtc_driver_42307A17</NAME>
+						<NAME>sceRtcIsLeapYear</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05EF322C</NID>
-						<NAME>sceRtc_driver_05EF322C</NAME>
+						<NAME>sceRtcGetDaysInMonth</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57726BC1</NID>
-						<NAME>sceRtc_driver_57726BC1</NAME>
+						<NAME>sceRtcGetDayOfWeek</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4B1B5E82</NID>
@@ -8210,27 +8210,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A807CC8</NID>
-						<NAME>sceRtc_driver_3A807CC8</NAME>
+						<NAME>sceRtcSetTime_t</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27C4594C</NID>
-						<NAME>sceRtc_driver_27C4594C</NAME>
+						<NAME>sceRtcGetTime_t</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF006F264</NID>
-						<NAME>sceRtc_driver_F006F264</NAME>
+						<NAME>sceRtcSetDosTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x36075567</NID>
-						<NAME>sceRtc_driver_36075567</NAME>
+						<NAME>sceRtcGetDosTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7ACE4C04</NID>
-						<NAME>sceRtc_driver_7ACE4C04</NAME>
+						<NAME>sceRtcSetWin32FileTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCF561893</NID>
-						<NAME>sceRtc_driver_CF561893</NAME>
+						<NAME>sceRtcGetWin32FileTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7ED29E40</NID>
@@ -8242,15 +8242,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9ED0AE87</NID>
-						<NAME>sceRtc_driver_9ED0AE87</NAME>
+						<NAME>sceRtcCompareTick</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x44F45E05</NID>
-						<NAME>sceRtc_driver_44F45E05</NAME>
+						<NAME>sceRtcTickAddTicks</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26D25A5D</NID>
-						<NAME>sceRtc_driver_26D25A5D</NAME>
+						<NAME>sceRtcTickAddMicroseconds</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF2A4AFE5</NID>
@@ -8258,51 +8258,51 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE6605BCA</NID>
-						<NAME>sceRtc_driver_E6605BCA</NAME>
+						<NAME>sceRtcTickAddMinutes</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26D7A24A</NID>
-						<NAME>sceRtc_driver_26D7A24A</NAME>
+						<NAME>sceRtcTickAddHours</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE51B4B7A</NID>
-						<NAME>sceRtc_driver_E51B4B7A</NAME>
+						<NAME>sceRtcTickAddDays</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCF3A2CA8</NID>
-						<NAME>sceRtc_driver_CF3A2CA8</NAME>
+						<NAME>sceRtcTickAddWeeks</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDBF74F1B</NID>
-						<NAME>sceRtc_driver_DBF74F1B</NAME>
+						<NAME>sceRtcTickAddMonths</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42842C77</NID>
-						<NAME>sceRtc_driver_42842C77</NAME>
+						<NAME>sceRtcTickAddYears</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC663B3B9</NID>
-						<NAME>sceRtc_driver_C663B3B9</NAME>
+						<NAME>sceRtcFormatRFC2822</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7DE6711B</NID>
-						<NAME>sceRtc_driver_7DE6711B</NAME>
+						<NAME>sceRtcFormatRFC2822LocalTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0498FB3C</NID>
-						<NAME>sceRtc_driver_0498FB3C</NAME>
+						<NAME>sceRtcFormatRFC3339</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27F98543</NID>
-						<NAME>sceRtc_driver_27F98543</NAME>
+						<NAME>sceRtcFormatRFC3339LocalTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDFBC5F16</NID>
-						<NAME>sceRtc_driver_DFBC5F16</NAME>
+						<NAME>sceRtcParseDateTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28E1E988</NID>
-						<NAME>sceRtc_driver_28E1E988</NAME>
+						<NAME>sceRtcParseRFC3339</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -8682,7 +8682,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x92D16FC7</NID>
-						<NAME>sceSyscon_driver_92D16FC7</NAME>
+						<NAME>sceSysconEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x081826B4</NID>
@@ -8762,11 +8762,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x32CFD20F</NID>
-						<NAME>sceSyscon_driver_32CFD20F</NAME>
+						<NAME>sceSysconIsLowBattery</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEC0DE439</NID>
-						<NAME>sceSyscon_driver_EC0DE439</NAME>
+						<NAME>sceSysconGetPowerSwitch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEA5B9823</NID>
@@ -8782,15 +8782,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBDA16E46</NID>
-						<NAME>sceSyscon_driver_BDA16E46</NAME>
+						<NAME>sceSysconGetWlanSwitch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF6BB4649</NID>
-						<NAME>sceSyscon_driver_F6BB4649</NAME>
+						<NAME>sceSysconGetHoldSwitch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x138747DE</NID>
-						<NAME>sceSyscon_driver_138747DE</NAME>
+						<NAME>sceSysconGetUmdSwitch</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71AE1BCE</NID>
@@ -8838,7 +8838,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE6B74CB9</NID>
-						<NAME>sceSyscon_driver_E6B74CB9</NAME>
+						<NAME>sceSysconNop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7EC5A957</NID>
@@ -8918,7 +8918,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8439C57</NID>
-						<NAME>sceSyscon_driver_C8439C57</NAME>
+						<NAME>sceSysconPowerStandby</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x91E183CB</NID>
@@ -8970,7 +8970,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF0ED3255</NID>
-						<NAME>sceSyscon_driver_F0ED3255</NAME>
+						<NAME>sceSysconCtrlWlanPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3C6DB1C5</NID>
@@ -9006,7 +9006,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE448FD3F</NID>
-						<NAME>sceSyscon_driver_E448FD3F</NAME>
+						<NAME>sceSysconBatteryNop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6A53F3F8</NID>
@@ -9014,15 +9014,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x70C10E61</NID>
-						<NAME>sceSyscon_driver_70C10E61</NAME>
+						<NAME>sceSysconBatteryGetTemp</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8BDEBB1E</NID>
-						<NAME>sceSyscon_driver_8BDEBB1E</NAME>
+						<NAME>sceSysconBatteryGetVolt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x373EC933</NID>
-						<NAME>sceSyscon_driver_373EC933</NAME>
+						<NAME>sceSysconBatteryGetElec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82861DE2</NID>
@@ -9050,7 +9050,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB5105D51</NID>
-						<NAME>sceSyscon_driver_B5105D51</NAME>
+						<NAME>sceSysconBatteryGetCycle</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD5340103</NID>
@@ -9058,7 +9058,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFA4C4518</NID>
-						<NAME>sceSyscon_driver_FA4C4518</NAME>
+						<NAME>sceSysconGpioCheckwrote</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB71B98A8</NID>
@@ -9070,7 +9070,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x75D22BF8</NID>
-						<NAME>sceSyscon_driver_75D22BF8</NAME>
+						<NAME>sceSysconDecodeModeKernel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C539345</NID>
@@ -9090,7 +9090,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x36E28C5F</NID>
-						<NAME>sceSyscon_driver_36E28C5F</NAME>
+						<NAME>sceSysconBatteryAuth</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x08DA3752</NID>
@@ -9106,19 +9106,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB8919D79</NID>
-						<NAME>sceSyscon_driver_B8919D79</NAME>
+						<NAME>sceSysconMsOn</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7BE86143</NID>
-						<NAME>sceSyscon_driver_7BE86143</NAME>
+						<NAME>sceSysconMsOff</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0E8560F9</NID>
-						<NAME>sceSyscon_driver_0E8560F9</NAME>
+						<NAME>sceSysconWlanOn</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1B60C8AD</NID>
-						<NAME>sceSyscon_driver_1B60C8AD</NAME>
+						<NAME>sceSysconWlanOff</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE00BFC9E</NID>
@@ -9552,11 +9552,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB9C643C9</NID>
-						<NAME>KDebugForKernel_B9C643C9</NAME>
+						<NAME>sceKernelDebugEcho</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7D1C74F0</NID>
-						<NAME>KDebugForKernel_7D1C74F0</NAME>
+						<NAME>sceKernelDebugEchoSet</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x24C32559</NID>
@@ -9564,7 +9564,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD636B827</NID>
-						<NAME>KDebugForKernel_D636B827</NAME>
+						<NAME>sceKernelRemoveByDebugSection</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5282DD5E</NID>
@@ -9588,7 +9588,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7251823</NID>
-						<NAME>KDebugForKernel_B7251823</NAME>
+						<NAME>sceKernelAcceptMbogoSig</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -9616,7 +9616,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCD0F6715</NID>
-						<NAME>sceSysreg_driver_CD0F6715</NAME>
+						<NAME>sceSysregDoTimerEvent</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x844AF6BD</NID>
@@ -9668,7 +9668,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9BB70D34</NID>
-						<NAME>sceSysreg_driver_9BB70D34</NAME>
+						<NAME>sceSysregAvcResetEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFD6C562B</NID>
@@ -9704,7 +9704,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC32F2491</NID>
-						<NAME>sceSysreg_driver_C32F2491</NAME>
+						<NAME>_Reserve</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB21B6CBF</NID>
@@ -9740,7 +9740,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x789BD609</NID>
-						<NAME>sceSysreg_driver_789BD609</NAME>
+						<NAME>sceUtilityCancelSet</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x391CE1C0</NID>
@@ -9748,7 +9748,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82D35024</NID>
-						<NAME>sceSysreg_driver_82D35024</NAME>
+						<NAME>sceSysregDbHomeChannelConfig</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAF904657</NID>
@@ -9788,7 +9788,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6C10DF0</NID>
-						<NAME>sceSysreg_driver_B6C10DF0</NAME>
+						<NAME>sceSysregDropFilterRol</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3E216017</NID>
@@ -9876,7 +9876,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA3E4154C</NID>
-						<NAME>sceSysreg_driver_A3E4154C</NAME>
+						<NAME>sceSysregDbmanRamOnly</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE8533DCA</NID>
@@ -10012,7 +10012,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x18172C6A</NID>
-						<NAME>sceSysreg_driver_18172C6A</NAME>
+						<NAME>sceSysregFatMSIsBlock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x63B1AADF</NID>
@@ -10048,7 +10048,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF844DDF3</NID>
-						<NAME>sceSysreg_driver_F844DDF3</NAME>
+						<NAME>sceSysregDcacheInvRangeGetIsZero</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x29A119A1</NID>
@@ -10104,7 +10104,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7B9E9A53</NID>
-						<NAME>sceSysreg_driver_7B9E9A53</NAME>
+						<NAME>sceSysregActivateUmdManChangeAsyncPriority</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7BDF0556</NID>
@@ -10120,7 +10120,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x633595F2</NID>
-						<NAME>sceSysreg_driver_633595F2</NAME>
+						<NAME>sceSysregACookiesBase64</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x32471457</NID>
@@ -11258,7 +11258,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF6427665</NID>
-						<NAME>ThreadManForKernel_F6427665</NAME>
+						<NAME>sceKernelGetUserLevel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x85A2A5BF</NID>
@@ -11274,7 +11274,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4FE44D5E</NID>
-						<NAME>ThreadManForKernel_4FE44D5E</NAME>
+						<NAME>sceKernelCheckThreadKernelStack</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD13BDE95</NID>
@@ -11374,11 +11374,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x85F6776E</NID>
-						<NAME>sceUmd9660_driver_85F6776E</NAME>
+						<NAME>sceUmd9660Init</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD7565881</NID>
-						<NAME>sceUmd9660_driver_D7565881</NAME>
+						<NAME>sceUmd9660Term</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26523A78</NID>
@@ -11390,7 +11390,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0EC10F9F</NID>
-						<NAME>sceUmd9660_driver_0EC10F9F</NAME>
+						<NAME>sceUmd9660GetDrive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB1AC979</NID>
@@ -11450,7 +11450,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDF407479</NID>
-						<NAME>sceUmdMan_driver_DF407479</NAME>
+						<NAME>sceUmdManDriveStop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8CFED611</NID>
@@ -11462,7 +11462,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x47E2B6D8</NID>
-						<NAME>sceUmdMan_driver_47E2B6D8</NAME>
+						<NAME>sceUmdManGetUmdDrive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6A77A311</NID>
@@ -11494,7 +11494,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2368381</NID>
-						<NAME>sceUmdMan_driver_B2368381</NAME>
+						<NAME>sceUmdManCheckDeviceReady</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE2B0FB78</NID>
@@ -11506,7 +11506,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x96527E8A</NID>
-						<NAME>sceUmdMan_driver_96527E8A</NAME>
+						<NAME>sceUmdManRandTranslationReply</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1B1BF9FD</NID>
@@ -11514,7 +11514,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x18DE1880</NID>
-						<NAME>sceUmdMan_driver_18DE1880</NAME>
+						<NAME>sceUmdManThreadManagerReadAsync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3D44BABF</NID>
@@ -11602,7 +11602,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x14D3381C</NID>
-						<NAME>sceUmdMan_driver_14D3381C</NAME>
+						<NAME>sceUmdExecTestCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x92F1CC33</NID>
@@ -11622,15 +11622,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDABDB450</NID>
-						<NAME>sceUmdMan_driver_DABDB450</NAME>
+						<NAME>sceUmdManGpioSetup</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA49E52E8</NID>
-						<NAME>sceUmdMan_driver_A49E52E8</NAME>
+						<NAME>sceUmdManGpioIntrStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC83EB3E2</NID>
-						<NAME>sceUmdMan_driver_C83EB3E2</NAME>
+						<NAME>sceUmdManGpioIntrStop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB2DDE9F8</NID>
@@ -11642,15 +11642,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAF6D5838</NID>
-						<NAME>sceUmdMan_driver_AF6D5838</NAME>
+						<NAME>sceUmdManGetDriveMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4581E306</NID>
-						<NAME>sceUmdMan_driver_4581E306</NAME>
+						<NAME>sceUmdManGetPowerStat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1FBF6078</NID>
-						<NAME>sceUmdMan_driver_1FBF6078</NAME>
+						<NAME>sceUmdManGetPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x93539196</NID>
@@ -11662,7 +11662,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCA68F200</NID>
-						<NAME>sceUmdMan_driver_CA68F200</NAME>
+						<NAME>sceUmdManChangePowerMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF4AFF62D</NID>
@@ -11690,7 +11690,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x14AAB3FC</NID>
-						<NAME>sceUmdMan_driver_14AAB3FC</NAME>
+						<NAME>sceUmdManSyncState</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC634697D</NID>
@@ -11722,7 +11722,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8609D1E4</NID>
-						<NAME>sceUmdMan_driver_8609D1E4</NAME>
+						<NAME>sceUmdManGetDiscInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAAA4ED91</NID>
@@ -11730,11 +11730,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x208089C2</NID>
-						<NAME>sceUmdMan_driver_208089C2</NAME>
+						<NAME>sceUmdManPowerOnOff</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x66F94A52</NID>
-						<NAME>sceUmdMan_driver_66F94A52</NAME>
+						<NAME>sceUmdManProbeRemainIcache</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x815AA6D3</NID>
@@ -11842,11 +11842,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7DF2A18D</NID>
-						<NAME>sceUmdMan_driver_7DF2A18D</NAME>
+						<NAME>sceUmdManSetAlarm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB0A6DC55</NID>
-						<NAME>sceUmdMan_driver_B0A6DC55</NAME>
+						<NAME>sceUmdManCancelAlarm</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x51A9AC49</NID>
@@ -12118,7 +12118,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3B84732D</NID>
-						<NAME>Kernel_Library_3B84732D</NAME>
+						<NAME>sceKernelCpuResumeIntrWithSync</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x47A0B729</NID>
@@ -12236,19 +12236,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2AD8E239</NID>
-						<NAME>sceUtility_2AD8E239</NAME>
+						<NAME>sceUtilityMsgDialogInitStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x67AF3428</NID>
-						<NAME>sceUtility_67AF3428</NAME>
+						<NAME>sceUtilityMsgDialogShutdownStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x95FC253B</NID>
-						<NAME>sceUtility_95FC253B</NAME>
+						<NAME>sceUtilityMsgDialogUpdate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9A1C91D7</NID>
-						<NAME>sceUtility_9A1C91D7</NAME>
+						<NAME>sceUtilityMsgDialogGetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF6269B82</NID>
@@ -12268,15 +12268,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x45C18506</NID>
-						<NAME>sceUtility_45C18506</NAME>
+						<NAME>sceUtilitySetSystemParamInt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x41E30674</NID>
-						<NAME>sceUtility_41E30674</NAME>
+						<NAME>sceUtilitySetSystemParamString</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA5DA2406</NID>
-						<NAME>sceUtility_A5DA2406</NAME>
+						<NAME>sceUtilityGetSystemParamInt</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x34B78343</NID>
@@ -12322,15 +12322,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x680C0EA8</NID>
-						<NAME>sceUtility_private_680C0EA8</NAME>
+						<NAME>sceUtilityDialogSetStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB222E887</NID>
-						<NAME>sceUtility_private_B222E887</NAME>
+						<NAME>sceUtilityDialogGetType</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4F2206BC</NID>
-						<NAME>sceUtility_private_4F2206BC</NAME>
+						<NAME>sceUtilityDialogGetParam</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE01FE32A</NID>
@@ -12342,19 +12342,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6F923BD3</NID>
-						<NAME>sceUtility_private_6F923BD3</NAME>
+						<NAME>sceUtilityDialogSetThreadId</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA5168A5D</NID>
-						<NAME>sceUtility_private_A5168A5D</NAME>
+						<NAME>sceUtilityDialogLoadModule</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3CEAE1DF</NID>
-						<NAME>sceUtility_private_3CEAE1DF</NAME>
+						<NAME>sceUtilityDialogPowerLock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x56BEDCA4</NID>
-						<NAME>sceUtility_private_56BEDCA4</NAME>
+						<NAME>sceUtilityDialogPowerUnlock</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -12364,11 +12364,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x072DEBF2</NID>
-						<NAME>sceUtility_netparam_internal_072DEBF2</NAME>
+						<NAME>sceUtilityCreateNetParam</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9CE50172</NID>
-						<NAME>sceUtility_netparam_internal_9CE50172</NAME>
+						<NAME>sceUtilityDeleteNetParam</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFB0C4840</NID>
@@ -12376,7 +12376,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFC4516F3</NID>
-						<NAME>sceUtility_netparam_internal_FC4516F3</NAME>
+						<NAME>sceUtilitySetNetParam</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -12638,15 +12638,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8C1FBE04</NID>
-						<NAME>UtilsForKernel_8C1FBE04</NAME>
+						<NAME>sceKernelGzipGetComment</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x23FFC828</NID>
-						<NAME>UtilsForKernel_23FFC828</NAME>
+						<NAME>sceKernelGzipGetCompressedData</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE8DB3CE6</NID>
-						<NAME>UtilsForKernel_E8DB3CE6</NAME>
+						<NAME>sceKernelDeflateDecompress</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -12662,23 +12662,23 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x5A7435B7</NID>
-						<NAME>sceVaudio_driver_5A7435B7</NAME>
+						<NAME>sceVaudioInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x72749E84</NID>
-						<NAME>sceVaudio_driver_72749E84</NAME>
+						<NAME>sceVaudioEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8986295E</NID>
-						<NAME>sceVaudio_driver_8986295E</NAME>
+						<NAME>sceVaudioOutputBlocking</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x03B6807D</NID>
-						<NAME>sceVaudio_driver_03B6807D</NAME>
+						<NAME>sceVaudioChReserve</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x67585DFD</NID>
-						<NAME>sceVaudio_driver_67585DFD</NAME>
+						<NAME>sceVaudioChRelease</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x346FBE94</NID>
@@ -12700,15 +12700,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8986295E</NID>
-						<NAME>sceVaudio_8986295E</NAME>
+						<NAME>sceVaudioOutputBlocking</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x03B6807D</NID>
-						<NAME>sceVaudio_03B6807D</NAME>
+						<NAME>sceVaudioChReserve</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x67585DFD</NID>
-						<NAME>sceVaudio_67585DFD</NAME>
+						<NAME>sceVaudioChRelease</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x346FBE94</NID>
@@ -12728,23 +12728,23 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x5A7435B7</NID>
-						<NAME>sceVaudio_driver_5A7435B7</NAME>
+						<NAME>sceVaudioInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x72749E84</NID>
-						<NAME>sceVaudio_driver_72749E84</NAME>
+						<NAME>sceVaudioEnd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8986295E</NID>
-						<NAME>sceVaudio_driver_8986295E</NAME>
+						<NAME>sceVaudioOutputBlocking</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x03B6807D</NID>
-						<NAME>sceVaudio_driver_03B6807D</NAME>
+						<NAME>sceVaudioChReserve</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x67585DFD</NID>
-						<NAME>sceVaudio_driver_67585DFD</NAME>
+						<NAME>sceVaudioChRelease</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x346FBE94</NID>
@@ -12766,15 +12766,15 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8986295E</NID>
-						<NAME>sceVaudio_8986295E</NAME>
+						<NAME>sceVaudioOutputBlocking</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x03B6807D</NID>
-						<NAME>sceVaudio_03B6807D</NAME>
+						<NAME>sceVaudioChReserve</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x67585DFD</NID>
-						<NAME>sceVaudio_67585DFD</NAME>
+						<NAME>sceVaudioChRelease</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x346FBE94</NID>
@@ -12822,15 +12822,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x745A7B7A</NID>
-						<NAME>sceVideocodec_745A7B7A</NAME>
+						<NAME>sceVideocodecSetMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2F385E7F</NID>
-						<NAME>sceVideocodec_2F385E7F</NAME>
+						<NAME>sceVideocodecScanHeader</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26927D19</NID>
-						<NAME>sceVideocodec_26927D19</NAME>
+						<NAME>sceVideocodecGetVersion</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -13134,7 +13134,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x93440B11</NID>
-						<NAME>sceWlanDrv_93440B11</NAME>
+						<NAME>sceWlanGPBindRegError</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD7763699</NID>
@@ -13168,23 +13168,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5ED4049A</NID>
-						<NAME>sceWlanDrv_lib_5ED4049A</NAME>
+						<NAME>sceWlanGPPrevEstablishActive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB4D7CB74</NID>
-						<NAME>sceWlanDrv_lib_B4D7CB74</NAME>
+						<NAME>sceWlanGPSend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA447103A</NID>
-						<NAME>sceWlanDrv_lib_A447103A</NAME>
+						<NAME>sceWlanGPRecv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9658C9F7</NID>
-						<NAME>sceWlanDrv_lib_9658C9F7</NAME>
+						<NAME>sceWlanGPRegisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C7F62E0</NID>
-						<NAME>sceWlanDrv_lib_4C7F62E0</NAME>
+						<NAME>sceWlanGPUnRegisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x81579D36</NID>
@@ -13216,11 +13216,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7FF54BD2</NID>
-						<NAME>sceWlanDrv_lib_7FF54BD2</NAME>
+						<NAME>sceWlanDevSetGPIO</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05FE320C</NID>
-						<NAME>sceWlanDrv_lib_05FE320C</NAME>
+						<NAME>sceWlanDevGetStateGPIO</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -13246,7 +13246,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x93440B11</NID>
-						<NAME>sceWlanDrv_driver_93440B11</NAME>
+						<NAME>sceWlanGPBindRegError</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x19E51F54</NID>
@@ -13258,23 +13258,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5ED4049A</NID>
-						<NAME>sceWlanDrv_driver_5ED4049A</NAME>
+						<NAME>sceWlanGPPrevEstablishActive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB4D7CB74</NID>
-						<NAME>sceWlanDrv_driver_B4D7CB74</NAME>
+						<NAME>sceWlanGPSend</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA447103A</NID>
-						<NAME>sceWlanDrv_driver_A447103A</NAME>
+						<NAME>sceWlanGPRecv</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9658C9F7</NID>
-						<NAME>sceWlanDrv_driver_9658C9F7</NAME>
+						<NAME>sceWlanGPRegisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C7F62E0</NID>
-						<NAME>sceWlanDrv_driver_4C7F62E0</NAME>
+						<NAME>sceWlanGPUnRegisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x81579D36</NID>
@@ -13306,11 +13306,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7FF54BD2</NID>
-						<NAME>sceWlanDrv_driver_7FF54BD2</NAME>
+						<NAME>sceWlanDevSetGPIO</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x05FE320C</NID>
-						<NAME>sceWlanDrv_driver_05FE320C</NAME>
+						<NAME>sceWlanDevGetStateGPIO</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -15778,7 +15778,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x67F17ED7</NID>
-						<NAME>sceLibFont_67F17ED7</NAME>
+						<NAME>sceFontNewLib</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x574B6FBC</NID>
@@ -15786,7 +15786,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x48293280</NID>
-						<NAME>sceLibFont_48293280</NAME>
+						<NAME>sceFontSetResolution</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27F6E642</NID>
@@ -15794,7 +15794,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBC75D85B</NID>
-						<NAME>sceLibFont_BC75D85B</NAME>
+						<NAME>sceFontGetFontList</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x099EF33C</NID>
@@ -15802,11 +15802,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x681E61A7</NID>
-						<NAME>sceLibFont_681E61A7</NAME>
+						<NAME>sceFontFindFont</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2F67356A</NID>
-						<NAME>sceLibFont_2F67356A</NAME>
+						<NAME>sceFontCalcMemorySize</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5333322D</NID>
@@ -15814,27 +15814,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA834319D</NID>
-						<NAME>sceLibFont_A834319D</NAME>
+						<NAME>sceFontOpen</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57FCB733</NID>
-						<NAME>sceLibFont_57FCB733</NAME>
+						<NAME>sceFontOpenUserFile</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBB8E7FE6</NID>
-						<NAME>sceLibFont_BB8E7FE6</NAME>
+						<NAME>sceFontOpenUserMemory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3AEA8CB6</NID>
-						<NAME>sceLibFont_3AEA8CB6</NAME>
+						<NAME>sceFontClose</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0DA7535E</NID>
-						<NAME>sceLibFont_0DA7535E</NAME>
+						<NAME>sceFontGetFontInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDCC80C2F</NID>
-						<NAME>sceLibFont_DCC80C2F</NAME>
+						<NAME>sceFontGetCharInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5C3E4A9E</NID>
@@ -15898,11 +15898,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x957ECBE2</NID>
-						<NAME>sceSsl_957ECBE2</NAME>
+						<NAME>sceSslInit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x191CDEFF</NID>
-						<NAME>sceSsl_191CDEFF</NAME>
+						<NAME>sceSslEnd</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -15928,19 +15928,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x624CB314</NID>
-						<NAME>sceSsl_lib_624CB314</NAME>
+						<NAME>BIO_copy_next_retry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9566709F</NID>
-						<NAME>sceSsl_lib_9566709F</NAME>
+						<NAME>BIO_ctrl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3E040FD4</NID>
-						<NAME>sceSsl_lib_3E040FD4</NAME>
+						<NAME>BIO_free</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x959557F5</NID>
-						<NAME>sceSsl_lib_959557F5</NAME>
+						<NAME>BIO_free_all</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x558CAA41</NID>
@@ -15956,11 +15956,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4A6078CF</NID>
-						<NAME>sceSsl_lib_4A6078CF</NAME>
+						<NAME>BIO_get_retry_reason</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAFD1D124</NID>
-						<NAME>sceSsl_lib_AFD1D124</NAME>
+						<NAME>BIO_gets</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0FD2F220</NID>
@@ -15972,7 +15972,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5DED429A</NID>
-						<NAME>sceSsl_lib_5DED429A</NAME>
+						<NAME>BIO_new</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x58352068</NID>
@@ -15980,27 +15980,27 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28B4DE33</NID>
-						<NAME>sceSsl_lib_28B4DE33</NAME>
+						<NAME>BIO_new_socket</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x732F4E44</NID>
-						<NAME>sceSsl_lib_732F4E44</NAME>
+						<NAME>BIO_pop</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3454E622</NID>
-						<NAME>sceSsl_lib_3454E622</NAME>
+						<NAME>BIO_printf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1EC64594</NID>
-						<NAME>sceSsl_lib_1EC64594</NAME>
+						<NAME>BIO_push</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x675AC5AA</NID>
-						<NAME>sceSsl_lib_675AC5AA</NAME>
+						<NAME>BIO_read</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1BCA32E3</NID>
-						<NAME>sceSsl_lib_1BCA32E3</NAME>
+						<NAME>BIO_retry_type</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x26A7CF72</NID>
@@ -16024,31 +16024,31 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xABCD28B8</NID>
-						<NAME>sceSsl_lib_ABCD28B8</NAME>
+						<NAME>BIO_should_io_special</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE3C30923</NID>
-						<NAME>sceSsl_lib_E3C30923</NAME>
+						<NAME>BIO_should_read</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9052D21A</NID>
-						<NAME>sceSsl_lib_9052D21A</NAME>
+						<NAME>BIO_should_retry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x089FF1F1</NID>
-						<NAME>sceSsl_lib_089FF1F1</NAME>
+						<NAME>BIO_should_write</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCED07EAE</NID>
-						<NAME>sceSsl_lib_CED07EAE</NAME>
+						<NAME>BIO_write</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5E5C873A</NID>
-						<NAME>sceSsl_lib_5E5C873A</NAME>
+						<NAME>CRYPTO_free</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE5FC4992</NID>
-						<NAME>sceSsl_lib_E5FC4992</NAME>
+						<NAME>CRYPTO_free_locked</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x69105335</NID>
@@ -16060,7 +16060,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x064F5DF3</NID>
-						<NAME>sceSsl_lib_064F5DF3</NAME>
+						<NAME>CRYPTO_get_locked_mem_functions</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6BA650E4</NID>
@@ -16068,7 +16068,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB0B90785</NID>
-						<NAME>sceSsl_lib_B0B90785</NAME>
+						<NAME>CRYPTO_get_mem_functions</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2FE7BB42</NID>
@@ -16076,15 +16076,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD84E2411</NID>
-						<NAME>sceSsl_lib_D84E2411</NAME>
+						<NAME>CRYPTO_lock</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0861D934</NID>
-						<NAME>sceSsl_lib_0861D934</NAME>
+						<NAME>CRYPTO_malloc</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6053B79C</NID>
-						<NAME>sceSsl_lib_6053B79C</NAME>
+						<NAME>CRYPTO_malloc_locked</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x64AA4ED6</NID>
@@ -16100,11 +16100,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA2619268</NID>
-						<NAME>sceSsl_lib_A2619268</NAME>
+						<NAME>CRYPTO_set_mem_functions</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9D8A385E</NID>
-						<NAME>sceSsl_lib_9D8A385E</NAME>
+						<NAME>CRYPTO_thread_id</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA7BED83B</NID>
@@ -16128,31 +16128,31 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x04E677AF</NID>
-						<NAME>sceSsl_lib_04E677AF</NAME>
+						<NAME>ERR_clear_error</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x101D418A</NID>
-						<NAME>sceSsl_lib_101D418A</NAME>
+						<NAME>ERR_free_strings</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE78AD94D</NID>
-						<NAME>sceSsl_lib_E78AD94D</NAME>
+						<NAME>ERR_get_error</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x47F7B97F</NID>
-						<NAME>sceSsl_lib_47F7B97F</NAME>
+						<NAME>ERR_peek_error</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9CDCA0D7</NID>
-						<NAME>sceSsl_lib_9CDCA0D7</NAME>
+						<NAME>ERR_put_error</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD8C05497</NID>
-						<NAME>sceSsl_lib_D8C05497</NAME>
+						<NAME>ERR_remove_state</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7317C1BC</NID>
-						<NAME>sceSsl_lib_7317C1BC</NAME>
+						<NAME>EVP_PKEY_free</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFAF333D1</NID>
@@ -16160,19 +16160,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0217E73C</NID>
-						<NAME>sceSsl_lib_0217E73C</NAME>
+						<NAME>PEM_ASN1_read_bio</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA920B39E</NID>
-						<NAME>sceSsl_lib_A920B39E</NAME>
+						<NAME>d2i_PrivateKey</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x21F2A35C</NID>
-						<NAME>sceSsl_lib_21F2A35C</NAME>
+						<NAME>RAND_bytes</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x56E19CEB</NID>
-						<NAME>sceSsl_lib_56E19CEB</NAME>
+						<NAME>RAND_cleanup</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA1C3AB31</NID>
@@ -16180,15 +16180,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4AE72675</NID>
-						<NAME>sceSsl_lib_4AE72675</NAME>
+						<NAME>RAND_get_rand_method</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDEA6EDB2</NID>
-						<NAME>sceSsl_lib_DEA6EDB2</NAME>
+						<NAME>RAND_seed</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1C2728A5</NID>
-						<NAME>sceSsl_lib_1C2728A5</NAME>
+						<NAME>RAND_set_rand_method</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA87C65C7</NID>
@@ -16340,15 +16340,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB4D78E98</NID>
-						<NAME>sceSsl_lib_B4D78E98</NAME>
+						<NAME>SSL_CTX_ctrl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4E0F2CCC</NID>
-						<NAME>sceSsl_lib_4E0F2CCC</NAME>
+						<NAME>SSL_CTX_flush_sessions</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x588F2FE8</NID>
-						<NAME>sceSsl_lib_588F2FE8</NAME>
+						<NAME>SSL_CTX_free</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x909E9D31</NID>
@@ -16356,19 +16356,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE14101E4</NID>
-						<NAME>sceSsl_lib_E14101E4</NAME>
+						<NAME>SSL_CTX_get_quiet_shutdown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x795B9EDF</NID>
-						<NAME>sceSsl_lib_795B9EDF</NAME>
+						<NAME>SSL_CTX_get_timeout</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFB8273FE</NID>
-						<NAME>sceSsl_lib_FB8273FE</NAME>
+						<NAME>SSL_CTX_new</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB81AD643</NID>
-						<NAME>sceSsl_lib_B81AD643</NAME>
+						<NAME>SSL_CTX_remove_session</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD5ABC603</NID>
@@ -16380,23 +16380,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBF55C31C</NID>
-						<NAME>sceSsl_lib_BF55C31C</NAME>
+						<NAME>SSL_CTX_set_client_cert_cb</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x42DF4592</NID>
-						<NAME>sceSsl_lib_42DF4592</NAME>
+						<NAME>SSL_CTX_set_quiet_shutdown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4214B7AF</NID>
-						<NAME>sceSsl_lib_4214B7AF</NAME>
+						<NAME>SSL_CTX_set_timeout</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAEBF278B</NID>
-						<NAME>sceSsl_lib_AEBF278B</NAME>
+						<NAME>SSL_CTX_set_verify</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBDAD0841</NID>
-						<NAME>sceSsl_lib_BDAD0841</NAME>
+						<NAME>SSL_SESSION_free</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x86D0771E</NID>
@@ -16404,15 +16404,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x54A7D8F3</NID>
-						<NAME>sceSsl_lib_54A7D8F3</NAME>
+						<NAME>SSL_clear</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x84833472</NID>
-						<NAME>sceSsl_lib_84833472</NAME>
+						<NAME>SSL_free</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE92302C5</NID>
-						<NAME>sceSsl_lib_E92302C5</NAME>
+						<NAME>SSL_get_SSL_CTX</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x340F8829</NID>
@@ -16428,55 +16428,55 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD49A570C</NID>
-						<NAME>sceSsl_lib_D49A570C</NAME>
+						<NAME>SSL_get_default_timeout</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB3B04C58</NID>
-						<NAME>sceSsl_lib_B3B04C58</NAME>
+						<NAME>SSL_get_error</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBB1564A3</NID>
-						<NAME>sceSsl_lib_BB1564A3</NAME>
+						<NAME>SSL_get_ex_data_X509_STORE_CTX_idx</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x95E346AB</NID>
-						<NAME>sceSsl_lib_95E346AB</NAME>
+						<NAME>SSL_get_info_cb</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6A19E0AA</NID>
-						<NAME>sceSsl_lib_6A19E0AA</NAME>
+						<NAME>SSL_get_quiet_shutdown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2E2E2B09</NID>
-						<NAME>sceSsl_lib_2E2E2B09</NAME>
+						<NAME>SSL_get_rbio</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEF5A4BD4</NID>
-						<NAME>sceSsl_lib_EF5A4BD4</NAME>
+						<NAME>SSL_get_session</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1205C58</NID>
-						<NAME>sceSsl_lib_D1205C58</NAME>
+						<NAME>SSL_get_shutdown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAA3B27CF</NID>
-						<NAME>sceSsl_lib_AA3B27CF</NAME>
+						<NAME>SSL_get_verify_result</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x868C15DF</NID>
-						<NAME>sceSsl_lib_868C15DF</NAME>
+						<NAME>SSL_get_wbio</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEBFB0E3C</NID>
-						<NAME>sceSsl_lib_EBFB0E3C</NAME>
+						<NAME>SSL_new</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE7C29542</NID>
-						<NAME>sceSsl_lib_E7C29542</NAME>
+						<NAME>SSL_read</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA8F0AD39</NID>
-						<NAME>sceSsl_lib_A8F0AD39</NAME>
+						<NAME>SSL_reuse</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBE423CD1</NID>
@@ -16492,63 +16492,63 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB9C8CCE6</NID>
-						<NAME>sceSsl_lib_B9C8CCE6</NAME>
+						<NAME>SSL_set_bio</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x80608663</NID>
-						<NAME>sceSsl_lib_80608663</NAME>
+						<NAME>SSL_set_connect_state</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC270B3A8</NID>
-						<NAME>sceSsl_lib_C270B3A8</NAME>
+						<NAME>SSL_set_info_cb</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4AF959E3</NID>
-						<NAME>sceSsl_lib_4AF959E3</NAME>
+						<NAME>SSL_set_quiet_shutdown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x69F1B678</NID>
-						<NAME>sceSsl_lib_69F1B678</NAME>
+						<NAME>SSL_set_session</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x86D4034D</NID>
-						<NAME>sceSsl_lib_86D4034D</NAME>
+						<NAME>SSL_set_shutdown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5605C9FE</NID>
-						<NAME>sceSsl_lib_5605C9FE</NAME>
+						<NAME>SSL_set_verify_result</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3E3133D6</NID>
-						<NAME>sceSsl_lib_3E3133D6</NAME>
+						<NAME>SSL_shutdown</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x104F749D</NID>
-						<NAME>sceSsl_lib_104F749D</NAME>
+						<NAME>SSL_state</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8390B321</NID>
-						<NAME>sceSsl_lib_8390B321</NAME>
+						<NAME>SSL_use_PrivateKey</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC0ABBB57</NID>
-						<NAME>sceSsl_lib_C0ABBB57</NAME>
+						<NAME>SSL_use_certificate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57F2E960</NID>
-						<NAME>sceSsl_lib_57F2E960</NAME>
+						<NAME>SSL_version</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC97D0510</NID>
-						<NAME>sceSsl_lib_C97D0510</NAME>
+						<NAME>SSL_want</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7CA8717</NID>
-						<NAME>sceSsl_lib_B7CA8717</NAME>
+						<NAME>SSL_write</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB40D11EA</NID>
-						<NAME>sceSsl_lib_B40D11EA</NAME>
+						<NAME>SSLv3_client_method</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9266C0D5</NID>
@@ -16560,19 +16560,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA2CE8DCD</NID>
-						<NAME>sceSsl_lib_A2CE8DCD</NAME>
+						<NAME>SSL_CIPHER_get_name</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x88897D26</NID>
-						<NAME>sceSsl_lib_88897D26</NAME>
+						<NAME>SSL_get_current_cipher</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x09C45275</NID>
-						<NAME>sceSsl_lib_09C45275</NAME>
+						<NAME>EVP_PKEY_new</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBE5FF9F1</NID>
-						<NAME>sceSsl_lib_BE5FF9F1</NAME>
+						<NAME>PEM_do_header</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB99D89E2</NID>
