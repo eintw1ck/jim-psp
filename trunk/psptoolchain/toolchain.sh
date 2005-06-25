@@ -48,9 +48,9 @@
  ################################
 
   ## Download the source.
-  wget -c ftp://ftp.gnu.org/pub/gnu/binutils/$BINUTILS.tar.gz
-  wget -c ftp://ftp.gnu.org/pub/gnu/gcc/$GCC/$GCC.tar.bz2
-  wget -c ftp://sources.redhat.com/pub/newlib/$NEWLIB.tar.gz
+  wget -c --passive-ftp ftp://ftp.gnu.org/pub/gnu/binutils/$BINUTILS.tar.gz
+  wget -c --passive-ftp ftp://ftp.gnu.org/pub/gnu/gcc/$GCC/$GCC.tar.bz2
+  wget -c --passive-ftp ftp://sources.redhat.com/pub/newlib/$NEWLIB.tar.gz
 
   ## Create the build directory.
   mkdir -p $TMPDIR; cd $TMPDIR
