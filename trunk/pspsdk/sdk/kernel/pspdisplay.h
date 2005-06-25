@@ -21,11 +21,11 @@ void sceDisplayWaitVblankStart();
  * @code
  * @endcode
  *
- * @param a
- * @param b
- * @param c
+ * @param unk1 - unknown always 0?
+ * @param width - width of screen in pixels
+ * @param height - height of screen in pixels
  */
-void sceDisplaySetMode(long a, long b, long c);
+void sceDisplaySetMode(long unk1, long width, long height);
 /**
  * Display set framebuf
  *
@@ -33,13 +33,13 @@ void sceDisplaySetMode(long a, long b, long c);
  * @code
  * @endcode
  *
- * @param topaddr*
- * @param linesize*
- * @param pixelsize*
- * @param d
+ * @param topaddr* - address of start of framebuffer
+ * @param bufferwidth* - buffer width (must be power of 2)
+ * @param pixelformat* - one of the following: 0 - BGRA 5551, 3 - ABGR 8888
+ * @param unk1 - unknown, always 1? (vblank sync?)
  */
-void sceDisplaySetFrameBuf(char *topaddr, long linesize, long pixelsize, long
-	d);
+void sceDisplaySetFrameBuf(char *topaddr, long bufferwidth, long pixelformat, long
+	unk1);
 
 #ifdef __cplusplus
 }
