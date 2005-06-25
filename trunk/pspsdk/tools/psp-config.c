@@ -180,10 +180,11 @@ void print_path(char *name)
 		found = 1;
 	}
 
-	strcat(pspdev_path, DIR_SEP_STR);
-	strcat(pspdev_path, "pspsdk");
-
-	printf("%s", pspdev_path);
+	if (pspdev_env != NULL) {
+		strcat(pspdev_path, DIR_SEP_STR);
+		strcat(pspdev_path, "pspsdk");
+		printf("%s\n", pspdev_path);
+	}
 }
 
 int main(int argc, char **argv)
