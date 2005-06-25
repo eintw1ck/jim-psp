@@ -1,5 +1,5 @@
 --- newlib-1.13.0.orig/config.sub	2004-11-15 17:18:39.000000000 -0800
-+++ newlib-psp/config.sub	2005-06-19 18:09:12.000000000 -0700
++++ newlib-psp/config.sub	2005-06-24 17:04:02.066996768 -0700
 @@ -253,6 +253,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
@@ -21,7 +21,7 @@
  		os=-mint
  		;;
 +	psp)
-+		basic_machine=mipsallegrexel-unknown
++		basic_machine=mipsallegrexel-psp
 +		os=-elf
 +		;;
  	mips3*-*)

@@ -1,15 +1,5 @@
---- binutils-2.16.orig/bfd/archures.c	2005-01-17 06:08:03.000000000 -0800
-+++ binutils-psp/bfd/archures.c	2005-05-24 18:04:43.000000000 -0700
-@@ -155,6 +155,7 @@
- .#define bfd_mach_mips16		16
- .#define bfd_mach_mips5                 5
- .#define bfd_mach_mips_sb1              12310201 {* octal 'SB', 01 *}
-+.#define bfd_mach_mips_allegrex         10111431 {* octal 'AL', 31 *}
- .#define bfd_mach_mipsisa32             32
- .#define bfd_mach_mipsisa32r2           33
- .#define bfd_mach_mipsisa64             64
 --- binutils-2.16.orig/bfd/bfd-in2.h	2005-03-02 13:23:20.000000000 -0800
-+++ binutils-psp/bfd/bfd-in2.h	2005-05-24 18:06:00.000000000 -0700
++++ binutils-psp/bfd/bfd-in2.h	2005-06-19 18:09:32.000000000 -0700
 @@ -1600,6 +1600,7 @@
  #define bfd_mach_mips16                16
  #define bfd_mach_mips5                 5
@@ -18,28 +8,18 @@
  #define bfd_mach_mipsisa32             32
  #define bfd_mach_mipsisa32r2           33
  #define bfd_mach_mipsisa64             64
---- binutils-2.16.orig/bfd/cpu-mips.c	2005-03-03 03:40:58.000000000 -0800
-+++ binutils-psp/bfd/cpu-mips.c	2005-05-24 18:09:41.000000000 -0700
-@@ -86,6 +86,7 @@
-   I_mipsisa64,
-   I_mipsisa64r2,
-   I_sb1,
-+  I_allegrex,
- };
- 
- #define NN(index) (&arch_info_struct[(index) + 1])
-@@ -118,7 +119,8 @@
-   N (32, 32, bfd_mach_mipsisa32r2,"mips:isa32r2", FALSE, NN(I_mipsisa32r2)),
-   N (64, 64, bfd_mach_mipsisa64,  "mips:isa64",   FALSE, NN(I_mipsisa64)),
-   N (64, 64, bfd_mach_mipsisa64r2,"mips:isa64r2", FALSE, NN(I_mipsisa64r2)),
--  N (64, 64, bfd_mach_mips_sb1, "mips:sb1",       FALSE, 0),
-+  N (64, 64, bfd_mach_mips_sb1, "mips:sb1",       FALSE, NN(I_sb1)),
-+  N (32, 32, bfd_mach_mips_allegrex, "mips:allegrex", FALSE, 0),
- };
- 
- /* The default architecture is mips:3000, but with a machine number of
+--- binutils-2.16.orig/bfd/archures.c	2005-01-17 06:08:03.000000000 -0800
++++ binutils-psp/bfd/archures.c	2005-06-19 18:09:32.000000000 -0700
+@@ -155,6 +155,7 @@
+ .#define bfd_mach_mips16		16
+ .#define bfd_mach_mips5                 5
+ .#define bfd_mach_mips_sb1              12310201 {* octal 'SB', 01 *}
++.#define bfd_mach_mips_allegrex         10111431 {* octal 'AL', 31 *}
+ .#define bfd_mach_mipsisa32             32
+ .#define bfd_mach_mipsisa32r2           33
+ .#define bfd_mach_mipsisa64             64
 --- binutils-2.16.orig/bfd/elfxx-mips.c	2005-04-19 11:37:04.000000000 -0700
-+++ binutils-psp/bfd/elfxx-mips.c	2005-05-24 18:16:08.000000000 -0700
++++ binutils-psp/bfd/elfxx-mips.c	2005-06-19 18:09:32.000000000 -0700
 @@ -4669,6 +4669,9 @@
      case E_MIPS_MACH_SB1:
        return bfd_mach_mips_sb1;
@@ -69,8 +49,28 @@
  
    /* MIPS I extensions.  */
    { bfd_mach_mips6000, bfd_mach_mips3000 },
+--- binutils-2.16.orig/bfd/cpu-mips.c	2005-03-03 03:40:58.000000000 -0800
++++ binutils-psp/bfd/cpu-mips.c	2005-06-19 18:09:32.000000000 -0700
+@@ -86,6 +86,7 @@
+   I_mipsisa64,
+   I_mipsisa64r2,
+   I_sb1,
++  I_allegrex,
+ };
+ 
+ #define NN(index) (&arch_info_struct[(index) + 1])
+@@ -118,7 +119,8 @@
+   N (32, 32, bfd_mach_mipsisa32r2,"mips:isa32r2", FALSE, NN(I_mipsisa32r2)),
+   N (64, 64, bfd_mach_mipsisa64,  "mips:isa64",   FALSE, NN(I_mipsisa64)),
+   N (64, 64, bfd_mach_mipsisa64r2,"mips:isa64r2", FALSE, NN(I_mipsisa64r2)),
+-  N (64, 64, bfd_mach_mips_sb1, "mips:sb1",       FALSE, 0),
++  N (64, 64, bfd_mach_mips_sb1, "mips:sb1",       FALSE, NN(I_sb1)),
++  N (32, 32, bfd_mach_mips_allegrex, "mips:allegrex", FALSE, 0),
+ };
+ 
+ /* The default architecture is mips:3000, but with a machine number of
 --- binutils-2.16.orig/binutils/readelf.c	2005-04-20 11:43:36.000000000 -0700
-+++ binutils-psp/binutils/readelf.c	2005-05-24 19:01:23.000000000 -0700
++++ binutils-psp/binutils/readelf.c	2005-06-19 18:09:27.000000000 -0700
 @@ -2043,6 +2043,7 @@
  	    case E_MIPS_MACH_5500: strcat (buf, ", 5500"); break;
  	    case E_MIPS_MACH_SB1:  strcat (buf, ", sb1");  break;
@@ -80,7 +80,7 @@
  	    /* We simply ignore the field in this case to avoid confusion:
  	       MIPS ELF does not specify EF_MIPS_MACH, it is a GNU
 --- binutils-2.16.orig/config.sub	2005-01-18 16:34:56.000000000 -0800
-+++ binutils-psp/config.sub	2005-05-24 20:11:12.000000000 -0700
++++ binutils-psp/config.sub	2005-06-24 17:01:46.131662080 -0700
 @@ -253,6 +253,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
@@ -102,38 +102,14 @@
  		os=-mint
  		;;
 +	psp)
-+		basic_machine=mipsallegrexel-unknown
++		basic_machine=mipsallegrexel-psp
 +		os=-elf
 +		;;
  	mips3*-*)
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
---- binutils-2.16.orig/gas/configure	2005-02-28 16:43:51.000000000 -0800
-+++ binutils-psp/gas/configure	2005-05-25 01:39:36.000000000 -0700
-@@ -4537,6 +4537,9 @@
- 	  mips64vr | mips64vrel)
- 	    mips_cpu=vr4100
- 	    ;;
-+	  mipsallegrex | mipsallegrexel)
-+	    mips_cpu=allegrex
-+	    ;;
- 	  mipsisa32r2* | mipsisa64r2*)
- 	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
- 	    ;;
---- binutils-2.16.orig/gas/configure.in	2005-02-28 16:43:57.000000000 -0800
-+++ binutils-psp/gas/configure.in	2005-05-25 01:38:40.000000000 -0700
-@@ -222,6 +222,9 @@
- 	  mips64vr | mips64vrel)
- 	    mips_cpu=vr4100
- 	    ;;
-+	  mipsallegrex | mipsallegrexel)
-+	    mips_cpu=allegrex
-+	    ;;
- 	  mipsisa32r2* | mipsisa64r2*)
- changequote(,)dnl
- 	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
 --- binutils-2.16.orig/gas/config/tc-mips.c	2005-04-20 11:41:36.000000000 -0700
-+++ binutils-psp/gas/config/tc-mips.c	2005-06-04 11:15:56.464153528 -0700
++++ binutils-psp/gas/config/tc-mips.c	2005-06-19 18:09:30.000000000 -0700
 @@ -365,11 +365,15 @@
  #define CPU_HAS_MDMX(cpu)	(FALSE                 \
  				 )
@@ -199,8 +175,32 @@
  
    /* MIPS III */
    { "r4000",          0,      ISA_MIPS3,      CPU_R4000 },
+--- binutils-2.16.orig/gas/configure	2005-02-28 16:43:51.000000000 -0800
++++ binutils-psp/gas/configure	2005-06-19 18:09:30.000000000 -0700
+@@ -4537,6 +4537,9 @@
+ 	  mips64vr | mips64vrel)
+ 	    mips_cpu=vr4100
+ 	    ;;
++	  mipsallegrex | mipsallegrexel)
++	    mips_cpu=allegrex
++	    ;;
+ 	  mipsisa32r2* | mipsisa64r2*)
+ 	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
+ 	    ;;
+--- binutils-2.16.orig/gas/configure.in	2005-02-28 16:43:57.000000000 -0800
++++ binutils-psp/gas/configure.in	2005-06-19 18:09:30.000000000 -0700
+@@ -222,6 +222,9 @@
+ 	  mips64vr | mips64vrel)
+ 	    mips_cpu=vr4100
+ 	    ;;
++	  mipsallegrex | mipsallegrexel)
++	    mips_cpu=allegrex
++	    ;;
+ 	  mipsisa32r2* | mipsisa64r2*)
+ changequote(,)dnl
+ 	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
 --- binutils-2.16.orig/include/elf/common.h	2004-10-08 06:55:08.000000000 -0700
-+++ binutils-psp/include/elf/common.h	2005-05-24 16:59:12.000000000 -0700
++++ binutils-psp/include/elf/common.h	2005-06-19 18:09:25.000000000 -0700
 @@ -93,6 +93,7 @@
  #define ET_HIOS		0xFEFF	/* Operating system-specific */
  #define ET_LOPROC	0xFF00	/* Processor-specific */
@@ -210,7 +210,7 @@
  /* Values for e_machine, which identifies the architecture.  These numbers
     are officially assigned by registry@caldera.com.  See below for a list of
 --- binutils-2.16.orig/include/elf/mips.h	2005-03-03 03:58:06.000000000 -0800
-+++ binutils-psp/include/elf/mips.h	2005-05-24 17:03:28.000000000 -0700
++++ binutils-psp/include/elf/mips.h	2005-06-19 18:09:25.000000000 -0700
 @@ -212,6 +212,7 @@
  #define E_MIPS_MACH_5400	0x00910000
  #define E_MIPS_MACH_5500	0x00980000
@@ -220,7 +220,7 @@
  /* Processor specific section indices.  These sections do not actually
     exist.  Symbols with a st_shndx field corresponding to one of these
 --- binutils-2.16.orig/include/opcode/mips.h	2005-03-03 03:58:10.000000000 -0800
-+++ binutils-psp/include/opcode/mips.h	2005-06-04 11:18:46.310332984 -0700
++++ binutils-psp/include/opcode/mips.h	2005-06-19 18:09:26.000000000 -0700
 @@ -148,6 +148,19 @@
  #define OP_MASK_EXTMSBD		0x1f	/* "ext" MSBD.  */
  #define OP_SH_EXTMSBD		11
@@ -267,7 +267,7 @@
  
  /* This is a list of macro expanded instructions.
 --- binutils-2.16.orig/opcodes/mips-dis.c	2005-03-03 03:49:50.000000000 -0800
-+++ binutils-psp/opcodes/mips-dis.c	2005-05-29 19:22:09.000000000 -0700
++++ binutils-psp/opcodes/mips-dis.c	2005-06-19 18:09:33.000000000 -0700
 @@ -140,6 +140,139 @@
    "c0_taglo",     "c0_taghi",     "c0_errorepc",  "c0_desave",
  };
@@ -595,7 +595,7 @@
  	  /* xgettext:c-format */
  	  (*info->fprintf_func) (info->stream,
 --- binutils-2.16.orig/opcodes/mips-opc.c	2005-03-03 03:49:50.000000000 -0800
-+++ binutils-psp/opcodes/mips-opc.c	2005-05-26 12:46:59.000000000 -0700
++++ binutils-psp/opcodes/mips-opc.c	2005-06-19 18:09:33.000000000 -0700
 @@ -109,6 +109,7 @@
  #define N5	(INSN_5400 | INSN_5500)
  #define N54	INSN_5400

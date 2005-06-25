@@ -1,5 +1,5 @@
 --- gcc-4.0.0.orig/config.sub	2005-01-17 17:20:48.000000000 -0800
-+++ gcc-psp/config.sub	2005-06-03 13:39:16.000000000 -0700
++++ gcc-psp/config.sub	2005-06-24 17:02:58.805613960 -0700
 @@ -253,6 +253,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
@@ -21,14 +21,46 @@
  		os=-mint
  		;;
 +	psp)
-+		basic_machine=mipsallegrexel-unknown
++		basic_machine=mipsallegrexel-psp
 +		os=-elf
 +		;;
  	mips3*-*)
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
+--- gcc-4.0.0.orig/gcc/config/mips/t-allegrex	1969-12-31 16:00:00.000000000 -0800
++++ gcc-psp/gcc/config/mips/t-allegrex	2005-06-19 18:09:38.000000000 -0700
+@@ -0,0 +1,29 @@
++# Suppress building libgcc1.a, since the MIPS compiler port is complete
++# and does not need anything from libgcc1.a.
++LIBGCC1 =
++CROSS_LIBGCC1 =
++
++EXTRA_MULTILIB_PARTS = crtbegin.o crtend.o crti.o crtn.o
++# Don't let CTOR_LIST end up in sdata section.
++CRTSTUFF_T_CFLAGS = -G 0
++
++# Assemble startup files.
++$(T)crti.o: $(srcdir)/config/mips/crti.asm $(GCC_PASSES)
++	$(GCC_FOR_TARGET) $(GCC_CFLAGS) $(MULTILIB_CFLAGS) $(INCLUDES) \
++	-c -o $(T)crti.o -x assembler-with-cpp $(srcdir)/config/mips/crti.asm
++
++$(T)crtn.o: $(srcdir)/config/mips/crtn.asm $(GCC_PASSES)
++	$(GCC_FOR_TARGET) $(GCC_CFLAGS) $(MULTILIB_CFLAGS) $(INCLUDES) \
++	-c -o $(T)crtn.o -x assembler-with-cpp $(srcdir)/config/mips/crtn.asm
++
++# We must build libgcc2.a with -G 0, in case the user wants to link
++# without the $gp register.
++TARGET_LIBGCC2_CFLAGS = -G 0
++
++# Build the libraries for both hard and soft floating point
++
++MULTILIB_OPTIONS = 
++MULTILIB_DIRNAMES = 
++
++LIBGCC = stmp-multilib
++INSTALL_LIBGCC = install-multilib
 --- gcc-4.0.0.orig/gcc/config/mips/mips.c	2005-04-15 00:00:27.000000000 -0700
-+++ gcc-psp/gcc/config/mips/mips.c	2005-06-03 14:30:08.000000000 -0700
++++ gcc-psp/gcc/config/mips/mips.c	2005-06-19 18:09:38.000000000 -0700
 @@ -673,6 +673,7 @@
  
    /* MIPS II */
@@ -38,7 +70,7 @@
    /* MIPS III */
    { "r4000", PROCESSOR_R4000, 3 },
 --- gcc-4.0.0.orig/gcc/config/mips/mips.h	2005-04-15 00:00:18.000000000 -0700
-+++ gcc-psp/gcc/config/mips/mips.h	2005-06-04 10:01:45.000000000 -0700
++++ gcc-psp/gcc/config/mips/mips.h	2005-06-19 18:09:38.000000000 -0700
 @@ -59,7 +59,8 @@
    PROCESSOR_R8000,
    PROCESSOR_R9000,
@@ -99,40 +131,8 @@
                                       ))
  
  /* True if the result of a load is not available to the next instruction.
---- gcc-4.0.0.orig/gcc/config/mips/t-allegrex	1969-12-31 16:00:00.000000000 -0800
-+++ gcc-psp/gcc/config/mips/t-allegrex	2005-06-08 13:59:28.931810264 -0700
-@@ -0,0 +1,29 @@
-+# Suppress building libgcc1.a, since the MIPS compiler port is complete
-+# and does not need anything from libgcc1.a.
-+LIBGCC1 =
-+CROSS_LIBGCC1 =
-+
-+EXTRA_MULTILIB_PARTS = crtbegin.o crtend.o crti.o crtn.o
-+# Don't let CTOR_LIST end up in sdata section.
-+CRTSTUFF_T_CFLAGS = -G 0
-+
-+# Assemble startup files.
-+$(T)crti.o: $(srcdir)/config/mips/crti.asm $(GCC_PASSES)
-+	$(GCC_FOR_TARGET) $(GCC_CFLAGS) $(MULTILIB_CFLAGS) $(INCLUDES) \
-+	-c -o $(T)crti.o -x assembler-with-cpp $(srcdir)/config/mips/crti.asm
-+
-+$(T)crtn.o: $(srcdir)/config/mips/crtn.asm $(GCC_PASSES)
-+	$(GCC_FOR_TARGET) $(GCC_CFLAGS) $(MULTILIB_CFLAGS) $(INCLUDES) \
-+	-c -o $(T)crtn.o -x assembler-with-cpp $(srcdir)/config/mips/crtn.asm
-+
-+# We must build libgcc2.a with -G 0, in case the user wants to link
-+# without the $gp register.
-+TARGET_LIBGCC2_CFLAGS = -G 0
-+
-+# Build the libraries for both hard and soft floating point
-+
-+MULTILIB_OPTIONS = 
-+MULTILIB_DIRNAMES = 
-+
-+LIBGCC = stmp-multilib
-+INSTALL_LIBGCC = install-multilib
 --- gcc-4.0.0.orig/gcc/config.gcc	2005-03-30 19:17:08.000000000 -0800
-+++ gcc-psp/gcc/config.gcc	2005-06-03 15:29:13.000000000 -0700
++++ gcc-psp/gcc/config.gcc	2005-06-19 18:09:38.000000000 -0700
 @@ -1500,6 +1500,13 @@
  	tmake_file=mips/t-r3900
  	use_fixproto=yes
