@@ -242,6 +242,20 @@ eval $COMBRELOCCAT <<EOF
   .rela.text    ${RELOCATING-0} : { *(.rela.text${RELOCATING+ .rela.text.* .rela.gnu.linkonce.t.*}) }
   .rel.fini     ${RELOCATING-0} : { *(.rel.fini) }
   .rela.fini    ${RELOCATING-0} : { *(.rela.fini) }
+
+  /* PSP-specific relocations. */
+  .rel.sceStub.text ${RELOCATING-0} : { *(.rel.sceStub.text) *(SORT(.rel.sceStub.text.*)) }
+  .rel.lib.ent.top  ${RELOCATING-0} : { *(.rel.lib.ent.top) }
+  .rel.lib.ent      ${RELOCATING-0} : { *(.rel.lib.ent) }
+  .rel.lib.ent.btm  ${RELOCATING-0} : { *(.rel.lib.ent.btm) }
+  .rel.lib.stub.top ${RELOCATING-0} : { *(.rel.lib.stub.top) }
+  .rel.lib.stub     ${RELOCATING-0} : { *(.rel.lib.stub) }
+  .rel.lib.stub.btm ${RELOCATING-0} : { *(.rel.lib.stub.btm) }
+  .rel.rodata.sceModuleInfo ${RELOCATING-0} : { *(.rel.rodata.sceModuleInfo) }
+  .rel.rodata.sceResident   ${RELOCATING-0} : { *(.rel.rodata.sceResident) }
+  .rel.rodata.sceNid        ${RELOCATING-0} : { *(.rel.rodata.sceNid) }
+  .rel.rodata.sceVstub      ${RELOCATING-0} : { *(.rel.rodata.sceVstub) *(SORT(.rel.rodata.sceVstub.*)) }
+
   .rel.rodata   ${RELOCATING-0} : { *(.rel.rodata${RELOCATING+ .rel.rodata.* .rel.gnu.linkonce.r.*}) }
   .rela.rodata  ${RELOCATING-0} : { *(.rela.rodata${RELOCATING+ .rela.rodata.* .rela.gnu.linkonce.r.*}) }
   ${OTHER_READONLY_RELOC_SECTIONS}
@@ -311,9 +325,32 @@ cat <<EOF
     KEEP (*(.fini))
     ${RELOCATING+${FINI_END}}
   } =${NOP-0}
+
+  /* PSP library stub functions. */
+  .sceStub.text   ${RELOCATING-0} : { *(.sceStub.text) *(SORT(.sceStub.text.*)) }
+
   ${RELOCATING+PROVIDE (__etext = .);}
   ${RELOCATING+PROVIDE (_etext = .);}
   ${RELOCATING+PROVIDE (etext = .);}
+
+  /* PSP library entry table and library stub table. */
+  .lib.ent.top  ${RELOCATING-0} : { *(.lib.ent.top) }
+  .lib.ent      ${RELOCATING-0} : { *(.lib.ent) }
+  .lib.ent.btm  ${RELOCATING-0} : { *(.lib.ent.btm) }
+
+  .lib.stub.top ${RELOCATING-0} : { *(.lib.stub.top) }
+  .lib.stub     ${RELOCATING-0} : { *(.lib.stub) }
+  .lib.stub.btm ${RELOCATING-0} : { *(.lib.stub.btm) }
+
+  /* PSP read-only data for module info, NIDs, and Vstubs.  The
+     .rodata.sceModuleInfo section must appear before the .rodata section
+     otherwise it would get absorbed into .rodata and the PSP bootloader
+     would be unable to locate the module info structure. */
+  .rodata.sceModuleInfo  ${RELOCATING-0} : { *(.rodata.sceModuleInfo) }
+  .rodata.sceResident    ${RELOCATING-0} : { *(.rodata.sceResident) }
+  .rodata.sceNid         ${RELOCATING-0} : { *(.rodata.sceNid) }
+  .rodata.sceVstub       ${RELOCATING-0} : { *(.rodata.sceVstub) *(SORT(.rodata.sceVstub.*)) }
+
   ${WRITABLE_RODATA-${RODATA}}
   .rodata1      ${RELOCATING-0} : { *(.rodata1) }
   ${CREATE_SHLIB-${SDATA2}}
