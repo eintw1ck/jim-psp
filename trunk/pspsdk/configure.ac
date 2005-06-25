@@ -30,6 +30,7 @@ AC_C_CONST
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_MEMCMP
+AC_CHECK_FUNCS([getcwd strchr])
 
 # Override the default prefix to point to where the pspdev tools should be installed.
 # The binaries will end up in $prefix/bin, but pspsdk itself will end up in $prefix/pspsdk.
