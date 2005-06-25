@@ -668,7 +668,7 @@ case $basic_machine in
 		os=-mint
 		;;
 	psp)
-		basic_machine=mipsallegrexel-unknown
+		basic_machine=mipsallegrexel-psp
 		os=-elf
 		;;
 	mips3*-*)
