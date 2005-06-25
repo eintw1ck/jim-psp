@@ -1,6 +1,7 @@
-# Based off of a normal elf32 MIPS target, but we use a seperate script
-# because the PSP architecture defines sections that cannot be overriden and
-# get absorbed (i.e. .rodata.sceModuleInfo).
+# Based off of the default elf32 MIPS target.  However, we use a seperate
+# script template because the PSP architecture defines sections that normally
+# cannot be overriden here and would normally get absorbed (i.e.
+# .rodata.sceModuleInfo would be absorbed into .rodata).
 
 EMBEDDED=yes
 . ${srcdir}/emulparams/elf32lmip.sh
