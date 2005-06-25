@@ -1505,6 +1505,11 @@ mipsallegrex-*-elf* | mipsallegrexel-*-elf*)
 	tmake_file=mips/t-allegrex
 	target_cpu_default="MASK_SINGLE_FLOAT|MASK_DIVIDE_BREAKS"
 	tm_defines="MIPS_ISA_DEFAULT=2 MIPS_CPU_STRING_DEFAULT=\\\"allegrex\\\" MIPS_ABI_DEFAULT=ABI_EABI"
+	case ${target} in
+	mipsallegrex*-psp-elf*)	
+		tm_file="${tm_file} mips/psp.h"
+		;;
+	esac
 	use_fixproto=yes
 	;;
 mmix-knuth-mmixware)
