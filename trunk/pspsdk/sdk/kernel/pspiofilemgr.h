@@ -123,7 +123,7 @@ long long sceIoLseek(int fd, long long offset, int whence);
  *
  * @return The position in the file after the seek. 
  */
-u32 sceIoLseek32(int fd, u32 offset, int whence);
+unsigned int sceIoLseek32(int fd, unsigned int offset, int whence);
 
 /**
  * Remove directory entry
@@ -227,7 +227,7 @@ int sceIoDclose(int fd);
   * @param outlen - Length of outdata, if 0 receives no data
   * @return 0 on success, < 0 on error
   */
-int sceIoDevctl(const char *dev, u32 cmd, void *indata, int inlen, void *outdata, int outlen);
+int sceIoDevctl(const char *dev, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
 
 /** 
   * Assigns one IO device to another (I guess)

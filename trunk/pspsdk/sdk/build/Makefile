@@ -6,6 +6,12 @@
 #
 # $Id$
 
+# program defs
+PSP_CC = psp-gcc
+PSP_CXX = psp-g++
+PSP_LD = psp-gcc
+PSP_AR = psp-ar
+
 # Include directories
 PSP_INCS := -I$(PSPSDK)/include -I. $(PSP_INCS)
 
@@ -16,7 +22,7 @@ PSP_CFLAGS := -O2 -G0 -Wall $(PSP_CFLAGS)
 PSP_CXXFLAGS := -O2 -G0 -Wall $(PSP_CXXFLAGS)
 
 # Linker flags
-PSP_LDFLAGS := -O0 -G0 -L$(PSPSDK)/lib -L$(PSPDEV)/psp/lib/gcc/psp/4.0.0 -T$(PSPSDK)/startup/linkfile -Ttext 8900000 -q $(PSP_LDFLAGS)
+PSP_LDFLAGS := -O0 -G0 -L$(PSPSDK)/lib $(PSP_LDFLAGS)
 
 # Assembler flags
 PSP_ASFLAGS := -G0 $(PSP_ASFLAGS)
@@ -24,7 +30,7 @@ PSP_ASFLAGS := -G0 $(PSP_ASFLAGS)
 # Link with following libraries.  This is a special case, and instead of
 # allowing the user to override the library order, we always make sure
 # libkernel is the last library to be linked.
-PSP_LIBS += -lc -lgcc -lkernel
+PSP_LIBS += -lgcc -lkernel
 
 # Define the overridable parameters for the EBOOT
 
@@ -81,8 +87,8 @@ PSP_CXX_COMPILE = $(PSP_CXX) $(PSP_CXXFLAGS) $(PSP_INCS)
 %.SFO : 
 	$(PSPSDK)/bin/mksfo '$(PSP_EBOOT_TITLE)' $(PSP_EBOOT_SFO)
 
-$(PSP_BIN) : $(PSP_OBJS) $(PSPSDK)/startup/crt0.o
-	$(PSP_LD) $(PSP_LDFLAGS) -o $(PSP_BIN).fix $(PSPSDK)/startup/crt0.o $(PSP_OBJS) $(PSP_LIBS)
+$(PSP_BIN) : $(PSP_OBJS) 
+	$(PSP_LD) $(PSP_LDFLAGS) -o $(PSP_BIN).fix $(PSP_OBJS) $(PSP_LIBS)
 	$(PSPSDK)/bin/prxtool -p -o $(PSP_BIN) $(PSP_BIN).fix 
 	rm -f $(PSP_BIN).fix
 
