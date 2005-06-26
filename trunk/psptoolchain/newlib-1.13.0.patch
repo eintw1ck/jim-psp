@@ -1,5 +1,5 @@
 --- newlib-1.13.0.orig/config.sub	2004-11-15 17:18:39.000000000 -0800
-+++ newlib-psp/config.sub	2005-06-24 17:04:02.066996768 -0700
++++ newlib-psp/config.sub	2005-06-24 17:04:02.000000000 -0700
 @@ -253,6 +253,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
@@ -52,15 +52,15 @@
      noconfigdirs="$noconfigdirs gprof ${libgcj}"
      ;;
 --- newlib-1.13.0.orig/newlib/configure.host	2004-10-05 12:44:24.000000000 -0700
-+++ newlib-psp/newlib/configure.host	2005-06-24 04:34:07.361668024 -0700
-@@ -569,6 +569,10 @@
- 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
- 	;;
++++ newlib-psp/newlib/configure.host	2005-06-25 23:48:15.705197400 -0700
+@@ -571,6 +571,10 @@
    mips*-*-elf*)
-+	case "${host}" in
-+	  mipsallegrex*)
-+		newlib_cflags="${newlib_cflags} -G0 -DPREFER_SIZE_OVER_SPEED -DCOMPACT_CTYPE" ;;
-+	esac
  	default_newlib_io_long_long="yes"
  	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
++	case "${host}" in
++	  mipsallegrex*-psp-*)
++		newlib_cflags="${newlib_cflags} -G0 -DPREFER_SIZE_OVER_SPEED -DCOMPACT_CTYPE -DCLOCK_PROVIDED -UMISSING_SYSCALL_NAMES" ;;
++	esac
  	;;
+   mmix-*)
+ 	syscall_dir=syscalls
