@@ -569,12 +569,12 @@ case "${host}" in
 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
 	;;
   mips*-*-elf*)
-	case "${host}" in
-	  mipsallegrex*)
-		newlib_cflags="${newlib_cflags} -G0 -DPREFER_SIZE_OVER_SPEED -DCOMPACT_CTYPE" ;;
-	esac
 	default_newlib_io_long_long="yes"
 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
+	case "${host}" in
+	  mipsallegrex*-psp-*)
+		newlib_cflags="${newlib_cflags} -G0 -DPREFER_SIZE_OVER_SPEED -DCOMPACT_CTYPE -DCLOCK_PROVIDED -UMISSING_SYSCALL_NAMES" ;;
+	esac
 	;;
   mmix-*)
 	syscall_dir=syscalls
