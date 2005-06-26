@@ -22,10 +22,11 @@
 		.weak	_init
 		.weak	_fini
 
-		.global module_start
-		.ent module_start
+		.global _start
+		.ent _start
 
 module_start:
+_start:
 		addiu 	$sp, -0x10
 		sw		$ra, 0($sp)	
 		sw		$s0, 4($sp)
@@ -54,7 +55,7 @@ module_start:
 		jr 		$ra
 		addiu	$sp, 0x10
 
-		.end module_start
+		.end _start
 
 # Second stage main function
 		.ent _main
