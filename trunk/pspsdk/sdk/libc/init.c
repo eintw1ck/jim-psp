@@ -18,7 +18,7 @@ void _pspsdk_stdio_deinit();
 void _pspsdk_stdlib_init();
 void _pspsdk_stdlib_deinit();
 
-__attribute__((weak))
+__attribute__((weak, constructor))
 void _pspsdk_libc_init()
 {
     _pspsdk_alloc_init();
@@ -26,7 +26,7 @@ void _pspsdk_libc_init()
     _pspsdk_stdlib_init();
 }
 
-__attribute__((weak))
+__attribute__((weak, destructor))
 void _pspsdk_libc_deinit()
 {
     _pspsdk_stdlib_deinit();
