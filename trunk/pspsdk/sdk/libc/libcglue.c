@@ -1,4 +1,5 @@
 
+#include <errno.h>
 #include <stdarg.h>
 #include <time.h>
 #include <sys/fcntl.h>
@@ -10,6 +11,11 @@
 #include <psptypes.h>
 #include <pspiofilemgr.h>
 #include <psputils.h>
+
+/* These functions aren't exposed in any public headers, and they probably don't need to be. */
+int sceKernelStdin(void);
+int sceKernelStdout(void);
+int sceKernelStderr(void);
 
 /* Wrappers of the standard open(), close(), read(), write(), and lseek() routines. */
 #ifdef F__open
@@ -43,12 +49,66 @@ int _open(const char *name, int flags, int mode)
 #endif
 
 #ifdef F__close
+int _close(int fd)
+{
+	int sce_fd = fd;
+
+	if (fd == STDIN_FILENO) {
+		sce_fd = sceKernelStdin();
+	} else if (fd == STDOUT_FILENO) {
+		sce_fd = sceKernelStdout();
+	} else if (fd == STDERR_FILENO) {
+		sce_fd == sceKernelStderr();
+	}
+
+	if (sce_fd < 0) {
+		return -EBADF;
+	}
+
+	return sceIoClose(sce_fd);
+}
 #endif
 
 #ifdef F__read
+int _read(int fd, void *buf, size_t size)
+{
+	int sce_fd = fd;
+
+	if (fd == STDIN_FILENO) {
+		sce_fd = sceKernelStdin();
+	} else if (fd == STDOUT_FILENO) {
+		sce_fd = sceKernelStdout();
+	} else if (fd == STDERR_FILENO) {
+		sce_fd == sceKernelStderr();
+	}
+
+	if (sce_fd < 0) {
+		return -EBADF;
+	}
+
+	return sceIoRead(fd, buf, size);
+}
 #endif
 
 #ifdef F__write
+int _write(int fd, const void *buf, size_t size)
+{
+	int sce_fd = fd;
+
+	if (fd == STDIN_FILENO) {
+		sce_fd = sceKernelStdin();
+	} else if (fd == STDOUT_FILENO) {
+		sce_fd = sceKernelStdout();
+	} else if (fd == STDERR_FILENO) {
+		sce_fd == sceKernelStderr();
+	}
+
+	if (sce_fd < 0) {
+		return -EBADF;
+	}
+
+	return sceIoWrite(fd, buf, size);
+}
 #endif
 
 #ifdef F__lseek
