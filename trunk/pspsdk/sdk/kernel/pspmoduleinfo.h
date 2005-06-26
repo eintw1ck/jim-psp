@@ -49,9 +49,11 @@ extern char _gp[];
 	"    .word 0\n"                                                 \
 	"    .set pop\n"                                                \
 	);                                                              \
+	extern char __lib_ent_top[], __lib_ent_bottom[];                \
+	extern char __lib_stub_top[], __lib_stub_bottom[];              \
 	SceModuleInfo module_info                                       \
-		__attribute__((section(".rodata.sceModuleInfo",         \
-			       aligned(16), unused))) = {               \
+		__attribute__((section(".rodata.sceModuleInfo"),        \
+			       aligned(16), unused)) = {                \
 	  attributes, { minor_version, major_version }, #name, 0, _gp,  \
 	  __lib_ent_top, __lib_ent_bottom,                              \
 	  __lib_stub_top, __lib_stub_bottom                             \
