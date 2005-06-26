@@ -432,15 +432,15 @@ FILE *fopen(const char *fname, const char *mode)
       switch(*mode++) {
         case 'r':
           flag = _IOREAD;
-          iomode = O_RDONLY;
+          iomode = PSP_O_RDONLY;
           break;
         case 'w':
           flag = _IOWRT;
-          iomode = (O_WRONLY | O_CREAT);
+          iomode = (PSP_O_WRONLY | PSP_O_CREAT);
           break;
         case 'a':
           flag = _IORW;
-          iomode = O_APPEND;
+          iomode = PSP_O_APPEND;
           break;
       }
       /* test the extended file mode. */
@@ -450,7 +450,7 @@ FILE *fopen(const char *fname, const char *mode)
             continue;
           case '+':
             flag |= (_IOREAD | _IOWRT);
-            iomode |= (O_RDWR | O_CREAT | O_TRUNC);
+            iomode |= (PSP_O_RDWR | PSP_O_CREAT | PSP_O_TRUNC);
             continue;
           default:
             break;
@@ -500,15 +500,15 @@ FILE *fdopen(int fd, const char *mode)
       switch(*mode++) {
         case 'r':
           flag = _IOREAD;
-          iomode = O_RDONLY;
+          iomode = PSP_O_RDONLY;
           break;
         case 'w':
           flag = _IOWRT;
-          iomode = (O_WRONLY | O_CREAT);
+          iomode = (PSP_O_WRONLY | PSP_O_CREAT);
           break;
         case 'a':
           flag = _IORW;
-          iomode = O_APPEND;
+          iomode = PSP_O_APPEND;
           break;
       }
       /* test the extended file mode. */
@@ -518,7 +518,7 @@ FILE *fdopen(int fd, const char *mode)
             continue;
           case '+':
             flag |= (_IOREAD | _IOWRT);
-            iomode |= (O_RDWR | O_CREAT | O_TRUNC);
+            iomode |= (PSP_O_RDWR | PSP_O_CREAT | PSP_O_TRUNC);
             continue;
           default:
             break;
