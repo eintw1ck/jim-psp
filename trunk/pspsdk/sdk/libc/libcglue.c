@@ -52,7 +52,7 @@ time_t time(time_t *t)
 
 /* Other POSIX routines that must be defined. */
 #ifdef F__fstat
-int fstat(int fd, struct stat *sbuf)
+int _fstat(int fd, struct stat *sbuf)
 {
 	sbuf->st_mode = 0x2000;
 	return 0;
