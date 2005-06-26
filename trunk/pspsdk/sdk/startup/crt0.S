@@ -80,10 +80,6 @@ _main:
 		addiu	$t0, $t0, 4
 
 		la		$gp, _gp
-# Call libc initialisation
-
-		jal		_pspsdk_libc_init
-		nop
 
 		la		$t0, _init
 		beqz	$t0, 1f
@@ -108,10 +104,6 @@ _exit:
 		jalr	$t0
 		nop
 2:
-
-# Call libc deinit
-		jal _pspsdk_libc_deinit
-		nop
 
 		lw		$ra, 0($sp)
 		jr		$ra
