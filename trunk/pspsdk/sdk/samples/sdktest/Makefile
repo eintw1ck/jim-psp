@@ -1,3 +1,4 @@
+PSPSDK=$(shell psp-config --pspsdk-path)
 PSP_EBOOT = EBOOT.PBP
 PSP_BIN = sdktest.elf
 PSP_OBJS = main.o
