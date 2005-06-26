@@ -12,6 +12,7 @@ install: $(PSP_LIB)
 	@mkdir  -p $(PSPDEV)/libraries/libTremor/include $(PSPDEV)/libraries/libTremor/lib
 	@cp ../include/ogg.h $(PSPDEV)/libraries/libTremor/include
 	@cp ../include/os_types.h $(PSPDEV)/libraries/libTremor/include
+	@cp ../include/config_types.h $(PSPDEV)/libraries/libTremor/include
 	@cp ../include/ivorbisfile.h $(PSPDEV)/libraries/libTremor/include
 	@cp ../include/ivorbiscodec.h $(PSPDEV)/libraries/libTremor/include
 	@cp ../lib/libvorbisidec.a $(PSPDEV)/libraries/libTremor/lib
