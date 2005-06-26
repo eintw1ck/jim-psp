@@ -79,14 +79,14 @@ int _read(int fd, void *buf, size_t size)
 	} else if (fd == STDOUT_FILENO) {
 		sce_fd = sceKernelStdout();
 	} else if (fd == STDERR_FILENO) {
-		sce_fd == sceKernelStderr();
+		sce_fd = sceKernelStderr();
 	}
 
 	if (sce_fd < 0) {
 		return -EBADF;
 	}
 
-	return sceIoRead(fd, buf, size);
+	return sceIoRead(sce_fd, buf, size);
 }
 #endif
 
@@ -100,18 +100,37 @@ int _write(int fd, const void *buf, size_t size)
 	} else if (fd == STDOUT_FILENO) {
 		sce_fd = sceKernelStdout();
 	} else if (fd == STDERR_FILENO) {
-		sce_fd == sceKernelStderr();
+		sce_fd = sceKernelStderr();
 	}
 
 	if (sce_fd < 0) {
 		return -EBADF;
 	}
 
-	return sceIoWrite(fd, buf, size);
+	return sceIoWrite(sce_fd, buf, size);
 }
 #endif
 
 #ifdef F__lseek
+off_t _lseek(int fd, off_t offset, int whence)
+{
+	int sce_fd = fd;
+
+	if (fd == STDIN_FILENO) {
+		sce_fd = sceKernelStdin();
+	} else if (fd == STDOUT_FILENO) {
+		sce_fd = sceKernelStdout();
+	} else if (fd == STDERR_FILENO) {
+		sce_fd = sceKernelStderr();
+	}
+
+	if (sce_fd < 0) {
+		return -EBADF;
+	}
+
+	/* We don't have to do anything with the whence argument because SEEK_* == PSP_SEEK_*. */
+	return (off_t) sceIoLseek(sce_fd, offset, whence);
+}
 #endif
 
 /* Time routines.  These wrap around the routines provided by the kernel. */
