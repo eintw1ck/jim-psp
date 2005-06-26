@@ -54,7 +54,7 @@ time_t time(time_t *t)
 #ifdef F__fstat
 int _fstat(int fd, struct stat *sbuf)
 {
-	sbuf->st_mode = 0x2000;
+	sbuf->st_mode = S_IFCHR;
 	return 0;
 }
 #endif
