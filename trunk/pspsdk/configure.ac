@@ -33,17 +33,21 @@ AC_FUNC_MEMCMP
 AC_CHECK_FUNCS([getcwd strchr])
 
 # Override the default prefix to point to where the pspdev tools should be installed.
-# The binaries will end up in $prefix/bin, but pspsdk itself will end up in $prefix/pspsdk.
+# The binaries will end up in $prefix/bin, but pspsdk itself will end up in $prefix/$target/sdk.
 # TODO: We should see if the user will ever want to override this.
 prefix="$pspdev"
+psp_targetdir="psp"
 
 # Create the pspsdk installation paths.
-pspsdk="$prefix/pspsdk"
+pspsdk_topdir="$psp_targetdir/sdk"
+pspsdk="$prefix/$pspsdk_topdir"
 pspsdk_includedir="$pspsdk/include"
 pspsdk_libdir="$pspsdk/lib"
 PSPSDK="$pspsdk"
 PSPSDK_INCLUDEDIR="$pspsdk_includedir"
 PSPSDK_LIBDIR="$pspsdk_libdir"
+AC_DEFINE_UNQUOTED(PSPSDK_TOPDIR, ["$pspsdk_topdir"],
+          [Toplevel directory where PSPSDK will be installed, relative to $prefix])
 AC_SUBST(PSPSDK)
 AC_SUBST(PSPSDK_INCLUDEDIR)
 AC_SUBST(PSPSDK_LIBDIR)

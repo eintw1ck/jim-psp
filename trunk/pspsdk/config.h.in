@@ -61,6 +61,9 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
+/* Toplevel directory where PSPSDK will be installed, relative to $prefix */
+#undef PSPSDK_TOPDIR
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
