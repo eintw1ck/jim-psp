@@ -798,6 +798,10 @@ int getc(FILE *stream)
 
 
 #ifdef F_getchar
+/* Get rid of the newlib macro definition. */
+#ifdef getchar
+#undef getchar
+#endif
 /* We can't use the macro version of getc provided in newlib's stdio.h. */
 #ifdef getc
 #undef getc
