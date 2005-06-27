@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------
 # Licensed under the BSD license, see LICENSE in PSPSDK root for details.
 #
-# Makefile - Base makefile for projects using PSPSDK.
+# build.mak - Base makefile for projects using PSPSDK.
 #
 # Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
 # Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
@@ -10,36 +10,45 @@
 #
 # $Id$
 
-# program defs
-PSP_CC = psp-gcc
-PSP_CXX = psp-g++
-PSP_LD = psp-gcc
-PSP_AR = psp-ar
+# Note: The PSPSDK make variable must be defined before this file is included.
+ifeq ($(PSPSDK),)
+$(error $$(PSPSDK) is undefined.  Use "PSPSDK := $$(shell psp-config --pspsdk-path)" in your Makefile)
+endif
 
-# Include directories
-PSP_INCS := -I$(PSPSDK)/include -I. $(PSP_INCS)
+CC       = psp-gcc
+CXX      = psp-g++
+AS       = psp-gcc
+LD       = psp-gcc
+AR       = psp-ar
+RANLIB   = psp-ranlib
+MKSFO    = mksfo
+PACK_PBP = pack-pbp
 
-# C compiler flags
-PSP_CFLAGS := -O2 -G0 -Wall $(PSP_CFLAGS)
+# Add in PSPSDK includes and libraries.
+INCDIR   := $(INCDIR) . $(PSPSDK)/include
+LIBDIR   := $(LIBDIR) . $(PSPSDK)/lib
 
-# C++ compiler flags
-PSP_CXXFLAGS := -O2 -G0 -Wall $(PSP_CXXFLAGS)
+CFLAGS   := $(addprefix -I,$(INCDIR)) $(CFLAGS)
+CXXFLAGS := $(CFLAGS) $(CXXFLAGS)
+ASFLAGS  := $(CFLAGS) $(ASFLAGS)
 
-# Linker flags
-PSP_LDFLAGS := -O0 -G0 -L$(PSPSDK)/lib $(PSP_LDFLAGS)
+LDFLAGS  := $(addprefix -L,$(LIBDIR)) $(LDFLAGS)
 
-# Assembler flags
-PSP_ASFLAGS := -G0 $(PSP_ASFLAGS)
+# Library selection.  By default we link with PSPSDK's libc.  Allow the
+# user to link with Newlib's libc if USE_NEWLIB_LIBC is set to 1.
+PSPSDK_LIBC_LIB = -lpsplibc
+ifeq ($(USE_NEWLIB_LIBC),1)
+PSPSDK_LIBC_LIB = -lc -lpspglue
+endif
 
-# Link with following libraries.  This is a special case, and instead of
-# allowing the user to override the library order, we always make sure
-# libkernel is the last library to be linked.
-PSP_LIBS += -lgcc -lkernel
+# Link with following default libraries.  Other libraries should be specified in the $(LIBS) variable.
+# TODO: This library list needs to be generated at configure time.
+PSPSDK_LIBS = -lpspdebug
+LIBS     := $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpspkernel
 
-# Define the overridable parameters for the EBOOT
-
+# Define the overridable parameters for EBOOT.PBP
 ifndef PSP_EBOOT_TITLE
-PSP_EBOOT_TITLE = PSPSDK
+PSP_EBOOT_TITLE = $(TARGET)
 endif
 
 ifndef PSP_EBOOT_SFO
@@ -47,7 +56,7 @@ PSP_EBOOT_SFO = PARAM.SFO
 endif
 
 ifndef PSP_EBOOT_ICON
-PSP_EBOOT_ICON = $(PSPSDK)/build/res/ICON0.PNG
+PSP_EBOOT_ICON = NULL
 endif
 
 ifndef PSP_EBOOT_ICON1
@@ -70,36 +79,22 @@ ifndef PSP_EBOOT_PSAR
 PSP_EBOOT_PSAR = NULL
 endif
 
-# Externally defined variables: PSP_BIN, PSP_OBJS, PSP_LIB
+ifndef PSP_EBOOT
+PSP_EBOOT = EBOOT.PBP
+endif
 
-# These macros can be used to simplify certain build rules.
-PSP_C_COMPILE = $(PSP_CC) $(PSP_CFLAGS) $(PSP_INCS)
-PSP_CXX_COMPILE = $(PSP_CXX) $(PSP_CXXFLAGS) $(PSP_INCS)
+all: $(TARGET).elf $(EXTRA_TARGETS)
 
-%.o : %.c
-	$(PSP_CC) $(PSP_CFLAGS) $(PSP_INCS) -c $< -o $@
+$(TARGET).elf: $(OBJS)
+	$(LINK.c) $^ $(LIBS) -o $@
 
-%.o : %.cpp
-	$(PSP_CXX) $(PSP_CXXFLAGS) $(PSP_INCS) -c $< -o $@
+$(PSP_EBOOT_SFO): 
+	$(MKSFO) '$(PSP_EBOOT_TITLE)' $@
 
-%.o : %.S
-	$(PSP_CC) $(PSP_CFLAGS) $(PSP_INCS) -c $< -o $@
+$(PSP_EBOOT): $(TARGET).elf $(PSP_EBOOT_SFO)
+	$(PACK_PBP) EBOOT.PBP $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
+		$(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
+		$(PSP_EBOOT_SND0)  $(TARGET).elf $(PSP_EBOOT_PSAR)
 
-%.o : %.s
-	$(PSP_AS) $(PSP_ASFLAGS) $< -o $@
-
-%.SFO : 
-	$(PSPSDK)/bin/mksfo '$(PSP_EBOOT_TITLE)' $(PSP_EBOOT_SFO)
-
-$(PSP_BIN) : $(PSP_OBJS) 
-	$(PSP_LD) $(PSP_LDFLAGS) -o $(PSP_BIN).fix $(PSP_OBJS) $(PSP_LIBS)
-	$(PSPSDK)/bin/prxtool -p -o $(PSP_BIN) $(PSP_BIN).fix 
-	rm -f $(PSP_BIN).fix
-
-$(PSP_LIB) : $(PSP_OBJS)
-	$(PSP_AR) cru $(PSP_LIB) $(PSP_OBJS)
-
-$(PSP_EBOOT) : $(PSP_BIN) $(PSP_EBOOT_SFO)
-	$(PSPSDK)/bin/pack-pbp EBOOT.PBP $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
-		     $(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
-			 $(PSP_EBOOT_SND0)  $(PSP_BIN) $(PSP_EBOOT_PSAR)
+clean:
+	-rm -f $(TARGET).elf *.o $(PSP_EBOOT_SFO) $(PSP_EBOOT)
