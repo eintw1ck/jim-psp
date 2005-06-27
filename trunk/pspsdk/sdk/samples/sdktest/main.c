@@ -1,10 +1,10 @@
-#include <kernel.h>
-#include <debug.h>
+#include <pspkernel.h>
+#include <pspdebug.h>
 #include <stdlib.h>
 #include <string.h>
 
 /* Define the module info section */
-MODULE_INFO("SDKTEST", 0x01010000)
+PSP_MODULE_INFO("SDKTEST", 0, 1, 1);
 
 /* Define printf, just to make typing easier */
 #define printf	pspDebugScreenPrintf
