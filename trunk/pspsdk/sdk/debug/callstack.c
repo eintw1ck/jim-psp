@@ -9,8 +9,10 @@
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ *
  * $Id$
  */
+
 /* 
  * $Xorg: getretmips.c,v 1.4 2001/02/09 02:06:19 xorgcvs Exp$
  *

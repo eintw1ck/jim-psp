@@ -7,6 +7,7 @@
  *
  * Copyright (c) 2005 Adresd
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
+ *
  * $Id$
  */
 #ifndef __AUDIO_H__
