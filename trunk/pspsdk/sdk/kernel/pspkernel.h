@@ -25,6 +25,7 @@
 #include <psputils.h>
 #include <pspumd.h>
 #include <pspge.h>
+#include <pspkerror.h>
 
 /** @defgroup Kernel PSP Kernel Import Library */
 

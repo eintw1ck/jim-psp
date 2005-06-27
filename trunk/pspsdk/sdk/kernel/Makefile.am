@@ -24,6 +24,7 @@ libpspkernelinclude_HEADERS =	\
 	pspkernel.h		\
 	psploadexec.h		\
 	pspmoduleinfo.h		\
+	pspkerror.h		\
 	pspmodulemgr.h		\
 	pspthreadman.h		\
 	pspumd.h		\
