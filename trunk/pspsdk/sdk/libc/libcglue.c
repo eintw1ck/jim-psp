@@ -169,6 +169,10 @@ time_t time(time_t *t)
 
 /* PSP-compatible sbrk(). */
 #ifdef F__sbrk
+void * _sbrk(ptrdiff_t incr)
+{
+	return (void *) -1;
+}
 #endif
 
 /* Other POSIX routines that must be defined. */
