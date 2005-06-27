@@ -32,6 +32,17 @@ AC_FUNC_MALLOC
 AC_FUNC_MEMCMP
 AC_CHECK_FUNCS([getcwd strchr])
 
+# Doxygen.
+DX_HTML_FEATURE(ON)
+DX_CHM_FEATURE(OFF)
+DX_CHI_FEATURE(OFF)
+DX_MAN_FEATURE(OFF)
+DX_RTF_FEATURE(OFF)
+DX_XML_FEATURE(OFF)
+DX_PDF_FEATURE(OFF)
+DX_PS_FEATURE(OFF)
+DX_INIT_DOXYGEN(pspsdk, doc/doxygen.cfg, doc)
+
 # Override the default prefix to point to where the pspdev tools should be installed.
 # The binaries will end up in $prefix/bin, but pspsdk itself will end up in $prefix/$target/sdk.
 # TODO: We should see if the user will ever want to override this.
