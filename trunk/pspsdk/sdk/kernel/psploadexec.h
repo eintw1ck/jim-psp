@@ -52,7 +52,7 @@ int sceKernelRegisterExitCallback(int cbid);
 void sceKernelExitGame(void);
 
 /** 
-  * Execute a new game executable (does not support ms)
+  * Execute a new game executable, limited when not running in kernel mode.
   * 
   * @param file - The file to execute.
   * @param unk  - Unknown, set to NULL.

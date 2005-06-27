@@ -14,13 +14,19 @@
 #ifndef __GE_H__
 #define __GE_H__
 
+/** Typedef for a GE callback */
 typedef void (*GeCallback)(int id, void *arg);
 
+/** Structure to hold the callback data */
 typedef struct _GeCallbackData
 {
+	/** GE callback for the signal interrupt */
 	GeCallback signal_func;
+	/** GE callback argument for signal interrupt */
 	void *signal_arg;
+	/** GE callback for the finish interrupt */
 	GeCallback finish_func;
+	/** GE callback argument for finish interrupt */
 	void *finish_arg;
 } GeCallbackData;
 

@@ -186,9 +186,9 @@ int sceKernelDeleteThread(int thid);
  * @code
  * @endcode
  *
- * @param thid
- * @param arg1
- * @param arg2
+ * @param thid - Thread id from sceKernelCreateThread
+ * @param arglen - Length of the args pointed to by the args parameter
+ * @param args - Pointer to the arguments.
  */
 int sceKernelStartThread(int thid, int arglen, void *args);
 

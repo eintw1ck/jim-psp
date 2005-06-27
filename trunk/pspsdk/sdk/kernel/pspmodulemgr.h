@@ -14,22 +14,67 @@
 #ifndef __MODLOAD_H__
 #define __MODLOAD_H__
 
+/** @defgroup ModuleMgr Module Manager Library
+  * This module contains the imports for the kernel's module management routines.
+  */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-struct load_t
+/** @addtogroup ModuleMgr Module Manager Library */
+/*@{*/
+
+typedef struct _mod_param
 {
-   u32 a;   // Set to 0x14
-   u32 b;   // For encrypted set to 1, else 2
-   u32 c;   // ""  ""        ""  "" "  ""   ""
-   u32 unused;  // Unused
-   u32 d;   // Set to 0
-   u32 e;   // Set to 0x01000000
-};
-int sceKernelLoadModule(const char *path, u32 zero, struct load_t* mod);
-int sceKernelLoadModuleMs(const char *path, u32 zero, struct load_t* mod);
-int sceKernelStartModule(int modid, u32 zero1, u32 zero2, u32 *status, u32 zero3);
+	u32 size;
+	u32 unk4;
+	u32 unk8;
+	u32 unkC;
+	u8  unk10;
+	u8  unk11;
+	u16 unk12;
+} __attribute__((packed)) mod_param_t;
+
+/**
+  * Load a module.
+  * @note This function restricts where it can load from (such as from flash0) 
+  * unless you call it in kernel mode. It also must be called from a thread.
+  * 
+  * @param path - The path to the module to load.
+  * @param zero - Unknown, set to 0 
+  * @param mod  - Pointer to a mod_param_t structure. Can be NULL.
+  *
+  * @return < 0 on error, otherwise the module id 
+  */
+int sceKernelLoadModule(const char *path, u32 zero, mod_param_t* mod);
+
+/**
+  * Load a module from MS.
+  * @note This function restricts what it can load, e.g. it wont load plain executables.
+  * 
+  * @param path - The path to the module to load.
+  * @param zero - Unknown, set to 0 
+  * @param mod  - Pointer to a mod_param_t structure. Can be NULL.
+  *
+  * @return < 0 on error, otherwise the module id 
+  */
+int sceKernelLoadModuleMs(const char *path, u32 zero, mod_param_t* mod);
+
+/**
+  * Start a loaded module.
+  *
+  * @param modid - The ID of the module returned from LoadModule.
+  * @param arglen - Length of the args.
+  * @param args - A pointer to the arguments to the module.
+  * @param status - Returns the status of the start.
+  * @param zero - Unknown, set to 0.
+  *
+  * @return < 0 on error.
+  */
+int sceKernelStartModule(int modid, u32 arglen, void* args, u32 *status, u32 zero);
+
+/*@}*/
 
 #ifdef __cplusplus
 }
