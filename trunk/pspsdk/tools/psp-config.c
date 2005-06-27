@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #define PSPDEV_ENV "PSPDEV"
 #define PATH_ENV "PATH"
 
@@ -182,7 +186,7 @@ void print_path(char *name)
 
 	if (pspdev_env != NULL) {
 		strcat(pspdev_path, DIR_SEP_STR);
-		strcat(pspdev_path, "pspsdk");
+		strcat(pspdev_path, PSPSDK_TOPDIR);
 		printf("%s\n", pspdev_path);
 	}
 }
