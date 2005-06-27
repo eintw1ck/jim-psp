@@ -1,8 +1,15 @@
-// Audiolib for PSP
-// built on top of sceAudio, but to provide multiple thread usage and callbacks
-//
-// adresd 2005
-
+/*
+ * PSP Software Development Kit - http://www.pspdev.org
+ * -----------------------------------------------------------------------
+ * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
+ *
+ * pspaudiolib.c - Audio library build on top of sceAudio, but to provide
+ *                 multiple thread usage and callbacks.
+ *
+ * Copyright (c) 2005 Adresd
+ * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
+ * $Id$
+ */
 #include <stdlib.h>
 #include <string.h>
 #include <pspthreadman.h>

@@ -1,3 +1,15 @@
+/*
+ * PSP Software Development Kit - http://www.pspdev.org
+ * -----------------------------------------------------------------------
+ * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
+ *
+ * pspaudiolib.h - Audio library build on top of sceAudio, but to provide
+ *                 multiple thread usage and callbacks.
+ *
+ * Copyright (c) 2005 Adresd
+ * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
+ * $Id$
+ */
 #ifndef __AUDIOLIB_H__
 #define __AUDIOLIB_H__
 

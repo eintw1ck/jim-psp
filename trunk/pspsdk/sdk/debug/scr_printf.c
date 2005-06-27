@@ -1,16 +1,15 @@
-/*      
-# _____     ___ ____     ___ ____
-#  ____|   |    ____|   |        | |____|
-# |     ___|   |     ___|    ____| |    \    PSPDEV Open Source Project.
-#-----------------------------------------------------------------------
-# Copyright 2001-2004, ps2dev - http://www.ps2dev.org
-# Licenced under Academic Free License version 2.0
-# Review ps2sdk README & LICENSE files for further details.
-#
-# $Id$
-# EE UGLY DEBUG ON SCREEN
-*/
-
+/*
+ * PSP Software Development Kit - http://www.pspdev.org
+ * -----------------------------------------------------------------------
+ * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
+ *
+ * scr_printf.c - Debug screen functions.
+ *
+ * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
+ * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
+ * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ * $Id$
+ */
 #include <stdio.h>
 #include <psptypes.h>
 #include <pspkernel.h>

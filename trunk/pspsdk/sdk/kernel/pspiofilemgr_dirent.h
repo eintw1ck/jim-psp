@@ -1,13 +1,15 @@
 /*
-# _____     ___ ____     ___ ____
-#  ____|   |    ____|   |        | |____|
-# |     ___|   |     ___|    ____| |    \    PSPDEV Open Source Project.
-#-----------------------------------------------------------------------
-#
-# $Id$
-# File attributes and directory entries.
-*/
-
+ * PSP Software Development Kit - http://www.pspdev.org
+ * -----------------------------------------------------------------------
+ * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
+ *
+ * pspiofilemgr_dirent.h - File attributes and directory entries.
+ *
+ * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
+ * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
+ * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ * $Id$
+ */
 #ifndef SYS_DIRENT_H
 #define SYS_DIRENT_H
 

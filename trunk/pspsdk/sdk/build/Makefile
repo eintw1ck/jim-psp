@@ -1,9 +1,12 @@
-# _____     ___ ____     ___ ____
-#  ____|   |   |____|   |        | |____|
-# |     ___|   |     ___|    ____| |    \    PSPDEV Open Source Project.
-#-----------------------------------------------------------------------
-# Review pspsdk README & LICENSE files for further details.
+# PSP Software Development Kit - http://www.pspdev.org
+# -----------------------------------------------------------------------
+# Licensed under the BSD license, see LICENSE in PSPSDK root for details.
 #
+# Makefile - Base makefile for projects using PSPSDK.
+#
+# Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
+# Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
+# Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
 # $Id$
 
 # program defs

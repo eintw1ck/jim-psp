@@ -20,4 +20,4 @@ lib_LIBRARIES = libpspaudio.a libpspaudiolib.a
 
 libpspaudio_a_SOURCES = audio.S
 
-libpspaudiolib_a_SOURCES = audiolib.c
+libpspaudiolib_a_SOURCES = pspaudiolib.c

@@ -1,18 +1,16 @@
 /*
-# _____     ___ ____     ___ ____
-#  ____|   |    ____|   |        | |____|
-# |     ___|   |____ ___|    ____| |    \    PS2DEV Open Source Project.
-#-----------------------------------------------------------------------
-# (c) 2003 Marcus R. Brown (mrbrown@0xd6.org)
-# Licenced under Academic Free License version 2.0
-# Review ps2sdk README & LICENSE files for further details.
-#
-# $Id$
-# Standard C library heap allocation routines.
-*/
-
+ * PSP Software Development Kit - http://www.pspdev.org
+ * -----------------------------------------------------------------------
+ * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
+ *
+ * alloc.c - Standard C library heap allocation routines.
+ *
+ * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
+ * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
+ * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ * $Id$
+ */
 /* This code is based on code contributed by Philip Joaqiun (jenova0). */
-
 #include <psptypes.h>
 #include <pspkernel.h>
 #include <malloc.h>

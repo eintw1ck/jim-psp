@@ -1,18 +1,16 @@
 /*
-# _____     ___ ____     ___ ____
-#  ____|   |    ____|   |        | |____|
-# |     ___|   |____ ___|    ____| |    \    PS2DEV Open Source Project.
-#-----------------------------------------------------------------------
-# (C)2001, Gustavo Scotti (gustavo@scotti.com)
-# (c) 2003 Marcus R. Brown (mrbrown@0xd6.org)
-# Licenced under Academic Free License version 2.0
-# Review ps2sdk README & LICENSE files for further details.
-#
-# $Id$
-# EE kernel sbrk function
-# Primary function to malloc - reserved
-*/
-
+ * PSP Software Development Kit - http://www.pspdev.org
+ * -----------------------------------------------------------------------
+ * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
+ *
+ * sbrk.c - kernel sbrk function, primary function to malloc - reserved
+ *
+ * Copyright (c) 2001 Gustavo Scotti <gustavo@scotti.com>
+ * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
+ * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
+ * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ * $Id$
+ */
 #include <pspkernel.h>
 
 /* Let's do a quick bodge :P */
