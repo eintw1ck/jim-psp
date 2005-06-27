@@ -142,7 +142,6 @@ void pspDebugScreenPrintf(const char *format, ...)
                                 }
           }
        }
-    pspDebugScreenPutChar( X*7 , Y * 8, fg_col, 219);
 }
 
 
