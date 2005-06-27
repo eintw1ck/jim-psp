@@ -1,17 +1,16 @@
-PSPSDK=$(shell psp-config --pspsdk-path)
-PSP_EBOOT = EBOOT.PBP
-PSP_BIN = sdktest.elf
-PSP_OBJS = main.o
-PSP_LIBS = -lpspdebug
-#PSP_EBOOT_SFO = res/PARAM.SFO
+TARGET = sdktest
+OBJS = main.o
+
+INCDIR = 
+CFLAGS = -O2 -G0 -Wall
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+ASFLAGS = $(CFLAGS)
+
+LIBDIR =
+LDFLAGS =
+
+EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = SDK Test v1.0
 
-all: release 
-
-release : $(PSP_EBOOT)
-
-clean:
-	rm -f *.elf *.o *.a $(PSP_EBOOT) $(PSP_EBOOT_SFO)
-
-include ../../build/Makefile.global
-
+PSPSDK=$(shell psp-config --pspsdk-path)
+include $(PSPSDK)/lib/build.mak
