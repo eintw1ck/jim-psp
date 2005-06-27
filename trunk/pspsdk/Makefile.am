@@ -13,3 +13,6 @@ EXTRA_DIST =			\
 	VERSION			\
 	$(DX_CONFIG)		\
 	doc/html
+
+dist-hook:
+	rm -rf `find $(distdir)/doc/html -name .svn -o -name CVS`
