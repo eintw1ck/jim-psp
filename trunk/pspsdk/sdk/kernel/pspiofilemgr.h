@@ -256,6 +256,7 @@ int sceIoDevctl(const char *dev, unsigned int cmd, void *indata, int inlen, void
   * @code 
   *	sceIoUnassign("flash0");
   * sceIoAssign("flash0", "lflash0:0,0", "fatflash0:", IOASSIGN_RDWR, NULL, 0);
+  * @endcode
   * 
   */
 int sceIoAssign(const char *dev1, const char *dev2, const char *dev3, int mode, void* unk1, long unk2);
@@ -295,6 +296,5 @@ int sceIoChStat(const char *file, io_stat_t *stat, int bits);
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif
