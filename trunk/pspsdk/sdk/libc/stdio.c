@@ -1115,6 +1115,10 @@ int putchar(int c)
 
 
 #ifdef F_puts
+/* We can't use the macro version of putc provided in newlib's stdio.h. */
+#ifdef putc
+#undef putc
+#endif
 /*
 **
 **  [func] - puts.
