@@ -83,10 +83,19 @@ ifndef PSP_EBOOT
 PSP_EBOOT = EBOOT.PBP
 endif
 
-all: $(TARGET).elf $(EXTRA_TARGETS)
+ifneq ($(TARGET_LIB),)
+FINAL_TARGET = $(TARGET_LIB)
+else
+FINAL_TARGET = $(TARGET).elf
+endif
+
+all: $(EXTRA_TARGETS) $(FINAL_TARGET)
 
 $(TARGET).elf: $(OBJS)
 	$(LINK.c) $^ $(LIBS) -o $@
+
+$(TARGET_LIB): $(OBJS)
+	$(AR) cru $@ $(OBJS)
 
 $(PSP_EBOOT_SFO): 
 	$(MKSFO) '$(PSP_EBOOT_TITLE)' $@
@@ -96,5 +105,5 @@ $(PSP_EBOOT): $(TARGET).elf $(PSP_EBOOT_SFO)
 		$(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
 		$(PSP_EBOOT_SND0)  $(TARGET).elf $(PSP_EBOOT_PSAR)
 
-clean:
-	-rm -f $(TARGET).elf *.o $(PSP_EBOOT_SFO) $(PSP_EBOOT)
+clean: $(EXTRA_CLEAN)
+	-rm -f $(FINAL_TARGET) *.o $(PSP_EBOOT_SFO) $(PSP_EBOOT)
