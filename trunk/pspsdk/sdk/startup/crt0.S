@@ -25,7 +25,6 @@
 		.global _start
 		.ent _start
 
-module_start:
 _start:
 		addiu 	$sp, -0x10
 		sw		$ra, 0($sp)	
@@ -115,43 +114,22 @@ _main_thread_name:
 		.asciiz	"user_main"
 ##############################################################################
 
-
-		.section	.lib.ent,"wa",@progbits
-		.global     __lib_ent_top
-__lib_ent_top:
+		.section	.lib.ent,"a",@progbits
+		.align 2
 		.word 0
 		.word 0x80000000
 		.word 0x00010104
 		.word __entrytable
 
-
-		.section	.lib.ent.btm,"wa",@progbits
-		.global     __lib_ent_bottom
-__lib_ent_bottom:
-		.word	0
-
-
-		.section	.lib.stub,"wa",@progbits
-		.global     __lib_stub_top
-__lib_stub_top:
-
-
-		.section	.lib.stub.btm,"wa",@progbits
-		.global     __lib_stub_bottom
-__lib_stub_bottom:
-		.word	0
-
 ##############################################################################
 
-		.section	.rodata.entrytable,"a",@progbits
+		.section	.rodata.sceResident,"a",@progbits
+		.align 2
 __entrytable:
 		.word 0xD632ACDB
 		.word 0xF01D73A7
-		.word module_start
+		.word _start
 		.word module_info
-		.word 0
-
-
 
 ###############################################################################
 
