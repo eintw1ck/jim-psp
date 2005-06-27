@@ -798,9 +798,9 @@ int getc(FILE *stream)
 
 
 #ifdef F_getchar
-/* Get rid of the newlib macro definition. */
-#ifdef getchar
-#undef getchar
+/* We can't use the macro version of getc provided in newlib's stdio.h. */
+#ifdef getc
+#undef getc
 #endif
 /*
 **
@@ -1087,6 +1087,10 @@ int putc(int c, FILE *stream)
 
 
 #ifdef F_putchar
+/* We can't use the macro version of putc provided in newlib's stdio.h. */
+#ifdef putc
+#undef putc
+#endif
 /*
 **
 **  [func] - putchar.
