@@ -67,22 +67,7 @@ extern char _gp[];
 	  __lib_stub_top, __lib_stub_bottom                             \
 	}
 
-/* This is TyRaNiD's original macro. */
-#if 0
-/** Define the module info macro. This must be specified in one file of a project */
-#define MODULE_INFO(name, flags) asm ( \
-		".section \".rodata.sceModuleInfo\", \"a\", @progbits\r\n" 	\
-		".global  module_info\r\n" 						  	\
-		"module_info:\r\n"										\
-		".word " #flags "\r\n" 								  	\
-		".ascii \"" name "\"\r\n" 							  	\
-		".align 5\r\n"											\
-		".word _gp\r\n" 										\
-		".word __lib_ent_top\r\n"								\
-		".word __lib_ent_bottom\r\n"							\
-		".word __lib_stub_top\r\n"								\
-		".word __lib_stub_bottom\r\n"							\
-		);
-#endif
+/* Define the main thread's attributes */
+#define PSP_MAIN_THREAD_ATTR(attr) u32 _main_thread_attr = (attr)
 
 #endif /* PSPMODULEINFO_H */

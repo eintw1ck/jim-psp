@@ -32,6 +32,9 @@
 		.weak	_init
 		.weak	_fini
 
+		# Define the main thread attribute variable as weak
+		.weak   _main_thread_attr
+
 		.global _start
 		.ent _start
 
@@ -48,7 +51,15 @@ _start:
 		la		$a1, _main
 		li		$a2, 0x20				# Priority
 		li		$a3, 0x40000			# Stack size
+
+		la		$t0, _main_thread_attr
+		bne		$t0, $0, 1f
+		nop
+		j		2f
 		lui		$t0, 0x8000				# Attributes
+1:
+		lw		$t0, 0($t0)
+2:
 		jal		sceKernelCreateThread
 		move	$t1, $0
 
