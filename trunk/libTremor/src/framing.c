@@ -24,6 +24,9 @@
 #include "ogg.h"
 #include "misc.h"
 
+#include "/usr/local/pspdev/psp/sdk/include/psptypes.h"
+#include "/usr/local/pspdev/psp/sdk/include/pspdebug.h"
+#define printf pspDebugScreenPrintf
 
 /* A complete description of Ogg framing exists in docs/framing.html */
 
@@ -667,13 +670,15 @@ static ogg_uint32_t _checksum(ogg_reference *or, int bytes){
 long ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og){
   oggbyte_buffer page;
   long           bytes,ret=0;
-
+printf("\tpage release\n");
   ogg_page_release(og);
 
   bytes=oy->fifo_fill;
+  printf("\toggbyte init\n");
   oggbyte_init(&page,oy->fifo_tail);
-
+printf("\t after init\n");
   if(oy->headerbytes==0){
+	  printf("\t header 0\n");
     if(bytes<27)goto sync_out; /* not enough for even a minimal header */
     
     /* verify capture pattern */
@@ -698,6 +703,7 @@ long ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og){
   /* we have what appears to be a complete page; last test: verify
      checksum */
   {
+	 printf("\tobbyte read4\n");
     ogg_uint32_t chksum=oggbyte_read4(&page,22);
     oggbyte_set4(&page,0,22);
 
@@ -717,12 +723,14 @@ long ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og){
   /* We have a page.  Set up page return. */
   if(og){
     /* set up page output */
+	  printf("\tbuffer split\n");
     og->header=ogg_buffer_split(&oy->fifo_tail,&oy->fifo_head,oy->headerbytes);
     og->header_len=oy->headerbytes;
     og->body=ogg_buffer_split(&oy->fifo_tail,&oy->fifo_head,oy->bodybytes);
     og->body_len=oy->bodybytes;
   }else{
     /* simply advance */
+	  printf("\tpretruncate\n");
     oy->fifo_tail=
       ogg_buffer_pretruncate(oy->fifo_tail,oy->headerbytes+oy->bodybytes);
     if(!oy->fifo_tail)oy->fifo_head=0;
@@ -737,7 +745,7 @@ long ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og){
   return ret;
   
  sync_fail:
-
+printf("\tsync failed\n");
   oy->headerbytes=0;
   oy->bodybytes=0;
   oy->fifo_tail=ogg_buffer_pretruncate(oy->fifo_tail,1);
@@ -766,6 +774,7 @@ long ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og){
   oy->fifo_fill+=ret;
 
  sync_out:
+  printf("\tsync out\n");
   return ret;
 }
 

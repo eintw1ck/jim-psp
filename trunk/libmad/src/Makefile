@@ -11,8 +11,8 @@ all: $(PSP_LIB)
 
 install: $(PSP_LIB)
 	@echo "Installing libmad into $(PSPLIBSDIR)/libmad"
-	@mkdir -p $(PSPDEV)/libraries/libmad/include $(PSPLIBSDIR)/libmad/lib
-	@cp ../include/mad.h $(PSPLIBSDIR)/libmad/includ
+	@mkdir -p $(PSPLIBSDIR)/libmad/include $(PSPLIBSDIR)/libmad/lib
+	@cp ../include/mad.h $(PSPLIBSDIR)/libmad/include
 	@cp ../lib/libmad.a  $(PSPLIBSDIR)/libmad/lib
 	@echo "Done"
 clean:
