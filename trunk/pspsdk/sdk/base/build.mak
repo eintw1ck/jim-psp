@@ -21,6 +21,7 @@ AS       = psp-gcc
 LD       = psp-gcc
 AR       = psp-ar
 RANLIB   = psp-ranlib
+STRIP    = psp-strip
 MKSFO    = mksfo
 PACK_PBP = pack-pbp
 
@@ -101,6 +102,7 @@ $(PSP_EBOOT_SFO):
 	$(MKSFO) '$(PSP_EBOOT_TITLE)' $@
 
 $(PSP_EBOOT): $(TARGET).elf $(PSP_EBOOT_SFO)
+	$(STRIP) $(TARGET).elf
 	$(PACK_PBP) EBOOT.PBP $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
 		$(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
 		$(PSP_EBOOT_SND0)  $(TARGET).elf $(PSP_EBOOT_PSAR)
