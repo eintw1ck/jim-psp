@@ -22,7 +22,7 @@ clock_t clock(void)
 }
 #endif
 
-#ifdef F__time
+#ifdef F_time
 /* Simple remapping of the kernel functions */
 time_t time(time_t *tloc)
 {
