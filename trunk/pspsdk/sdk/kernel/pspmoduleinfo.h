@@ -35,6 +35,40 @@ typedef const _sceModuleInfo SceModuleInfo;
 
 extern char _gp[];
 
+#ifdef __cplusplus
+
+/* Declare a module.  This must be specified in the source of a library or executable. */
+#define PSP_MODULE_INFO(name, attributes, major_version, minor_version) \
+	asm (                                                           \
+	"    .set push\n"                                               \
+	"    .section .lib.ent.top, \"a\", @progbits\n"                 \
+	"    .align 2\n"                                                \
+	"    .word 0\n"                                                 \
+	"__lib_ent_top:\n"                                              \
+	"    .section .lib.ent.btm, \"a\", @progbits\n"                 \
+	"    .align 2\n"                                                \
+	"__lib_ent_bottom:\n"                                           \
+	"    .word 0\n"                                                 \
+	"    .section .lib.stub.top, \"a\", @progbits\n"                \
+	"    .align 2\n"                                                \
+	"    .word 0\n"                                                 \
+	"__lib_stub_top:\n"                                             \
+	"    .section .lib.stub.btm, \"a\", @progbits\n"                \
+	"    .align 2\n"                                                \
+	"__lib_stub_bottom:\n"                                          \
+	"    .word 0\n"                                                 \
+	"    .set pop\n"                                                \
+	);                                                              \
+	extern char __lib_ent_top[], __lib_ent_bottom[];                \
+	extern char __lib_stub_top[], __lib_stub_bottom[];              \
+	extern SceModuleInfo module_info                                \
+		__attribute__((section(".rodata.sceModuleInfo"),        	\
+			       aligned(16), unused)) = {                		\
+	  attributes, { minor_version, major_version }, #name, 0, _gp,  \
+	  __lib_ent_top, __lib_ent_bottom,                              \
+	  __lib_stub_top, __lib_stub_bottom                             \
+	}
+#else
 /* Declare a module.  This must be specified in the source of a library or executable. */
 #define PSP_MODULE_INFO(name, attributes, major_version, minor_version) \
 	asm (                                                           \
@@ -60,12 +94,13 @@ extern char _gp[];
 	extern char __lib_ent_top[], __lib_ent_bottom[];                \
 	extern char __lib_stub_top[], __lib_stub_bottom[];              \
 	SceModuleInfo module_info                                       \
-		__attribute__((section(".rodata.sceModuleInfo"),        \
-			       aligned(16), unused)) = {                \
+		__attribute__((section(".rodata.sceModuleInfo"),        	\
+			       aligned(16), unused)) = {                		\
 	  attributes, { minor_version, major_version }, #name, 0, _gp,  \
 	  __lib_ent_top, __lib_ent_bottom,                              \
 	  __lib_stub_top, __lib_stub_bottom                             \
 	}
+#endif
 
 /* Define the main thread's attributes */
 #define PSP_MAIN_THREAD_ATTR(attr) u32 _main_thread_attr = (attr)
