@@ -17,35 +17,59 @@ static unsigned int __attribute__((aligned(16))) list[262144];
 
 struct Vertex
 {
+	unsigned int color;
 	float x,y,z;
 };
 
-struct Vertex __attribute__((aligned(16))) vertices[8*3] =
+struct Vertex __attribute__((aligned(16))) vertices[12*3] =
 {
-	{-1,-1,-1},
-	{ 1,-1,-1},
-	{ 1,-1, 1},
-	{-1,-1, 1},
-	{-1, 1,-1},
-	{ 1, 1,-1},
-	{ 1, 1, 1},
-	{-1, 1, 1}
-};
+	{ 0xff0000ff,-1,-1,-1}, // 0
+	{ 0xff0000ff, 1,-1,-1}, // 1
+	{ 0xff0000ff, 1,-1, 1}, // 2
 
-unsigned short __attribute__((aligned(16))) indices[12*3] =
-{
-	0, 1, 2,
-	0, 2, 3,
-	0, 4, 5,
-	0, 5, 1,
-	1, 5, 6,
-	1, 6, 2,
-	3, 2, 6,
-	3, 6, 7,
-	0, 3, 7,
-	0, 7, 4,
-	4, 7, 6,
-	4, 6, 5,
+	{ 0xff0000ff,-1,-1,-1}, // 0
+	{ 0xff0000ff, 1,-1, 1}, // 2
+	{ 0xff0000ff,-1,-1, 1}, // 3
+
+	{ 0xffff0000,-1,-1,-1}, // 0
+	{ 0xffff0000,-1, 1,-1}, // 4
+	{ 0xffff0000, 1, 1,-1}, // 5
+
+	{ 0xffff0000,-1,-1,-1}, // 0
+	{ 0xffff0000, 1, 1,-1}, // 5
+	{ 0xffff0000, 1,-1,-1}, // 1
+
+	{ 0xff00ff00, 1,-1,-1}, // 1
+	{ 0xff00ff00, 1, 1,-1}, // 5
+	{ 0xff00ff00, 1, 1, 1}, // 6
+
+	{ 0xff00ff00, 1,-1, 1}, // 2
+	{ 0xff00ff00, 1,-1,-1}, // 1
+	{ 0xff00ff00, 1, 1, 1}, // 6
+
+	{ 0xffff0000,-1,-1, 1}, // 3
+	{ 0xffff0000, 1,-1, 1}, // 2
+	{ 0xffff0000, 1, 1, 1}, // 6
+
+	{ 0xffff0000,-1,-1, 1}, // 3
+	{ 0xffff0000, 1, 1, 1}, // 6
+	{ 0xffff0000,-1, 1, 1}, // 7
+
+	{ 0xff00ff00,-1,-1,-1}, // 0
+	{ 0xff00ff00,-1,-1, 1}, // 3
+	{ 0xff00ff00,-1, 1, 1}, // 7
+
+	{ 0xff00ff00,-1,-1,-1}, // 0
+	{ 0xff00ff00,-1, 1, 1}, // 7
+	{ 0xff00ff00,-1, 1,-1}, // 4
+
+	{ 0xff0000ff,-1, 1,-1}, // 4
+	{ 0xff0000ff,-1, 1, 1}, // 7
+	{ 0xff0000ff, 1, 1, 1}, // 6
+
+	{ 0xff0000ff,-1, 1,-1}, // 4
+	{ 0xff0000ff, 1, 1, 1}, // 6
+	{ 0xff0000ff, 1, 1,-1}  // 5
 };
 
 int done = 0;
@@ -149,6 +173,56 @@ void matrix_translate(float* matrix, float x, float y, float z)
 	matrix_multiply(matrix,matrix,temp);
 }
 
+void matrix_setrotatex(float* matrix, float angle)
+{
+	float cs = cosf(angle);
+	float sn = sinf(angle);
+
+	matrix_identity(matrix);
+	matrix[(1<<2)+1] = cs;
+	matrix[(1<<2)+2] = sn;
+	matrix[(2<<2)+1] = -sn;
+	matrix[(2<<2)+2] = cs;
+}
+
+void matrix_setrotatey(float* matrix, float angle)
+{
+	float cs = cosf(angle);
+	float sn = sinf(angle);
+
+	matrix_identity(matrix);
+	matrix[(0<<2)+0] = cs;
+	matrix[(0<<2)+2] = -sn;
+	matrix[(2<<2)+0] = sn;
+	matrix[(2<<2)+2] = cs;
+}
+
+void matrix_setrotatez(float* matrix, float angle)
+{
+	float cs = cosf(angle);
+	float sn = sinf(angle);
+
+	matrix_identity(matrix);
+	matrix[(0<<2)+0] = cs;
+	matrix[(0<<2)+1] = sn;
+	matrix[(1<<2)+0] = -sn;
+	matrix[(1<<2)+1] = cs;
+}
+
+void matrix_rotate(float* matrix, float x, float y, float z)
+{
+	float temp[16];
+
+	matrix_setrotatex(temp,x);
+	matrix_multiply(matrix,matrix,temp);
+
+	matrix_setrotatey(temp,y);
+	matrix_multiply(matrix,matrix,temp);
+
+	matrix_setrotatez(temp,z);
+	matrix_multiply(matrix,matrix,temp);
+}
+
 #define SIN_ITERATOR 20
 
 float sinf(float v)
@@ -235,10 +309,10 @@ int main(int argc, char* argv[])
 	sceGuBlendFunc(0,2,3,0,0);
 	sceGuEnable(GU_STATE_BLEND);
 	sceGuDepthFunc(7);
-	sceGuDisable(GU_STATE_DEPTH_TEST);
+	sceGuEnable(GU_STATE_DEPTH_TEST);
 	sceGuFrontFace(0);
 	sceGuShadeModel(1);
-//	sceGuEnable(GU_STATE_UNKNOWN8);
+	sceGuEnable(GU_STATE_UNKNOWN8);
 	sceGuFinish();
 	sceGuSync(0,0);
 
@@ -251,10 +325,6 @@ int main(int argc, char* argv[])
 	float view[16];
 	float world[16];
 
-	float xc = 24.0f;
-	float yc = 13.6f;
-	float sz = 20.0f;
-
 	int val = 0;
 
 	while (!done)
@@ -263,56 +333,25 @@ int main(int argc, char* argv[])
 
 		sceGuStart(0,list);
 
-		sceGuClearColor(val);
-		sceGuClear(1);
+		sceGuClearColor(0);
+		sceGuClearDepth(0);
+		sceGuClear(1 + 4);
 
 		val++;
 
-		float cs1 = cosf((val % 360) * (M_PI/180));
-		float sn1 = sinf((val % 360) * (M_PI/180));
+		matrix_identity(projection);
+		matrix_projection(projection,75.0f,16.0/9.0f,0.01f,1000.0f);
+		sceGuSetMatrix(0,projection);
 
-		float cs2 = cosf(((val+120) % 360) * (M_PI/180));
-		float sn2 = sinf(((val+120) % 360) * (M_PI/180));
+		matrix_identity(view);
+		sceGuSetMatrix(1,view);
 
-		float cs3 = cosf(((val+240) % 360) * (M_PI/180));
-		float sn3 = sinf(((val+240) % 360) * (M_PI/180));
+		matrix_identity(world);
+		matrix_translate(world,0,0,-1.9f);
+		matrix_rotate(world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
+		sceGuSetMatrix(2,world);
 
-		for (y = 0; y < 20; ++y)
-		{
-			for (x = 0; x < 20; ++x)
-			{
-				short* vertices = sceGuGetMemory((4*3)*sizeof(short));
-
-				vertices[0] = (short)(0x0f00) + ((int)(((x+y) / 40.0f) * 15.0f));
-				vertices[1] = (short)(xc*x+cs1 * sz);
-				vertices[2] = (short)(yc*y+sn1 * sz);
-				vertices[3] = (short)(0);
-
-				vertices[4] = (short)(0x00f0) + ((int)((x / 20.0f) * 15.0f)) << 8;
-				vertices[5] = (short)(xc*x+cs2 * sz);
-				vertices[6] = (short)(yc*y+sn2 * sz);
-				vertices[7] = (short)(0);
-
-				vertices[8] = (short)(0x000f) + ((int)((x / 20.0f) * 15.0f)) << 4;
-				vertices[9] = (short)(xc*x+cs3 * sz);
-				vertices[10] = (short)(yc*y+sn3 * sz);
-				vertices[11] = (short)(0);
-		/*
-				matrix_identity(projection);
-				matrix_projection(projection,480,272,3.0f,1.0f,0.01f,1000.0f);
-				sceGuSetMatrix(0,projection);
-
-				matrix_identity(view);
-				sceGuSetMatrix(1,view);
-
-				matrix_identity(world);
-				matrix_translate(world,0,0,10.0f);
-				sceGuSetMatrix(2,world);
-		*/
-
-				sceGuDrawArray(3,0x800118,3,0,vertices);
-			}
-		}
+		sceGuDrawArray(3,0x00019c,12*3,0,vertices);
 
 		sceGuFinish();
 		sceGuSync(0,0);
