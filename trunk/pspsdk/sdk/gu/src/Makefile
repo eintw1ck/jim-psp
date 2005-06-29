@@ -1,3 +1,4 @@
+PSPSDK = $(shell psp-config --pspsdk-path)
 INCDIR=../include
 OBJDIR=obj
 DEPEND=.depend
