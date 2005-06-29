@@ -6,7 +6,7 @@
 #include <math.h>
 #include <string.h>
 
-#include <gu.h>
+#include <pspgu.h>
 
 PSP_MODULE_INFO("SceGu Cube", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);

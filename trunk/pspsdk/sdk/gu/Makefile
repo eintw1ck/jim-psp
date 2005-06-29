@@ -3,6 +3,9 @@ SRCDIR=src
 all:
 	$(MAKE) -C $(SRCDIR) all
 
+install:
+	$(MAKE) -C $(SRCDIR) install
+
 clean:
 	$(MAKE) -C $(SRCDIR) clean
 

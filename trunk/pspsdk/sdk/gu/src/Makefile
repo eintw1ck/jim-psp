@@ -21,6 +21,11 @@ clean:
 	-$(RM) $(OBJECTS) $(TARGET) $(DEPEND) *~
 	-$(RMDIR) $(OBJDIR)
 
+install:
+	@echo "Installing libGU to $(PSPSDK)/"
+	@cp ../include/pspgu.h $(PSPSDK)/include
+	@cp libgu.a $(PSPSDK)/lib
+	@echo "Done."
 $(TARGET): $(OBJECTS)
 	$(AR) cru $@ $(OBJECTS)
 	$(RANLIB) $@
