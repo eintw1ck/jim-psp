@@ -1,1 +1,1 @@
-SUBDIRS = audio base debug kernel libc startup samples
+SUBDIRS = audio base debug gu kernel libc startup samples
