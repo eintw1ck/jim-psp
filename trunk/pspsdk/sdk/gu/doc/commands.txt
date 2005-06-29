@@ -20,7 +20,7 @@ correct this asap.
 	 2	02	ILIST	Index List (BASE)
 
 	 4	04	PRIM	Primitive Kick
-				Bits 0-15: Number of primitives
+				Bits 0-15: Number of vertices
 				Bits 16-18: Primitive type
 
 	 5	05	BEZIER	Bezier Patch Kick
