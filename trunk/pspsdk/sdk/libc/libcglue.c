@@ -149,7 +149,7 @@ off_t _lseek(int fd, off_t offset, int whence)
 #ifdef F__gettimeofday
 int _gettimeofday(struct timeval *tp, struct timezone *tzp)
 {
-	return sceKernelGettimeofday(tp, tzp);
+	return sceKernelLibcGettimeofday(tp, tzp);
 }
 #endif
 

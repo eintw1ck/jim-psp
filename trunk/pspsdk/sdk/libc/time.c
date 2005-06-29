@@ -34,6 +34,6 @@ time_t time(time_t *tloc)
 /* Simple remapping of the kernel functions */
 int gettimeofday(struct timeval *tp, struct timezone *tzp)
 {
-    return sceKernelGettimeofday(tp, tzp);
+    return sceKernelLibcGettimeofday(tp, tzp);
 }
 #endif
