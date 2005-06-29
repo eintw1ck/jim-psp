@@ -9,7 +9,7 @@
 #ifndef __guInternal_h__
 #define __guInternal_h__
 
-#include "../include/pspgu.h"
+#include "pspgu.h"
 
 typedef void (*GuCallback)(int);
 
