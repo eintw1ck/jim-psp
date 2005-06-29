@@ -24,7 +24,7 @@
 
  typedef struct { char signature[4]; int version; int offset[8]; } HEADER;
 
- char *filename[8] = { "PARAM.SFO", "ICON0.PNG", "ICON1.PMF", "UKNOWN.PNG", "PIC1.PNG", "SND0.AT3", "UNKNOWN.PSP", "UNKNOWN.PSAR" };
+ char *filename[8] = { "PARAM.SFO", "ICON0.PNG", "ICON1.PMF", "UNKNOWN.PNG", "PIC1.PNG", "SND0.AT3", "UNKNOWN.PSP", "UNKNOWN.PSAR" };
 
  int main(int argc, char *argv[]) {
   FILE *infile, *outfile; HEADER header; int loop0, total_size;
