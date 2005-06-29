@@ -7,7 +7,7 @@ AR = @PSP_AR@
 RANLIB = @PSP_RANLIB@
 
 INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
-CFLAGS = @PSPSDK_CFLAGS@
+CFLAGS =  -g -G0 -Wall #@PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base
 
 libpspguincludedir = @PSPSDK_INCLUDEDIR@
