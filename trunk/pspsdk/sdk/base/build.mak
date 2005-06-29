@@ -84,6 +84,10 @@ ifndef PSP_EBOOT
 PSP_EBOOT = EBOOT.PBP
 endif
 
+ifndef PSP_DIR_NAME
+PSP_DIR_NAME = PSP-DEV
+endif
+
 ifneq ($(TARGET_LIB),)
 FINAL_TARGET = $(TARGET_LIB)
 else
@@ -91,6 +95,18 @@ FINAL_TARGET = $(TARGET).elf
 endif
 
 all: $(EXTRA_TARGETS) $(FINAL_TARGET)
+
+kxploit: $(TARGET).elf $(PSP_EBOOT_SFO)
+	@if [ -f .dummyelf ] ; then echo please remove .dummyelf exit 1 ; fi
+	$(STRIP) $(TARGET).elf
+	mkdir -p "$(PSP_DIR_NAME)" 
+	cp $(TARGET).elf "$(PSP_DIR_NAME)/$(PSP_EBOOT)"
+	mkdir -p "$(PSP_DIR_NAME)%%" 
+	touch .kxploit_dummyelf
+	$(PACK_PBP) "$(PSP_DIR_NAME)%%//$(PSP_EBOOT)" $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
+		$(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
+		$(PSP_EBOOT_SND0) .kxploit_dummyelf $(PSP_EBOOT_PSAR)
+	rm -f .kxploit_dummyelf
 
 $(TARGET).elf: $(OBJS)
 	$(LINK.c) $^ $(LIBS) -o $@
