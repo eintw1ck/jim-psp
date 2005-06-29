@@ -97,16 +97,13 @@ endif
 all: $(EXTRA_TARGETS) $(FINAL_TARGET)
 
 kxploit: $(TARGET).elf $(PSP_EBOOT_SFO)
-	@if [ -e .kxploit_dummyelf ] ; then echo please remove .kxploit_dummyelf ; exit 1 ; fi
 	$(STRIP) $(TARGET).elf
 	mkdir -p "$(PSP_DIR_NAME)" 
 	cp $(TARGET).elf "$(PSP_DIR_NAME)/$(PSP_EBOOT)"
 	mkdir -p "$(PSP_DIR_NAME)%%" 
-	touch .kxploit_dummyelf
 	$(PACK_PBP) "$(PSP_DIR_NAME)%%//$(PSP_EBOOT)" $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
 		$(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
-		$(PSP_EBOOT_SND0) .kxploit_dummyelf $(PSP_EBOOT_PSAR)
-	rm -f .kxploit_dummyelf
+		$(PSP_EBOOT_SND0) NULL $(PSP_EBOOT_PSAR)
 
 $(TARGET).elf: $(OBJS)
 	$(LINK.c) $^ $(LIBS) -o $@
