@@ -1,0 +1,641 @@
+Every GE command consists of two parts: The command and the argument. They are assembled like this:
+(cmd << 24)|(argument)
+The command is 8 bits, and the argument 24 bits.
+
+The GE accepts 24-bit floats. To convert from a standard float, do this:
+u32 ge_float = (*((u32*)&normal_float)) >> 8;
+
+Many suggested register-names have been contributed by Neovangelist. Thanks!
+
+Items marked with (BASE) means that they use BASE (16/0x10) as the top bits
+for the address passed in. Write to BASE before the target register.
+
+Light registers are not correct (except for the Light Enable registers), I'll
+correct this asap.
+
+	 0	00	NOP	No Operation
+
+	 1	01	VLIST	Vertex List (BASE)
+
+	 2	02	ILIST	Index List (BASE)
+
+	 4	04	PRIM	Primitive Kick
+				Bits 0-15: Number of primitives
+				Bits 16-18: Primitive type
+
+	 5	05	BEZIER	Bezier Patch Kick
+				Bits 0-7: a1
+				Bits 8-?: a0
+
+	 6	06	SPLINE	Spline Kick
+				Bits 0-7: a1
+				Bits 8-15: a2
+				Bits 16-17: a3
+				Bits 18-23?: t0
+
+	 7	07	???	-
+
+	 8	08	JUMP	Jump To New Address (BASE)
+				Bits 0-23: Address
+
+	 9	09	BJUMP	- (BASE)
+
+	10	0A	CALL	Call Address (BASE)
+				Bits 0-23: Address
+
+	11	0B	RET	Return From Call
+				TODO: Figure out stack depth (GS has 2)
+
+	12	0C	END	-
+
+	14	1E	SIGNAL	Raise Signal Interrupt
+				Bits 0-15: a1
+				Bits 16-23: a0
+
+	15	1F	FINISH	-
+
+	16	10	BASE	Base Address Register
+				Bits 16-20: 4 top bits of address
+
+	18	12	VTYPE	Vertex Type
+				Bits 0-1: Texture Format
+				Bits 2-4: Color Format
+				Bits 5-6: Normal Format
+				Bits 7-8: Position Format
+				Bits 9-10: Weight Format
+				Bits 11-12: Index Format
+				Bit 23: Bypass Transform (Raw 2D Coordinates)
+
+	21	15	REGION1	Draw Region Start
+				Bits 0-9: X Start
+				Bits 10-19: Y Start
+
+	22	16	REGION2	Draw Region End
+				Bits 0-9: X End (x + width)-1
+				Bits 10-19: Y End (y + height)-1
+
+	24	18	LIGHT0	Light 0 Enable
+
+	25	19	LIGHT1	Light 1 Enable
+
+	26	1A	LIGHT2	Light 2 Enable
+
+	27	1B	LIGHT3	Light 3 Enable
+
+	28	1C	???	State Related
+
+	29	1D	???	State Related
+
+ 	30	1E	???	State Related
+
+	31	1F	???	State Related
+
+	32	20	DTE	State Related
+
+	33	21	ABE	Alpha Blend Enable
+
+	34	22	ATE	Alpha Test Enable
+
+	35	23	ZTE	Depth Test Enable
+
+	36	24	???	State Related
+
+	37	25	???	State Related
+
+	38	26	???	State Related
+
+	39	27	???	State Related
+
+	40	28	???	State Related
+
+	42	2A	???	Bone Matrix Offset
+				Bits 0-23: Bone Matrix offset (value = index * (3*4))
+
+	43	2B	???	Bone Matrix Value
+				Bits 0-23: Bone Matrix Value (float)
+				Written 3*4 times to upload one matrix (3*4 matrix)
+
+	44	2C	???	Morph Weight 0
+				Bits 0-23: Morph Weight (float)
+
+	45	2D	???	Morph Weight 1
+				Bits: See Previous
+
+	46	2E	???	Morph Weight 2
+				Bits: See Previous
+
+	47	2F	???	Morph Weight 3
+				Bits: See Previous
+
+	48	30	???	Morph Weight 4
+				Bits: See Previous
+
+	49	31	???	Morph Weight 5
+				Bits: See Previous
+
+	50	32	???	Morph Weight 6
+				Bits: See Previous
+
+	51	33	???	Morph Weight 7
+				Bits: See Previous
+
+	54	36	???	Patch Divide
+				Bits 0-7: a0
+				Bits 8-15: a1
+
+	55	37	???	Patch Prim
+				Bits 0-1: a0 == 0 : 2; a0 == 2: 1; a0 == 4: 0
+
+	56	38	???	Patch Front Face
+				Bits 0-23: Value
+
+	58	3A	???	World Matrix Upload
+				Bits: 0-23: Float (strobe???) (write 0.0f before uploading)
+
+	59	3B	???	World Matrix Upload
+				Bits: 0-23: Float (write 3*4 values to upload complete matrix) (3*4 matrix)
+
+	60	3C	???	View Matrix strobe
+				Bits: 0-23: Float (strobe???) (write 0.0f before uploading)
+
+	61	3D	???	View Matrix upload
+				Bits: 0-23: Float (write 3*4 values to upload complete matrix) (3*4 matrix)
+
+	62	3E	???	Projection matrix strobe
+				Bits 0-23: Float (strobe???) (write 0.0f before uploading)
+
+	63	3F	???	Projection Matrix upload
+				Bits 0-23: Float (write 4*4 values to upload complete matrix)
+
+	64	40	???	Texture Matrix Strobe???
+				Bits 0-23: Float (strobe???) (write 0.0f before uploading)
+
+	65	41	???	Texture Matrix Upload???
+				Bits 0-23: Float (write 3*4 values to upload complete matrix) (3*4 matrix)
+
+	66	42	XSCALE	Viewport X Scale
+				Bits 0-23: X Scale (float) (480)
+
+	67	43	YSCALE	Viewport
+				Bits 0-23: Y Scale (float) (-272)
+
+	68	44	???	Depth Range???
+				Bits 0-23: Float
+
+	69	45	XOFFSET	Viewport X Offset
+				Bits 0-23: Offset (float) (2048)
+
+	70	46	YOFFSET	Viewport Y Offset
+				Bits 0-23: Offset (float) (2048)
+
+	71	47	???	Depth Offset???
+				Bits 0-23: Float
+
+	72	48	???	Texture Scale U
+				Bits 0-23: U Scale (float)
+
+	73	49	???	Texture Scale V
+				Bits 0-23: V Scale (float)
+
+	74	4A	???	Texture Offset U
+				Bits 0-23: U Offset (float)
+
+	75	4B	???	Texture Offset V
+				Bits 0-23: V Offset (float)
+
+	76	4C	OFFSETX	Viewport offset (X)
+				Bits 0-23: X-Offset << 4
+
+	77	4D	OFFSETY	Viewport offset (Y)
+				Bits 0-23: Y-Offset << 4
+
+	80	50	SHADE	Shading
+				Bit 0: 0/1 Flat/Gouraud(???)
+
+	81	51	???	State Related
+
+	83	53	???	Color Material
+				Bits 0-23: Color Material (RGB?)
+
+	84	54	???	Related to Model Color
+				Bits 0-23: a0 (sceGuModelColor())
+
+	85	55	???	Ambient Model Color
+				Bits 0-23: Color
+
+	86	56	???	Related to Model Color
+				Bits 0-23: a2 (sceGuModelColor())
+
+	87	57	???	Related to Model Color
+				Bits 0-23: a3 (sceGuModelColor())
+
+	88	58	???	Ambient Color Alpha
+				Bits 0-7: Ambient Color Alpha
+
+	91	5B	???	Specular Power
+				Bits 0-23: Specular power (float)
+
+	92	5C	???	Ambient RGB (BGR?)
+				Bits: 0-23: Color
+
+	93	5D	???	Ambient Alpha
+				Bits 0-7: Alpha
+
+	94	5E	???	Light Mode
+				Bits: 0-23: ???
+
+	95	5F	???	Light X Position (Light 0)
+				Bits 0-23: Position (float)
+
+	96	60	???	Light X Position (Light 1)
+				Bits: See Previous
+
+	97	61	???	Light X Position (Light 2)
+				Bits: See Previous
+
+	98	62	???	Light X Position (Light 3)
+				Bits: See Previous
+
+	101	65	???	Light Z Direction (Light 0)
+				Bits 0-23: Direction (float)
+
+	104	68	???	Light Z Direction (Light 1)
+				Bits 0-23: Direction (float)
+
+	107	6B	???	Light Z Direction (Light 2)
+				Bits 0-23: Direction (float)
+
+	110	6E	???	Light Z Direction (Light 3)
+				Bits 0-23: Direction (float)
+
+	111	6F	???	Light Y Direction (Light 0)
+				Bits 0-23: Direction (float)
+
+	112	70	???	Light X Direction (Light 0)
+				Bits 0-23: Direction (float)
+
+	113	71	???	Light Z Position (Light 0)
+				Bits 0-23: Position (float)
+
+	114	72	???	Light Y Direction (Light 1)
+				Bits 0-23: Direction (float)
+
+	115	73	???	Light X Direction (Light 1)
+				Bits 0-23: Direction (float)
+
+	116	74	???	Light Z Position (Light 1)
+				Bits 0-23: Position (float)
+
+	117	75	???	Light Y Direction (Light 2)
+				Bits 0-23: Direction (float)
+
+	118	76	???	Light X Direction (Light 2)
+				Bits 0-23: Direction (float)
+
+	119	77	???	Light Z Position (Light 2)
+				Bits 0-23: Position (float)
+
+	120	78	???	Light Y Direction (Light 3)
+				Bits 0-23: Direction (float)
+
+	121	79	???	Light X Direction (Light 3)
+				Bits 0-23: Direction (float)
+
+	122	7A	???	Light Z Position (Light 3)
+				Bits 0-23: Position (float)
+
+	123	7B	???	Light Color Related (Light 0) (8)
+				Bits 0-23: Color
+
+	124	7C	???	Inner/Outer Cone For Light??? (Light 0)
+				Bits 0-23: Float
+
+	125	7D	???	Inner/Outer Cone For Light??? (Light 0)
+				Bits 0-23: Float
+
+	126	7E	???	Light Color Related (Light 1)	(8)
+				Bits 0-23: Color
+
+	127	7F	???	Inner/Outer Cone For Light??? (Light 1)
+				Bits 0-23: Float
+
+	128	80	???	Inner/Outer Cone For Light??? (Light 1)
+				Bits 0-23: Float
+
+	129	81	???	Light Color Related (Light 2)	(8)
+				Bits 0-23: Color
+
+	130	82	???	Inner/Outer Cone For Light??? (Light 2)
+				Bits 0-23: Float
+
+	131	83	???	Inner/Outer Cone For Light??? (Light 2)
+				Bits 0-23: Float
+
+	132	84	???	Light Color Related (Light 3) (8)
+				Bits 0-23: Color
+
+	133	85	???	Inner/Outer Cone For Light??? (Light 3)
+				Bits 0-23: Float
+
+	134	86	???	Inner/Outer Cone For Light??? (Light 3)
+				Bits 0-23: Float
+
+	144	90	???	Light Color Related (Light 0) (10)
+				Bits 0-23: Color
+
+	145	91	???	Light Color Related (Light 0) (9)
+				Bits 0-23: Color
+
+	147	93	???	Light Color Related (Light 1) (10)
+				Bits 0-23: Color
+
+	148	94	???	Light Color Related (Light 1) (9)
+				Bits 0-23: Color
+
+	150	96	???	Light Color Related (Light 2) (10)
+				Bits 0-23: Color
+
+	151	97	???	Light Color Related (Light 2) (9)
+				Bits 0-23: Color
+
+	153	99	???	Light Color Related (Light 3) (10)
+				Bits 0-23: Color
+
+	154	9A	???	Light Color Related (Light 3) (9)
+				Bits 0-23: Color
+
+	155	9B	???	Front Face
+				Bit 0: 0/1 (Front face???)
+
+	156	9C	FBP	Frame Buffer
+				Bits 0-23: Address
+
+	157	9D	FBW	Frame Buffer Width
+				Bits 16-23: 8 Top Bits FBP
+				Bits 0-15: Frame Buffer Width
+
+	158	9E	ZBP	Depth Buffer
+				Bits 0-23: Address
+
+	159	9F	ZBW	Depth Buffer Width
+				Bits 16-23: 8 Top Bits ZBP
+				Bits 0-15: Depth Buffer Width
+
+	160	A0	TBP0	Texture Base Pointer (Mipmap level 0)
+				Bits 0-23: Texture Pointer
+
+	161	A1	TBP1	Texture Base Pointer (Mipmap level 1)
+				Bits: See Previous
+
+	162	A2	TBP2	Texture Base Pointer (Mipmap level 2)
+				Bits: See Previous
+
+	163	A3	TBP3	Texture Base Pointer (Mipmap level 3)
+				Bits: See Previous
+
+	164	A4	TBP4	Texture Base Pointer (Mipmap level 4)
+				Bits: See Previous
+
+	165	A5	TBP5	Texture Base Pointer (Mipmap level 5)
+				Bits: See Previous
+
+	166	A6	TBP6	Texture Base Pointer (Mipmap level 6)
+				Bits: See Previous
+
+	167	A7	TBP7	Texture Base Pointer (Mipmap level 7)
+				Bits: See Previous
+
+	168	A8	TBW0	Texture Buffer Width (Mipmap level 0)
+				Bits 16-20: 4 Top Bits TBP
+				Bits 0-15: Texture Buffer Width
+
+	169	A9	TBW1	Texture Buffer Width (Mipmap level 1)
+				Bits: See Previous
+
+	170	AA	TBW2	Texture Buffer Width (Mipmap level 2)
+				Bits: See Previous
+
+	171	AB	TBW3	Texture Buffer Width (Mipmap level 3)
+				Bits: See Previous
+
+	172	AC	TBW4	Texture Buffer Width (Mipmap level 4)
+				Bits: See Previous
+
+	173	AD	TBW5	Texture Buffer Width (Mipmap level 5)
+				Bits: See Previous
+
+	174	AE	TBW6	Texture Buffer Width (Mipmap level 6)
+				Bits: See Previous
+
+	175	AF	TBW7	Texture Buffer Width (Mipmap level 7)
+				Bits: See Previous
+
+	176	B0	CBP	CLUT Pointer
+				Bits 0-23: Address
+
+	177	B1	CBP2	CLUT Pointer (Top Bits)
+				Bits 16-20: 4 Bits Top CBP
+
+	178	B2	SBP	Source Buffer (Texture Transfer)
+				Bits 0-23: Address
+
+	179	B3	SBW	Source Buffer Width
+				Bits 16-23: 8 Top Bits SBP
+				Bits 0-15: Source Buffer Width
+
+	180	B4	DBP	Destination Buffer (Texture Transfer)
+				Bits 0-23: Address
+
+	181	B5	DBW	Destination Buffer Width
+				Bits 16-23: 8 Top Bits DBP
+				Bits 0-15: Destination Buffer Width
+
+	184	B8	TSIZE0	Texture Size (Mipmap level 0)
+				Bits 0-7: Log2(Width)
+				Bits 8-15: Log2(Height)
+
+	185	B9	TSIZE1	Texture Size (Mipmap level 1)
+				Bits: See Previous
+
+	186	BA	TSIZE2	Texture Size (Mipmap level 2)
+				Bits: See Previous
+
+	187	BB	TSIZE3	Texture Size (Mipmap level 3)
+				Bits: See Previous
+
+	188	BC	TSIZE4	Texture Size (Mipmap level 4)
+				Bits: See Previous
+
+	189	BD	TSIZE5	Texture Size (Mipmap level 5)
+				Bits: See Previous
+
+	190	BE	TSIZE6	Texture Size (Mipmap level 6)
+				Bits: See Previous
+
+	191	BF	TSIZE7	Texture Size (Mipmap level 7)
+				Bits: See Previous
+
+	192	C0	TMAP	Texture Projection Map Mode + Texture Map Mode
+				Bits 0-1: Texture Map Mode
+				Bits 8-11: Texture Projection Map Mode
+
+	193	C1	TSHADE	Texture Map Mode (continued)
+				Bits 0-1: a1
+				Bits 8-15(23?): a2
+
+	194	C2	TMODE	Texture Mode
+				Bits 0-8: a3
+				Bits 8-15: a2
+				Bits 16-23: a1
+
+	195	C3	TPSM	Texture Format
+				Bits 0-23: Format
+
+	196	C4	???	Related to CLUT (Number of colors???)
+				Bits 0-23: ???
+
+	197	C5	CMODE	Clut Mode
+				Bits 0-1: a0
+				Bits 2-7(?): a1
+				Bits 8-15: a2
+				Bits 16-23: a3
+
+	198	C6	TFLT	Texture Filter
+				Bits 0-7: a0 (min/mag?)
+				Bits 8-15: a1 (min/mag?)
+
+	199	C7	TWRAP	Texture Wrap
+				Bits 0-7: U Wrap
+				Bits 8-15: V Wrap
+
+	200	C8	???	Texture Level Mode (L/K???)
+				Bits 0-15: a0
+				Bits 16-23: -128 - 128 (Mip map bias?)
+
+	201	C9	???	Texture Function
+				Bits 0-7: a0
+				Bits 8-15: a1
+				Bits 16-23: ???
+
+	202	CA	???	Texture Env Color
+				Bits 0-23: Color (RGB)
+
+	203	CB	TFLUSH	Texture Flush
+				Bits 0-23: Strobe? (float) (Just write zero)
+
+	204	CC	TSYNC	Texture Sync
+				Bits 0-23: Strobe? (Just write zero)
+
+	205	CD	???	Fog End (?)
+				Bits 0-23: Distance (float)
+
+	206	CE	???	Fog Range
+				Bits 0-23: Inverse relative distance (float) 1.0/(far-near)
+
+	207	CF	???	Fog Color
+				Bits 0-23: Color (RGB)
+
+	208	D0	???	Texture Slope
+				Bits 0-23: Texture Slope (float)
+
+	210	D2	PSM	Pixel Format
+				Bits 0-1: Pixel Format
+
+	211	D3	CLEAR	Clear Flags
+				Bit 0: Clear enabled???
+				Bit 8-11: Clear Flags
+
+	212	D4	???	Scissor X/Y Start
+				Bits 0-9: X Start
+				Bits 10-19: Y Start
+
+	213	D5	???	Scissor X/Y End
+				Bits 0-9: X End ((Width + X Start)-1)
+				Bits 10-19: Y End ((Height + Y Start)-1)
+
+	214	D6	???	Near Plane
+				Bits 0-23: Near Depth (int)
+
+	215	D7	???	Far Plane
+				Bits 0-23: Far Depth (int)
+
+	216	D8	???	Color Function
+				Bits 0-1: Function
+
+	217	D9	???	Color for Color Function
+				Bits 0-23: RGB
+
+	218	DA	???	Color for Color function (???)
+				Bits 0-23: RGB
+
+	219	DB	ATST	Alpha Func
+				Bits 0-7: a0
+				Bits 8-15: a1
+				Bits 16-23: a2
+
+	220	DC	???	Stencil Function
+				Bits 0-7: a0
+				Bits 8-15: a1
+				Bits 16-23: a2
+
+	221	DD	???	Stencil Op
+				Bits 0-7: a0
+				Bits 8-15: a1
+				Bits 16-23: a2
+
+	222	DE	ZTST	Depth Function
+				Bits 0-23(?): Depth test function?
+
+	223	DF	ALPHA	Blend function
+				Bits 0-3: a1
+				Bits 4-7: a2
+				Bits 8-11: a3
+
+	224	E0	???	Related to blend function
+				Bits 0-23: Value (fix? seems to be a color)
+
+	225	E1	???	Related to blend function
+				Bits 0-23: Value (fix? seems to be a color)
+
+	226	E2	???	Dither Matrix, Row 0
+				Bits 0-3: Column 0
+				Bits 4-7: Column 1
+				Bits 8-11: Column 2
+				Bits 12-15: Column 3
+
+	227	E3	???	Dither Matrix, Row 1
+				Bits: See Previous
+
+	228	E4	???	Dither Matrix, Row 2
+				Bits: See Previous
+
+	229	E5	???	Dither Matrix, Row 3
+				Bits: See Previous
+
+	230	E6	???	Logical Op
+				Bits 0-3: Logical Op
+
+	231	E7	DMASK	Depth Mask
+				Bits 0-23: Depth Mask
+
+	232	E8	PMASK	Pixel Mask (RGB)
+				Bits 0-23: Pixel Mask (RGB)
+
+	233	E9	PMASKA	Pixel Mask (Alpha)
+				Bits 0-7: Pixel Mask (Alpha)
+
+	234	EA	???	Texture Transfer Mode???
+				Bit 0: 1/0 (Host -> Local / Local -> Host???)
+
+	235	EB	SBPOS	X/Y Offset for Source Buffer
+				Bits 0-9: X Offset
+				Bits 10-19: Y Offset
+
+	236	EC	DBPOS	X/Y Offset for Destination Buffer
+				Bits 0-9: X Offset
+				Bits 10-19: Y Offset
+
+	238	EE	???	Width / Height For Texture Transfer
+				Bits 0-9: Width? (Width-1)
+				Bits 10-19: Height? (Height-1)
+
