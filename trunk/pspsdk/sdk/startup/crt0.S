@@ -144,6 +144,10 @@ _main_thread_name:
 
 ##############################################################################
 
+		# Declare module_info as weak so even if PSP_MODULE_INFO()
+		# hasn't been defined the program will still link.
+		.weak		module_info
+
 		.section	.rodata.sceResident,"a",@progbits
 		.align 2
 __entrytable:
