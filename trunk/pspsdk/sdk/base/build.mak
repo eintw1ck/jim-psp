@@ -100,8 +100,8 @@ kxploit: $(TARGET).elf $(PSP_EBOOT_SFO)
 	$(STRIP) $(TARGET).elf
 	mkdir -p "$(PSP_DIR_NAME)" 
 	cp $(TARGET).elf "$(PSP_DIR_NAME)/$(PSP_EBOOT)"
-	mkdir -p "$(PSP_DIR_NAME)%%" 
-	$(PACK_PBP) "$(PSP_DIR_NAME)%%//$(PSP_EBOOT)" $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
+	mkdir -p "$(PSP_DIR_NAME)%" 
+	$(PACK_PBP) "$(PSP_DIR_NAME)%/$(PSP_EBOOT)" $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
 		$(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
 		$(PSP_EBOOT_SND0) NULL $(PSP_EBOOT_PSAR)
 
