@@ -1,22 +1,43 @@
-## TODO: This isn't the best way to handle samples.  Come up with something better.
 
-## XXX: This is severely broken - sdktest is the only sample we can support here.
-samplesdir = @PSPSDK@/samples/sdktest
+samplesdir = @PSPSDK@/samples
 
-sdktest_files  = $(srcdir)/sdktest/main.c $(srcdir)/sdktest/Makefile.sample
-
-SAMPLES_DIST = $(sdktest_files)
+SAMPLES = \
+	sdktest
 
 all:
 
-# Copy the samples into the installation samples directory.  Rename any .sample files.
+dist-hook:
+	rm -rf `find $(distdir) -name .svn -o -name CVS`
+
+# Install all of the samples.  Rename any files that end in a .sample extension.
+SAMPLES_INSTALL = $(INSTALL_DATA)
 install-data-hook:
 	$(mkinstalldirs) $(DESTDIR)$(samplesdir)
-	cp -rp $(SAMPLES_DIST) $(DESTDIR)$(samplesdir)
-	for f in `find $(DESTDIR)$(samplesdir) -name *.sample -print `; do \
-		mv -v $$f `echo $$f | sed -e 's/\.sample$$//'` ; done
+	@list='$(SAMPLES)'; for s in $$list; do \
+	  $(mkinstalldirs) $(DESTDIR)$(samplesdir)/$$s; \
+	  for p in $(srcdir)/$$s/*; do \
+	    if test -f $$p; then \
+	      f="`echo $$p | sed -e 's|^.*/||'`"; \
+	      echo " $(SAMPLES_INSTALL) $$p $(DESTDIR)$(samplesdir)/$$s/$$f"; \
+	      $(SAMPLES_INSTALL) $$p $(DESTDIR)$(samplesdir)/$$s/$$f; \
+	    else :; fi; \
+	  done; \
+	done
+	@for p in `find $(DESTDIR)$(samplesdir) -name *.sample -print `; do \
+	  f="`echo $$p | sed -e 's/\.sample$$//'`"; \
+	  echo " mv $$p $$f"; \
+	  mv $$p $$f;  \
+	done
 
 uninstall-hook:
-	rm -rf $(DESTDIR)$(samplesdir)/*
+	@list='$(SAMPLES)'; for s in $$list; do \
+	  for p in $(DESTDIR)$(samplesdir)/$$s/*; do \
+	    if test -f $$p; then \
+	      p="`echo $$p | sed -e 's|^.*/||'`"; \
+	      echo " rm -f $(DESTDIR)$(samplesdir)/$$s/$$p"; \
+	      rm -f $(DESTDIR)$(samplesdir)/$$s/$$p; \
+	    else :; fi; \
+	  done; \
+	done
 
-EXTRA_DIST = $(SAMPLES_DIST)
+EXTRA_DIST = $(SAMPLES)
