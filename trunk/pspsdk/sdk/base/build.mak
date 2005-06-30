@@ -84,10 +84,6 @@ ifndef PSP_EBOOT
 PSP_EBOOT = EBOOT.PBP
 endif
 
-ifndef PSP_DIR_NAME
-PSP_DIR_NAME = PSP-DEV
-endif
-
 ifneq ($(TARGET_LIB),)
 FINAL_TARGET = $(TARGET_LIB)
 else
@@ -98,10 +94,10 @@ all: $(EXTRA_TARGETS) $(FINAL_TARGET)
 
 kxploit: $(TARGET).elf $(PSP_EBOOT_SFO)
 	$(STRIP) $(TARGET).elf
-	mkdir -p "$(PSP_DIR_NAME)" 
-	cp $(TARGET).elf "$(PSP_DIR_NAME)/$(PSP_EBOOT)"
-	mkdir -p "$(PSP_DIR_NAME)%" 
-	$(PACK_PBP) "$(PSP_DIR_NAME)%/$(PSP_EBOOT)" $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
+	mkdir -p "$(TARGET)"
+	cp $(TARGET).elf "$(TARGET)/$(PSP_EBOOT)"
+	mkdir -p "$(TARGET)%"
+	$(PACK_PBP) "$(TARGET)%/$(PSP_EBOOT)" $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
 		$(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
 		$(PSP_EBOOT_SND0) NULL $(PSP_EBOOT_PSAR)
 
