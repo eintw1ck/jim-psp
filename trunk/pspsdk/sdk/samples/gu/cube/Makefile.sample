@@ -1,5 +1,5 @@
 TARGET = cube
-OBJS = cube.o
+OBJS = cube.o logo.o
 
 INCDIR =
 CFLAGS = -G0 -Wall
@@ -16,3 +16,6 @@ PSP_DIR_NAME=CUBE
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
+
+logo.o: logo.raw
+	bin2o -i logo.raw logo.o logo

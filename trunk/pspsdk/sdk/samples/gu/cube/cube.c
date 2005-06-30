@@ -15,61 +15,64 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
 static unsigned int __attribute__((aligned(16))) list[262144];
 
+extern unsigned char logo_start[];
+
 struct Vertex
 {
+	float u, v;
 	unsigned int color;
 	float x,y,z;
 };
 
 struct Vertex __attribute__((aligned(16))) vertices[12*3] =
 {
-	{ 0xff0000ff,-1,-1,-1}, // 0
-	{ 0xff0000ff, 1,-1,-1}, // 1
-	{ 0xff0000ff, 1,-1, 1}, // 2
+	{0, 0, 0xffff0000,-1,-1, 1}, // 0
+	{1, 0, 0xffff0000,-1, 1, 1}, // 4
+	{1, 1, 0xffff0000, 1, 1, 1}, // 5
 
-	{ 0xff0000ff,-1,-1,-1}, // 0
-	{ 0xff0000ff, 1,-1, 1}, // 2
-	{ 0xff0000ff,-1,-1, 1}, // 3
+	{0, 0, 0xffff0000,-1,-1, 1}, // 0
+	{1, 1, 0xffff0000, 1, 1, 1}, // 5
+	{0, 1, 0xffff0000, 1,-1, 1}, // 1
 
-	{ 0xffff0000,-1,-1,-1}, // 0
-	{ 0xffff0000,-1, 1,-1}, // 4
-	{ 0xffff0000, 1, 1,-1}, // 5
+	{0, 0, 0xffff0000,-1,-1,-1}, // 3
+	{1, 0, 0xffff0000, 1,-1,-1}, // 2
+	{1, 1, 0xffff0000, 1, 1,-1}, // 6
 
-	{ 0xffff0000,-1,-1,-1}, // 0
-	{ 0xffff0000, 1, 1,-1}, // 5
-	{ 0xffff0000, 1,-1,-1}, // 1
+	{0, 0, 0xffff0000,-1,-1,-1}, // 3
+	{1, 1, 0xffff0000, 1, 1,-1}, // 6
+	{0, 1, 0xffff0000,-1, 1,-1}, // 7
 
-	{ 0xff00ff00, 1,-1,-1}, // 1
-	{ 0xff00ff00, 1, 1,-1}, // 5
-	{ 0xff00ff00, 1, 1, 1}, // 6
+	{0, 0, 0xff00ff00, 1,-1,-1}, // 0
+	{1, 0, 0xff00ff00, 1,-1, 1}, // 3
+	{1, 1, 0xff00ff00, 1, 1, 1}, // 7
 
-	{ 0xff00ff00, 1,-1, 1}, // 2
-	{ 0xff00ff00, 1,-1,-1}, // 1
-	{ 0xff00ff00, 1, 1, 1}, // 6
+	{0, 0, 0xff00ff00, 1,-1,-1}, // 0
+	{1, 1, 0xff00ff00, 1, 1, 1}, // 7
+	{0, 1, 0xff00ff00, 1, 1,-1}, // 4
 
-	{ 0xffff0000,-1,-1, 1}, // 3
-	{ 0xffff0000, 1,-1, 1}, // 2
-	{ 0xffff0000, 1, 1, 1}, // 6
+	{0, 0, 0xff00ff00,-1,-1,-1}, // 0
+	{1, 0, 0xff00ff00,-1, 1,-1}, // 3
+	{1, 1, 0xff00ff00,-1, 1, 1}, // 7
 
-	{ 0xffff0000,-1,-1, 1}, // 3
-	{ 0xffff0000, 1, 1, 1}, // 6
-	{ 0xffff0000,-1, 1, 1}, // 7
+	{0, 0, 0xff00ff00,-1,-1,-1}, // 0
+	{1, 1, 0xff00ff00,-1, 1, 1}, // 7
+	{0, 1, 0xff00ff00,-1,-1, 1}, // 4
 
-	{ 0xff00ff00,-1,-1,-1}, // 0
-	{ 0xff00ff00,-1,-1, 1}, // 3
-	{ 0xff00ff00,-1, 1, 1}, // 7
+	{0, 0, 0xff0000ff,-1, 1,-1}, // 0
+	{1, 0, 0xff0000ff, 1, 1,-1}, // 1
+	{1, 1, 0xff0000ff, 1, 1, 1}, // 2
 
-	{ 0xff00ff00,-1,-1,-1}, // 0
-	{ 0xff00ff00,-1, 1, 1}, // 7
-	{ 0xff00ff00,-1, 1,-1}, // 4
+	{0, 0, 0xff0000ff,-1, 1,-1}, // 0
+	{1, 1, 0xff0000ff, 1, 1, 1}, // 2
+	{0, 1, 0xff0000ff,-1, 1, 1}, // 3
 
-	{ 0xff0000ff,-1, 1,-1}, // 4
-	{ 0xff0000ff,-1, 1, 1}, // 7
-	{ 0xff0000ff, 1, 1, 1}, // 6
+	{0, 0, 0xff0000ff,-1,-1,-1}, // 4
+	{1, 0, 0xff0000ff,-1,-1, 1}, // 7
+	{1, 1, 0xff0000ff, 1,-1, 1}, // 6
 
-	{ 0xff0000ff,-1, 1,-1}, // 4
-	{ 0xff0000ff, 1, 1, 1}, // 6
-	{ 0xff0000ff, 1, 1,-1}  // 5
+	{0, 0, 0xff0000ff,-1,-1,-1}, // 4
+	{1, 1, 0xff0000ff, 1,-1, 1}, // 6
+	{0, 1, 0xff0000ff, 1,-1,-1}, // 5
 };
 
 int done = 0;
@@ -314,6 +317,7 @@ int main(int argc, char* argv[])
 	sceGuFrontFace(0);
 	sceGuShadeModel(1);
 	sceGuEnable(GU_STATE_CULLING);
+	sceGuEnable(GU_STATE_TEXTURING);
 	sceGuFinish();
 	sceGuSync(0,0);
 
@@ -348,7 +352,15 @@ int main(int argc, char* argv[])
 		matrix_rotate(world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
 		sceGuSetMatrix(2,world);
 
-		sceGuDrawArray(GU_PRIM_TRIANGLES,GE_SETREG_VTYPE(0,GE_CT_8888,0,GE_MT_32BITF,0,0,0,0,0),12*3,0,vertices);
+		sceGuTexMode(GE_TFMT_4444,0,0,0);
+		sceGuTexImage(0,64,64,64,logo_start);
+		sceGuTexFunc(0,0);
+		sceGuTexFilter(1,1);
+		sceGuTexScale(1,1);
+		sceGuTexOffset(0,0);
+		sceGuAmbientColor(0xffffffff);
+
+		sceGuDrawArray(GU_PRIM_TRIANGLES,GE_SETREG_VTYPE(GE_TT_32BITF,GE_CT_8888,0,GE_MT_32BITF,0,0,0,0,0),12*3,0,vertices);
 
 		sceGuFinish();
 		sceGuSync(0,0);

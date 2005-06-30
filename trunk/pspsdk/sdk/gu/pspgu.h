@@ -22,7 +22,7 @@ extern "C" {
 #define GU_STATE_UNKNOWN6       (6)
 #define GU_STATE_UNKNOWN7       (7)
 #define GU_STATE_CULLING        (8)
-#define GU_STATE_UNKNOWN9       (9)
+#define GU_STATE_TEXTURING      (9)
 #define GU_STATE_UNKNOWN10      (10)
 #define GU_STATE_LIGHT0         (11) // Light 0 Enable
 #define GU_STATE_LIGHT1         (12) // Light 1 Enable
@@ -78,6 +78,11 @@ extern "C" {
 
 #define GE_BM_3D        0x00
 #define GE_BM_2D        0x01
+
+#define GE_TFMT_5650	0
+#define GE_TFMT_5551	1
+#define GE_TFMT_4444	2
+#define GE_TFMT_8888	3
 
 /* screen buffers */
 void sceGuDepthBuffer(void* depth_buffer, int depth_width);
