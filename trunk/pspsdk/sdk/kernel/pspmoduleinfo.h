@@ -39,7 +39,7 @@ extern char _gp[];
 
 /* Declare a module.  This must be specified in the source of a library or executable. */
 #define PSP_MODULE_INFO(name, attributes, major_version, minor_version) \
-	asm (                                                           \
+	__asm__ (                                                       \
 	"    .set push\n"                                               \
 	"    .section .lib.ent.top, \"a\", @progbits\n"                 \
 	"    .align 2\n"                                                \
@@ -62,8 +62,8 @@ extern char _gp[];
 	extern char __lib_ent_top[], __lib_ent_bottom[];                \
 	extern char __lib_stub_top[], __lib_stub_bottom[];              \
 	extern SceModuleInfo module_info                                \
-		__attribute__((section(".rodata.sceModuleInfo"),        	\
-			       aligned(16), unused)) = {                		\
+		__attribute__((section(".rodata.sceModuleInfo"),        \
+			       aligned(16), unused)) = {                \
 	  attributes, { minor_version, major_version }, #name, 0, _gp,  \
 	  __lib_ent_top, __lib_ent_bottom,                              \
 	  __lib_stub_top, __lib_stub_bottom                             \
@@ -71,7 +71,7 @@ extern char _gp[];
 #else
 /* Declare a module.  This must be specified in the source of a library or executable. */
 #define PSP_MODULE_INFO(name, attributes, major_version, minor_version) \
-	asm (                                                           \
+	__asm__ (                                                       \
 	"    .set push\n"                                               \
 	"    .section .lib.ent.top, \"a\", @progbits\n"                 \
 	"    .align 2\n"                                                \
@@ -94,8 +94,8 @@ extern char _gp[];
 	extern char __lib_ent_top[], __lib_ent_bottom[];                \
 	extern char __lib_stub_top[], __lib_stub_bottom[];              \
 	SceModuleInfo module_info                                       \
-		__attribute__((section(".rodata.sceModuleInfo"),        	\
-			       aligned(16), unused)) = {                		\
+		__attribute__((section(".rodata.sceModuleInfo"),        \
+			       aligned(16), unused)) = {                \
 	  attributes, { minor_version, major_version }, #name, 0, _gp,  \
 	  __lib_ent_top, __lib_ent_bottom,                              \
 	  __lib_stub_top, __lib_stub_bottom                             \
