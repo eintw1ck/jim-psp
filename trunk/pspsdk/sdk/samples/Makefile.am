@@ -2,7 +2,8 @@
 samplesdir = @PSPSDK@/samples
 
 SAMPLES = \
-	sdktest
+	sdktest \
+	gu/cube
 
 all:
 
