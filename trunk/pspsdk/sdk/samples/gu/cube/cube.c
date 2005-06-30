@@ -132,7 +132,8 @@ void matrix_projection(float* matrix, float fovy, float aspect, float near, floa
 {
 	matrix_identity(matrix);
 
-	float cotangent = cosf(fovy / 2.0f) * sinf(fovy / 2.0f);
+	float angle = (fovy / 2.0f) * (M_PI/180.0f);
+	float cotangent = cosf(angle) / sinf(angle);
 
 	matrix[(0<<2)+0] = cotangent / aspect;
 	matrix[(1<<2)+1] = cotangent;
@@ -312,14 +313,12 @@ int main(int argc, char* argv[])
 	sceGuEnable(GU_STATE_DEPTH_TEST);
 	sceGuFrontFace(0);
 	sceGuShadeModel(1);
-	sceGuEnable(GU_STATE_UNKNOWN8);
+	sceGuEnable(GU_STATE_CULLING);
 	sceGuFinish();
 	sceGuSync(0,0);
 
 	sceDisplayWaitVblankStart();
 	sceGuDisplay(1);
-
-	int i = 0;
 
 	float projection[16];
 	float view[16];
@@ -329,8 +328,6 @@ int main(int argc, char* argv[])
 
 	while (!done)
 	{
-		unsigned int x,y;
-
 		sceGuStart(0,list);
 
 		sceGuClearColor(0);
@@ -347,11 +344,11 @@ int main(int argc, char* argv[])
 		sceGuSetMatrix(1,view);
 
 		matrix_identity(world);
-		matrix_translate(world,0,0,-1.9f);
+		matrix_translate(world,0,0,-3.0f);
 		matrix_rotate(world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
 		sceGuSetMatrix(2,world);
 
-		sceGuDrawArray(3,0x00019c,12*3,0,vertices);
+		sceGuDrawArray(GU_PRIM_TRIANGLES,GE_SETREG_VTYPE(0,GE_CT_8888,0,GE_MT_32BITF,0,0,0,0,0),12*3,0,vertices);
 
 		sceGuFinish();
 		sceGuSync(0,0);

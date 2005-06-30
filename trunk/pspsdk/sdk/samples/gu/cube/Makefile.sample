@@ -12,6 +12,7 @@ LIBS= -lpspgu
 
 EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = SceGu Cube
+PSP_DIR_NAME=CUBE
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak

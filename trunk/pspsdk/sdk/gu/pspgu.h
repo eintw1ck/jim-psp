@@ -5,6 +5,14 @@
 extern "C" {
 #endif
 
+#define GU_PRIM_POINTS          (0)
+#define GU_PRIM_LINES           (1)
+#define GU_PRIM_LINESTRIPS      (2)
+#define GU_PRIM_TRIANGLES       (3)
+#define GU_PRIM_TRISTRIPS       (4)
+#define GU_PRIM_TRIFANS         (5)
+#define GU_PRIM_SPRITES         (6)
+
 #define GU_STATE_ATE            (0) // Alpha Test
 #define GU_STATE_DEPTH_TEST     (1) // Depth Test
 #define GU_STATE_SCISSOR        (2)
@@ -13,7 +21,7 @@ extern "C" {
 #define GU_STATE_UNKNOWN5       (5)
 #define GU_STATE_UNKNOWN6       (6)
 #define GU_STATE_UNKNOWN7       (7)
-#define GU_STATE_UNKNOWN8       (8)
+#define GU_STATE_CULLING        (8)
 #define GU_STATE_UNKNOWN9       (9)
 #define GU_STATE_UNKNOWN10      (10)
 #define GU_STATE_LIGHT0         (11) // Light 0 Enable
@@ -27,6 +35,49 @@ extern "C" {
 #define GU_STATE_UNKNOWN19      (19)
 #define GU_STATE_PATCH_FACE     (20) // sceGuPatchFrontFace()
 #define GU_STATE_UNKNOWN21      (21)
+
+/* vertex type by Neovangelist */
+#define GE_SETREG_VTYPE(tt, ct, nt, mt, wt, it, nw, vb, dm) \
+        ((u32)(tt)      | ((u32)(ct) << 2)      | ((u32)(nt) << 5) | \
+        ((u32)(mt) << 7)| ((u32)(wt) << 9)      | ((u32)(it) << 11) | \
+        ((u32)(nw) <<14)| ((u32)(vb) << 18)     | ((u32)(dm) << 23))
+
+#define GE_TT_NONE	0x00
+#define GE_TT_8BIT	0x01
+#define GE_TT_16BIT	0x02
+#define GE_TT_32BITF	0x03
+
+#define GE_CT_NONE	0x00
+#define GE_CT_RES1	0x01
+#define GE_CT_RES2	0x02
+#define GE_CT_RES3	0x03
+#define GE_CT_5650	0x04
+#define GE_CT_5551	0x05
+#define GE_CT_4444	0x06
+#define GE_CT_8888	0x07
+
+#define GE_NT_NONE	0x00
+#define GE_NT_8BIT	0x01
+#define GE_NT_16BIT	0x02
+#define GE_NT_32BITF	0x03
+
+#define GE_MT_RES	0x00
+#define GE_MT_8BIT	0x01
+#define GE_MT_16BIT	0x02
+#define GE_MT_32BITF	0x03
+
+#define GE_WT_NONE	0x00
+#define GE_WT_8BIT	0x01
+#define GE_WT_16BIT	0x02
+#define GE_WT_32BITF	0x03
+
+#define GE_IT_NONE	0x00
+#define GE_IT_8BIT	0x01
+#define GE_IT_16BIT	0x02
+#define GE_IT_RES	0x03
+
+#define GE_BM_3D        0x00
+#define GE_BM_2D        0x01
 
 /* screen buffers */
 void sceGuDepthBuffer(void* depth_buffer, int depth_width);
