@@ -278,7 +278,7 @@ int sceIoUnassign(const char *dev);
   * 
   * @return < 0 on error.
   */
-int sceIoGetStat(const char *file, io_stat_t *stat);
+int sceIoGetstat(const char *file, io_stat_t *stat);
 
 /** 
   * Change the status of a file.
@@ -289,7 +289,7 @@ int sceIoGetStat(const char *file, io_stat_t *stat);
   *
   * @return < 0 on error.
   */
-int sceIoChStat(const char *file, io_stat_t *stat, int bits);
+int sceIoChstat(const char *file, io_stat_t *stat, int bits);
 
 /*@}*/
 
