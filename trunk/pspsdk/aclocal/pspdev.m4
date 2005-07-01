@@ -52,6 +52,7 @@ dnl the psp- prefix.  That's highly unlikely though.
 AC_DEFUN(AC_PSPDEV_TOOLCHAIN,
 [
   __PSPDEV_CHECK_TOOL(PSP_CC, gcc, no)
+  __PSPDEV_CHECK_TOOL(PSP_CXX, g++, no)
   __PSPDEV_CHECK_TOOL(PSP_AS, as, no)
   __PSPDEV_CHECK_TOOL(PSP_LD, ld, no)
   __PSPDEV_CHECK_TOOL(PSP_AR, ar, no)

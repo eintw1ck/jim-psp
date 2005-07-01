@@ -15,6 +15,7 @@ AC_PSPDEV_TOOLCHAIN
 AC_PROG_CC
 # These will actually be overridden by the psp-specific counterparts.  They are
 # here mainly to shut automake up.
+AC_PROG_CXX
 AM_PROG_AS
 AC_PROG_RANLIB
 
@@ -63,9 +64,11 @@ AC_SUBST(PSPSDK)
 AC_SUBST(PSPSDK_INCLUDEDIR)
 AC_SUBST(PSPSDK_LIBDIR)
 
-# CFLAGS used to build pspsdk libraries.
+# CFLAGS and CXXFLAGS used to build pspsdk libraries.
 PSPSDK_CFLAGS="$CFLAGS -G0 -Wall"
+PSPSDK_CXXFLAGS="$PSPSDK_CFLAGS -fno-exceptions -fno-rtti"
 AC_SUBST(PSPSDK_CFLAGS)
+AC_SUBST(PSPSDK_CXXFLAGS)
 
 # Turn on all warnings (for host programs).
 if test x$ac_compiler_gnu = xyes; then
