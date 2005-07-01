@@ -2,12 +2,14 @@
 libdir = @PSPSDK_LIBDIR@
 
 CC = @PSP_CC@
+CXX = @PSP_CXX@
 CCAS = $(CC)
 AR = @PSP_AR@
 RANLIB = @PSP_RANLIB@
 
 INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 CFLAGS = @PSPSDK_CFLAGS@
+CXXFLAGS = @PSPSDK_CXXFLAGS@
 CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base
 
 EXTRA_DIST = LIB.status
@@ -15,7 +17,7 @@ EXTRA_DIST = LIB.status
 lib_LIBRARIES = libpsplibc.a libpspglue.a
 
 ## libpsplibc.a sources.
-CORE_SOURCES = sbrk.c terminate.c setjmp.S qsort.c init.c #cxx.cpp
+CORE_SOURCES = sbrk.c terminate.c setjmp.S qsort.c init.c cxx.cpp
 MULT_SOURCES = xprintf.c alloc.c string.c stdio.c stdlib.c time.c
 
 ALLOC_OBJS = malloc.o realloc.o calloc.o memalign.o free.o __builtin_alloc.o __alloc_internals.o __mem_walk.o
