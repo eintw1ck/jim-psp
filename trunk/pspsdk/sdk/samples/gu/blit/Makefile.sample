@@ -1,5 +1,5 @@
-TARGET = cube
-OBJS = cube.o logo.o
+TARGET = blit
+OBJS = blit.c
 
 INCDIR =
 CFLAGS = -G0 -Wall
@@ -11,8 +11,8 @@ LDFLAGS =
 LIBS= -lpspgu
 
 EXTRA_TARGETS = EBOOT.PBP
-PSP_EBOOT_TITLE = Cube Sample
-PSP_DIR_NAME=CUBE
+PSP_EBOOT_TITLE = Blit Sample
+PSP_DIR_NAME=BLIT
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak

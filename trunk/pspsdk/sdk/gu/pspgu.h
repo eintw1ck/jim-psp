@@ -18,10 +18,10 @@ extern "C" {
 #define GU_STATE_SCISSOR        (2)
 #define GU_STATE_UNKNOWN3       (3)
 #define GU_STATE_BLEND          (4) // Alpha Blend
-#define GU_STATE_UNKNOWN5       (5)
+#define GU_STATE_CULLING        (5)
 #define GU_STATE_UNKNOWN6       (6)
 #define GU_STATE_UNKNOWN7       (7)
-#define GU_STATE_CULLING        (8)
+#define GU_STATE_UNKNOWN8       (8)
 #define GU_STATE_TEXTURING      (9)
 #define GU_STATE_UNKNOWN10      (10)
 #define GU_STATE_LIGHT0         (11) // Light 0 Enable
@@ -79,10 +79,24 @@ extern "C" {
 #define GE_BM_3D        0x00
 #define GE_BM_2D        0x01
 
-#define GE_TFMT_5650	0
-#define GE_TFMT_5551	1
-#define GE_TFMT_4444	2
-#define GE_TFMT_8888	3
+#define GE_PSM_5650	0
+#define GE_PSM_5551	1
+#define GE_PSM_4444	2
+#define	GE_PSM_8888	3
+
+#define GE_TPSM_5650	0
+#define GE_TPSM_5551	1
+#define GE_TPSM_4444	2
+#define GE_TPSM_8888	3
+
+#define GE_SHADE_FLAT		0
+#define GE_SHADE_GOURAUD	1
+
+#define GE_FILTER_POINT		0
+#define GE_FILTER_LINEAR	1
+
+#define GE_WRAP_REPEAT		0
+#define GE_WRAP_CLAMP		1
 
 /* screen buffers */
 void sceGuDepthBuffer(void* depth_buffer, int depth_width);

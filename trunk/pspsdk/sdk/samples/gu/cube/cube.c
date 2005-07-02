@@ -8,7 +8,7 @@
 
 #include <pspgu.h>
 
-PSP_MODULE_INFO("SceGu Cube", 0, 1, 1);
+PSP_MODULE_INFO("Cube Sample", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
 #define printf	pspDebugScreenPrintf
@@ -26,53 +26,53 @@ struct Vertex
 
 struct Vertex __attribute__((aligned(16))) vertices[12*3] =
 {
-	{0, 0, 0xffff0000,-1,-1, 1}, // 0
-	{1, 0, 0xffff0000,-1, 1, 1}, // 4
-	{1, 1, 0xffff0000, 1, 1, 1}, // 5
+	{0, 0, 0xff7f0000,-1,-1, 1}, // 0
+	{1, 0, 0xff7f0000,-1, 1, 1}, // 4
+	{1, 1, 0xff7f0000, 1, 1, 1}, // 5
 
-	{0, 0, 0xffff0000,-1,-1, 1}, // 0
-	{1, 1, 0xffff0000, 1, 1, 1}, // 5
-	{0, 1, 0xffff0000, 1,-1, 1}, // 1
+	{0, 0, 0xff7f0000,-1,-1, 1}, // 0
+	{1, 1, 0xff7f0000, 1, 1, 1}, // 5
+	{0, 1, 0xff7f0000, 1,-1, 1}, // 1
 
-	{0, 0, 0xffff0000,-1,-1,-1}, // 3
-	{1, 0, 0xffff0000, 1,-1,-1}, // 2
-	{1, 1, 0xffff0000, 1, 1,-1}, // 6
+	{0, 0, 0xff7f0000,-1,-1,-1}, // 3
+	{1, 0, 0xff7f0000, 1,-1,-1}, // 2
+	{1, 1, 0xff7f0000, 1, 1,-1}, // 6
 
-	{0, 0, 0xffff0000,-1,-1,-1}, // 3
-	{1, 1, 0xffff0000, 1, 1,-1}, // 6
-	{0, 1, 0xffff0000,-1, 1,-1}, // 7
+	{0, 0, 0xff7f0000,-1,-1,-1}, // 3
+	{1, 1, 0xff7f0000, 1, 1,-1}, // 6
+	{0, 1, 0xff7f0000,-1, 1,-1}, // 7
 
-	{0, 0, 0xff00ff00, 1,-1,-1}, // 0
-	{1, 0, 0xff00ff00, 1,-1, 1}, // 3
-	{1, 1, 0xff00ff00, 1, 1, 1}, // 7
+	{0, 0, 0xff007f00, 1,-1,-1}, // 0
+	{1, 0, 0xff007f00, 1,-1, 1}, // 3
+	{1, 1, 0xff007f00, 1, 1, 1}, // 7
 
-	{0, 0, 0xff00ff00, 1,-1,-1}, // 0
-	{1, 1, 0xff00ff00, 1, 1, 1}, // 7
-	{0, 1, 0xff00ff00, 1, 1,-1}, // 4
+	{0, 0, 0xff007f00, 1,-1,-1}, // 0
+	{1, 1, 0xff007f00, 1, 1, 1}, // 7
+	{0, 1, 0xff007f00, 1, 1,-1}, // 4
 
-	{0, 0, 0xff00ff00,-1,-1,-1}, // 0
-	{1, 0, 0xff00ff00,-1, 1,-1}, // 3
-	{1, 1, 0xff00ff00,-1, 1, 1}, // 7
+	{0, 0, 0xff007f00,-1,-1,-1}, // 0
+	{1, 0, 0xff007f00,-1, 1,-1}, // 3
+	{1, 1, 0xff007f00,-1, 1, 1}, // 7
 
-	{0, 0, 0xff00ff00,-1,-1,-1}, // 0
-	{1, 1, 0xff00ff00,-1, 1, 1}, // 7
-	{0, 1, 0xff00ff00,-1,-1, 1}, // 4
+	{0, 0, 0xff007f00,-1,-1,-1}, // 0
+	{1, 1, 0xff007f00,-1, 1, 1}, // 7
+	{0, 1, 0xff007f00,-1,-1, 1}, // 4
 
-	{0, 0, 0xff0000ff,-1, 1,-1}, // 0
-	{1, 0, 0xff0000ff, 1, 1,-1}, // 1
-	{1, 1, 0xff0000ff, 1, 1, 1}, // 2
+	{0, 0, 0xff00007f,-1, 1,-1}, // 0
+	{1, 0, 0xff00007f, 1, 1,-1}, // 1
+	{1, 1, 0xff00007f, 1, 1, 1}, // 2
 
-	{0, 0, 0xff0000ff,-1, 1,-1}, // 0
-	{1, 1, 0xff0000ff, 1, 1, 1}, // 2
-	{0, 1, 0xff0000ff,-1, 1, 1}, // 3
+	{0, 0, 0xff00007f,-1, 1,-1}, // 0
+	{1, 1, 0xff00007f, 1, 1, 1}, // 2
+	{0, 1, 0xff00007f,-1, 1, 1}, // 3
 
-	{0, 0, 0xff0000ff,-1,-1,-1}, // 4
-	{1, 0, 0xff0000ff,-1,-1, 1}, // 7
-	{1, 1, 0xff0000ff, 1,-1, 1}, // 6
+	{0, 0, 0xff00007f,-1,-1,-1}, // 4
+	{1, 0, 0xff00007f,-1,-1, 1}, // 7
+	{1, 1, 0xff00007f, 1,-1, 1}, // 6
 
-	{0, 0, 0xff0000ff,-1,-1,-1}, // 4
-	{1, 1, 0xff0000ff, 1,-1, 1}, // 6
-	{0, 1, 0xff0000ff, 1,-1,-1}, // 5
+	{0, 0, 0xff00007f,-1,-1,-1}, // 4
+	{1, 1, 0xff00007f, 1,-1, 1}, // 6
+	{0, 1, 0xff00007f, 1,-1,-1}, // 5
 };
 
 int done = 0;
@@ -302,12 +302,12 @@ int main(int argc, char* argv[])
 
 	// setup
 	sceGuStart(0,list);
-	sceGuDrawBuffer(3,(void*)0,512);
+	sceGuDrawBuffer(GE_PSM_8888,(void*)0,512);
 	sceGuDispBuffer(480,272,(void*)0x88000,512);
 	sceGuDepthBuffer((void*)0x110000,512);
 	sceGuOffset(2048 - (480/2),2048 - (272/2));
 	sceGuViewport(2048,2048,480,272);
-	sceGuDepthRange(0xc350,10000);
+	sceGuDepthRange(0xc350,0x2710);
 	sceGuScissor(0,0,480,272);
 	sceGuEnable(GU_STATE_SCISSOR);
 	sceGuBlendFunc(0,2,3,0,0);
@@ -315,7 +315,7 @@ int main(int argc, char* argv[])
 	sceGuDepthFunc(7);
 	sceGuEnable(GU_STATE_DEPTH_TEST);
 	sceGuFrontFace(0);
-	sceGuShadeModel(1);
+	sceGuShadeModel(GE_SHADE_GOURAUD);
 	sceGuEnable(GU_STATE_CULLING);
 	sceGuEnable(GU_STATE_TEXTURING);
 	sceGuFinish();
@@ -334,7 +334,7 @@ int main(int argc, char* argv[])
 	{
 		sceGuStart(0,list);
 
-		sceGuClearColor(0);
+		sceGuClearColor(0xff554433);
 		sceGuClearDepth(0);
 		sceGuClear(1 + 4);
 
@@ -352,9 +352,9 @@ int main(int argc, char* argv[])
 		matrix_rotate(world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
 		sceGuSetMatrix(2,world);
 
-		sceGuTexMode(GE_TFMT_4444,0,0,0);
+		sceGuTexMode(GE_TPSM_4444,0,0,0);
 		sceGuTexImage(0,64,64,64,logo_start);
-		sceGuTexFunc(0,0);
+		sceGuTexFunc(4,0);
 		sceGuTexFilter(1,1);
 		sceGuTexScale(1,1);
 		sceGuTexOffset(0,0);

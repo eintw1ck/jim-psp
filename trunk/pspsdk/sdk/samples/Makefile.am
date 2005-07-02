@@ -3,7 +3,8 @@ samplesdir = @PSPSDK@/samples
 
 SAMPLES = \
 	sdktest \
-	gu/cube
+	gu/cube \
+	gu/blit
 
 all:
 
