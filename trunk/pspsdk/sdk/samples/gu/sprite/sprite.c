@@ -16,6 +16,11 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 static unsigned int __attribute__((aligned(16))) list[262144];
 extern unsigned char ball_start[];
 
+struct InputVertex
+{
+	float x,y,z;
+};
+
 struct Vertex
 {
 	float u, v;
@@ -42,11 +47,11 @@ void matrix_translate(float* matrix, float x, float y, float z);
 #define FRAME_SIZE (BUF_WIDTH * SCR_HEIGHT * PIXEL_SIZE)
 #define ZBUF_SIZE (BUF_WIDTH SCR_HEIGHT * 2) /* zbuffer seems to be 16-bit? */
 
-#define NUM_SLICES 15
-#define NUM_ROWS 14
+#define NUM_SLICES 35
+#define NUM_ROWS 35
 #define RING_SIZE 2.0f
 #define RING_RADIUS 1.0f
-#define SPRITE_SIZE 0.2f
+#define SPRITE_SIZE 0.1f
 
 unsigned int colors[7] = 
 {
@@ -59,9 +64,32 @@ unsigned int colors[7] =
 	0xffffffff,
 };
 
+struct InputVertex torus_vertices[NUM_SLICES * NUM_ROWS];
+
 int main(int argc, char* argv[])
 {
+	unsigned int i,j;
+
 	SetupCallbacks();
+
+	// initialize torus
+
+	for (i = 0; i < NUM_SLICES; ++i)
+	{
+		for (j = 0; j < NUM_ROWS; ++j)
+		{
+			float s = i + 0.5f, t = j;
+			float x,y,z;
+
+			x = (RING_SIZE + RING_RADIUS * cosf(s * ((M_PI*2)/NUM_SLICES))) * cosf(t * ((M_PI*2)/NUM_ROWS));
+			y = (RING_SIZE + RING_RADIUS * cosf(s * ((M_PI*2)/NUM_SLICES))) * sinf(t * ((M_PI*2)/NUM_ROWS));
+			z = RING_RADIUS * sinf(s * ((M_PI*2)/NUM_SLICES));
+
+			torus_vertices[j + i * NUM_ROWS].x = x;
+			torus_vertices[j + i * NUM_ROWS].y = y;
+			torus_vertices[j + i * NUM_ROWS].z = z;
+		}
+	}
 
 	// setup GU
 
@@ -151,17 +179,19 @@ int main(int argc, char* argv[])
 		for (i = 0; i < NUM_SLICES; ++i)
 		{
 			struct Vertex* row = &vertices[i * NUM_ROWS * 2];
+			struct InputVertex* inrow = &torus_vertices[i * NUM_ROWS];
 
 			for (j = 0; j < NUM_ROWS; ++j)
 			{
 				struct Vertex* curr = &row[j << 1];
-				float s = i + 0.5f, t = j;
-				float x,y,z;
-				float tx,ty,tz;
+				struct InputVertex* incurr = &inrow[j];
+				float x, y, z;
+				float tx, ty, tz;
 
-				x = (RING_SIZE + RING_RADIUS * cosf(s * ((M_PI*2)/NUM_SLICES))) * cosf(t * ((M_PI*2)/NUM_ROWS));
-				y = (RING_SIZE + RING_RADIUS * cosf(s * ((M_PI*2)/NUM_SLICES))) * sinf(t * ((M_PI*2)/NUM_ROWS));
-				z = RING_RADIUS * sinf(s * ((M_PI*2)/NUM_SLICES));
+				x = incurr->x;
+				y = incurr->y;
+				z = incurr->z;
+
 
 				tx = x * world[(0 << 2)+0] + y * world[(1 << 2)+0] + z * world[(2 << 2)+0] + world[(3 << 2)+0];
 				ty = x * world[(0 << 2)+1] + y * world[(1 << 2)+1] + z * world[(2 << 2)+1] + world[(3 << 2)+1];
