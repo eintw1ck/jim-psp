@@ -22,6 +22,8 @@
 
 #include <psptypes.h>
 #include <pspiofilemgr.h>
+#include <pspmodulemgr.h>
+#include <pspthreadman.h>
 #include <psputils.h>
 
 /* These functions aren't exposed in any public headers, and they probably don't need to be. */
@@ -217,5 +219,25 @@ int _kill(int unused, int unused2)
 pid_t _wait(int *unused)
 {
 	return (pid_t) -1;
+}
+#endif
+
+/* Exit. */
+#ifdef F__exit
+extern int sce_newlib_nocreate_thread_in_start __attribute__((weak));
+
+void _exit(int status)
+{
+	if (&sce_newlib_nocreate_thread_in_start != NULL) {
+		/* Free the heap created by _sbrk(). */
+
+		sceKernelSelfStopUnloadModule(1, 0, NULL);
+	} else {
+		if (status == 0) {
+			/* Free the heap created by _sbrk(). */
+		}
+
+		sceKernelExitThread(status);
+	}
 }
 #endif
