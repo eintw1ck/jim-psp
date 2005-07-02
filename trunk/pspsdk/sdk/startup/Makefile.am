@@ -10,7 +10,7 @@ CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base
 
 ## Borrow this trick from newlib - create a dummy library to generate build rules.
 noinst_LIBRARIES = lib.a
-lib_a_SOURCES = dummy.c dummyasm.S
+lib_a_SOURCES = dummy.c
 
 startupdir = @PSPDEV_LIBDIR@
 startup_DATA = crt0.o
@@ -20,4 +20,4 @@ all: crt0.o
 CLEANFILES = crt0.o
 
 ## How else do I add a dependency for this?
-EXTRA_DIST = crt0.S
+EXTRA_DIST = crt0.c
