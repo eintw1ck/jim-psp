@@ -6,7 +6,8 @@ SAMPLES = \
 	gu/cube \
 	gu/blit \
 	kdumper \
-	exception
+	exception \
+	kprintf
 
 all:
 
