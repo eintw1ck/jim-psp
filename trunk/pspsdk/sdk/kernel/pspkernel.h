@@ -15,6 +15,7 @@
 #define __KERNEL_H__
 
 #include <psptypes.h>
+#include <pspkerneltypes.h>
 #include <pspctrl.h>
 #include <pspdisplay.h>
 #include <pspiofilemgr.h>
