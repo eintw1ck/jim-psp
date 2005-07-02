@@ -153,16 +153,25 @@ int _gettimeofday(struct timeval *tp, struct timezone *tzp)
 {
 	return sceKernelLibcGettimeofday(tp, tzp);
 }
+
 #endif
 
-#ifdef F_clock
+/* If we're being built for PSPSDK's libc this function isn't defined. */
+#ifdef F_glue_gettimeofday
+int gettimeofday(struct timeval *tp, struct timezone *tzp)
+{
+	return sceKernelLibcGettimeofday(tp, tzp);
+}
+#endif
+
+#if defined(F_clock) || defined(F_glue_clock)
 clock_t clock(void)
 {
 	return sceKernelLibcClock();
 }
 #endif
 
-#ifdef F_time
+#if defined(F_time) || defined(F_glue_time)
 time_t time(time_t *t)
 {
 	return sceKernelLibcTime(t);
@@ -170,7 +179,7 @@ time_t time(time_t *t)
 #endif
 
 /* PSP-compatible sbrk(). */
-#ifdef F__sbrk
+#if defined(F__sbrk) || defined(F_glue__sbrk)
 void * _sbrk(ptrdiff_t incr)
 {
 	return (void *) -1;
@@ -223,7 +232,7 @@ pid_t _wait(int *unused)
 #endif
 
 /* Exit. */
-#ifdef F__exit
+#if defined(F__exit) || defined(F_glue__exit)
 extern int sce_newlib_nocreate_thread_in_start __attribute__((weak));
 
 void _exit(int status)
@@ -239,5 +248,7 @@ void _exit(int status)
 
 		sceKernelExitThread(status);
 	}
+
+	while (1) ;
 }
 #endif

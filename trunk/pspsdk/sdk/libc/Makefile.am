@@ -44,9 +44,10 @@ STDLIB_OBJS = abs.o atexit.o atof.o bsearch.o div.o getenv.o _itoa.o labs.o \
 	strtod.o strtol.o strtoul.o __assert_fail.o \
 	__stdlib_internals.o 
 
-TIME_OBJS = clock.o _time.o gettimeofday.o
+## Use a few functions from libpspglue.a.
+GLUE_OBJS = glue__exit.o glue__sbrk.o glue_clock.o glue_gettimeofday.o glue_time.o
 
-MULT_OBJS = $(XPRINTF_OBJS) $(ALLOC_OBJS) $(STRING_C_OBJS) $(STDIO_OBJS) $(STDLIB_OBJS) $(TIME_OBJS)
+MULT_OBJS = $(XPRINTF_OBJS) $(ALLOC_OBJS) $(STRING_C_OBJS) $(STDIO_OBJS) $(STDLIB_OBJS) $(GLUE_OBJS)
 
 libpsplibc_a_SOURCES = $(CORE_SOURCES) $(MULT_SOURCES)
 libpsplibc_a_LIBADD  = $(MULT_OBJS)
@@ -67,6 +68,9 @@ $(STDLIB_OBJS): stdlib.c
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(TIME_OBJS): time.c
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(GLUE_OBJS): libcglue.c
 	$(COMPILE) -DF_$* $< -c -o $@
 
 ## libpspglue.a sources.
