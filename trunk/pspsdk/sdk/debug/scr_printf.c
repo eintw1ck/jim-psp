@@ -29,6 +29,8 @@ static int MX=60, MY=34;
 static u32 bg_col = 0, fg_col = 0xFFFFFFFF;
 static u32* g_vram_base = (u32 *) 0x04000000;
 
+static int init = 0;
+
 static void clear_screen(u32 color)
 {
     int x;
@@ -48,6 +50,7 @@ void pspDebugScreenInit()
    sceDisplaySetMode(0, PSP_SCREEN_WIDTH, PSP_SCREEN_HEIGHT);
    sceDisplaySetFrameBuf((void *) g_vram_base, PSP_LINE_SIZE, PSP_PIXEL_FORMAT, 1);
    clear_screen(bg_col);
+   init = 1;
 }
 
 void pspDebugScreenSetBackColor(u32 colour)
@@ -71,6 +74,11 @@ pspDebugScreenPutChar( int x, int y, u32 color, u8 ch)
    u32  pixel;
    u32 *vram_ptr;
    u32 *vram;
+
+   if(!init)
+   {
+	   return;
+   }
 
    vram = g_vram_base + x;
    vram += (y * PSP_LINE_SIZE);
@@ -107,6 +115,10 @@ void pspDebugScreenPrintf(const char *format, ...)
    char		buff[2048], c;
    int		i, bufsz, j;
    
+   if(!init)
+   {
+	   return;
+   }
    
    va_start(opt, format);
    bufsz = vsnprintf( buff, (size_t) sizeof(buff), format, opt);
@@ -164,6 +176,12 @@ int pspDebugScreenGetY()
 void pspDebugScreenClear()
 {
 	int y;
+
+	if(!init)
+	{
+		return;
+	}
+
 	for(y=0;y<MY;y++)
 		clear_line(y);
 	pspDebugScreenSetXY(0,0);

@@ -4,7 +4,8 @@ samplesdir = @PSPSDK@/samples
 SAMPLES = \
 	sdktest \
 	gu/cube \
-	gu/blit
+	gu/blit \
+	kdumper
 
 all:
 

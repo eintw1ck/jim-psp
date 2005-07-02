@@ -199,6 +199,13 @@ int sceKernelStartThread(int thid, int arglen, void *args);
  */
 int sceKernelExitThread(int status);
 
+/** 
+  * Exit a thread and delete itself.
+  *
+  * @param status - Exit status
+  */
+int sceKernelExitDeleteThread(int status);
+
 /**
  * Create callback
  *
