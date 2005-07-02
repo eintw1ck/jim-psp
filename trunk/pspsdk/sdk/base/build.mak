@@ -93,9 +93,8 @@ endif
 all: $(EXTRA_TARGETS) $(FINAL_TARGET)
 
 kxploit: $(TARGET).elf $(PSP_EBOOT_SFO)
-	$(STRIP) $(TARGET).elf
 	mkdir -p "$(TARGET)"
-	cp $(TARGET).elf "$(TARGET)/$(PSP_EBOOT)"
+	$(STRIP) $(TARGET).elf -o $(TARGET)/$(PSP_EBOOT)
 	mkdir -p "$(TARGET)%"
 	$(PACK_PBP) "$(TARGET)%/$(PSP_EBOOT)" $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
 		$(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
@@ -111,10 +110,11 @@ $(PSP_EBOOT_SFO):
 	$(MKSFO) '$(PSP_EBOOT_TITLE)' $@
 
 $(PSP_EBOOT): $(TARGET).elf $(PSP_EBOOT_SFO)
-	$(STRIP) $(TARGET).elf
+	$(STRIP) $(TARGET).elf -o $(TARGET)_strip.elf
 	$(PACK_PBP) EBOOT.PBP $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
 		$(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
-		$(PSP_EBOOT_SND0)  $(TARGET).elf $(PSP_EBOOT_PSAR)
+		$(PSP_EBOOT_SND0)  $(TARGET)_strip.elf $(PSP_EBOOT_PSAR)
+	-rm -f $(TARGET)_strip.elf
 
 clean: $(EXTRA_CLEAN)
-	-rm -f $(FINAL_TARGET) *.o $(PSP_EBOOT_SFO) $(PSP_EBOOT)
+	-rm -f $(FINAL_TARGET) $(OBJS) $(PSP_EBOOT_SFO) $(PSP_EBOOT)
