@@ -14,6 +14,7 @@
 #ifndef __FILEIO_H__
 #define __FILEIO_H__
 
+#include <pspkerneltypes.h>
 #include <pspiofilemgr_fcntl.h>
 #include <pspiofilemgr_stat.h>
 #include <pspiofilemgr_dirent.h>
@@ -56,10 +57,10 @@ enum IoAssignPerms
  *
  * @param file - Pointer to a string holding the name of the file to open
  * @param flags - Libc styled flags that are or'ed together
- * @param perms - Unix style permission
+ * @param mode - File access mode.
  * @return A non-negative integer is a valid fd, anything else an error
  */
-int sceIoOpen(const char* file, int flags, int perms);
+SceUID sceIoOpen(const char *file, int flags, SceMode mode);
 
 /**
  * Delete a descriptor
@@ -71,7 +72,7 @@ int sceIoOpen(const char* file, int flags, int perms);
  * @param fd - File descriptor to close
  * @return < 0 on error
  */
-int sceIoClose(int fd);
+int sceIoClose(SceUID fd);
 
 /**
  * Read input
@@ -87,7 +88,7 @@ int sceIoClose(int fd);
  * 
  * @return The number of bytes read
  */
-int sceIoRead(int fd, void *data, int size);
+int sceIoRead(SceUID fd, void *data, SceSize size);
 
 /**
  * Write output
@@ -103,7 +104,7 @@ int sceIoRead(int fd, void *data, int size);
  *
  * @return The number of bytes written
  */
-int sceIoWrite(int fd, const void *data, int size);
+int sceIoWrite(SceUID fd, const void *data, SceSize size);
 
 /**
  * Reposition read/write file descriptor offset
@@ -120,7 +121,7 @@ int sceIoWrite(int fd, const void *data, int size);
  *
  * @return The position in the file after the seek. 
  */
-long long sceIoLseek(int fd, long long offset, int whence);
+SceOff sceIoLseek(SceUID fd, SceOff offset, int whence);
 
 /**
  * Reposition read/write file descriptor offset (32bit mode)
@@ -137,7 +138,7 @@ long long sceIoLseek(int fd, long long offset, int whence);
  *
  * @return The position in the file after the seek. 
  */
-unsigned int sceIoLseek32(int fd, unsigned int offset, int whence);
+int sceIoLseek32(SceUID fd, int offset, int whence);
 
 /**
  * Remove directory entry
@@ -159,10 +160,10 @@ int sceIoRemove(const char *file);
  * @endcode
  *
  * @param dir
- * @param mode
+ * @param mode - Access mode.
  * @return Returns the value 0 if its succesful otherwise -1
  */
-int sceIoMkdir(const char *dir, int mode);
+int sceIoMkdir(const char *dir, SceMode mode);
 
 /**
  * Remove a directory file
@@ -202,7 +203,7 @@ int sceIoRename(const char *oldname, const char *newname);
   * @param dirname - The directory to open for reading.
   * @return If >= 0 then a valid file descriptor, otherwise a Sony error code.
   */
-int sceIoDopen(const char *dirname);
+SceUID sceIoDopen(const char *dirname);
 
 /** 
   * Reads an entry from an opened file descriptor.
@@ -215,7 +216,7 @@ int sceIoDopen(const char *dirname);
   * - > 0 - More directory entired to go
   * - < 0 - Error
   */
-int sceIoDread(int fd, SceIoDirent *dir);
+int sceIoDread(SceUID fd, SceIoDirent *dir);
 
 /**
   * Close an opened directory file descriptor
@@ -223,7 +224,7 @@ int sceIoDread(int fd, SceIoDirent *dir);
   * @param fd - Already opened file descriptor (using sceIoDopen)
   * @return < 0 on error
   */
-int sceIoDclose(int fd);
+int sceIoDclose(SceUID fd);
 
 /** 
   * Send a devctl command to a device.
