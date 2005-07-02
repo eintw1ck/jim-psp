@@ -111,14 +111,14 @@ extern "C" {
 #define GE_FACE_CW		(0)
 #define GE_FACE_CCW		(1)
 
-#define GE_ZTST_NEVER		(0)
-#define GE_ZTST_ALWAYS		(1)
-#define GE_ZTST_FUNCTION2	(2) /* figure these out */
-#define GE_ZTST_FUNCTION3	(3)
-#define GE_ZTST_LESS		(4)
-#define GE_ZTST_LEQUAL		(5)
-#define GE_ZTST_GREATER		(6)
-#define GE_ZTST_GEQUAL		(7)
+#define GE_TEST_NEVER		(0)
+#define GE_TEST_ALWAYS		(1)
+#define GE_TEST_FUNCTION2	(2) /* figure these out */
+#define GE_TEST_FUNCTION3	(3)
+#define GE_TEST_LESS		(4)
+#define GE_TEST_LEQUAL		(5)
+#define GE_TEST_GREATER		(6)
+#define GE_TEST_GEQUAL		(7)
 
 #define GE_CLEAR_COLOR		(1)
 #define GE_CLEAR_DEPTH		(4)
@@ -126,6 +126,9 @@ extern "C" {
 #define GE_TFX_MODULATE		(0)
 #define GE_TFX_REPLACE		(3)
 #define GE_TFX_ADD		(4)
+
+#define GE_TCC_RGB		(0)
+#define GE_TCC_RGBA		(1)
 
 /* screen buffers */
 void sceGuDepthBuffer(void* depth_buffer, int depth_width);

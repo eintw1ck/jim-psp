@@ -52,7 +52,6 @@ int SetupCallbacks(void)
 }
 
 static unsigned short __attribute__((aligned(16))) pixels[512*272];
-static unsigned short __attribute__((aligned(16))) pixels2[512*272];
 
 struct Vertex
 {
@@ -107,7 +106,7 @@ int main(int argc, char* argv[])
 
 	while (!done)
 	{
-		unsigned int i,j;
+		unsigned int j;
 		struct Vertex* vertices;
 
 		sceGuStart(0,list);

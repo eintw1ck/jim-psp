@@ -14,64 +14,13 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 #define printf	pspDebugScreenPrintf
 
 static unsigned int __attribute__((aligned(16))) list[262144];
-extern unsigned char logo_start[];
+extern unsigned char ball_start[];
 
 struct Vertex
 {
 	float u, v;
 	unsigned int color;
 	float x,y,z;
-};
-
-struct Vertex __attribute__((aligned(16))) vertices[12*3] =
-{
-	{0, 0, 0xff7f0000,-1,-1, 1}, // 0
-	{1, 0, 0xff7f0000,-1, 1, 1}, // 4
-	{1, 1, 0xff7f0000, 1, 1, 1}, // 5
-
-	{0, 0, 0xff7f0000,-1,-1, 1}, // 0
-	{1, 1, 0xff7f0000, 1, 1, 1}, // 5
-	{0, 1, 0xff7f0000, 1,-1, 1}, // 1
-
-	{0, 0, 0xff7f0000,-1,-1,-1}, // 3
-	{1, 0, 0xff7f0000, 1,-1,-1}, // 2
-	{1, 1, 0xff7f0000, 1, 1,-1}, // 6
-
-	{0, 0, 0xff7f0000,-1,-1,-1}, // 3
-	{1, 1, 0xff7f0000, 1, 1,-1}, // 6
-	{0, 1, 0xff7f0000,-1, 1,-1}, // 7
-
-	{0, 0, 0xff007f00, 1,-1,-1}, // 0
-	{1, 0, 0xff007f00, 1,-1, 1}, // 3
-	{1, 1, 0xff007f00, 1, 1, 1}, // 7
-
-	{0, 0, 0xff007f00, 1,-1,-1}, // 0
-	{1, 1, 0xff007f00, 1, 1, 1}, // 7
-	{0, 1, 0xff007f00, 1, 1,-1}, // 4
-
-	{0, 0, 0xff007f00,-1,-1,-1}, // 0
-	{1, 0, 0xff007f00,-1, 1,-1}, // 3
-	{1, 1, 0xff007f00,-1, 1, 1}, // 7
-
-	{0, 0, 0xff007f00,-1,-1,-1}, // 0
-	{1, 1, 0xff007f00,-1, 1, 1}, // 7
-	{0, 1, 0xff007f00,-1,-1, 1}, // 4
-
-	{0, 0, 0xff00007f,-1, 1,-1}, // 0
-	{1, 0, 0xff00007f, 1, 1,-1}, // 1
-	{1, 1, 0xff00007f, 1, 1, 1}, // 2
-
-	{0, 0, 0xff00007f,-1, 1,-1}, // 0
-	{1, 1, 0xff00007f, 1, 1, 1}, // 2
-	{0, 1, 0xff00007f,-1, 1, 1}, // 3
-
-	{0, 0, 0xff00007f,-1,-1,-1}, // 4
-	{1, 0, 0xff00007f,-1,-1, 1}, // 7
-	{1, 1, 0xff00007f, 1,-1, 1}, // 6
-
-	{0, 0, 0xff00007f,-1,-1,-1}, // 4
-	{1, 1, 0xff00007f, 1,-1, 1}, // 6
-	{0, 1, 0xff00007f, 1,-1,-1}, // 5
 };
 
 int SetupCallbacks();
@@ -93,6 +42,23 @@ void matrix_translate(float* matrix, float x, float y, float z);
 #define FRAME_SIZE (BUF_WIDTH * SCR_HEIGHT * PIXEL_SIZE)
 #define ZBUF_SIZE (BUF_WIDTH SCR_HEIGHT * 2) /* zbuffer seems to be 16-bit? */
 
+#define NUM_SLICES 15
+#define NUM_ROWS 14
+#define RING_SIZE 2.0f
+#define RING_RADIUS 1.0f
+#define SPRITE_SIZE 0.2f
+
+unsigned int colors[7] = 
+{
+	0xffff0000,
+	0xffff00ff,
+	0xff0000ff,
+	0xff00ffff,
+	0xff00ff00,
+	0xffffff00,
+	0xffffffff,
+};
+
 int main(int argc, char* argv[])
 {
 	SetupCallbacks();
@@ -101,20 +67,28 @@ int main(int argc, char* argv[])
 
 	sceGuInit();
 	sceGuStart(0,list);
+
 	sceGuDrawBuffer(GE_PSM_8888,(void*)0,BUF_WIDTH);
 	sceGuDispBuffer(SCR_WIDTH,SCR_HEIGHT,(void*)0x88000,BUF_WIDTH);
 	sceGuDepthBuffer((void*)0x110000,BUF_WIDTH);
 	sceGuOffset(2048 - (SCR_WIDTH/2),2048 - (SCR_HEIGHT/2));
 	sceGuViewport(2048,2048,SCR_WIDTH,SCR_HEIGHT);
+
 	sceGuDepthRange(0xc350,0x2710);
+
 	sceGuScissor(0,0,SCR_WIDTH,SCR_HEIGHT);
 	sceGuEnable(GU_STATE_SCISSOR);
-	sceGuBlendFunc(0,2,3,0,0);
-	sceGuEnable(GU_STATE_BLEND);
+
+	sceGuAlphaFunc(GE_TEST_GREATER,0,0xff);
+	sceGuEnable(GU_STATE_ATE);
+
 	sceGuDepthFunc(GE_TEST_GEQUAL);
 	sceGuEnable(GU_STATE_ZTE);
-	sceGuFrontFace(GE_FACE_CW); // NOTE: not CCW
+
+	sceGuFrontFace(GE_FACE_CW);
+
 	sceGuShadeModel(GE_SHADE_GOURAUD);
+
 	sceGuEnable(GU_STATE_CULL);
 	sceGuEnable(GU_STATE_TEXTURE);
 	sceGuFinish();
@@ -129,10 +103,13 @@ int main(int argc, char* argv[])
 	float view[16];
 	float world[16];
 
-	int val = 0;
+	float val = 0;
 
 	for(;;)
 	{
+		unsigned int i,j;
+		struct Vertex* vertices;
+
 		sceGuStart(0,list);
 
 		// clear screen
@@ -140,9 +117,6 @@ int main(int argc, char* argv[])
 		sceGuClearColor(0xff554433);
 		sceGuClearDepth(0);
 		sceGuClear(GE_CLEAR_COLOR|GE_CLEAR_DEPTH);
-
-
-		// setup matrices for cube
 
 		matrix_identity(projection);
 		matrix_projection(projection,75.0f,16.0/9.0f,0.01f,1000.0f);
@@ -152,23 +126,64 @@ int main(int argc, char* argv[])
 		sceGuSetMatrix(GU_MATRIX_VIEW,view);
 
 		matrix_identity(world);
-		matrix_translate(world,0,0,-3.0f);
-		matrix_rotate(world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
-		sceGuSetMatrix(2,world);
+		sceGuSetMatrix(2,world); // note: identity, we're doing the rotation ourselves to fix billboards
+
+		matrix_translate(world,0,0,-5.0f);
+		matrix_rotate(world,val * 0.3f * (M_PI/180.0f), val * 0.7f * (M_PI/180.0f), val * 1.3f * (M_PI/180.0f));
 
 		// setup texture
 
-		sceGuTexMode(GE_TPSM_4444,0,0,0);
-		sceGuTexImage(0,64,64,64,logo_start);
-		sceGuTexFunc(GE_TFX_ADD,0);
-		sceGuTexFilter(GE_FILTER_LINEAR,GE_FILTER_LINEAR);
+		sceGuTexMode(GE_TPSM_5551,0,0,0);
+		sceGuTexImage(0,32,32,32,ball_start); // width, height, buffer width, tbp
+		sceGuTexFunc(GE_TFX_MODULATE,GE_TCC_RGBA); // NOTE: this enables reads of the alpha-component from the texture, otherwise blend/test won't work
+		sceGuTexFilter(GE_FILTER_POINT,GE_FILTER_POINT);
+		sceGuTexWrap(GE_WRAP_CLAMP,GE_WRAP_CLAMP);
 		sceGuTexScale(1,1);
 		sceGuTexOffset(0,0);
 		sceGuAmbientColor(0xffffffff);
 
 		// draw cube
 
-		sceGuDrawArray(GU_PRIM_TRIANGLES,GE_SETREG_VTYPE(GE_TT_32BITF,GE_CT_8888,0,GE_MT_32BITF,0,0,0,0,0),12*3,0,vertices);
+		vertices = (struct Vertex*)sceGuGetMemory(NUM_SLICES * NUM_ROWS * 2 * sizeof(struct Vertex));
+
+		// this loop really needs vfpu.. come on ppl, figure it out :)
+
+		for (i = 0; i < NUM_SLICES; ++i)
+		{
+			struct Vertex* row = &vertices[i * NUM_ROWS * 2];
+
+			for (j = 0; j < NUM_ROWS; ++j)
+			{
+				struct Vertex* curr = &row[j << 1];
+				float s = i + 0.5f, t = j;
+				float x,y,z;
+				float tx,ty,tz;
+
+				x = (RING_SIZE + RING_RADIUS * cosf(s * ((M_PI*2)/NUM_SLICES))) * cosf(t * ((M_PI*2)/NUM_ROWS));
+				y = (RING_SIZE + RING_RADIUS * cosf(s * ((M_PI*2)/NUM_SLICES))) * sinf(t * ((M_PI*2)/NUM_ROWS));
+				z = RING_RADIUS * sinf(s * ((M_PI*2)/NUM_SLICES));
+
+				tx = x * world[(0 << 2)+0] + y * world[(1 << 2)+0] + z * world[(2 << 2)+0] + world[(3 << 2)+0];
+				ty = x * world[(0 << 2)+1] + y * world[(1 << 2)+1] + z * world[(2 << 2)+1] + world[(3 << 2)+1];
+				tz = x * world[(0 << 2)+2] + y * world[(1 << 2)+2] + z * world[(2 << 2)+2] + world[(3 << 2)+2];
+
+				curr[0].u = 0;
+				curr[0].v = 0;
+				curr[0].color = colors[(i+j)%7];
+				curr[0].x = tx - SPRITE_SIZE;
+				curr[0].y = ty - SPRITE_SIZE;
+				curr[0].z = tz;
+
+				curr[1].u = 1;
+				curr[1].v = 1;
+				curr[1].color = colors[(i+j)%7];
+				curr[1].x = tx + SPRITE_SIZE;
+				curr[1].y = ty + SPRITE_SIZE;
+				curr[1].z = tz;
+			}
+		}
+
+		sceGuDrawArray(GU_PRIM_SPRITES,GE_SETREG_VTYPE(GE_TT_32BITF,GE_CT_8888,0,GE_MT_32BITF,0,0,0,0,0),NUM_SLICES * NUM_ROWS * 2,0,vertices);
 
 		sceGuFinish();
 		sceGuSync(0,0);
@@ -176,7 +191,7 @@ int main(int argc, char* argv[])
 		sceDisplayWaitVblankStart();
 		sceGuSwapBuffers();
 
-		val++;
+		val += 0.8f;
 	}
 
 	sceGuTerm();
