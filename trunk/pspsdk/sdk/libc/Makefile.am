@@ -18,7 +18,7 @@ lib_LIBRARIES = libpsplibc.a libpspglue.a
 
 ## libpsplibc.a sources.
 CORE_SOURCES = sbrk.c terminate.c setjmp.S qsort.c init.c cxx.cpp
-MULT_SOURCES = xprintf.c alloc.c string.c stdio.c stdlib.c time.c
+MULT_SOURCES = xprintf.c alloc.c string.c stdio.c stdlib.c
 
 ALLOC_OBJS = malloc.o realloc.o calloc.o memalign.o free.o __builtin_alloc.o __alloc_internals.o __mem_walk.o
 
@@ -65,9 +65,6 @@ $(STDIO_OBJS): stdio.c
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(STDLIB_OBJS): stdlib.c
-	$(COMPILE) -DF_$* $< -c -o $@
-
-$(TIME_OBJS): time.c
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(GLUE_OBJS): libcglue.c
