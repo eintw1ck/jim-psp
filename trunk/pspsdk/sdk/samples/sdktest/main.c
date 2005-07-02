@@ -87,10 +87,12 @@ int SetupCallbacks(void)
 	return thid;
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
 	pspDebugScreenInit();
-	printf("Bootpath: %s\n", g_elf_name);
+	if (argc > 0) {
+		printf("Bootpath: %s\n", argv[0]);
+	}
 	SetupCallbacks();
 	printf("\nMain Thread Status:\n");
 	dump_threadstatus();
