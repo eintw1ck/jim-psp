@@ -14,7 +14,6 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 #define printf	pspDebugScreenPrintf
 
 static unsigned int __attribute__((aligned(16))) list[262144];
-
 extern unsigned char logo_start[];
 
 struct Vertex
@@ -75,11 +74,121 @@ struct Vertex __attribute__((aligned(16))) vertices[12*3] =
 	{0, 1, 0xff00007f, 1,-1,-1}, // 5
 };
 
-int done = 0;
+int SetupCallbacks();
+
+void matrix_identity(float* matrix);
+void matrix_rotate(float* matrix, float x, float y, float z);
+void matrix_projection(float* matrix, float fovy, float aspect, float near, float far);
+void matrix_multiply(float* result, float* a, float* b);
+void matrix_setrotatex(float* matrix, float angle);
+void matrix_setrotatey(float* matrix, float angle);
+void matrix_setrotatez(float* matrix, float angle);
+void matrix_rotate(float* matrix, float x, float y, float z);
+void matrix_translate(float* matrix, float x, float y, float z);
+
+#define BUF_WIDTH (512)
+#define SCR_WIDTH (480)
+#define SCR_HEIGHT (272)
+#define PIXEL_SIZE (4) /* change this if you change to another screenmode */
+#define FRAME_SIZE (BUF_WIDTH * SCR_HEIGHT * PIXEL_SIZE)
+#define ZBUF_SIZE (BUF_WIDTH SCR_HEIGHT * 2) /* zbuffer seems to be 16-bit? */
+
+int main(int argc, char* argv[])
+{
+	SetupCallbacks();
+
+	// setup GU
+
+	sceGuInit();
+	sceGuStart(0,list);
+	sceGuDrawBuffer(GE_PSM_8888,(void*)0,BUF_WIDTH);
+	sceGuDispBuffer(SCR_WIDTH,SCR_HEIGHT,(void*)0x88000,BUF_WIDTH);
+	sceGuDepthBuffer((void*)0x110000,BUF_WIDTH);
+	sceGuOffset(2048 - (SCR_WIDTH/2),2048 - (SCR_HEIGHT/2));
+	sceGuViewport(2048,2048,SCR_WIDTH,SCR_HEIGHT);
+	sceGuDepthRange(0xc350,0x2710);
+	sceGuScissor(0,0,SCR_WIDTH,SCR_HEIGHT);
+	sceGuEnable(GU_STATE_SCISSOR);
+	sceGuBlendFunc(0,2,3,0,0);
+	sceGuEnable(GU_STATE_BLEND);
+	sceGuDepthFunc(GE_ZTST_GEQUAL);
+	sceGuEnable(GU_STATE_ZTE);
+	sceGuFrontFace(GE_FACE_CW); // NOTE: not CCW
+	sceGuShadeModel(GE_SHADE_GOURAUD);
+	sceGuEnable(GU_STATE_CULL);
+	sceGuEnable(GU_STATE_TEXTURE);
+	sceGuFinish();
+	sceGuSync(0,0);
+
+	sceDisplayWaitVblankStart();
+	sceGuDisplay(GU_DISPLAY_ON);
+
+	// run sample
+
+	float projection[16];
+	float view[16];
+	float world[16];
+
+	int val = 0;
+
+	for(;;)
+	{
+		sceGuStart(0,list);
+
+		// clear screen
+
+		sceGuClearColor(0xff554433);
+		sceGuClearDepth(0);
+		sceGuClear(GE_CLEAR_COLOR|GE_CLEAR_DEPTH);
+
+
+		// setup matrices for cube
+
+		matrix_identity(projection);
+		matrix_projection(projection,75.0f,16.0/9.0f,0.01f,1000.0f);
+		sceGuSetMatrix(GU_MATRIX_PROJECTION,projection);
+
+		matrix_identity(view);
+		sceGuSetMatrix(GU_MATRIX_VIEW,view);
+
+		matrix_identity(world);
+		matrix_translate(world,0,0,-3.0f);
+		matrix_rotate(world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
+		sceGuSetMatrix(2,world);
+
+		// setup texture
+
+		sceGuTexMode(GE_TPSM_4444,0,0,0);
+		sceGuTexImage(0,64,64,64,logo_start);
+		sceGuTexFunc(GE_TFX_ADD,0);
+		sceGuTexFilter(GE_FILTER_LINEAR,GE_FILTER_LINEAR);
+		sceGuTexScale(1,1);
+		sceGuTexOffset(0,0);
+		sceGuAmbientColor(0xffffffff);
+
+		// draw cube
+
+		sceGuDrawArray(GU_PRIM_TRIANGLES,GE_SETREG_VTYPE(GE_TT_32BITF,GE_CT_8888,0,GE_MT_32BITF,0,0,0,0,0),12*3,0,vertices);
+
+		sceGuFinish();
+		sceGuSync(0,0);
+
+		sceDisplayWaitVblankStart();
+		sceGuSwapBuffers();
+
+		val++;
+	}
+
+	sceGuTerm();
+
+	sceKernelExitGame();
+	return 0;
+}
+
 /* Exit callback */
 int exit_callback(void)
 {
-	done = 1;
+	sceKernelExitGame();
 	return 0;
 }
 
@@ -107,6 +216,9 @@ int SetupCallbacks(void)
 
 	return thid;
 }
+
+
+/* small matrix library */
 
 void matrix_identity(float* matrix)
 {
@@ -287,90 +399,4 @@ float cosf(float v)
 		fac/=t;
 	}
 	return res;
-}
-
-int main(int argc, char* argv[])
-{
-
-	pspDebugScreenInit();
-	printf("Bootpath: %s\n", g_elf_name);
-	SetupCallbacks();
-
-	sceGuInit();
-
-	printf("INIT OK\n");
-
-	// setup
-	sceGuStart(0,list);
-	sceGuDrawBuffer(GE_PSM_8888,(void*)0,512);
-	sceGuDispBuffer(480,272,(void*)0x88000,512);
-	sceGuDepthBuffer((void*)0x110000,512);
-	sceGuOffset(2048 - (480/2),2048 - (272/2));
-	sceGuViewport(2048,2048,480,272);
-	sceGuDepthRange(0xc350,0x2710);
-	sceGuScissor(0,0,480,272);
-	sceGuEnable(GU_STATE_SCISSOR);
-	sceGuBlendFunc(0,2,3,0,0);
-	sceGuEnable(GU_STATE_BLEND);
-	sceGuDepthFunc(7);
-	sceGuEnable(GU_STATE_DEPTH_TEST);
-	sceGuFrontFace(0);
-	sceGuShadeModel(GE_SHADE_GOURAUD);
-	sceGuEnable(GU_STATE_CULLING);
-	sceGuEnable(GU_STATE_TEXTURING);
-	sceGuFinish();
-	sceGuSync(0,0);
-
-	sceDisplayWaitVblankStart();
-	sceGuDisplay(1);
-
-	float projection[16];
-	float view[16];
-	float world[16];
-
-	int val = 0;
-
-	while (!done)
-	{
-		sceGuStart(0,list);
-
-		sceGuClearColor(0xff554433);
-		sceGuClearDepth(0);
-		sceGuClear(1 + 4);
-
-		val++;
-
-		matrix_identity(projection);
-		matrix_projection(projection,75.0f,16.0/9.0f,0.01f,1000.0f);
-		sceGuSetMatrix(0,projection);
-
-		matrix_identity(view);
-		sceGuSetMatrix(1,view);
-
-		matrix_identity(world);
-		matrix_translate(world,0,0,-3.0f);
-		matrix_rotate(world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
-		sceGuSetMatrix(2,world);
-
-		sceGuTexMode(GE_TPSM_4444,0,0,0);
-		sceGuTexImage(0,64,64,64,logo_start);
-		sceGuTexFunc(4,0);
-		sceGuTexFilter(1,1);
-		sceGuTexScale(1,1);
-		sceGuTexOffset(0,0);
-		sceGuAmbientColor(0xffffffff);
-
-		sceGuDrawArray(GU_PRIM_TRIANGLES,GE_SETREG_VTYPE(GE_TT_32BITF,GE_CT_8888,0,GE_MT_32BITF,0,0,0,0,0),12*3,0,vertices);
-
-		sceGuFinish();
-		sceGuSync(0,0);
-
-		sceDisplayWaitVblankStart();
-		sceGuSwapBuffers();
-	}
-
-	sceGuTerm();
-
-	sceKernelExitGame();
-	return 0;
 }

@@ -52,6 +52,7 @@ int SetupCallbacks(void)
 }
 
 static unsigned short __attribute__((aligned(16))) pixels[512*272];
+static unsigned short __attribute__((aligned(16))) pixels2[512*272];
 
 struct Vertex
 {
@@ -65,12 +66,9 @@ int main(int argc, char* argv[])
 	unsigned int x,y;
 
 	pspDebugScreenInit();
-	printf("Bootpath: %s\n", g_elf_name);
 	SetupCallbacks();
 
 	sceGuInit();
-
-	printf("INIT OK\n");
 
 	// setup
 	sceGuStart(0,list);
@@ -82,18 +80,14 @@ int main(int argc, char* argv[])
 	sceGuDepthRange(0xc350,0x2710);
 	sceGuScissor(0,0,480,272);
 	sceGuEnable(GU_STATE_SCISSOR);
-	sceGuFrontFace(0);
-	sceGuEnable(GU_STATE_TEXTURING);
-	sceGuClear(7);
+	sceGuFrontFace(GE_FACE_CW);
+	sceGuEnable(GU_STATE_TEXTURE);
+	sceGuClear(GE_CLEAR_COLOR|GE_CLEAR_DEPTH);
 	sceGuFinish();
 	sceGuSync(0,0);
 
 	sceDisplayWaitVblankStart();
 	sceGuDisplay(1);
-
-	float projection[16];
-	float view[16];
-	float world[16];
 
 	int val = 0;
 
@@ -121,8 +115,8 @@ int main(int argc, char* argv[])
 		// setup the source buffer as a 512x512 texture, but only copy 480x272
 		sceGuTexMode(GE_TPSM_4444,0,0,0);
 		sceGuTexImage(0,512,512,512,pixels);
-		sceGuTexFunc(3,0); // 3 seems to be 'replace'
-		sceGuTexFilter(0,0);
+		sceGuTexFunc(GE_TFX_REPLACE,0);
+		sceGuTexFilter(GE_FILTER_POINT,GE_FILTER_POINT);
 		sceGuTexScale(1.0f/512.0f,1.0f/512.0f); // scale UVs to 0..1
 		sceGuTexOffset(0,0);
 		sceGuAmbientColor(0xffffffff);
@@ -146,15 +140,15 @@ int main(int argc, char* argv[])
 		sceGuFinish();
 		sceGuSync(0,0);
 
+		float curr_fps = 1.0f / curr_ms;
+
 //		sceDisplayWaitVblankStart();
 		sceGuSwapBuffers();
 
-		// simple frame rate counter
-
-		float curr_fps = 1.0f / curr_ms;
-
 		pspDebugScreenSetXY(0,0);
-		pspDebugScreenPrintf("%d.%4d",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f));
+		pspDebugScreenPrintf("%d.%03d",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f));
+
+		// simple frame rate counter
 
 		gettimeofday(&time_slices[val & 15],0);
 
