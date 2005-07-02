@@ -102,7 +102,29 @@ extern char _gp[];
 	}
 #endif
 
-/* Define the main thread's attributes */
-#define PSP_MAIN_THREAD_ATTR(attr) u32 _main_thread_attr = (attr)
+/* Define the main thread's initial priority. */
+#define PSP_MAIN_THREAD_PRIORITY(priority) \
+	unsigned int sce_newlib_priority = (priority)
+/* Define the main thread's stack size (in KB). */
+#define PSP_MAIN_THREAD_STACK_SIZE_KB(size_kb) \
+	unsigned int sce_newlib_stack_kb_size = (size_kb)
+/* Define the main thread's attributes. */
+#define PSP_MAIN_THREAD_ATTR(attr) \
+	unsigned int sce_newlib_attribute = (attr)
+#define PSP_MAIN_THREAD_ATTRIBUTE PSP_MAIN_THREAD_ATTR
+
+/* Define all main thread parameters. */
+#define PSP_MAIN_THREAD_PARAMS(priority, size_kb, attribute) \
+	PSP_MAIN_THREAD_PRIORITY(priority); \
+	PSP_MAIN_THREAD_STACK_SIZE_KB(size_kb); \
+	PSP_MAIN_THREAD_ATTR(attribute)
+
+/* If declared, the runtime code won't create a main thread for the program. */
+#define PSP_NO_CREATE_MAIN_THREAD() \
+	int sce_newlib_nocreate_thread_in_start = 1
+
+/* Declare the size of the heap (in KB) that the program wants to allocate from. */
+#define PSP_HEAP_SIZE_KB(size_kb) \
+	unsigned int sce_newlib_heap_kb_size = (size_kb)
 
 #endif /* PSPMODULEINFO_H */
