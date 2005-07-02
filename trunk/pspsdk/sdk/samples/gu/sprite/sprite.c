@@ -47,11 +47,11 @@ void matrix_translate(float* matrix, float x, float y, float z);
 #define FRAME_SIZE (BUF_WIDTH * SCR_HEIGHT * PIXEL_SIZE)
 #define ZBUF_SIZE (BUF_WIDTH SCR_HEIGHT * 2) /* zbuffer seems to be 16-bit? */
 
-#define NUM_SLICES 35
-#define NUM_ROWS 35
+#define NUM_SLICES 60
+#define NUM_ROWS 60
 #define RING_SIZE 2.0f
 #define RING_RADIUS 1.0f
-#define SPRITE_SIZE 0.1f
+#define SPRITE_SIZE 0.05f
 
 unsigned int colors[7] = 
 {
