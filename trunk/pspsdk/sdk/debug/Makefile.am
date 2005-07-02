@@ -20,4 +20,8 @@ libpspdebug_a_SOURCES =		\
 	callstack.c		\
 	callstackget.S		\
 	font.c			\
-	scr_printf.c
+	scr_printf.c	\
+	exception.c	\
+	exception_asm.S \
+	modmgr.c	\
+	kprintf.c	

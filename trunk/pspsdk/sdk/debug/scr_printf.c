@@ -25,7 +25,7 @@
 /* baseado nas libs do Duke... */
 
 static int X = 0, Y = 0;
-static int MX=60, MY=34;
+static int MX=68, MY=34;
 static u32 bg_col = 0, fg_col = 0xFFFFFFFF;
 static u32* g_vram_base = (u32 *) 0x04000000;
 

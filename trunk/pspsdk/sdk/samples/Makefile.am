@@ -5,7 +5,8 @@ SAMPLES = \
 	sdktest \
 	gu/cube \
 	gu/blit \
-	kdumper
+	kdumper \
+	exception
 
 all:
 

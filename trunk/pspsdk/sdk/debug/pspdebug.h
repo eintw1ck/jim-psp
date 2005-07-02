@@ -93,6 +93,82 @@ void pspDebugScreenClear(void);
 */
 void pspDebugGetStackTrace(unsigned int* results,int max);
 
+/** Structure to hold the register data associated with an exception */
+typedef struct _PspDebugRegBlock
+{
+	/** Array of the 32 GPRs */
+	u32 r[32];
+	/** The status register */
+	u32 status;
+	/** The cause register */
+	u32 cause;
+	/** The EPC register */
+	u32 epc;
+	/** The BadVAddr register (possible unused) */
+	u32 badvaddr;
+} PspDebugRegBlock;
+
+/** Defines a debug error handler */
+typedef void (*PspDebugErrorHandler)(PspDebugRegBlock *regs);
+
+/** 
+  * Install an error handler to catch unhandled exceptions.
+  * 
+  * @param handler - Pointer to a handler function. If set to NULL it will default
+  * to resetting the screen and dumping the error.
+  * @return < 0 on error
+  */
+int pspDebugInstallErrorHandler(PspDebugErrorHandler handler);
+
+/**
+  * Dump an exception to screen using the pspDebugScreen functions.
+  * @note This function will not setup the screen for debug output, you should call sceDebugScreenInit
+  * before using it if it isn't already.
+  *
+  * @param regs - Pointer to a register block.
+  *
+  */
+void pspDebugDumpException(PspDebugRegBlock *regs);
+
+/** 
+  * Scans through memory trying to find the specified module header.
+  *
+  * @note This scans all of memory, ensure you are in kernel mode before trying this.
+  * @param mod_name - The name of module (e.g. sceExceptionManager) 
+  * @return A pointer to the module information, if found. Otherwise NULL.
+  */
+SceModuleInfo *pspDebugFindModule(const char *mod_name);
+
+/** 
+  * Scans through memory trying to find the specified module header. For user modules only.
+  *
+  * @param mod_name - The name of module (e.g. sceExceptionManager) 
+  * @return A pointer to the module information, if found. Otherwise NULL.
+  */
+SceModuleInfo *pspDebugFindUserModule(const char *mod_name);
+
+/**
+  * Find an exported function from its module information.
+  *
+  * @param mod - Pointer to a module info structure, found with ::pspDebugFindModule.
+  * @param exp_name - The name of the export library.
+  * @param nid - The nid of the function to find.
+  *
+  * @return A pointer to the function if found, else NULL.
+  */
+void *pspDebugFindExportedFunction(SceModuleInfo *mod, const char *exp_name, u32 nid);
+
+/** Type for Kprintf handler */
+typedef int (*PspDebugKprintfHandler)(const char *format, u32 *args);
+
+/** 
+  * Install a Kprintf handler into the system.
+  *
+  * @param handler - Function pointer to the handler.
+  * @return < 0 on error.
+  */
+int pspDebugInstallKprintfHandler(PspDebugKprintfHandler handler);
+
 /*@}*/
 
 #ifdef __cplusplus
