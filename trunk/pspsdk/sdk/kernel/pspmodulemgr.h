@@ -14,6 +14,8 @@
 #ifndef __MODLOAD_H__
 #define __MODLOAD_H__
 
+#include <pspkerneltypes.h>
+
 /** @defgroup ModuleMgr Module Manager Library
   * This module contains the imports for the kernel's module management routines.
   */
@@ -73,6 +75,17 @@ int sceKernelLoadModuleMs(const char *path, u32 zero, mod_param_t* mod);
   * @return < 0 on error.
   */
 int sceKernelStartModule(int modid, u32 arglen, void* args, u32 *status, u32 zero);
+
+/**
+ * Stop and unload the current module.
+ *
+ * @param unknown - Unknown (I've seen 1 passed).
+ * @param argsize - Size (in bytes) of the arguments that will be passed to module_stop().
+ * @param argp - Pointer to arguments that will be passed to module_stop().
+ *
+ * @return < 0 on error.
+ */
+int sceKernelSelfStopUnloadModule(int unknown, SceSize argsize, void *argp);
 
 /*@}*/
 
