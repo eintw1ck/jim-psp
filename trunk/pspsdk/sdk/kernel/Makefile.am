@@ -21,6 +21,7 @@ libpspkernelinclude_HEADERS =	\
 	pspiofilemgr.h		\
 	pspiofilemgr_dirent.h	\
 	pspiofilemgr_fcntl.h	\
+	pspiofilemgr_stat.h	\
 	pspkernel.h		\
 	pspkerneltypes.h	\
 	pspkerror.h		\

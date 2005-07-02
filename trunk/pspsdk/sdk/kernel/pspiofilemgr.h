@@ -14,8 +14,9 @@
 #ifndef __FILEIO_H__
 #define __FILEIO_H__
 
-#include <pspiofilemgr_dirent.h>
 #include <pspiofilemgr_fcntl.h>
+#include <pspiofilemgr_stat.h>
+#include <pspiofilemgr_dirent.h>
 
 /** @defgroup FileIO File IO Library 
  *  This module contains the imports for the kernel's IO routines.
@@ -214,7 +215,7 @@ int sceIoDopen(const char *dirname);
   * - > 0 - More directory entired to go
   * - < 0 - Error
   */
-int sceIoDread(int fd, io_dirent_t* dir);
+int sceIoDread(int fd, SceIoDirent *dir);
 
 /**
   * Close an opened directory file descriptor
@@ -278,7 +279,7 @@ int sceIoUnassign(const char *dev);
   * 
   * @return < 0 on error.
   */
-int sceIoGetstat(const char *file, io_stat_t *stat);
+int sceIoGetstat(const char *file, SceIoStat *stat);
 
 /** 
   * Change the status of a file.
@@ -289,7 +290,7 @@ int sceIoGetstat(const char *file, io_stat_t *stat);
   *
   * @return < 0 on error.
   */
-int sceIoChstat(const char *file, io_stat_t *stat, int bits);
+int sceIoChstat(const char *file, SceIoStat *stat, int bits);
 
 /*@}*/
 
