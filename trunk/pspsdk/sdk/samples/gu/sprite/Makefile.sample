@@ -1,5 +1,5 @@
 TARGET = sprite
-OBJS = sprite.c ball.o
+OBJS = sprite.o ball.o
 
 INCDIR =
 CFLAGS = -G0 -Wall -O2

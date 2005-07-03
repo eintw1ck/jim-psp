@@ -8,7 +8,7 @@
 
 #include <pspgu.h>
 
-PSP_MODULE_INFO("Cube Sample", 0, 1, 1);
+PSP_MODULE_INFO("Sprite Sample", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
 #define printf	pspDebugScreenPrintf
@@ -40,6 +40,8 @@ void matrix_setrotatez(float* matrix, float angle);
 void matrix_rotate(float* matrix, float x, float y, float z);
 void matrix_translate(float* matrix, float x, float y, float z);
 
+void create_torus_billboards(struct Vertex* vertices, float* world);
+
 #define BUF_WIDTH (512)
 #define SCR_WIDTH (480)
 #define SCR_HEIGHT (272)
@@ -47,11 +49,11 @@ void matrix_translate(float* matrix, float x, float y, float z);
 #define FRAME_SIZE (BUF_WIDTH * SCR_HEIGHT * PIXEL_SIZE)
 #define ZBUF_SIZE (BUF_WIDTH SCR_HEIGHT * 2) /* zbuffer seems to be 16-bit? */
 
-#define NUM_SLICES 60
-#define NUM_ROWS 63
+#define NUM_SLICES 128
+#define NUM_ROWS 119
 #define RING_SIZE 2.0f
 #define RING_RADIUS 1.0f
-#define SPRITE_SIZE 0.05f
+#define SPRITE_SIZE 0.025f
 
 unsigned int colors[7] = 
 {
@@ -135,8 +137,9 @@ int main(int argc, char* argv[])
 
 	for(;;)
 	{
-		unsigned int i,j;
+		unsigned int i;
 		struct Vertex* vertices;
+		float sx, sy, sz;
 
 		sceGuStart(0,list);
 
@@ -154,10 +157,9 @@ int main(int argc, char* argv[])
 		sceGuSetMatrix(GU_MATRIX_VIEW,view);
 
 		matrix_identity(world);
-		sceGuSetMatrix(2,world); // note: identity, we're doing the rotation ourselves to fix billboards
-
 		matrix_translate(world,0,0,-5.0f);
 		matrix_rotate(world,val * 0.3f * (M_PI/180.0f), val * 0.7f * (M_PI/180.0f), val * 1.3f * (M_PI/180.0f));
+		sceGuSetMatrix(2,world);
 
 		// setup texture
 
@@ -170,50 +172,14 @@ int main(int argc, char* argv[])
 		sceGuTexOffset(0,0);
 		sceGuAmbientColor(0xffffffff);
 
-		// draw cube
+		// render torus
 
-		vertices = (struct Vertex*)sceGuGetMemory(NUM_SLICES * NUM_ROWS * 2 * sizeof(struct Vertex));
-
-		// this loop really needs vfpu.. come on ppl, figure it out :)
-
-		for (i = 0; i < NUM_SLICES; ++i)
-		{
-			struct Vertex* row = &vertices[i * NUM_ROWS * 2];
-			struct InputVertex* inrow = &torus_vertices[i * NUM_ROWS];
-
-			for (j = 0; j < NUM_ROWS; ++j)
-			{
-				struct Vertex* curr = &row[j << 1];
-				struct InputVertex* incurr = &inrow[j];
-				float x, y, z;
-				float tx, ty, tz;
-
-				x = incurr->x;
-				y = incurr->y;
-				z = incurr->z;
-
-
-				tx = x * world[(0 << 2)+0] + y * world[(1 << 2)+0] + z * world[(2 << 2)+0] + world[(3 << 2)+0];
-				ty = x * world[(0 << 2)+1] + y * world[(1 << 2)+1] + z * world[(2 << 2)+1] + world[(3 << 2)+1];
-				tz = x * world[(0 << 2)+2] + y * world[(1 << 2)+2] + z * world[(2 << 2)+2] + world[(3 << 2)+2];
-
-				curr[0].u = 0;
-				curr[0].v = 0;
-				curr[0].color = colors[(i+j)%7];
-				curr[0].x = tx - SPRITE_SIZE;
-				curr[0].y = ty - SPRITE_SIZE;
-				curr[0].z = tz;
-
-				curr[1].u = 1;
-				curr[1].v = 1;
-				curr[1].color = colors[(i+j)%7];
-				curr[1].x = tx + SPRITE_SIZE;
-				curr[1].y = ty + SPRITE_SIZE;
-				curr[1].z = tz;
-			}
-		}
+		vertices = sceGuGetMemory(NUM_SLICES * NUM_ROWS * 2 * sizeof(struct Vertex));
+		create_torus_billboards(vertices,world);
 
 		sceGuDrawArray(GU_PRIM_SPRITES,GE_SETREG_VTYPE(GE_TT_32BITF,GE_CT_8888,0,GE_MT_32BITF,0,0,0,0,0),NUM_SLICES * NUM_ROWS * 2,0,vertices);
+
+		// wait for next frame
 
 		sceGuFinish();
 		sceGuSync(0,0);
@@ -221,13 +187,57 @@ int main(int argc, char* argv[])
 		sceDisplayWaitVblankStart();
 		sceGuSwapBuffers();
 
-		val += 0.8f;
+		val += 0.6f;
 	}
 
 	sceGuTerm();
 
 	sceKernelExitGame();
 	return 0;
+}
+
+/* this function generates the billboards rendered by sceGuDrawArray() */
+void create_torus_billboards(struct Vertex* vertices, float* world)
+{
+	unsigned int i,j;
+	float sx, sy, sz;
+
+	// calculate billboard world offsets
+
+	sx = SPRITE_SIZE * world[(0 << 2)+0] + SPRITE_SIZE * world[(0 << 2)+1];
+	sy = SPRITE_SIZE * world[(1 << 2)+0] + SPRITE_SIZE * world[(1 << 2)+1];
+	sz = SPRITE_SIZE * world[(2 << 2)+0] + SPRITE_SIZE * world[(2 << 2)+1];
+
+	for (i = 0; i < NUM_SLICES; ++i)
+	{
+		struct Vertex* row = &vertices[i * NUM_ROWS * 2];
+		struct InputVertex* inrow = &torus_vertices[i * NUM_ROWS];
+
+		for (j = 0; j < NUM_ROWS; ++j)
+		{
+			struct Vertex* curr = &row[j << 1];
+			struct InputVertex* incurr = &inrow[j];
+			float x, y, z;
+
+			x = incurr->x;
+			y = incurr->y;
+			z = incurr->z;
+
+			curr[0].u = 0;
+			curr[0].v = 0;
+			curr[0].color = colors[(i+j)%7];
+			curr[0].x = x - sx;
+			curr[0].y = y - sy;
+			curr[0].z = z - sz;
+
+			curr[1].u = 1;
+			curr[1].v = 1;
+			curr[1].color = colors[(i+j)%7];
+			curr[1].x = x + sx;
+			curr[1].y = y + sy;
+			curr[1].z = z + sz;
+		}
+	}
 }
 
 /* Exit callback */

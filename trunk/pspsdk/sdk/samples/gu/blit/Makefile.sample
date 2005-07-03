@@ -1,5 +1,5 @@
 TARGET = blit
-OBJS = blit.c
+OBJS = blit.o
 
 INCDIR =
 CFLAGS = -G0 -Wall
