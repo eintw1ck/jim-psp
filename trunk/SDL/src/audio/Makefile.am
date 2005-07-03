@@ -23,6 +23,7 @@ DIST_SUBDIRS =	\
 	nto	\
 	openbsd	\
 	paudio	\
+	psp	\
 	sun	\
 	ums	\
 	windib	\

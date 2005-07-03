@@ -172,6 +172,9 @@ extern AudioBootStrap DRENDERER_bootstrap;
 #ifdef MMEAUDIO_SUPPORT
 extern AudioBootStrap MMEAUDIO_bootstrap;
 #endif
+#ifdef ENABLE_PSP
+extern AudioBootStrap PSPAUD_bootstrap;
+#endif
 
 /* This is the current audio device */
 extern SDL_AudioDevice *current_audio;

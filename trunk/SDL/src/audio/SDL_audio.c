@@ -108,6 +108,9 @@ static AudioBootStrap *bootstrap[] = {
 #ifdef DRENDERER_SUPPORT
 	&DRENDERER_bootstrap,
 #endif
+#ifdef ENABLE_PSP
+	&PSPAUD_bootstrap,
+#endif
 	NULL
 };
 SDL_AudioDevice *current_audio = NULL;
