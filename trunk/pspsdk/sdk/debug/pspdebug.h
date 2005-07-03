@@ -169,6 +169,29 @@ typedef int (*PspDebugKprintfHandler)(const char *format, u32 *args);
   */
 int pspDebugInstallKprintfHandler(PspDebugKprintfHandler handler);
 
+/** Structure to hold a single stack trace entry */
+typedef struct _PspDebugStackTrace
+{
+	/** The address which called the function */
+	u32 call_addr;
+	/** The address of the function called */
+	u32 func_addr;
+} PspDebugStackTrace;
+
+/**
+  * Do a stack trace from the current exception. 
+  * @note This function really isn't too general purpose and it is more than likely to generate a few 
+  * false positives but I consider that better then missing out calls entirely. You have to use your
+  * discretion, your code and a objdump to work out if some calls are completely surprious or not ;)
+  *
+  * @param regs - Pointer to a register block from an exception.
+  * @param trace - Pointer to an array of PspDebugStackTrace structures.
+  * @param max - The maximum number of traces to make.
+  *
+  * @return The number of functions found.
+  */
+int pspDebugGetStackTrace2(PspDebugRegBlock *regs, PspDebugStackTrace *trace, int max);
+
 /*@}*/
 
 #ifdef __cplusplus
