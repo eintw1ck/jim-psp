@@ -18,6 +18,9 @@
 extern "C" {
 #endif
 
+/* Some of the structures and definitions in this file were extracted from the japanese 
+   puzzle bobble main executable */
+
 /** @defgroup Utils Utils Library */
 
 /** @addtogroup Utils */
@@ -48,12 +51,10 @@ int sceKernelLibcGettimeofday(struct timeval *tp, struct timezone *tzp);
 void sceKernelDcacheWritebackAll(void);
 
 /** Structure for holding a mersenne twister context */
-typedef struct _Mt19937Context
-{
-	/** The context, from looking at utils.prx it seems that this structure is something 
-	  like u32, u32[624] but made 1024 for security :P */
-	u32 context[1024];
-} Mt19937Context;
+typedef struct _SceKernelUtilsMt19937Context {
+	unsigned int 	count;
+	unsigned int 	state[624];
+} SceKernelUtilsMt19937Context;
 
 /** 
   * Function to initialise a mersenne twister context.
@@ -63,14 +64,14 @@ typedef struct _Mt19937Context
   *
   * @par Example:
   * @code
-  * Mt19927Context ctx;
+  * SceKernelUtilsMt19937Context ctx;
   * sceKernelUtilsMt19937Init(&ctx, time(NULL));
   * u23 rand_val = sceKernelUtilsMt19937UInt(&ctx);
   * @endcode
   *
   * @return < 0 on error.
   */
-int sceKernelUtilsMt19937Init(Mt19937Context *ctx, u32 seed);
+int sceKernelUtilsMt19937Init(SceKernelUtilsMt19937Context *ctx, u32 seed);
 
 /**
   * Function to return a new psuedo random number.
@@ -78,12 +79,17 @@ int sceKernelUtilsMt19937Init(Mt19937Context *ctx, u32 seed);
   * @param ctx - Pointer to a pre-initialised context.
   * @return A pseudo random number (between 0 and MAX_INT).
   */
-u32 sceKernelUtilsMt19937UInt(Mt19937Context *ctx);
+u32 sceKernelUtilsMt19937UInt(SceKernelUtilsMt19937Context *ctx);
 
-typedef struct _Md5Context
-{
-	u8 context[96];
-} Md5Context;
+/** Structure to hold the MD5 context */
+typedef struct _SceKernelUtilsMd5Context {
+	unsigned int 	h[4];
+	unsigned int 	pad;
+	short unsigned int 	usRemains;
+	short unsigned int 	usComputed;
+	long long unsigned int 	ullTotalLen;
+	unsigned char 	buf[64];
+} SceKernelUtilsMd5Context;
 
 /**
   * Function to perform an MD5 digest of a data block.
@@ -104,14 +110,14 @@ int sceKernelUtilsMd5Digest(u8 *data, u32 size, u8 *digest);
   * @return < 0 on error.
   * @par Example:
   * @code
-  * Md5Context ctx;
+  * SceKernelUtilsMd5Context ctx;
   * u8 digest[16];
   * sceKernelUtilsMd5BlockInit(&ctx);
   * sceKernelUtilsMd5BlockUpdate(&ctx, (u8*) "Hello", 5);
   * sceKernelUtilsMd5BlockResult(&ctx, digest);
   * @endcode
   */
-int sceKernelUtilsMd5BlockInit(Md5Context *ctx);
+int sceKernelUtilsMd5BlockInit(SceKernelUtilsMd5Context *ctx);
 
 /**
   * Function to update the MD5 digest with a block of data.
@@ -122,7 +128,7 @@ int sceKernelUtilsMd5BlockInit(Md5Context *ctx);
   *
   * @return < 0 on error.
   */
-int sceKernelUtilsMd5BlockUpdate(Md5Context *ctx, u8 *data, u32 size);
+int sceKernelUtilsMd5BlockUpdate(SceKernelUtilsMd5Context *ctx, u8 *data, u32 size);
 
 /**
   * Function to get the digest result of the MD5 hash.
@@ -132,14 +138,16 @@ int sceKernelUtilsMd5BlockUpdate(Md5Context *ctx, u8 *data, u32 size);
   *
   * @return < 0 on error.
   */
-int sceKernelUtilsMd5BlockResult(Md5Context *ctx, u8 *digest);
+int sceKernelUtilsMd5BlockResult(SceKernelUtilsMd5Context *ctx, u8 *digest);
 
 /** Type to hold a sha1 context */
-typedef struct _Sha1Context
-{
-	/* The context, I am pretty sure this is not the correct size */
-	u8 ctx[128];
-} Sha1Context;
+typedef struct _SceKernelUtilsSha1Context {
+	unsigned int 	h[5];
+	short unsigned int 	usRemains;
+	short unsigned int 	usComputed;
+	long long unsigned int 	ullTotalLen;
+	unsigned char 	buf[64];
+} SceKernelUtilsSha1Context;
 
 /**
   * Function to SHA1 hash a data block.
@@ -161,14 +169,14 @@ int sceKernelUtilsSha1Digest(u8 *data, u32 size, u8 *digest);
   *
   * @par Example:
   * @code
-  * Sha1Context ctx;
+  * SceKernelUtilsSha1Context ctx;
   * u8 digest[20];
   * sceKernelUtilsSha1BlockInit(&ctx);
   * sceKernelUtilsSha1BlockUpdate(&ctx, (u8*) "Hello", 5);
   * sceKernelUtilsSha1BlockResult(&ctx, digest);
   * @endcode
   */
-int sceKernelUtilsSha1BlockInit(Sha1Context *ctx);
+int sceKernelUtilsSha1BlockInit(SceKernelUtilsSha1Context *ctx);
 
 /**
   * Function to update the current hash.
@@ -179,7 +187,7 @@ int sceKernelUtilsSha1BlockInit(Sha1Context *ctx);
   *
   * @return < 0 on error.
   */
-int sceKernelUtilsSha1BlockUpdate(Sha1Context *ctx, u8 *data, u32 size);
+int sceKernelUtilsSha1BlockUpdate(SceKernelUtilsSha1Context *ctx, u8 *data, u32 size);
 
 /**
   * Function to get the result of the SHA1 hash.
@@ -189,7 +197,7 @@ int sceKernelUtilsSha1BlockUpdate(Sha1Context *ctx, u8 *data, u32 size);
   *
   * @return < 0 on error.
   */
-int sceKernelUtilsSha1BlockResult(Sha1Context *ctx, u8 *digest);
+int sceKernelUtilsSha1BlockResult(SceKernelUtilsSha1Context *ctx, u8 *digest);
 
 /*@}*/
 

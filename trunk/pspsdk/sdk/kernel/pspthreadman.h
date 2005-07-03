@@ -15,6 +15,11 @@
 #define __THREADMAN_H__
 
 #include <psptypes.h>
+#include <pspkerneltypes.h>
+
+/* Note: Some of the structures, types, and definitions in this file were
+   extrapolated from symbolic debugging information found in the Japanese
+   version of Puzzle Bobble. */
 
 /** @defgroup ThreadMan Thread Manager Library
   * Library imports for the kernel threading library.
@@ -28,34 +33,49 @@ extern "C" {
 
 /*@{*/
 
+typedef void* SceKernelThreadEntry;
+
 /** Structure to hold the status information for a thread
   * @see sceKernelReferThreadStatus
   */
-typedef struct _ThreadStatus
-{
+typedef struct _SceKernelThreadInfo {
 	/** Size of the structure */
-	u32 size;
+	SceSize     size;
 	/** Nul terminated name of the thread */
-	char name[32];
-	/** Unknown */
-	u32  unk0; // ?
-	/** Unknown */
-	u32  unk1;
-	/** Address of the the thread (likely start address) */
-	u32  th_addr;
-	/** Base of the stack */
-	u32  stack_addr;
-	/** Stack size */
-	u32  stack_size;
-	/** gp */
-	u32 gp;
+	char    	name[32];
+	/** Thread attributes */
+	SceUInt     attr;
+	/** Thread status */
+	int     	status;
+	/** Thread entry point */
+	SceKernelThreadEntry    entry;
+	/** Thread stack pointer */
+	void *  	stack;
+	/** Thread stack size */
+	int     	stackSize;
+	/** Pointer to the gp */
+	void *  	gpReg;
 	/** Initial priority */
-	u32 init_pri;
+	int     	initPriority;
 	/** Current priority */
-	u32 curr_pri;
-	/** More unknown */
-	u32 unk2[9];
-} ThreadStatus;
+	int     	currentPriority;
+	/** Wait type */
+	int     	waitType;
+	/** Wait id */
+	SceUID  	waitId;
+	/** Wakeup count */
+	int     	wakeupCount;
+	/** Exit status of the thread */
+	int     	exitStatus;
+	/** Number of clock cycles run */
+	SceKernelSysClock   runClocks;
+	/** Interrupt preemption count */
+	SceUInt     intrPreemptCount;
+	/** Thread preemption count */
+	SceUInt     threadPreemptCount;
+	/** Release count */
+	SceUInt     releaseCount;
+} SceKernelThreadInfo;
 
 /** Attribute for threads */
 enum ThreadAttributes
@@ -299,7 +319,7 @@ int sceKernelChangeThreadPriority(int thid, int priority);
   * @endcode 
   * @return 0 if successful, otherwise the error code.
   */
-int sceKernelReferThreadStatus(int thid, ThreadStatus *status);
+int sceKernelReferThreadStatus(int thid, SceKernelThreadInfo *status);
 
 /** 
   * Wait until a thread has ended.

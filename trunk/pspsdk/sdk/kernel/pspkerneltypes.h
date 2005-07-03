@@ -34,4 +34,9 @@ typedef int SceMode;
 typedef long long int SceOff;
 typedef long long int SceIores;
 
+typedef struct _SceKernelSysClock {
+	SceUInt32   low;
+	SceUInt32   hi;
+} SceKernelSysClock;
+
 #endif /* PSPKERNELTYPES_H */
