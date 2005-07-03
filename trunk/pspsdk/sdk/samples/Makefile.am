@@ -5,6 +5,7 @@ SAMPLES = \
 	sdktest \
 	gu/cube \
 	gu/blit \
+	gu/sprite \
 	kdumper \
 	exception \
 	kprintf
