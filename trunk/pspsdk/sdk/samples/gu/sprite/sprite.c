@@ -48,7 +48,7 @@ void matrix_translate(float* matrix, float x, float y, float z);
 #define ZBUF_SIZE (BUF_WIDTH SCR_HEIGHT * 2) /* zbuffer seems to be 16-bit? */
 
 #define NUM_SLICES 60
-#define NUM_ROWS 64
+#define NUM_ROWS 63
 #define RING_SIZE 2.0f
 #define RING_RADIUS 1.0f
 #define SPRITE_SIZE 0.05f
