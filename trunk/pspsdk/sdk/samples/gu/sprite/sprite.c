@@ -50,12 +50,12 @@ void create_torus_billboards(struct Vertex* vertices, float* world);
 #define ZBUF_SIZE (BUF_WIDTH SCR_HEIGHT * 2) /* zbuffer seems to be 16-bit? */
 
 #define NUM_SLICES 128
-#define NUM_ROWS 119
+#define NUM_ROWS 128
 #define RING_SIZE 2.0f
 #define RING_RADIUS 1.0f
 #define SPRITE_SIZE 0.025f
 
-unsigned int colors[7] = 
+unsigned int colors[8] = 
 {
 	0xffff0000,
 	0xffff00ff,
@@ -64,6 +64,7 @@ unsigned int colors[7] =
 	0xff00ff00,
 	0xffffff00,
 	0xffffffff,
+	0xff101010
 };
 
 struct InputVertex torus_vertices[NUM_SLICES * NUM_ROWS];
@@ -137,9 +138,7 @@ int main(int argc, char* argv[])
 
 	for(;;)
 	{
-		unsigned int i;
 		struct Vertex* vertices;
-		float sx, sy, sz;
 
 		sceGuStart(0,list);
 
@@ -225,14 +224,14 @@ void create_torus_billboards(struct Vertex* vertices, float* world)
 
 			curr[0].u = 0;
 			curr[0].v = 0;
-			curr[0].color = colors[(i+j)%7];
+			curr[0].color = colors[(i+j)&7];
 			curr[0].x = x - sx;
 			curr[0].y = y - sy;
 			curr[0].z = z - sz;
 
 			curr[1].u = 1;
 			curr[1].v = 1;
-			curr[1].color = colors[(i+j)%7];
+			curr[1].color = colors[(i+j)&7];
 			curr[1].x = x + sx;
 			curr[1].y = y + sy;
 			curr[1].z = z + sz;
