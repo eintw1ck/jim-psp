@@ -417,6 +417,9 @@ extern VideoBootStrap DC_bootstrap;
 #ifdef ENABLE_RISCOS
 extern VideoBootStrap RISCOS_bootstrap;
 #endif
+#ifdef ENABLE_PSP
+extern VideoBootStrap PSP_bootstrap;
+#endif
 /* This is the current video device */
 extern SDL_VideoDevice *current_video;
 
