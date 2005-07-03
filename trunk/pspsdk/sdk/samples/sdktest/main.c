@@ -52,24 +52,24 @@ void CallbackThread(void *arg)
 void dump_threadstatus(void)
 {
 	int thid;
-	ThreadStatus status;
+	SceKernelThreadInfo status;
 	int ret;
 
 	thid = sceKernelGetThreadId();
-	memset(&status, 0, sizeof(ThreadStatus));
+	memset(&status, 0, sizeof(SceKernelThreadInfo));
 	printf("Thread ID: %08X\n", thid);
-	status.size = sizeof(ThreadStatus);
+	status.size = sizeof(SceKernelThreadInfo);
 	ret = sceKernelReferThreadStatus(thid, &status); 
 	printf("Get Thread Status: %08X\n", ret);
 	if(ret == 0)
 	{
 		printf("Name: %s\n", status.name);
-		printf("Thread Addr: %08X\n", status.th_addr);
-		printf("Stack Addr: %08X\n", status.stack_addr);
-		printf("Stack Size: %08X\n", status.stack_size);
-		printf("gp: %08X\n", status.gp);
-		printf("Initial Pri: %x\n", status.init_pri);
-		printf("Current Pri: %x\n", status.curr_pri);
+		printf("Thread Addr: %p\n", status.entry);
+		printf("Stack Addr: %p\n", status.stack);
+		printf("Stack Size: %08X\n", status.stackSize);
+		printf("gp: %p\n", status.gpReg);
+		printf("Initial Pri: %x\n", status.initPriority);
+		printf("Current Pri: %x\n", status.currentPriority);
 	}
 }
 
