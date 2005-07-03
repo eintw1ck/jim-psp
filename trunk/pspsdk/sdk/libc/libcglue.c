@@ -32,7 +32,7 @@ int sceKernelStdin(void);
 int sceKernelStdout(void);
 int sceKernelStderr(void);
 
-/* Wrappers of the standard open(), close(), read(), write(), and lseek() routines. */
+/* Wrappers of the standard open(), close(), read(), write(), unlink() and lseek() routines. */
 #ifdef F__open
 int _open(const char *name, int flags, int mode)
 {
@@ -145,6 +145,20 @@ off_t _lseek(int fd, off_t offset, int whence)
 
 	/* We don't have to do anything with the whence argument because SEEK_* == PSP_SEEK_*. */
 	return (off_t) sceIoLseek(sce_fd, offset, whence);
+}
+#endif
+
+#ifdef F__unlink
+int _unlink(const char *path)
+{
+	return sceIoRemove(path);
+}
+#endif
+
+#ifdef F__link
+int _link(const char *name1, const char *name2)
+{
+	return -1;
 }
 #endif
 
