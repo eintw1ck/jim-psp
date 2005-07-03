@@ -324,3 +324,17 @@ void _exit(int status)
 	while (1) ;
 }
 #endif
+
+/* newlib's errno.h wants a function that returns a pointer to errno. */
+#ifdef F_glue___errno
+#undef errno
+
+int errno;
+
+/* TODO: Should this be made reentrant (wrapping interrupt disable/enable
+   around it should do it)? */
+int * __errno(void)
+{
+	return &errno;
+}
+#endif
