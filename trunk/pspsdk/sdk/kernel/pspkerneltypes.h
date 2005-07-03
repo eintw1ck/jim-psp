@@ -19,6 +19,8 @@
 #ifndef PSPKERNELTYPES_H
 #define PSPKERNELTYPES_H
 
+#include <psptypes.h>
+
 /** UIDs are used to describe many different kernel objects. */
 typedef int SceUID;
 
