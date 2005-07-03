@@ -22,6 +22,7 @@
 #include <psploadexec.h>
 #include <pspmoduleinfo.h>
 #include <pspmodulemgr.h>
+#include <pspsysmem.h>
 #include <pspthreadman.h>
 #include <psputils.h>
 #include <pspumd.h>
