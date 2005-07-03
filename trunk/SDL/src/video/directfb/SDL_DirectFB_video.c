@@ -26,7 +26,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_DirectFB_video.c,v 1.18 2004/05/16 19:02:19 slouken Exp $";
+ "@(#) $Id: SDL_DirectFB_video.c,v 1.20 2005/01/17 19:38:28 icculus Exp $";
 #endif
 
 /* DirectFB video driver implementation.
@@ -468,6 +468,9 @@ int DirectFB_VideoInit(_THIS, SDL_PixelFormat *vformat)
   
   if (HIDDEN->enable_mga_crtc2)
     {
+      DFBDisplayLayerConfig      dlc;
+      DFBDisplayLayerConfigFlags failed;
+
       ret = dfb->GetDisplayLayer (dfb, 2, &HIDDEN->c2layer);
       if (ret)
         {
@@ -492,12 +495,8 @@ int DirectFB_VideoInit(_THIS, SDL_PixelFormat *vformat)
       HIDDEN->c2layer->SetOpacity(HIDDEN->c2layer, 0x0);
 
       /* Init the surface here as it got a fixed size */
-      DFBDisplayLayerConfig      dlc;
-      DFBDisplayLayerConfigFlags failed;
-    
-      dlc.flags      = DLCONF_PIXELFORMAT | DLCONF_BUFFERMODE | DLCONF_OPTIONS;
+      dlc.flags      = DLCONF_PIXELFORMAT | DLCONF_BUFFERMODE;
       dlc.buffermode = DLBM_BACKVIDEO;
-      dlc.options    = DLOP_FLICKER_FILTERING;
       dlc.pixelformat = DSPF_RGB32;
       
       ret = HIDDEN->c2layer->TestConfiguration( HIDDEN->c2layer, &dlc, &failed );

@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_blit.c,v 1.12 2004/04/11 19:52:58 slouken Exp $";
+ "@(#) $Id: SDL_blit.c,v 1.13 2005/04/17 10:40:41 icculus Exp $";
 #endif
 
 #include <stdio.h>
@@ -279,6 +279,17 @@ int SDL_CalculateBlit(SDL_Surface *surface)
 			SDL_VideoDevice *this  = current_video;
 			video->CheckHWBlit(this, surface, surface->map->dst);
 		}
+	}
+	
+	/* if an alpha pixel format is specified, we can accelerate alpha blits */
+	if (((surface->flags & SDL_HWSURFACE) == SDL_HWSURFACE )&&(current_video->displayformatalphapixel)) 
+	{
+		if ( (surface->flags & SDL_SRCALPHA) ) 
+			if ( current_video->info.blit_hw_A ) {
+				SDL_VideoDevice *video = current_video;
+				SDL_VideoDevice *this  = current_video;
+				video->CheckHWBlit(this, surface, surface->map->dst);
+			}
 	}
 
 	/* Get the blit function index, based on surface mode */

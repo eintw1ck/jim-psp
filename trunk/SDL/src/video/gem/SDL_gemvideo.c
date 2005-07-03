@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_gemvideo.c,v 1.30 2004/11/27 21:28:49 pmandin Exp $";
+ "@(#) $Id: SDL_gemvideo.c,v 1.38 2005/06/07 13:30:06 pmandin Exp $";
 #endif
 
 /*
@@ -106,6 +106,7 @@ static int GEM_ToggleFullScreen(_THIS, int on);
 static void GEM_FreeBuffers(_THIS);
 static void GEM_ClearScreen(_THIS);
 static void GEM_ClearRect(_THIS, short *rect);
+static void GEM_SetNewPalette(_THIS, Uint16 newpal[256][3]);
 static void GEM_LockScreen(_THIS);
 static void GEM_UnlockScreen(_THIS);
 static void refresh_window(_THIS, int winhandle, short *rect);
@@ -299,7 +300,7 @@ static void VDI_ReadExtInfo(_THIS, short *work_out)
 
 int GEM_VideoInit(_THIS, SDL_PixelFormat *vformat)
 {
-	int i;
+	int i, menubar_size;
 	short work_in[12], work_out[272], dummy;
 
 	/* Open AES (Application Environment Services) */
@@ -396,6 +397,8 @@ int GEM_VideoInit(_THIS, SDL_PixelFormat *vformat)
 		VDI_oldpalette[i][1] = rgb[1];
 		VDI_oldpalette[i][2] = rgb[2];
 	}
+	VDI_setpalette = GEM_SetNewPalette;
+	memcpy(VDI_curpalette,VDI_oldpalette,sizeof(VDI_curpalette));
 
 	/* Setup screen info */
 	GEM_title_name = empty_name;
@@ -443,6 +446,10 @@ int GEM_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	vsf_interior(VDI_handle,1);
 	vsf_perimeter(VDI_handle,0);
 
+	/* Menu bar save buffer */
+	menubar_size = GEM_desk_w * GEM_desk_y * VDI_pixelsize;
+	GEM_menubar=Atari_SysMalloc(menubar_size,MX_PREFTTRAM);
+
 	/* Fill video modes list */
 	SDL_modelist[0] = malloc(sizeof(SDL_Rect));
 	SDL_modelist[0]->x = 0;
@@ -477,12 +484,12 @@ static void GEM_FreeBuffers(_THIS)
 {
 	/* Release buffer */
 	if ( GEM_buffer2 ) {
-		free( GEM_buffer2 );
+		Mfree( GEM_buffer2 );
 		GEM_buffer2=NULL;
 	}
 
 	if ( GEM_buffer1 ) {
-		free( GEM_buffer1 );
+		Mfree( GEM_buffer1 );
 		GEM_buffer1=NULL;
 	}
 }
@@ -516,6 +523,23 @@ static void GEM_ClearScreen(_THIS)
 	v_show_c(VDI_handle, 1);
 }
 
+static void GEM_SetNewPalette(_THIS, Uint16 newpal[256][3])
+{
+	int i;
+	short rgb[3];
+
+	if (VDI_oldnumcolors==0)
+		return;
+
+	for(i = 0; i < VDI_oldnumcolors; i++) {
+		rgb[0] = newpal[i][0];
+		rgb[1] = newpal[i][1];
+		rgb[2] = newpal[i][2];
+
+		vs_color(VDI_handle, i, rgb);
+	}
+}
+
 static void GEM_LockScreen(_THIS)
 {
 	if (!GEM_locked) {
@@ -525,6 +549,29 @@ static void GEM_LockScreen(_THIS)
 		/* Reserve memory space, used to be sure of compatibility */
 		form_dial( FMD_START, 0,0,0,0, 0,0,VDI_w,VDI_h);
 
+		/* Save menu bar */
+		if (GEM_menubar) {
+			MFDB mfdb_src;
+			short blitcoords[8];
+
+			mfdb_src.fd_addr=GEM_menubar;
+			mfdb_src.fd_w=GEM_desk_w;
+			mfdb_src.fd_h=GEM_desk_y;
+			mfdb_src.fd_wdwidth=GEM_desk_w>>4;
+			mfdb_src.fd_nplanes=VDI_bpp;
+			mfdb_src.fd_stand=
+				mfdb_src.fd_r1=
+				mfdb_src.fd_r2=
+				mfdb_src.fd_r3= 0;
+
+			blitcoords[0] = blitcoords[4] = 0;
+			blitcoords[1] = blitcoords[5] = 0;
+			blitcoords[2] = blitcoords[6] = GEM_desk_w-1;
+			blitcoords[3] = blitcoords[7] = GEM_desk_y-1;
+
+			vro_cpyfm(VDI_handle, S_ONLY, blitcoords, &VDI_dst_mfdb, &mfdb_src);
+		}
+
 		GEM_locked=SDL_TRUE;
 	}
 }
@@ -532,6 +579,29 @@ static void GEM_LockScreen(_THIS)
 static void GEM_UnlockScreen(_THIS)
 {
 	if (GEM_locked) {
+		/* Restore menu bar */
+		if (GEM_menubar) {
+			MFDB mfdb_src;
+			short blitcoords[8];
+
+			mfdb_src.fd_addr=GEM_menubar;
+			mfdb_src.fd_w=GEM_desk_w;
+			mfdb_src.fd_h=GEM_desk_y;
+			mfdb_src.fd_wdwidth=GEM_desk_w>>4;
+			mfdb_src.fd_nplanes=VDI_bpp;
+			mfdb_src.fd_stand=
+				mfdb_src.fd_r1=
+				mfdb_src.fd_r2=
+				mfdb_src.fd_r3= 0;
+
+			blitcoords[0] = blitcoords[4] = 0;
+			blitcoords[1] = blitcoords[5] = 0;
+			blitcoords[2] = blitcoords[6] = GEM_desk_w-1;
+			blitcoords[3] = blitcoords[7] = GEM_desk_y-1;
+
+			vro_cpyfm(VDI_handle, S_ONLY, blitcoords, &mfdb_src, &VDI_dst_mfdb);
+		}
+
 		/* Restore screen memory, and send REDRAW to all apps */
 		form_dial( FMD_FINISH, 0,0,0,0, 0,0,VDI_w,VDI_h);
 		/* Unlock AES */
@@ -701,6 +771,19 @@ SDL_Surface *GEM_SetVideoMode(_THIS, SDL_Surface *current,
 
 			/* Open the window */
 			wind_open(GEM_handle,x2,y2,w2,h2);
+		} else {
+			/* Resize window if needed, to fit asked video mode */
+			if (modeflags & SDL_RESIZABLE) {
+				wind_get (GEM_handle, WF_WORKXYWH, &x2,&y2,&w2,&h2);
+				if ((w2&15)!=0) {
+					w2=(w2|15)+1;
+				}
+				if ((w2!=width) || (h2!=height)) {
+					if (wind_calc(WC_BORDER, GEM_win_type, x2,y2,width,height, &x2,&y2,&w2,&h2)) {
+						wind_set (GEM_handle, WF_CURRXYWH, x2,y2,w2,h2);
+					}
+				}
+			}
 		}
 
 		GEM_fullscreen = SDL_FALSE;
@@ -714,8 +797,6 @@ SDL_Surface *GEM_SetVideoMode(_THIS, SDL_Surface *current,
 		current->pitch = width * VDI_pixelsize;
 	} else {
 		current->pixels = VDI_screen;
-		current->pixels += VDI_pitch * ((VDI_h - height) >> 1);
-		current->pixels += VDI_pixelsize * ((VDI_w - width) >> 1);
 		current->pitch = VDI_pitch;
 	}
 
@@ -781,13 +862,7 @@ static void GEM_UpdateRectsFullscreen(_THIS, int numrects, SDL_Rect *rects)
 		int destpitch;
 
 		if (GEM_bufops & B2S_C2P_1TOS) {
-			int destx;
-
 			destscr = VDI_screen;
-			destscr += VDI_pitch * ((VDI_h - surface->h) >> 1);
-			destx = (VDI_w - surf_width) >> 1;
-			destx &= ~15;
-			destscr += destx;
 			destpitch = VDI_pitch;
 		} else {
 			destscr = GEM_buffer2;
@@ -828,7 +903,7 @@ static void GEM_UpdateRectsFullscreen(_THIS, int numrects, SDL_Rect *rects)
 		mfdb_src.fd_addr=surface->pixels;
 		mfdb_src.fd_w=surf_width;
 		mfdb_src.fd_h=surface->h;
-		mfdb_src.fd_wdwidth=mfdb_src.fd_w >> 4;
+		mfdb_src.fd_wdwidth= (surface->pitch/VDI_pixelsize) >> 4;
 		mfdb_src.fd_nplanes=surface->format->BitsPerPixel;
 		mfdb_src.fd_stand=
 			mfdb_src.fd_r1=
@@ -839,15 +914,10 @@ static void GEM_UpdateRectsFullscreen(_THIS, int numrects, SDL_Rect *rects)
 		}
 
 		for ( i=0; i<numrects; ++i ) {
-			blitcoords[0] = rects[i].x;
-			blitcoords[1] = rects[i].y;
-			blitcoords[2] = blitcoords[0] + rects[i].w - 1;
-			blitcoords[3] = blitcoords[1] + rects[i].h - 1;
-
-			blitcoords[4] = rects[i].x + ((VDI_w - surface->w) >> 1);
-			blitcoords[5] = rects[i].y + ((VDI_h - surface->h) >> 1);
-			blitcoords[6] = blitcoords[4] + rects[i].w - 1;
-			blitcoords[7] = blitcoords[5] + rects[i].h - 1;
+			blitcoords[0] = blitcoords[4] = rects[i].x;
+			blitcoords[1] = blitcoords[5] = rects[i].y;
+			blitcoords[2] = blitcoords[6] = rects[i].x + rects[i].w - 1;
+			blitcoords[3] = blitcoords[7] = rects[i].y + rects[i].h - 1;
 
 			vro_cpyfm(VDI_handle, S_ONLY, blitcoords, &mfdb_src, &VDI_dst_mfdb);
 		}
@@ -905,13 +975,7 @@ static int GEM_FlipHWSurfaceFullscreen(_THIS, SDL_Surface *surface)
 		int destpitch;
 
 		if (GEM_bufops & B2S_C2P_1TOS) {
-			int destx;
-
 			destscr = VDI_screen;
-			destscr += VDI_pitch * ((VDI_h - surface->h) >> 1);
-			destx = (VDI_w - surf_width) >> 1;
-			destx &= ~15;
-			destscr += destx;
 			destpitch = VDI_pitch;
 		} else {
 			destscr = GEM_buffer2;
@@ -944,15 +1008,10 @@ static int GEM_FlipHWSurfaceFullscreen(_THIS, SDL_Surface *surface)
 			mfdb_src.fd_addr=GEM_buffer2;
 		}
 
-		blitcoords[0] = 0;
-		blitcoords[1] = 0;
-		blitcoords[2] = surface->w - 1;
-		blitcoords[3] = surface->h - 1;
-
-		blitcoords[4] = (VDI_w - surface->w) >> 1;
-		blitcoords[5] = (VDI_h - surface->h) >> 1;
-		blitcoords[6] = blitcoords[4] + surface->w - 1;
-		blitcoords[7] = blitcoords[5] + surface->h - 1;
+		blitcoords[0] = blitcoords[4] = 0;
+		blitcoords[1] = blitcoords[5] = 0;
+		blitcoords[2] = blitcoords[6] = surface->w - 1;
+		blitcoords[3] = blitcoords[7] = surface->h - 1;
 
 		vro_cpyfm(VDI_handle, S_ONLY, blitcoords, &mfdb_src, &VDI_dst_mfdb);
 	}
@@ -1009,9 +1068,9 @@ static int GEM_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 		g = colors[i].g;
 		b = colors[i].b;
 
-		rgb[0] = (1000 * r) / 255;
-		rgb[1] = (1000 * g) / 255;
-		rgb[2] = (1000 * b) / 255;
+		rgb[0] = VDI_curpalette[i][0] = (1000 * r) / 255;
+		rgb[1] = VDI_curpalette[i][1] =(1000 * g) / 255;
+		rgb[2] = VDI_curpalette[i][2] =(1000 * b) / 255;
 
 		vs_color(VDI_handle, vdi_index[firstcolor+i], rgb);
 	}
@@ -1055,23 +1114,14 @@ void GEM_VideoQuit(_THIS)
 	}
 
 	GEM_UnlockScreen(this);
+	if (GEM_menubar) {
+		Mfree(GEM_menubar);
+		GEM_menubar=NULL;
+	}
 
 	appl_exit();
 
-	/* Restore palette */
-	if (VDI_oldnumcolors) {
-		int i;
-
-		for(i = 0; i < VDI_oldnumcolors; i++) {
-			short	rgb[3];
-
-			rgb[0] = VDI_oldpalette[i][0];
-			rgb[1] = VDI_oldpalette[i][1];
-			rgb[2] = VDI_oldpalette[i][2];
-
-			vs_color(VDI_handle, i, rgb);
-		}
-	}
+	GEM_SetNewPalette(this, VDI_oldpalette);
 
 	/* Close VDI workstation */
 	if (VDI_handle) {

@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_syscdrom.c,v 1.6 2004/01/04 16:49:16 slouken Exp $";
+ "@(#) $Id: SDL_syscdrom.c,v 1.7 2005/01/12 06:04:48 slouken Exp $";
 #endif
 
 /* Functions for system-level CD-ROM audio control */
@@ -143,6 +143,8 @@ int  SDL_SYS_CDInit(void)
 	static char *checklist[] = {
 #ifdef __OpenBSD__
 		"?0 cd?c", "cdrom", NULL
+#elif defined(__NetBSD__)
+		"?0 cd?d", "?0 cd?c", "cdrom", NULL
 #else
 		"?0 cd?c", "?0 acd?c", "cdrom", NULL
 #endif

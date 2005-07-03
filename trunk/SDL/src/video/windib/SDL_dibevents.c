@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_dibevents.c,v 1.23 2004/11/15 21:11:44 slouken Exp $";
+ "@(#) $Id: SDL_dibevents.c,v 1.24 2005/04/17 10:23:58 icculus Exp $";
 #endif
 
 #include <stdlib.h>
@@ -116,8 +116,6 @@ LONG
 				} else {
 					wParam = 0;
 				}
-			} else {
-				wParam = 0;
 			}
 #endif /* NO_GETKEYBOARDSTATE */
 			posted = SDL_PrivateKeyboard(SDL_PRESSED,

@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_systimer.c,v 1.3 2004/09/17 13:20:10 slouken Exp $";
+ "@(#) $Id: SDL_systimer.c,v 1.4 2005/02/12 18:01:30 slouken Exp $";
 #endif
 
 #include <stdio.h>
@@ -99,8 +99,8 @@ void SDL_Delay (Uint32 ms)
     } else is_event_thread = 1;
 #endif
 
-/*TODO: Next version of unixlib may allow us to use usleep here */
-/*      for non event threads */
+        /*TODO: Next version of Unixlib may allow us to use usleep here */
+        /*      for non event threads */
 
 	/* Set the timeout interval - Linux only needs to do this once */
 	then = SDL_GetTicks();
@@ -222,7 +222,7 @@ void SDL_SYS_TimerQuit(void)
 
 int SDL_SYS_StartTimer(void)
 {
-	SDL_SetError("Internal logic error: RISCOS uses threaded timer");
+	SDL_SetError("Internal logic error: RISC OS uses threaded timer");
 	return(-1);
 }
 

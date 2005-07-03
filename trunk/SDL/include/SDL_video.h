@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_video.h,v 1.18 2004/07/18 22:57:40 slouken Exp $";
+ "@(#) $Id: SDL_video.h,v 1.19 2005/01/02 05:11:16 slouken Exp $";
 #endif
 
 /* Header file for access to the SDL raw framebuffer window */
@@ -89,11 +89,6 @@ typedef struct SDL_PixelFormat {
 	Uint8  alpha;
 } SDL_PixelFormat;
 
-/* typedef for private surface blitting functions */
-struct SDL_Surface;
-typedef int (*SDL_blit)(struct SDL_Surface *src, SDL_Rect *srcrect,
-			struct SDL_Surface *dst, SDL_Rect *dstrect);
-
 /* This structure should be treated as read-only, except for 'pixels',
    which, if not NULL, contains the raw pixel data for the surface.
 */
@@ -151,6 +146,10 @@ typedef struct SDL_Surface {
 #define SDL_MUSTLOCK(surface)	\
   (surface->offset ||		\
   ((surface->flags & (SDL_HWSURFACE|SDL_ASYNCBLIT|SDL_RLEACCEL)) != 0))
+
+/* typedef for private surface blitting functions */
+typedef int (*SDL_blit)(struct SDL_Surface *src, SDL_Rect *srcrect,
+			struct SDL_Surface *dst, SDL_Rect *dstrect);
 
 
 /* Useful for determining the video hardware capabilities */

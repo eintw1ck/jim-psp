@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_surface.c,v 1.19 2004/08/21 05:29:45 slouken Exp $";
+ "@(#) $Id: SDL_surface.c,v 1.21 2005/04/17 10:40:41 icculus Exp $";
 #endif
 
 #include <stdio.h>
@@ -54,7 +54,7 @@ SDL_Surface * SDL_CreateRGBSurface (Uint32 flags,
 
 	/* Make sure the size requested doesn't overflow our datatypes */
 	/* Next time I write a library like SDL, I'll use int for size. :) */
-	if ( width > 16384 || height > 16384 ) {
+	if ( width >= 16384 || height >= 65536 ) {
 		SDL_SetError("Width or height is too large");
 		return(NULL);
 	}
@@ -91,11 +91,22 @@ SDL_Surface * SDL_CreateRGBSurface (Uint32 flags,
 	}
 	surface->flags = SDL_SWSURFACE;
 	if ( (flags & SDL_HWSURFACE) == SDL_HWSURFACE ) {
-		depth = screen->format->BitsPerPixel;
-		Rmask = screen->format->Rmask;
-		Gmask = screen->format->Gmask;
-		Bmask = screen->format->Bmask;
-		Amask = screen->format->Amask;
+		if ((Amask) && (video->displayformatalphapixel))
+		{
+			depth = video->displayformatalphapixel->BitsPerPixel;
+			Rmask = video->displayformatalphapixel->Rmask;
+			Gmask = video->displayformatalphapixel->Gmask;
+			Bmask = video->displayformatalphapixel->Bmask;
+			Amask = video->displayformatalphapixel->Amask;
+		}
+		else
+		{
+			depth = screen->format->BitsPerPixel;
+			Rmask = screen->format->Rmask;
+			Gmask = screen->format->Gmask;
+			Bmask = screen->format->Bmask;
+			Amask = screen->format->Amask;
+		}
 	}
 	surface->format = SDL_AllocFormat(depth, Rmask, Gmask, Bmask, Amask);
 	if ( surface->format == NULL ) {

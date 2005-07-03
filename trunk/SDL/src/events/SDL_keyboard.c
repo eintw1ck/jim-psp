@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_keyboard.c,v 1.9 2004/01/04 16:49:17 slouken Exp $";
+ "@(#) $Id: SDL_keyboard.c,v 1.10 2005/01/03 00:24:44 slouken Exp $";
 #endif
 
 /* General keyboard handling code for SDL */
@@ -491,7 +491,8 @@ printf("The '%s' key has been %s\n", SDL_GetKeyName(keysym->sym),
 			/*
 			 * jk 991215 - Added
 			 */
-			if ( SDL_KeyRepeat.timestamp ) {
+			if ( SDL_KeyRepeat.timestamp &&
+			     SDL_KeyRepeat.evt.key.keysym.sym == keysym->sym ) {
 				SDL_KeyRepeat.timestamp = 0;
 			}
 			break;

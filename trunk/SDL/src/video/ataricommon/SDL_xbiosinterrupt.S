@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_xbiosinterrupt.S,v 1.3 2004/11/22 20:36:59 pmandin Exp $";
+ "@(#) $Id: SDL_xbiosinterrupt.S,v 1.4 2005/05/20 20:37:28 pmandin Exp $";
 #endif
 
 /*
@@ -155,7 +155,7 @@ _SDL_AtariXbios_JoystickVector:
 	movel	d0,sp@-
 
 	/* New joystick state */
-	moveb	a0@(1),d0
+	moveb	a0@(2),d0
 	andw	#0x8f,d0
 	movew	d0,_SDL_AtariXbios_joystick
 

@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_rwops.c,v 1.8 2004/01/04 16:49:17 slouken Exp $";
+ "@(#) $Id: SDL_rwops.c,v 1.9 2005/06/24 12:48:38 icculus Exp $";
 #endif
 
 /* This file provides a general interface for SDL to read and write
@@ -110,15 +110,23 @@ static int mem_seek(SDL_RWops *context, int offset, int whence)
 }
 static int mem_read(SDL_RWops *context, void *ptr, int size, int maxnum)
 {
-	int num;
+	int total_bytes;
+	int mem_available;
 
-	num = maxnum;
-	if ( (context->hidden.mem.here + (num*size)) > context->hidden.mem.stop ) {
-		num = (context->hidden.mem.stop-context->hidden.mem.here)/size;
+	total_bytes = (maxnum * size);
+	if ( (maxnum <= 0) || (size <= 0) || ((total_bytes / maxnum) != size) ) {
+		return 0;
 	}
-	memcpy(ptr, context->hidden.mem.here, num*size);
-	context->hidden.mem.here += num*size;
-	return(num);
+
+	mem_available = (context->hidden.mem.stop - context->hidden.mem.here);
+	if (total_bytes > mem_available) {
+		total_bytes = mem_available;
+	}
+
+	memcpy(ptr, context->hidden.mem.here, total_bytes);
+	context->hidden.mem.here += total_bytes;
+
+	return (total_bytes / size);
 }
 static int mem_write(SDL_RWops *context, const void *ptr, int size, int num)
 {

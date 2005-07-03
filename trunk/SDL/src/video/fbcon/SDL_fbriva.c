@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_fbriva.c,v 1.5 2004/01/04 16:49:25 slouken Exp $";
+ "@(#) $Id: SDL_fbriva.c,v 1.6 2005/01/04 19:04:14 slouken Exp $";
 #endif
 
 #include "SDL_types.h"
@@ -61,6 +61,7 @@ static void NV4WaitIdle(_THIS)
 		;
 }
 
+#if 0 /* Not yet implemented? */
 /* Sets video mem colorkey and accelerated blit function */
 static int SetHWColorKey(_THIS, SDL_Surface *surface, Uint32 key)
 {
@@ -72,6 +73,7 @@ static int SetHWAlpha(_THIS, SDL_Surface *surface, Uint8 value)
 {
 	return(0);
 }
+#endif /* Not yet implemented */
 
 static int FillHWRect(_THIS, SDL_Surface *dst, SDL_Rect *rect, Uint32 color)
 {

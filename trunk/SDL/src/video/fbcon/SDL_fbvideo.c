@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_fbvideo.c,v 1.12 2004/08/21 11:34:24 slouken Exp $";
+ "@(#) $Id: SDL_fbvideo.c,v 1.13 2005/02/12 18:03:54 slouken Exp $";
 #endif
 
 /* Framebuffer console based SDL video driver implementation.
@@ -1423,7 +1423,7 @@ static void FB_VideoQuit(_THIS)
 	if ( this->screen ) {
 		/* Clear screen and tell SDL not to free the pixels */
 		if ( this->screen->pixels && FB_InGraphicsMode(this) ) {
-#ifdef __powerpc__	/* SIGBUS when using memset() ?? */
+#if defined(__powerpc__) || defined(__ia64__)	/* SIGBUS when using memset() ?? */
 			Uint8 *rowp = (Uint8 *)this->screen->pixels;
 			int left = this->screen->pitch*this->screen->h;
 			while ( left-- ) { *rowp++ = 0; }

@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_atarievents.c,v 1.4 2004/01/04 16:49:23 slouken Exp $";
+ "@(#) $Id: SDL_atarievents.c,v 1.6 2005/06/25 18:21:13 pmandin Exp $";
 #endif
 
 /*
@@ -51,7 +51,9 @@ enum {
 	MCH_ST=0,
 	MCH_STE,
 	MCH_TT,
-	MCH_F30
+	MCH_F30,
+	MCH_CLONE,
+	MCH_ARANYM
 };
 
 void (*Atari_ShutdownEvents)(void);
@@ -73,6 +75,7 @@ static void Atari_InitializeEvents(_THIS)
 		case MCH_STE:
 		case MCH_TT:
 		case MCH_F30:
+		case MCH_ARANYM:
 			this->InitOSKeymap=AtariIkbd_InitOSKeymap;
 			this->PumpEvents=AtariIkbd_PumpEvents;
 			Atari_ShutdownEvents=AtariIkbd_ShutdownEvents;

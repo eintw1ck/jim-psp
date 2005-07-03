@@ -21,7 +21,7 @@
 */
 
 /*
-   RISCOS - Joystick support by Alan Buckley (alan_baa@hotmail.com) - 10 April 2003
+   RISC OS - Joystick support by Alan Buckley (alan_baa@hotmail.com) - 10 April 2003
 
    Note: Currently assumes joystick is present if joystick module is loaded
    and that there is one joystick with four buttons.
@@ -29,7 +29,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_sysjoystick.c,v 1.2 2004/01/04 16:49:18 slouken Exp $";
+ "@(#) $Id: SDL_sysjoystick.c,v 1.3 2005/02/12 18:01:30 slouken Exp $";
 #endif
 
 /* This is the system specific header for the SDL joystick API */
@@ -78,7 +78,7 @@ const char *SDL_SYS_JoystickName(int index)
 {
 	if (index == 0)
 	{
-		return "RISCOS Joystick 0";
+		return "RISC OS Joystick 0";
 	}
 
 	SDL_SetError("No joystick available with that index");

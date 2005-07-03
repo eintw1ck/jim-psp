@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_syscdrom.c,v 1.9 2004/11/30 14:45:08 slouken Exp $";
+ "@(#) $Id: SDL_syscdrom.c,v 1.11 2005/05/20 07:34:34 slouken Exp $";
 #endif
 
 /* Functions for system-level CD-ROM audio control */
@@ -37,6 +37,7 @@ static char rcsid =
 #include <errno.h>
 #include <unistd.h>
 #ifdef __linux__
+#ifdef HAVE_LINUX_VERSION_H
 /* linux 2.6.9 workaround */
 #include <linux/version.h>
 #if LINUX_VERSION_CODE == KERNEL_VERSION(2,6,9)
@@ -48,6 +49,7 @@ static char rcsid =
 #define __be32 __u32
 #define __be16 __u16
 #endif /* linux 2.6.9 workaround */
+#endif /* HAVE_LINUX_VERSION_H */
 #include <linux/cdrom.h>
 #endif
 #ifdef __SVR4
@@ -132,7 +134,7 @@ static int CheckDrive(char *drive, char *mnttype, struct stat *stbuf)
 	/* If it does exist, verify that it's an available CD-ROM */
 	is_cd = 0;
 	if ( S_ISCHR(stbuf->st_mode) || S_ISBLK(stbuf->st_mode) ) {
-		cdfd = open(drive, (O_RDONLY|O_EXCL|O_NONBLOCK), 0);
+		cdfd = open(drive, (O_RDONLY|O_NONBLOCK), 0);
 		if ( cdfd >= 0 ) {
 			info.cdsc_format = CDROM_MSF;
 			/* Under Linux, EIO occurs when a disk is not present.
@@ -393,7 +395,7 @@ static const char *SDL_SYS_CDName(int drive)
 
 static int SDL_SYS_CDOpen(int drive)
 {
-	return(open(SDL_cdlist[drive], (O_RDONLY|O_EXCL|O_NONBLOCK), 0));
+	return(open(SDL_cdlist[drive], (O_RDONLY|O_NONBLOCK), 0));
 }
 
 static int SDL_SYS_CDGetTOC(SDL_CD *cdrom)

@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_blit_0.c,v 1.6 2004/01/04 16:49:21 slouken Exp $";
+ "@(#) $Id: SDL_blit_0.c,v 1.8 2005/05/16 05:55:17 slouken Exp $";
 #endif
 
 #include <stdio.h>
@@ -452,6 +452,10 @@ SDL_loblit SDL_CalculateBlit0(SDL_Surface *surface, int blit_index)
 {
 	int which;
 
+	if ( surface->format->BitsPerPixel != 1 ) {
+		/* We don't support sub 8-bit packed pixel modes */
+		return NULL;
+	}
 	if ( surface->map->dst->format->BitsPerPixel < 8 ) {
 		which = 0;
 	} else {

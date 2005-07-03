@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_blit.h,v 1.10 2004/01/04 16:49:21 slouken Exp $";
+ "@(#) $Id: SDL_blit.h,v 1.11 2005/04/17 10:19:22 icculus Exp $";
 #endif
 
 #ifndef _SDL_blit_h
@@ -373,6 +373,20 @@ do {						\
 	dG = (((sG-dG)*(A))>>8)+dG;		\
 	dB = (((sB-dB)*(A))>>8)+dB;		\
 } while(0)
+
+/* Blend the RGB values of two pixels based on a source alpha value */
+#define ACCURATE_ALPHA_BLEND(sR, sG, sB, sA, dR, dG, dB)	\
+do {						\
+    unsigned tR, tG, tB, tA; \
+    tA = 255 - sA; \
+    tR = 1 + (sR * sA) + (dR * tA); \
+    dR = (tR + (tR >> 8)) >> 8; \
+    tG = 1 + (sG * sA) + (dG * tA); \
+    dG = (tG + (tG >> 8)) >> 8; \
+    tB = 1 + (sB * sA) + (dB * tA); \
+    dB = (tB + (tB >> 8)) >> 8; \
+} while(0)
+
 
 /* This is a very useful loop for optimizing blitters */
 #if defined(_MSC_VER) && (_MSC_VER == 1300)

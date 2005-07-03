@@ -63,7 +63,7 @@
 
 /* By default SDL uses the C calling convention */
 #ifndef SDLCALL
-#ifdef WIN32
+#if defined(WIN32) && !defined(__GNUC__)
 #define SDLCALL __cdecl
 #else
 #define SDLCALL
@@ -102,7 +102,8 @@
 /* Add any special compiler-specific cases here */
 #if defined(_MSC_VER) || defined(__BORLANDC__) || \
     defined(__DMC__) || defined(__SC__) || \
-    defined(__WATCOMC__) || defined(__LCC__)
+    defined(__WATCOMC__) || defined(__LCC__) || \
+    defined(__DECC)
 #ifndef __inline__
 #define __inline__	__inline
 #endif

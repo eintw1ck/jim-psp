@@ -14,9 +14,9 @@ dnl Set various version strings - taken gratefully from the GTk sources
 #
 SDL_MAJOR_VERSION=1
 SDL_MINOR_VERSION=2
-SDL_MICRO_VERSION=8
-SDL_INTERFACE_AGE=1
-SDL_BINARY_AGE=8
+SDL_MICRO_VERSION=9
+SDL_INTERFACE_AGE=2
+SDL_BINARY_AGE=9
 SDL_VERSION=$SDL_MAJOR_VERSION.$SDL_MINOR_VERSION.$SDL_MICRO_VERSION
 
 AC_SUBST(SDL_MAJOR_VERSION)
@@ -1280,12 +1280,11 @@ CheckPTHREAD()
             pthread_lib=""
             ;;
         *-*-osf*)
+            pthread_cflags="-D_REENTRANT"
             if test x$ac_cv_prog_gcc = xyes; then
-                pthread_cflags="-D_REENTRANT"
                 pthread_lib="-lpthread -lrt"
             else
-                pthread_cflags="-pthread"
-                pthread_lib="-lpthread -lrt"
+                pthread_lib="-lpthread -lexc -lrt"
             fi
             ;;
         *)
@@ -1840,19 +1839,29 @@ CheckAltivec()
 {
     AC_MSG_CHECKING(for GCC Altivec instruction support)
     have_gcc_altivec=no
+    save_CFLAGS="${CFLAGS}"
+    CFLAGS="${CFLAGS} -DGCC_ALTIVEC -DUSE_ALTIVEC_BLITTERS -faltivec"
     AC_TRY_COMPILE([
+    vector unsigned int vzero() {
+        return vec_splat_u32(0);
+    }
     ],[
-        asm volatile ("mtspr 256, %0\n\t"
-                      "vand %%v0, %%v0, %%v0"
-                      :
-                      : "r" (-1));
     ],[
     have_gcc_altivec=yes
     ])
-    if test x$have_gcc_altivec = xyes; then
-        CFLAGS="$CFLAGS -DGCC_ALTIVEC"
+    if test x$have_gcc_altivec = xno; then
+        CFLAGS="${save_CFLAGS}"
     fi
     AC_MSG_RESULT($have_gcc_altivec)
+}
+
+dnl Check for a valid linux/version.h
+CheckLinuxVersion()
+{
+    AC_CHECK_HEADER(linux/version.h, have_linux_version_h=yes)
+    if test x$have_linux_version_h = xyes; then
+        CFLAGS="$CFLAGS -DHAVE_LINUX_VERSION_H"
+    fi
 }
 
 case "$target" in
@@ -1889,6 +1898,8 @@ case "$target" in
         CheckPTHREAD
         CheckSIGACTION
         CheckAltivec
+        CheckLinuxVersion
+
         # Set up files for the main() stub
         if test "x$video_qtopia" = "xyes"; then
           SDL_CFLAGS="$SDL_CFLAGS -Dmain=SDL_main"
@@ -2565,6 +2576,7 @@ case "$target" in
         CheckMacGL
         CheckPTHREAD
         CheckSIGACTION
+        CheckAltivec
         # If either the audio or CD driver is used, add the AudioUnit framework
         if test x$enable_audio = xyes -o x$enable_cdrom = xyes; then
             SYSTEM_LIBS="$SYSTEM_LIBS -framework AudioToolbox -framework AudioUnit"
@@ -2645,7 +2657,7 @@ case "$target" in
         # MiNT does not define "unix"
         CFLAGS="$CFLAGS -Dunix"
         ;;
-    *-*-riscos)
+    *-riscos)
         ARCH=riscos
         # Set up files for the video library
         if test x$enable_video = xyes; then
@@ -2654,8 +2666,11 @@ case "$target" in
         fi
         # Set up files for the audio library
         if test x$enable_audio = xyes; then
-            AUDIO_SUBDIRS="$AUDIO_SUBDIRS riscos"
-            AUDIO_DRIVERS="$AUDIO_DRIVERS riscos/libaudio_riscos.la"
+            CFLAGS="$CFLAGS -DOSS_SUPPORT"
+            AUDIO_SUBDIRS="$AUDIO_SUBDIRS dsp"
+            AUDIO_DRIVERS="$AUDIO_DRIVERS dsp/libaudio_dsp.la"
+            AUDIO_SUBDIRS="$AUDIO_SUBDIRS dma"
+            AUDIO_DRIVERS="$AUDIO_DRIVERS dma/libaudio_dma.la"
         fi
         # Set up files for the joystick library
         if test x$enable_joystick = xyes; then
@@ -2685,7 +2700,7 @@ case "$target" in
             COPY_ARCH_SRC(src/timer, riscos, SDL_systimer.c)
         fi
 
-        CFLAGS="$CFLAGS -DENABLE_RISCOS -DDRENDERER_SUPPORT"
+        CFLAGS="$CFLAGS -DENABLE_RISCOS"
 
         SYSTEM_LIBS="$SYSTEM_LIBS -ljpeg -ltiff -lpng -lz"
         ;;
@@ -2860,7 +2875,6 @@ src/audio/nas/Makefile
 src/audio/nto/Makefile
 src/audio/openbsd/Makefile
 src/audio/paudio/Makefile
-src/audio/riscos/Makefile
 src/audio/sun/Makefile
 src/audio/ums/Makefile
 src/audio/windib/Makefile

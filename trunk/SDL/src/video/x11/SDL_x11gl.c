@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_x11gl.c,v 1.19 2004/02/26 20:49:45 slouken Exp $";
+ "@(#) $Id: SDL_x11gl.c,v 1.20 2005/05/16 08:23:34 slouken Exp $";
 #endif
 
 #include <stdlib.h>	/* For getenv() prototype */
@@ -145,15 +145,17 @@ XVisualInfo *X11_GL_GetVisual(_THIS)
 	}
 
 #ifdef GLX_DIRECT_COLOR /* Try for a DirectColor visual for gamma support */
-	attribs[i++] = GLX_X_VISUAL_TYPE;
-	attribs[i++] = GLX_DIRECT_COLOR;
+	if ( !getenv("SDL_VIDEO_X11_NODIRECTCOLOR") ) {
+		attribs[i++] = GLX_X_VISUAL_TYPE;
+		attribs[i++] = GLX_DIRECT_COLOR;
+	}
 #endif
 	attribs[i++] = None;
 
  	glx_visualinfo = this->gl_data->glXChooseVisual(GFX_Display, 
 						  SDL_Screen, attribs);
 #ifdef GLX_DIRECT_COLOR
-	if( !glx_visualinfo ) { /* No DirectColor visual?  Try again.. */
+	if( !glx_visualinfo && !getenv("SDL_VIDEO_X11_NODIRECTCOLOR") ) { /* No DirectColor visual?  Try again.. */
 		attribs[i-3] = None;
  		glx_visualinfo = this->gl_data->glXChooseVisual(GFX_Display, 
 						  SDL_Screen, attribs);

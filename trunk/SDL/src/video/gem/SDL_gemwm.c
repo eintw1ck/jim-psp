@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_gemwm.c,v 1.5 2004/01/04 16:49:25 slouken Exp $";
+ "@(#) $Id: SDL_gemwm.c,v 1.7 2005/06/29 16:18:08 pmandin Exp $";
 #endif
 
 /*
@@ -38,8 +38,6 @@ static char rcsid =
 #include "SDL_gemwm_c.h"
 
 /* Defines */
-
-#define DEBUG_VIDEO_GEM 0
 
 #define ICONWIDTH 64
 #define ICONHEIGHT 64
@@ -64,15 +62,8 @@ void GEM_SetIcon(_THIS, SDL_Surface *icon, Uint8 *mask)
 	SDL_Surface *sicon;
 	SDL_Rect bounds;
 
-#ifdef DEBUG_VIDEO_GEM
-	printf("sdl:video:gem: SetIcon(0x%08x)\n", (long) icon);
-#endif
-
 #if 0
 	if ((GEM_wfeatures & (1<<WF_ICONIFY))==0) {
-#ifdef DEBUG_VIDEO_GEM
-		printf("sdl:video:gem: AES can not iconify windows\n");
-#endif
 		return;
 	}
 #endif
@@ -98,10 +89,6 @@ void GEM_SetIcon(_THIS, SDL_Surface *icon, Uint8 *mask)
 	}
 
 	GEM_icon = sicon;
-
-#ifdef DEBUG_VIDEO_GEM
-	printf("sdl:video:gem: SetIcon(): done\n");
-#endif
 }
 
 int GEM_IconifyWindow(_THIS)
@@ -125,5 +112,5 @@ int GEM_IconifyWindow(_THIS)
 
 SDL_GrabMode GEM_GrabInput(_THIS, SDL_GrabMode mode)
 {
-	return mode;
+	return SDL_GRAB_OFF;
 }

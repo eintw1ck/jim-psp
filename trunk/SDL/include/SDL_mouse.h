@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_mouse.h,v 1.8 2004/07/18 22:57:40 slouken Exp $";
+ "@(#) $Id: SDL_mouse.h,v 1.9 2005/04/17 10:16:30 icculus Exp $";
 #endif
 
 /* Include file for SDL mouse event handling */
@@ -120,7 +120,7 @@ extern DECLSPEC int SDLCALL SDL_ShowCursor(int toggle);
    Button 4:	Mouse wheel up	 (may also be a real button)
    Button 5:	Mouse wheel down (may also be a real button)
  */
-#define SDL_BUTTON(X)		(SDL_PRESSED<<(X-1))
+#define SDL_BUTTON(X)		(SDL_PRESSED << ((X)-1))
 #define SDL_BUTTON_LEFT		1
 #define SDL_BUTTON_MIDDLE	2
 #define SDL_BUTTON_RIGHT	3

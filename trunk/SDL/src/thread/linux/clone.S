@@ -1,7 +1,7 @@
 
 /* Taken with thanks from LinuxThreads 0.6 */
 
-/* This is no longer necessary with glibc-2.1, which has it's own clone() */
+/* This is no longer necessary with glibc-2.1, which has its own clone() */
 #ifdef linux
 /* Look to see if glibc is available, and if so, what version */
 #include <features.h>
@@ -34,7 +34,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: clone.S,v 1.2 2001/04/26 16:50:18 hercules Exp $";
+ "@(#) $Id: clone.S,v 1.3 2005/02/12 18:01:30 slouken Exp $";
 #endif
 Cambridge, MA 02139, USA.  */
 

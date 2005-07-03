@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_xbios.c,v 1.23 2004/11/27 21:28:49 pmandin Exp $";
+ "@(#) $Id: SDL_xbios.c,v 1.31 2005/06/30 12:02:25 pmandin Exp $";
 #endif
 
 /*
@@ -55,10 +55,23 @@ static char rcsid =
 #include "SDL_atarimxalloc_c.h"
 #include "SDL_atarigl_c.h"
 #include "SDL_xbios.h"
+#include "SDL_xbios_blowup.h"
+#include "SDL_xbios_centscreen.h"
+#include "SDL_xbios_sb3.h"
 
 #define XBIOS_VID_DRIVER_NAME "xbios"
 
-/*#define DEBUG_VIDEO_XBIOS 1*/
+/* Debug print info */
+#if 0
+#define DEBUG_PRINT(what) \
+	{ \
+		printf what; \
+	}
+#define DEBUG_VIDEO_XBIOS 1
+#else
+#define DEBUG_PRINT(what)
+#undef DEBUG_VIDEO_XBIOS
+#endif
 
 /* Initialization/Query functions */
 static int XBIOS_VideoInit(_THIS, SDL_PixelFormat *vformat);
@@ -80,55 +93,6 @@ static void XBIOS_UpdateRects(_THIS, int numrects, SDL_Rect *rects);
 static void XBIOS_GL_SwapBuffers(_THIS);
 #endif
 
-/* List of video modes */
-
-/* ST modes */
-static int xbiosnummodes_st=1;
-static xbiosmode_t xbiosmodelist_st[]={
-	{ST_LOW>>8,320,200,4,SDL_FALSE}
-};
-
-/* TT modes */
-static int xbiosnummodes_tt=2;
-static xbiosmode_t xbiosmodelist_tt[]={
-	{TT_LOW,320,480,8,SDL_FALSE},
-	{TT_LOW,320,240,8,SDL_TRUE}	/* Software double-lined mode */
-};
-
-/* Falcon RVB modes */
-static int xbiosnummodes_f30rvb=16;
-static xbiosmode_t xbiosmodelist_f30rvb[]={
-	{BPS16|COL80|OVERSCAN|VERTFLAG,768,480,16,SDL_FALSE},
-	{BPS16|COL80|OVERSCAN,768,240,16,SDL_FALSE},
-	{BPS16|COL80|VERTFLAG,640,400,16,SDL_FALSE},
-	{BPS16|COL80,640,200,16,SDL_FALSE},
-	{BPS16|OVERSCAN|VERTFLAG,384,480,16,SDL_FALSE},
-	{BPS16|OVERSCAN,384,240,16,SDL_FALSE},
-	{BPS16|VERTFLAG,320,400,16,SDL_FALSE},
-	{BPS16,320,200,16,SDL_FALSE},
-
-	{BPS8|COL80|OVERSCAN|VERTFLAG,768,480,8,SDL_FALSE},
-	{BPS8|COL80|OVERSCAN,768,240,8,SDL_FALSE},
-	{BPS8|COL80|VERTFLAG,640,400,8,SDL_FALSE},
-	{BPS8|COL80,640,200,8,SDL_FALSE},
-	{BPS8|OVERSCAN|VERTFLAG,384,480,8,SDL_FALSE},
-	{BPS8|OVERSCAN,384,240,8,SDL_FALSE},
-	{BPS8|VERTFLAG,320,400,8,SDL_FALSE},
-	{BPS8,320,200,8,SDL_FALSE}
-};
-
-/* Falcon VGA modes */
-static int xbiosnummodes_f30vga=6;
-static xbiosmode_t xbiosmodelist_f30vga[]={
-	{BPS16,320,480,16,SDL_FALSE},
-	{BPS16|VERTFLAG,320,240,16,SDL_FALSE},
-
-	{BPS8|COL80,640,480,8,SDL_FALSE},	
-	{BPS8|COL80|VERTFLAG,640,240,8,SDL_FALSE},
-	{BPS8,320,480,8,SDL_FALSE},
-	{BPS8|VERTFLAG,320,240,8,SDL_FALSE}
-};
-
 /* To setup palette */
 
 static unsigned short	TT_palette[256];
@@ -138,7 +102,7 @@ static unsigned long	F30_palette[256];
 
 static int XBIOS_Available(void)
 {
-	unsigned long cookie_vdo, cookie_mil, cookie_hade;
+	unsigned long cookie_vdo, cookie_mil, cookie_hade, cookie_scpn;
 
 	/* Milan/Hades Atari clones do not have an Atari video chip */
 	if ( (Getcookie(C__MIL, &cookie_mil) == C_FOUND) ||
@@ -165,6 +129,11 @@ static int XBIOS_Available(void)
 		case VDO_F30:
 			if ( Montype() == MONITOR_MONO)
 				return 0;
+			if (Getcookie(C_SCPN, &cookie_scpn) == C_FOUND) {
+				if (!SDL_XBIOS_SB3Usable((scpn_cookie_t *)cookie_scpn)) {
+					return 0;
+				}
+			}
 			break;
 		default:
 			return 0;
@@ -238,10 +207,62 @@ VideoBootStrap XBIOS_bootstrap = {
 	XBIOS_Available, XBIOS_CreateDevice
 };
 
+void SDL_XBIOS_AddMode(_THIS, Uint16 modecode, Uint16 width, Uint16 height,
+	Uint16 depth, SDL_bool flags)
+{
+	int i, curpos;
+	xbiosmode_t *current_mode;
+
+	/* Check if mode already exists */
+	if (XBIOS_modelist) {
+		current_mode = XBIOS_modelist;
+		for (i=0;i<XBIOS_nummodes; i++, current_mode++) {
+			if (current_mode->width != width)
+				continue;
+			if (current_mode->height != height)
+				continue;
+			if (current_mode->depth != depth)
+				continue;
+			return;
+		}
+	}
+
+	++XBIOS_nummodes;
+	XBIOS_modelist = (xbiosmode_t *) realloc(XBIOS_modelist, XBIOS_nummodes * sizeof(xbiosmode_t));
+
+	/* Keep the list sorted: bpp, width, height */
+	curpos=0;
+
+	for(i=0; i<XBIOS_nummodes-1; i++) {
+		if (XBIOS_modelist[i].depth <= depth) {
+			if (XBIOS_modelist[i].width < width) {
+				break;
+			} else if (XBIOS_modelist[i].width == width) {
+				if (XBIOS_modelist[i].height <= height) {
+					break;
+				}
+			}
+		}
+		curpos++;
+	}
+
+	/* Push remaining modes further */
+	for(i=XBIOS_nummodes-1; i>curpos; i--) {
+		memcpy(&XBIOS_modelist[i], &XBIOS_modelist[i-1], sizeof(xbiosmode_t));
+	}
+
+	XBIOS_modelist[curpos].number = modecode;
+	XBIOS_modelist[curpos].width = width;
+	XBIOS_modelist[curpos].height = height;
+	XBIOS_modelist[curpos].depth = depth;
+	XBIOS_modelist[curpos].doubleline = flags;
+}
+
 static int XBIOS_VideoInit(_THIS, SDL_PixelFormat *vformat)
 {
 	int i,j8,j16;
 	xbiosmode_t *current_mode;
+	unsigned long cookie_blow, cookie_scpn, cookie_cnts;
 
 	/* Initialize all variables that we clean on shutdown */
 	memset (SDL_modelist, 0, sizeof(SDL_modelist));
@@ -260,6 +281,9 @@ static int XBIOS_VideoInit(_THIS, SDL_PixelFormat *vformat)
 
 	/* Initialize video mode list */
 	/* and save current screen status (palette, screen address, video mode) */
+	XBIOS_nummodes = 0;
+	XBIOS_modelist = NULL;
+	XBIOS_centscreen = SDL_FALSE;
 
 	switch (XBIOS_cvdo >>16) {
 		case VDO_ST:
@@ -267,8 +291,7 @@ static int XBIOS_VideoInit(_THIS, SDL_PixelFormat *vformat)
 			{
 				short *oldpalette;
 
-				XBIOS_nummodes=xbiosnummodes_st;
-				XBIOS_modelist=xbiosmodelist_st;
+				SDL_XBIOS_AddMode(this, ST_LOW>>8,320,200,4,SDL_FALSE);
 			
 				XBIOS_oldvbase=Physbase();
 				XBIOS_oldvmode=Getrez();
@@ -296,8 +319,10 @@ static int XBIOS_VideoInit(_THIS, SDL_PixelFormat *vformat)
 			}
 			break;
 		case VDO_TT:
-			XBIOS_nummodes=xbiosnummodes_tt;
-			XBIOS_modelist=xbiosmodelist_tt;
+
+			SDL_XBIOS_AddMode(this, TT_LOW,320,480,8,SDL_FALSE);
+			/* Software double-lined mode */
+			SDL_XBIOS_AddMode(this, TT_LOW,320,240,8,SDL_TRUE);
 
 			XBIOS_oldvbase=Logbase();
 			XBIOS_oldvmode=EgetShift();
@@ -335,12 +360,30 @@ static int XBIOS_VideoInit(_THIS, SDL_PixelFormat *vformat)
 					break;
 				case MONITOR_RGB:
 				case MONITOR_TV:
-					XBIOS_nummodes = xbiosnummodes_f30rvb;
-					XBIOS_modelist = xbiosmodelist_f30rvb;
+					SDL_XBIOS_AddMode(this, BPS16|COL80|OVERSCAN|VERTFLAG,768,480,16,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS16|COL80|OVERSCAN,768,240,16,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS16|COL80|VERTFLAG,640,400,16,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS16|COL80,640,200,16,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS16|OVERSCAN|VERTFLAG,384,480,16,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS16|OVERSCAN,384,240,16,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS16|VERTFLAG,320,400,16,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS16,320,200,16,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8|COL80|OVERSCAN|VERTFLAG,768,480,8,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8|COL80|OVERSCAN,768,240,8,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8|COL80|VERTFLAG,640,400,8,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8|COL80,640,200,8,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8|OVERSCAN|VERTFLAG,384,480,8,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8|OVERSCAN,384,240,8,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8|VERTFLAG,320,400,8,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8,320,200,8,SDL_FALSE);
 					break;
 				case MONITOR_VGA:
-					XBIOS_nummodes = xbiosnummodes_f30vga;
-					XBIOS_modelist = xbiosmodelist_f30vga;
+					SDL_XBIOS_AddMode(this, BPS16,320,480,16,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS16|VERTFLAG,320,240,16,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8|COL80,640,480,8,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8|COL80|VERTFLAG,640,240,8,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8,320,480,8,SDL_FALSE);
+					SDL_XBIOS_AddMode(this, BPS8|VERTFLAG,320,240,8,SDL_FALSE);
 					break;
 			}
 			XBIOS_oldvbase=Logbase();
@@ -369,12 +412,22 @@ static int XBIOS_VideoInit(_THIS, SDL_PixelFormat *vformat)
 				current_mode++;
 			}
 
+			/* Initialize BlowUp/SB3/Centscreen stuff if present */
+			if (Getcookie(C_BLOW, &cookie_blow) == C_FOUND) {
+				SDL_XBIOS_BlowupInit(this, (blow_cookie_t *)cookie_blow);
+			} else if (Getcookie(C_SCPN, &cookie_scpn) == C_FOUND) {
+				SDL_XBIOS_SB3Init(this, (scpn_cookie_t *)cookie_scpn);
+			} else if (Getcookie(C_CNTS, &cookie_cnts) == C_FOUND) {
+				XBIOS_oldvmode = SDL_XBIOS_CentscreenInit(this);
+				XBIOS_centscreen = SDL_TRUE;
+			}
+
 			break;
 	}
-	
+
 	current_mode = XBIOS_modelist;
 	j8 = j16 = 0;
-	for (i=0;i<XBIOS_nummodes;i++) {
+	for (i=0; i<XBIOS_nummodes; i++, current_mode++) {
 		switch (current_mode->depth) {
 			case 4:
 			case 8:
@@ -383,7 +436,6 @@ static int XBIOS_VideoInit(_THIS, SDL_PixelFormat *vformat)
 				SDL_modelist[0][j8]->w = current_mode->width;
 				SDL_modelist[0][j8]->h = current_mode->height;
 				XBIOS_videomodes[0][j8]=current_mode;
-				current_mode++;
 				j8++;
 				break;
 			case 16:
@@ -392,7 +444,6 @@ static int XBIOS_VideoInit(_THIS, SDL_PixelFormat *vformat)
 				SDL_modelist[1][j16]->w = current_mode->width;
 				SDL_modelist[1][j16]->h = current_mode->height;
 				XBIOS_videomodes[1][j16]=current_mode;
-				current_mode++;
 				j16++;
 				break;
 		}		
@@ -486,7 +537,7 @@ static SDL_Surface *XBIOS_SetVideoMode(_THIS, SDL_Surface *current,
 	if (new_depth == 4) {
 		SDL_Atari_C2pConvert = SDL_Atari_C2pConvert4;
 		new_depth=8;
-		modeflags |= SDL_SWSURFACE;
+		modeflags |= SDL_SWSURFACE|SDL_HWPALETTE;
 	} else if (new_depth == 8) {
 		SDL_Atari_C2pConvert = SDL_Atari_C2pConvert8;
 		modeflags |= SDL_SWSURFACE|SDL_HWPALETTE;
@@ -595,15 +646,7 @@ static SDL_Surface *XBIOS_SetVideoMode(_THIS, SDL_Surface *current,
 #endif
 			/* Reset palette */
 			for (i=0;i<16;i++) {
-				int c;
-
-				c = ((i>>1)<<8) | ((i>>1)<<4) | (i>>1);
-				if ((i & 1) && (i<15))
-					c += (1<<4);
-				if (i==14)
-					c -= 1<<8;
-
-				TT_palette[i]= c;
+				TT_palette[i]= ((i>>1)<<8) | (((i*8)/17)<<4) | (i>>1);
 			}
 #ifndef DEBUG_VIDEO_XBIOS
 			Setpalette(TT_palette);
@@ -632,7 +675,11 @@ static SDL_Surface *XBIOS_SetVideoMode(_THIS, SDL_Surface *current,
 			break;
 		case VDO_F30:
 #ifndef DEBUG_VIDEO_XBIOS
-			Vsetmode(new_video_mode->number);
+			if (XBIOS_centscreen) {
+				SDL_XBIOS_CentscreenSetmode(this, width, height, new_depth);
+			} else {
+				Vsetmode(new_video_mode->number);
+			}
 #endif
 			break;
 	}
@@ -672,16 +719,7 @@ static void XBIOS_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 	surface = this->screen;
 
 	if ((surface->format->BitsPerPixel) == 8) {
-		void *destscr;
-		int destx;
 		int i;
-
-		/* Center on destination screen */
-		destscr = XBIOS_screens[XBIOS_fbnum];
-		destscr += XBIOS_pitch * ((XBIOS_height - surface->h) >> 1);
-		destx = (XBIOS_width - surface->w) >> 1;
-		destx &= ~15;
-		destscr += destx;
 
 		for (i=0;i<numrects;i++) {
 			void *source,*destination;
@@ -697,19 +735,16 @@ static void XBIOS_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 			source += surface->pitch * rects[i].y;
 			source += x1;
 
-			destination = destscr;
+			destination = XBIOS_screens[XBIOS_fbnum];
 			destination += XBIOS_pitch * rects[i].y;
 			destination += x1;
 
 			/* Convert chunky to planar screen */
 			SDL_Atari_C2pConvert(
-				source,
-				destination,
-				x2-x1,
-				rects[i].h,
+				source, destination,
+				x2-x1, rects[i].h,
 				XBIOS_doubleline,
-				surface->pitch,
-				XBIOS_pitch
+				surface->pitch, XBIOS_pitch
 			);
 		}
 	}
@@ -730,25 +765,12 @@ static void XBIOS_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 static int XBIOS_FlipHWSurface(_THIS, SDL_Surface *surface)
 {
 	if ((surface->format->BitsPerPixel) == 8) {
-		void *destscr;
-		int destx;
-			
-		/* Center on destination screen */
-		destscr = XBIOS_screens[XBIOS_fbnum];
-		destscr += XBIOS_pitch * ((XBIOS_height - surface->h) >> 1);
-		destx = (XBIOS_width - surface->w) >> 1;
-		destx &= ~15;
-		destscr += destx;
-
 		/* Convert chunky to planar screen */
 		SDL_Atari_C2pConvert(
-			surface->pixels,
-			destscr,
-			surface->w,
-			surface->h,
+			surface->pixels, XBIOS_screens[XBIOS_fbnum],
+			surface->w, surface->h,
 			XBIOS_doubleline,
-			surface->pitch,
-			XBIOS_pitch
+			surface->pitch, XBIOS_pitch
 		);
 	}
 
@@ -792,7 +814,7 @@ static int XBIOS_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors
 				v = colors[i].g;
 				b = colors[i].b;
 					
-				TT_palette[i]=((r>>4)<<8)|((v>>4)<<4)|(b>>4);
+				TT_palette[firstcolor+i]=((r>>4)<<8)|((v>>4)<<4)|(b>>4);
 			}
 #ifndef DEBUG_VIDEO_XBIOS
 			EsetPalette(firstcolor,ncolors,TT_palette);
@@ -805,7 +827,7 @@ static int XBIOS_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors
 				v = colors[i].g;
 				b = colors[i].b;
 
-				F30_palette[i]=(r<<16)|(v<<8)|b;
+				F30_palette[firstcolor+i]=(r<<16)|(v<<8)|b;
 			}
 #ifndef DEBUG_VIDEO_XBIOS
 			VsetRGB(firstcolor,ncolors,F30_palette);
@@ -844,7 +866,11 @@ static void XBIOS_VideoQuit(_THIS)
 			break;
 		case VDO_F30:
 			Setscreen(-1, XBIOS_oldvbase, -1);
-			Vsetmode(XBIOS_oldvmode);
+			if (XBIOS_centscreen) {
+				SDL_XBIOS_CentscreenRestore(this, XBIOS_oldvmode);
+			} else {
+				Vsetmode(XBIOS_oldvmode);
+			}
 			if (XBIOS_oldnumcol) {
 				VsetRGB(0, XBIOS_oldnumcol, XBIOS_oldpalette);
 			}
@@ -874,6 +900,12 @@ static void XBIOS_VideoQuit(_THIS)
 				SDL_modelist[j][i]=NULL;
 			}
 		}
+	}
+
+	if (XBIOS_modelist) {
+		free(XBIOS_modelist);
+		XBIOS_nummodes=0;
+		XBIOS_modelist=NULL;
 	}
 
 	this->screen->pixels = NULL;	

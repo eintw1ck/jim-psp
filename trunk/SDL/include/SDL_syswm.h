@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_syswm.h,v 1.15 2004/11/30 15:21:29 slouken Exp $";
+ "@(#) $Id: SDL_syswm.h,v 1.17 2005/02/12 18:01:30 slouken Exp $";
 #endif
 
 /* Include file for SDL custom system window manager hooks */
@@ -49,7 +49,7 @@ typedef struct SDL_SysWMinfo SDL_SysWMinfo;
 #else
 
 /* This is the structure for custom window manager events */
-#if (defined(unix) || defined(__unix__) || defined(_AIX) || defined(__OpenBSD__)) && \
+#if (defined(unix) || defined(__unix__) || defined(_AIX) || defined(__OpenBSD__) || defined(__NetBSD__)) && \
     (!defined(DISABLE_X11) && !defined(__CYGWIN32__) && !defined(ENABLE_NANOX) && \
      !defined(__QNXNTO__))
  /* AIX is unix, of course, but the native compiler CSet doesn't define unix */
@@ -140,12 +140,12 @@ struct SDL_SysWMmsg {
 	int pollBlock[64];
 };
 
-/* The RISCOS custom window manager information structure */
+/* The RISC OS custom window manager information structure */
 typedef struct SDL_SysWMinfo {
 	SDL_version version;
 	int wimpVersion;    /* Wimp version running under */
-	int taskHandle;     /* The RISCOS task handle */
-	int window;			/* The RISCOS display window */
+	int taskHandle;     /* The RISC OS task handle */
+	int window;		/* The RISC OS display window */
 } SDL_SysWMinfo;
 
 #elif defined(__QNXNTO__)

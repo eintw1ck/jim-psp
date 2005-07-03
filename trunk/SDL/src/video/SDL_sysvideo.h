@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_sysvideo.h,v 1.23 2004/01/04 16:49:21 slouken Exp $";
+ "@(#) $Id: SDL_sysvideo.h,v 1.24 2005/04/17 10:40:41 icculus Exp $";
 #endif
 
 #ifndef _SDL_sysvideo_h
@@ -134,6 +134,9 @@ struct SDL_VideoDevice {
 	/* Information about the video hardware */
 	SDL_VideoInfo info;
 
+	/* The pixel format used when SDL_CreateRGBSurface creates SDL_HWSURFACEs with alpha */
+	SDL_PixelFormat* displayformatalphapixel;
+	
 	/* Allocates a surface in video memory */
 	int (*AllocHWSurface)(_THIS, SDL_Surface *surface);
 

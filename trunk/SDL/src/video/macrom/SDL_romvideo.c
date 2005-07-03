@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_romvideo.c,v 1.8 2004/07/25 19:43:56 slouken Exp $";
+ "@(#) $Id: SDL_romvideo.c,v 1.9 2005/01/25 16:57:11 slouken Exp $";
 #endif
 
 #include <stdio.h>
@@ -163,13 +163,8 @@ static SDL_VideoDevice *ROM_CreateDevice(int devindex)
 #ifdef HAVE_OPENGL
 	device->GL_MakeCurrent = Mac_GL_MakeCurrent;
 	device->GL_SwapBuffers = Mac_GL_SwapBuffers;
-#ifdef __MWERKS__
 	device->GL_LoadLibrary = Mac_GL_LoadLibrary;
 	device->GL_GetProcAddress = Mac_GL_GetProcAddress;
-#else
-	device->GL_LoadLibrary = NULL;
-	device->GL_GetProcAddress = NULL;
-#endif	// CodeWarrior
 #endif	// Have OpenGL
 	device->SetCaption = Mac_SetCaption;
 	device->SetIcon = NULL;

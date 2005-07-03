@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_gemvideo.h,v 1.9 2004/11/25 15:47:49 pmandin Exp $";
+ "@(#) $Id: SDL_gemvideo.h,v 1.11 2005/06/07 11:52:46 pmandin Exp $";
 #endif
 
 #ifndef _SDL_gemvideo_h
@@ -65,6 +65,9 @@ struct SDL_PrivateVideoData {
 	short	blit_coords[8];		/* Coordinates for bitblt */
 	MFDB	src_mfdb, dst_mfdb;	/* VDI MFDB for bitblt */
 	Uint16 old_palette[256][3];	/* Saved current palette */
+	Uint16 cur_palette[256][3];	/* SDL application palette */
+								/* Function to set/restore palette */
+	void (*setpalette)(_THIS, Uint16 newpal[256][3]);
 
 	/* GEM infos */
 	short desk_x, desk_y;		/* Desktop properties */
@@ -81,6 +84,7 @@ struct SDL_PrivateVideoData {
 	SDL_bool locked;			/* AES locked for fullscreen ? */
 	SDL_bool lock_redraw;		/* Prevent redraw till buffers are setup */
 	short message[8];			/* To self-send an AES message */
+	void *menubar;				/* Menu bar save buffer when going fullscreen */
 
 	SDL_bool fullscreen;		/* Fullscreen or windowed mode ? */
 	SDL_Rect *SDL_modelist[SDL_NUMMODES+1];	/* Mode list */
@@ -95,6 +99,8 @@ struct SDL_PrivateVideoData {
 #define VDI_pixelsize		(this->hidden->pixelsize)
 #define VDI_oldnumcolors	(this->hidden->old_numcolors)
 #define VDI_oldpalette		(this->hidden->old_palette)
+#define VDI_curpalette		(this->hidden->cur_palette)
+#define VDI_setpalette		(this->hidden->setpalette)
 #define VDI_pitch			(this->hidden->pitch)
 #define VDI_format			(this->hidden->format)
 #define VDI_screen			(this->hidden->screen)
@@ -126,6 +132,7 @@ struct SDL_PrivateVideoData {
 #define SDL_modelist		(this->hidden->SDL_modelist)
 #define GEM_icon			(this->hidden->icon)
 #define GEM_fullscreen		(this->hidden->fullscreen)
+#define GEM_menubar			(this->hidden->menubar)
 
 #define GEM_buffer1			(this->hidden->buffer1)
 #define GEM_buffer2			(this->hidden->buffer2)

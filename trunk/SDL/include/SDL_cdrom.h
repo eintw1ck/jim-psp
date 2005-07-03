@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_cdrom.h,v 1.7 2004/07/18 22:57:40 slouken Exp $";
+ "@(#) $Id: SDL_cdrom.h,v 1.8 2005/04/17 10:16:30 icculus Exp $";
 #endif
 
 /* This is the CD-audio control API for Simple DirectMedia Layer */
@@ -60,7 +60,7 @@ typedef enum {
 } CDstatus;
 
 /* Given a status, returns true if there's a disk in the drive */
-#define CD_INDRIVE(status)	((int)status > 0)
+#define CD_INDRIVE(status)	((int)(status) > 0)
 
 typedef struct SDL_CDtrack {
 	Uint8 id;		/* Track number */

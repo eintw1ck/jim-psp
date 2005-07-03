@@ -22,17 +22,13 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_ataric2p_s.h,v 1.4 2004/01/04 16:49:23 slouken Exp $";
+ "@(#) $Id: SDL_ataric2p_s.h,v 1.5 2005/06/30 12:03:19 pmandin Exp $";
 #endif
 
 #ifndef _ATARI_C2P_h
 #define _ATARI_C2P_h
 
 #include "SDL_types.h"
-
-/*--- Variables ---*/
-
-extern Uint8 SDL_Atari_table_c2p[2048];	/* Used by conversions routines */
 
 /*--- Functions pointers ---*/
 

@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_xbios.h,v 1.5 2004/11/25 15:47:49 pmandin Exp $";
+ "@(#) $Id: SDL_xbios.h,v 1.7 2005/05/31 12:31:11 pmandin Exp $";
 #endif
 
 #ifndef _SDL_xbios_h
@@ -69,6 +69,8 @@ struct SDL_PrivateVideoData {
 	int frame_number;		/* Number of frame for double buffer */
 	int pitch;				/* Destination line width for C2P */
 	int width, height;		/* Screen size for centered C2P */
+
+	SDL_bool centscreen;	/* Centscreen extension present ? */
 
 	SDL_Rect *SDL_modelist[NUM_MODELISTS][SDL_NUMMODES+1];
 	xbiosmode_t *videomodes[NUM_MODELISTS][SDL_NUMMODES+1];
@@ -123,5 +125,11 @@ enum {
 #define XBIOS_pitch			(this->hidden->pitch)
 #define XBIOS_width			(this->hidden->width)
 #define XBIOS_height		(this->hidden->height)
+#define XBIOS_centscreen	(this->hidden->centscreen)
+
+/*--- Functions prototypes ---*/
+
+void SDL_XBIOS_AddMode(_THIS, Uint16 modecode, Uint16 width, Uint16 height,
+	Uint16 depth, SDL_bool flags);
 
 #endif /* _SDL_xbios_h */

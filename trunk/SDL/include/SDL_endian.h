@@ -22,7 +22,7 @@
 
 #ifdef SAVE_RCSID
 static char rcsid =
- "@(#) $Id: SDL_endian.h,v 1.11 2004/11/27 23:11:20 pmandin Exp $";
+ "@(#) $Id: SDL_endian.h,v 1.15 2005/03/30 12:38:03 pmandin Exp $";
 #endif
 
 /* Functions for reading and writing endian-specific values */
@@ -68,7 +68,7 @@ static __inline__ Uint16 SDL_Swap16(Uint16 x)
 #elif defined(__GNUC__) && defined(__x86_64__)
 static __inline__ Uint16 SDL_Swap16(Uint16 x)
 {
-	__asm__("xchgb %b0,%h0" : "=q" (x) :  "0" (x));
+	__asm__("xchgb %b0,%h0" : "=Q" (x) :  "0" (x));
 	return x;
 }
 #elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
@@ -79,7 +79,7 @@ static __inline__ Uint16 SDL_Swap16(Uint16 x)
 	__asm__("rlwimi %0,%2,8,16,23" : "=&r" (result) : "0" (x >> 8), "r" (x));
 	return result;
 }
-#elif defined(__GNUC__) && defined(__M68000__)
+#elif defined(__GNUC__) && (defined(__M68000__) || defined(__M68020__))
 static __inline__ Uint16 SDL_Swap16(Uint16 x)
 {
 	__asm__("rorw #8,%0" : "=d" (x) :  "0" (x) : "cc");
@@ -113,10 +113,10 @@ static __inline__ Uint32 SDL_Swap32(Uint32 x)
 	__asm__("rlwimi %0,%2,24,0,7"   : "=&r" (result) : "0" (result),    "r" (x));
 	return result;
 }
-#elif defined(__GNUC__) && defined(__M68000__)
+#elif defined(__GNUC__) && (defined(__M68000__) || defined(__M68020__))
 static __inline__ Uint32 SDL_Swap32(Uint32 x)
 {
-	__asm__("rorw	#8,%0\n\tswap	%0\n\tror	#8,%0" : "=d" (x) :  "0" (x) : "cc");
+	__asm__("rorw #8,%0\n\tswap %0\n\trorw #8,%0" : "=d" (x) :  "0" (x) : "cc");
 	return x;
 }
 #else

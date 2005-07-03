@@ -21,7 +21,7 @@
 */
 
 /*
-    This file added by Alan Buckley (alan_baa@hotmail.com) to support RISCOS 
+    This file added by Alan Buckley (alan_baa@hotmail.com) to support RISC OS 
 	26 March 2003
 
 	File includes routines for:
@@ -44,7 +44,7 @@
 pthread_t main_thread;
 #endif
 
-/* RISCOS variables */
+/* RISC OS variables */
 
 static int task_handle = 0;
 static int wimp_version = 0;
@@ -52,7 +52,6 @@ static int wimp_version = 0;
 /* RISC OS variables to help compatability with certain programs */
 int riscos_backbuffer = 0; /* Create a back buffer in system memory for full screen mode */
 int riscos_closeaction = 1; /* Close icon action */
-int riscos_audiobuffer = 0; /* Audio buffer size */
 
 static int stored_mode = -1; /* -1 when in desktop, mode number or pointer when full screen */
 
@@ -84,7 +83,7 @@ static void dump_mode()
 
 /******************************************************************
 
- Initialise as RISCOS Wimp task
+ Initialise as RISC OS Wimp task
 
 *******************************************************************/
 
@@ -169,7 +168,7 @@ void RISCOS_ExitTask()
 		   there is a variable set up in the form SDL$<name>$TaskName
 		   in which case the value of this variable will be used.
 
-		   Now also gets other riscos configuration varibles
+		   Now also gets other RISC OS configuration varibles
                 SDL$<name>$BackBuffer - set to 1 to use a system memory backbuffer in fullscreen mode
 						    so updates wait until a call to SDL_UpdateRects. (default 0)
 						    This is required for programmes where they have assumed this is
@@ -178,13 +177,6 @@ void RISCOS_ExitTask()
                     0 Don't show close icon
                     1 Show close icon
 
-               SDL$<name>$AudioBuffer - set to number of samples to buffer
-                    in advance. Will default to a minimum of 1024 or twice
-                    amount requested by program whichever is largest.
-                    If not specified default is amount for 10 csecs.
-                    Time that will be pre-buffered can be calculated as
-                    sample to buffer * 1000 / freq milliseconds.
-                    
 ***************************************************************************/
 
 int RISCOS_GetTaskName(char *task_name)
@@ -226,7 +218,7 @@ int RISCOS_GetTaskName(char *task_name)
 
 	   if (*p)
 	   {
-		   /* Read variables that effect the RISCOS SDL engine for this task */
+		   /* Read variables that effect the RISC OS SDL engine for this task */
 		   env_var = malloc(strlen(p) + 18); /* 18 is larger than the biggest variable name */
 		   if (env_var)
 		   {
@@ -246,7 +238,7 @@ int RISCOS_GetTaskName(char *task_name)
 			   strcat(env_var, "$BackBuffer");
 
 			   env_val = getenv(env_var);
-			   if (env_val && strcmp(env_val,"1") == 0) riscos_backbuffer = 1;
+			   if (env_val) riscos_backbuffer = atoi(env_val);
 
 			   strcpy(env_var, "SDL$");
 			   strcat(env_var, p);
@@ -254,13 +246,6 @@ int RISCOS_GetTaskName(char *task_name)
 
 			   env_val = getenv(env_var);
 			   if (env_val && strcmp(env_val,"0") == 0) riscos_closeaction = 0;
-
-			   strcpy(env_var, "SDL$");
-			   strcat(env_var, p);
-			   strcat(env_var, "$AudioBuffer");
-
-			   env_val = getenv(env_var);
-			   riscos_audiobuffer = atoi(env_val);
 
 			   free(env_var);
 		   }
