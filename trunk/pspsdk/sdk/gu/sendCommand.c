@@ -10,6 +10,23 @@
 
 #include <pspkernel.h>
 
+void sendCommandi(int cmd, int argument)
+{
+	*(gu_list->current++) = (cmd << 24) | (argument & 0xffffff);
+}
+
+void sendCommandf(int cmd, float argument)
+{
+	union
+	{
+		float f;
+		unsigned int i;
+	} t;
+	t.f = argument;
+
+	sendCommandi(cmd,t.i >> 8);
+}
+
 void sendCommandiStall(int cmd, int argument)
 {
 	sendCommandi(cmd,argument);

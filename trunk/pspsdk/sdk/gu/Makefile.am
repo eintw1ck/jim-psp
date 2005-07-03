@@ -7,7 +7,7 @@ AR = @PSP_AR@
 RANLIB = @PSP_RANLIB@
 
 INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
-CFLAGS =  -g -G0 -Wall #@PSPSDK_CFLAGS@
+CFLAGS =  @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base
 
 libpspguincludedir = @PSPSDK_INCLUDEDIR@
@@ -32,5 +32,5 @@ libpspgu_a_SOURCES = callbackFin.c callbackSig.c guInternal.c resetValues.c sceG
 	sceGuSignal.c sceGuSpecular.c sceGuSpriteMode.c sceGuStart.c sceGuStencilFunc.c sceGuStencilOp.c \
 	sceGuSwapBuffers.c sceGuSync.c sceGuTerm.c sceGuTexEnvColor.c sceGuTexFilter.c sceGuTexFlush.c sceGuTexFunc.c \
 	sceGuTexImage.c sceGuTexLevelMode.c sceGuTexMapMode.c sceGuTexMode.c sceGuTexOffset.c sceGuTexProjMapMode.c \
-	sceGuTexScale.c sceGuTexSlope.c sceGuTexSync.c sceGuTexWrap.c sceGuViewport.c sendCommandf.c sendCommandi.c \
-	sendCommandiStall.c
+	sceGuTexScale.c sceGuTexSlope.c sceGuTexSync.c sceGuTexWrap.c sceGuViewport.c sendCommand.c
+
