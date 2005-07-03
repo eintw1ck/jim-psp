@@ -46,7 +46,7 @@
   done
 
   ## Download and build everything if nothing specified
-  if [ ! "$1" ]
+  if [ "$#" -lt "2" ]
   then
     BUILD_GCC=1
     BUILD_BINUTILS=1
@@ -126,7 +126,7 @@
      cd build-$TARGET
   
      ## Configure the source.
-     ../configure --prefix=$PSPDEV --target=$TARGET || { echo "ERROR CONFIGURING BINUTILS ($BINUTILS $TARGET)"; exit; }
+     ../configure --prefix=$PSPDEV --target=$TARGET --enable-install-libbfd || { echo "ERROR CONFIGURING BINUTILS ($BINUTILS $TARGET)"; exit; }
   
      ## Build the source.
      $MAKE clean; $MAKE || { echo "ERROR BUILDING BINUTILS ($BINUTILS $TARGET)"; exit; }
