@@ -31,7 +31,7 @@
 #define ALLOC_MAGIC 0xa110ca73
 #endif
 
-void * ps2_sbrk(int incr);
+extern void * _sbrk(ptrdiff_t incr);
 
 void _pspsdk_alloc_init();
 void _pspsdk_alloc_deinit();
@@ -133,13 +133,13 @@ void * malloc(size_t size)
 	if (__alloc_heap_head == NULL) {
 		/* Align the bottom of the heap to our default alignment.  */
 		if (__alloc_heap_base == NULL) {
-			heap_align_bytes = (u32)ps2_sbrk(0) & (DEFAULT_ALIGNMENT - 1);
-			ps2_sbrk(heap_align_bytes);
-			__alloc_heap_base = ps2_sbrk(0);
+			heap_align_bytes = (u32) _sbrk(0) & (DEFAULT_ALIGNMENT - 1);
+			_sbrk(heap_align_bytes);
+			__alloc_heap_base = _sbrk(0);
 		}
 
 		/* Allocate the physical heap and setup the head block.  */
-		if ((mem_ptr = ps2_sbrk(mem_sz)) == (void *)-1)
+		if ((mem_ptr = _sbrk(mem_sz)) == (void *)-1)
 			return ptr;	/* NULL */
 		
 		ptr = (void *)((u32)mem_ptr + sizeof(heap_mem_header_t));
@@ -200,7 +200,7 @@ void * malloc(size_t size)
 
 	/* Extend the heap, but make certain the block is inserted in
 	   order. */
-	if ((mem_ptr = ps2_sbrk(mem_sz)) == (void *)-1) {
+	if ((mem_ptr = _sbrk(mem_sz)) == (void *)-1) {
 		_pspsdk_alloc_unlock();
 		return ptr;	/* NULL */
 	}
@@ -259,7 +259,7 @@ void * realloc(void *ptr, size_t size)
 	if (prev_mem->size >= size) {
 		/* However, if this is the last block, we have to shrink the heap. */
 		if (!prev_mem->next)
-			ps2_sbrk(ptr + size - ps2_sbrk(0));
+			_sbrk(ptr + size - _sbrk(0));
 		prev_mem->size = size;
 		
 		_pspsdk_alloc_unlock();
@@ -272,7 +272,7 @@ void * realloc(void *ptr, size_t size)
 	/* Are we the last memory block ? */
 	if (!prev_mem->next) {
 		/* Yes, let's just extend the heap then. */
-		if (ps2_sbrk(size - prev_mem->size) == (void*) -1)
+		if (_sbrk(size - prev_mem->size) == (void*) -1)
 			return NULL;
 		prev_mem->size = size;
 		
@@ -411,7 +411,7 @@ void free(void *ptr)
 		} else {
 			__alloc_heap_tail = NULL;
 
-			ps2_sbrk(-size);
+			_sbrk(-size);
 		}
 		
 		_pspsdk_alloc_unlock();
@@ -438,9 +438,9 @@ void free(void *ptr)
 
 		/* We need to free (heap top) - (prev->ptr + prev->size), or else
 		   we'll end up with an unallocatable block of heap.  */
-		heap_top = ps2_sbrk(0);
+		heap_top = _sbrk(0);
 		size = (u32)heap_top - (u32)(cur->prev->ptr + cur->prev->size);
-		ps2_sbrk(-size);
+		_sbrk(-size);
 	}
 
 	cur->prev->next = cur->next;
