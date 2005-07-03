@@ -94,7 +94,7 @@ generate)
   # into how to do it the autoconf way.
   version=`cat "$top_srcdir/VERSION"`
   cat configure | sed "s/PSPSDK_VERSION/$version/g" > configure.out
-  cp -f configure.out configure
+  cp configure.out configure
   rm -f configure.out
   ;;
 
