@@ -9,6 +9,7 @@ SAMPLES = \
 	gu/lines \
 	kdumper \
 	exception \
+	sircs \
 	kprintf
 
 all:
