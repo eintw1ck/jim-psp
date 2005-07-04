@@ -12,7 +12,6 @@ LIBS= -lpspgu
 
 EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = Sprite Sample
-PSP_DIR_NAME = SPRITE
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak

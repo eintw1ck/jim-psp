@@ -6,6 +6,7 @@ SAMPLES = \
 	gu/cube \
 	gu/blit \
 	gu/sprite \
+	gu/lines \
 	kdumper \
 	exception \
 	kprintf
