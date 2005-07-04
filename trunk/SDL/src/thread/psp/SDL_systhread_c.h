@@ -22,8 +22,6 @@
 
 /* PSP port contributed by Marcus R. Brown <mrbrown@ocgnet.org>. */
 
-/*
 #include <pspkerneltypes.h>
 
 typedef SceUID SYS_ThreadHandle;
-*/

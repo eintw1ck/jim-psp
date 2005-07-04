@@ -27,7 +27,7 @@ static char rcsid =
  "@(#) $Id: SDL_nullevents_c.h,v 1.4 2004/01/04 16:49:24 slouken Exp $";
 #endif
 
-#include "SDL_dcvideo.h"
+#include "SDL_pspvideo.h"
 
 /* Variables and functions exported by SDL_sysevents.c to other parts 
    of the native video subsystem (SDL_sysvideo.c)

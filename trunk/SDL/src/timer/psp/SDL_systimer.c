@@ -32,22 +32,14 @@ static char rcsid =
 #include "SDL_error.h"
 #include "SDL_timer_c.h"
 
-static unsigned start;
-
-/* 
-	jif =  ms * HZ /1000
-	ms  = jif * 1000/HZ
-*/
-
 void SDL_StartTicks(void)
 {
-	/* Set first ticks value */
-	start = jiffies;
+	/* Do nothing. */
 }
 
 Uint32 SDL_GetTicks(void)
 {
-	return((jiffies-start)*1000/HZ);
+	return 0;
 }
 
 void SDL_Delay(Uint32 ms)
