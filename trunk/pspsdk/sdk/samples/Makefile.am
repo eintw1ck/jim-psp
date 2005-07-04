@@ -8,6 +8,7 @@ SAMPLES = \
 	gu/blit \
 	gu/sprite \
 	gu/lines \
+	gu/clut \
 	kdumper \
 	exception \
 	sircs \

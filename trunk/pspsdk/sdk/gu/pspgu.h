@@ -98,6 +98,8 @@ extern "C" {
 #define GE_TPSM_5551		(1)
 #define GE_TPSM_4444		(2)
 #define GE_TPSM_8888		(3)
+#define GE_TPSM_T4		(4)
+#define GE_TPSM_T8		(5)
 
 #define GE_SHADE_FLAT		(0)
 #define GE_SHADE_GOURAUD	(1)
