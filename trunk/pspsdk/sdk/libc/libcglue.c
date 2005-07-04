@@ -12,9 +12,9 @@
  * $Id$
  */
 #include <errno.h>
+#include <malloc.h>
 #include <stdarg.h>
 #include <time.h>
-#include <malloc.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -206,7 +206,12 @@ struct SceIoDirent *_readdir(DIR *dirp)
 int _closedir(DIR *dirp)
 {
 	if (dirp != NULL)
-		return sceIoDclose(dirp->uid); 
+	{
+		int uid;
+		uid = dirp->uid;
+		free (dirp);
+		return sceIoDclose(uid); 
+	}
 	return -1; 
 }
 #endif
