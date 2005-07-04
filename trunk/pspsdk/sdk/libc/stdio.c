@@ -1226,8 +1226,8 @@ int __stdio_skip_atoi(const char **s)
 }
 #endif
 
-
-#ifdef F_sscanf
+//Do not uncomment until vsscanf is implemented - Warren
+//#ifdef F_sscanf
 /*
 **
 **  [func] - sscanf.
@@ -1240,17 +1240,18 @@ int __stdio_skip_atoi(const char **s)
 **  [post] - the memory pointed to by format string arguments are
 **
 */
+/*
 int sscanf(const char *buf, const char *format, ...)
 {
   int     ret;
   va_list va;
 
   va_start(va, format);
-  //ret = vsscanf(buf, format, va);
+  ret = vsscanf(buf, format, va);
   va_end(va);
   return (ret);
-}
-#endif
+}*?
+//#endif
 
 
 #ifdef F__stdio
