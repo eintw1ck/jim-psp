@@ -1864,6 +1864,27 @@ CheckLinuxVersion()
     fi
 }
 
+dnl Check for a valid PSPSDK installation
+CheckPSPSDK()
+{
+    AC_CHECK_PROG(psp_config, psp-config, psp-config, no)
+    if test x$psp_config = xno; then
+        AC_MSG_ERROR(Couldn't locate psp-config.)
+    fi
+
+    AC_MSG_CHECKING(for PSPSDK)
+    pspsdk_path=`$psp_config --pspsdk-path`
+    if test ! -d $pspsdk_path -o -z $pspsdk_path; then
+        AC_MSG_RESULT(not found)
+        AC_MSG_ERROR(Couldn't locate PSPSDK.)
+    fi
+    AC_MSG_RESULT($pspsdk_path)
+
+    # Compile SDL with -G0 to disable the $gp register.
+    CFLAGS="$CFLAGS -G0 -I\"${pspsdk_path}/include\""
+    SYSTEM_LIBS="$SYSTEM_LIBS -lpspgu -lpspaudio -lpsplibc -lpspkernel"
+}
+
 case "$target" in
     *-*-linux*|*-*-gnu*|*-*-k*bsd*-gnu)
         case "$target" in
@@ -2704,6 +2725,47 @@ case "$target" in
 
         SYSTEM_LIBS="$SYSTEM_LIBS -ljpeg -ltiff -lpng -lz"
         ;;
+    *-psp-*)
+        ARCH=psp
+        CheckPSPSDK
+        # Set up files for the video library
+        if test x$enable_video = xyes; then
+            VIDEO_SUBDIRS="$VIDEO_SUBDIRS psp"
+            VIDEO_DRIVERS="$VIDEO_DRIVERS psp/libvideo_psp.la"
+        fi
+        # Set up files for the audio library
+        if test x$enable_audio = xyes; then
+            AUDIO_SUBDIRS="$AUDIO_SUBDIRS psp"
+            AUDIO_DRIVERS="$AUDIO_DRIVERS psp/libaudio_psp.la"
+        fi
+        # Set up files for the joystick library
+        if test x$enable_joystick = xyes; then
+            JOYSTICK_SUBDIRS="$JOYSTICK_SUBDIRS psp"
+            JOYSTICK_DRIVERS="$JOYSTICK_DRIVERS psp/libjoystick_psp.la"
+        fi
+        # Set up files for the cdrom library
+        if test x$enable_cdrom = xyes; then
+            CDROM_SUBDIRS="$CDROM_SUBDIRS dummy"
+            CDROM_DRIVERS="$CDROM_DRIVERS dummy/libcdrom_dummy.la"
+        fi
+        # Set up files for the thread library
+        if test x$enable_threads = xyes; then
+            COPY_ARCH_SRC(src/thread, psp, SDL_systhread.c)
+            COPY_ARCH_SRC(src/thread, psp, SDL_systhread_c.h)
+            COPY_ARCH_SRC(src/thread, psp, SDL_sysmutex.c)
+            COPY_ARCH_SRC(src/thread, generic, SDL_sysmutex_c.h)
+            COPY_ARCH_SRC(src/thread, psp, SDL_syssem.c)
+            COPY_ARCH_SRC(src/thread, generic, SDL_syssem_c.h)
+            COPY_ARCH_SRC(src/thread, generic, SDL_syscond.c)
+            COPY_ARCH_SRC(src/thread, generic, SDL_syscond_c.h)
+        fi
+        # Set up files for the timer library
+        if test x$enable_timers = xyes; then
+            COPY_ARCH_SRC(src/timer, psp, SDL_systimer.c)
+        fi
+
+        CFLAGS="$CFLAGS -DENABLE_PSP -DDISABLE_STDIO"
+        ;;
     *)
         AC_MSG_ERROR(Unsupported target:  Please add to configure.in)
         ;;
@@ -2726,6 +2788,7 @@ AM_CONDITIONAL(TARGET_MACOS, test $ARCH = macos)
 AM_CONDITIONAL(TARGET_MACOSX, test $ARCH = macosx)
 AM_CONDITIONAL(TARGET_QNX, test $ARCH = qnx)
 AM_CONDITIONAL(TARGET_MINT, test $ARCH = mint)
+AM_CONDITIONAL(TARGET_PSP, test $ARCH = psp)
 
 # More automake conditionals
 AM_CONDITIONAL(USE_DIRECTX, test x$use_directx = xyes)
@@ -2875,6 +2938,7 @@ src/audio/nas/Makefile
 src/audio/nto/Makefile
 src/audio/openbsd/Makefile
 src/audio/paudio/Makefile
+src/audio/psp/Makefile
 src/audio/sun/Makefile
 src/audio/ums/Makefile
 src/audio/windib/Makefile
@@ -2899,6 +2963,7 @@ src/video/nanox/Makefile
 src/video/photon/Makefile
 src/video/picogui/Makefile
 src/video/ps2gs/Makefile
+src/video/psp/Makefile
 src/video/qtopia/Makefile
 src/video/quartz/Makefile
 src/video/riscos/Makefile
@@ -2926,6 +2991,7 @@ src/joystick/dummy/Makefile
 src/joystick/linux/Makefile
 src/joystick/macos/Makefile
 src/joystick/mint/Makefile
+src/joystick/psp/Makefile
 src/joystick/riscos/Makefile
 src/joystick/win32/Makefile
 src/cdrom/Makefile
