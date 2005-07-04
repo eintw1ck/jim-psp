@@ -11,6 +11,7 @@ ARCH_SUBDIRS = $(srcdir)/generic	\
                $(srcdir)/epoc		\
                $(srcdir)/irix		\
                $(srcdir)/linux		\
+               $(srcdir)/psp		\
                $(srcdir)/pth		\
                $(srcdir)/win32
 
