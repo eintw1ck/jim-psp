@@ -1246,7 +1246,7 @@ int sscanf(const char *buf, const char *format, ...)
   va_list va;
 
   va_start(va, format);
-  ret = vsscanf(buf, format, va);
+  //ret = vsscanf(buf, format, va);
   va_end(va);
   return (ret);
 }
