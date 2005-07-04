@@ -28,6 +28,7 @@ libpspkernelinclude_HEADERS =	\
 	psploadexec.h		\
 	pspmoduleinfo.h		\
 	pspmodulemgr.h		\
+	pspsircs.h		\
 	pspsysmem.h		\
 	pspthreadman.h		\
 	pspumd.h		\
@@ -44,6 +45,7 @@ libpspkernel_a_SOURCES =	\
 	loadexec.S		\
 	modulemgr.S		\
 	power.S			\
+	sircs.S			\
 	stdio.S			\
 	suspend.S		\
 	sysmem.S		\
