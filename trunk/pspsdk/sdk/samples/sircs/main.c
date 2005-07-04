@@ -89,7 +89,7 @@ int SetupCallbacks(void)
 int main(void)
 {
 	ctrl_data_t pad;
-	u32 buttonsold;
+	u32 buttonsold = 0;
 	int sirc_bits = 20; // # of bits in code, choose from 12, 15 or 20
 
 	SetupCallbacks();
