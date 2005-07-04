@@ -27,29 +27,13 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 /* Define printf, just to make typing easier */
 #define printf	pspDebugScreenPrintf
 
-// sircs devices are identified by an address
-#define SIRCS_ADDR_DVD	0x1b5a
-
 // sircs commands are easily found in lirc
 // - interpret as described at 
 //   http://sourceforge.net/mailarchive/message.php?msg_id=8833252
 
-// RESET 0x00000000000A8B5B
-// 1010 100 | 0 1011 0101 1011
-// 001 0101 | 1 1011 0101 1010
-// 0x15 | 0x1b5a
+#define SIRCS_ADDR_DVD	0x1b5a
 #define SIRCS_CMD_RESET	0x15
-
-// PLAY 0x000000000004CB92
-// 0100 110 | 0 1011 0101 1011
-// 011 0010 | 1 1011 0101 1010
-// 0x32 | 0x1b5a
 #define SIRCS_CMD_PLAY	0x32
-
-// PAUSE 0x000000000009CB92
-// 1001 110 | 0 1011 0101 1011
-// 011 1001 | 1 1011 0101 1010
-// 0x39 | 0x1b5a
 #define SIRCS_CMD_PAUSE	0x39
 
 void send_code(int type, int dev, int cmd) 
@@ -136,8 +120,7 @@ int main(void)
 			}
 
 			if (pad.buttons & CTRL_SQUARE)
-			{
-				printf ("Sending SIRCS_CMD_RESET\n");
+			{ printf ("Sending SIRCS_CMD_PAUSE\n");
 				send_code(sirc_bits, SIRCS_ADDR_DVD, SIRCS_CMD_PAUSE);
 			}
 
