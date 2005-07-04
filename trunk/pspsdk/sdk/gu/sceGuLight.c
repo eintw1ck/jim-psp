@@ -17,7 +17,7 @@ void sceGuLight(int index, int a1, int a2, const float* position)
 	sendCommandf(settings->row1[0],position[2]);
 
 	int type = 2;
-	if (a2 == 8)
+	if (a2 != 8)
 		type = (a2^6) < 1 ? 1 : 0;
 
 	sendCommandi(settings->row0[1],((a1 & 0x03) << 8)|type);
