@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
 			vertices[0].color = 0;
 			vertices[0].x = j; vertices[0].y = 0; vertices[0].z = 0;
 			vertices[1].u = j+SLICE_SIZE; vertices[1].v = 272;
-			vertices[0].color = 0;
+			vertices[1].color = 0;
 			vertices[1].x = j+SLICE_SIZE; vertices[1].y = 272; vertices[1].z = 0;
 
 			sceGuDrawArray(GU_PRIM_SPRITES,GE_SETREG_VTYPE(GE_TT_16BIT,GE_CT_4444,0,GE_MT_16BIT,0,0,0,0,GE_BM_2D),2,0,vertices);
