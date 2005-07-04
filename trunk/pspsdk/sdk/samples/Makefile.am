@@ -2,6 +2,7 @@
 samplesdir = @PSPSDK@/samples
 
 SAMPLES = \
+	audio/wavegen \
 	sdktest \
 	gu/cube \
 	gu/blit \
