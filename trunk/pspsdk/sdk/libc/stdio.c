@@ -1250,7 +1250,7 @@ int sscanf(const char *buf, const char *format, ...)
   ret = vsscanf(buf, format, va);
   va_end(va);
   return (ret);
-}*?
+}*/
 //#endif
 
 
