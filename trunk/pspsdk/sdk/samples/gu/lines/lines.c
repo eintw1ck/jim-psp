@@ -126,21 +126,25 @@ int main(int argc, char* argv[])
 			{
 				position[i].x = 0;
 				direction[i].x = (((float)rand())/RAND_MAX) * SPEED;
+				direction[i].y += 0.1f * (direction[i].y / fabsf(direction[i].y));
 			}
 			else if (position[i].x >= SCR_WIDTH)
 			{
 				position[i].x = (SCR_WIDTH-1);
 				direction[i].x = -(((float)rand())/RAND_MAX) * SPEED;
+				direction[i].y += 0.1f * (direction[i].y / fabsf(direction[i].y));
 			}
 
 			if (position[i].y < 0)
 			{
 				position[i].y = 0;
+				direction[i].x += 0.1f * (direction[i].x / fabsf(direction[i].x));
 				direction[i].y = (0.1f+((float)rand())/RAND_MAX) * SPEED;
 			}
 			else if (position[i].y >= SCR_HEIGHT)
 			{
 				position[i].y = (SCR_HEIGHT-1);
+				direction[i].x += 0.1f * (direction[i].x / fabsf(direction[i].x));
 				direction[i].y = -(0.1f+((float)rand())/RAND_MAX) * SPEED;
 			}
 
