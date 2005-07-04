@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <time.h>
+#include <malloc.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -159,6 +160,54 @@ int _unlink(const char *path)
 int _link(const char *name1, const char *name2)
 {
 	return -1;
+}
+#endif
+
+#ifdef F__opendir
+DIR *_opendir(const char *filename)
+{
+	DIR *dirp;
+	SceUID uid;
+
+	dirp = (DIR *)malloc(sizeof(DIR));
+
+	uid = sceIoDopen(filename);
+
+	if (uid < 0)
+	{
+		free(dirp);
+		return NULL;
+	}
+
+	dirp->uid = uid;
+
+	return dirp;
+}
+#endif
+
+#ifdef F__readdir
+struct SceIoDirent *_readdir(DIR *dirp)
+{
+	SceIoDirent *de;
+
+	de = (SceIoDirent *)malloc(sizeof(SceIoDirent));
+
+	if (sceIoDread(dirp->uid, de) <= 0)
+	{
+		free(de);
+		return NULL;
+	}
+
+	return de;
+}
+#endif
+
+#ifdef F__closedir
+int _closedir(DIR *dirp)
+{
+	if (dirp != NULL)
+		return sceIoDclose(dirp->uid); 
+	return -1; 
 }
 #endif
 
