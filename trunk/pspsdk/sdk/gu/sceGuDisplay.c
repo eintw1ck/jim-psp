@@ -10,13 +10,13 @@
 
 #include <pspkernel.h>
 
-int sceGuDisplay(int on)
+int sceGuDisplay(int state)
 {
-	if (on)
+	if (state)
 		sceDisplaySetFrameBuf((void*)((unsigned int)ge_edram_address+(unsigned int)gu_draw_buffer.disp_buffer),gu_draw_buffer.frame_width,gu_draw_buffer.pixel_size,1);
 	else
 		sceDisplaySetFrameBuf(0,0,0,1);
 
-	gu_display_on = on;
-	return on;
+	gu_display_on = state;
+	return state;
 }

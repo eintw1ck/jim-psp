@@ -8,13 +8,13 @@
 
 #include "guInternal.h"
 
-void sceGuLight(int index, int a1, int a2, const float* position)
+void sceGuLight(int index, int a1, int a2, const ScePspFVector3* position)
 {
 	GuLightSettings* settings = &light_settings[index];
 
-	sendCommandf(settings->row0[2],position[0]);
-	sendCommandf(settings->row0[3],position[1]);
-	sendCommandf(settings->row1[0],position[2]);
+	sendCommandf(settings->row0[2],position->x);
+	sendCommandf(settings->row0[3],position->y);
+	sendCommandf(settings->row1[0],position->z);
 
 	int type = 2;
 	if (a2 != 8)

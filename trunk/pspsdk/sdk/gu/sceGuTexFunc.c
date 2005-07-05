@@ -8,10 +8,10 @@
 
 #include "guInternal.h"
 
-void sceGuTexFunc(unsigned int a0, unsigned int a1)
+void sceGuTexFunc(int tfx, int tcc)
 {
 	GuContext* context = &gu_contexts[gu_curr_context];
-	context->texture_function = (a1 << 8) | a0;
+	context->texture_function = (tcc << 8) | tfx;
 
-	sendCommandi(201,((a1 << 8)|a0)|context->unknown_state);
+	sendCommandi(201,((tcc << 8)|tfx)|context->unknown_state);
 }

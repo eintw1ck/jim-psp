@@ -8,9 +8,10 @@
 
 #include "guInternal.h"
 
-void sceGuSetMatrix(int type, float* matrix)
+void sceGuSetMatrix(int type, const ScePspFMatrix4* matrix)
 {
 	unsigned int i,j;
+	const float* fmatrix = (const float*)matrix;
 
 	switch (type)
 	{
@@ -20,7 +21,7 @@ void sceGuSetMatrix(int type, float* matrix)
 
 			// 4*4 - most probably projection
 			for (i = 0; i < 16; ++i)
-				sendCommandf(63,matrix[i]);
+				sendCommandf(63,fmatrix[i]);
 		}
 		break;
 
@@ -32,7 +33,7 @@ void sceGuSetMatrix(int type, float* matrix)
 			for (i = 0; i < 4; ++i)
 			{
 				for (j = 0; j < 3; ++j)
-					sendCommandf(61,matrix[j+i*4]);
+					sendCommandf(61,fmatrix[j+i*4]);
 			}
 		}
 		break;
@@ -45,7 +46,7 @@ void sceGuSetMatrix(int type, float* matrix)
 			for (i = 0; i < 4; ++i)
 			{
 				for (j = 0; j < 3; ++j)
-					sendCommandf(59,matrix[j+i*4]);
+					sendCommandf(59,fmatrix[j+i*4]);
 			}
 		}
 		break;
@@ -58,7 +59,7 @@ void sceGuSetMatrix(int type, float* matrix)
 			for (i = 0; i < 4; ++i)
 			{
 				for (j = 0; j < 3; ++j)
-					sendCommandf(65,matrix[j+i*4]);
+					sendCommandf(65,fmatrix[j+i*4]);
 			}
 		}
 		break;

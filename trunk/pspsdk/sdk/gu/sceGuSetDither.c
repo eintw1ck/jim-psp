@@ -8,10 +8,10 @@
 
 #include "guInternal.h"
 
-void sceGuSetDither(int* matrix)
+void sceGuSetDither(const ScePspIMatrix4* matrix)
 {
-	sendCommandi(226,(matrix[0] & 0x0f)|((matrix[1] & 0x0f) << 4)|((matrix[2] & 0x0f) << 8)|((matrix[3] & 0x0f) << 12));
-	sendCommandi(227,(matrix[4] & 0x0f)|((matrix[5] & 0x0f) << 4)|((matrix[6] & 0x0f) << 8)|((matrix[7] & 0x0f) << 12));
-	sendCommandi(228,(matrix[8] & 0x0f)|((matrix[9] & 0x0f) << 4)|((matrix[10] & 0x0f) << 8)|((matrix[11] & 0x0f) << 12));
-	sendCommandi(229,(matrix[12] & 0x0f)|((matrix[13] & 0x0f) << 4)|((matrix[14] & 0x0f) << 8)|((matrix[15] & 0x0f) << 12));
+	sendCommandi(226,(matrix->x.x & 0x0f)|((matrix->x.y & 0x0f) << 4)|((matrix->x.z & 0x0f) << 8)|((matrix->x.w & 0x0f) << 12));
+	sendCommandi(227,(matrix->y.x & 0x0f)|((matrix->y.y & 0x0f) << 4)|((matrix->y.z & 0x0f) << 8)|((matrix->y.w & 0x0f) << 12));
+	sendCommandi(228,(matrix->z.x & 0x0f)|((matrix->z.y & 0x0f) << 4)|((matrix->z.z & 0x0f) << 8)|((matrix->z.w & 0x0f) << 12));
+	sendCommandi(229,(matrix->w.x & 0x0f)|((matrix->w.y & 0x0f) << 4)|((matrix->w.z & 0x0f) << 8)|((matrix->w.w & 0x0f) << 12));
 }

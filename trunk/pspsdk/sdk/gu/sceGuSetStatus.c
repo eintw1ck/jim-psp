@@ -8,10 +8,10 @@
 
 #include "guInternal.h"
 
-void sceGuSetStatus(int index, int status)
+void sceGuSetStatus(int state, int status)
 {
 	if (status)
-		sceGuEnable(index);
+		sceGuEnable(state);
 	else
-		sceGuDisable(index);
+		sceGuDisable(state);
 }

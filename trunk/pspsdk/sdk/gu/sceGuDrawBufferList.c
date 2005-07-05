@@ -8,9 +8,9 @@
 
 #include "guInternal.h"
 
-void sceGuDrawBufferList(int pixel_size, void* frame_buffer, int frame_width)
+void sceGuDrawBufferList(int psm, void* fbp, int fbw)
 {
-	sendCommandi(210,pixel_size);
-	sendCommandi(156,((unsigned int)frame_buffer) & 0xffffff);
-	sendCommandi(157,((((unsigned int)frame_buffer) & 0xff000000) >> 8) | frame_width);
+	sendCommandi(210,psm);
+	sendCommandi(156,((unsigned int)fbp) & 0xffffff);
+	sendCommandi(157,((((unsigned int)fbp) & 0xff000000) >> 8) | fbw);
 }

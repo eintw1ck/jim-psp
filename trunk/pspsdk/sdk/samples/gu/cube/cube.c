@@ -133,9 +133,9 @@ int main(int argc, char* argv[])
 
 	// run sample
 
-	float projection[16];
-	float view[16];
-	float world[16];
+	ScePspFMatrix4 projection;
+	ScePspFMatrix4 view;
+	ScePspFMatrix4 world;
 
 	int val = 0;
 
@@ -152,17 +152,17 @@ int main(int argc, char* argv[])
 
 		// setup matrices for cube
 
-		matrix_identity(projection);
-		matrix_projection(projection,75.0f,16.0/9.0f,0.01f,1000.0f);
-		sceGuSetMatrix(GU_MATRIX_PROJECTION,projection);
+		matrix_identity((float*)&projection);
+		matrix_projection((float*)&projection,75.0f,16.0/9.0f,0.01f,1000.0f);
+		sceGuSetMatrix(GU_MATRIX_PROJECTION,&projection);
 
-		matrix_identity(view);
-		sceGuSetMatrix(GU_MATRIX_VIEW,view);
+		matrix_identity((float*)&view);
+		sceGuSetMatrix(GU_MATRIX_VIEW,&view);
 
-		matrix_identity(world);
-		matrix_translate(world,0,0,-3.0f);
-		matrix_rotate(world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
-		sceGuSetMatrix(2,world);
+		matrix_identity((float*)&world);
+		matrix_translate((float*)&world,0,0,-3.0f);
+		matrix_rotate((float*)&world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
+		sceGuSetMatrix(2,&world);
 
 		// setup texture
 

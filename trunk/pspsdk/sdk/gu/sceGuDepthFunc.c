@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuDepthFunc(int a0)
+void sceGuDepthFunc(int function)
 {
-	sendCommandi(222,a0);
+	sendCommandi(222,function);
 }

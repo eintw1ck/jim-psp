@@ -138,9 +138,9 @@ int main(int argc, char* argv[])
 
 	// run sample
 
-	float projection[16];
-	float view[16];
-	float world[16];
+	ScePspFMatrix4 projection;
+	ScePspFMatrix4 view;
+	ScePspFMatrix4 world;
 
 	float val = 0;
 
@@ -156,17 +156,17 @@ int main(int argc, char* argv[])
 		sceGuClearDepth(0);
 		sceGuClear(GE_CLEAR_COLOR|GE_CLEAR_DEPTH);
 
-		matrix_identity(projection);
-		matrix_projection(projection,75.0f,16.0/9.0f,0.01f,1000.0f);
-		sceGuSetMatrix(GU_MATRIX_PROJECTION,projection);
+		matrix_identity((float*)&projection);
+		matrix_projection((float*)&projection,75.0f,16.0/9.0f,0.01f,1000.0f);
+		sceGuSetMatrix(GU_MATRIX_PROJECTION,&projection);
 
-		matrix_identity(view);
-		sceGuSetMatrix(GU_MATRIX_VIEW,view);
+		matrix_identity((float*)&view);
+		sceGuSetMatrix(GU_MATRIX_VIEW,&view);
 
-		matrix_identity(world);
-		matrix_translate(world,0,0,-5.0f);
-		matrix_rotate(world,val * 0.3f * (M_PI/180.0f), val * 0.7f * (M_PI/180.0f), val * 1.3f * (M_PI/180.0f));
-		sceGuSetMatrix(2,world);
+		matrix_identity((float*)&world);
+		matrix_translate((float*)&world,0,0,-5.0f);
+		matrix_rotate((float*)&world,val * 0.3f * (M_PI/180.0f), val * 0.7f * (M_PI/180.0f), val * 1.3f * (M_PI/180.0f));
+		sceGuSetMatrix(2,&world);
 
 		// setup texture
 
@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
 		// render torus
 
 		vertices = sceGuGetMemory(NUM_SLICES * NUM_ROWS * 2 * sizeof(struct Vertex));
-		create_torus_billboards(vertices,world);
+		create_torus_billboards(vertices,(float*)&world);
 
 		sceGuDrawArray(GU_PRIM_SPRITES,GE_SETREG_VTYPE(GE_TT_32BITF,GE_CT_8888,0,GE_MT_32BITF,0,0,0,0,0),NUM_SLICES * NUM_ROWS * 2,0,vertices);
 

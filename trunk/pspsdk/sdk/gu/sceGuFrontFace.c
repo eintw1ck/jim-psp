@@ -8,9 +8,9 @@
 
 #include "guInternal.h"
 
-void sceGuFrontFace(unsigned int a0)
+void sceGuFrontFace(int order)
 {
-	if (a0)
+	if (order)
 		sendCommandi(155,0);
 	else
 		sendCommandi(155,1);

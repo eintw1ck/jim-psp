@@ -8,10 +8,10 @@
 
 #include "guInternal.h"
 
-void sceGuDrawArray(int primitive_type, int vertex_type, int count, void* indices, void* vertices)
+void sceGuDrawArray(int prim, int vtype, int count, const void* indices, const void* vertices)
 {
-  if (vertex_type)
-    sendCommandi(18,vertex_type);
+  if (vtype)
+    sendCommandi(18,vtype);
 
   if (indices)
   {
@@ -25,5 +25,5 @@ void sceGuDrawArray(int primitive_type, int vertex_type, int count, void* indice
     sendCommandi(1,((unsigned int)vertices) & 0xffffff);
   }  
 
-  sendCommandiStall(4,(primitive_type << 16)|count);
+  sendCommandiStall(4,(prim << 16)|count);
 }
