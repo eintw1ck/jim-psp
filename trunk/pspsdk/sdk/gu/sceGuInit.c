@@ -9,6 +9,7 @@
 #include "guInternal.h"
 
 #include <pspkernel.h>
+#include <pspge.h>
 
 unsigned int __attribute__((aligned(16))) ge_init_list[] =
 {
