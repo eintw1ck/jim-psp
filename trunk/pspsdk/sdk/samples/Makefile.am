@@ -16,7 +16,8 @@ SAMPLES = \
 	gu/blend \
 	irda/sircs \
 	kernel/kdumper \
-	kernel/threadstatus
+	kernel/threadstatus \
+	kernel/fileio
 
 all:
 
