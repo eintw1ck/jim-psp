@@ -20,11 +20,28 @@
 
     ## PSPDEV SETTINGS
     export PSPDEV="/usr/local/pspdev"
-    export PSPSDK="$PSPDEV/pspsdk"
-    export CVSROOT=":pserver:anonymous@cvs.ps2dev.org:/home/pspcvs"
-    export PATH="$PATH:$PSPDEV/bin:$PSPDEV/psp/bin:$PSPSDK/bin"
+    export PATH="$PATH:$PSPDEV/bin"
 
    Then you're done!
+
+  =====================
+   WHAT ELSE CAN I DO?
+  =====================
+
+   Thanks to Rinco, you can now select which parts of the process to
+   perform. No longer will you have to rerun the whole script:
+
+    -d		- Download the required files.
+    -b		- Build and install binutils.
+    -g		- Build and install gcc. (both c and c++)
+    -n		- Build and install newlib.
+    -p		- Download, build and install pspsdk.
+
+   For example, say you wanted to update only pspsdk:
+
+    ./toolchain.sh -p
+
+   The script grabs the latest version of pspsdk from the svn repository.
 
   ======================
    HOW DO I CONTRIBUTE?
@@ -41,3 +58,4 @@
 
    Dan Peori (peori@oopo.net) - Created the script, patch maintenance.
    Marcus R. Brown (mrbrown@0xd6.org) - Drop-in tree, toolchain.
+   Rinco (matthewh@webone.com.au) - Options to build specific targets.
