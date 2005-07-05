@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 	{
 		for (i = 0; i < 256; ++i)
 		{
-			tex256[i + j * 256] = j ^ i;
+			tex256[i + j * 256] = j & i;
 		}
 	}
 
