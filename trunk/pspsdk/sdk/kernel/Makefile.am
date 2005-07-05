@@ -15,7 +15,6 @@ EXTRA_DIST = common.s
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
-	pspctrl.h		\
 	pspdisplay.h		\
 	pspge.h			\
 	pspiofilemgr.h		\
@@ -37,7 +36,6 @@ libpspkernelinclude_HEADERS =	\
 lib_LIBRARIES = libpspkernel.a
 
 libpspkernel_a_SOURCES =	\
-	ctrl.S			\
 	display.S		\
 	ge.S			\
 	iofilemgr.S		\

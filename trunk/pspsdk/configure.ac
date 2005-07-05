@@ -80,6 +80,7 @@ AC_CONFIG_FILES([Makefile
                  sdk/Makefile
                  sdk/audio/Makefile
                  sdk/base/Makefile
+                 sdk/ctrl/Makefile
                  sdk/debug/Makefile
                  sdk/gu/Makefile
                  sdk/hprm/Makefile

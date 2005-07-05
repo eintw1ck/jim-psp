@@ -1,1 +1,11 @@
-SUBDIRS = audio base debug gu hprm kernel libc startup samples
+SUBDIRS = \
+	audio \
+	base \
+	ctrl \
+	debug \
+	gu \
+	hprm \
+	kernel \
+	libc \
+	startup \
+	samples
