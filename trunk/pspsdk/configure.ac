@@ -27,6 +27,7 @@ AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
+AC_C_BIGENDIAN
 
 # Checks for library functions.
 AC_FUNC_MALLOC

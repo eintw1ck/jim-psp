@@ -10,17 +10,24 @@
 # $Id$
 */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
  #include <stdio.h>
  #include <stdlib.h> 
  #ifdef HAVE_MALLOC_H 
  #include <malloc.h> 
  #endif 
 
-#ifdef __BIG_ENDIAN__
+#ifdef WORDS_BIGENDIAN
 
- #include <machine/byte_order.h>
+static int swap_int(int n)
+{
+  return ((n>>24)&0xff)|((n>>8)&0xff00)|((n<<8)&0xff0000)|((n<<24)&0xff000000);
+}
 
-#endif 
+#endif
 
  typedef struct { char signature[4]; int version; int offset[8]; } HEADER;
 
@@ -49,10 +56,10 @@
   if (header.signature[2] != 0x42) { printf("ERROR: Input file is not a PBP file.\n"); return -1; } else
   if (header.signature[3] != 0x50) { printf("ERROR: Input file is not a PBP file.\n"); return -1; }
 
-#ifdef __BIG_ENDIAN__
+#ifdef WORDS_BIGENDIAN
 
   // Swap the byte order for big-endian machines.
-  for (loop0=0; loop0<8; loop0++) { header.offset[loop0] = NXSwapInt(header.offset[loop0]); }
+  for (loop0=0; loop0<8; loop0++) { header.offset[loop0] = swap_int(header.offset[loop0]); }
 
 #endif 
 

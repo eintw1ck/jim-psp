@@ -10,9 +10,16 @@
 # $Id$
 */
 
-#ifdef __BIG_ENDIAN__
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
- #include <machine/byte_order.h>
+#ifdef WORDS_BIGENDIAN
+
+static int swap_int(int n)
+{
+  return ((n>>24)&0xff)|((n>>8)&0xff00)|((n<<8)&0xff0000)|((n<<24)&0xff000000);
+}
 
 #endif
 
@@ -65,10 +72,10 @@
   // Set the header offset values.
   for (loop0=1;loop0<8;loop0++) { header.offset[loop0] = header.offset[loop0 - 1] + filesize[loop0 - 1]; }
 
-#ifdef __BIG_ENDIAN__
+#ifdef WORDS_BIGENDIAN
 
   // Swap the byte order for big-endian machines.
-  for (loop0=0;loop0<8;loop0++) { header.offset[loop0] = NXSwapInt(header.offset[loop0]); }
+  for (loop0=0;loop0<8;loop0++) { header.offset[loop0] = swap_int(header.offset[loop0]); }
 
 #endif 
 
