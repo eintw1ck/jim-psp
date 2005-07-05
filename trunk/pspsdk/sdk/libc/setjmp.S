@@ -15,28 +15,28 @@
 #include <as_reg_compat.h>
 
 #define O_S0	0x00
-#define O_S1	0x10
-#define O_S2	0x20
-#define O_S3	0x30
-#define O_S4	0x40
-#define O_S5	0x50
-#define O_S6	0x60
-#define O_S7	0x70
-#define O_FP	0x80
-#define O_SP	0x90
-#define O_RA	0xa0
-#define O_F20   0xb0
-#define O_F21   0xb4
-#define O_F22   0xb8
-#define O_F23   0xbc
-#define O_F24   0xc0
-#define O_F25   0xc4
-#define O_F26   0xc8
-#define O_F27   0xcc
-#define O_F28   0xd0
-#define O_F29   0xd4
-#define O_F30   0xd8
-#define O_F31   0xdc
+#define O_S1	0x04
+#define O_S2	0x08
+#define O_S3	0x0c
+#define O_S4	0x10
+#define O_S5	0x14
+#define O_S6	0x18
+#define O_S7	0x1c
+#define O_FP	0x20
+#define O_SP	0x24
+#define O_RA	0x28
+#define O_F20   0x2c
+#define O_F21   0x30
+#define O_F22   0x34
+#define O_F23   0x38
+#define O_F24   0x3c
+#define O_F25   0x40
+#define O_F26   0x44
+#define O_F27   0x48
+#define O_F28   0x4c
+#define O_F29   0x50
+#define O_F30   0x54
+#define O_F31   0x58
 
 /* int setjmp (jmp_buf);  */
 	.globl	setjmp
