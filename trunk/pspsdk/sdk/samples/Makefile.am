@@ -7,6 +7,7 @@ SAMPLES = \
 	controller/basic \
 	debug/exception \
 	debug/kprintf \
+	debug/modmgr \
 	gu/blit \
 	gu/clut \
 	gu/cube \
