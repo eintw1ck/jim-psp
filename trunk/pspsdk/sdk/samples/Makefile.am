@@ -2,7 +2,7 @@
 samplesdir = @PSPSDK@/samples
 
 SAMPLES = \
-	audio/song \
+	audio/polyphonic \
 	audio/wavegen \
 	debug/exception \
 	debug/kprintf \
