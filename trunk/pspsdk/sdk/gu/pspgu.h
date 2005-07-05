@@ -31,7 +31,7 @@ extern "C" {
 #define GU_STATE_ZTE		(1) // Depth Test
 #define GU_STATE_SCISSOR	(2)
 #define GU_STATE_UNKNOWN3	(3)
-#define GU_STATE_BLEND		(4) // Alpha Blend
+#define GU_STATE_ALPHA		(4) // Alpha Blend
 #define GU_STATE_CULL		(5)
 #define GU_STATE_UNKNOWN6	(6)
 #define GU_STATE_UNKNOWN7	(7)
@@ -145,6 +145,19 @@ extern "C" {
 
 #define GE_TCC_RGB		(0)
 #define GE_TCC_RGBA		(1)
+
+#define GE_ALPHA_ADD		(0)
+#define GE_ALPHA_SUBTRACT	(1)
+
+#define GE_ALPHA_SRC_COLOR		(0)
+#define GE_ALPHA_ONE_MINUS_SRC_COLOR	(1)
+#define GE_ALPHA_SRC_ALPHA		(2)
+#define GE_ALPHA_ONE_MINUS_SRC_ALPHA	(3)
+
+#define GE_ALPHA_DST_COLOR		(0)
+#define GE_ALPHA_ONE_MINUS_DST_COLOR	(1)
+
+#define GE_ALPHA_FIX			(10)
 
 /** @addtogroup GU */
 /*@{*/
@@ -417,7 +430,7 @@ int sceGuGetAllStatus(void);
   *   - GE_STATE_ATE - Alpha testing
   *   - GE_STATE_ZTE - Depth testing
   *   - GE_STATE_SCISSOR - Display custom scissoring
-  *   - GU_STATE_BLEND - Alpha blending
+  *   - GU_STATE_ALPHA - Alpha blending
   *   - GU_STATE_CULL - Primitive culling
   *   - GU_STATE_TEXTURE - Texture mapping
   *   - GU_STATE_LIGHTING - Hardware lighting enable
@@ -486,7 +499,31 @@ void sceGuColorMaterial(int a0);
 void sceGuAlphaFunc(int a0, int a1, int a2);
 void sceGuAmbient(unsigned int color);
 void sceGuAmbientColor(unsigned int color);
-void sceGuBlendFunc(int a0, int a1, int a2, unsigned int a3, unsigned int t0);
+
+/**
+  * Set the blending-mode
+  *
+  * Available blending-operations are:
+  *   - GE_ALPHA_ADD - Additive blend
+  *   - GE_ALPHA_SUB - Subtractive blend
+  *
+  * Available blending-functions are:
+  *   - GE_ALPHA_SRC_COLOR
+  *   - GE_ALPHA_ONE_MINUS_SRC_COLOR
+  *   - GE_ALPHA_SRC_ALPHA
+  *   - GE_ALPHA_ONE_MINUS_SRC_ALPHA
+  *   - GE_ALPHA_DST_COLOR
+  *   - GE_ALPHA_ONE_MINUS_DST_COLOR
+  *   - GE_ALPHA_FIX
+  *
+  * @param op - Blending Operation
+  * @param src - Blending function for source operand
+  * @param dest - Blending function for dest operand
+  * @param srcfix - Fix value for GL_ALPHA_FIX (source operand)
+  * @param destfix - Fix value for GL_ALPHA_FIX (dest operand)
+**/
+void sceGuBlendFunc(int op, int src, int dest, unsigned int srcfix, unsigned int destfix);
+
 void sceGuMaterial(int mode, int color);
 void sceGuModelColor(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3);
 void sceGuStencilFunc(unsigned int a0, unsigned int a1, unsigned int a2);

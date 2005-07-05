@@ -117,8 +117,6 @@ int main(int argc, char* argv[])
 	sceGuDepthRange(0xc350,0x2710);
 	sceGuScissor(0,0,SCR_WIDTH,SCR_HEIGHT);
 	sceGuEnable(GU_STATE_SCISSOR);
-	sceGuBlendFunc(0,2,3,0,0);
-	sceGuEnable(GU_STATE_BLEND);
 	sceGuDepthFunc(GE_TEST_GEQUAL);
 	sceGuEnable(GU_STATE_ZTE);
 	sceGuFrontFace(GE_FACE_CW); // NOTE: not CCW

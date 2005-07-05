@@ -8,9 +8,9 @@
 
 #include "guInternal.h"
 
-void sceGuBlendFunc(int a0, int a1, int a2, unsigned int a3, unsigned int t0)
+void sceGuBlendFunc(int op, int src, int dest, unsigned int srcfix, unsigned int destfix)
 {
-	sendCommandi(223,a1 | (a2 << 4) | (a0 << 8));
-	sendCommandi(224,a3 & 0xffffff);
-	sendCommandi(225,t0 & 0xffffff);
+	sendCommandi(223,src | (dest << 4) | (op << 8));
+	sendCommandi(224,srcfix & 0xffffff);
+	sendCommandi(225,destfix & 0xffffff);
 }

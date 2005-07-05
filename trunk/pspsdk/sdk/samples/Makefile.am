@@ -12,6 +12,7 @@ SAMPLES = \
 	gu/cube \
 	gu/lines \
 	gu/sprite \
+	gu/blend \
 	irda/sircs \
 	kernel/kdumper \
 	kernel/threadstatus

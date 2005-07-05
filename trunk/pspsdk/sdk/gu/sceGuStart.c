@@ -42,7 +42,7 @@ void sceGuStart(int cid, void* list)
 			 3,-1, 2,-2
 		};
 
-		sceGuSetDither(dither_matrix);
+		sceGuSetDither((ScePspIMatrix4*)dither_matrix);
 		sceGuPatchDivide(16,16);
 		sceGuColorMaterial(7);
 
