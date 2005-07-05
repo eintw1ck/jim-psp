@@ -12,7 +12,11 @@
  * $Id$
  */
 #include <pspkernel.h>
+#include <pspctrl.h>
 #include <pspdebug.h>
+#include <pspdisplay.h>
+#include <pspumd.h>
+
 #include <string.h>
 
 PSP_MODULE_INFO("Dumper", 0, 1, 1);
