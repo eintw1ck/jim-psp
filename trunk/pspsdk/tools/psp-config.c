@@ -17,11 +17,16 @@
 #define PATH_SEP ":"
 #define DIR_SEP '/'
 #define DIR_SEP_STR "/"
+
 /* The suffix to the path to strip off, if this is not there then we have an error */
+#ifdef __MINGW32__
+#define PSPDEV_PATH_SUFFIX "/bin/psp-config.exe"
+#else
 #define PSPDEV_PATH_SUFFIX "/bin/psp-config"
+#endif
 /************************/
 
-/* Speficies that the current usage is to the print the pspsdk path */
+/* Specifies that the current usage is to the print the pspsdk path */
 static int g_printpath;
 
 static struct option arg_opts[] = 
@@ -69,7 +74,21 @@ char *find_pspdev_path(char *name)
 	static char path[MAX_PATH];
 	int found = 0;
 
-	/* Check if name is an absolute path, if so out job is done */
+	/* Check if name is an absolute path, if so our job is done */
+#ifdef __MINGW32__
+
+	char *ptr = name;
+	
+	char temp = name[0];
+	*(ptr++) = '/';
+	*(ptr++) = temp;
+	while (*(ptr)) {
+		temp = *(ptr);
+		if (temp == '\\') *(ptr) = '/';
+		ptr++;
+	}
+
+#endif
 	if(name[0] == DIR_SEP)
 	{
 		/* Absolute path */
