@@ -11,6 +11,11 @@
  *
  * $Id$
  */
+
+/* Note: Some of the structures, types, and definitions in this file were
+   extrapolated from symbolic debugging information found in the Japanese
+   version of Puzzle Bobble. */
+
 #ifndef __MODLOAD_H__
 #define __MODLOAD_H__
 
@@ -27,16 +32,25 @@ extern "C" {
 /** @addtogroup ModuleMgr Module Manager Library */
 /*@{*/
 
-typedef struct _mod_param
-{
-	u32 size;
-	u32 unk4;
-	u32 unk8;
-	u32 unkC;
-	u8  unk10;
-	u8  unk11;
-	u16 unk12;
-} __attribute__((packed)) mod_param_t;
+typedef struct SceKernelLMOption {
+	SceSize 		size;
+	SceUID 			mpidtext;
+	SceUID 			mpiddata;
+	unsigned int 	flags;
+	char 			position;
+	char 			access;
+	char 			creserved[2];
+} SceKernelLMOption;
+
+typedef struct SceKernelSMOption {
+	SceSize 		size;
+	SceUID 			mpidstack;
+	SceSize 		stacksize;
+	int 			priority;
+	unsigned int 	attribute;
+} SceKernelSMOption;
+
+//sceKernelLoadModuleByID
 
 /**
   * Load a module.
@@ -49,7 +63,7 @@ typedef struct _mod_param
   *
   * @return < 0 on error, otherwise the module id 
   */
-int sceKernelLoadModule(const char *path, u32 zero, mod_param_t* mod);
+SceUID sceKernelLoadModule(const char *path, int flags, SceKernelLMOption *option);
 
 /**
   * Load a module from MS.
@@ -61,7 +75,7 @@ int sceKernelLoadModule(const char *path, u32 zero, mod_param_t* mod);
   *
   * @return < 0 on error, otherwise the module id 
   */
-int sceKernelLoadModuleMs(const char *path, u32 zero, mod_param_t* mod);
+SceUID sceKernelLoadModuleMs(const char *path, int flags, SceKernelLMOption *option);
 
 /**
   * Start a loaded module.
@@ -74,7 +88,11 @@ int sceKernelLoadModuleMs(const char *path, u32 zero, mod_param_t* mod);
   *
   * @return < 0 on error.
   */
-int sceKernelStartModule(int modid, u32 arglen, void* args, u32 *status, u32 zero);
+int sceKernelStartModule(SceUID modid, SceSize argsize, void *argp, int *status, SceKernelSMOption *option);
+
+//sceKernelStopModule
+//
+//sceKernelUnloadModule
 
 /**
  * Stop and unload the current module.
@@ -86,6 +104,24 @@ int sceKernelStartModule(int modid, u32 arglen, void* args, u32 *status, u32 zer
  * @return < 0 on error.
  */
 int sceKernelSelfStopUnloadModule(int unknown, SceSize argsize, void *argp);
+
+//sceKernelStopUnloadSelfModule
+
+typedef struct SceKernelModuleInfo {
+	SceSize 		size;
+	char 			nsegment;
+	char 			reserved[3];
+	int 			segmentaddr[4];
+	int 			segmentsize[4];
+	unsigned int 	entry_addr;
+	unsigned int 	gp_value;
+	unsigned int 	text_addr;
+	unsigned int 	text_size;
+	unsigned int 	data_size;
+	unsigned int 	bss_size;
+} SceKernelModuleInfo;
+
+//sceKernelQueryModuleInfo
 
 /*@}*/
 
