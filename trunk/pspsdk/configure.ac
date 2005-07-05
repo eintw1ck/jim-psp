@@ -89,6 +89,7 @@ AC_CONFIG_FILES([Makefile
                  sdk/kernel/Makefile
                  sdk/libc/Makefile
                  sdk/power/Makefile
+                 sdk/sircs/Makefile
                  sdk/startup/Makefile
                  sdk/samples/Makefile
                  tools/Makefile])

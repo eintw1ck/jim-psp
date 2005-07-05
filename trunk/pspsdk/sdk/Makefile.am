@@ -10,5 +10,6 @@ SUBDIRS = \
 	kernel \
 	libc \
 	power \
+	sircs \
 	startup \
 	samples
