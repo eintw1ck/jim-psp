@@ -74,14 +74,14 @@ void MyExceptionHandler(PspDebugRegBlock *regs)
 
 int main(void)
 {
-	ctrl_data_t pad;
+	SceCtrlData pad;
 	pspDebugScreenInit();
 	SetupCallbacks();
 
 	/* Install our custom exception handler. If this was NULL then the default would be used */
 	pspDebugInstallErrorHandler(MyExceptionHandler);
 	sceCtrlSetSamplingCycle(0);
-	sceCtrlSetSamplingMode(0);
+	sceCtrlSetSamplingMode(PSP_CTRL_MODE_DIGITAL);
 
 	pspDebugScreenPrintf("Exception Sample\n\n");
 	pspDebugScreenPrintf("You have two choices, press O for a bus error or X for a breakpoint\n\n");
@@ -89,13 +89,13 @@ int main(void)
 	while(1)
 	{
 		sceCtrlReadBufferPositive(&pad, 1);
-		if(pad.buttons & CTRL_CIRCLE)
+		if(pad.Buttons & PSP_CTRL_CIRCLE)
 		{
 			/* Cause a bus error */
 			_sw(0, 0);
 		}
 
-		if(pad.buttons & CTRL_CROSS)
+		if(pad.Buttons & PSP_CTRL_CROSS)
 		{
 			/* Cause a break exception */
 			asm(

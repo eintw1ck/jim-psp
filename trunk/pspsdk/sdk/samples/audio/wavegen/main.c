@@ -127,14 +127,14 @@ void controlFrequency() {
 	const float response[6] = {0.0f, 0.1f, 0.5f, 1.0f, 4.0f, 8.0f};
 	const float minFreq = 32.0f;
 	const float maxFreq = 7040.0f;
-	ctrl_data_t pad;
+	SceCtrlData pad;
 	float direction;
 	int changedButtons;
 	int i, v;
 
 	sceCtrlReadBufferPositive(&pad, 1);
 
-	v = pad.analog_y - 128;
+	v = pad.Ly - 128;
 	if (v < 0) {
    	        direction = 1.0f;
 		v = -v;
@@ -155,14 +155,14 @@ void controlFrequency() {
 	        frequency = maxFreq;
 	}
 
-	changedButtons = pad.buttons & (~oldButtons);
-	if (changedButtons & CTRL_CROSS) {
+	changedButtons = pad.Buttons & (~oldButtons);
+	if (changedButtons & PSP_CTRL_CROSS) {
 	        function++;
 	        if (function > 2) {
 	                 function = 0;
 	        }
 	}
-	oldButtons = pad.buttons;
+	oldButtons = pad.Buttons;
 }
 
 int main(void) {
@@ -173,7 +173,7 @@ int main(void) {
 	pspAudioSetChannelCallback(0, audioCallback);
 
 	sceCtrlSetSamplingCycle(0);
-	sceCtrlSetSamplingMode(1);
+	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
 	printf("Press up and down to select frequency\nPress X to change function\n");
 	

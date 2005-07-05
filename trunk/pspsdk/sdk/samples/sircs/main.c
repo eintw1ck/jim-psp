@@ -88,12 +88,16 @@ int SetupCallbacks(void)
 
 int main(void)
 {
-	ctrl_data_t pad;
+	SceCtrlData pad;
 	u32 buttonsold = 0;
 	int sirc_bits = 20; // # of bits in code, choose from 12, 15 or 20
 
 	SetupCallbacks();
 	pspDebugScreenInit();
+
+	sceCtrlSetSamplingCycle(0);
+	sceCtrlSetSamplingMode(PSP_CTRL_MODE_DIGITAL);
+
 	printf ("Sircs Example\n");
         printf ("-------\n");
 	printf ("This example can be used with a PS2\n\n");
@@ -104,27 +108,28 @@ int main(void)
 	do {
 		sceCtrlReadBufferPositive(&pad, 1);
 
-		if (pad.buttons != buttonsold) 
+		if (pad.Buttons != buttonsold) 
 		{
 
-			if (pad.buttons & CTRL_CIRCLE) 
+			if (pad.Buttons & PSP_CTRL_CIRCLE) 
 			{
 				printf ("Sending SIRCS_CMD_RESET\n");
 				send_code(sirc_bits, SIRCS_ADDR_DVD, SIRCS_CMD_RESET);
 			}
 
-			if (pad.buttons & CTRL_CROSS) 
+			if (pad.Buttons & PSP_CTRL_CROSS) 
 			{
 				printf ("Sending SIRCS_CMD_PLAY\n");
 				send_code(sirc_bits, SIRCS_ADDR_DVD, SIRCS_CMD_PLAY);
 			}
 
-			if (pad.buttons & CTRL_SQUARE)
-			{ printf ("Sending SIRCS_CMD_PAUSE\n");
+			if (pad.Buttons & PSP_CTRL_SQUARE)
+			{
+				printf ("Sending SIRCS_CMD_PAUSE\n");
 				send_code(sirc_bits, SIRCS_ADDR_DVD, SIRCS_CMD_PAUSE);
 			}
 
-			buttonsold = pad.buttons;
+			buttonsold = pad.Buttons;
 		}
 
 		sceDisplayWaitVblankStart(); 
