@@ -10,4 +10,4 @@ unpack_pbp_SOURCES = unpack-pbp.c
 
 mksfo_SOURCES = mksfo.c
 
-psp_config_SOURCES = psp-config.c
+psp_config_SOURCES = psp-config.c getopt.c getopt1.c
