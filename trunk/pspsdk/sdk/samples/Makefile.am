@@ -4,6 +4,7 @@ samplesdir = @PSPSDK@/samples
 SAMPLES = \
 	audio/polyphonic \
 	audio/wavegen \
+	controller/basic \
 	debug/exception \
 	debug/kprintf \
 	gu/blit \
