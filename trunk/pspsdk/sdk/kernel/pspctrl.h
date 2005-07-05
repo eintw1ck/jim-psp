@@ -11,6 +11,11 @@
  *
  * $Id$
  */
+
+/* Note: Some of the structures, types, and definitions in this file were
+   extrapolated from symbolic debugging information found in the Japanese
+   version of Puzzle Bobble. */
+
 #ifndef __CTRL_H__
 #define __CTRL_H__
 
@@ -21,76 +26,115 @@ extern "C" {
 /** @addtogroup Ctrl Controller Kernel Library */
 /*@{*/
 
-/** Enumeration for the controller digital buttons */
-enum CtrlButtons
+/** Enumeration for the digital controller buttons. */
+enum PspCtrlButtons
 {
-	/** Square button */
-	CTRL_SQUARE     = 0x8000,
-	/** Triangle button */
-	CTRL_TRIANGLE   = 0x1000,
-	/** Circle button */
-	CTRL_CIRCLE     = 0x2000,
-	/** Cross button */
-	CTRL_CROSS      = 0x4000,
-	/** Up D-Pad button */
-	CTRL_UP         = 0x0010,
-	/** Down D-Pad button */
-	CTRL_DOWN      	= 0x0040,
-	/** Left D-Pad button */
-	CTRL_LEFT      	= 0x0080,
-	/** Right D-Pad button */
-	CTRL_RIGHT      = 0x0020,
-	/** Start button */
-	CTRL_START      = 0x0008,
-	/** Select button */
-	CTRL_SELECT     = 0x0001,
-	/** Left trigger */
-	CTRL_LTRIGGER   = 0x0100,
-	/** Right trigger */
-	CTRL_RTRIGGER   = 0x0200,
+	/** Select button. */
+	PSP_CTRL_SELECT     = 0x00001,
+	/** Start button. */
+	PSP_CTRL_START      = 0x00008,
+	/** Up D-Pad button. */
+	PSP_CTRL_UP         = 0x00010,
+	/** Right D-Pad button. */
+	PSP_CTRL_RIGHT      = 0x00020,
+	/** Down D-Pad button. */
+	PSP_CTRL_DOWN      	= 0x00040,
+	/** Left D-Pad button. */
+	PSP_CTRL_LEFT      	= 0x00080,
+	/** Left trigger. */
+	PSP_CTRL_LTRIGGER   = 0x00100,
+	/** Right trigger. */
+	PSP_CTRL_RTRIGGER   = 0x00200,
+	/** Triangle button. */
+	PSP_CTRL_TRIANGLE   = 0x01000,
+	/** Circle button. */
+	PSP_CTRL_CIRCLE     = 0x02000,
+	/** Cross button. */
+	PSP_CTRL_CROSS      = 0x04000,
+	/** Square button. */
+	PSP_CTRL_SQUARE     = 0x08000,
+	/** Home button. */
+	PSP_CTRL_HOME       = 0x10000,
+	/** Hold button. */
+	PSP_CTRL_HOLD       = 0x20000,
+};
+
+/** Controller mode. */
+enum PspCtrlMode
+{
+	/* Digitial. */
+	PSP_CTRL_MODE_DIGITAL = 0,
+	/* Analog. */
+	PSP_CTRL_MODE_ANALOG
 };
 
 /** Returned controller data */
-typedef struct _ctrl_data
-{
-	/** The current read frame */
-	u32 frame;
-	/** Bit mask containing zero or more of CtrlButtons */
-	u32 buttons;
-	/** Analogue stick, X direction */
-	u8  analog_x;
-	/** Analogue stick, Y direction */
-	u8  analog_y; 
-	/** Dummy padding value */
-	u16 dummy;
-	/** Seemingly unused */
-	u32 unused;
-} __attribute__((packed)) ctrl_data_t; 
+typedef struct SceCtrlData {
+	/** The current read frame. */
+	unsigned int 	TimeStamp;
+	/** Bit mask containing zero or more of ::PspCtrlButtons. */
+	unsigned int 	Buttons;
+	/** Analogue stick, X axis. */
+	unsigned char 	Lx;
+	/** Analogue stick, Y axis. */
+	unsigned char 	Ly;
+	/** Reserved. */
+	unsigned char 	Rsrv[6];
+} SceCtrlData;
+
+typedef struct SceCtrlLatch {
+	unsigned int 	uiMake;
+	unsigned int 	uiBreak;
+	unsigned int 	uiPress;
+	unsigned int 	uiRelease;
+} SceCtrlLatch;
 
 /**
- * Set controller sample rate
+ * Set the controller cycle setting.
  *
- * @par Example:
- * @see sceCtrlReadBufferPositive
+ * @param cycle - Cycle.  Normally set to 0.
  *
- * @param arg Should be set to 0
+ * @returns The previous cycle setting.
  */
-void sceCtrlSetSamplingCycle(int arg);
+int sceCtrlSetSamplingCycle(int cycle);
+
 /**
- * Set the sampling mode
+ * Get the controller current cycle setting.
  *
- * @par Example:
- * @see sceCtrlReadBufferPositive
- *
- * @param on - Pass 1 to enable analogue mode
+ * @param pcycle - Return value.
+ * 
+ * @returns 0.
  */
-void sceCtrlSetSamplingMode(int on);
+int sceCtrlGetSamplingCycle(int *pcycle);
+
+/**
+ * Set the controller mode.
+ *
+ * @param mode - One of ::PspCtrlMode.
+ *
+ * @returns The previous mode.
+ */
+int sceCtrlSetSamplingMode(int mode);
+
+/**
+ * Get the current controller mode.
+ *
+ * @param pmode - Return value.
+ *
+ * @returns 0.
+ */
+int sceCtrlGetSamplingMode(int *pmode);
+
+int sceCtrlPeekBufferPositive(SceCtrlData *pad_data, int count);
+
+int sceCtrlPeekBufferNegative(SceCtrlData *pad_data, int count);
+
 /**
  * Read buffer positive
  *
  * @par Example:
  * @code
- * ctrl_data_t pad;
+ * SceCtrlData pad;
 
  * sceCtrlSetSamplingCycle(0);
  * sceCtrlSetSamplingMode(1);
@@ -98,10 +142,16 @@ void sceCtrlSetSamplingMode(int on);
  * // Do something with the read controller data
  * @endcode
  *
- * @param pad_data - Structure to hold the returned pad data
- * @param option - Unknown function. Always set to 1
+ * @param pad_data - Pointer to a ::SceCtrlData structure used hold the returned pad data.
+ * @param count - Number of ::SceCtrlData buffers to read.
  */
-void sceCtrlReadBufferPositive(ctrl_data_t *pad_data, int option);
+int sceCtrlReadBufferPositive(SceCtrlData *pad_data, int count);
+
+int sceCtrlReadBufferNegative(SceCtrlData *pad_data, int count);
+
+int sceCtrlPeekLatch(SceCtrlLatch *latch_data);
+
+int sceCtrlReadLatch(SceCtrlLatch *latch_data);
 
 /*@}*/
 
