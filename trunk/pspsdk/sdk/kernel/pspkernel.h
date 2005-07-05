@@ -16,7 +16,6 @@
 
 #include <psptypes.h>
 #include <pspkerneltypes.h>
-#include <pspdisplay.h>
 #include <pspiofilemgr.h>
 #include <psploadexec.h>
 #include <pspmoduleinfo.h>

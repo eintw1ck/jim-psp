@@ -3,6 +3,7 @@ SUBDIRS = \
 	base \
 	ctrl \
 	debug \
+	display \
 	gu \
 	hprm \
 	kernel \
