@@ -40,5 +40,4 @@ libpspkernel_a_SOURCES =	\
 	suspend.S		\
 	sysmem.S		\
 	threadman.S		\
-	utility.S		\
 	utils.S

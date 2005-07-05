@@ -1,0 +1,15 @@
+
+libdir = @PSPSDK_LIBDIR@
+
+CC = @PSP_CC@
+CCAS = $(CC)
+AR = @PSP_AR@
+RANLIB = @PSP_RANLIB@
+
+INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
+CFLAGS = @PSPSDK_CFLAGS@
+CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
+
+lib_LIBRARIES = libpsputility.a
+libpsputility_a_SOURCES = utility.S
+
