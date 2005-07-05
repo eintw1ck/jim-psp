@@ -1,4 +1,4 @@
-TARGET = sdktest
+TARGET = threadstatus
 OBJS = main.o
 
 INCDIR = 
@@ -10,7 +10,7 @@ LIBDIR =
 LDFLAGS =
 
 EXTRA_TARGETS = EBOOT.PBP
-PSP_EBOOT_TITLE = SDK Test v1.0
+PSP_EBOOT_TITLE = threadstatus sample
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
