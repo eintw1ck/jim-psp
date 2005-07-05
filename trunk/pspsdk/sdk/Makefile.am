@@ -9,5 +9,6 @@ SUBDIRS = \
 	hprm \
 	kernel \
 	libc \
+	power \
 	startup \
 	samples

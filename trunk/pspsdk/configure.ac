@@ -88,6 +88,7 @@ AC_CONFIG_FILES([Makefile
                  sdk/hprm/Makefile
                  sdk/kernel/Makefile
                  sdk/libc/Makefile
+                 sdk/power/Makefile
                  sdk/startup/Makefile
                  sdk/samples/Makefile
                  tools/Makefile])

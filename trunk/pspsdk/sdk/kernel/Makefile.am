@@ -38,7 +38,6 @@ libpspkernel_a_SOURCES =	\
 	kernel.S		\
 	loadexec.S		\
 	modulemgr.S		\
-	power.S			\
 	sircs.S			\
 	stdio.S			\
 	suspend.S		\
