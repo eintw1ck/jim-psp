@@ -1,4 +1,4 @@
-TARGET = song
+TARGET = polyphonic
 OBJS = main.o
 
 INCDIR = 
@@ -11,7 +11,7 @@ LDFLAGS =
 LIBS = -lpspaudiolib -lpspaudio
 
 EXTRA_TARGETS = EBOOT.PBP
-PSP_EBOOT_TITLE = Song sample by Shine
+PSP_EBOOT_TITLE = Polyphonic sample by Shine
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
