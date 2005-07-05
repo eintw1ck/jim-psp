@@ -4,6 +4,7 @@ SUBDIRS = \
 	ctrl \
 	debug \
 	display \
+	ge \
 	gu \
 	hprm \
 	kernel \
