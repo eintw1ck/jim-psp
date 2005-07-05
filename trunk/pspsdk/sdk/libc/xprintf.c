@@ -193,7 +193,7 @@ int vxprintf(func,arg,format,ap)
   int flag_zeropad;         /* True if field width constant starts with zero */
   int flag_long;            /* True if "l" flag is present */
   int flag_center;          /* True if "=" flag is present */
-  unsigned long longvalue;  /* Value for integer types */
+  unsigned long long longvalue;  /* Value for integer types */
 
   long double realvalue;    /* Value for real types */
   info *infop;              /* Pointer to the appropriate info structure */
@@ -292,6 +292,10 @@ int vxprintf(func,arg,format,ap)
     if( c=='l' ){
       flag_long = 1;
       c = *++fmt;
+      if( c == 'l' ){
+	flag_long = 2;
+	c = *++fmt;
+      }
     }else{
       flag_long = 0;
     }
@@ -331,7 +335,13 @@ int vxprintf(func,arg,format,ap)
     switch( xtype ){
       case ORDINAL:
       case RADIX:
-        if(( flag_long )&&( infop->flag_signed )){
+        if(( flag_long>1 )&&( infop->flag_signed )){
+	    signed long long t = va_arg(ap,signed long long);
+	    longvalue = t;
+	}else if(( flag_long>1 )&&( !infop->flag_signed )){
+	    unsigned long long t = va_arg(ap,unsigned long long);
+	    longvalue = t;
+	}else if(( flag_long )&&( infop->flag_signed )){
 	    signed long t = va_arg(ap,signed long);
 	    longvalue = t;
 	}else if(( flag_long )&&( !infop->flag_signed )){
@@ -354,8 +364,8 @@ int vxprintf(func,arg,format,ap)
         if( longvalue==0 && infop->base==8 ) flag_alternateform = 0;
 #endif
         if( infop->flag_signed ){
-          if( *(long*)&longvalue<0 ){
-	    longvalue = -*(long*)&longvalue;
+          if( *(long long*)&longvalue<0 ){
+	    longvalue = -*(long long*)&longvalue;
             prefix = '-';
           }else if( flag_plussign )  prefix = '+';
           else if( flag_blanksign )  prefix = ' ';
