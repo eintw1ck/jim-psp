@@ -12,4 +12,5 @@ SUBDIRS = \
 	power \
 	sircs \
 	startup \
+	umd \
 	samples

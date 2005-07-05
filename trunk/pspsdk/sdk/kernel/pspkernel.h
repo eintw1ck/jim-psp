@@ -23,7 +23,6 @@
 #include <pspsysmem.h>
 #include <pspthreadman.h>
 #include <psputils.h>
-#include <pspumd.h>
 #include <pspkerror.h>
 
 /** @defgroup Kernel PSP Kernel Import Library */

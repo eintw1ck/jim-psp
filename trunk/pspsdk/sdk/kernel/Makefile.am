@@ -27,7 +27,6 @@ libpspkernelinclude_HEADERS =	\
 	pspmodulemgr.h		\
 	pspsysmem.h		\
 	pspthreadman.h		\
-	pspumd.h		\
 	psputils.h
 
 lib_LIBRARIES = libpspkernel.a
@@ -41,6 +40,5 @@ libpspkernel_a_SOURCES =	\
 	suspend.S		\
 	sysmem.S		\
 	threadman.S		\
-	umd.S			\
 	utility.S		\
 	utils.S

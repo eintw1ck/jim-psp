@@ -91,6 +91,7 @@ AC_CONFIG_FILES([Makefile
                  sdk/power/Makefile
                  sdk/sircs/Makefile
                  sdk/startup/Makefile
+                 sdk/umd/Makefile
                  sdk/samples/Makefile
                  tools/Makefile])
 AC_OUTPUT
