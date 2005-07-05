@@ -3,16 +3,16 @@ samplesdir = @PSPSDK@/samples
 
 SAMPLES = \
 	audio/wavegen \
-	sdktest \
-	gu/cube \
+	debug/exception \
+	debug/kprintf \
 	gu/blit \
-	gu/sprite \
-	gu/lines \
 	gu/clut \
-	kdumper \
-	exception \
-	sircs \
-	kprintf
+	gu/cube \
+	gu/lines \
+	gu/sprite \
+	irda/sircs \
+	kernel/kdumper \
+	kernel/sdktest
 
 all:
 
