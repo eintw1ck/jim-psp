@@ -12,7 +12,7 @@ SAMPLES = \
 	gu/sprite \
 	irda/sircs \
 	kernel/kdumper \
-	kernel/sdktest
+	kernel/threadstatus
 
 all:
 
