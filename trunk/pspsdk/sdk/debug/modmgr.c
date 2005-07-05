@@ -219,6 +219,20 @@ void *pspDebugFindExportedFunction(SceModuleInfo *mod, const char *exp_name, u32
 	return _pspDebugFindExport(mod->ent_top, mod->ent_end, exp_name, nid, EXPORT_FUNCTION);
 }
 
+void *pspDebugFindExportedFunctionByName(SceModuleInfo *mod, const char *exp_name, const char *name)
+{
+	u8 digest[20];
+
+	if((mod == NULL) || (name == NULL))
+	{
+		return NULL;
+	}
+
+	(void) sceKernelUtilsSha1Digest((u8*) name, strlen(name), digest);
+
+	return _pspDebugFindExport(mod->ent_top, mod->ent_end, exp_name, *((u32*) digest), EXPORT_FUNCTION);
+}
+
 void *pspDebugFindExportedVariable(SceModuleInfo *mod, const char *exp_name, u32 nid)
 {
 	if(mod == NULL)
@@ -227,4 +241,18 @@ void *pspDebugFindExportedVariable(SceModuleInfo *mod, const char *exp_name, u32
 	}
 
 	return _pspDebugFindExport(mod->ent_top, mod->ent_end, exp_name, nid, EXPORT_VARIABLE);
+}
+
+void *pspDebugFuncExportedVariableByName(SceModuleInfo *mod, const char *exp_name, const char *name)
+{
+	u8 digest[20];
+
+	if((mod == NULL) || (name == NULL))
+	{
+		return NULL;
+	}
+
+	(void) sceKernelUtilsSha1Digest((u8*) name, strlen(name), digest);
+
+	return _pspDebugFindExport(mod->ent_top, mod->ent_end, exp_name, *((u32*) digest), EXPORT_VARIABLE);
 }

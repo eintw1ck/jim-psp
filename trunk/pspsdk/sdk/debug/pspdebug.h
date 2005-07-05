@@ -169,6 +169,28 @@ void *pspDebugFindExportedFunction(SceModuleInfo *mod, const char *exp_name, u32
   */
 void *pspDebugFindExportedVariable(SceModuleInfo *mod, const char *exp_name, u32 nid);
 
+/**
+  * Find an exported function from its module information, based on its name.
+  *
+  * @param mod - Pointer to a module info structure, found with ::pspDebugFindModule.
+  * @param exp_name - The name of the export library.
+  * @param name - The name of the function to find.
+  *
+  * @return A pointer to the function if found, else NULL.
+  */
+void *pspDebugFindExportedFunctionByName(SceModuleInfo *mod, const char *exp_name, const char *name);
+
+/**
+  * Find an exported variable from its module information, based on its name.
+  *
+  * @param mod - Pointer to a module info structure, found with ::pspDebugFindModule.
+  * @param exp_name - The name of the export library.
+  * @param name - The name of the variable to find.
+  *
+  * @return A pointer to the variable if found, else NULL.
+  */
+void *pspDebugFuncExportedVariableByName(SceModuleInfo *mod, const char *exp_name, const char *name);
+
 /** Type for Kprintf handler */
 typedef int (*PspDebugKprintfHandler)(const char *format, u32 *args);
 

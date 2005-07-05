@@ -159,17 +159,24 @@ void decrypt_files(const char *basedir, const char *destdir)
 }
 
 /* Init our kernel hook, i.e. grab the pointer to sceKernelCheckExecFile */
+/* This uses the module manager routines to grab a module and resolved an exported symbol */
+/* This should hopefully be pretty portable, until Sony decide to change kernel structures :P */
 int init_hooks(void)
 {
 	SceModuleInfo *mod;
 	int ret = 0;
 
+	/* Lookup the load core module by its name. this is the name as given in the module information */
 	mod = pspDebugFindModule("sceLoaderCore");
 	if(mod != NULL)
 	{
-		sceKernelCheckExecFile = pspDebugFindExportedFunction(mod, "LoadCoreForKernel", 0x7BE1421C);
+		/* We have found the module we were looking for, lets grab the function by name */
+		sceKernelCheckExecFile = pspDebugFindExportedFunctionByName(mod, "LoadCoreForKernel", "sceKernelCheckExecFile");
+		/* Could also use the nid directly with, 
+		   pspDebugFindExportedFunction(mod, "LoadCoreForKernel", 0x7BE1421C); */
 		if(sceKernelCheckExecFile != NULL)
 		{
+			/* Woo, we have our kernel function */
 			printf("sceKernelCheckExecFile %p\n", sceKernelCheckExecFile);
 			ret = 1;
 		}
