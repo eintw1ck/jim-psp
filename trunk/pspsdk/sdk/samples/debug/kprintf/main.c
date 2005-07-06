@@ -54,11 +54,10 @@ int SetupCallbacks(void)
 	return thid;
 }
 
+void Kprintf(char *, ...);
+
 int main(void)
 {
-	SceModuleInfo *mod;
-	void (*Kprintf)(char *, ...);
-
 	pspDebugScreenInit();
 	SetupCallbacks();
 
@@ -71,20 +70,10 @@ int main(void)
 	/* Try and load a module, this should print an error to the screen */
 	sceKernelLoadModule("test:/this/is/not/a/file.prx", 0, NULL);
 	pspDebugScreenSetTextColor(0xFFFFFFFF);
-
-	/* Let's get Kprintf directly and call that as well */
-	mod = pspDebugFindModule("sceSystemMemoryManager");
-	if(mod != NULL)
-	{
-		Kprintf = pspDebugFindExportedFunction(mod, "KDebugForKernel", 0x84F370BC);
-		if(Kprintf != NULL)
-		{
-			printf("\nLets call Kprintf directly\n");
-			pspDebugScreenSetTextColor(0xFF);
-			Kprintf("Hello from Kprintf\n");
-		}
-	}
-
+	printf("\nLets call Kprintf directly\n");
+	pspDebugScreenSetTextColor(0xFF);
+	Kprintf("Hello from Kprintf\n");
+	
 	/* Let's bug out */
 	sceKernelExitDeleteThread(0);
 

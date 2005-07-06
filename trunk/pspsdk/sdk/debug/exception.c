@@ -13,33 +13,18 @@
 #include <pspkernel.h>
 #include <pspdebug.h>
 
-#define REGISTER_FUNC_MOD  "sceExceptionManager"
-#define REGISTER_FUNC_LIB  "ExceptionManagerForKernel"
-#define REGISTER_FUNC_NID  0x565C0B0E
-
 static PspDebugErrorHandler curr_handler = NULL;
 
 void _pspDebugExceptionHandler(void);
 PspDebugRegBlock _pspDebugExceptRegs;
 
+int sceKernelRegisterDefaultExceptionHandler(void *func);
+
 /* Install an error handler */
 int pspDebugInstallErrorHandler(PspDebugErrorHandler handler)
 {
-	int  (*sceKernelRegisterDefaultExceptionHandler)(void *func);
 	SceModuleInfo *mod;
 	u32 addr;
-
-	mod = pspDebugFindModule(REGISTER_FUNC_MOD);
-	if(mod != NULL)
-	{
-		sceKernelRegisterDefaultExceptionHandler = pspDebugFindExportedFunction(mod, REGISTER_FUNC_LIB, REGISTER_FUNC_NID);
-	}
-
-	if((mod == NULL) || (sceKernelRegisterDefaultExceptionHandler == NULL))
-	{
-		pspDebugScreenPrintf("Could not find sceKernelRegisterDefaultExceptionHandler\n");
-		return -1;
-	}
 
 	curr_handler = handler;
 

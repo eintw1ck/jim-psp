@@ -1,0 +1,14 @@
+	.set noreorder
+
+#include "common.s"
+
+	STUB_START	"ExceptionManagerForKernel",0x00010000,0x00080005
+	STUB_FUNC	0x3FB264FC,sceKernelRegisterExceptionHandler
+	STUB_FUNC	0x5A837AD4,sceKernelRegisterPriorityExceptionHandler
+	STUB_FUNC	0x565C0B0E,sceKernelRegisterDefaultExceptionHandler
+	STUB_FUNC	0x1AA6CFFA,sceKernelReleaseExceptionHandler
+	STUB_FUNC	0xDF83875E,sceKernelGetActiveDefaultExceptionHandler
+	STUB_FUNC	0x291FF031,sceKernelReleaseDefaultExceptionHandler
+	STUB_FUNC	0x15ADC862,sceKernelRegisterNmiHandler
+	STUB_FUNC	0xB15357C9,sceKernelReleaseNmiHandler
+	STUB_END

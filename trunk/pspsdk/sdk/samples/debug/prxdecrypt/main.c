@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * main.c - Basic sample to demonstrate the module manager functions.
+ * main.c - Basic sample to erm do something.
  *
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
@@ -59,7 +59,7 @@ int SetupCallbacks(void)
 }
 
 /* ptr is a pointer to the file to decrypt, check is undocumented, look at decrypt_file to see how to use */
-int (*sceKernelCheckExecFile)(void *ptr, void *check);
+int sceKernelCheckExecFile(void *ptr, void *check);
 
 char g_data[0x400000] __attribute__((aligned(64)));
 char g_decrypt_buf[0x400000] __attribute__((aligned(64)));
@@ -158,55 +158,17 @@ void decrypt_files(const char *basedir, const char *destdir)
 	}
 }
 
-/* Init our kernel hook, i.e. grab the pointer to sceKernelCheckExecFile */
-/* This uses the module manager routines to grab a module and resolved an exported symbol */
-/* This should hopefully be pretty portable, until Sony decide to change kernel structures :P */
-int init_hooks(void)
-{
-	SceModuleInfo *mod;
-	int ret = 0;
-
-	/* Lookup the load core module by its name. this is the name as given in the module information */
-	mod = pspDebugFindModule("sceLoaderCore");
-	if(mod != NULL)
-	{
-		/* We have found the module we were looking for, lets grab the function by name */
-		sceKernelCheckExecFile = pspDebugFindExportedFunctionByName(mod, "LoadCoreForKernel", "sceKernelCheckExecFile");
-		/* Could also use the nid directly with, 
-		   pspDebugFindExportedFunction(mod, "LoadCoreForKernel", 0x7BE1421C); */
-		if(sceKernelCheckExecFile != NULL)
-		{
-			/* Woo, we have our kernel function */
-			printf("sceKernelCheckExecFile %p\n", sceKernelCheckExecFile);
-			ret = 1;
-		}
-		else
-		{
-			printf("Could not find sceKernelCheckExecFile in memory\n");
-		}
-	}
-	else
-	{
-		printf("Could not find sceLoaderCore in memory\n");
-	}
-
-	return ret;
-}
-
 int main(void)
 {
 	pspDebugScreenInit();
 	SetupCallbacks();
 
-	if(init_hooks())
-	{
-		/* Decrypt kernel modules */
-		sceIoMkdir("ms0:/kd", 0777);
-		decrypt_files("flash0:/kd/", "ms0:/kd/");
-		/* Decrypt VShell modules */
-		sceIoMkdir("ms0:/vsh", 0777);
-		decrypt_files("flash0:/vsh/module/", "ms0:/vsh/");
-	}
+	/* Decrypt kernel modules */
+	sceIoMkdir("ms0:/kd", 0777);
+	decrypt_files("flash0:/kd/", "ms0:/kd/");
+	/* Decrypt VShell modules */
+	sceIoMkdir("ms0:/vsh", 0777);
+	decrypt_files("flash0:/vsh/module/", "ms0:/vsh/");
 
 	printf("Done\n");
 	sceKernelExitDeleteThread(0);

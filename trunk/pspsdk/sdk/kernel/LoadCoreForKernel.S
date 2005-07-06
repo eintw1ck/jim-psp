@@ -1,0 +1,36 @@
+	.set noreorder
+
+#include "common.s"
+
+	STUB_START	"LoadCoreForKernel",0x00010000,0x001E0005
+	STUB_FUNC	0xACE23476,sceKernelCheckPspConfig
+	STUB_FUNC	0x7BE1421C,sceKernelCheckExecFile
+	STUB_FUNC	0xBF983EF2,sceKernelProbeExecutableObject
+	STUB_FUNC	0x7068E6BA,sceKernelLoadExecutableObject
+	STUB_FUNC	0xB4D6FECC,sceKernelApplyElfRelSection
+	STUB_FUNC	0x54AB2675,LoadCoreForKernel_54AB2675
+	STUB_FUNC	0x2952F5AC,sceKernelDcacheWBinvAll
+	STUB_FUNC	0xD8779AC6,sceKernelIcacheClearAll
+	STUB_FUNC	0x99A695F0,sceKernelRegisterLibrary
+	STUB_FUNC	0x5873A31F,sceKernelRegisterLibraryForUser
+	STUB_FUNC	0x0B464512,sceKernelReleaseLibrary
+	STUB_FUNC	0x9BAF90F6,sceKernelCanReleaseLibrary
+	STUB_FUNC	0x0E760DBA,sceKernelLinkLibraryEntries
+	STUB_FUNC	0x0DE1F600,sceKernelLinkLibraryEntriesForUser
+	STUB_FUNC	0xDA1B09AA,sceKernelUnLinkLibraryEntries
+	STUB_FUNC	0xC99DD47A,sceKernelQueryLoadCoreCB
+	STUB_FUNC	0x616FCCCD,sceKernelSetBootCallbackLevel
+	STUB_FUNC	0xF32A2940,sceKernelModuleFromUID
+	STUB_FUNC	0xCD0F3BAC,sceKernelCreateModule
+	STUB_FUNC	0x6B2371C2,sceKernelDeleteModule
+	STUB_FUNC	0x7320D964,sceKernelModuleAssign
+	STUB_FUNC	0x44B292AB,sceKernelAllocModule
+	STUB_FUNC	0xBD61D4D5,sceKernelFreeModule
+	STUB_FUNC	0xAE7C6E76,sceKernelRegisterModule
+	STUB_FUNC	0x74CF001A,sceKernelReleaseModule
+	STUB_FUNC	0xCF8A41B1,sceKernelFindModuleByName
+	STUB_FUNC	0xFB8AE27D,sceKernelFindModuleByAddress
+	STUB_FUNC	0xCCE4A157,sceKernelFindModuleByUID
+	STUB_FUNC	0x82CE54ED,sceKernelModuleCount
+	STUB_FUNC	0xC0584F0C,sceKernelGetModuleList
+	STUB_END

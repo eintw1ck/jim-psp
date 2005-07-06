@@ -14,4 +14,5 @@ SUBDIRS = \
 	startup \
 	umd \
 	utility \
-	samples
+	samples \
+	user

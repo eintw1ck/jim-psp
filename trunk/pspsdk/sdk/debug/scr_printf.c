@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <psptypes.h>
 #include <pspkernel.h>
+#include <pspdisplay.h>
+#include <pspge.h>
 #include <stdarg.h>
 #include <pspdebug.h>
 

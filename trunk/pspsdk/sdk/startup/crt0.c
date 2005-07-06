@@ -84,6 +84,8 @@ void _main(SceSize args, void *argp)
  */
 int _start(SceSize args, void *argp)
 {
+	void (*_main_ptr)(SceSize args, void *argp);
+
 	if (&sce_newlib_nocreate_thread_in_start != NULL) {
 		/* The program does not want main() to be run in a seperate thread. */
 		_main(args, argp);
@@ -104,8 +106,21 @@ int _start(SceSize args, void *argp)
 		stackSize = sce_newlib_stack_kb_size * 1024;
 	}
 
+	/* Set default main pointer */
+	_main_ptr = _main;
+	if(((attribute & THREAD_ATTR_USER) == 0) && (&module_info != NULL))
+	{
+		if(module_info.modattribute & 0x1000)
+		{
+			u32 main_val;
+
+			main_val = (u32) _main;
+			_main_ptr = (void*) (main_val | 0x80000000);
+		}
+	}
+
 	SceUID thid;
-	thid = sceKernelCreateThread("user_main", (void *) _main, priority, stackSize, attribute, 0);
+	thid = sceKernelCreateThread("user_main", (void *) _main_ptr, priority, stackSize, attribute, 0);
 	sceKernelStartThread(thid, args, argp);
 
 	return 0;

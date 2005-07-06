@@ -32,12 +32,6 @@ libpspkernelinclude_HEADERS =	\
 lib_LIBRARIES = libpspkernel.a
 
 libpspkernel_a_SOURCES =	\
-	iofilemgr.S		\
-	kernel.S		\
-	loadexec.S		\
-	modulemgr.S		\
-	stdio.S			\
-	suspend.S		\
-	sysmem.S		\
-	threadman.S		\
-	utils.S
+	ExceptionManagerForKernel.S \
+	KDebugForKernel.S	\
+	LoadCoreForKernel.S	

@@ -1,0 +1,26 @@
+	.set noreorder
+
+#include "common.s"
+
+	STUB_START	"KDebugForKernel",0x00010000,0x00140005
+	STUB_FUNC	0xE7A3874D,sceKernelRegisterAssertHandler
+	STUB_FUNC	0x2FF4E9F9,sceKernelAssert
+	STUB_FUNC	0x9B868276,sceKernelGetDebugPutchar
+	STUB_FUNC	0xE146606D,sceKernelRegisterDebugPutchar
+	STUB_FUNC	0x7CEB2C09,sceKernelRegisterKprintfHandler
+	STUB_FUNC	0x84F370BC,Kprintf
+	STUB_FUNC	0x5CE9838B,sceKernelDebugWrite
+	STUB_FUNC	0x66253C4E,sceKernelRegisterDebugWrite
+	STUB_FUNC	0xDBB5597F,sceKernelDebugRead
+	STUB_FUNC	0xE6554FDA,sceKernelRegisterDebugRead
+	STUB_FUNC	0xB9C643C9,sceKernelDebugEcho
+	STUB_FUNC	0x7D1C74F0,sceKernelDebugEchoSet
+	STUB_FUNC	0x24C32559,KDebugForKernel_24C32559
+	STUB_FUNC	0xD636B827,sceKernelRemoveByDebugSection
+	STUB_FUNC	0x5282DD5E,KDebugForKernel_5282DD5E
+	STUB_FUNC	0x9F8703E4,KDebugForKernel_9F8703E4
+	STUB_FUNC	0x333DCEC7,KDebugForKernel_333DCEC7
+	STUB_FUNC	0xE892D9A1,KDebugForKernel_E892D9A1
+	STUB_FUNC	0xA126F497,KDebugForKernel_A126F497
+	STUB_FUNC	0xB7251823,sceKernelAcceptMbogoSig
+	STUB_END
