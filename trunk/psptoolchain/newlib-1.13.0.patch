@@ -52,15 +52,18 @@
      noconfigdirs="$noconfigdirs gprof ${libgcj}"
      ;;
 --- newlib-1.13.0.orig/newlib/configure.host	2004-10-05 12:44:24.000000000 -0700
-+++ newlib-psp/newlib/configure.host	2005-07-06 14:21:16.030259592 -0700
-@@ -571,6 +571,11 @@
++++ newlib-psp/newlib/configure.host	2005-07-06 14:32:51.274566392 -0700
+@@ -570,7 +570,13 @@
+ 	;;
    mips*-*-elf*)
  	default_newlib_io_long_long="yes"
- 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
+-	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
 +	case "${host}" in
 +	  mipsallegrex*-psp-*)
 +		syscall_dir=syscalls
-+		newlib_cflags="${newlib_cflags} -G0 -DPREFER_SIZE_OVER_SPEED -DCOMPACT_CTYPE -DCLOCK_PROVIDED -UMISSING_SYSCALL_NAMES" ;;
++		newlib_cflags="${newlib_cflags} -G0 -DPREFER_SIZE_OVER_SPEED -DCOMPACT_CTYPE -DCLOCK_PROVIDED" ;;
++	  *)
++		newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES" ;;
 +	esac
  	;;
    mmix-*)
