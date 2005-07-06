@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 # toolchain.sh - Dan Peori <peori@oopo.net>
 # Copy all you want. Please give me some credit.
 
@@ -23,17 +23,21 @@
  ## PARSE THE ARGUMENTS ##
  #########################
 
-  ## If no arguments are given, do everything.
-  if [ $# == 0 ] ; then
+  ## If no arguments are given...
+  if test $# -eq 0 ; then
+
+   ## Do everything possible.
    DO_DOWNLOAD=1
    BUILD_BINUTILS=1
    BUILD_GCC=1
    BUILD_NEWLIB=1
    BUILD_PSPSDK=1
 
-  ## Else, parse the arguments.
+  ## Else...
   else
-   while [ $# -ge 1 ] ; do
+
+   ## Parse the arguments.
+   while test $# -ge 1 ; do
     case "$1" in
      -d)
       DO_DOWNLOAD=1
@@ -52,64 +56,109 @@
       shift;;
     esac
    done
+
   fi
 
  ###########################
  ## SOFTWARE DEPENDENCIES ##
  ###########################
 
-  ## Check for which make to use.
-  MAKE="gmake"; $MAKE -v || { MAKE="make"; }
-
   ## Check for make.
-  $MAKE -v || { echo "ERROR: Please make sure you have GNU 'make' installed."; exit; }
+  if test "`gmake -v`" ; then
+   MAKE="gmake"
+  else
+   if test "`make -v`" ; then
+    MAKE="make"
+   else
+    echo "ERROR: Please make sure you have GNU 'make' installed."
+    exit
+   fi
+  fi
 
   ## Check for patch.
-  patch -v || { echo "ERROR: Please make sure you have 'patch' installed."; exit; }
+  if test "`patch -v`" ; then
+   PATCH="patch -p1"
+  else
+   echo "ERROR: Please make sure you have 'patch' installed."
+   exit
+  fi
 
   ## Check for wget.
-  wget -V || { echo "ERROR: Please make sure you have 'wget' installed."; exit; }
+  if test "`wget -V`" ; then
+   WGET="wget --passive-ftp"
+  else
+   echo "ERROR: Please make sure you have 'wget' installed."
+   exit
+  fi
 
   ## Check for subversion.
-  svn help || { echo "ERROR: Please make sure you have 'subversion (svn)' installed."; exit; }
+  if test "`svn help`" ; then
+   SVN="svn"
+  else
+   echo "ERROR: Please make sure you have 'subversion (svn)' installed."
+   exit
+  fi
 
  ################################
  ## DOWNLOAD, UNPACK AND PATCH ##
  ################################
 
-  ## Download the source.
-  if [ $DO_DOWNLOAD ] ; then
-   wget -c --passive-ftp ftp://ftp.gnu.org/pub/gnu/binutils/$BINUTILS.tar.gz
-   wget -c --passive-ftp ftp://ftp.gnu.org/pub/gnu/gcc/$GCC/$GCC.tar.bz2
-   wget -c --passive-ftp ftp://sources.redhat.com/pub/newlib/$NEWLIB.tar.gz
+  ## If we've been told to download...
+  if test $DO_DOWNLOAD ; then
+
+   ## Download the binutils source.
+   if test $BUILD_BINUTILS ; then
+    if test ! -f "$BINUTILS.tar.gz" ; then
+     $WGET ftp://ftp.gnu.org/pub/gnu/binutils/$BINUTILS.tar.gz || { echo "ERROR DOWNLOADING BINUTILS"; exit; }
+    fi
+   fi
+
+   ## Download the gcc source.
+   if test $BUILD_GCC ; then
+    if test ! -f "$GCC.tar.bz2" ; then
+     $WGET ftp://ftp.gnu.org/pub/gnu/gcc/$GCC/$GCC.tar.bz2 || { echo "ERROR DOWNLOADING GCC"; exit; }
+    fi
+   fi
+
+   ## Download the newlib source.
+   if test $BUILD_NEWLIB ; then
+    if test ! -f "$NEWLIB.tar.gz" ; then
+     $WGET ftp://sources.redhat.com/pub/newlib/$NEWLIB.tar.gz || { echo "ERROR DOWNLOADING NEWLIB"; exit; }
+    fi
+   fi
+
   fi
 
-  ## Create the temp directory.
+  ## Create and enter the temp directory.
   mkdir -p $TMPDIR; cd $TMPDIR
 
   ## Unpack and patch the binutils source.
-  if [ $BUILD_BINUTILS ] ; then
-    rm -Rf $BINUTILS; tar xfvz $SRCDIR/$BINUTILS.tar.gz
-    cd $BINUTILS; cat $SRCDIR/$BINUTILS.patch | patch -p1; cd ..
+  if test $BUILD_BINUTILS ; then
+   rm -Rf $BINUTILS; tar xfvz $SRCDIR/$BINUTILS.tar.gz
+   cd $BINUTILS; cat $SRCDIR/$BINUTILS.patch | $PATCH || { echo "ERROR PATCHING BINUTILS"; exit; }
+   cd ..
   fi
 
   ## Unpack and patch the gcc source.
-  if [ $BUILD_GCC ] ; then
-    rm -Rf $GCC; tar xfvj $SRCDIR/$GCC.tar.bz2
-    cd $GCC; cat $SRCDIR/$GCC.patch | patch -p1; cd ..
+  if test $BUILD_GCC ; then
+   rm -Rf $GCC; tar xfvj $SRCDIR/$GCC.tar.bz2
+   cd $GCC; cat $SRCDIR/$GCC.patch | $PATCH || { echo "ERROR PATCHING GCC"; exit; }
+   cd ..
   fi
 
   ## Unpack and patch the newlib source.
-  if [ $BUILD_NEWLIB ] ; then
-    rm -Rf $NEWLIB; tar xfvz $SRCDIR/$NEWLIB.tar.gz
-    cd $NEWLIB; cat $SRCDIR/$NEWLIB.patch | patch -p1; cd ..
+  if test $BUILD_NEWLIB ; then
+   rm -Rf $NEWLIB; tar xfvz $SRCDIR/$NEWLIB.tar.gz
+   cd $NEWLIB; cat $SRCDIR/$NEWLIB.patch | $PATCH || { echo "ERROR PATCHING NEWLIB"; exit; }
+   cd ..
   fi
 
  ################################
  ## BUILD AND INSTALL BINUTILS ##
  ################################
 
-  if [ $BUILD_BINUTILS ] ; then
+  ## If we've been told to build binutils...
+  if test $BUILD_BINUTILS ; then
 
    ## Enter the source directory.
    cd $BINUTILS
@@ -138,7 +187,8 @@
  ## BUILD AND INSTALL GCC ##
  ###########################
 
-  if [ $BUILD_GCC ] ; then
+  ## If we've been told to build gcc...
+  if test $BUILD_GCC ; then
 
    ## Enter the source directory.
    cd $GCC
@@ -167,7 +217,8 @@
  ## BUILD AND INSTALL NEWLIB ##
  ##############################
 
-  if [ $BUILD_NEWLIB ] ; then
+  ## If we've been told to build newlib...
+  if test $BUILD_NEWLIB ; then
 
    ## Enter the source directory.
    cd $NEWLIB
@@ -196,7 +247,8 @@
  ## BUILD AND INSTALL GCC (C++) ##
  #################################
 
-  if [ $BUILD_GCC ] ; then
+  ## If we've been told to build gcc...
+  if test $BUILD_GCC ; then
 
    ## Enter the source directory.
    cd $GCC
@@ -225,13 +277,14 @@
  ## BUILD AND INSTALL PSPSDK ##
  ##############################
 
-  if [ $BUILD_PSPSDK ] ; then
+  ## If we've been told to build pspsdk...
+  if test $BUILD_PSPSDK ; then
 
    ## Remove any previous builds.
    rm -Rf pspsdk
 
    ## Check out the latest source.
-   svn checkout svn://svn.pspdev.org/psp/trunk/pspsdk
+   $SVN checkout svn://svn.pspdev.org/psp/trunk/pspsdk
 
    ## Enter the source directory.
    cd pspsdk
@@ -260,14 +313,14 @@
  ## CLEAN UP THE RESULT ##
  #########################
 
-  ## Clean up binutils.
+  ## Clean up the binutils source.
   rm -Rf $BINUTILS
 
-  ## Clean up gcc.
+  ## Clean up the gcc source.
   rm -Rf $GCC
 
-  ## Clean up newlib.
+  ## Clean up the newlib source.
   rm -Rf $NEWLIB
 
-  ## Clean up pspsdk.
+  ## Clean up the pspsdk source.
   rm -Rf pspsdk
