@@ -34,6 +34,7 @@ void exit_callback(void)
 /* Power Callback */
 void power_callback(int unknown, int pwrflags)
 {
+    /* check for power switch and suspending as one is manual and the other automatic */
     if (pwrflags & PSP_POWER_CB_POWER_SWITCH || pwrflags & PSP_POWER_CB_SUSPENDING) {
 	sprintf(powerCBMessage,
 		"first arg: 0x%08X, flags: 0x%08X: suspending\n", unknown, pwrflags);
@@ -48,7 +49,7 @@ void power_callback(int unknown, int pwrflags)
 	sprintf(powerCBMessage,
 		"first arg: 0x%08X, flags: 0x%08X: entering standby mode\n", unknown, pwrflags);
     } else {
-	sprintf(powerCBMessage, "first arg: 0x%08X, flags: 0x%08X\n", unknown, pwrflags);
+	sprintf(powerCBMessage, "first arg: 0x%08X, flags: 0x%08X: Unhandled power event\n", unknown, pwrflags);
     }
     sceDisplayWaitVblankStart();
 }
@@ -82,7 +83,8 @@ int main(int argc, char *argv[])
     int powerLocked = 0;
     int powerTicks = 0;
     u32 oldButtons = 0;
-
+    int batteryLifeTime = 0;
+    
     //init screen and callbacks
     pspDebugScreenInit();
     pspDebugScreenClear();
@@ -94,6 +96,11 @@ int main(int argc, char *argv[])
 
     //fetch and print out power and battery information
     for (;;) {
+    	/* fix so the screen lines up right if the battery disappears */
+    	if (!scePowerIsBatteryExist()) {
+	    pspDebugScreenClear();
+    	}
+    	
 	pspDebugScreenSetXY(0, 0);
 	printf("PSP Power Sample v1.0 by John_K\n\n");
 	sceCtrlReadBufferPositive(&pad, 1);
@@ -104,8 +111,9 @@ int main(int argc, char *argv[])
 	if (scePowerIsBatteryExist()) {
 	    printf("%-14s: %s\n", "Low Charge", scePowerIsLowBattery()? "yes" : "no ");
 	    printf("%-14s: %s\n", "Charging", scePowerIsBatteryCharging()? "yes" : "no ");
-	    printf("%-14s: %d%% (%03d)     \n", "Charge",
-		   scePowerGetBatteryLifePercent(), scePowerGetBatteryLifeTime());
+	    batteryLifeTime = scePowerGetBatteryLifeTime();
+	    printf("%-14s: %d%% (%02dh%02dm)     \n", "Charge",
+		   scePowerGetBatteryLifePercent(), batteryLifeTime/60, batteryLifeTime-(batteryLifeTime/60*60));
 	    printf("%-14s: %0.3fV\n", "Volts", (float) scePowerGetBatteryVolt() / 1000.0);
 	    printf("%-14s: %d deg C\n", "Battery Temp", scePowerGetBatteryTemp());
 	} else
