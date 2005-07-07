@@ -6,7 +6,7 @@
 	STUB_FUNC	0x2B51FE2F,scePower_2B51FE2F
 	STUB_FUNC	0x442BFBAC,scePower_442BFBAC
 	STUB_FUNC	0xEFD3C963,scePowerTick
-	STUB_FUNC	0xEDC13FE5,scePower_EDC13FE5
+	STUB_FUNC	0xEDC13FE5,scePowerGetIdleTimer
 	STUB_FUNC	0x7F30B3B1,scePowerIdleTimerEnable
 	STUB_FUNC	0x972CE941,scePowerIdleTimerDisable
 	STUB_FUNC	0x27F3292C,scePowerBatteryUpdateInfo
@@ -31,12 +31,12 @@
 	STUB_FUNC	0xD6D016EF,scePowerLock
 	STUB_FUNC	0xCA3D34C1,scePowerUnlock
 	STUB_FUNC	0xDB62C9CF,scePowerCancelRequest
-	STUB_FUNC	0x7FA406DD,scePower_7FA406DD
-	STUB_FUNC	0x2B7C7CF4,scePower_2B7C7CF4
-	STUB_FUNC	0xAC32C9CC,scePower_AC32C9CC
+	STUB_FUNC	0x7FA406DD,scePowerIsRequest
+	STUB_FUNC	0x2B7C7CF4,scePowerRequestStandby
+	STUB_FUNC	0xAC32C9CC,scePowerRequestSuspend
 	STUB_FUNC	0x2875994B,scePower_2875994B
 	STUB_FUNC	0x3951AF53,scePowerEncodeUBattery
-	STUB_FUNC	0x0074EF9B,scePower_0074EF9B
+	STUB_FUNC	0x0074EF9B,scePowerGetResumeCount
 	STUB_FUNC	0x04B7766E,scePowerRegisterCallback
 	STUB_FUNC	0xDFA8BAF8,scePowerUnregisterCallback
 	STUB_FUNC	0xDB9D28DD,scePower_DB9D28DD
@@ -44,9 +44,9 @@
 	STUB_FUNC	0xB8D7B3FB,scePowerSetBusClockFrequency
 	STUB_FUNC	0xFEE03A2F,scePowerGetCpuClockFrequency
 	STUB_FUNC	0x478FE6F5,scePowerGetBusClockFrequency
-	STUB_FUNC	0xFDB5BFE9,scePower_FDB5BFE9
-	STUB_FUNC	0xBD681969,scePower_BD681969
-	STUB_FUNC	0xB1A52C83,scePower_B1A52C83
-	STUB_FUNC	0x9BADB3EB,scePower_9BADB3EB
+	STUB_FUNC	0xFDB5BFE9,scePowerGetCpuClockFrequencyInt
+	STUB_FUNC	0xBD681969,scePowerGetBusClockFrequencyInt
+	STUB_FUNC	0xB1A52C83,scePowerGetCpuClockFrequencyFloat
+	STUB_FUNC	0x9BADB3EB,scePowerGetBusClockFrequencyFloat
 	STUB_FUNC	0x737486F2,scePowerSetClockFrequency
 	STUB_END

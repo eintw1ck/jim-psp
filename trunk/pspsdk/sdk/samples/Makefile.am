@@ -17,7 +17,8 @@ SAMPLES = \
 	irda/sircs \
 	kernel/kdumper \
 	kernel/threadstatus \
-	kernel/fileio
+	kernel/fileio \
+	power
 
 all:
 
