@@ -61,6 +61,20 @@ int sceHprmPeekLatch(u32 *latch);
   */
 int sceHprmReadLatch(u32 *latch);
 
+/**
+  * Determines whether the headphones are plugged in.
+  *
+  * @return 1 if the headphones are plugged in, else 0.
+  */
+int sceHprmIsHeadphoneExist(void);
+
+/** 
+  * Determines whether the remote is plugged in.
+  *
+  * @return 1 if the remote is plugged in, else 0.
+  */
+int sceHprmIsRemoteExist(void);
+
 /*@}*/
 
 #ifdef __cplusplus
