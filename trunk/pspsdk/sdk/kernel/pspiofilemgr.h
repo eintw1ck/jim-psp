@@ -172,10 +172,18 @@ int sceIoMkdir(const char *dir, SceMode mode);
  * @code
  * @endcode
  *
- * @param path Removes a directory file pointed by the string path
+ * @param path - Removes a directory file pointed by the string path
  * @return Returns the value 0 if its succesful otherwise -1
  */
 int sceIoRmdir(const char *path);
+
+/**
+  * Change the current directory.
+  *
+  * @param path - The path to change to.
+  * @return < 0 on error.
+  */
+int sceIoChdir(const char *path);
 
 /**
  * Change the name of a file
@@ -292,6 +300,118 @@ int sceIoGetstat(const char *file, SceIoStat *stat);
   * @return < 0 on error.
   */
 int sceIoChstat(const char *file, SceIoStat *stat, int bits);
+
+/**
+  * Perform an ioctl on a device.
+  *
+  * @param dev - String for the device to send the devctl to (e.g. "ms0:")
+  * @param cmd - The command to send to the device
+  * @param indata - A data block to send to the device, if NULL sends no data
+  * @param inlen - Length of indata, if 0 sends no data
+  * @param outdata - A data block to receive the result of a command, if NULL receives no data
+  * @param outlen - Length of outdata, if 0 receives no data
+  * @return 0 on success, < 0 on error
+  */
+int sceIoIoctl(const char *dev, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
+
+/** Structure passed to the init and exit functions of the io driver system */
+struct _PspIoDrvArg
+{
+	/** Pointer to the original driver which was added */
+	struct _PspIoDrv *drv;
+	/** Pointer to a user defined argument (if written by the driver will preseve across calls */
+	void *arg;
+};
+
+typedef struct _PspIoDrvArg PspIoDrvArg;
+
+/** Structure passed to the file functions of the io driver system */
+struct _PspIoDrvFileArg
+{
+	/** Unknown */
+	u32 unk1;
+	/** The file system number, e.g. if a file is opened as host5:/myfile.txt this field will be 5 */
+	u32 fs_num;
+	/** Pointer to the driver structure */
+	struct _PspIoDrvArg *drv;
+	/** Unknown, again */
+	u32 unk2;
+	/** Pointer to a user defined argument, this is preserved on a per file basis */
+	void *arg;
+};
+
+typedef struct _PspIoDrvFileArg PspIoDrvFileArg;
+
+/** Structure to maintain the file driver pointers */
+struct _PspIoDrvFuncs
+{
+	int (*IoInit)(PspIoDrvArg* arg);
+	int (*IoExit)(PspIoDrvArg* arg); 
+	int (*IoOpen)(PspIoDrvFileArg *arg, char *file, int flags, SceMode mode); 
+	int (*IoClose)(PspIoDrvFileArg *arg); 
+	int (*IoRead)(PspIoDrvFileArg *arg, char *data, int len); 
+	int (*IoWrite)(PspIoDrvFileArg *arg, const char *data, int len); 
+	int (*IoLseek)(PspIoDrvFileArg *arg, u32 unk, long long ofs, int whence); 
+	int (*IoIoctl)(PspIoDrvFileArg *arg, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
+	int (*IoRemove)(PspIoDrvFileArg *arg, const char *name); 
+	int (*IoMkdir)(PspIoDrvFileArg *arg, const char *name, SceMode mode); 
+	int (*IoRmdir)(PspIoDrvFileArg *arg, const char *name);
+	int (*IoDopen)(PspIoDrvFileArg *arg, const char *dirname); 
+	int (*IoDclose)(PspIoDrvFileArg *arg);
+	int (*IoDread)(PspIoDrvFileArg *arg, SceIoDirent *dir);
+	int (*IoGetstat)(PspIoDrvFileArg *arg, const char *file, SceIoStat *stat);
+	int (*IoChstat)(PspIoDrvFileArg *arg, const char *file, SceIoStat *stat, int bits);
+	int (*IoRename)(PspIoDrvFileArg *arg, const char *oldname, const char *newname); 
+	int (*IoChdir)(PspIoDrvFileArg *arg, const char *dir); 
+	int (*IoMount)(PspIoDrvFileArg *arg); 
+	int (*IoUmount)(PspIoDrvFileArg *arg); 
+	int (*IoDevctl)(PspIoDrvFileArg *arg, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen); 
+	int (*IoUnk21)(PspIoDrvFileArg *arg); 
+};
+
+typedef struct _PspIoDrvFuncs PspIoDrvFuncs;
+
+struct _PspIoDrv
+{
+	/** The name of the device to add */
+	const char *name;
+	/** Device type, this 0x10 is for a filesystem driver */
+	u32 dev_type;
+	/** Unknown, set to 0x800 */
+	u32 unk2;
+	/** This seems to be the same as name but capitalised :/ */
+	const char *name2;
+	/** Pointer to a filled out functions table */
+	PspIoDrvFuncs *funcs;
+};
+
+typedef struct _PspIoDrv PspIoDrv;
+
+/** 
+  * Adds a new IO driver to the system.
+  * @note This is only exported in the kernel version of IoFileMgr
+  * 
+  * @param drv - Pointer to a filled out driver structure
+  * @return < 0 on error.
+  *
+  * @par Example:
+  * @code
+  * PspIoDrvFuncs host_funcs = { ... };
+  * PspIoDrv host_driver = { "host", 0x10, 0x800, "HOST", &host_funcs };
+  * sceIoDelDrv("host");
+  * sceIoAddDrv(&host_driver);
+  * @endcode
+  */
+int sceIoAddDrv(PspIoDrv *drv);
+
+/**
+  * Deletes a IO driver from the system.
+  * @note This is only exported in the kernel version of IoFileMgr
+  *
+  * @param drv_name - Name of the driver to delete.
+  * @return < 0 on error
+  */
+int sceIoDelDrv(const char *drv_name);
 
 /*@}*/
 
