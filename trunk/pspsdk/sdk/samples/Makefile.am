@@ -8,6 +8,7 @@ SAMPLES = \
 	debug/exception \
 	debug/kprintf \
 	debug/prxdecrypt \
+	debug/profiler \
 	gu/blit \
 	gu/clut \
 	gu/cube \

@@ -228,6 +228,50 @@ typedef struct _PspDebugStackTrace
   */
 int pspDebugGetStackTrace2(PspDebugRegBlock *regs, PspDebugStackTrace *trace, int max);
 
+/** Structure to hold the psp profiler register values */
+typedef struct _PspDebugProfilerRegs
+{
+	u32 enable;
+	u32 systemck;
+	u32 cpuck;
+	u32 stall;
+	u32 internal;
+	u32 memory;
+	u32 copz;
+	u32 vfpu;
+	u32 sleep;
+	u32 bus_access;
+	u32 uncached_load;
+	u32 uncached_store;
+	u32 cached_load;
+	u32 cached_store;
+	u32 i_miss;
+	u32 d_miss;
+	u32 d_writeback;
+	u32 cop0_inst;
+	u32 fpu_inst;
+	u32 vfpu_inst;
+	u32 local_bus;
+} PspDebugProfilerRegs;
+
+/** Enables the profiler hardware */
+void pspDebugProfilerEnable(void);
+
+/** Disables the profiler hardware */
+void pspDebugProfilerDisable(void);
+
+/** Clear the profiler registers */
+void pspDebugProfilerClear(void);
+
+/** Get the profiler register state
+  *
+  * @param regs - A pointer to a PspDebugProfilerRegs structure.
+  */
+void pspDebugProfilerGetRegs(PspDebugProfilerRegs *regs);
+
+/** Print the profiler registers to screen */
+void pspDebugProfilerPrint(void);
+
 /*@}*/
 
 #ifdef __cplusplus

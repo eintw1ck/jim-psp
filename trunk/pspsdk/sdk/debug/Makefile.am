@@ -24,4 +24,5 @@ libpspdebug_a_SOURCES =		\
 	exception.c	\
 	exception_asm.S \
 	kprintf.c	\
-	stacktrace.c	
+	stacktrace.c	\
+	profiler.c
