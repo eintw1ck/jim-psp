@@ -2014,15 +2014,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x444ED0B7</NID>
-						<NAME>sceHprm_444ED0B7</NAME>
+						<NAME>sceHprmUnregisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x208DB1BD</NID>
-						<NAME>sceHprm_208DB1BD</NAME>
+						<NAME>sceHprmIsRemoteExist</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7E69EDA4</NID>
-						<NAME>sceHprm_7E69EDA4</NAME>
+						<NAME>sceHprmIsHeadphoneExist</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x219C58F1</NID>
@@ -2030,7 +2030,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1910B327</NID>
-						<NAME>sceHprm_1910B327</NAME>
+						<NAME>sceHprmPeekCurrentKey</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2BCEC83E</NID>
@@ -2072,15 +2072,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x444ED0B7</NID>
-						<NAME>sceHprm_driver_444ED0B7</NAME>
+						<NAME>sceHprmUnregisterCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x208DB1BD</NID>
-						<NAME>sceHprm_driver_208DB1BD</NAME>
+						<NAME>sceHprmIsRemoteExist</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7E69EDA4</NID>
-						<NAME>sceHprm_driver_7E69EDA4</NAME>
+						<NAME>sceHprmIsHeadphoneExist</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x219C58F1</NID>
@@ -2108,7 +2108,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1910B327</NID>
-						<NAME>sceHprm_driver_1910B327</NAME>
+						<NAME>sceHprmPeekCurrentKey</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2BCEC83E</NID>
