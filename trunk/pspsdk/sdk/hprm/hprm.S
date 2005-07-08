@@ -2,17 +2,13 @@
 
 #include "common.s"
 
-	STUB_START	"sceHprm",0x40010000,0x00090005 
-	STUB_FUNC	0x1c5bc5a0,sceHprmInit
-	STUB_FUNC	0x588845da,sceHprmEnd
-	STUB_FUNC	0x526bb7f4,sceHprmSuspend
-	STUB_FUNC	0x2c7b8b05,sceHprmResume
-	STUB_FUNC	0xd222913db,sceHprmSetConnectCallback
-	STUB_FUNC	0xc7154136,sceHprmRegisterCallback
-	STUB_FUNC	0x4d1e622c,sceHprmReset
-	STUB_FUNC	0x7b038474,sceHprmGetInternalState
-	STUB_FUNC	0xbad0828e,sceHprmGetModel
-	STUB_FUNC	0x1910b327,sceHprmPeekCurrentKey
-	STUB_FUNC	0x2bcec83e,sceHprmPeekLatch
-	STUB_FUNC	0x40d2f9f0,sceHprmReadLatch
+	STUB_START	"sceHprm",0x40010000,0x00080005
+	STUB_FUNC	0xC7154136,sceHprmRegisterCallback
+	STUB_FUNC	0x444ED0B7,sceHprm_444ED0B7
+	STUB_FUNC	0x208DB1BD,sceHprm_208DB1BD
+	STUB_FUNC	0x7E69EDA4,sceHprm_7E69EDA4
+	STUB_FUNC	0x219C58F1,sceHprm_219C58F1
+	STUB_FUNC	0x1910B327,sceHprmPeekCurrentKey
+	STUB_FUNC	0x2BCEC83E,sceHprmPeekLatch
+	STUB_FUNC	0x40D2F9F0,sceHprmReadLatch
 	STUB_END

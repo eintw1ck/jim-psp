@@ -22,78 +22,44 @@ extern "C" {
 
 /*@{*/
 
-/**
-  * sceHprmInit
+/** Enumeration of the remote keys */
+enum PspHprmKeys
+{
+	PSP_HPRM_PLAYPAUSE  = 0x1,
+	PSP_HPRM_FORWARD    = 0x4,
+	PSP_HPRM_BACK       = 0x8,
+	PSP_HPRM_VOL_UP		= 0x10,
+	PSP_HPRM_VOL_DOWN   = 0x20,
+	PSP_HPRM_HOLD       = 0x80
+};
+
+/** 
+  * Peek at the current being pressed on the remote.
+  * 
+  * @param key - Pointer to the u32 to receive the key bitmap, should be one or
+  * more of ::PspHprmKeys
   *
+  * @return < 0 on error
   */
-void sceHprmInit();
+int sceHprmPeekCurrentKey(u32 *key);
 
 /**
-  * sceHprmEnd
+  * Peek at the current latch data.
   *
+  * @param latch - Pointer a to a 4 dword array to contain the latch data.
+  *
+  * @return < 0 on error.
   */
-void sceHprmEnd();
+int sceHprmPeekLatch(u32 *latch);
 
 /**
-  * sceHprmSuspend
+  * Read the current latch data.
   *
-  */
-void sceHprmSuspend();
-
-/**
-  * sceHprmResume
+  * @param latch - Pointer a to a 4 dword array to contain the latch data.
   *
+  * @return < 0 on error.
   */
-void sceHprmResume();
-
-/**
-  * sceHprmSetConnectCallback
-  *
-  */
-void sceHprmSetConnectCallback();
-
-/**
-  * sceHprmRegisterCallback
-  *
-  */
-void sceHprmRegisterCallback();
-
-/**
-  * sceHprmReset
-  *
-  */
-void sceHprmReset();
-
-/**
-  * sceHprmGetInternalState
-  *
-  */
-void sceHprmGetInternalState();
-
-/**
-  * sceHprmGetModel
-  *
-  */
-void sceHprmGetModel();
-
-/**
-  * sceHprmPeekCurrentKey
-  *
-  */
-void sceHprmPeekCurrentKey();
-
-/**
-  * sceHprmPeekLatch
-  *
-  */
-void sceHprmPeekLatch();
-
-/**
-  * sceHprmReadLatch
-  *
-  */
-void sceHprmReadLatch();
-
+int sceHprmReadLatch(u32 *latch);
 
 /*@}*/
 
