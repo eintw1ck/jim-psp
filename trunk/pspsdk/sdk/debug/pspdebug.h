@@ -14,10 +14,13 @@
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
 
+#include <psptypes.h>
+#include <pspmoduleinfo.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <pspmoduleinfo.h>
+
 /** @defgroup Debug Debug Utility Library */
 
 /** @addtogroup Debug */
