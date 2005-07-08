@@ -23,17 +23,17 @@
 	STUB_FUNC	0xB62A4061,sceUtility_B62A4061
 	STUB_FUNC	0xED0FAD38,sceUtility_ED0FAD38
 	STUB_FUNC	0x88BC7406,sceUtility_88BC7406
-	STUB_FUNC	0x2AD8E239,sceUtility_2AD8E239
-	STUB_FUNC	0x67AF3428,sceUtility_67AF3428
-	STUB_FUNC	0x95FC253B,sceUtility_95FC253B
-	STUB_FUNC	0x9A1C91D7,sceUtility_9A1C91D7
+	STUB_FUNC	0x2AD8E239,sceUtilityMsgDialogInitStart
+	STUB_FUNC	0x67AF3428,sceUtilityMsgDialogShutdownStart
+	STUB_FUNC	0x95FC253B,sceUtilityMsgDialogUpdate
+	STUB_FUNC	0x9A1C91D7,sceUtilityMsgDialogGetStatus
 	STUB_FUNC	0xF6269B82,sceUtilityOskInitStart
 	STUB_FUNC	0x3DFAEBA9,sceUtilityOskShutdownStart
 	STUB_FUNC	0x4B85C861,sceUtilityOskUpdate
 	STUB_FUNC	0xF3F76017,sceUtilityOskGetStatus
-	STUB_FUNC	0x45C18506,sceUtility_45C18506
-	STUB_FUNC	0x41E30674,sceUtility_41E30674
-	STUB_FUNC	0xA5DA2406,sceUtility_A5DA2406
+	STUB_FUNC	0x45C18506,sceUtilitySetSystemParamInt
+	STUB_FUNC	0x41E30674,sceUtilitySetSystemParamString
+	STUB_FUNC	0xA5DA2406,sceUtilityGetSystemParamInt
 	STUB_FUNC	0x34B78343,sceUtilityGetSystemParamString
 	STUB_FUNC	0x5EEE6548,sceUtilityCheckNetParam
 	STUB_FUNC	0x434D4B3A,sceUtilityGetNetParam

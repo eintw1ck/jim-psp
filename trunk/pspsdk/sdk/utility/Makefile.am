@@ -10,6 +10,9 @@ INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 
+libpsputilityincludedir = @PSPSDK_INCLUDEDIR@
+libpsputilityinclude_HEADERS = psputility.h
+
 lib_LIBRARIES = libpsputility.a
 libpsputility_a_SOURCES = utility.S
 
