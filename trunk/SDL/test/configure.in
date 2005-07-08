@@ -18,6 +18,29 @@ dnl Check for compiler environment
 
 AC_C_CONST
 
+AM_CONDITIONAL(TARGET_PSP, test $ARCH = psp)
+dnl Check for a valid PSPSDK installation
+CheckPSPSDK()
+{
+    AC_CHECK_PROG(psp_config, psp-config, psp-config, no)
+    if test x$psp_config = xno; then
+        AC_MSG_ERROR(Couldn't locate psp-config.)
+    fi
+
+    AC_MSG_CHECKING(for PSPSDK)
+    pspsdk_path=`$psp_config --pspsdk-path`
+    if test ! -d $pspsdk_path -o -z $pspsdk_path; then
+        AC_MSG_RESULT(not found)
+        AC_MSG_ERROR(Couldn't locate PSPSDK.)
+    fi
+    AC_MSG_RESULT($pspsdk_path)
+
+    # Compile SDL with -G0 to disable the $gp register.
+    CFLAGS="$CFLAGS -G0 -I\"${pspsdk_path}/include\""
+    SYSTEM_LIBS="$SYSTEM_LIBS -lpspgu -lpspaudio -lpsplibc -lpspuser -lpspkernel"
+    BUILD_PREFIX="psp-"
+}
+
 dnl Figure out which math library to use
 case "$target" in
     *-*-cygwin* | *-*-mingw32*)
@@ -50,6 +73,32 @@ case "$target" in
             SYS_GL_LIBS="-lOSMesa"
         fi
 		;;
+    *-psp-*)
+        ARCH=psp
+        CheckPSPSDK
+        # Set up files for the video library
+        if test x$enable_video = xyes; then
+            VIDEO_SUBDIRS="$VIDEO_SUBDIRS psp"
+            VIDEO_DRIVERS="$VIDEO_DRIVERS psp/libvideo_psp.la"
+        fi
+        # Set up files for the audio library
+        if test x$enable_audio = xyes; then
+            AUDIO_SUBDIRS="$AUDIO_SUBDIRS psp"
+            AUDIO_DRIVERS="$AUDIO_DRIVERS psp/libaudio_psp.la"
+        fi
+        # Set up files for the joystick library
+        if test x$enable_joystick = xyes; then
+            JOYSTICK_SUBDIRS="$JOYSTICK_SUBDIRS psp"
+            JOYSTICK_DRIVERS="$JOYSTICK_DRIVERS psp/libjoystick_psp.la"
+        fi
+        # Set up files for the cdrom library
+        if test x$enable_cdrom = xyes; then
+            CDROM_SUBDIRS="$CDROM_SUBDIRS dummy"
+            CDROM_DRIVERS="$CDROM_DRIVERS dummy/libcdrom_dummy.la"
+        fi
+
+        CFLAGS="$CFLAGS -DENABLE_PSP -DDISABLE_STDIO"
+        ;;
     *)
         MATHLIB="-lm"
         AC_PATH_X
