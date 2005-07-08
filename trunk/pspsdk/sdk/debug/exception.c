@@ -11,6 +11,7 @@
  */
 
 #include <pspkernel.h>
+#include <pspdisplay.h>
 #include <pspdebug.h>
 
 static PspDebugErrorHandler curr_handler = NULL;
@@ -23,7 +24,6 @@ int sceKernelRegisterDefaultExceptionHandler(void *func);
 /* Install an error handler */
 int pspDebugInstallErrorHandler(PspDebugErrorHandler handler)
 {
-	SceModuleInfo *mod;
 	u32 addr;
 
 	curr_handler = handler;
