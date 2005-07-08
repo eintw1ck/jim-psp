@@ -11,7 +11,7 @@
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  * Copyright (c) 2005 Donour Sizemore <donour@uchicago.edu>
  *
- * $Id: main.c 363 2005-06-27 20:35:14Z tyranid $
+ * $Id$
  */
 #include <pspkernel.h>
 #include <pspdebug.h>

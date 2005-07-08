@@ -9,7 +9,7 @@
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  *
- * $Id: main.c 363 2005-06-27 20:35:14Z tyranid $
+ * $Id$
  */
 #include <pspkernel.h>
 #include <pspdebug.h>

@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  *
- * $Id: pspmodulemgr.h 422 2005-07-02 21:22:09Z mrbrown $
+ * $Id$
  */
 
 /* Note: Some of the structures, types, and definitions in this file were
