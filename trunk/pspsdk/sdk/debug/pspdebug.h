@@ -17,7 +17,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+#include <pspmoduleinfo.h>
 /** @defgroup Debug Debug Utility Library */
 
 /** @addtogroup Debug */
