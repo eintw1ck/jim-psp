@@ -9,6 +9,8 @@
  *
  * $Id$
  */
+#ifndef __PSPUTILITY_H__
+#define __PSPUTILITY_H__
 
 /**
  * IDs for use inSystemParam functions
@@ -120,3 +122,5 @@ int sceUtilityGetSystemParamInt( int id, int *value );
  * @returns 0 on success, PSP_SYSTEMPARAM_RETVAL_FAIL on failure
  */
 int sceUtilityGetSystemParamString(int id, char *str, int len);
+
+#endif
