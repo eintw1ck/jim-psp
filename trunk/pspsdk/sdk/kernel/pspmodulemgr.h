@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * pspmodulemgr.h - Prototypes to manage manage modules.
+ * pspmodulemgr.h - Prototypes to manage modules.
  *
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
