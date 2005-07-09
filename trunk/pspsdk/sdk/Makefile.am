@@ -13,6 +13,6 @@ SUBDIRS = \
 	sircs \
 	startup \
 	umd \
+	user \
 	utility \
-	samples \
-	user
+	samples

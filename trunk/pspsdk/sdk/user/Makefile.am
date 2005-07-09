@@ -10,11 +10,8 @@ INCLUDES = -I$(top_srcdir)/sdk/base
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base
 
-EXTRA_DIST = common.s
-
 libpspuserincludedir = @PSPSDK_INCLUDEDIR@
-
-libpspuserinclude_HEADERS =	
+libpspuserinclude_HEADERS = pspuser.h
 
 lib_LIBRARIES = libpspuser.a
 
