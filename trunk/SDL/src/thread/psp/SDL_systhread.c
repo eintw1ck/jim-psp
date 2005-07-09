@@ -41,7 +41,7 @@ static char rcsid =
 
 static int ThreadEntry(SceSize args, void *argp)
 {
-	SDL_RunThread(argp);
+	SDL_RunThread(*(void **) argp);
 	return 0;
 }
 
@@ -53,7 +53,7 @@ int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 		return -1;
 	}
 
-	sceKernelStartThread(thread->handle, 0, args);
+	sceKernelStartThread(thread->handle, 4, &args);
 	return 0;
 }
 
