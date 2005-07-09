@@ -6,9 +6,9 @@ Building
 --------
 To build for the PSP, make sure psp-config is in the path and configure as follows:
 
-;   export LDFLAGS="-L`psp-config --pspsdk-path`/lib -lpsplibc -lpspuser"
-;   ./autogen.sh
-;   ./configure --host psp --prefix=`psp-config --pspsdk-path`/.. --disable-threads
+   export LDFLAGS="-L`psp-config --pspsdk-path`/lib -lc -lpspglue -lpspuser"
+   ./autogen.sh
+   ./configure --host psp --prefix=`psp-config --pspsdk-path`/.. --disable-threads
 
 followed by make, make install.  The --disable-threads bit is temporary.
 
