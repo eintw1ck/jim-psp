@@ -108,7 +108,7 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 
 	/* joystick button events */
 	if ( pad.Buttons != old_pad_buttons ) {
-		for ( i = 0; i < joystick->nbuttons; ++i ) {
+		for ( i = 0; i < joystick->nbuttons; i++ ) {
 			if ( pad.Buttons & buttons[i] ) {  
 				if ( ! joystick->buttons[i] ) {
 					SDL_PrivateJoystickButton(joystick, (Uint8)i, SDL_PRESSED);
