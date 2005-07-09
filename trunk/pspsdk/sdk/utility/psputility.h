@@ -12,6 +12,10 @@
 #ifndef __PSPUTILITY_H__
 #define __PSPUTILITY_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * IDs for use inSystemParam functions
  * PSP_SYSTEMPARAM_ID_INT are for use with SystemParamInt funcs
@@ -122,5 +126,9 @@ int sceUtilityGetSystemParamInt( int id, int *value );
  * @returns 0 on success, PSP_SYSTEMPARAM_RETVAL_FAIL on failure
  */
 int sceUtilityGetSystemParamString(int id, char *str, int len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -14,6 +14,10 @@
 #ifndef __POWER_H__
 #define __POWER_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Power callback flags
  */
@@ -213,4 +217,9 @@ int scePowerIdleTimerEnable();
  * @param unknown - pass 0
  */
 int scePowerIdleTimerDisable();
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

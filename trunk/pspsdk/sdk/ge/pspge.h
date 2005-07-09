@@ -16,6 +16,10 @@
 
 #include <psptypes.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Typedef for a GE callback */
 typedef void (*GeCallback)(int id, void *arg);
 
@@ -92,5 +96,9 @@ int sceGeListSync(int qid, int wait);
   * @return 0?
   */
 int sceGeDrawSync(int wait);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GE_H__ */
