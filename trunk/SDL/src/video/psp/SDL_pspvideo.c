@@ -145,7 +145,7 @@ int PSP_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	vformat->BitsPerPixel = 32;
 	vformat->BytesPerPixel = 4;
 
-	this->hidden->vram_base = (void *)(0x40000000 | sceGeEdramGetAddr());
+	this->hidden->vram_base = (void *)sceGeEdramGetAddr();
 	
 	return(0);
 }
@@ -221,6 +221,7 @@ static int PSP_LockHWSurface(_THIS, SDL_Surface *surface)
 
 static void PSP_UnlockHWSurface(_THIS, SDL_Surface *surface)
 {
+	sceKernelDcacheWritebackAll();
 	return;
 }
 

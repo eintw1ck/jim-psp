@@ -11,3 +11,13 @@ be compiled and executed on your PC:
 
    make pc
    ./sdltest-pc
+
+It demonstrates:
+   Video
+   Multiple timers and threads
+   Joystick input
+     Press button 0 (TRIANGLE) to clear the screen, any other button to exit
+
+
+
+   
