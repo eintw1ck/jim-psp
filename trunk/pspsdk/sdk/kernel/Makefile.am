@@ -13,6 +13,7 @@ CCASFLAGS = $(CFLAGS) $(INCLUDES)
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
+	pspiofilemgr_kernel.h	\
 	pspkernel.h
 
 lib_LIBRARIES = libpspkernel.a

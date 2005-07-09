@@ -16,5 +16,6 @@
 #define PSPKERNEL_H
 
 #include <pspuser.h>
+#include <pspiofilemgr_kernel.h>
 
 #endif /* PSPKERNEL_H */
