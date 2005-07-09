@@ -2752,7 +2752,7 @@ case "$target" in
         if test x$enable_threads = xyes; then
             COPY_ARCH_SRC(src/thread, psp, SDL_systhread.c)
             COPY_ARCH_SRC(src/thread, psp, SDL_systhread_c.h)
-            COPY_ARCH_SRC(src/thread, psp, SDL_sysmutex.c)
+            COPY_ARCH_SRC(src/thread, generic, SDL_sysmutex.c)
             COPY_ARCH_SRC(src/thread, generic, SDL_sysmutex_c.h)
             COPY_ARCH_SRC(src/thread, psp, SDL_syssem.c)
             COPY_ARCH_SRC(src/thread, generic, SDL_syssem_c.h)
