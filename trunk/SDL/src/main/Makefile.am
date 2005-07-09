@@ -9,6 +9,7 @@ ARCH_SUBDIRS = $(srcdir)/beos \
                $(srcdir)/dummy \
                $(srcdir)/macos \
                $(srcdir)/macosx \
+               $(srcdir)/psp \
                $(srcdir)/qtopia \
                $(srcdir)/win32
 
@@ -24,7 +25,11 @@ else
 if TARGET_QTOPIA
 MAINLIB_ARCH_SRCS = qtopia/SDL_qtopia_main.cc
 else
+if TARGET_PSP
+MAINLIB_ARCH_SRCS = psp/SDL_psp_main.c
+else
 MAINLIB_ARCH_SRCS = dummy/SDL_dummy_main.c
+endif # !TARGET_PSP
 endif # !TARGET_QTOPIA
 endif # !TARGET_MACOSX
 endif # !TARGET_WIN32

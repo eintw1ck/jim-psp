@@ -20,7 +20,11 @@
     slouken@libsdl.org
 */
 
-/* PSP port contributed by Marcus R. Brown <mrbrown@ocgnet.org>. */
+/*  
+    PSP port contributed by:
+    Marcus R. Brown <mrbrown@ocgnet.org>
+    Jim Paris <jim@jtan.com>
+*/
 
 #ifdef SAVE_RCSID
 static char rcsid =
@@ -31,20 +35,34 @@ static char rcsid =
 #include "SDL_timer.h"
 #include "SDL_error.h"
 #include "SDL_timer_c.h"
+#include <stdlib.h>
+#include <time.h>
+#include <sys/time.h>
+#include <pspthreadman.h>
+
+static struct timeval start;
 
 void SDL_StartTicks(void)
 {
-	/* Do nothing. */
+	gettimeofday(&start, NULL);
 }
 
 Uint32 SDL_GetTicks(void)
 {
-	return 0;
+	struct timeval now;
+	Uint32 ticks;
+
+	gettimeofday(&now, NULL);
+	ticks=(now.tv_sec-start.tv_sec)*1000+(now.tv_usec-start.tv_usec)/1000;
+	return(ticks);
 }
 
 void SDL_Delay(Uint32 ms)
 {
-	/* Do nothing. */
+	const Uint32 max_delay = 0xffffffffUL / 1000;
+	if(ms > max_delay)
+		ms = max_delay;
+	sceKernelDelayThreadCB(ms * 1000);
 }
 
 /* Data to handle a single periodic alarm */

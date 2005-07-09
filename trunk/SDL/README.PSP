@@ -1,0 +1,60 @@
+SDL port for the Sony PSP contributed by 
+   Marcus R. Brown <mrbrown@ocgnet.org>
+   Jim Paris <jim@jtan.com>
+
+Building
+--------
+To build for the PSP, make sure psp-config is in the path and configure as follows:
+
+;   export LDFLAGS="-L`psp-config --pspsdk-path`/lib -lpsplibc -lpspuser"
+;   ./autogen.sh
+;   ./configure --host psp --prefix=`psp-config --pspsdk-path`/.. --disable-threads
+
+followed by make, make install.  The --disable-threads bit is temporary.
+
+
+SDL_main
+--------
+When writing an SDL program, the typical use is to write your main
+function as "SDL_main", then link -lSDLmain which provides the real
+main().  In this implementation, -lSDLmain will:
+  - Define the required PSP_* macros
+  - Set up the "home" button callback.
+  - Initialize the debugging screen
+  - Call the user-supplied SDL_main
+  - When it returns, delay 2.5 seconds, then exit to VSH.
+
+Of course, you can leave off -lSDLmain, and write the real main()
+yourself if you need more control than this.
+
+By default, the PSP "sdl-config --cflags" will define main=SDL_main.
+
+
+Building applications
+---------------------
+
+Write your source file as you would a normal SDL program.  Use the
+standard Makefile as supplied with sdktest.  Above the final "include"
+line, add:
+
+PSPBIN = $(PSPSDK)/../bin
+CFLAGS += `$(PSPBIN)/sdl-config --cflags`
+LIBS += `$(PSPBIN)/sdl-config --libs`
+
+
+Libc
+----
+SDL is linked against newlib's libc, and your SDL programs should be
+too (-lc -lpspglue).
+
+
+Status
+------
+   Video - yes, single 32-bit ABGR framebuffer surface only; SDL will
+           emulate other formats as necessary.  Needs HW accel.  No 3D.
+  Timers - yes
+   Audio - no
+ Threads - no
+Joystick - no
+   Mouse - no
+Keyboard - no

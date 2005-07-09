@@ -20,27 +20,16 @@
     slouken@libsdl.org
 */
 
-/* PSP port contributed by Marcus R. Brown <mrbrown@ocgnet.org>. */
+/*  
+    PSP port contributed by:
+    Marcus R. Brown <mrbrown@ocgnet.org>
+    Jim Paris <jim@jtan.com>
+*/
 
 #ifdef SAVE_RCSID
 static char rcsid =
  "@(#) $Id: SDL_nullvideo.c,v 1.7 2004/01/04 16:49:24 slouken Exp $";
 #endif
-
-/* Dummy SDL video driver implementation; this is just enough to make an
- *  SDL-based application THINK it's got a working video driver, for
- *  applications that call SDL_Init(SDL_INIT_VIDEO) when they don't need it,
- *  and also for use as a collection of stubs when porting SDL to a new
- *  platform for which you haven't yet written a valid video driver.
- *
- * This is also a great way to determine bottlenecks: if you think that SDL
- *  is a performance problem for a given platform, enable this driver, and
- *  then see if your application runs faster without video overhead.
- *
- * Initial work by Ryan C. Gordon (icculus@linuxgames.com). A good portion
- *  of this was cut-and-pasted from Stephane Peter's work in the AAlib
- *  SDL video driver.  Renamed to "DUMMY" by Sam Lantinga.
- */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -124,7 +113,7 @@ static SDL_VideoDevice *PSP_CreateDevice(int devindex)
 	device->SetHWAlpha = NULL;
 	device->LockHWSurface = PSP_LockHWSurface;
 	device->UnlockHWSurface = PSP_UnlockHWSurface;
-	device->FlipHWSurface = NULL;;
+	device->FlipHWSurface = NULL;
 	device->FreeHWSurface = PSP_FreeHWSurface;
 	device->SetCaption = NULL;
 	device->SetIcon = NULL;
@@ -144,54 +133,71 @@ VideoBootStrap PSP_bootstrap = {
 	PSP_Available, PSP_CreateDevice
 };
 
+const static SDL_Rect RECT_480x272 = { .w = 480, .h = 272 };
+const static SDL_Rect *modelist[] = {
+	&RECT_480x272,
+	NULL
+};
 
 int PSP_VideoInit(_THIS, SDL_PixelFormat *vformat)
 {
-	/* Determine the screen depth (use default 8-bit depth) */
-	/* we change this during the SDL_SetVideoMode implementation... */
-	vformat->BitsPerPixel = 8;
-	vformat->BytesPerPixel = 1;
+	/* Default for pspsdk is 8888 ABGR */
+	vformat->BitsPerPixel = 32;
+	vformat->BytesPerPixel = 4;
 
-	/* We're done! */
+	this->hidden->vram_base = (void *)(0x40000000 | sceGeEdramGetAddr());
+	
 	return(0);
 }
 
 SDL_Rect **PSP_ListModes(_THIS, SDL_PixelFormat *format, Uint32 flags)
 {
-   	 return (SDL_Rect **) -1;
+	switch(format->BitsPerPixel) {
+	case 32:
+		return (SDL_Rect **)modelist;
+	default:
+		return NULL;
+	}
 }
 
 SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 				int width, int height, int bpp, Uint32 flags)
 {
-	if ( this->hidden->buffer ) {
-		free( this->hidden->buffer );
+	int pitch;
+	Uint32 Amask, Rmask, Gmask, Bmask;
+
+	if (width != 480 || height != 272) {
+		SDL_SetError("Couldn't find requested mode");
+		return NULL;
 	}
 
-	this->hidden->buffer = malloc(width * height * (bpp / 8));
-	if ( ! this->hidden->buffer ) {
-		SDL_SetError("Couldn't allocate buffer for requested mode");
+	switch(bpp) {
+	case 32: 
+		pitch = 512 * 4;
+		Amask = 0xff000000;
+		Rmask = 0x000000ff;
+		Gmask = 0x0000ff00;
+		Bmask = 0x00ff0000;
+		break;
+	default:
+		SDL_SetError("Couldn't find requested mode");
+		return(NULL);
+	}
+	
+	if ( ! SDL_ReallocFormat(current, bpp, Rmask, Gmask, Bmask, 0) ) {
+		SDL_SetError("Couldn't allocate color format");
 		return(NULL);
 	}
 
-/* 	printf("Setting mode %dx%d\n", width, height); */
+	current->flags = (SDL_FULLSCREEN | SDL_HWSURFACE);
+	current->w = width;
+	current->h = height;
+	current->pitch = pitch;
 
-	memset(this->hidden->buffer, 0, width * height * (bpp / 8));
-
-	/* Allocate the new pixel format for the screen */
-	if ( ! SDL_ReallocFormat(current, bpp, 0, 0, 0, 0) ) {
-		free(this->hidden->buffer);
-		this->hidden->buffer = NULL;
-		SDL_SetError("Couldn't allocate new pixel format for requested mode");
-		return(NULL);
-	}
-
-	/* Set up the new mode framebuffer */
-	current->flags = flags & SDL_FULLSCREEN;
-	this->hidden->w = current->w = width;
-	this->hidden->h = current->h = height;
-	current->pitch = current->w * (bpp / 8);
-	current->pixels = this->hidden->buffer;
+	sceDisplaySetMode(0, width, height);
+	sceDisplaySetFrameBuf(this->hidden->vram_base, 512, 3, 1);
+	current->pixels = this->hidden->vram_base;
+	current->flags |= SDL_PREALLOC; /* so SDL doesn't free ->pixels */
 
 	/* We're done */
 	return(current);
@@ -234,11 +240,7 @@ int PSP_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 */
 void PSP_VideoQuit(_THIS)
 {
-	if (this->screen->pixels != NULL)
-	{
-		free(this->screen->pixels);
-		this->screen->pixels = NULL;
-	}
+	return;
 }
 
 /* vim: ts=4 sw=4

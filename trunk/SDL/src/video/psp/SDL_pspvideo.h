@@ -20,7 +20,11 @@
     slouken@libsdl.org
 */
 
-/* PSP port contributed by Marcus R. Brown <mrbrown@ocgnet.org>. */
+/*  
+    PSP port contributed by:
+    Marcus R. Brown <mrbrown@ocgnet.org>
+    Jim Paris <jim@jtan.com>
+*/
 
 #ifdef SAVE_RCSID
 static char rcsid =
@@ -34,6 +38,12 @@ static char rcsid =
 #include "SDL_sysvideo.h"
 #include "SDL_mutex.h"
 
+#include <psptypes.h>
+#include <pspge.h>
+#include <pspkernel.h>
+#include <psputils.h>
+#include <pspdisplay.h>
+
 /* Hidden "this" pointer for the video functions */
 #define _THIS	SDL_VideoDevice *this
 
@@ -41,8 +51,7 @@ static char rcsid =
 /* Private display data */
 
 struct SDL_PrivateVideoData {
-    int w, h;
-    void *buffer;
+	void *vram_base;
 };
 
 #endif /* _SDL_pspvideo_h */
