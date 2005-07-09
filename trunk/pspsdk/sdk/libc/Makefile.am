@@ -7,10 +7,10 @@ CCAS = $(CC)
 AR = @PSP_AR@
 RANLIB = @PSP_RANLIB@
 
-INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
+INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel -I$(top_srcdir)/sdk/user
 CFLAGS = @PSPSDK_CFLAGS@
 CXXFLAGS = @PSPSDK_CXXFLAGS@
-CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base
+CCASFLAGS = $(CFLAGS) $(INCLUDES)
 
 EXTRA_DIST = LIB.status
 
