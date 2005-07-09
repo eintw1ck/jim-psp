@@ -9,4 +9,4 @@ pspsdkinclude_HEADERS =		\
 buildmakdir = @PSPSDK_LIBDIR@
 buildmak_DATA = build.mak
 
-EXTRA_DIST = build.mak
+EXTRA_DIST = build.mak common.s
