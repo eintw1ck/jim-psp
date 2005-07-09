@@ -6,26 +6,14 @@ CCAS = $(CC)
 AR = @PSP_AR@
 RANLIB = @PSP_RANLIB@
 
-INCLUDES = -I$(top_srcdir)/sdk/base
+INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/user
 CFLAGS = @PSPSDK_CFLAGS@
-CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base
+CCASFLAGS = $(CFLAGS) $(INCLUDES)
 
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
-	pspiofilemgr.h		\
-	pspiofilemgr_dirent.h	\
-	pspiofilemgr_fcntl.h	\
-	pspiofilemgr_stat.h	\
-	pspkernel.h		\
-	pspkerneltypes.h	\
-	pspkerror.h		\
-	psploadexec.h		\
-	pspmoduleinfo.h		\
-	pspmodulemgr.h		\
-	pspsysmem.h		\
-	pspthreadman.h		\
-	psputils.h
+	pspkernel.h
 
 lib_LIBRARIES = libpspkernel.a
 

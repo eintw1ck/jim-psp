@@ -11,33 +11,10 @@
  *
  * $Id$
  */
-#ifndef __KERNEL_H__
-#define __KERNEL_H__
 
-#include <psptypes.h>
-#include <pspkerneltypes.h>
-#include <pspiofilemgr.h>
-#include <psploadexec.h>
-#include <pspmoduleinfo.h>
-#include <pspmodulemgr.h>
-#include <pspsysmem.h>
-#include <pspthreadman.h>
-#include <psputils.h>
-#include <pspkerror.h>
+#ifndef PSPKERNEL_H
+#define PSPKERNEL_H
 
-/** @defgroup Kernel PSP Kernel Import Library */
+#include <pspuser.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/** @addtogroup Kernel */
-/*@{*/
-
-/*@}*/
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* PSPKERNEL_H */

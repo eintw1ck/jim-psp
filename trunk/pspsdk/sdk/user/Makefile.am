@@ -8,10 +8,23 @@ RANLIB = @PSP_RANLIB@
 
 INCLUDES = -I$(top_srcdir)/sdk/base
 CFLAGS = @PSPSDK_CFLAGS@
-CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base
+CCASFLAGS = $(CFLAGS) $(INCLUDES)
 
 libpspuserincludedir = @PSPSDK_INCLUDEDIR@
-libpspuserinclude_HEADERS = pspuser.h
+libpspuserinclude_HEADERS =	\
+	pspiofilemgr.h		\
+	pspiofilemgr_dirent.h	\
+	pspiofilemgr_fcntl.h	\
+	pspiofilemgr_stat.h	\
+	pspkerneltypes.h	\
+	pspkerror.h		\
+	psploadexec.h		\
+	pspmoduleinfo.h		\
+	pspmodulemgr.h		\
+	pspsysmem.h		\
+	pspthreadman.h		\
+	pspuser.h		\
+	psputils.h
 
 lib_LIBRARIES = libpspuser.a
 
