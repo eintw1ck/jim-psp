@@ -14,6 +14,8 @@
 #ifndef __GE_H__
 #define __GE_H__
 
+#include <psptypes.h>
+
 /** Typedef for a GE callback */
 typedef void (*GeCallback)(int id, void *arg);
 
