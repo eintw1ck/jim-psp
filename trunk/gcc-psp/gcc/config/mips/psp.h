@@ -22,3 +22,7 @@ Boston, MA 02111-1307, USA.  */
 /* Override the startfile spec to include crt0.o. */
 #undef STARTFILE_SPEC
 #define STARTFILE_SPEC "crt0%O%s crti%O%s crtbegin%O%s"
+
+#undef SUBTARGET_CPP_SPEC
+#define SUBTARGET_CPP_SPEC "-DPSP=1 -D__psp__=1 -D_PSP=1"
+
