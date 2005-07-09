@@ -40,12 +40,14 @@ line, add:
 PSPBIN = $(PSPSDK)/../bin
 CFLAGS += `$(PSPBIN)/sdl-config --cflags`
 LIBS += `$(PSPBIN)/sdl-config --libs`
+USE_NEWLIB_LIBC = 1
 
 
 Libc
 ----
 SDL is linked against newlib's libc, and your SDL programs should be
-too (-lc -lpspglue).
+too.  Linking against psplibc will appear to work but may behave
+strangely at runtime.
 
 
 Status

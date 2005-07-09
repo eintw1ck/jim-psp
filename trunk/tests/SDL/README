@@ -1,0 +1,15 @@
+SDL test application by Jim Paris <jim@jtan.com>
+
+This application demonstrates the parts of SDL that work on the PSP,
+and how to build against the PSP SDL library.  Make sure psp-config is
+in your $PATH and compile with:
+  
+   make
+
+Notice how sdltest.c has no PSP-specific code.  This same binary can
+be compiled and executed on your PC:
+
+   make pc
+   ./sdltest-pc
+
+That's what's great about SDL.
