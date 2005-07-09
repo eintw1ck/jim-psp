@@ -264,21 +264,21 @@ int sceKernelResumeThread(SceUID thid);
   * Wait until a thread has ended.
   *
   * @param thid - Id of the thread to wait for.
-  * @param unk  - Unknown, set to 0.
+  * @param timeout - Timeout in microseconds (assumed).
   *
   * @return < 0 on error.
   */
-int sceKernelWaitThreadEnd(SceUID thid, void *unk);
+int sceKernelWaitThreadEnd(SceUID thid, SceUInt *timeout);
 
 /** 
   * Wait until a thread has ended and handle callbacks if necessary.
   *
   * @param thid - Id of the thread to wait for.
-  * @param unk  - Unknown, set to 0.
+  * @param timeout - Timeout in microseconds (assumed).
   *
   * @return < 0 on error.
   */
-int sceKernelWaitThreadEndCB(SceUID thid, void *unk);
+int sceKernelWaitThreadEndCB(SceUID thid, SceUInt *timeout);
 
 /**
   * Delay the current thread by a specified number of microseconds
@@ -449,11 +449,11 @@ int sceKernelSignalSema(SceUID semaid, int signal);
  *
  * @param semaid - The sema id returned from sceKernelCreateSema
  * @param signal - The value to wait for (i.e. if 1 then wait till reaches a signal state of 1)
- * @param unknown - Unknown.
+ * @param timeout - Timeout in microseconds (assumed).
  *
  * @return < 0 on error.
  */
-int sceKernelWaitSema(SceUID semaid, int signal, int unknown);
+int sceKernelWaitSema(SceUID semaid, int signal, SceUInt *timeout);
 
 /**
  * Lock a semaphore a handle callbacks if necessary.
@@ -465,11 +465,11 @@ int sceKernelWaitSema(SceUID semaid, int signal, int unknown);
  *
  * @param semaid - The sema id returned from sceKernelCreateSema
  * @param signal - The value to wait for (i.e. if 1 then wait till reaches a signal state of 1)
- * @param unknown - Unknown.
+ * @param timeout - Timeout in microseconds (assumed).
  *
  * @return < 0 on error.
  */
-int sceKernelWaitSemaCB(SceUID semaid, int signal, int unknown);
+int sceKernelWaitSemaCB(SceUID semaid, int signal, SceUInt *timeout);
 
 /**
  * Poll a sempahore.
