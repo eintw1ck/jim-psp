@@ -17,7 +17,7 @@
 #include <string.h>
 
 /* The maximum number of arguments that can be passed to main(). */
-#define ARG_MAX 20
+#define ARG_MAX 19
 
 /* Default thread parameters for the main program thread. */
 #define DEFAULT_THREAD_PRIORITY 32
@@ -51,7 +51,7 @@ extern int main(int argc, char *argv[]);
  */
 void _main(SceSize args, void *argp)
 {
-	char *argv[ARG_MAX], *ap = (char *) argp;
+	char *argv[ARG_MAX + 1], *ap = (char *) argp;
 	int argc = 0;
 
 	/* Turn our thread arguments into main()'s argc and argv[]. */
@@ -61,6 +61,7 @@ void _main(SceSize args, void *argp)
 			ap += strlen(ap) + 1;
 		} while ((argc < ARG_MAX) && (((char *) argp - ap) < args));
 	}
+	argv[argc] = NULL;
 
 	/* Make sure _fini() is called when the program ends, and call _init() to
 	   initialize global constructors. */

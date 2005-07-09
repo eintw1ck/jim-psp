@@ -48,13 +48,14 @@ int sdl_psp_exit_callback(void)
 	return 0;
 }
 
-void sdl_psp_callback_thread(void *arg)
+int sdl_psp_callback_thread(SceSize args, void *argp)
 {
 	int cbid;
 	cbid = sceKernelCreateCallback("Exit Callback", 
 				       sdl_psp_exit_callback, NULL);
 	sceKernelRegisterExitCallback(cbid);
 	sceKernelSleepThreadCB();
+	return 0;
 }
 
 int sdl_psp_setup_callbacks(void)
