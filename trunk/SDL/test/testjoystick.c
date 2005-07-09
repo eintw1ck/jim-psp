@@ -7,8 +7,8 @@
 
 #include "SDL.h"
 
-#define SCREEN_WIDTH	640
-#define SCREEN_HEIGHT	480
+#define SCREEN_WIDTH	480
+#define SCREEN_HEIGHT	272
 
 void WatchJoystick(SDL_Joystick *joystick)
 {
@@ -162,16 +162,16 @@ int main(int argc, char *argv[])
 		printf("Joystick %d: %s\n",i,name ? name : "Unknown Joystick");
 	}
 
-	if ( argv[1] ) {
-		joystick = SDL_JoystickOpen(atoi(argv[1]));
+//	if ( argv[1] ) {
+		joystick = SDL_JoystickOpen(0);
 		if ( joystick == NULL ) {
-			printf("Couldn't open joystick %d: %s\n", atoi(argv[1]),
+			printf("Couldn't open joystick %d: %s\n", 0,
 			       SDL_GetError());
 		} else {
 			WatchJoystick(joystick);
 			SDL_JoystickClose(joystick);
 		}
-	}
+//	}
 	SDL_QuitSubSystem(SDL_INIT_VIDEO|SDL_INIT_JOYSTICK);
 
 	return(0);

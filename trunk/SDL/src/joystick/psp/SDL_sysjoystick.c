@@ -21,6 +21,7 @@
 */
 
 /* PSP port contributed by Marcus R. Brown <mrbrown@ocgnet.org>. */
+/* Joystick stuff by Matthew H <matthewh@webone.com.au>. */
 
 #ifdef SAVE_RCSID
 static char rcsid =
@@ -28,6 +29,7 @@ static char rcsid =
 #endif
 
 /* This is the system specific header for the SDL joystick API */
+#include <pspctrl.h>
 
 #include <stdio.h>		/* For the definition of NULL */
 #include <stdlib.h>
@@ -37,6 +39,9 @@ static char rcsid =
 #include "SDL_sysjoystick.h"
 #include "SDL_joystick_c.h"
 
+// is shifting faster than load? we'll see
+#define JOY_BUTTON_FLAG(n)	(PSP_CTRL_HOLD>>n) 
+
 /* Function to scan the system for joysticks.
  * This function should set SDL_numjoysticks to the number of available
  * joysticks.  Joystick 0 should be the system default joystick.
@@ -44,7 +49,10 @@ static char rcsid =
  */
 int SDL_SYS_JoystickInit(void)
 {
-	return -1;
+	sceCtrlSetSamplingCycle(0);
+	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
+	SDL_numjoysticks = 1;
+	return 1;
 }
 
 /* Function to get the device-dependent name of a joystick */
@@ -66,7 +74,9 @@ const char *SDL_SYS_JoystickName(int index)
  */
 int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 {
-	return -1;
+	joystick->nbuttons = 14;
+	joystick->naxes = 2;
+	return 0;
 }
 
 /* Function to update the state of a joystick - called as a device poll.
@@ -74,9 +84,46 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
  * but instead should call SDL_PrivateJoystick*() to deliver events
  * and update joystick device state.
  */
+
+static int old_pad_buttons = 0; 
+static int old_axes[2] = {0,0}; 
+
 void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 {
-	/* Do nothing. */
+	int i;
+	int buttons[] = {
+		PSP_CTRL_TRIANGLE, PSP_CTRL_CIRCLE, PSP_CTRL_CROSS, PSP_CTRL_SQUARE,  
+		PSP_CTRL_LTRIGGER, PSP_CTRL_RTRIGGER, PSP_CTRL_DOWN, PSP_CTRL_LEFT,  
+		PSP_CTRL_UP, PSP_CTRL_RIGHT, PSP_CTRL_SELECT, PSP_CTRL_START, 
+		PSP_CTRL_HOME, PSP_CTRL_HOLD}; 
+	SceCtrlData pad; 
+
+	sceCtrlReadBufferPositive(&pad, 1); 
+
+	/* joystick axes events */
+	for (i = 0; i < 2; i++) {
+		if ( old_axes[i] != pad.Lx) {
+			SDL_PrivateJoystickAxis(joystick, (Uint8)i, 
+				(Sint16)((((i % 2) ? pad.Ly : pad.Lx) - 128) * 256));
+			old_axes[i] = pad.Lx;
+		}
+	}
+
+	/* joystick button events */
+	if ( pad.Buttons != old_pad_buttons ) {
+		for ( i = 0; i < joystick->nbuttons; ++i ) {
+			if ( pad.Buttons & buttons[i] ) {  
+				if ( ! joystick->buttons[i] ) {
+					SDL_PrivateJoystickButton(joystick, (Uint8)i, SDL_PRESSED);
+				}
+			} else {
+				if ( joystick->buttons[i] ) {
+					SDL_PrivateJoystickButton(joystick, (Uint8)i, SDL_RELEASED);
+				}
+			}
+		}
+		old_pad_buttons = pad.Buttons;
+	}
 }
 
 /* Function to close a joystick after use */
