@@ -33,12 +33,45 @@ extern "C" {
 
 /*@{*/
 
-typedef void* SceKernelThreadEntry;
+/** 64-bit system clock type. */
+typedef struct SceKernelSysClock {
+	SceUInt32   low;
+	SceUInt32   hi;
+} SceKernelSysClock;
+
+
+/** Attribute for threads. */
+enum PspThreadAttributes
+{
+	/** Enable VFPU access for the thread. */
+	PSP_THREAD_ATTR_VFPU = 0x00004000,
+	/** Start the thread in user mode (done automatically 
+	  if the thread creating it is in user mode). */
+	PSP_THREAD_ATTR_USER = 0x80000000,
+	/** Thread is part of the USB/WLAN API. */
+	PSP_THREAD_ATTR_USBWLAN = 0xa0000000,
+	/** Thread is part of the VSH API. */
+	PSP_THREAD_ATTR_VSH = 0xc0000000,
+};
+
+/* Maintained for compatibility with older versions of PSPSDK. */
+#define THREAD_ATTR_VFPU PSP_THREAD_ATTR_VFPU
+#define THREAD_ATTR_USER PSP_THREAD_ATTR_USER
+
+typedef int (*SceKernelThreadEntry)(SceSize args, void *argp);
+
+/** Additional options used when creating threads. */
+typedef struct SceKernelThreadOptParam {
+	/** Size of the ::SceKernelThreadOptParam structure. */
+	SceSize 	size;
+	/** UID of the memory block (?) allocated for the thread's stack. */
+	SceUID 		stackMpid;
+} SceKernelThreadOptParam;
 
 /** Structure to hold the status information for a thread
   * @see sceKernelReferThreadStatus
   */
-typedef struct _SceKernelThreadInfo {
+typedef struct SceKernelThreadInfo {
 	/** Size of the structure */
 	SceSize     size;
 	/** Nul terminated name of the thread */
@@ -77,97 +110,21 @@ typedef struct _SceKernelThreadInfo {
 	SceUInt     releaseCount;
 } SceKernelThreadInfo;
 
-/** Attribute for threads */
-enum ThreadAttributes
-{
-	/** Enable VFPU access for the thread */
-	THREAD_ATTR_VFPU = 0x00004000,
-	/** Start the thread in user mode (done automatically 
-	  if the thread creating it is in user mode) */
-	THREAD_ATTR_USER = 0x80000000,
-};
-
-/**
- * Creates a new semaphore
- *
- * @par Example:
- * @code
- * int semaid;
- * semaid = sceKernelCreateSema("MyMutex", 0, 1, 1, 0);
- * @endcode
- *
- * @param name - Specifies the name of the sema
- * @param attr - Sema attribute flags (normally set to 0)
- * @param initVal - Sema initial value 
- * @param maxVal - Sema maximum value
- * @param option - Sema options (normally set to 0)
- * @return A semaphore id
+/** Statistics about a running thread.
+ * @see sceKernelReferThreadRunStatus.
  */
-int sceKernelCreateSema(const char* name, int attr, int initVal, int maxVal, int option);
-
-/**
- * Destroy a semaphore
- *
- * @param semaid - The semaid returned from a previous create call.
- * @return Returns the value 0 if its succesful otherwise -1
- */
-int sceKernelDeleteSema(int semaid);
-
-/**
- * Send a signal to a semaphore
- *
- * @par Example:
- * @code
- * // Signal the sema
- * sceKernelSignalSema(semaid, 1);
- * @endcode
- *
- * @param semaid - The sema id returned from sceKernelCreateSema
- * @param signal - The amount to signal the sema (i.e. if 2 then increment the sema by 2)
- *
- * @return < 0 On error.
- */
-int sceKernelSignalSema(int semaid, int signal);
-
-/**
- * Lock a semaphore
- *
- * @par Example:
- * @code
- * sceKernelWaitSema(semaid, 1, 0);
- * @endcode
- *
- * @param semaid - The sema id returned from sceKernelCreateSema
- * @param signal - The value to wait for (i.e. if 1 then wait till reaches a signal state of 1)
- * @param unknown - Unknown.
- *
- * @return < 0 on error.
- */
-int sceKernelWaitSema(int semaid, int signal, int unknown);
-
-/**
- * Lock a semaphore a handle callbacks if necessary.
- *
- * @par Example:
- * @code
- * sceKernelWaitSemaCB(semaid, 1, 0);
- * @endcode
- *
- * @param semaid - The sema id returned from sceKernelCreateSema
- * @param signal - The value to wait for (i.e. if 1 then wait till reaches a signal state of 1)
- * @param unknown - Unknown.
- *
- * @return < 0 on error.
- */
-int sceKernelWaitSemaCB(int semaid, int signal, int unknown);
-
-
-/**
- * Sleep thread
- *
- * @return < 0 on error.
- */
-int sceKernelSleepThread(void);
+typedef struct SceKernelThreadRunStatus {
+	SceSize 	size;
+	int 		status;
+	int 		currentPriority;
+	int 		waitType;
+	int 		waitId;
+	int 		wakeupCount;
+	SceKernelSysClock runClocks;
+	SceUInt 	intrPreemptCount;
+	SceUInt 	threadPreemptCount;
+	SceUInt 	releaseCount;
+} SceKernelThreadRunStatus;
 
 /**
  * Create a thread
@@ -175,20 +132,20 @@ int sceKernelSleepThread(void);
  * @par Example:
  * @code
  * int thid;
- * this = sceKernelCreateThread("my_thread", threadFunc, 0x18, 0x10000, 0, 0);
+ * this = sceKernelCreateThread("my_thread", threadFunc, 0x18, 0x10000, 0, NULL);
  * @endcode
  *
  * @param name - An arbitrary thread name.
- * @param func - The thread function to run when started.
+ * @param entry - The thread function to run when started.
  * @param initPriority - The initial priority of the thread. Less if higher priority.
- * @param stacksize - The size of the initial stack.
- * @param attributes - The thread attributes, zero or more of ThreadAttributes.
- * @param option - An optional parameter (always 0?)
+ * @param stackSize - The size of the initial stack.
+ * @param attr - The thread attributes, zero or more of ::PspThreadAttributes.
+ * @param option - Additional options specified by ::SceKernelThreadOptParam.
 
- * @return < 0 on error, >= 0 Thread ID for use in subsequent functions.
+ * @return UID of the created thread, or an error code.
  */
-int sceKernelCreateThread(const char* name, void *func, int initPriority, 
-						  int stacksize, int attributes, int option);
+SceUID sceKernelCreateThread(const char *name, SceKernelThreadEntry entry, int initPriority,
+                             int stackSize, SceUInt attr, SceKernelThreadOptParam *option);
 
 /**
  * Delate a thread
@@ -197,7 +154,7 @@ int sceKernelCreateThread(const char* name, void *func, int initPriority,
  *
  * @return < 0 on error.
  */
-int sceKernelDeleteThread(int thid);
+int sceKernelDeleteThread(SceUID thid);
 
 /**
  * Start a created thread
@@ -210,7 +167,7 @@ int sceKernelDeleteThread(int thid);
  * @param arglen - Length of the args pointed to by the args parameter
  * @param args - Pointer to the arguments.
  */
-int sceKernelStartThread(int thid, int arglen, void *args);
+int sceKernelStartThread(SceUID thid, SceSize args, void *argp);
 
 /**
  * Exit a thread
@@ -227,21 +184,34 @@ int sceKernelExitThread(int status);
 int sceKernelExitDeleteThread(int status);
 
 /**
- * Create callback
+ * Terminate a thread.
  *
- * @par Example:
- * @code
- * int cbid;
- * cbid = sceKernelCreateCallback("Exit Callback", exit_cb, NULL);
- * @endcode
+ * @param thid - UID of the thread to terminate.
  *
- * @param name - A textual name for the callback
- * @param func - A pointer to a function that will be called as the callback
- * @param arg  - Argument for the callback ?
- *
- * @return >= 0 A callback id which can be used in subsequent functions, < 0 an error.
+ * @returns Success if >= 0, an error if < 0.
  */
-int sceKernelCreateCallback(const char *name, void *func, void *arg);
+int sceKernelTerminateThread(SceUID thid);
+
+/**
+ * Terminate and delete a thread.
+ *
+ * @param thid - UID of the thread to terminate and delete.
+ *
+ * @returns Success if >= 0, an error if < 0.
+ */
+int sceKernelTerminateDeleteThread(SceUID thid);
+
+//
+// sceKernelSuspendDispatchThread
+// sceKernelResumeDispatchThread
+//
+
+/**
+ * Sleep thread
+ *
+ * @return < 0 on error.
+ */
+int sceKernelSleepThread(void);
 
 /**
  * Sleep thread but service any callbacks as necessary
@@ -254,12 +224,61 @@ int sceKernelCreateCallback(const char *name, void *func, void *arg);
  */
 void sceKernelSleepThreadCB(void);
 
+/**
+ * Wake a thread previously put into the sleep state.
+ *
+ * @param thid - UID of the thread to wake.
+ *
+ * @returns Success if >= 0, an error if < 0.
+ */
+int sceKernelWakeupThread(SceUID thid);
+
+/**
+ * Cancel a thread that was to be woken with ::sceKernelWakeupThread.
+ *
+ * @param thid - UID of the thread to cancel.
+ *
+ * @returns Success if >= 0, an error if < 0.
+ */
+int sceKernelCancelWakeupThread(SceUID thid);
+
+/**
+ * Suspend a thread.
+ *
+ * @param thid - UID of the thread to suspend.
+ *
+ * @returns Success if >= 0, an error if < 0.
+ */
+int sceKernelSuspendThread(SceUID thid);
+
+/**
+ * Resume a thread previously put into a suspended state with ::sceKernelSuspendThread.
+ *
+ * @param thid - UID of the thread to resume.
+ *
+ * @returns Success if >= 0, an error if < 0.
+ */
+int sceKernelResumeThread(SceUID thid);
+
 /** 
-  * Get the current thread Id
+  * Wait until a thread has ended.
   *
-  * @return The thread id of the calling thread.
+  * @param thid - Id of the thread to wait for.
+  * @param unk  - Unknown, set to 0.
+  *
+  * @return < 0 on error.
   */
-int sceKernelGetThreadId(void);
+int sceKernelWaitThreadEnd(SceUID thid, void *unk);
+
+/** 
+  * Wait until a thread has ended and handle callbacks if necessary.
+  *
+  * @param thid - Id of the thread to wait for.
+  * @param unk  - Unknown, set to 0.
+  *
+  * @return < 0 on error.
+  */
+int sceKernelWaitThreadEndCB(SceUID thid, void *unk);
 
 /**
   * Delay the current thread by a specified number of microseconds
@@ -271,7 +290,7 @@ int sceKernelGetThreadId(void);
   * sceKernelDelayThread(1000000); // Delay for a second
   * @endcode
   */
-void sceKernelDelayThread(int delay);
+void sceKernelDelayThread(SceUInt delay);
 
 /**
   * Delay the current thread by a specified number of microseconds and handle any callbacks.
@@ -283,7 +302,9 @@ void sceKernelDelayThread(int delay);
   * sceKernelDelayThread(1000000); // Delay for a second
   * @endcode
   */
-void sceKernelDelayThreadCB(int delay);
+void sceKernelDelayThreadCB(SceUInt delay);
+
+// sceKernelChangeCurrentThreadAttr
 
 /**
   * Change the threads current priority.
@@ -300,7 +321,25 @@ void sceKernelDelayThreadCB(int delay);
   *
   * @return 0 if successful, otherwise the error code.
   */
-int sceKernelChangeThreadPriority(int thid, int priority);
+int sceKernelChangeThreadPriority(SceUID thid, int priority);
+
+// sceKernelRotateThreadReadyQueue
+//
+// sceKernelReleaseWaitThread
+
+/** 
+  * Get the current thread Id
+  *
+  * @return The thread id of the calling thread.
+  */
+int sceKernelGetThreadId(void);
+
+// sceKernelGetThreadCurrentPriority
+//
+// sceKernelGetThreadExitStatus
+//
+// sceKernelCheckThreadStack
+// sceKernelGetThreadStackFreeSize
 
 /** 
   * Get the status information for the specified thread.
@@ -319,27 +358,157 @@ int sceKernelChangeThreadPriority(int thid, int priority);
   * @endcode 
   * @return 0 if successful, otherwise the error code.
   */
-int sceKernelReferThreadStatus(int thid, SceKernelThreadInfo *status);
+int sceKernelReferThreadStatus(SceUID thid, SceKernelThreadInfo *info);
 
-/** 
-  * Wait until a thread has ended.
-  *
-  * @param thid - Id of the thread to wait for.
-  * @param unk  - Unknown, set to 0.
-  *
-  * @return < 0 on error.
-  */
-int sceKernelWaitEndThread(int thid, void *unk);
+/**
+ * Retrive the runtime status of a thread.
+ *
+ * @param thid - UID of the thread to retrive status.
+ * @param status - Pointer to a ::SceKernelThreadRunStatus struct to receive the runtime status.
+ *
+ * @returns 0 if successful, otherwise the error code.
+ */
+int sceKernelReferThreadRunStatus(SceUID thid, SceKernelThreadRunStatus *status);
 
-/** 
-  * Wait until a thread has ended and handle callbacks if necessary.
-  *
-  * @param thid - Id of the thread to wait for.
-  * @param unk  - Unknown, set to 0.
-  *
-  * @return < 0 on error.
-  */
-int sceKernelWaitEndThreadCB(int thid, void *unk);
+
+/** Additional options used when creating semaphores. */
+typedef struct SceKernelSemaOptParam {
+	/** Size of the ::SceKernelSemaOptParam structure. */
+	SceSize 	size;
+} SceKernelSemaOptParam;
+
+/** Current state of a semaphore.
+ * @see sceKernelReferSemaStatus.
+ */
+typedef struct SceKernelSemaInfo {
+	/** Size of the ::SceKernelSemaInfo structure. */
+	SceSize 	size;
+	/** NUL-terminated name of the semaphore. */
+	char 		name[32];
+	/** Attributes. */
+	SceUInt 	attr;
+	/** The initial count the semaphore was created with. */
+	int 		initCount;
+	/** The current count. */
+	int 		currentCount;
+	/** The maximum count. */
+	int 		maxCount;
+	/** The number of threads waiting on the semaphore. */
+	int 		numWaitThreads;
+} SceKernelSemaInfo;
+
+/**
+ * Creates a new semaphore
+ *
+ * @par Example:
+ * @code
+ * int semaid;
+ * semaid = sceKernelCreateSema("MyMutex", 0, 1, 1, 0);
+ * @endcode
+ *
+ * @param name - Specifies the name of the sema
+ * @param attr - Sema attribute flags (normally set to 0)
+ * @param initVal - Sema initial value 
+ * @param maxVal - Sema maximum value
+ * @param option - Sema options (normally set to 0)
+ * @return A semaphore id
+ */
+SceUID sceKernelCreateSema(const char *name, SceUInt attr, int initVal, int maxVal, SceKernelSemaOptParam *option);
+
+/**
+ * Destroy a semaphore
+ *
+ * @param semaid - The semaid returned from a previous create call.
+ * @return Returns the value 0 if its succesful otherwise -1
+ */
+int sceKernelDeleteSema(SceUID semaid);
+
+/**
+ * Send a signal to a semaphore
+ *
+ * @par Example:
+ * @code
+ * // Signal the sema
+ * sceKernelSignalSema(semaid, 1);
+ * @endcode
+ *
+ * @param semaid - The sema id returned from sceKernelCreateSema
+ * @param signal - The amount to signal the sema (i.e. if 2 then increment the sema by 2)
+ *
+ * @return < 0 On error.
+ */
+int sceKernelSignalSema(SceUID semaid, int signal);
+
+/**
+ * Lock a semaphore
+ *
+ * @par Example:
+ * @code
+ * sceKernelWaitSema(semaid, 1, 0);
+ * @endcode
+ *
+ * @param semaid - The sema id returned from sceKernelCreateSema
+ * @param signal - The value to wait for (i.e. if 1 then wait till reaches a signal state of 1)
+ * @param unknown - Unknown.
+ *
+ * @return < 0 on error.
+ */
+int sceKernelWaitSema(SceUID semaid, int signal, int unknown);
+
+/**
+ * Lock a semaphore a handle callbacks if necessary.
+ *
+ * @par Example:
+ * @code
+ * sceKernelWaitSemaCB(semaid, 1, 0);
+ * @endcode
+ *
+ * @param semaid - The sema id returned from sceKernelCreateSema
+ * @param signal - The value to wait for (i.e. if 1 then wait till reaches a signal state of 1)
+ * @param unknown - Unknown.
+ *
+ * @return < 0 on error.
+ */
+int sceKernelWaitSemaCB(SceUID semaid, int signal, int unknown);
+
+/**
+ * Poll a sempahore.
+ *
+ * @param semaid - UID of the semaphore to poll.
+ * @param signal - The value to test for.
+ *
+ * @return < 0 on error.
+ */
+int sceKernelPollSema(SceUID semaid, int signal);
+
+/**
+ * Retrieve information about a semaphore.
+ *
+ * @param semaid - UID of the semaphore to retrieve info for.
+ * @param info - Pointer to a ::SceKernelSemaInfo struct to receive the info.
+ *
+ * @returns < 0 on error.
+ */
+int sceKernelReferSemaStatus(SceUID semaid, SceKernelSemaInfo *info);
+
+
+/**
+ * Create callback
+ *
+ * @par Example:
+ * @code
+ * int cbid;
+ * cbid = sceKernelCreateCallback("Exit Callback", exit_cb, NULL);
+ * @endcode
+ *
+ * @param name - A textual name for the callback
+ * @param func - A pointer to a function that will be called as the callback
+ * @param arg  - Argument for the callback ?
+ *
+ * @return >= 0 A callback id which can be used in subsequent functions, < 0 an error.
+ */
+int sceKernelCreateCallback(const char *name, void *func, void *arg);
+
 
 /** 
   * Create an event flag.
