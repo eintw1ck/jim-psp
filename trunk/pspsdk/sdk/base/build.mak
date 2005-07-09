@@ -35,11 +35,11 @@ ASFLAGS  := $(CFLAGS) $(ASFLAGS)
 
 LDFLAGS  := $(addprefix -L,$(LIBDIR)) $(LDFLAGS)
 
-# Library selection.  By default we link with PSPSDK's libc.  Allow the
-# user to link with Newlib's libc if USE_NEWLIB_LIBC is set to 1.
-PSPSDK_LIBC_LIB = -lpsplibc
-ifeq ($(USE_NEWLIB_LIBC),1)
+# Library selection.  By default we link with Newlib's libc.  Allow the
+# user to link with PSPSDK's libc if USE_PSPSDK_LIBC is set to 1.
 PSPSDK_LIBC_LIB = -lc -lpspglue
+ifeq ($(USE_PSPSDK_LIBC),1)
+PSPSDK_LIBC_LIB = -lpsplibc
 endif
 
 # Link with following default libraries.  Other libraries should be specified in the $(LIBS) variable.
@@ -105,6 +105,7 @@ $(TARGET).elf: $(OBJS)
 
 $(TARGET_LIB): $(OBJS)
 	$(AR) cru $@ $(OBJS)
+	$(RANLIB) $@
 
 $(PSP_EBOOT_SFO): 
 	$(MKSFO) '$(PSP_EBOOT_TITLE)' $@
