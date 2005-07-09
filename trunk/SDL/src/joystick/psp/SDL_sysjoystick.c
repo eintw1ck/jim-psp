@@ -39,8 +39,8 @@ static char rcsid =
 #include "SDL_sysjoystick.h"
 #include "SDL_joystick_c.h"
 
-// is shifting faster than load? we'll see
-#define JOY_BUTTON_FLAG(n)	(PSP_CTRL_HOLD>>n) 
+static int old_pad_buttons = 0; 
+static int old_axes[2] = {0,0}; 
 
 /* Function to scan the system for joysticks.
  * This function should set SDL_numjoysticks to the number of available
@@ -85,18 +85,15 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
  * and update joystick device state.
  */
 
-static int old_pad_buttons = 0; 
-static int old_axes[2] = {0,0}; 
-
 void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 {
 	int i;
+	SceCtrlData pad; 
 	int buttons[] = {
 		PSP_CTRL_TRIANGLE, PSP_CTRL_CIRCLE, PSP_CTRL_CROSS, PSP_CTRL_SQUARE,  
 		PSP_CTRL_LTRIGGER, PSP_CTRL_RTRIGGER, PSP_CTRL_DOWN, PSP_CTRL_LEFT,  
 		PSP_CTRL_UP, PSP_CTRL_RIGHT, PSP_CTRL_SELECT, PSP_CTRL_START, 
 		PSP_CTRL_HOME, PSP_CTRL_HOLD}; 
-	SceCtrlData pad; 
 
 	sceCtrlReadBufferPositive(&pad, 1); 
 
@@ -104,7 +101,7 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 	for (i = 0; i < 2; i++) {
 		if ( old_axes[i] != pad.Lx) {
 			SDL_PrivateJoystickAxis(joystick, (Uint8)i, 
-				(Sint16)((((i % 2) ? pad.Ly : pad.Lx) - 128) * 256));
+				(Sint16)((((i % 2) ? pad.Ly : pad.Lx) - 128) * 256)); // char to sint16
 			old_axes[i] = pad.Lx;
 		}
 	}
