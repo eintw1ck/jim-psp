@@ -36,10 +36,25 @@ static char rcsid =
 #include "SDL_thread.h"
 #include "SDL_systhread.h"
 
+#include <pspkerneltypes.h>
+#include <pspthreadman.h>
+
+static int ThreadEntry(SceSize args, void *argp)
+{
+	SDL_RunThread(argp);
+	return 0;
+}
 
 int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
-{ 
-	return -1;
+{
+	thread->handle = sceKernelCreateThread("SDL thread", ThreadEntry, 0x13, 0x8000, 0, NULL);
+	if (thread->handle < 0) {
+		SDL_SetError("sceKernelCreateThread() failed");
+		return -1;
+	}
+
+	sceKernelStartThread(thread->handle, 0, args);
+	return 0;
 }
 
 void SDL_SYS_SetupThread(void)
@@ -49,17 +64,18 @@ void SDL_SYS_SetupThread(void)
 
 Uint32 SDL_ThreadID(void)
 {
-	return 0;
+	return (Uint32) sceKernelGetThreadId();
 }
 
 void SDL_SYS_WaitThread(SDL_Thread *thread)
 {
-	/* Do nothing. */
+	sceKernelWaitThreadEnd(thread->handle, NULL);
+	sceKernelDeleteThread(thread->handle);
 }
 
 void SDL_SYS_KillThread(SDL_Thread *thread)
-{
-	/* Do nothing. */
+{ 
+	sceKernelTerminateDeleteThread(thread->handle);
 }
 
 /* vim: ts=4 sw=4

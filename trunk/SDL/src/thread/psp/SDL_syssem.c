@@ -35,26 +35,89 @@ static char rcsid =
 #include "SDL_error.h"
 #include "SDL_thread.h"
 
+#include <pspkerneltypes.h>
+#include <pspthreadman.h>
+#include <pspkerror.h>
+
 struct SDL_semaphore {
-	void *empty;
+	SceUID	semid;
 };
 
 
 /* Create a semaphore */
 SDL_sem *SDL_CreateSemaphore(Uint32 initial_value)
 {
-	return NULL;
+	SDL_sem *sem;
+
+	sem = (SDL_sem *) malloc(sizeof(*sem));
+	if (sem != NULL) {
+		/* TODO: Figure out the limit on the maximum value. */
+		sem->semid = sceKernelCreateSema("SDL sema", 0, initial_value, 255, NULL);
+		if (sem->semid < 0) {
+			SDL_SetError("Couldn't create semaphore");
+			free(sem);
+			sem = NULL;
+		}
+	} else {
+		SDL_OutOfMemory();
+	}
+
+	return sem;
 }
 
 /* Free the semaphore */
 void SDL_DestroySemaphore(SDL_sem *sem)
 {
-	/* Do nothing. */
+	if (sem != NULL) {
+		if (sem->semid > 0) {
+			sceKernelDeleteSema(sem->semid);
+			sem->semid = 0;
+		}
+
+		free(sem);
+	}
 }
 
+/* TODO: This routine is a bit overloaded.
+ * If the timeout is 0 then just poll the semaphore; if it's SDL_MUTEX_MAXWAIT, pass
+ * NULL to sceKernelWaitSema() so that it waits indefinitely; and if the timeout
+ * is specified, convert it to microseconds. */
 int SDL_SemWaitTimeout(SDL_sem *sem, Uint32 timeout)
 {
-	return -1;
+	Uint32 *pTimeout;
+	int res;
+
+	if (sem == NULL) {
+		SDL_SetError("Passed a NULL sem");
+		return 0;
+	}
+
+	if (timeout == 0) {
+		res = sceKernelPollSema(sem->semid, 1);
+		if (res < 0) {
+			return SDL_MUTEX_TIMEDOUT;
+		}
+		return 0;
+	}
+
+	if (timeout == SDL_MUTEX_MAXWAIT) {
+		pTimeout = NULL;
+	} else {
+		timeout *= 1000;  /* Convert to microseconds. */
+		pTimeout = &timeout;
+	}
+
+	res = sceKernelWaitSema(sem->semid, 1, pTimeout);
+	if (res < 0) {
+		SDL_SetError("WaitForSingleObject() failed");
+		return -1;
+	}
+
+	if (pTimeout != NULL && *pTimeout == SCE_KERNEL_ERROR_WAIT_TIMEOUT) {
+		return SDL_MUTEX_TIMEDOUT;
+	}
+
+	return 0;
 }
 
 int SDL_SemTryWait(SDL_sem *sem)
@@ -70,12 +133,36 @@ int SDL_SemWait(SDL_sem *sem)
 /* Returns the current count of the semaphore */
 Uint32 SDL_SemValue(SDL_sem *sem)
 {
+	SceKernelSemaInfo info;
+
+	if (sem == NULL) {
+		SDL_SetError("Passed a NULL sem");
+		return 0;
+	}
+
+	if (sceKernelReferSemaStatus(sem->semid, &info) >= 0) {
+		return info.currentCount;
+	}
+
 	return 0;
 }
 
 int SDL_SemPost(SDL_sem *sem)
 {
-	return -1;
+	int res;
+
+	if (sem == NULL) {
+		SDL_SetError("Passed a NULL sem");
+		return -1;
+	}
+
+	res = sceKernelSignalSema(sem->semid, 1);
+	if (res < 0) {
+		SDL_SetError("sceKernelSignalSema() failed");
+		return -1;
+	}
+
+	return 0;
 }
 
 /* vim: ts=4 sw=4
