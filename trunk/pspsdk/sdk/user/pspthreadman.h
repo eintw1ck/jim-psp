@@ -304,7 +304,15 @@ void sceKernelDelayThread(SceUInt delay);
   */
 void sceKernelDelayThreadCB(SceUInt delay);
 
-// sceKernelChangeCurrentThreadAttr
+/**
+ * Modify the attributes of the current thread.
+ *
+ * @param unknown - Set to 0.
+ * @param attr - The thread attributes to modify.  One of ::PspThreadAttributes.
+ *
+ * @returns < 0 on error.
+ */
+int sceKernelChangeCurrentThreadAttr(int unknown, SceUInt attr);
 
 /**
   * Change the threads current priority.
