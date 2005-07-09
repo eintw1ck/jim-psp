@@ -32,7 +32,6 @@ By default, the PSP "sdl-config --cflags" will define main=SDL_main.
 
 Building applications
 ---------------------
-
 Write your source file as you would a normal SDL program.  Use the
 standard Makefile as supplied with sdktest.  Above the final "include"
 line, add:
@@ -41,6 +40,18 @@ PSPBIN = $(PSPSDK)/../bin
 CFLAGS += `$(PSPBIN)/sdl-config --cflags`
 LIBS += `$(PSPBIN)/sdl-config --libs`
 USE_NEWLIB_LIBC = 1
+
+
+Building autoconf applications
+------------------------------
+The general way to build autoconf applications is to add the psp
+architecture to configure.in, then use --with-sdl-prefix to point to
+the proper sdl-config.  For example, to build the applications in the
+test/ subdirectory, use:
+
+  export LDFLAGS="-L`psp-config --pspsdk-path`/lib -lc -lpspglue -lpspuser"
+  ./autogen.sh
+  ./configure --host psp --with-sdl-prefix=`psp-config --pspsdk-path`/.. 
 
 
 Libc
