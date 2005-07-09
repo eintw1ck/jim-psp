@@ -132,8 +132,8 @@
  
  /* True if the result of a load is not available to the next instruction.
 --- gcc-4.0.0.orig/gcc/config/mips/psp.h	1969-12-31 16:00:00.000000000 -0800
-+++ gcc-psp/gcc/config/mips/psp.h	2005-06-25 11:36:20.854968032 -0700
-@@ -0,0 +1,24 @@
++++ gcc-psp/gcc/config/mips/psp.h	2005-07-08 23:43:30.285976560 -0700
+@@ -0,0 +1,28 @@
 +/* Support for Sony's Playstation Portable (PSP).
 +   Copyright (C) 2005 Free Software Foundation, Inc.
 +   Contributed by Marcus R. Brown <mrbrown@ocgnet.org>
@@ -158,8 +158,12 @@
 +/* Override the startfile spec to include crt0.o. */
 +#undef STARTFILE_SPEC
 +#define STARTFILE_SPEC "crt0%O%s crti%O%s crtbegin%O%s"
++
++#undef SUBTARGET_CPP_SPEC
++#define SUBTARGET_CPP_SPEC "-DPSP=1 -D__psp__=1 -D_PSP=1"
++
 --- gcc-4.0.0.orig/gcc/config.gcc	2005-03-30 19:17:08.000000000 -0800
-+++ gcc-psp/gcc/config.gcc	2005-06-25 11:39:25.894837696 -0700
++++ gcc-psp/gcc/config.gcc	2005-06-25 11:39:25.000000000 -0700
 @@ -1500,6 +1500,18 @@
  	tmake_file=mips/t-r3900
  	use_fixproto=yes
