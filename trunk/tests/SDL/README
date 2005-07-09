@@ -6,10 +6,8 @@ in your $PATH and compile with:
   
    make
 
-Notice how sdltest.c has no PSP-specific code.  This same binary can
+Notice how sdltest.c has no PSP-specific code.  This same code can
 be compiled and executed on your PC:
 
    make pc
    ./sdltest-pc
-
-That's what's great about SDL.

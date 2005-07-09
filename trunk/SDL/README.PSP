@@ -39,7 +39,6 @@ line, add:
 PSPBIN = $(PSPSDK)/../bin
 CFLAGS += `$(PSPBIN)/sdl-config --cflags`
 LIBS += `$(PSPBIN)/sdl-config --libs`
-USE_NEWLIB_LIBC = 1
 
 
 Building autoconf applications

@@ -19,7 +19,6 @@ PSPSDK=$(shell psp-config --pspsdk-path)
 PSPBIN = $(PSPSDK)/../bin
 CFLAGS += `$(PSPBIN)/sdl-config --cflags`
 LIBS += `$(PSPBIN)/sdl-config --libs`
-USE_NEWLIB_LIBC = 1
 include $(PSPSDK)/lib/build.mak
 
 # Use "make pc" to build a copy of sdltest that runs on your PC.
