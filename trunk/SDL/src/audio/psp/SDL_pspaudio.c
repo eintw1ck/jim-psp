@@ -30,6 +30,7 @@ static char rcsid =
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <malloc.h>
 
 #include "SDL_audio.h"
 #include "SDL_error.h"
@@ -105,8 +106,7 @@ static void PSPAUD_WaitAudio(_THIS)
 {
 	int timeleft;
 
-	timeleft = sceAudioGetChannelRestLen(this->hidden->channel);
-	if (timeleft > 0) {
+	while ((timeleft = sceAudioGetChannelRestLen(this->hidden->channel)) > 0) {
 		timeleft /= this->spec.freq / 1000;
 		SDL_Delay((Uint32) timeleft);
 	}
@@ -114,17 +114,20 @@ static void PSPAUD_WaitAudio(_THIS)
 
 static void PSPAUD_PlayAudio(_THIS)
 {
+	Uint8 *mixbuf = this->hidden->mixbufs[this->hidden->next_buffer];
+
 	if (this->spec.channels == 1) {
-		sceAudioOutput(this->hidden->channel, PSP_AUDIO_VOLUME_MAX, this->hidden->mixbuf);
+		sceAudioOutput(this->hidden->channel, PSP_AUDIO_VOLUME_MAX, mixbuf);
 	} else {
-		sceAudioOutputPanned(this->hidden->channel, PSP_AUDIO_VOLUME_MAX,
-				PSP_AUDIO_VOLUME_MAX, this->hidden->mixbuf);
+		sceAudioOutputPanned(this->hidden->channel, PSP_AUDIO_VOLUME_MAX, PSP_AUDIO_VOLUME_MAX, mixbuf);
 	}
+
+	this->hidden->next_buffer = (this->hidden->next_buffer + 1) % NUM_BUFFERS;
 }
 
 static Uint8 *PSPAUD_GetAudioBuf(_THIS)
 {
-	return this->hidden->mixbuf;
+	return this->hidden->mixbufs[this->hidden->next_buffer];
 }
 
 static void PSPAUD_CloseAudio(_THIS)
@@ -134,15 +137,15 @@ static void PSPAUD_CloseAudio(_THIS)
 		this->hidden->channel = -1;
 	}
 
-	if (this->hidden->mixbuf != NULL) {
-		SDL_FreeAudioMem(this->hidden->mixbuf);
-		this->hidden->mixbuf = NULL;
+	if (this->hidden->rawbuf != NULL) {
+		free(this->hidden->rawbuf);
+		this->hidden->rawbuf = NULL;
 	}
 }
 
 static int PSPAUD_OpenAudio(_THIS, SDL_AudioSpec *spec)
 {
-	int format;
+	int format, mixlen, i;
 
 	switch (spec->format & 0xff) {
 		case 8:
@@ -154,17 +157,22 @@ static int PSPAUD_OpenAudio(_THIS, SDL_AudioSpec *spec)
 			return -1;
 	}
 
+	/* The sample count must be a multiple of 64. */
+	spec->samples = PSP_AUDIO_SAMPLE_ALIGN(spec->samples);
+	spec->freq = 44100;
+
 	/* Update the fragment size as size in bytes. */
 	SDL_CalculateAudioSpec(spec);
 
-	/* Allocate the mixing buffer.  Its size must be a multiple of 64 bytes. */
-	this->hidden->mixlen = PSP_AUDIO_SAMPLE_ALIGN(spec->size);
-	this->hidden->mixbuf = (Uint8 *) SDL_AllocAudioMem(this->hidden->mixlen);
-	if (this->hidden->mixbuf == NULL) {
+	/* Allocate the mixing buffer.  Its size and starting address must
+	   be a multiple of 64 bytes.  Our sample count is already a multiple of
+	   64, so spec->size should be a multiple of 64 as well. */
+	mixlen = spec->size * NUM_BUFFERS;
+	this->hidden->rawbuf = (Uint8 *) memalign(64, mixlen);
+	if (this->hidden->rawbuf == NULL) {
 		SDL_SetError("Couldn't allocate mixing buffer");
 		return -1;
 	}
-	memset(this->hidden->mixbuf, spec->silence, this->hidden->mixlen);
 
 	/* Setup the hardware channel. */
 	if (spec->channels == 1) {
@@ -172,14 +180,20 @@ static int PSPAUD_OpenAudio(_THIS, SDL_AudioSpec *spec)
 	} else {
 		format = PSP_AUDIO_FORMAT_STEREO;
 	}
-	this->hidden->channel = sceAudioChReserve(PSP_AUDIO_NEXT_CHANNEL, this->hidden->mixlen, format);
+	this->hidden->channel = sceAudioChReserve(PSP_AUDIO_NEXT_CHANNEL, spec->samples, format);
 	if (this->hidden->channel < 0) {
 		SDL_SetError("Couldn't reserve hardware channel");
-		SDL_FreeAudioMem(this->hidden->mixbuf);
-		this->hidden->mixbuf = NULL;
+		free(this->hidden->rawbuf);
+		this->hidden->rawbuf = NULL;
 		return -1;
 	}
 
+	memset(this->hidden->rawbuf, 0, mixlen);
+	for (i = 0; i < NUM_BUFFERS; i++) {
+		this->hidden->mixbufs[i] = &this->hidden->rawbuf[i * spec->size];
+	}
+
+	this->hidden->next_buffer = 0;
 	return 0;
 }
 

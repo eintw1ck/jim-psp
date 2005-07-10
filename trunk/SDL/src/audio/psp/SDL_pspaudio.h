@@ -35,13 +35,17 @@ static char rcsid =
 /* Hidden "this" pointer for the video functions */
 #define _THIS	SDL_AudioDevice *this
 
+#define NUM_BUFFERS 2
+
 struct SDL_PrivateAudioData {
 	/* The hardware output channel. */
 	int		channel;
-	/* Raw mixing buffer. */
-	Uint8	*mixbuf;
-	/* Size of the mixing buffer. */
-	Uint32	mixlen;
+	/* The raw allocated mixing buffer. */
+	Uint8	*rawbuf;
+	/* Individual mixing buffers. */
+	Uint8	*mixbufs[NUM_BUFFERS];
+	/* Index of the next available mixing buffer. */
+	int		next_buffer;
 };
 
 #endif /* _SDL_pspaudio_h */
