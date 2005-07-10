@@ -10,74 +10,109 @@
  *
  * $Id$
  */
-#ifndef __AUDIO_H__
-#define __AUDIO_H__
+#ifndef PSPAUDIO_H
+#define PSPAUDIO_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/** @defgroup Audio Audio Library */
+/** @defgroup Audio User Audio Library */
 
 /** @addtogroup Audio */
 
 /*@{*/
 
+/** The maximum output volume. */
+#define PSP_AUDIO_VOLUME_MAX    0x8000
+
+/** The maximum number of hardware channels. */
+#define PSP_AUDIO_CHANNEL_MAX   8
+/** Used to request the next available hardware channel. */
+#define PSP_AUDIO_NEXT_CHANNEL  (-1)
+
+enum PspAudioFormats {
+    /** Channel is set to stereo output. */
+    PSP_AUDIO_FORMAT_STEREO = 0,
+    /** Channel is set to mono output. */
+    PSP_AUDIO_FORMAT_MONO   = 0x10
+};
+
+/** The minimum number of samples that can be allocated to a channel. */
+#define PSP_AUDIO_SAMPLE_MIN    64
+/** The maximum number of samples that can be allocated to a channel. */
+#define PSP_AUDIO_SAMPLE_MAX    65472
+/** Make the given sample count a multiple of 64. */
+#define PSP_AUDIO_SAMPLE_ALIGN(s) (((s) + 63) & ~63)
+ 
 /**
-  * a
+  * Allocate and initialize a hardware output channel.
   *
+  * @param channel - Use a value between 0 - 7 to reserve a specific channel.
+  *                   Pass PSP_AUDIO_NEXT_CHANNEL to get the first available channel.
+  * @param samplecount - The number of samples that can be output on the channel per
+  *                      output call.  It must be a value between ::PSP_AUDIO_SAMPLE_MIN
+  *                      and ::PSP_AUDIO_SAMPLE_MAX, and it must be aligned to 64 bytes
+  *                      (use the ::PSP_AUDIO_SAMPLE_ALIGN macro to align it).
+  * @param format - The output format to use for the channel.  One of ::PspAudioFormats.
+  *
+  * @returns The channel number on success, an error code if less than 0.
   */
-void sceAudioOutputBlocking();
+int sceAudioChReserve(int channel, int samplecount, int format);
+
+/**
+  * Release a hardware output channel.
+  *
+  * @param channel - The channel to release.
+  *
+  * @returns 0 on success, an error if less than 0.
+  */
+int sceAudioChRelease(int channel);
+
+
+int sceAudioOutput(int channel, int vol, void *buf);
 
 /**
   * a
   *
   */
-void sceAudioOutputPanned();
+int sceAudioOutputBlocking(int channel, int vol, void *buf);
 
 /**
   * a
   *
   */
-long sceAudioOutputPannedBlocking(int handle, int vol1, int vol2, void *buffer);
+int sceAudioOutputPanned(int channel, int leftvol, int rightvol, void *buffer);
 
 /**
   * a
   *
   */
-//init buffer? returns handle, minus if error
-long sceAudioChReserve(int id, int samplecount, int unknown);
+int sceAudioOutputPannedBlocking(int channel, int leftvol, int rightvol, void *buffer);
 
 /**
   * a
   *
   */
-//free buffer?
-void sceAudioChRelease(int handle);
+int sceAudioGetChannelRestLen(int channel);
 
 /**
   * a
   *
   */
-void sceAudioGetChannelRestLen();
+int sceAudioSetChannelDataLen(int channel, int samplecount);
 
 /**
   * a
   *
   */
-int sceAudioSetChannelDataLen(int a, int b);
+int sceAudioChangeChannelConfig(int channel, int format);
 
 /**
   * a
   *
   */
-void sceAudioChangeChannelConfig();
-
-/**
-  * a
-  *
-  */
-void sceAudioChangeChannelVolume();
+int sceAudioChangeChannelVolume(int channel, int leftvol, int rightvol);
 
 /*@}*/
 
@@ -85,4 +120,4 @@ void sceAudioChangeChannelVolume();
 }
 #endif
 
-#endif
+#endif /* PSPAUDIO_H */
