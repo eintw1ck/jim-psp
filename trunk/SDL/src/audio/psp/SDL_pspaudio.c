@@ -27,9 +27,9 @@ static char rcsid =
  "@(#) $Id: SDL_diskaudio.c,v 1.5 2004/01/04 16:49:13 slouken Exp $";
 #endif
 
-/* Output raw audio data to a file. */
-
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "SDL_audio.h"
 #include "SDL_error.h"
@@ -38,6 +38,8 @@ static char rcsid =
 #include "SDL_timer.h"
 #include "SDL_audiodev_c.h"
 #include "SDL_pspaudio.h"
+
+#include <pspaudio.h>
 
 /* The tag name used by PSP audio */
 #define PSPAUD_DRIVER_NAME         "psp"
@@ -64,7 +66,6 @@ static void PSPAUD_DeleteDevice(SDL_AudioDevice *device)
 static SDL_AudioDevice *PSPAUD_CreateDevice(int devindex)
 {
 	SDL_AudioDevice *this;
-    const char *envr;
 
 	/* Initialize all variables that we clean on shutdown */
 	this = (SDL_AudioDevice *)malloc(sizeof(SDL_AudioDevice));
@@ -102,27 +103,84 @@ AudioBootStrap PSPAUD_bootstrap = {
 /* This function waits until it is possible to write a full sound buffer */
 static void PSPAUD_WaitAudio(_THIS)
 {
-	/* Do nothing. */
+	int timeleft;
+
+	timeleft = sceAudioGetChannelRestLen(this->hidden->channel);
+	if (timeleft > 0) {
+		timeleft /= this->spec.freq / 1000;
+		SDL_Delay((Uint32) timeleft);
+	}
 }
 
 static void PSPAUD_PlayAudio(_THIS)
 {
-	/* Do nothing. */
+	if (this->spec.channels == 1) {
+		sceAudioOutput(this->hidden->channel, PSP_AUDIO_VOLUME_MAX, this->hidden->mixbuf);
+	} else {
+		sceAudioOutputPanned(this->hidden->channel, PSP_AUDIO_VOLUME_MAX,
+				PSP_AUDIO_VOLUME_MAX, this->hidden->mixbuf);
+	}
 }
 
 static Uint8 *PSPAUD_GetAudioBuf(_THIS)
 {
-	return NULL;
+	return this->hidden->mixbuf;
 }
 
 static void PSPAUD_CloseAudio(_THIS)
 {
-	/* Do nothing. */
+	if (this->hidden->channel >= 0) {
+		sceAudioChRelease(this->hidden->channel);
+		this->hidden->channel = -1;
+	}
+
+	if (this->hidden->mixbuf != NULL) {
+		SDL_FreeAudioMem(this->hidden->mixbuf);
+		this->hidden->mixbuf = NULL;
+	}
 }
 
 static int PSPAUD_OpenAudio(_THIS, SDL_AudioSpec *spec)
 {
-	return -1;
+	int format;
+
+	switch (spec->format & 0xff) {
+		case 8:
+		case 16:
+			spec->format = AUDIO_S16LSB;
+			break;
+		default:
+			SDL_SetError("Unsupported audio format");
+			return -1;
+	}
+
+	/* Update the fragment size as size in bytes. */
+	SDL_CalculateAudioSpec(spec);
+
+	/* Allocate the mixing buffer.  Its size must be a multiple of 64 bytes. */
+	this->hidden->mixlen = PSP_AUDIO_SAMPLE_ALIGN(spec->size);
+	this->hidden->mixbuf = (Uint8 *) SDL_AllocAudioMem(this->hidden->mixlen);
+	if (this->hidden->mixbuf == NULL) {
+		SDL_SetError("Couldn't allocate mixing buffer");
+		return -1;
+	}
+	memset(this->hidden->mixbuf, spec->silence, this->hidden->mixlen);
+
+	/* Setup the hardware channel. */
+	if (spec->channels == 1) {
+		format = PSP_AUDIO_FORMAT_MONO;
+	} else {
+		format = PSP_AUDIO_FORMAT_STEREO;
+	}
+	this->hidden->channel = sceAudioChReserve(PSP_AUDIO_NEXT_CHANNEL, this->hidden->mixlen, format);
+	if (this->hidden->channel < 0) {
+		SDL_SetError("Couldn't reserve hardware channel");
+		SDL_FreeAudioMem(this->hidden->mixbuf);
+		this->hidden->mixbuf = NULL;
+		return -1;
+	}
+
+	return 0;
 }
 
 /* vim: ts=4 sw=4

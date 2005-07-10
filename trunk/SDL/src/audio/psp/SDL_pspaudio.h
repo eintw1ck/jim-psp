@@ -36,7 +36,14 @@ static char rcsid =
 #define _THIS	SDL_AudioDevice *this
 
 struct SDL_PrivateAudioData {
-	void *empty;
+	/* The hardware output channel. */
+	int		channel;
+	/* Raw mixing buffer. */
+	Uint8	*mixbuf;
+	/* Size of the mixing buffer. */
+	Uint32	mixlen;
 };
 
 #endif /* _SDL_pspaudio_h */
+/* vim: ts=4 sw=4
+ */
