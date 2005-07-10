@@ -1,6 +1,7 @@
 SDL port for the Sony PSP contributed by 
    Marcus R. Brown <mrbrown@ocgnet.org>
    Jim Paris <jim@jtan.com>
+   Matthew H <matthewh@webone.com.au>
 
 Building
 --------
@@ -60,13 +61,44 @@ too.  Linking against psplibc will appear to work but may behave
 strangely at runtime.
 
 
+Joystick
+--------
+Joystick has a two analog axes and 14 buttons.
+Axes:
+ 0 - analog stick x
+ 1 - analog stick y
+Buttons:
+ 0 - triangle
+ 1 - circle
+ 2 - cross
+ 3 - square
+ 4 - left trigger
+ 5 - right trigger
+ 6 - down
+ 7 - left
+ 8 - up
+ 9 - right
+10 - select
+11 - start
+12 - home
+13 - hold
+
+Note: A "home" button press is sometimes generated when the screen
+turns off after being idle ("backlight auto-off" setting).  This
+generated event does not trigger the usual exit callback, though.
+
+
 Status
 ------
    Video - yes, single 32-bit ABGR framebuffer surface only; SDL will
            emulate other formats as necessary.  Needs HW accel.  No 3D.
-  Timers - yes
+  Timers - yes, with multiple callbacks
+ Threads - yes, with mutexes and semaphores
+Joystick - yes, see above for button mapping
    Audio - no
- Threads - no
-Joystick - no
    Mouse - no
 Keyboard - no
+
+No plans for how mouse and keyboard might work at the moment.
+
+

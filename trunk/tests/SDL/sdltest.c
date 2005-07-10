@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 			case SDL_JOYBUTTONDOWN:
 				if(event.jbutton.button == 0)
 					draw_gradient();
-				else
+				else if(event.jbutton.button < 10) 
 					done = 1;
 				break;
 			case SDL_KEYDOWN: /* for PC only */

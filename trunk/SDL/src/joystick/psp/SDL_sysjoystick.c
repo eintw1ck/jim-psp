@@ -94,15 +94,18 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 		PSP_CTRL_LTRIGGER, PSP_CTRL_RTRIGGER, PSP_CTRL_DOWN, PSP_CTRL_LEFT,  
 		PSP_CTRL_UP, PSP_CTRL_RIGHT, PSP_CTRL_SELECT, PSP_CTRL_START, 
 		PSP_CTRL_HOME, PSP_CTRL_HOLD}; 
+	unsigned char val;
 
 	sceCtrlReadBufferPositive(&pad, 1); 
 
 	/* joystick axes events */
 	for (i = 0; i < 2; i++) {
-		if ( old_axes[i] != pad.Lx) {
+		val = i ? pad.Ly : pad.Lx;
+
+		if ( old_axes[i] != val) {
 			SDL_PrivateJoystickAxis(joystick, (Uint8)i, 
-				(Sint16)((((i % 2) ? pad.Ly : pad.Lx) - 128) * 256)); // char to sint16
-			old_axes[i] = pad.Lx;
+				(Sint16)((val - 128) * 256)); // char to sint16
+			old_axes[i] = val;
 		}
 	}
 
