@@ -2,7 +2,8 @@
 
 #include "common.s"
 
-	STUB_START	"sceAudio",0x40010000,0x00090005 
+	STUB_START	"sceAudio",0x40010000,0x000a0005 
+	STUB_FUNC	0x8C1009B2,sceAudioOutput
 	STUB_FUNC	0x136CAF51,sceAudioOutputBlocking
 	STUB_FUNC	0xE2D56B2D,sceAudioOutputPanned
 	STUB_FUNC	0x13F592BC,sceAudioOutputPannedBlocking
