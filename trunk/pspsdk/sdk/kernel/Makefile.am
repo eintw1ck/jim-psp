@@ -14,6 +14,7 @@ libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
 	pspiofilemgr_kernel.h	\
+	pspstdio_kernel.h		\
 	pspkernel.h
 
 lib_LIBRARIES = libpspkernel.a
@@ -22,4 +23,5 @@ libpspkernel_a_SOURCES =	\
 	ExceptionManagerForKernel.S \
 	KDebugForKernel.S	\
 	LoadCoreForKernel.S	\
-	iofilemgr_kernel.S	
+	iofilemgr_kernel.S	\
+	StdioForKernel.S

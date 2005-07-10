@@ -89,6 +89,16 @@ int pspDebugScreenGetY(void);
 void pspDebugScreenClear(void);
 
 /**
+  * Print non-nul terminated strings.
+  * 
+  * @param buff - Buffer containing the text.
+  * @param size - Size of the data
+  *
+  * @return The number of characters written
+  */
+int pspDebugScreenPrintData(const char *buff, int size);
+
+/**
   * Get a MIPS stack trace (might work :P)
   *
   * @param results - List of points to store the results of the trace, (up to max)
@@ -271,6 +281,39 @@ void pspDebugProfilerGetRegs(PspDebugProfilerRegs *regs);
 
 /** Print the profiler registers to screen */
 void pspDebugProfilerPrint(void);
+
+/** Type for the debug print handlers */
+typedef int (*PspDebugPrintHandler)(const char *data, int len);
+
+/** Type for the debug input handler */
+typedef int (*PspDebugInputHandler)(char *data, int len);
+
+/**
+  * Install a handler for stdin (so you can use normal stdio functions)
+  *
+  * @param handler - A pointer to input handler, NULL to disable.
+  *
+  * @return < 0 on error, else 0.
+  */
+int pspDebugInstallStdinHandler(PspDebugInputHandler handler);
+
+/**
+  * Install a print handler for stdout (so you can use normal print functions)
+  *
+  * @param handler - A pointer to print handler, NULL to disable.
+  *
+  * @return < 0 on error, else 0.
+  */
+int pspDebugInstallStdoutHandler(PspDebugPrintHandler handler);
+
+/**
+  * Install a print handler for stderr (so you can use normal print functions)
+  *
+  * @param handler - A pointer to print handler, NULL to disable.
+  *
+  * @return < 0 on error, else 0.
+  */
+int pspDebugInstallStderrHandler(PspDebugPrintHandler handler);
 
 /*@}*/
 

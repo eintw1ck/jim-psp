@@ -107,15 +107,55 @@ static void  clear_line( int Y)
    int i;
    for (i=0; i < MX; i++)
     pspDebugScreenPutChar( i*7 , Y * 8, bg_col, 219);
+}
 
+/* Print non-nul terminated strings */
+int pspDebugScreenPrintData(const char *buff, int size)
+{
+	int i;
+	int j;
+	char c;
 
+	for (i = 0; i < size; i++)
+	{
+		c = buff[i];
+		switch (c)
+		{
+			case '\n':
+						X = 0;
+						Y ++;
+						if (Y == MY)
+							Y = 0;
+						clear_line(Y);
+						break;
+			case '\t':
+						for (j = 0; j < 5; j++) {
+							pspDebugScreenPutChar( X*7 , Y * 8, fg_col, ' ');
+							X++;
+						}
+						break;
+			default:
+						pspDebugScreenPutChar( X*7 , Y * 8, fg_col, c);
+						X++;
+						if (X == MX)
+						{
+							X = 0;
+							Y++;
+							if (Y == MY)
+								Y = 0;
+							clear_line(Y);
+						}
+		}
+	}
+
+	return i;
 }
 
 void pspDebugScreenPrintf(const char *format, ...)
 {
    va_list	opt;
-   char		buff[2048], c;
-   int		i, bufsz, j;
+   char     buff[2048];
+   int		bufsz;
    
    if(!init)
    {
@@ -124,38 +164,7 @@ void pspDebugScreenPrintf(const char *format, ...)
    
    va_start(opt, format);
    bufsz = vsnprintf( buff, (size_t) sizeof(buff), format, opt);
-
-   for (i = 0; i < bufsz; i++)
-       {
-       c = buff[i];
-       switch (c)
-          {
-          case		'\n':
-                             X = 0;
-                             Y ++;
-                             if (Y == MY)
-                                 Y = 0;
-                             clear_line(Y);
-                             break;
-          case      '\t':
-                             for (j = 0; j < 5; j++) {
-                             	pspDebugScreenPutChar( X*7 , Y * 8, fg_col, ' ');
-                             	X++;
-                             }
-                             break;
-          default:
-             		     pspDebugScreenPutChar( X*7 , Y * 8, fg_col, c);
-                             X++;
-                             if (X == MX)
-                                {
-                                X = 0;
-                                Y++;
-                                if (Y == MY)
-                                   Y = 0;
-                                clear_line(Y);
-                                }
-          }
-       }
+   (void) pspDebugScreenPrintData(buff, bufsz);
 }
 
 

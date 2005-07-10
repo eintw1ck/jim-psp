@@ -23,6 +23,7 @@ libpspuserinclude_HEADERS =	\
 	pspmodulemgr.h		\
 	pspsysmem.h		\
 	pspthreadman.h		\
+	pspstdio.h		\
 	pspuser.h		\
 	psputils.h
 
@@ -37,4 +38,5 @@ libpspuser_a_SOURCES =	\
 	suspend.S		\
 	sysmem.S		\
 	threadman.S		\
-	utils.S			
+	utils.S			\
+	StdioForUser.S	

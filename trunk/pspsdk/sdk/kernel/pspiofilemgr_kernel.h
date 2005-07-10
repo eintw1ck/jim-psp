@@ -123,6 +123,18 @@ int sceIoAddDrv(PspIoDrv *drv);
   */
 int sceIoDelDrv(const char *drv_name);
 
+/**
+  * Reopens an existing file descriptor.
+  *
+  * @param file - The new file to open.
+  * @param flags - The open flags.
+  * @param mode - The open mode.
+  * @param fd - The old filedescriptor to reopen
+  *
+  * @return < 0 on error, otherwise the reopened fd.
+  */
+int sceIoReopen(const char *file, int flags, SceMode mode, SceUID fd);
+
 /*@}*/
 
 #ifdef __cplusplus

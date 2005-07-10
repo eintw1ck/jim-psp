@@ -25,5 +25,6 @@
 #include <pspthreadman.h>
 #include <psputils.h>
 #include <pspkerror.h>
+#include <pspstdio.h>
 
 #endif /* PSPUSER_H */
