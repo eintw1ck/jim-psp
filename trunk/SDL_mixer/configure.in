@@ -226,6 +226,33 @@ if test x$enable_music_mp3 = xyes; then
     fi
 fi
 
+dnl Check for a valid PSPSDK installation
+CheckPSPSDK()
+{
+    AC_CHECK_PROG(psp_config, psp-config, psp-config, no)
+    if test x$psp_config = xno; then
+        AC_MSG_ERROR(Couldn't locate psp-config.)
+    fi
+
+    AC_MSG_CHECKING(for PSPSDK)
+    pspsdk_path=`$psp_config --pspsdk-path`
+    if test ! -d $pspsdk_path -o -z $pspsdk_path; then
+        AC_MSG_RESULT(not found)
+        AC_MSG_ERROR(Couldn't locate PSPSDK.)
+    fi
+    AC_MSG_RESULT($pspsdk_path)
+
+    # Compile SDL with -G0 to disable the $gp register.
+    CFLAGS="$CFLAGS -G0 -I\"${pspsdk_path}/include\""
+    SYSTEM_LIBS="$SYSTEM_LIBS -lpspdebug -lpspgu -lpspctrl -lpspaudio -lpspge -lpspdisplay -lc -lpspglue -lpspuser -lpspkernel"
+}
+
+case "$target" in
+    *-psp-*)
+        CheckPSPSDK
+	;;
+esac
+
 dnl Add Makefile conditionals
 AC_SUBST(MUSIC_SUBDIRS)
 AM_CONDITIONAL(USE_MIKMOD, test x$enable_music_mod = xyes)
