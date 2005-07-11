@@ -14,6 +14,8 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
+#include <psptypes.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
