@@ -36,6 +36,10 @@ OBJS =
 #dirs = nanowm nanox nxkbd nxscribble
 #endif
 
+ifeq ($(ARCH), PSP)
+dirs = nanowm nanox mwin
+endif
+
 ######################### Makefile.rules section #############################
 
 include $(MW_DIR_SRC)/Makefile.rules

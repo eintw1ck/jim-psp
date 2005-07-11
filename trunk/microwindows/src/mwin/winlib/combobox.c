@@ -38,6 +38,12 @@
 #include "windowsx.h"
 #include "mwsystem.h"
 
+// hack
+#ifdef PSP
+#define fprintf(...) do {} while(0)
+#endif
+
+
 #define WinMalloc(n)	malloc((n))
 #define WinFree(p)	free(p)
 

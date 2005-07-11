@@ -370,7 +370,9 @@ SLEditCtrlProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         case WM_CREATE:
             if (!(pSLEditData = malloc (sizeof (SLEDITDATA)))) {
+#ifndef PSP
                 fprintf (stderr, "EDIT: malloc error!\n");
+#endif
                 return -1;
             }
 

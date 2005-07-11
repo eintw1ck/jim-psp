@@ -251,7 +251,9 @@ ProgressBarCtrlProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         case WM_CREATE:
             if (!(pData = malloc (sizeof (PROGRESSDATA)))) {
+#ifndef PSP
                 fprintf(stderr, "Create progress bar control failure!\n");
+#endif
                 return -1;
             }
             

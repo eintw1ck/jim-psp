@@ -211,6 +211,7 @@
 #define MWPF_TRUECOLOR555  6	/* pixel is packed 16 bits 5/5/5 truecolor*/
 #define MWPF_TRUECOLOR332  7	/* pixel is packed 8 bits 3/3/2 truecolor*/
 #define MWPF_TRUECOLOR8888 8	/* pixel is packed 32 bits 8/8/8/8 truecolor with alpha */
+#define MWPF_TRUECOLORABGR 9	/* pixel is packed 32 bits 8/8/8/8 BGR truecolor with alpha */
 
 /*
  * MWPIXELVAL definition: changes based on target system

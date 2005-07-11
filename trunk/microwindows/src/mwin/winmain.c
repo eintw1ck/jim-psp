@@ -8,6 +8,13 @@
 #include <string.h>
 #include <signal.h>
 
+// hack
+#ifdef PSP
+#include <pspkernel.h>
+#include <psputils.h>
+#define exit(...) sceKernelExitGame()
+#endif
+
 #ifndef __PACIFIC__
 #include <errno.h>
 #include <sys/types.h>
@@ -52,9 +59,34 @@ int		keyb_fd;		/* the keyboard file descriptor */
 int		mouse_fd;		/* the mouse file descriptor */
 int		escape_quits = 1;	/* terminate when pressing ESC */
 
+#if PSP
+
+int exit_callback(void)
+{
+	sceKernelExitGame();
+	return 0;
+}
+
+void CallbackThread(void *arg)
+{
+	int cbid;
+
+	cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
+	sceKernelRegisterExitCallback(cbid);
+	sceKernelSleepThreadCB();
+}
+#endif
+
 int
 main(int ac,char **av)
 {
+#if PSP
+	int thid;
+	thid = sceKernelCreateThread("update_thread", CallbackThread, 0x11, 0xFA0, 0, 0);
+	if(thid >= 0)
+		sceKernelStartThread(thid, 0, 0);
+#endif
+
 	/* call user hook routine before anything*/
 	if(MwUserInit(ac, av) < 0)
 		exit(1);
@@ -66,7 +98,8 @@ main(int ac,char **av)
 	WinMain(NULL, NULL, NULL, SW_SHOW);
 
 	MwClose();
-	return 0;
+
+	exit(0);
 }
 
 /*
@@ -245,6 +278,41 @@ MwSelect(void)
 	MwHandleTimers();
 }
 #endif
+
+#if PSP
+
+void 
+MwSelect(void)
+{
+	int mouseevents = 0;
+	int keybdevents = 0;
+
+	/* If mouse data present, service it */
+	while (mousedev.Poll() > 0)
+	{
+		MwCheckMouseEvent();
+		if (mouseevents++ > 10)
+			break;
+	}
+	
+	
+	/* If keyboard data present, service it */
+	while (kbddev.Poll() > 0)
+	{
+		MwCheckKeyboardEvent();
+		if (keybdevents++ > 10)
+			break;
+	}
+	
+	/* did we not process any input? if so, yield so we don't freeze system */
+	if (mouseevents==0 && keybdevents==0)
+		sceKernelDelayThread(100);
+
+	MwHandleTimers();
+}
+
+#endif
+
 
 #if UNIX && defined(HAVESELECT)
 #if ANIMATEPALETTE
@@ -473,8 +541,11 @@ MwInitialize(void)
   	}
 	userregfd_head = -1;
 #endif
+
+#ifndef MW_NOSIGNALS
 	/* catch terminate signal to restore tty state*/
 	signal(SIGTERM, (void *)MwTerminate);
+#endif
 
 	startTicks = GetTickCount();
 	

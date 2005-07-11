@@ -895,6 +895,9 @@ GdDrawImage(PSD psd, MWCOORD x, MWCOORD y, PMWIMAGEHDR pimage)
 			case MWPF_TRUECOLOR8888:
 				pixel = COLOR2PIXEL8888(cr);
 				break;
+			case MWPF_TRUECOLORABGR:
+				pixel = COLOR2PIXELABGR(cr);
+				break;
 			case MWPF_TRUECOLOR0888:
 			case MWPF_TRUECOLOR888:
 				pixel = COLOR2PIXEL888(cr);
@@ -957,6 +960,9 @@ GdDrawImage(PSD psd, MWCOORD x, MWCOORD y, PMWIMAGEHDR pimage)
 					break;
 				case MWPF_TRUECOLOR8888:
 					pixel = COLOR2PIXEL8888(cr);
+					break;
+				case MWPF_TRUECOLORABGR:
+					pixel = COLOR2PIXELABGR(cr);
 					break;
 				case MWPF_TRUECOLOR0888:
 				case MWPF_TRUECOLOR888:
@@ -1296,6 +1302,7 @@ GdArea(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, void *pixel
 		pixsize = sizeof(unsigned char);
 		break;
 	case MWPF_TRUECOLOR8888:
+	case MWPF_TRUECOLORABGR:
 	case MWPF_TRUECOLOR0888:
 		pixsize = sizeof(unsigned long);
 		break;
@@ -1328,6 +1335,7 @@ GdArea(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, void *pixel
 	case MWPF_TRUECOLOR332:
 		gr_foreground = *PIXELS++;
 		break;
+	case MWPF_TRUECOLORABGR:
 	case MWPF_TRUECOLOR8888:
 	case MWPF_TRUECOLOR0888:
 		gr_foreground = *(unsigned long *)PIXELS;
@@ -1374,6 +1382,7 @@ GdArea(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, void *pixel
 				goto breakwhile;
 			++PIXELS;
 			break;
+		case MWPF_TRUECOLORABGR:
 		case MWPF_TRUECOLOR8888:
 		case MWPF_TRUECOLOR0888:
 			if(gr_foreground != *(unsigned long *)PIXELS)
@@ -2260,6 +2269,11 @@ GdTranslateArea(MWCOORD width, MWCOORD height, void *in, int inpixtype,
 			colorval = PIXEL888TOCOLORVAL(pixelval);
 			inbuf += sizeof(unsigned long);
 			break;
+		case MWPF_TRUECOLORABGR:
+			pixelval = *(unsigned long *) inbuf;
+			colorval = PIXELABGRTOCOLORVAL(pixelval);
+			inbuf += sizeof(unsigned long);
+			break;
 		case MWPF_TRUECOLOR8888:
 			pixelval = *(unsigned long *) inbuf;
 			colorval = PIXEL8888TOCOLORVAL(pixelval);
@@ -2315,6 +2329,11 @@ GdTranslateArea(MWCOORD width, MWCOORD height, void *in, int inpixtype,
 		case MWPF_TRUECOLOR8888:
 			*(unsigned long *) outbuf =
 				COLOR2PIXEL8888(colorval);
+			outbuf += sizeof(unsigned long);
+			break;
+		case MWPF_TRUECOLORABGR:
+			*(unsigned long *) outbuf =
+				COLOR2PIXELABGR(colorval);
 			outbuf += sizeof(unsigned long);
 			break;
 		case MWPF_TRUECOLOR888:

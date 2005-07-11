@@ -13,8 +13,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+// hack
+#ifdef PSP
+#define exit(...) sceKernelExitGame()
+#endif
+
 #if !(DOS_TURBOC | DOS_QUICKC | _MINIX | VXWORKS)
-static int
+int
 abs(int n)
 {
 	return n >= 0? n: -n;

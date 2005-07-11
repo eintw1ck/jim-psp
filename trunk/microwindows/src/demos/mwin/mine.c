@@ -8,7 +8,7 @@
 extern int mwCurrentButtons;	/* FIXME */
 
 
-#ifdef __rtems__
+#if defined(__rtems__) || defined(PSP)
 #define  srandom  srand
 #define  random   rand
 #endif

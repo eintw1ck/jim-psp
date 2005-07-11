@@ -16,6 +16,13 @@ extern "C" {
 
 #include "mwtypes.h"			/* exported engine MW* types*/
 
+/* another ugly hack */
+#ifdef PSP
+#define fprintf(...) do {} while(0)
+#define setbuf(...) do {} while(0)
+#define exit(...) sceKernelExitGame()
+#endif
+
 /*
  * The following typedefs are inherited from the Microwindows
  * engine layer.

@@ -63,7 +63,7 @@ GPROF                    = N
 # Libraries to build: microwin, nano-X, nanowidget, object frameworks
 #
 ####################################################################
-MICROWIN                 = Y
+MICROWIN                 = N
 NANOX                    = Y
 SHAREDLIBS               = N
 OBJFRAMEWORK             = N
@@ -339,8 +339,7 @@ SCANKBD                  = N
 PIPEKBD                  = N
 IPAQKBD                  = N
 LIRCKBD                  = N
-NOKBD                    = N
-PSPKBD			 = Y
+NOKBD                    = Y
 
 endif
 

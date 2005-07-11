@@ -1,0 +1,41 @@
+Microwindows and Nano-X port for the Sony PSP contributed by
+   Jim Paris <jim@jtan.com>
+
+This is a _very_ rough port; it runs, but there are a number of hacks
+both in the build system and the code that would have to be worked out
+before this was useful for anything.  For example, the included demos
+sometimes show video corruption, and there are issues with the event
+loop that cause random delays to occur.  Consider this more of a
+proof-of-concept at this point.
+
+To build and run a demo, first make sure psp-config is in your PATH, then:
+
+   cd src
+   make
+
+A number of demos are generated in bin.  "mdemo" and "mine" should
+both work, for example.
+
+
+Mouse:
+  
+  Analog stick moves
+  X = left click
+  Square = left click
+  Circle = right click
+  Triangle = middle click
+
+Keyboard:
+  
+  L Trigger = escape
+  R Trigger = enter
+  Left = letter L
+  Right = letter R
+  Up = letter U
+  Down = letter D
+  Select = backspace
+  Start = quit
+
+
+  
+  

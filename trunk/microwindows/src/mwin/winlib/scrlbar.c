@@ -14,6 +14,12 @@
 #include "wintools.h"
 #include "mwsystem.h"
 
+// hack
+#ifdef PSP
+#define fprintf(...) do {} while(0)
+#endif
+
+
 /* scrollbar status/positions*/
 #define SBS_UNKNOWN		0x0000
 #define SBS_LEFTARROW		0x0001

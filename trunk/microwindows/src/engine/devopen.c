@@ -293,6 +293,9 @@ GdFindColor(PSD psd, MWCOLORVAL c)
 	case MWPF_TRUECOLOR8888:
 		return COLOR2PIXEL8888(c);
 
+	case MWPF_TRUECOLORABGR:
+		return COLOR2PIXELABGR(c);
+
 	case MWPF_TRUECOLOR0888:
 	case MWPF_TRUECOLOR888:
 		/* create 24 bit 8/8/8 pixel (0x00RRGGBB) from RGB colorval*/
@@ -379,6 +382,9 @@ GdGetColorRGB(PSD psd, MWPIXELVAL pixel)
 	case MWPF_TRUECOLOR8888:
 		return PIXEL8888TOCOLORVAL(pixel);
 
+	case MWPF_TRUECOLORABGR:
+		return PIXELABGRTOCOLORVAL(pixel);
+
 	case MWPF_TRUECOLOR0888:
 		return PIXEL888TOCOLORVAL(pixel);
 
@@ -459,6 +465,10 @@ typedef struct {
 #define RMASK888	0xff0000
 #define GMASK888	0x00ff00
 #define BMASK888	0x0000ff
+
+#define BMASKBGR	0xff0000
+#define GMASKBGR	0x00ff00
+#define RMASKBGR	0x0000ff
 
 static void
 putsw(unsigned long dw, FILE *ofp)
@@ -561,6 +571,11 @@ GdCaptureScreen(char *path)
 				rmask = RMASK888;
 				gmask = GMASK888;
 				bmask = BMASK888;
+				break;
+			case MWPF_TRUECOLORABGR:
+				rmask = RMASKBGR;
+				gmask = GMASKBGR;
+				bmask = BMASKBGR;
 				break;
 			case MWPF_TRUECOLOR565:
 				rmask = RMASK565;
