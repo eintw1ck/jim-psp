@@ -119,9 +119,26 @@ typedef struct SceKernelModuleInfo {
 	unsigned int 	text_size;
 	unsigned int 	data_size;
 	unsigned int 	bss_size;
+	/* The following is only available in the v1.5 firmware and above,
+	   but as sceKernelQueryModuleInfo is broken in v1.0 is doesn't matter ;) */
+	unsigned short  attribute;
+	unsigned char   version[2];
+	char            name[28];
 } SceKernelModuleInfo;
 
-//sceKernelQueryModuleInfo
+/**
+  * Query the information about a loaded module from its UID.
+  * @note This fails on v1.0 firmware (and even it worked has a limited structure)
+  * so if you want to be compatible with both 1.5 and 1.0 (and you are running in 
+  * kernel mode) then call this function first then ::pspDebugQueryModuleInfoV1 
+  * if it fails, or make separate v1 and v1.5+ builds.
+  *
+  * @param uid - The UID of the loaded module.
+  * @param mod - Pointer to a SceKernelModuleInfo structure.
+  * 
+  * @return < 0 on error.
+  */
+int sceKernelQueryModuleInfo(SceUID uid, SceKernelModuleInfo *mod);
 
 /*@}*/
 

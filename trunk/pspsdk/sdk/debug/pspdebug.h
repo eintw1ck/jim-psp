@@ -143,67 +143,6 @@ int pspDebugInstallErrorHandler(PspDebugErrorHandler handler);
   */
 void pspDebugDumpException(PspDebugRegBlock *regs);
 
-/** 
-  * Scans through memory trying to find the specified module header.
-  *
-  * @note This scans all of memory, ensure you are in kernel mode before trying this.
-  * @param mod_name - The name of module (e.g. sceExceptionManager) 
-  * @return A pointer to the module information, if found. Otherwise NULL.
-  */
-SceModuleInfo *pspDebugFindModule(const char *mod_name);
-
-/** 
-  * Scans through memory trying to find the specified module header. For user modules only.
-  *
-  * @param mod_name - The name of module (e.g. sceExceptionManager) 
-  * @return A pointer to the module information, if found. Otherwise NULL.
-  */
-SceModuleInfo *pspDebugFindUserModule(const char *mod_name);
-
-/**
-  * Find an exported function from its module information.
-  *
-  * @param mod - Pointer to a module info structure, found with ::pspDebugFindModule.
-  * @param exp_name - The name of the export library.
-  * @param nid - The nid of the function to find.
-  *
-  * @return A pointer to the function if found, else NULL.
-  */
-void *pspDebugFindExportedFunction(SceModuleInfo *mod, const char *exp_name, u32 nid);
-
-/**
-  * Find an exported variable from its module information.
-  *
-  * @param mod - Pointer to a module info structure, found with ::pspDebugFindModule.
-  * @param exp_name - The name of the export library.
-  * @param nid - The nid of the variable to find.
-  *
-  * @return A pointer to the variable if found, else NULL.
-  */
-void *pspDebugFindExportedVariable(SceModuleInfo *mod, const char *exp_name, u32 nid);
-
-/**
-  * Find an exported function from its module information, based on its name.
-  *
-  * @param mod - Pointer to a module info structure, found with ::pspDebugFindModule.
-  * @param exp_name - The name of the export library.
-  * @param name - The name of the function to find.
-  *
-  * @return A pointer to the function if found, else NULL.
-  */
-void *pspDebugFindExportedFunctionByName(SceModuleInfo *mod, const char *exp_name, const char *name);
-
-/**
-  * Find an exported variable from its module information, based on its name.
-  *
-  * @param mod - Pointer to a module info structure, found with ::pspDebugFindModule.
-  * @param exp_name - The name of the export library.
-  * @param name - The name of the variable to find.
-  *
-  * @return A pointer to the variable if found, else NULL.
-  */
-void *pspDebugFuncExportedVariableByName(SceModuleInfo *mod, const char *exp_name, const char *name);
-
 /** Type for Kprintf handler */
 typedef int (*PspDebugKprintfHandler)(const char *format, u32 *args);
 
@@ -314,6 +253,19 @@ int pspDebugInstallStdoutHandler(PspDebugPrintHandler handler);
   * @return < 0 on error, else 0.
   */
 int pspDebugInstallStderrHandler(PspDebugPrintHandler handler);
+
+/**
+  * Qeury a modules information from its uid.
+  * @note this is a replacement function for the broken kernel sceKernelQueryModuleInfo.
+  * DO NOT use on a anything above that version. This also needs kernel mode access where
+  * the normal one has a user mode stub.
+  * 
+  * @param uid - The UID of the module to query.
+  * @param modinfo - Pointer a module SceKernelModuleInfo structure.
+  *
+  * @return < 0 on error.
+  */
+int pspDebugQueryModuleInfoV1(SceUID uid, SceKernelModuleInfo *modinfo);
 
 /*@}*/
 
