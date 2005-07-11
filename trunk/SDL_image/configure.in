@@ -53,6 +53,28 @@ AC_PROG_CC
 AC_C_INLINE
 AC_PROG_INSTALL
 
+AM_CONDITIONAL(TARGET_PSP, test $ARCH = psp)
+dnl Check for a valid PSPSDK installation
+CheckPSPSDK()
+{
+    AC_CHECK_PROG(psp_config, psp-config, psp-config, no)
+    if test x$psp_config = xno; then
+        AC_MSG_ERROR(Couldn't locate psp-config.)
+    fi
+
+    AC_MSG_CHECKING(for PSPSDK)
+    pspsdk_path=`$psp_config --pspsdk-path`
+    if test ! -d $pspsdk_path -o -z $pspsdk_path; then
+        AC_MSG_RESULT(not found)
+        AC_MSG_ERROR(Couldn't locate PSPSDK.)
+    fi
+    AC_MSG_RESULT($pspsdk_path)
+
+    # Compile SDL with -G0 to disable the $gp register.
+    CFLAGS="$CFLAGS -G0 -I\"${pspsdk_path}/include\""
+    BUILD_PREFIX="psp-"
+}
+
 dnl The alpha architecture needs special flags for binary portability
 case "$target" in
     alpha*-*-linux*)
@@ -72,6 +94,10 @@ case "$target" in
             fi
         fi
         ;;
+    *-psp-*)
+       	ARCH=psp
+       	CheckPSPSDK
+       	;;
 esac
 
 dnl Check for SDL

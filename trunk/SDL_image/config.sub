@@ -229,6 +229,7 @@ case $basic_machine in
 		| 1750a | dsp16xx | pdp10 | pdp11 \
 		| mips16 | mips64 | mipsel | mips64el \
 		| mips64orion | mips64orionel | mipstx39 | mipstx39el \
+		| mipsallegrex | mipsallegrexel \
 		| mips64vr4300 | mips64vr4300el | mips64vr4100 | mips64vr4100el \
 		| mips64vr5000 | miprs64vr5000el | mcore \
 		| sparc | sparclet | sparclite | sparc64 | sparcv9 | v850 | c4x \
@@ -729,6 +730,10 @@ case $basic_machine in
 		;;
 	ps2)
 		basic_machine=i386-ibm
+		;;
+	psp)
+		basic_machine=mipsallegrexel-psp
+		os=-elf
 		;;
 	rom68k)
 		basic_machine=m68k-rom68k

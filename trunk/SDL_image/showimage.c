@@ -36,6 +36,10 @@
 #include "picture.xpm"
 #endif
 
+/* psp debug */
+#define printf	pspDebugScreenPrintf
+#define fprintf(fd,x...)	pspDebugScreenPrintf(x);
+
 /* Draw a Gimpish background pattern to show transparency in the image */
 void draw_background(SDL_Surface *screen)
 {
@@ -76,8 +80,11 @@ void draw_background(SDL_Surface *screen)
     }
 }
 
-int main(int argc, char *argv[])
+//int main(int argc, char *argv[])
+int main(void)
 {
+	int argc = 3;
+	char *argv[] = { "showimage", "-fullscreen", "ms0:/PSP/GAME/PSPDEV/sail.bmp", NULL };
 	Uint32 flags;
 	SDL_Surface *screen, *image;
 	int i, depth, done;
