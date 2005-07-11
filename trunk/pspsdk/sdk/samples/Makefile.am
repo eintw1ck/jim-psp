@@ -20,7 +20,8 @@ SAMPLES = \
 	kernel/kdumper \
 	kernel/threadstatus \
 	kernel/fileio \
-	power
+	power \
+	utility/systemparam
 
 all:
 
