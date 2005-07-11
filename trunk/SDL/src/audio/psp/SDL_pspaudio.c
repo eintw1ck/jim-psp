@@ -104,12 +104,7 @@ AudioBootStrap PSPAUD_bootstrap = {
 /* This function waits until it is possible to write a full sound buffer */
 static void PSPAUD_WaitAudio(_THIS)
 {
-	int timeleft;
-
-	while ((timeleft = sceAudioGetChannelRestLen(this->hidden->channel)) > 0) {
-		timeleft /= this->spec.freq / 1000;
-		SDL_Delay((Uint32) timeleft);
-	}
+	/* Because we block when sending audio, there's no need for this function to do anything. */
 }
 
 static void PSPAUD_PlayAudio(_THIS)
@@ -117,9 +112,9 @@ static void PSPAUD_PlayAudio(_THIS)
 	Uint8 *mixbuf = this->hidden->mixbufs[this->hidden->next_buffer];
 
 	if (this->spec.channels == 1) {
-		sceAudioOutput(this->hidden->channel, PSP_AUDIO_VOLUME_MAX, mixbuf);
+		sceAudioOutputBlocking(this->hidden->channel, PSP_AUDIO_VOLUME_MAX, mixbuf);
 	} else {
-		sceAudioOutputPanned(this->hidden->channel, PSP_AUDIO_VOLUME_MAX, PSP_AUDIO_VOLUME_MAX, mixbuf);
+		sceAudioOutputPannedBlocking(this->hidden->channel, PSP_AUDIO_VOLUME_MAX, PSP_AUDIO_VOLUME_MAX, mixbuf);
 	}
 
 	this->hidden->next_buffer = (this->hidden->next_buffer + 1) % NUM_BUFFERS;
