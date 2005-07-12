@@ -18,5 +18,5 @@ TEMPLATE_NAME=elf32
 GENERATE_SHLIB_SCRIPT=yes
 DYNAMIC_LINK=FALSE
 
-# Discard the .comment section.
-OTHER_SECTIONS="/DISCARD/ : { *(.comment*) }"
+# Discard the .comment and .pdr sections.
+OTHER_SECTIONS="/DISCARD/ : { *(.comment) *(.pdr) }"

@@ -318,7 +318,7 @@
  mips*-*-elf*)		targ_emul=elf32ebmip ;;
  mips*el-*-rtems*)	targ_emul=elf32elmip ;;
 --- binutils-2.16.orig/ld/emulparams/elf_mipsallegrexel_psp.sh	1969-12-31 16:00:00.000000000 -0800
-+++ binutils-psp/ld/emulparams/elf_mipsallegrexel_psp.sh	2005-07-12 03:15:24.491660384 -0700
++++ binutils-psp/ld/emulparams/elf_mipsallegrexel_psp.sh	2005-07-12 03:44:26.006909824 -0700
 @@ -0,0 +1,22 @@
 +# Based off of the default elf32 MIPS target.  However, we use a seperate
 +# script template because the PSP architecture defines sections that normally
@@ -340,8 +340,8 @@
 +GENERATE_SHLIB_SCRIPT=yes
 +DYNAMIC_LINK=FALSE
 +
-+# Discard the .comment section.
-+OTHER_SECTIONS="/DISCARD/ : { *(.comment*) }"
++# Discard the .comment and .pdr sections.
++OTHER_SECTIONS="/DISCARD/ : { *(.comment) *(.pdr) }"
 --- binutils-2.16.orig/ld/scripttempl/elf_psp.sc	1969-12-31 16:00:00.000000000 -0800
 +++ binutils-psp/ld/scripttempl/elf_psp.sc	2005-06-25 03:12:02.000000000 -0700
 @@ -0,0 +1,496 @@
