@@ -31,11 +31,9 @@ static char rcsid =
 /* This is the system specific header for the SDL joystick API */
 #include <pspctrl.h>
 #include <pspkernel.h>
-#include <pspdisplay.h>
 
 #include <stdio.h>		/* For the definition of NULL */
 #include <stdlib.h>
-#include <time.h>
 
 #include "SDL_error.h"
 #include "SDL_joystick.h"
@@ -110,7 +108,6 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 	if (abs(tval.tv_usec - old_tval.tv_usec) < THROTTLE) 
 		return;
 
-//	old_tval.tv_sec = tval.tv_sec;
 	old_tval.tv_usec = tval.tv_usec;
 
 	sceCtrlReadBufferPositive(&pad, 1); 
