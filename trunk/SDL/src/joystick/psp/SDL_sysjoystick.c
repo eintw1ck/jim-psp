@@ -43,7 +43,7 @@ static char rcsid =
 #include "SDL_joystick_c.h"
 
 #define JITTER 1 // value between 1 and 255. 0 to disable
-#define THROTTLE 10 // time in usec
+#define THROTTLE 10000 // time in usec
 
 static int old_pad_buttons = 0; 
 static int old_axes[2] = {0,0}; 
