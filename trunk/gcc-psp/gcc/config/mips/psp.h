@@ -26,3 +26,6 @@ Boston, MA 02111-1307, USA.  */
 #undef SUBTARGET_CPP_SPEC
 #define SUBTARGET_CPP_SPEC "-DPSP=1 -D__psp__=1 -D_PSP=1"
 
+/* Get rid of the .pdr section. */
+#undef SUBTARGET_ASM_SPEC
+#define SUBTARGET_ASM_SPEC "-mno-pdr"
