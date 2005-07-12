@@ -39,6 +39,8 @@ static char rcsid =
 #include "SDL_sysjoystick.h"
 #include "SDL_joystick_c.h"
 
+#define JITTER 1 // value between 1 and 255. 0 to disable
+
 static int old_pad_buttons = 0; 
 static int old_axes[2] = {0,0}; 
 
@@ -87,7 +89,7 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 
 void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 {
-	int i;
+	int i, change;
 	SceCtrlData pad; 
 	int buttons[] = {
 		PSP_CTRL_TRIANGLE, PSP_CTRL_CIRCLE, PSP_CTRL_CROSS, PSP_CTRL_SQUARE,  
@@ -101,12 +103,14 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 	/* joystick axes events */
 	for (i = 0; i < 2; i++) {
 		val = i ? pad.Ly : pad.Lx;
+		change = (val - old_axes[i]);
 
-		if ( old_axes[i] != val) {
+		if ( (change > JITTER) || (change < -JITTER) ) {
 			SDL_PrivateJoystickAxis(joystick, (Uint8)i, 
-				(Sint16)((val - 128) * 256)); // char to sint16
-			old_axes[i] = val;
+				(Sint16)((val - 128) * 256)); 
 		}
+
+		old_axes[i] = val;
 	}
 
 	/* joystick button events */
