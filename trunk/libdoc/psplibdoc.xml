@@ -2026,7 +2026,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x219C58F1</NID>
-						<NAME>sceHprm_219C58F1</NAME>
+						<NAME>sceHprmIsMicrophoneExist</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1910B327</NID>
@@ -2084,7 +2084,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x219C58F1</NID>
-						<NAME>sceHprm_driver_219C58F1</NAME>
+						<NAME>sceHprmIsMicrophoneExist</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4D1E622C</NID>
