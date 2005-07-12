@@ -39,13 +39,29 @@ static char rcsid =
 #include "SDL_joystick.h"
 #include "SDL_sysjoystick.h"
 #include "SDL_joystick_c.h"
+#include "SDL_thread.h"
+#include "SDL_mutex.h"
+#include "SDL_timer.h"
 
-#define JITTER 1 // value between 1 and 255. 0 to disable
-#define THROTTLE 10000 // time in usec
+static SceCtrlData pad;
+static SDL_Thread *thread = NULL;
+static SDL_sem *sem = NULL;
+static int alive = 0;
 
-static int old_pad_buttons = 0; 
-static int old_axes[2] = {0,0}; 
-static struct timeval old_tval = {0,0};
+/*
+ * Function to throttle updates to once per frame
+ */
+int JoystickUpdate(void *data)
+{
+	while (alive) {
+		SDL_SemWait(sem);
+		sceCtrlReadBufferPositive(&pad, 1); 
+		SDL_SemPost(sem);
+//		sceDisplayWaitVblankStart();
+        SDL_Delay(1000 / 60);
+	}
+	return 0;
+}
 
 /* Function to scan the system for joysticks.
  * This function should set SDL_numjoysticks to the number of available
@@ -57,6 +73,12 @@ int SDL_SYS_JoystickInit(void)
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 	SDL_numjoysticks = 1;
+
+	/* setup thread to update pad buffer on vsync */
+	alive = 1;
+	thread = SDL_CreateThread(JoystickUpdate, NULL);
+	sem = SDL_CreateSemaphore(1);
+
 	return 1;
 }
 
@@ -92,41 +114,29 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 
 void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 {
-	int i, change;
-	struct timeval tval;
-	SceCtrlData pad; 
+	int i;
+	static SceCtrlData old_pad = {0, 0, 0, 0, ""}; 
 	int buttons[] = {
 		PSP_CTRL_TRIANGLE, PSP_CTRL_CIRCLE, PSP_CTRL_CROSS, PSP_CTRL_SQUARE,  
 		PSP_CTRL_LTRIGGER, PSP_CTRL_RTRIGGER, PSP_CTRL_DOWN, PSP_CTRL_LEFT,  
 		PSP_CTRL_UP, PSP_CTRL_RIGHT, PSP_CTRL_SELECT, PSP_CTRL_START, 
 		PSP_CTRL_HOME, PSP_CTRL_HOLD}; 
-	unsigned char val;
 
-	gettimeofday(&tval,0);
-
-	// cheap time check & throttle
-	if (abs(tval.tv_usec - old_tval.tv_usec) < THROTTLE) 
-		return;
-
-	old_tval.tv_usec = tval.tv_usec;
-
-	sceCtrlReadBufferPositive(&pad, 1); 
+	SDL_SemWait(sem);
 
 	/* joystick axes events */
-	for (i = 0; i < 2; i++) {
-		val = i ? pad.Ly : pad.Lx;
-		change = (val - old_axes[i]);
+	if (pad.Lx != old_pad.Lx ) {
+		SDL_PrivateJoystickAxis(joystick, (Uint8)0, (Sint16)((pad.Lx - 128) * 256)); 
+		old_pad.Lx = pad.Lx;
+	}
 
-		if ( (change > JITTER) || (change < -JITTER) ) {
-			SDL_PrivateJoystickAxis(joystick, (Uint8)i, 
-				(Sint16)((val - 128) * 256)); 
-		}
-
-		old_axes[i] = val;
+	if (pad.Ly != old_pad.Ly ) {
+		SDL_PrivateJoystickAxis(joystick, (Uint8)1, (Sint16)((pad.Ly - 128) * 256)); 
+		old_pad.Ly = pad.Ly;
 	}
 
 	/* joystick button events */
-	if ( pad.Buttons != old_pad_buttons ) {
+	if ( pad.Buttons != old_pad.Buttons ) {
 		for ( i = 0; i < joystick->nbuttons; i++ ) {
 			if ( pad.Buttons & buttons[i] ) {  
 				if ( ! joystick->buttons[i] ) {
@@ -138,8 +148,11 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 				}
 			}
 		}
-		old_pad_buttons = pad.Buttons;
+		old_pad.Buttons = pad.Buttons;
 	}
+
+	SDL_SemPost(sem);
+
 }
 
 /* Function to close a joystick after use */
@@ -151,7 +164,10 @@ void SDL_SYS_JoystickClose(SDL_Joystick *joystick)
 /* Function to perform any system-specific joystick related cleanup */
 void SDL_SYS_JoystickQuit(void)
 {
-	/* Do nothing. */
+	/* Cleanup Threads and Semaphore. */
+	alive = 0;
+	SDL_WaitThread(thread, NULL);
+	SDL_DestroySemaphore(sem);
 }
 
 /* vim: ts=4 sw=4
