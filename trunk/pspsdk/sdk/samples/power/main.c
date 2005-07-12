@@ -55,7 +55,7 @@ void power_callback(int unknown, int pwrflags)
 }
 
 /* Callback thread */
-void CallbackThread(void *arg)
+int CallbackThread(SceSize args, void *argp)
 {
     int cbid;
     cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
@@ -63,6 +63,8 @@ void CallbackThread(void *arg)
     cbid = sceKernelCreateCallback("Power Callback", power_callback, NULL);
     scePowerRegisterCallback(0, cbid);
     sceKernelSleepThreadCB();
+
+	return 0;
 }
 
 /* Sets up the callback thread and returns its thread id */

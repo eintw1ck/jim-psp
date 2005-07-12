@@ -30,7 +30,7 @@ int exit_callback(void)
 }
 
 /* Callback thread */
-void CallbackThread(void *arg)
+int CallbackThread(SceSize args, void *argp)
 {
 	int cbid;
 
@@ -38,6 +38,8 @@ void CallbackThread(void *arg)
 	sceKernelRegisterExitCallback(cbid);
 
 	sceKernelSleepThreadCB();
+
+	return 0;
 }
 
 /* Sets up the callback thread and returns its thread id */
