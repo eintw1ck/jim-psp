@@ -33,8 +33,8 @@ By default, the PSP "sdl-config --cflags" will define main=SDL_main.
 
 Building applications
 ---------------------
-Write your source file as you would a normal SDL program.  Use the
-standard Makefile as supplied with sdktest.  Above the final "include"
+Write your source file as you would a normal SDL program.  Use the standard
+Makefile as supplied with any PSPSDK sample program.  Above the final "include"
 line, add:
 
 PSPBIN = $(PSPSDK)/../bin
@@ -95,7 +95,7 @@ Status
   Timers - yes, with multiple callbacks
  Threads - yes, with mutexes and semaphores
 Joystick - yes, see above for button mapping
-   Audio - no
+   Audio - yes
    Mouse - no
 Keyboard - no
 
