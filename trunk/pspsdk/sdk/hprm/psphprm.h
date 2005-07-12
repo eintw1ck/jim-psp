@@ -75,6 +75,15 @@ int sceHprmIsHeadphoneExist(void);
   */
 int sceHprmIsRemoteExist(void);
 
+/** 
+  * Determines whether the microphone is plugged in.
+  *
+  * @return 1 if the microphone is plugged in, else 0.
+  */
+int sceHprmIsMicrophoneExist(void);
+
+
+
 /*@}*/
 
 #ifdef __cplusplus
