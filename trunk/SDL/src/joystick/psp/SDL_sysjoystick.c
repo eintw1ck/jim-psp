@@ -30,9 +30,12 @@ static char rcsid =
 
 /* This is the system specific header for the SDL joystick API */
 #include <pspctrl.h>
+#include <pspkernel.h>
+#include <pspdisplay.h>
 
 #include <stdio.h>		/* For the definition of NULL */
 #include <stdlib.h>
+#include <time.h>
 
 #include "SDL_error.h"
 #include "SDL_joystick.h"
@@ -40,9 +43,11 @@ static char rcsid =
 #include "SDL_joystick_c.h"
 
 #define JITTER 1 // value between 1 and 255. 0 to disable
+#define THROTTLE 10 // time in usec
 
 static int old_pad_buttons = 0; 
 static int old_axes[2] = {0,0}; 
+static struct timeval old_tval = {0,0};
 
 /* Function to scan the system for joysticks.
  * This function should set SDL_numjoysticks to the number of available
@@ -90,6 +95,7 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 {
 	int i, change;
+	struct timeval tval;
 	SceCtrlData pad; 
 	int buttons[] = {
 		PSP_CTRL_TRIANGLE, PSP_CTRL_CIRCLE, PSP_CTRL_CROSS, PSP_CTRL_SQUARE,  
@@ -97,6 +103,15 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 		PSP_CTRL_UP, PSP_CTRL_RIGHT, PSP_CTRL_SELECT, PSP_CTRL_START, 
 		PSP_CTRL_HOME, PSP_CTRL_HOLD}; 
 	unsigned char val;
+
+	gettimeofday(&tval,0);
+
+	// cheap time check & throttle
+	if (abs(tval.tv_usec - old_tval.tv_usec) < THROTTLE) 
+		return;
+
+//	old_tval.tv_sec = tval.tv_sec;
+	old_tval.tv_usec = tval.tv_usec;
 
 	sceCtrlReadBufferPositive(&pad, 1); 
 
