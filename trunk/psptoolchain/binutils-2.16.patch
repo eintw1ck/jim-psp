@@ -267,7 +267,7 @@
  
  /* This is a list of macro expanded instructions.
 --- binutils-2.16.orig/ld/Makefile.am	2005-01-20 11:37:49.000000000 -0800
-+++ binutils-psp/ld/Makefile.am	2005-06-25 02:44:52.056431072 -0700
++++ binutils-psp/ld/Makefile.am	2005-06-25 02:44:52.000000000 -0700
 @@ -190,6 +190,7 @@
  	eelf_i386_chaos.o \
  	eelf_i386_fbsd.o \
@@ -287,7 +287,7 @@
    $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
  	${GENSCRIPTS} elf_s390 "$(tdir_elf_s390)"
 --- binutils-2.16.orig/ld/Makefile.in	2005-01-22 21:36:37.000000000 -0800
-+++ binutils-psp/ld/Makefile.in	2005-06-25 02:47:12.212124168 -0700
++++ binutils-psp/ld/Makefile.in	2005-06-25 02:47:12.000000000 -0700
 @@ -315,6 +315,7 @@
  	eelf_i386_chaos.o \
  	eelf_i386_fbsd.o \
@@ -307,7 +307,7 @@
    $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
  	${GENSCRIPTS} elf_s390 "$(tdir_elf_s390)"
 --- binutils-2.16.orig/ld/configure.tgt	2005-02-08 11:54:27.000000000 -0800
-+++ binutils-psp/ld/configure.tgt	2005-06-25 03:20:06.047055648 -0700
++++ binutils-psp/ld/configure.tgt	2005-06-25 03:20:06.000000000 -0700
 @@ -428,6 +428,8 @@
  mips*vr4100-*-elf*)	targ_emul=elf32b4300 ;;
  mips*vr5000el-*-elf*)	targ_emul=elf32l4300 ;;
@@ -318,8 +318,8 @@
  mips*-*-elf*)		targ_emul=elf32ebmip ;;
  mips*el-*-rtems*)	targ_emul=elf32elmip ;;
 --- binutils-2.16.orig/ld/emulparams/elf_mipsallegrexel_psp.sh	1969-12-31 16:00:00.000000000 -0800
-+++ binutils-psp/ld/emulparams/elf_mipsallegrexel_psp.sh	2005-06-25 03:28:05.630147936 -0700
-@@ -0,0 +1,19 @@
++++ binutils-psp/ld/emulparams/elf_mipsallegrexel_psp.sh	2005-07-12 03:15:24.491660384 -0700
+@@ -0,0 +1,22 @@
 +# Based off of the default elf32 MIPS target.  However, we use a seperate
 +# script template because the PSP architecture defines sections that normally
 +# cannot be overriden here and would normally get absorbed (i.e.
@@ -339,8 +339,11 @@
 +TEMPLATE_NAME=elf32
 +GENERATE_SHLIB_SCRIPT=yes
 +DYNAMIC_LINK=FALSE
++
++# Discard the .comment section.
++OTHER_SECTIONS="/DISCARD/ : { *(.comment*) }"
 --- binutils-2.16.orig/ld/scripttempl/elf_psp.sc	1969-12-31 16:00:00.000000000 -0800
-+++ binutils-psp/ld/scripttempl/elf_psp.sc	2005-06-25 03:12:02.857511624 -0700
++++ binutils-psp/ld/scripttempl/elf_psp.sc	2005-06-25 03:12:02.000000000 -0700
 @@ -0,0 +1,496 @@
 +#
 +# Unusual variables checked by this code:
