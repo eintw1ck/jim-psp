@@ -53,7 +53,6 @@ AC_PROG_CC
 AC_C_INLINE
 AC_PROG_INSTALL
 
-AM_CONDITIONAL(TARGET_PSP, test $ARCH = psp)
 dnl Check for a valid PSPSDK installation
 CheckPSPSDK()
 {
