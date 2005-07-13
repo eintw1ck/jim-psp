@@ -130,26 +130,26 @@
   fi
 
   ## Create and enter the temp directory.
-  mkdir -p $TMPDIR; cd $TMPDIR
+  mkdir -p "$TMPDIR"; cd "$TMPDIR"
 
   ## Unpack and patch the binutils source.
   if test $BUILD_BINUTILS ; then
-   rm -Rf $BINUTILS; tar xfvz $SRCDIR/$BINUTILS.tar.gz
-   cd $BINUTILS; cat $SRCDIR/$BINUTILS.patch | $PATCH || { echo "ERROR PATCHING BINUTILS"; exit; }
+   rm -Rf $BINUTILS; tar xfvz "$SRCDIR/$BINUTILS.tar.gz"
+   cd $BINUTILS; cat "$SRCDIR/$BINUTILS.patch" | $PATCH || { echo "ERROR PATCHING BINUTILS"; exit; }
    cd ..
   fi
 
   ## Unpack and patch the gcc source.
   if test $BUILD_GCC ; then
-   rm -Rf $GCC; tar xfvj $SRCDIR/$GCC.tar.bz2
-   cd $GCC; cat $SRCDIR/$GCC.patch | $PATCH || { echo "ERROR PATCHING GCC"; exit; }
+   rm -Rf $GCC; tar xfvj "$SRCDIR/$GCC.tar.bz2"
+   cd $GCC; cat "$SRCDIR/$GCC.patch" | $PATCH || { echo "ERROR PATCHING GCC"; exit; }
    cd ..
   fi
 
   ## Unpack and patch the newlib source.
   if test $BUILD_NEWLIB ; then
-   rm -Rf $NEWLIB; tar xfvz $SRCDIR/$NEWLIB.tar.gz
-   cd $NEWLIB; cat $SRCDIR/$NEWLIB.patch | $PATCH || { echo "ERROR PATCHING NEWLIB"; exit; }
+   rm -Rf $NEWLIB; tar xfvz "$SRCDIR/$NEWLIB.tar.gz"
+   cd $NEWLIB; cat "$SRCDIR/$NEWLIB.patch" | $PATCH || { echo "ERROR PATCHING NEWLIB"; exit; }
    cd ..
   fi
 
