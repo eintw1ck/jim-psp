@@ -44,7 +44,7 @@ endif
 
 # Link with following default libraries.  Other libraries should be specified in the $(LIBS) variable.
 # TODO: This library list needs to be generated at configure time.
-PSPSDK_LIBS = -lpspdebug -lpspdisplay -lpspge -lpspctrl
+PSPSDK_LIBS = -lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk
 LIBS     := $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpspuser -lpspkernel
 
 # Define the overridable parameters for EBOOT.PBP
