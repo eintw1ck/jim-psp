@@ -15,7 +15,8 @@ SAMPLES = \
 	gu/lines \
 	gu/sprite \
 	gu/blend \
-	irda/sircs \
+	ir/sircs \
+	ir/irda \
 	kernel/kdumper \
 	kernel/threadstatus \
 	kernel/fileio \

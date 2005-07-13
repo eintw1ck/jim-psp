@@ -1,6 +1,6 @@
 PSPSDK = $(shell psp-config --pspsdk-path)
 PSPLIBSDIR = $(PSPSDK)/..
-TARGET = netparamsample
+TARGET = netconfsample
 OBJS = main.o
 LIBS = -lpsputility
 
