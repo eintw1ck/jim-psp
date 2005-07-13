@@ -11,6 +11,7 @@ SUBDIRS = \
 	libc \
 	power \
 	sircs \
+	sdk \
 	startup \
 	umd \
 	user \

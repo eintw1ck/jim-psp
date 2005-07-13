@@ -13,7 +13,7 @@
  */
 
 #include <pspkernel.h>
-#include <pspdebug.h>
+#include <pspsdk.h>
 #include <string.h>
 
 /* Internal kernel structure for the module information, only correct on a v1 */
@@ -42,7 +42,7 @@ struct SceModuleInfo_v1_Internal
 
 struct SceModuleInfo_v1_Internal *sceKernelFindModuleByUID(int modid);
 
-int pspDebugQueryModuleInfoV1(SceUID uid, SceKernelModuleInfo *modinfo)
+int pspSdkQueryModuleInfoV1(SceUID uid, SceKernelModuleInfo *modinfo)
 {
 	struct SceModuleInfo_v1_Internal *mod;
 

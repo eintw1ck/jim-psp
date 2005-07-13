@@ -254,19 +254,6 @@ int pspDebugInstallStdoutHandler(PspDebugPrintHandler handler);
   */
 int pspDebugInstallStderrHandler(PspDebugPrintHandler handler);
 
-/**
-  * Qeury a modules information from its uid.
-  * @note this is a replacement function for the broken kernel sceKernelQueryModuleInfo.
-  * DO NOT use on a anything above that version. This also needs kernel mode access where
-  * the normal one has a user mode stub.
-  * 
-  * @param uid - The UID of the module to query.
-  * @param modinfo - Pointer a module SceKernelModuleInfo structure.
-  *
-  * @return < 0 on error.
-  */
-int pspDebugQueryModuleInfoV1(SceUID uid, SceKernelModuleInfo *modinfo);
-
 /*@}*/
 
 #ifdef __cplusplus
