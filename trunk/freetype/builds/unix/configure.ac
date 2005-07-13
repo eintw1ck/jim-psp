@@ -46,6 +46,9 @@ else
     XX_CFLAGS="-std1 -g3"
     XX_ANSIFLAGS=
     ;;
+  *-psp-*)
+    XX_CFLAGS="-G0"
+    ;;
   *)
     XX_CFLAGS=
     XX_ANSIFLAGS=
