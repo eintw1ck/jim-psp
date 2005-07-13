@@ -69,6 +69,9 @@ case "$target" in
             ac_default_prefix=/usr/local/cross-tools/i386-mingw32msvc
         fi
         ;;
+    *-psp-*)
+        CFLAGS="$CFLAGS -G0"
+	;;
 esac
 
 dnl Check for the FreeType 2 library
@@ -132,6 +135,10 @@ case "$target" in
         if test x$ac_cv_prog_gcc = xyes; then
             CFLAGS="-mthreads"
 	fi
+        SYS_GL_LIBS=""
+        ;;
+    *-psp-*)
+        MATHLIB="-lm"
         SYS_GL_LIBS=""
         ;;
     *)
