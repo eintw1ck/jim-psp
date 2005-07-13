@@ -15,12 +15,12 @@ SAMPLES = \
 	gu/lines \
 	gu/sprite \
 	gu/blend \
-	ir/sircs \
-	ir/irda \
+	irda/sircs \
 	kernel/kdumper \
 	kernel/threadstatus \
 	kernel/fileio \
 	power \
+	utility/netconf \
 	utility/systemparam
 
 all:
