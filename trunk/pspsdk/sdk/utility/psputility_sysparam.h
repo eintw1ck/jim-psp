@@ -8,7 +8,7 @@
  *
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  *
- * $Id: psputility.h 581 2005-07-11 03:47:07Z warren $
+ * $Id$
  */
 #ifndef __PSPUTILITY_SYSPARAM_H__
 #define __PSPUTILITY_SYSPARAM_H__
