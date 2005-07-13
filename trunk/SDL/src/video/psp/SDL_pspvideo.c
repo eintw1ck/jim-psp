@@ -221,7 +221,14 @@ static int PSP_LockHWSurface(_THIS, SDL_Surface *surface)
 
 static void PSP_UnlockHWSurface(_THIS, SDL_Surface *surface)
 {
+	/* Process callbacks.  This should only happen about once per
+	   frame, and it's necessary to ensure that the game can quit
+	   via the Home button. */
+        sceKernelDelayThreadCB(0);
+
+	/* Flush video RAM */
 	sceKernelDcacheWritebackAll();
+
 	return;
 }
 
