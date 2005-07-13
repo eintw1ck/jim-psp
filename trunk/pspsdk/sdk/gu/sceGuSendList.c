@@ -9,6 +9,7 @@
 #include "guInternal.h"
 
 #include <pspkernel.h>
+#include <pspge.h>
 
 int sceGeListEnQueueHead(void* list, void* stall, int cbid, void* arg);
 

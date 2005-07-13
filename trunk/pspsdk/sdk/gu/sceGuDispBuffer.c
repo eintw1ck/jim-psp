@@ -9,6 +9,7 @@
 #include "guInternal.h"
 
 #include <pspkernel.h>
+#include <pspdisplay.h>
 
 void drawRegion(int x, int y, int width, int height)
 {

@@ -9,6 +9,7 @@
 #include "guInternal.h"
 
 #include <pspkernel.h>
+#include <pspge.h>
 
 void sceGuStart(int cid, void* list)
 {

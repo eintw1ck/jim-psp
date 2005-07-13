@@ -9,6 +9,7 @@
 #include "guInternal.h"
 
 #include <pspkernel.h>
+#include <pspge.h>
 
 void sendCommandi(int cmd, int argument)
 {

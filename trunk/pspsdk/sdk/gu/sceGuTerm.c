@@ -9,9 +9,7 @@
 #include "guInternal.h"
 
 #include <pspkernel.h>
-
-// TODO: remove when prototype has been declared
-void sceKernelDeleteEventFlag(int id);
+#include <pspge.h>
 
 void sceGuTerm(void)
 {

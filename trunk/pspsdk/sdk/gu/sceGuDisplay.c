@@ -9,6 +9,7 @@
 #include "guInternal.h"
 
 #include <pspkernel.h>
+#include <pspdisplay.h>
 
 int sceGuDisplay(int state)
 {

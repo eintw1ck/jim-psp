@@ -19,6 +19,7 @@ void sceGuClear(int flags)
     case 1: filter = (context->clear_color & 0xffffff) | (context->clear_stencil << 31); break;
     case 2: filter = (context->clear_color & 0xffffff) | (context->clear_stencil << 28); break;
     case 3: filter = (context->clear_color & 0xffffff) | (context->clear_stencil << 24); break;
+    default: filter = 0; break;
   }
 
   short* buffer;
