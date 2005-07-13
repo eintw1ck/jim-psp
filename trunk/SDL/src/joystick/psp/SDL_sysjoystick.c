@@ -76,8 +76,8 @@ int SDL_SYS_JoystickInit(void)
 
 	/* setup thread to update pad buffer on vsync */
 	alive = 1;
-	thread = SDL_CreateThread(JoystickUpdate, NULL);
 	sem = SDL_CreateSemaphore(1);
+	thread = SDL_CreateThread(JoystickUpdate, NULL);
 
 	return 1;
 }
