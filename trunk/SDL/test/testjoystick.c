@@ -150,8 +150,8 @@ int main(int argc, char *argv[])
 	SDL_Joystick *joystick;
 	char tmp[32];
 
-	setenv("PSP_DPAD","0",1);        /* dpad buttons all send the same button press */
-	setenv("PSP_LEFT","J7",1);
+	setenv("PSP_DPAD","0",1);        /* dpad should act as buttons */
+	setenv("PSP_LEFT","J7",1);       /* .. that all send joystick button 7 */
 	setenv("PSP_RIGHT","J7",1);
 	setenv("PSP_UP","J7",1);
 	setenv("PSP_DOWN","J7",1);
