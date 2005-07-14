@@ -14,6 +14,8 @@ SUBDIRS = \
 	sdk \
 	startup \
 	umd \
+	usb \
+	usbstor \
 	user \
 	utility \
 	samples

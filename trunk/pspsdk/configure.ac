@@ -94,6 +94,8 @@ AC_CONFIG_FILES([Makefile
                  sdk/startup/Makefile
 		 sdk/user/Makefile
                  sdk/umd/Makefile
+                 sdk/usb/Makefile
+                 sdk/usbstor/Makefile
                  sdk/utility/Makefile
                  sdk/samples/Makefile
                  tools/Makefile])
