@@ -31,7 +31,6 @@
  */
 
 #include "SDL.h"
-#include "SDL_pspvideo.h"
 #include "SDL_pspinput.h"
 #include "SDL_thread.h"
 #include "SDL_mutex.h"
