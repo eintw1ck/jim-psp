@@ -21,7 +21,7 @@ SAMPLES = \
 	kernel/threadstatus \
 	kernel/fileio \
 	power \
-	usb/MassStorage \
+	usb/storage \
 	utility/netconf \
 	utility/systemparam
 
