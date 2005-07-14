@@ -14,6 +14,16 @@ To build for the PSP, make sure psp-config is in the path and configure as follo
 followed by make, make install. 
 
 
+Status
+------
+   Video - yes, single 32-bit ABGR framebuffer surface only; SDL will
+           emulate other formats as necessary.  No HW accel.  No 3D.
+  Timers - yes, with multiple callbacks
+ Threads - yes, with mutexes and semaphores
+   Input - yes, see "Input" below
+   Audio - yes
+
+
 SDL_main
 --------
 When writing an SDL program, the typical use is to write your main
@@ -61,44 +71,58 @@ too.  Linking against psplibc will appear to work but may behave
 strangely at runtime.
 
 
-Joystick
---------
-Joystick has a two analog axes and 14 buttons.
-Axes:
- 0 - analog stick x
- 1 - analog stick y
-Buttons:
- 0 - triangle
- 1 - circle
- 2 - cross
- 3 - square
- 4 - left trigger
- 5 - right trigger
- 6 - down
- 7 - left
- 8 - up
- 9 - right
-10 - select
-11 - start
-12 - home
-13 - hold
+Input
+-----
+The PSP's input scheme can be configured through environment
+variables.  These environment variables will typically be created by
+the application prior to calling SDL_Init, with calls like
+    setenv("PSP_CROSS","K88",1);
+    setenv("PSP_ANALOG","1",1);
+    setenv("PSP_LTRIGGER","M0",1);
+    setenv("PSP_RTRIGGER","M2",1);
+The above examples would make the cross button send an "X" keypress,
+while the analog stick is the mouse, and the left and right triggers
+are the left and right mouse buttons.
+
+These variables and values are recognized:
+
+PSP_DPAD:
+   0 - dpad is just buttons (default)
+   1 - dpad is joystick axes 
+
+PSP_ANALOG:
+   0 - analog stick is axes (default)
+   1 - analog stick is mouse
+
+PSP_name: (where "name" is from the list below)
+   J0 - J13:  map to joystick button 0-13 (defaults, see below)
+   M0 - M4:   map to mouse button 0-4
+   K0 - K511: map to keyboard keycode 0-511 (matches SDLKey enum)
+
+Available PSP button names, and default mapping:
+   TRIANGLE J0
+   CIRCLE   J1
+   CROSS    J2
+   SQUARE   J3
+   LTRIGGER J4
+   RTRIGGER J5
+   DOWN     J6  (only if PSP_DPAD=0)
+   LEFT     J7  (only if PSP_DPAD=0)
+   UP       J8  (only if PSP_DPAD=0)
+   RIGHT    J9  (only if PSP_DPAD=0)
+   SELECT   J10
+   START    J11
+   HOME     J12
+   HOLD     J13
+
+The joystick device always has 14 buttons.  The mouse always has 5
+(corresponding to left, middle, right, wheelup, wheeldown).  Joystick
+or mouse buttons that have nothing assigned to them will never
+generate events.  If both PSP_DPAD and PSP_ANALOG are axes, the dpad
+axes come first.  To remove the default mapping without setting a new
+one, just use an empty value.
 
 Note: A "home" button press is sometimes generated when the screen
 turns off after being idle ("backlight auto-off" setting).  This
-generated event does not trigger the usual exit callback, though.
-
-
-Status
-------
-   Video - yes, single 32-bit ABGR framebuffer surface only; SDL will
-           emulate other formats as necessary.  Needs HW accel.  No 3D.
-  Timers - yes, with multiple callbacks
- Threads - yes, with mutexes and semaphores
-Joystick - yes, see above for button mapping
-   Audio - yes
-   Mouse - no
-Keyboard - no
-
-No plans for how mouse and keyboard might work at the moment.
-
+generated event does not trigger the usual PSP exit callback.
 

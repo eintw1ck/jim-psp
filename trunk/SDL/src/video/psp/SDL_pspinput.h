@@ -20,35 +20,33 @@
     slouken@libsdl.org
 */
 
-/* PSP port contributed by Marcus R. Brown <mrbrown@ocgnet.org>. */
+/* PSP input mapping by Jim Paris <jim@jtan.com> */
 
-#ifdef SAVE_RCSID
-static char rcsid =
- "@(#) $Id: SDL_nullevents.c,v 1.4 2004/01/04 16:49:24 slouken Exp $";
+#ifndef PSPINPUT_H
+#define PSPINPUT_H
+
+#include <pspctrl.h>
+#include "SDL_mutex.h"
+
+typedef struct {
+	char *name;
+	enum PspCtrlButtons id;
+	enum { bc_none, bc_joystick, bc_mouse, bc_keyboard } type;
+	int value;
+} PspButtonConfig;
+
+extern PspButtonConfig psp_button_config[];
+
+typedef enum { pdm_buttons = 0, pdm_axes = 1 } pdm_t;
+extern pdm_t psp_dpad_mode;
+
+typedef enum { pam_axes = 0, pam_mouse = 1 } pam_t;
+extern pam_t psp_analog_mode;
+
+extern SceCtrlData psp_input_pad;
+extern SDL_sem *psp_input_sem;
+
+void psp_input_init(void);
+void psp_input_quit(void);
+
 #endif
-
-/* Being a null driver, there's no event stream. We just define stubs for
-   most of the API. */
-
-#include "SDL.h"
-#include "SDL_sysevents.h"
-#include "SDL_events_c.h"
-#include "SDL_pspvideo.h"
-#include "SDL_pspevents_c.h"
-
-void PSP_PumpEvents(_THIS)
-{
-	/* Process callbacks.  This is required so that the Home
-	 * button can exit the game.  This also happens in the
-	 * joystick subsystem, but that subsystem may not have been
-	 * initialized by the user. */
-        sceKernelDelayThreadCB(0);
-}
-
-void PSP_InitOSKeymap(_THIS)
-{
-	/* do nothing. */
-}
-
-/* end of SDL_pspevents.c ... */
-

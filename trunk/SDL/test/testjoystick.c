@@ -148,6 +148,20 @@ int main(int argc, char *argv[])
 	const char *name;
 	int i;
 	SDL_Joystick *joystick;
+	char tmp[32];
+
+	setenv("PSP_DPAD","0",1);        /* dpad buttons all send the same button press */
+	setenv("PSP_LEFT","J7",1);
+	setenv("PSP_RIGHT","J7",1);
+	setenv("PSP_UP","J7",1);
+	setenv("PSP_DOWN","J7",1);
+	setenv("PSP_CROSS","J0",1);      /* reorder buttons */
+	setenv("PSP_CIRCLE","J1",1);
+	setenv("PSP_TRIANGLE","J2",1);
+	setenv("PSP_SQUARE","J3",1);
+	setenv("PSP_LTRIGGER","",1);     /* left trigger = nothing */
+	sprintf(tmp,"K%d",SDLK_ESCAPE);  /* start = escape (not implemented yet) */
+	setenv("PSP_START",tmp,1);
 
 	/* Initialize SDL (Note: video is required to start event loop) */
 	if ( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_JOYSTICK) < 0 ) {

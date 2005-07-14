@@ -11,5 +11,7 @@ SRCS = 				\
 	SDL_pspevents_c.h	\
 	SDL_pspmouse.c		\
 	SDL_pspmouse_c.h	\
-	SDL_pspvideo.c
+	SDL_pspvideo.c		\
+	SDL_pspinput.h		\
+	SDL_pspinput.c
 

@@ -42,26 +42,7 @@ static char rcsid =
 #include "SDL_thread.h"
 #include "SDL_mutex.h"
 #include "SDL_timer.h"
-
-static SceCtrlData pad;
-static SDL_Thread *thread = NULL;
-static SDL_sem *sem = NULL;
-static int alive = 0;
-
-/*
- * Function to throttle updates to once per frame
- */
-int JoystickUpdate(void *data)
-{
-	while (alive) {
-		SDL_SemWait(sem);
-		sceCtrlReadBufferPositive(&pad, 1); 
-		SDL_SemPost(sem);
-//		sceDisplayWaitVblankStart();
-        SDL_Delay(1000 / 60);
-	}
-	return 0;
-}
+#include "../../video/psp/SDL_pspinput.h"
 
 /* Function to scan the system for joysticks.
  * This function should set SDL_numjoysticks to the number of available
@@ -70,14 +51,10 @@ int JoystickUpdate(void *data)
  */
 int SDL_SYS_JoystickInit(void)
 {
-	sceCtrlSetSamplingCycle(0);
-	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 	SDL_numjoysticks = 1;
 
-	/* setup thread to update pad buffer on vsync */
-	alive = 1;
-	sem = SDL_CreateSemaphore(1);
-	thread = SDL_CreateThread(JoystickUpdate, NULL);
+	/* Set up joystick config according to environment variables */
+	psp_input_init();
 
 	return 1;
 }
@@ -102,7 +79,15 @@ const char *SDL_SYS_JoystickName(int index)
 int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 {
 	joystick->nbuttons = 14;
-	joystick->naxes = 2;
+
+	joystick->naxes = 0;
+	if(psp_dpad_mode == pdm_axes)
+		joystick->naxes += 2;
+	if(psp_analog_mode == pam_axes)
+		joystick->naxes += 2;
+
+	joystick->nhats = 0;
+
 	return 0;
 }
 
@@ -114,45 +99,88 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 
 void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 {
-	int i;
-	static SceCtrlData old_pad = {0, 0, 0, 0, ""}; 
-	int buttons[] = {
-		PSP_CTRL_TRIANGLE, PSP_CTRL_CIRCLE, PSP_CTRL_CROSS, PSP_CTRL_SQUARE,  
-		PSP_CTRL_LTRIGGER, PSP_CTRL_RTRIGGER, PSP_CTRL_DOWN, PSP_CTRL_LEFT,  
-		PSP_CTRL_UP, PSP_CTRL_RIGHT, PSP_CTRL_SELECT, PSP_CTRL_START, 
-		PSP_CTRL_HOME, PSP_CTRL_HOLD}; 
+	int i, axis_base = 0;
+	SceCtrlData pad; 
+	enum PspCtrlButtons changed;
+	static enum PspCtrlButtons old_buttons = 0;
+	static Sint16 old_dpad_x = 0, old_dpad_y = 0;
+	static Sint16 old_analog_x = 0, old_analog_y = 0;
+	Sint16 dpad_x, dpad_y;
+	PspButtonConfig *pbc;
 
-	SDL_SemWait(sem);
+	SDL_SemWait(psp_input_sem);
+	pad = psp_input_pad;
+	SDL_SemPost(psp_input_sem);
 
-	/* joystick axes events */
-	if (pad.Lx != old_pad.Lx ) {
-		SDL_PrivateJoystickAxis(joystick, (Uint8)0, (Sint16)((pad.Lx - 128) * 256)); 
-		old_pad.Lx = pad.Lx;
-	}
+	changed = old_buttons ^ pad.Buttons;
+	old_buttons = pad.Buttons;
 
-	if (pad.Ly != old_pad.Ly ) {
-		SDL_PrivateJoystickAxis(joystick, (Uint8)1, (Sint16)((pad.Ly - 128) * 256)); 
-		old_pad.Ly = pad.Ly;
-	}
-
-	/* joystick button events */
-	if ( pad.Buttons != old_pad.Buttons ) {
-		for ( i = 0; i < joystick->nbuttons; i++ ) {
-			if ( pad.Buttons & buttons[i] ) {  
-				if ( ! joystick->buttons[i] ) {
-					SDL_PrivateJoystickButton(joystick, (Uint8)i, SDL_PRESSED);
-				}
-			} else {
-				if ( joystick->buttons[i] ) {
-					SDL_PrivateJoystickButton(joystick, (Uint8)i, SDL_RELEASED);
-				}
-			}
+	/* Check dpad axes */
+	if (psp_dpad_mode == pdm_axes)
+	{
+		/* Synthesize each dpad axis as -32767, 0, or 32727. */
+		dpad_x = dpad_y = 0;	       
+		if(pad.Buttons & PSP_CTRL_LEFT)  dpad_x -= 32767;
+		if(pad.Buttons & PSP_CTRL_RIGHT) dpad_x += 32767;
+		if(pad.Buttons & PSP_CTRL_UP)    dpad_y -= 32767;
+		if(pad.Buttons & PSP_CTRL_DOWN)  dpad_y += 32767;
+		
+		if(dpad_x != old_dpad_x) {
+			SDL_PrivateJoystickAxis(joystick, axis_base+0, dpad_x);
+			old_dpad_x = dpad_x;
 		}
-		old_pad.Buttons = pad.Buttons;
+
+		if(dpad_y != old_dpad_y) {
+			SDL_PrivateJoystickAxis(joystick, axis_base+1, dpad_y);
+			old_dpad_y = dpad_y;
+		}
+
+		axis_base += 2;
 	}
 
-	SDL_SemPost(sem);
+	/* Check analog axes */
+	if (psp_analog_mode == pam_axes)
+	{
+		Sint16 analog_x, analog_y;
 
+		/* Map 0,255 to -32768,32512.  This could be
+		   done more accurately via a lookup table,
+		   but the analog stick is bad enough that it
+		   probably doesn't matter. */
+		analog_x = (((Sint16)pad.Lx) - 128) * 256;
+		analog_y = (((Sint16)pad.Ly) - 128) * 256;
+
+		if(analog_x != old_analog_x) {
+			SDL_PrivateJoystickAxis(joystick, axis_base+0, analog_x);
+			old_analog_x = analog_x;
+		}
+
+		if(analog_y != old_analog_y) {
+			SDL_PrivateJoystickAxis(joystick, axis_base+1, analog_y);
+			old_analog_y = analog_y;
+		}
+
+		axis_base += 2;
+	}
+
+	/* Check buttons */
+	for(pbc = psp_button_config; pbc->name != NULL; pbc++)
+	{
+		if(pbc->type != bc_joystick)
+			continue;
+
+		if(changed & pbc->id) {
+			SDL_PrivateJoystickButton(joystick, pbc->value,
+						  (pad.Buttons & pbc->id) ? 
+						  SDL_PRESSED : SDL_RELEASED);
+		}
+	}
+
+	/* Process callbacks.  This is required so that the Home
+	 * button can exit the game.  This also happens in the video
+	 * events subsystem, but that subsystem may not have been
+	 * initialized by the user. */
+        sceKernelDelayThreadCB(0);
 }
 
 /* Function to close a joystick after use */
@@ -165,9 +193,7 @@ void SDL_SYS_JoystickClose(SDL_Joystick *joystick)
 void SDL_SYS_JoystickQuit(void)
 {
 	/* Cleanup Threads and Semaphore. */
-	alive = 0;
-	SDL_WaitThread(thread, NULL);
-	SDL_DestroySemaphore(sem);
+	psp_input_quit();
 }
 
 /* vim: ts=4 sw=4
