@@ -17,6 +17,7 @@
 
 #include <pspuser.h>
 #include <pspiofilemgr_kernel.h>
+#include <psploadcore.h>
 #include <pspstdio_kernel.h>
 
 #endif /* PSPKERNEL_H */

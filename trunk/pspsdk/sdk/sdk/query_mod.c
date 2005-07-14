@@ -12,44 +12,20 @@
  * $Id$
  */
 
-#include <pspkernel.h>
+#include <pspkerneltypes.h>
+#include <psploadcore.h>
+#include <pspmodulemgr.h>
 #include <pspsdk.h>
 #include <string.h>
 
-/* Internal kernel structure for the module information, only correct on a v1 */
-struct SceModuleInfo_v1_Internal
-{
-	struct SceModuleInfo_v1_Inernal *next;
-	unsigned short attribute;	
-	unsigned char  version[2];
-	char name[28]; 
-	unsigned int unk1[7];
-	unsigned char *export_table; 
-	unsigned int export_size; 
-	unsigned char *import_table; 
-	unsigned int import_size; 
-	unsigned int unk2[4];
-	unsigned int entry_addr; 
-	unsigned int gp_value; 
-	unsigned int text_addr; 
-	unsigned int text_size; 
-	unsigned int data_size; 
-	unsigned int bss_size; 
-	unsigned int nsegment; 
-	unsigned int segmentaddr[4]; // x7c
-	unsigned int segmentsize[4]; // x80
-} __attribute__((packed));
-
-struct SceModuleInfo_v1_Internal *sceKernelFindModuleByUID(int modid);
-
 int pspSdkQueryModuleInfoV1(SceUID uid, SceKernelModuleInfo *modinfo)
 {
-	struct SceModuleInfo_v1_Internal *mod;
+	SceModule *mod;
 
-	mod = (struct SceModuleInfo_v1_Internal *) sceKernelFindModuleByUID(uid);
+	mod = sceKernelFindModuleByUID(uid);
 	if(mod != NULL)
 	{
-		memcpy(modinfo->name, mod->name, 28);
+		memcpy(modinfo->name, mod->modname, sizeof(mod->modname) + 1);
 		modinfo->attribute = mod->attribute;
 		modinfo->version[0] = mod->version[0];
 		modinfo->version[1] = mod->version[1];

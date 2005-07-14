@@ -14,8 +14,9 @@ libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
 	pspiofilemgr_kernel.h	\
-	pspstdio_kernel.h		\
-	pspkernel.h
+	pspkernel.h		\
+	psploadcore.h		\
+	pspstdio_kernel.h
 
 lib_LIBRARIES = libpspkernel.a
 
