@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 	setenv("PSP_TRIANGLE","J2",1);
 	setenv("PSP_SQUARE","J3",1);
 	setenv("PSP_LTRIGGER","",1);     /* left trigger = nothing */
-	sprintf(tmp,"K%d",SDLK_ESCAPE);  /* start = escape (not implemented yet) */
+	sprintf(tmp,"K%d",SDLK_ESCAPE);  /* start = escape */
 	setenv("PSP_START",tmp,1);
 
 	/* Initialize SDL (Note: video is required to start event loop) */

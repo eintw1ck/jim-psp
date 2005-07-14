@@ -35,9 +35,38 @@ static char rcsid =
 #include "SDL_events_c.h"
 #include "SDL_pspvideo.h"
 #include "SDL_pspevents_c.h"
+#include "SDL_pspinput.h"
 
 void PSP_PumpEvents(_THIS)
 {
+	SceCtrlData pad; 
+	enum PspCtrlButtons changed;
+	static enum PspCtrlButtons old_buttons = 0;
+	PspButtonConfig *pbc;
+	SDL_keysym sym;
+
+	SDL_SemWait(psp_input_sem);
+	pad = psp_input_pad;
+	SDL_SemPost(psp_input_sem);
+
+	changed = old_buttons ^ pad.Buttons;
+	old_buttons = pad.Buttons;
+
+	/* Keyboard events */
+	for(pbc = psp_button_config; pbc->name != NULL; pbc++)
+	{
+		if(pbc->type != bc_keyboard)
+			continue;
+
+		if(changed & pbc->id) {
+			sym.scancode = pbc->id;
+			sym.sym = pbc->value;
+			SDL_PrivateKeyboard((pad.Buttons & pbc->id) ? 
+					    SDL_PRESSED : SDL_RELEASED, &sym);
+		}
+	}
+
+
 	/* Process callbacks.  This is required so that the Home
 	 * button can exit the game.  This also happens in the
 	 * joystick subsystem, but that subsystem may not have been
