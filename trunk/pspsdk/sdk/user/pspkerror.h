@@ -17,7 +17,7 @@
 /* Note: The error code enumerations in this file were extrapolated from
    symbolic debugging information found in the Japanese version of Puzzle Bobble. */
 
-enum KernelErrorCodes
+enum PspKernelErrorCodes
 {
 	SCE_KERNEL_ERROR_OK	 = 0,	
 	SCE_KERNEL_ERROR_ERROR	 = 0x80020001,	

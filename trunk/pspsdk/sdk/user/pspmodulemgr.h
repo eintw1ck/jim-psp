@@ -50,7 +50,6 @@ typedef struct SceKernelSMOption {
 	unsigned int 	attribute;
 } SceKernelSMOption;
 
-//sceKernelLoadModuleByID
 
 /**
   * Load a module.
@@ -58,10 +57,10 @@ typedef struct SceKernelSMOption {
   * unless you call it in kernel mode. It also must be called from a thread.
   * 
   * @param path - The path to the module to load.
-  * @param flags - Unknown, set to 0 
+  * @param flags - Unused, always 0 .
   * @param option  - Pointer to a mod_param_t structure. Can be NULL.
   *
-  * @return < 0 on error, otherwise the module id 
+  * @returns The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.
   */
 SceUID sceKernelLoadModule(const char *path, int flags, SceKernelLMOption *option);
 
@@ -70,12 +69,38 @@ SceUID sceKernelLoadModule(const char *path, int flags, SceKernelLMOption *optio
   * @note This function restricts what it can load, e.g. it wont load plain executables.
   * 
   * @param path - The path to the module to load.
-  * @param flags - Unknown, set to 0 
+  * @param flags - Unused, set to 0.
   * @param option  - Pointer to a mod_param_t structure. Can be NULL.
   *
-  * @return < 0 on error, otherwise the module id 
+  * @returns The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.
   */
 SceUID sceKernelLoadModuleMs(const char *path, int flags, SceKernelLMOption *option);
+
+/**
+ * Load a module from the given file UID.
+ *
+ * @param fid - The module's file UID.
+ * @param flags - Unused, always 0.
+ * @param option - Pointer to an optional ::SceKernelLMOption structure.
+ *
+ * @returns The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.
+ */
+SceUID sceKernelLoadModuleByID(SceUID fid, int flags, SceKernelLMOption *option);
+
+/**
+ * Load a module from a buffer using the USB/WLAN API.
+ *
+ * Can only be called from kernel mode, or from a thread that has attributes of 0xa0000000.
+ *
+ * @param bufsize - Size (in bytes) of the buffer pointed to by buf.
+ * @param buf - Pointer to a buffer containing the module to load.  The buffer must reside at an
+ *              address that is a multiple to 64 bytes.
+ * @param flags - Unused, always 0.
+ * @param option - Pointer to an optional ::SceKernelLMOption structure.
+ *
+ * @returns The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.
+ */
+SceUID sceKernelLoadModuleBufferUsbWlan(SceSize bufsize, void *buf, int flags, SceKernelLMOption *option);
 
 /**
   * Start a loaded module.
@@ -84,15 +109,33 @@ SceUID sceKernelLoadModuleMs(const char *path, int flags, SceKernelLMOption *opt
   * @param argsize - Length of the args.
   * @param argp - A pointer to the arguments to the module.
   * @param status - Returns the status of the start.
-  * @param option - Unknown, set to 0.
+  * @param option - Pointer to an optional ::SceKernelSMOption structure.
   *
-  * @return < 0 on error.
+  * @return ??? on success, otherwise one of ::PspKernelErrorCodes.
   */
 int sceKernelStartModule(SceUID modid, SceSize argsize, void *argp, int *status, SceKernelSMOption *option);
 
-//sceKernelStopModule
-//
-//sceKernelUnloadModule
+/**
+ * Stop a running module.
+ *
+ * @param modid - The UID of the module to stop.
+ * @param argsize - The length of the arguments pointed to by argp.
+ * @param argp - Pointer to arguments to pass to the module's module_stop() routine.
+ * @param status - Return value of the module's module_stop() routine.
+ * @param option - Pointer to an optional ::SceKernelSMOption structure.
+ *
+ * @returns ??? on success, otherwise one of ::PspKernelErrorCodes.
+ */
+int sceKernelStopModule(SceUID modid, SceSize argsize, void *argp, int *status, SceKernelSMOption *option);
+
+/**
+ * Unload a stopped module.
+ *
+ * @param modid - The UID of the module to unload.
+ *
+ * @returns ??? on success, otherwise one of ::PspKernelErrorCodes.
+ */
+int sceKernelUnloadModule(SceUID modid);
 
 /**
  * Stop and unload the current module.
@@ -101,11 +144,22 @@ int sceKernelStartModule(SceUID modid, SceSize argsize, void *argp, int *status,
  * @param argsize - Size (in bytes) of the arguments that will be passed to module_stop().
  * @param argp - Pointer to arguments that will be passed to module_stop().
  *
- * @return < 0 on error.
+ * @return ??? on success, otherwise one of ::PspKernelErrorCodes.
  */
 int sceKernelSelfStopUnloadModule(int unknown, SceSize argsize, void *argp);
 
-//sceKernelStopUnloadSelfModule
+/**
+ * Stop and unload the current module.
+ *
+ * @param argsize - Size (in bytes) of the arguments that will be passed to module_stop().
+ * @param argp - Poitner to arguments that will be passed to module_stop().
+ * @param status - Return value from module_stop().
+ * @param option - Pointer to an optional ::SceKernelSMOption structure.
+ *
+ * @returns ??? on success, otherwise one of ::PspKernelErrorCodes.
+ */
+int sceKernelStopUnloadSelfModule(SceSize argsize, void *argp, int *status, SceKernelSMOption *option);
+
 
 typedef struct SceKernelModuleInfo {
 	SceSize 		size;
@@ -133,12 +187,12 @@ typedef struct SceKernelModuleInfo {
   * kernel mode) then call this function first then ::pspDebugQueryModuleInfoV1 
   * if it fails, or make separate v1 and v1.5+ builds.
   *
-  * @param uid - The UID of the loaded module.
-  * @param mod - Pointer to a SceKernelModuleInfo structure.
+  * @param modid - The UID of the loaded module.
+  * @param info - Pointer to a ::SceKernelModuleInfo structure.
   * 
-  * @return < 0 on error.
+  * @return 0 on success, otherwise one of ::PspKernelErrorCodes.
   */
-int sceKernelQueryModuleInfo(SceUID uid, SceKernelModuleInfo *mod);
+int sceKernelQueryModuleInfo(SceUID modid, SceKernelModuleInfo *info);
 
 /*@}*/
 
