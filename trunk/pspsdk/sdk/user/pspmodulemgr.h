@@ -58,8 +58,8 @@ typedef struct SceKernelSMOption {
   * unless you call it in kernel mode. It also must be called from a thread.
   * 
   * @param path - The path to the module to load.
-  * @param zero - Unknown, set to 0 
-  * @param mod  - Pointer to a mod_param_t structure. Can be NULL.
+  * @param flags - Unknown, set to 0 
+  * @param option  - Pointer to a mod_param_t structure. Can be NULL.
   *
   * @return < 0 on error, otherwise the module id 
   */
@@ -70,8 +70,8 @@ SceUID sceKernelLoadModule(const char *path, int flags, SceKernelLMOption *optio
   * @note This function restricts what it can load, e.g. it wont load plain executables.
   * 
   * @param path - The path to the module to load.
-  * @param zero - Unknown, set to 0 
-  * @param mod  - Pointer to a mod_param_t structure. Can be NULL.
+  * @param flags - Unknown, set to 0 
+  * @param option  - Pointer to a mod_param_t structure. Can be NULL.
   *
   * @return < 0 on error, otherwise the module id 
   */
@@ -81,10 +81,10 @@ SceUID sceKernelLoadModuleMs(const char *path, int flags, SceKernelLMOption *opt
   * Start a loaded module.
   *
   * @param modid - The ID of the module returned from LoadModule.
-  * @param arglen - Length of the args.
-  * @param args - A pointer to the arguments to the module.
+  * @param argsize - Length of the args.
+  * @param argp - A pointer to the arguments to the module.
   * @param status - Returns the status of the start.
-  * @param zero - Unknown, set to 0.
+  * @param option - Unknown, set to 0.
   *
   * @return < 0 on error.
   */
