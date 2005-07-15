@@ -40,8 +40,9 @@ extern PspButtonConfig psp_button_config[];
 typedef enum { pdm_buttons = 0, pdm_axes = 1 } pdm_t;
 extern pdm_t psp_dpad_mode;
 
-typedef enum { pam_axes = 0, pam_mouse = 1 } pam_t;
+typedef enum { pam_axes = 0, pam_mouse = 1, pam_absmouse = 2 } pam_t;
 extern pam_t psp_analog_mode;
+extern int psp_rel_mouse_x, psp_rel_mouse_y;
 
 extern SceCtrlData psp_input_pad;
 extern SDL_sem *psp_input_sem;

@@ -59,6 +59,7 @@ PspButtonConfig psp_button_config[] = {
 };
 pdm_t psp_dpad_mode = 0;
 pam_t psp_analog_mode = 0;
+int psp_rel_mouse_x = 0, psp_rel_mouse_y = 0;
 
 /* Current pad state */
 SceCtrlData psp_input_pad = { 0, 0, 0, 0, "" };
@@ -75,7 +76,16 @@ int InputUpdate(void *data)
 {
 	while (refcount) {
 		SDL_SemWait(psp_input_sem);
+
+		/* Read control input */
 		sceCtrlReadBufferPositive(&psp_input_pad, 1); 
+
+		/* In case we're simulating a mouse, update relative
+		   motion counters.  Full speed will cross the screen
+		   in two seconds. */
+		psp_rel_mouse_x += ((int)psp_input_pad.Lx - 128) / 32;
+		psp_rel_mouse_y += ((int)psp_input_pad.Ly - 128) / 32;
+
 		SDL_SemPost(psp_input_sem);
 		/* Delay 1/60th of a second */
 		sceKernelDelayThreadCB(1000000 / 60);  
@@ -135,7 +145,7 @@ static void read_env_config(void)
 
 	/* First get overall modes */
 	psp_dpad_mode = strtol_safe(getenv("PSP_DPAD"), 0, 0, 1);
-	psp_analog_mode = strtol_safe(getenv("PSP_ANALOG"), 0, 0, 1);
+	psp_analog_mode = strtol_safe(getenv("PSP_ANALOG"), 0, 0, 2);
 
 	/* If we're using dpad as axes, clear the dpad button mappings */
 	if(psp_dpad_mode != pdm_buttons) {

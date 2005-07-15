@@ -1,37 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_main.h>
+#include "SDL.h"
+#include "SDL_main.h"
+#include "SDL_thread.h"
+#include "SDL_mutex.h"
+
+/* Tests and demonstrates use of:
+     Joystick
+     Mouse
+     Keyboard
+     Mutex
+     Timer
+     Video
+*/
 
 /* Maximum 480 x 272 for the PSP.  Smaller is fine. */
 #define W 480
 #define H 272
 
-static SDL_Surface *screen;
+SDL_Surface *screen;
 
-static Uint32 draw_square(Uint32 interval, void *param)
+SDL_mutex *color_mutex;
+Uint32 color = 0;
+int color_draw = 0;
+
+static Uint32 color_square(Uint32 interval, void *param)
 {
-	SDL_Rect rect;
-	Uint8 r, g, b;
+	int r = 0, g = 0, b = 0;
 
-	if(screen) {
-		rect.x = rand()%(W-50);
-		rect.y = rand()%(H-50);
-		rect.w = 50;
-		rect.h = 50;
+	/* Shouldn't draw from a thread, so just pick a color and
+	   signal main event loop that drawing should happen */
+	if((int) param == 1)
+		r = rand() & 255;
+	if((int) param == 2)
+		g = rand() & 255;
+	if((int) param == 3)
+		b = rand() & 255;
 
-		r = g = b = 0;
-		if((int) param == 1)
-			r = rand() & 255;
-		if((int) param == 2)
-			g = rand() & 255;
-		if((int) param == 3)
-			b = rand() & 255;
-		
-		SDL_FillRect(screen, &rect, 
-			     SDL_MapRGB(screen->format, r, g, b));
-		SDL_UpdateRect(screen, rect.x, rect.y, rect.w, rect.h);
-	}
+	SDL_mutexP(color_mutex);
+	color = SDL_MapRGB(screen->format, r, g, b);
+	color_draw = 1;
+	SDL_mutexV(color_mutex);
+
 	return interval;
 }
 
@@ -61,6 +71,17 @@ int main(int argc, char *argv[])
 	SDL_Event event;
 	SDL_TimerID t1, t2, t3;
 	int done = 0;
+	char tmp[32];
+
+	setenv("PSP_DPAD","0",1);        /* dpad should act as buttons */
+	setenv("PSP_ANALOG","1",1);      /* analog stick should act as mouse */
+	setenv("PSP_CROSS","J0",1);      /* cross is joystick button 0 */
+	setenv("PSP_LTRIGGER","M0",1);   /* ltrigger is left mouse button */
+	setenv("PSP_RTRIGGER","M2",1);   /* rtrigger is right mouse button */
+	sprintf(tmp,"K%d",SDLK_ESCAPE);  /* start = escape */
+	setenv("PSP_START",tmp,1);
+	sprintf(tmp,"K%d",SDLK_SPACE);   /* select = space */
+	setenv("PSP_SELECT",tmp,1);
 
 	/* Initialize SDL. */
 	if (SDL_Init(SDL_INIT_VIDEO |
@@ -70,13 +91,17 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	if((color_mutex = SDL_CreateMutex()) == NULL) {
+		fprintf(stderr, "mutex: '%s'\n", SDL_GetError());
+		return 1;
+	}
+
 	/* Set video mode.  Any pixel format should work. */
 	if((screen = SDL_SetVideoMode(W, H, 32, 0)) == NULL)
 	{
 		fprintf(stderr, "SetVideoMode: %s\n", SDL_GetError());
 		return 1;
 	}
-	SDL_ShowCursor(SDL_DISABLE);
 
 	/* Draw background */
 	draw_gradient();
@@ -84,10 +109,10 @@ int main(int argc, char *argv[])
 	/* Wait 1 second */
 	SDL_Delay(1000);
 
-	/* Set up three callbacks to draw random RGB squares every 200ms */
-	t1 = SDL_AddTimer(200, draw_square, (void*)1); 
-	t2 = SDL_AddTimer(200, draw_square, (void*)2);
-	t3 = SDL_AddTimer(200, draw_square, (void*)3);
+	/* Set up three callbacks to change color and signal drawing */
+	t1 = SDL_AddTimer(200, color_square, (void*)1); 
+	t2 = SDL_AddTimer(350, color_square, (void*)2);
+	t3 = SDL_AddTimer(500, color_square, (void*)3);
 	
 	/* Open the joystick */
 	if(SDL_NumJoysticks()) {
@@ -101,16 +126,22 @@ int main(int argc, char *argv[])
 	while (!done) {
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
+			case SDL_MOUSEBUTTONDOWN:
+				if(event.button.button == SDL_BUTTON_LEFT)
+					draw_gradient();
+				else if(event.button.button == SDL_BUTTON_RIGHT)
+					done = 1;
+				break;
 			case SDL_JOYBUTTONDOWN:
 				if(event.jbutton.button == 0)
 					draw_gradient();
-				else if(event.jbutton.button < 10) 
+				else if(event.jbutton.button == 1)
 					done = 1;
 				break;
-			case SDL_KEYDOWN: /* for PC only */
+			case SDL_KEYDOWN:
 				if(event.key.keysym.sym == SDLK_SPACE)
 					draw_gradient();
-				else
+				else if(event.key.keysym.sym == SDLK_ESCAPE)
 					done = 1;
 				break;
 			case SDL_QUIT:
@@ -120,6 +151,21 @@ int main(int argc, char *argv[])
 				break;
 			}
 		}
+		SDL_mutexP(color_mutex);
+		if(color_draw) {
+			SDL_Rect rect;
+
+			color_draw = 0;			
+
+			rect.x = rand()%(W-50);
+			rect.y = rand()%(H-50);
+			rect.w = 50;
+			rect.h = 50;
+
+			SDL_FillRect(screen, &rect, color);
+			SDL_UpdateRect(screen, rect.x, rect.y, rect.w, rect.h);
+		}
+		SDL_mutexV(color_mutex);
 	}
 
 	/* Cleanup */
@@ -130,6 +176,8 @@ int main(int argc, char *argv[])
 	if(joystick)
 		SDL_JoystickClose(joystick);
 
+
+	SDL_DestroyMutex(color_mutex);
 	SDL_Quit();
 
 	return(0);

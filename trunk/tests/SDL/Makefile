@@ -12,7 +12,7 @@ LDFLAGS =
 EXTRA_TARGETS = EBOOT.PBP kxploit
 EXTRA_CLEAN = my-clean
 
-PSP_EBOOT_TITLE = SDL Test v1.0
+PSP_EBOOT_TITLE = SDL Test v1.1
 PSP_DIR_NAME = SDLTEST
 
 PSPSDK=$(shell psp-config --pspsdk-path)

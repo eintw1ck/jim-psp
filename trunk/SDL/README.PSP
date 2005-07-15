@@ -81,8 +81,8 @@ the application prior to calling SDL_Init, with calls like
     setenv("PSP_LTRIGGER","M0",1);
     setenv("PSP_RTRIGGER","M2",1);
 The above examples would make the cross button send an "X" keypress,
-while the analog stick is the mouse, and the left and right triggers
-are the left and right mouse buttons.
+make the analog stick the mouse, and make the left and right triggers
+the left and right mouse buttons.
 
 These variables and values are recognized:
 
@@ -93,6 +93,7 @@ PSP_DPAD:
 PSP_ANALOG:
    0 - analog stick is axes (default)
    1 - analog stick is mouse
+   2 - analog stick is mouse with absolute positioning
 
 PSP_name: (where "name" is from the list below)
    J0 - J13:  map to joystick button 0-13 (defaults, see below)
@@ -116,11 +117,11 @@ Available PSP button names, and default mapping:
    HOLD     J13
 
 The joystick device always has 14 buttons.  The mouse always has 5
-(corresponding to left, middle, right, wheelup, wheeldown).  Joystick
-or mouse buttons that have nothing assigned to them will never
-generate events.  If both PSP_DPAD and PSP_ANALOG are axes, the dpad
-axes come first.  To remove the default mapping without setting a new
-one, just use an empty value.
+(left=0, middle=1, right=2, wheelup=3, wheeldown=4).  Joystick or
+mouse buttons that have nothing assigned to them will never generate
+events.  If both PSP_DPAD and PSP_ANALOG are axes, the dpad axes come
+first.  To remove the default mapping without setting a new one, just
+use an empty value.
 
 Note: A "home" button press is sometimes generated when the screen
 turns off after being idle ("backlight auto-off" setting).  This
