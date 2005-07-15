@@ -54,6 +54,15 @@ void sceDisplaySetMode(long unk1, long width, long height);
 void sceDisplaySetFrameBuf(char *topaddr, long bufferwidth, long pixelformat, long
 	unk1);
 
+/**
+ * Set display mode
+ *
+ * @return 0 on success
+ */
+int sceDisplayGetMode(int *unknown, int *width, int *height);
+
+int sceDisplayGetFrameBuf(char **topaddr, long *bufferwidth, long *pixelformat, long *unknown);
+
 #ifdef __cplusplus
 }
 #endif
