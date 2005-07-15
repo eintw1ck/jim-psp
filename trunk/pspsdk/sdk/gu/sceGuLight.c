@@ -8,17 +8,17 @@
 
 #include "guInternal.h"
 
-void sceGuLight(int index, int a1, int a2, const ScePspFVector3* position)
+void sceGuLight(int light, int type, int components, const ScePspFVector3* position)
 {
-	GuLightSettings* settings = &light_settings[index];
+	GuLightSettings* settings = &light_settings[light];
 
 	sendCommandf(settings->row0[2],position->x);
 	sendCommandf(settings->row0[3],position->y);
 	sendCommandf(settings->row1[0],position->z);
 
-	int type = 2;
-	if (a2 != 8)
-		type = (a2^6) < 1 ? 1 : 0;
+	int kind = 2;
+	if (components != 8)
+		kind = (components^6) < 1 ? 1 : 0;
 
-	sendCommandi(settings->row0[1],((a1 & 0x03) << 8)|type);
+	sendCommandi(settings->row0[1],((type & 0x03) << 8)|kind);
 }

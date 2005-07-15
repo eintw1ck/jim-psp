@@ -19,145 +19,189 @@
 extern "C" {
 #endif
 
-#define GU_PRIM_POINTS          (0)
-#define GU_PRIM_LINES           (1)
-#define GU_PRIM_LINESTRIPS      (2)
-#define GU_PRIM_TRIANGLES       (3)
-#define GU_PRIM_TRISTRIPS       (4)
-#define GU_PRIM_TRIFANS         (5)
-#define GU_PRIM_SPRITES         (6)
+#define GU_FALSE		(0)
+#define GU_TRUE			(1)
 
-#define GU_STATE_ATE		(0) // Alpha Test
-#define GU_STATE_ZTE		(1) // Depth Test
-#define GU_STATE_SCISSOR	(2)
-#define GU_STATE_UNKNOWN3	(3)
-#define GU_STATE_ALPHA		(4) // Alpha Blend
-#define GU_STATE_CULL		(5)
-#define GU_STATE_UNKNOWN6	(6)
-#define GU_STATE_UNKNOWN7	(7)
-#define GU_STATE_UNKNOWN8	(8)
-#define GU_STATE_TEXTURE	(9)
-#define GU_STATE_LIGHTING	(10)
-#define GU_STATE_LIGHT0		(11) // Light 0 Enable
-#define GU_STATE_LIGHT1		(12) // Light 1 Enable
-#define GU_STATE_LIGHT2		(13) // Light 2 Enable
-#define GU_STATE_LIGHT3		(14) // Light 3 Enable
-#define GU_STATE_UNKNOWN15	(15)
-#define GU_STATE_UNKNOWN16	(16)
-#define GU_STATE_UNKNOWN17	(17)
-#define GU_STATE_UNKNOWN18	(18)
-#define GU_STATE_UNKNOWN19	(19)
-#define GU_STATE_PATCH_FACE	(20) // sceGuPatchFrontFace()
-#define GU_STATE_UNKNOWN21	(21)
+/* Primitive types */
+#define GU_POINTS		(0)
+#define GU_LINES		(1)
+#define GU_LINE_STRIP		(2)
+#define GU_TRIANGLES		(3)
+#define GU_TRIANGLE_STRIP	(4)
+#define GU_TRIANGLE_FAN		(5)
+#define GU_SPRITES		(6)
 
-#define GU_DISPLAY_OFF		(0)
-#define GU_DISPLAY_ON		(1)
+/* States */
+#define GU_ALPHA_TEST		(0)
+#define GU_DEPTH_TEST		(1)
+#define GU_SCISSOR_TEST		(2)
+#define GU_UNKNOWN_3		(3)
+#define GU_BLEND		(4)
+#define GU_CULL_FACE		(5)
+#define GU_DITHER		(6)
+#define GU_UNKNOWN_7		(7)
+#define GU_CLIP_PLANES		(8)
+#define GU_TEXTURE_2D		(9)
+#define GU_LIGHTING		(10)
+#define GU_LIGHT0		(11)
+#define GU_LIGHT1		(12)
+#define GU_LIGHT2		(13)
+#define GU_LIGHT3		(14)
+#define GU_UNKNOWN_15		(15)
+#define GU_UNKNOWN_16		(16)
+#define GU_UNKNOWN_17		(17)
+#define GU_UNKNOWN_18		(18)
+#define GU_UNKNOWN_19		(19)
+#define GU_PATCH_FACE		(20)
+#define GU_UNKNOWN_21		(21)
 
-#define GU_MATRIX_PROJECTION	(0)
-#define GU_MATRIX_VIEW		(1)
-#define GU_MATRIX_WORLD		(2)
-#define GU_MATRIX_TEXTURE	(3) /* this is untested, only assumed */
+/* Matrix modes */
+#define GU_PROJECTION		(0)
+#define GU_VIEW			(1)
+#define GU_MODEL		(2)
+#define GU_TEXTURE		(3)
 
-/* TODO: should the GE_ defines move to pspge.h? It's not like they are exclusive to pspgu */
+/* Vertex Declarations Begin */
+#define GU_TEXTURE_SHIFT(n)	((n)<<0)
+#define GU_TEXTURE_8BIT		GU_TEXTURE_SHIFT(1)
+#define GU_TEXTURE_16BIT	GU_TEXTURE_SHIFT(2)
+#define GU_TEXTURE_32BITF	GU_TEXTURE_SHIFT(3)
 
-/* vertex type by Neovangelist */
-#define GE_SETREG_VTYPE(tt, ct, nt, mt, wt, it, nw, vb, dm) \
-        ((u32)(tt)      | ((u32)(ct) << 2)      | ((u32)(nt) << 5) | \
-        ((u32)(mt) << 7)| ((u32)(wt) << 9)      | ((u32)(it) << 11) | \
-        ((u32)(nw) <<14)| ((u32)(vb) << 18)     | ((u32)(dm) << 23))
+#define GU_COLOR_SHIFT(n)	((n)<<2)
+#define GU_COLOR_RES1		GU_COLOR_SHIFT(1)
+#define GU_COLOR_RES2		GU_COLOR_SHIFT(2)
+#define GU_COLOR_RES3		GU_COLOR_SHIFT(3)
+#define GU_COLOR_5650		GU_COLOR_SHIFT(4)
+#define GU_COLOR_5551		GU_COLOR_SHIFT(5)
+#define GU_COLOR_4444		GU_COLOR_SHIFT(6)
+#define GU_COLOR_8888		GU_COLOR_SHIFT(7)
 
-#define GE_TT_NONE		0x00
-#define GE_TT_8BIT		0x01
-#define GE_TT_16BIT		0x02
-#define GE_TT_32BITF		0x03
+#define GU_NORMAL_SHIFT(n)	((n)<<5)
+#define GU_NORMAL_8BIT		GU_NORMAL_SHIFT(1)
+#define GU_NORMAL_16BIT		GU_NORMAL_SHIFT(2)
+#define GU_NORMAL_32BITF	GU_NORMAL_SHIFT(3)
 
-#define GE_CT_NONE		0x00
-#define GE_CT_RES1		0x01
-#define GE_CT_RES2		0x02
-#define GE_CT_RES3		0x03
-#define GE_CT_5650		0x04
-#define GE_CT_5551		0x05
-#define GE_CT_4444		0x06
-#define GE_CT_8888		0x07
+#define GU_VERTEX_SHIFT(n)	((n)<<7)
+#define GU_VERTEX_8BIT		GU_VERTEX_SHIFT(1)
+#define GU_VERTEX_16BIT		GU_VERTEX_SHIFT(2)
+#define GU_VERTEX_32BITF	GU_VERTEX_SHIFT(3)
 
-#define GE_NT_NONE		0x00
-#define GE_NT_8BIT		0x01
-#define GE_NT_16BIT		0x02
-#define GE_NT_32BITF		0x03
+#define GU_WEIGHT_SHIFT(n)	((n)<<9)
+#define GU_WEIGHT_8BIT		GU_WEIGHT_SHIFT(1)
+#define GU_WEIGHT_16BIT		GU_WEIGHT_SHIFT(2)
+#define GU_WEIGHT_32BITF	GU_WEIGHT_SHIFT(3)
 
-#define GE_MT_RES		0x00
-#define GE_MT_8BIT		0x01
-#define GE_MT_16BIT		0x02
-#define GE_MT_32BITF		0x03
+#define GU_INDEX_SHIFT(n)	((n)<<11))
+#define GU_INDEX_8BIT		GU_INDEX_SHIFT(1)
+#define GU_INDEX_16BIT		GU_INDEX_SHIFT(2)
+#define GU_INDEX_RES3		GU_INDEX_SHIFT(3)
 
-#define GE_WT_NONE		0x00
-#define GE_WT_8BIT		0x01
-#define GE_WT_16BIT		0x02
-#define GE_WT_32BITF		0x03
+#define GU_TRANSFORM_SHIFT(n)	((n)<<23)
+#define GU_TRANSFORM_3D		GU_TRANSFORM_SHIFT(0)
+#define GU_TRANSFORM_2D		GU_TRANSFORM_SHIFT(1)
+/* Vertex Declarations End */
 
-#define GE_IT_NONE		0x00
-#define GE_IT_8BIT		0x01
-#define GE_IT_16BIT		0x02
-#define GE_IT_RES		0x03
+/* Pixel Formats */
+#define GU_PSM_5650		(0) /* Display, Texture, Palette */
+#define GU_PSM_5551		(1) /* Display, Texture, Palette */
+#define GU_PSM_4444		(2) /* Display, Texture, Palette */
+#define GU_PSM_8888		(3) /* Display, Texture, Palette */
+#define GU_PSM_T4		(4) /* Texture */
+#define GU_PSM_T8		(5) /* Texture */
 
-#define GE_BM_3D		0x00
-#define GE_BM_2D		0x01
+/* Shading Model */
+#define GU_FLAT			(0)
+#define GU_SMOOTH		(1)
 
-#define GE_PSM_5650		(0)
-#define GE_PSM_5551		(1)
-#define GE_PSM_4444		(2)
-#define GE_PSM_8888		(3)
+/* Logical operation */
+#define GU_CLEAR		(0)
+#define GU_AND			(1)
+#define GU_AND_REVERSE		(2)
+#define GU_COPY			(3)
+#define GU_AND_INVERTED		(4)
+#define GU_NOOP			(5)
+#define GU_XOR			(6)
+#define GU_OR			(7)
+#define GU_NOR			(8)
+#define GU_EQUIV		(9)
+#define GU_INVERT		(10)
+#define GU_OR_REVERSE		(11)
+#define GU_COPY_INVERTED	(12)
+#define GU_OR_INVERTED		(13)
+#define GU_NAND			(14)
+#define GU_SET			(15)
 
-#define GE_TPSM_5650		(0)
-#define GE_TPSM_5551		(1)
-#define GE_TPSM_4444		(2)
-#define GE_TPSM_8888		(3)
-#define GE_TPSM_T4		(4)
-#define GE_TPSM_T8		(5)
+/* Texture Filter */
+#define GU_NEAREST		(0)
+#define GU_LINEAR		(1)
+#define GU_NEAREST_MIPMAP_NEAREST (4)
+#define GU_LINEAR_MIPMAP_NEAREST (5)
+#define GU_NEAREST_MIPMAP_LINEAR (6)
+#define GU_LINEAR_MIPMAP_LINEAR	(7)
 
-#define GE_SHADE_FLAT		(0)
-#define GE_SHADE_GOURAUD	(1)
+/* Wrap Mode */
+#define GU_REPEAT		(0)
+#define GU_CLAMP		(1)
 
-#define GE_FILTER_POINT		(0)
-#define GE_FILTER_LINEAR	(1)
+/* Front Face Direction */
+#define GU_CW			(0)
+#define GU_CCW			(1)
 
-#define GE_WRAP_REPEAT		(0)
-#define GE_WRAP_CLAMP		(1)
+/* Alpha & Depth Test (Stencil aswell???) */
+#define GU_NEVER		(0)
+#define GU_ALWAYS		(1)
+#define GU_EQUAL		(2)
+#define GU_NOTEQUAL		(3)
+#define GU_LESS			(4)
+#define GU_LEQUAL		(5)
+#define GU_GREATER		(6)
+#define GU_GEQUAL		(7)
 
-#define GE_FACE_CW		(0)
-#define GE_FACE_CCW		(1)
+/* Clear Buffer Mask */
+#define GU_COLOR_BUFFER_BIT	(1)
+#define GU_UNKNOWN_BUFFER_BIT	(2)
+#define GU_DEPTH_BUFFER_BIT	(4)
 
-#define GE_TEST_NEVER		(0)
-#define GE_TEST_ALWAYS		(1)
-#define GE_TEST_FUNCTION2	(2) /* figure these out */
-#define GE_TEST_FUNCTION3	(3)
-#define GE_TEST_LESS		(4)
-#define GE_TEST_LEQUAL		(5)
-#define GE_TEST_GREATER		(6)
-#define GE_TEST_GEQUAL		(7)
+/* Texture Effect */
+#define GU_TFX_MODULATE		(0)
+#define GU_TFX_DECAL		(1)
+#define GU_TFX_BLEND		(2)
+#define GU_TFX_REPLACE		(3)
+#define GU_TFX_ADD		(4)
 
-#define GE_CLEAR_COLOR		(1)
-#define GE_CLEAR_DEPTH		(4)
+/* Texture Color Component */
+#define GU_TCC_RGB		(0)
+#define GU_TCC_RGBA		(1)
 
-#define GE_TFX_MODULATE		(0)
-#define GE_TFX_REPLACE		(3)
-#define GE_TFX_ADD		(4)
+/* Blending Op */
+#define GU_ADD			(0)
+#define GU_SUBTRACT		(1)
 
-#define GE_TCC_RGB		(0)
-#define GE_TCC_RGBA		(1)
+/* Blending Factor */
+#define GU_SRC_COLOR		(0)
+#define GU_ONE_MINUS_SRC_COLOR	(1)
+#define GU_SRC_ALPHA		(2)
+#define GU_ONE_MINUS_SRC_ALPHA	(3)
+#define GU_DST_COLOR		(0)
+#define GU_ONE_MINUS_DST_COLOR	(1)
+#define GU_FIX			(10)
 
-#define GE_ALPHA_ADD		(0)
-#define GE_ALPHA_SUBTRACT	(1)
+/* Light Components */
+#define GU_AMBIENT		(1)
+#define GU_DIFFUSE		(2)
+#define GU_SPECULAR		(4)
+#define GU_AMBIENT_AND_DIFFUSE	(GU_AMBIENT|GU_DIFFUSE)
+#define GU_DIFFUSE_AND_SPECULAR	(GU_DIFFUSE|GU_SPECULAR)
 
-#define GE_ALPHA_SRC_COLOR		(0)
-#define GE_ALPHA_ONE_MINUS_SRC_COLOR	(1)
-#define GE_ALPHA_SRC_ALPHA		(2)
-#define GE_ALPHA_ONE_MINUS_SRC_ALPHA	(3)
+/* Light Type */
+#define GU_DIRECTIONAL		(0)
+#define GU_POINTLIGHT		(1)
+#define GU_SPOTLIGHT		(2)
 
-#define GE_ALPHA_DST_COLOR		(0)
-#define GE_ALPHA_ONE_MINUS_DST_COLOR	(1)
-
-#define GE_ALPHA_FIX			(10)
+/* Contexts */
+#define GU_DIRECT		(0)
+#define GU_CALL			(1)
+#define GU_SEND			(2)
 
 /** @addtogroup GU */
 /*@{*/
@@ -190,9 +234,15 @@ void sceGuDispBuffer(int width, int height, void* dispbp, int dispbw);
 /**
   * Set draw buffer parameters (and store in context for buffer-swap)
   *
+  * Available pixel formats are:
+  *   - GU_PSM_5650
+  *   - GU_PSM_5551
+  *   - GU_PSM_4444
+  *   - GU_PSM_8888
+  *
   * @par Example: Setup a standard 16-bit draw buffer
   * @code
-  * sceGuDispBuffer(GE_PSM_5551,(void*)0,512);
+  * sceGuDispBuffer(GU_PSM_5551,(void*)0,512);
   * @endcode
   *
   * @param psm - Pixel format to use for rendering (and display)
@@ -214,8 +264,8 @@ void sceGuDrawBufferList(int psm, void* fbp, int fbw);
   * Turn display on or off
   *
   * Available states are:
-  *   - GE_DISPLAY_ON (1) - Turns display on
-  *   - GE_DISPLAY_OFF (0) - Turns display off
+  *   - GU_TRUE (1) - Turns display on
+  *   - GU_FALSE (0) - Turns display off
   *
   * @param state - Turn display on or off
   * @returns State of the display prior to this call
@@ -226,14 +276,14 @@ int sceGuDisplay(int state);
   * Select which depth-test function to use
   *
   * Valid choices for the depth-test are:
-  *   - GE_TEST_NEVER - No pixels pass the depth-test
-  *   - GE_TEST_ALWAYS - All pixels pass the depth-test
-  *   - GE_TEST_FUNCTION2 - Figure this one out
-  *   - GE_TEST_FUNCTION3 - Figure this one out
-  *   - GE_TEST_LESS - Pixels that are less in depth passes
-  *   - GE_TEST_LEQUAL - Pixels that are less or equal in depth passes
-  *   - GE_TEST_GREATER - Pixels that are greater in depth passes
-  *   - GE_TEST_GEQUAL - Pixels that are greater or equal passes
+  *   - GU_NEVER - No pixels pass the depth-test
+  *   - GU_ALWAYS - All pixels pass the depth-test
+  *   - GU_EQUAL - Pixels that match the depth-test pass
+  *   - GU_NOTEQUAL - Pixels that doesn't match the depth-test pass
+  *   - GU_LESS - Pixels that are less in depth passes
+  *   - GU_LEQUAL - Pixels that are less or equal in depth passes
+  *   - GU_GREATER - Pixels that are greater in depth passes
+  *   - GU_GEQUAL - Pixels that are greater or equal passes
   *
   * @param function - Depth test function to use
 **/
@@ -300,18 +350,26 @@ void* sceGuGetMemory(int size);
 /**
   * Start filling a new display-context
   *
-  * Context 0 is the display context, contexts 1 and 2 are buffered and not directly rendered
+  * Contexts available are:
+  *   - GU_DIRECT - Rendering is performed as list is filled
+  *   - GU_CALL - List is setup to be called from the main list
+  *   - GU_SEND - List is buffered for a later call to sceGuSendList()
   *
-  * @param cid - Context ID (0,1,2)
+  * The previous context-type is stored so that it can be restored at sceGuFinish().
+  *
+  * @param cid - Context Type
   * @param list - Pointer to display-list (16 byte aligned)
 **/
 void sceGuStart(int cid, void* list);
 
 /**
-  * Finish current display list and possibly kick the display list
+  * Finish current display list and goes back to the parent context
   *
-  * If the current context is 0 (display context), the list is kicked. Otherwise the context
-  * is popped back to the parent context and rendering commands may continue
+  * If the context is GU_DIRECT, the stall-address is updated so that the entire list will
+  * execute. Otherwise, only the terminating action is written to the list, depending on
+  * context-type.
+  *
+  * This also restores control back to whatever context that was active prior to this call.
   *
   * @returns Size of finished display list
 **/
@@ -333,7 +391,7 @@ void sceGuCallMode(int mode);
 **/
 int sceGuCheckList(void);
 
-void sceGuSendList(unsigned int mode, void* list, void* data);
+void sceGuSendList(unsigned int mode, const void* list, void* data);
 
 /**
   * Swap display and draw buffer
@@ -358,31 +416,59 @@ int sceGuSync(int mode, int a1);
   * Draw array of vertices forming primitives
   *
   * Available primitive-types are:
-  *   - GE_PRIM_POINTS - Single pixel points (1 vertex per primitive)
-  *   - GE_PRIM_LINES - Single pixel lines (2 vertices per primitive)
-  *   - GE_PRIM_LINESTRIPS - Single pixel line-strips (2 vertices for the first primitive, 1 for every following)
-  *   - GE_PRIM_TRIANGLES - Filled triangles (3 vertices per primitive)
-  *   - GE_PRIM_TRISTRIPS - Filled triangles-strips (3 vertices for the first primitive, 1 for every following)
-  *   - GE_PRIM_TRIFANS - Filled triangle-fans (3 vertices for the first primitive, 1 for every following)
-  *   - GE_PRIM_SPRITES - Filled blocks (2 vertices per primitive)
+  *   - GU_POINTS - Single pixel points (1 vertex per primitive)
+  *   - GU_LINES - Single pixel lines (2 vertices per primitive)
+  *   - GU_LINE_STRIP - Single pixel line-strip (2 vertices for the first primitive, 1 for every following)
+  *   - GU_TRIANGLES - Filled triangles (3 vertices per primitive)
+  *   - GU_TRIANGLE_STRIP - Filled triangles-strip (3 vertices for the first primitive, 1 for every following)
+  *   - GU_TRIANGLE_FAN - Filled triangle-fan (3 vertices for the first primitive, 1 for every following)
+  *   - GU_SPRITES - Filled blocks (2 vertices per primitive)
   *
   * The vertex-type decides how the vertices align and what kind of information they contain.
+  * The following flags are ORed together to compose the final vertex format:
+  *   - GU_TEXTURE_8BIT - 8-bit texture coordinates
+  *   - GU_TEXTURE_16BIT - 16-bit texture coordinates
+  *   - GU_TEXTURE_32BITF - 32-bit texture coordinates (float)
+  *
+  *   - GU_COLOR_5650 - 16-bit color (R5G6B5A0)
+  *   - GU_COLOR_5551 - 16-bit color (R5G5B5A1)
+  *   - GU_COLOR_4444 - 16-bit color (R4G4B4A4)
+  *   - GU_COLOR_8888 - 16-bit color (R8G8B8A8)
+  *
+  *   - GU_NORMAL_8BIT - 8-bit normals
+  *   - GU_NORMAL_16BIT - 16-bit normals
+  *   - GU_NORMAL_32BITF - 32-bit normals (float)
+  *
+  *   - GU_VERTEX_8BIT - 8-bit vertex position
+  *   - GU_VERTEX_16BIT - 16-bit vertex position
+  *   - GU_VERTEX_32BITF - 32-bit vertex position (float)
+  *
+  *   - GU_WEIGHT_8BIT - 8-bit weights
+  *   - GU_WEIGHT_16BIT - 16-bit weights
+  *   - GU_WEIGHT_32BITF - 32-bit weights (float)
+  *
+  *   - GU_INDEX_8BIT - 8-bit vertex index
+  *   - GU_INDEX_16BIT - 16-bit vertex index
+  *
+  *   - GU_TRANSFORM_2D - Coordinate is passed directly to the rasterizer
+  *   - GU_TRANSFORM_3D - Coordinate is transformed before passed to rasterizer
+  *
   * NOTE: Every vertex must align to 32 bits, which means that you HAVE to pad if it does not add up!
   *
-  * @par Example: Render 400 triangles, with floating-point texture coordinates, and floating-point position, and no indices
+  * @par Example: Render 400 triangles, with floating-point texture coordinates, and floating-point position, no indices
   * @code
-  * sceGuDrawArray(GU_PRIM_TRIANGLES,GE_SETREG_VTYPE(GE_TT_32BITF,0,0,GE_MT_32BITF,0,0,0,0,0),400,0,vertices);
+  * sceGuDrawArray(GU_TRIANGLES,GU_TEXTURE_32BITF|GU_VERTEX_32BITF,400*3,0,vertices);
   * @endcode
   *
   * @param prim - What kind of primitives to render
-  * @param vtype - Vertex type to process (look at GU_SETREG_VTYPE)
+  * @param vtype - Vertex type to process
   * @param count - How many vertices to process
   * @param indices - Optional pointer to an index-list
   * @param vertices - Optional pointer to an vertex-list
 **/
 void sceGuDrawArray(int prim, int vtype, int count, const void* indices, const void* vertices);
 
-void sceGuBeginObject(int type, int a1, void* indices, void* vertices);
+void sceGuBeginObject(int type, int a1, const void* indices, const void* vertices);
 void sceGuEndObject(void);
 
 /**
@@ -427,17 +513,18 @@ int sceGuGetAllStatus(void);
   * Enable GE state
   *
   * The currently available states are:
-  *   - GE_STATE_ATE - Alpha testing
-  *   - GE_STATE_ZTE - Depth testing
-  *   - GE_STATE_SCISSOR - Display custom scissoring
-  *   - GU_STATE_ALPHA - Alpha blending
-  *   - GU_STATE_CULL - Primitive culling
-  *   - GU_STATE_TEXTURE - Texture mapping
-  *   - GU_STATE_LIGHTING - Hardware lighting enable
-  *   - GU_STATE_LIGHT0 - Light 0 enable
-  *   - GU_STATE_LIGHT1 - Light 1 enable
-  *   - GU_STATE_LIGHT2 - Light 2 enable
-  *   - GU_STATE_LIGHT3 - Light 3 enable
+  *   - GU_ALPHA_TEST - Alpha testing
+  *   - GU_DEPTH_TEST - Depth testing
+  *   - GU_SCISSOR_TEST - Display custom scissoring
+  *   - GU_BLEND - Alpha blending
+  *   - GU_CULL_FACE - Primitive culling
+  *   - GU_DITHER - Dither matrix
+  *   - GU_TEXTURE_2D - Texture mapping
+  *   - GU_LIGHTING - Hardware lighting enable
+  *   - GU_LIGHT0 - Light 0 enable
+  *   - GU_LIGHT1 - Light 1 enable
+  *   - GU_LIGHT2 - Light 2 enable
+  *   - GU_LIGHT3 - Light 3 enable
   *
   * @param state - Which state to enable
 **/
@@ -452,19 +539,59 @@ void sceGuEnable(int state);
 **/
 void sceGuDisable(int state);
 
-/* lights */
-void sceGuLight(int index, int a1, int a2, const ScePspFVector3* position);
+/**
+  * Set light parameters
+  *
+  * Available light types are:
+  *   - GU_DIRECTIONAL - Directional light
+  *   - GU_POINTLIGHT - Single point of light
+  *   - GU_SPOTLIGHT - Point-light with a cone
+  *
+  * Available light components are:
+  *   - GU_AMBIENT
+  *   - GU_DIFFUSE
+  *   - GU_SPECULAR
+  *   - GU_AMBIENT_AND_DIFFUSE
+  *   - GU_DIFFUSE_AND_SPECULAR
+  *
+  * @param light - Light index
+  * @param type - Light type
+  * @param components - Light components
+  * @param position - Light position
+**/
+void sceGuLight(int light, int type, int components, const ScePspFVector3* position);
+
+/**
+  * Set light attenuation (falloff)
+**/
 void sceGuLightAtt(int index, float f12, float f13, float f14);
-void sceGuLightColor(int light, int type, unsigned int color);
+
+/**
+  * Set light color
+  *
+  * Available light components are:
+  *   - GU_AMBIENT
+  *   - GU_DIFFUSE
+  *   - GU_SPECULAR
+  *   - GU_AMBIENT_AND_DIFFUSE
+  *   - GU_DIFFUSE_AND_SPECULAR
+  *
+  * @param light - Light index
+  * @param component - Which component to set
+  * @param color - Which color to use
+**/
+void sceGuLightColor(int light, int component, unsigned int color);
+
 void sceGuLightMode(int mode);
+
 void sceGuLightSpot(int index, const ScePspFVector3* direction, float f12, float f13);
 
 /**
   * Clear current drawbuffer
   *
-  * Available clear-flags are:
-  *   - GE_CLEAR_COLOR - Clears the color-buffer
-  *   - GE_CLEAR_DEPTH - Clears the depth-buffer
+  * Available clear-flags are (OR them together to get final clear-mode):
+  *   - GU_COLOR_BUFFER_BIT - Clears the color-buffer
+  *   - GU_DEPTH_BUFFER_BIT - Clears the depth-buffer
   *
   * @param flags - Which part of the buffer to clear
 **/
@@ -504,23 +631,23 @@ void sceGuAmbientColor(unsigned int color);
   * Set the blending-mode
   *
   * Available blending-operations are:
-  *   - GE_ALPHA_ADD - Additive blend
-  *   - GE_ALPHA_SUB - Subtractive blend
+  *   - GU_ADD - Additive blend
+  *   - GU_SUBTRACT - Subtractive blend
   *
   * Available blending-functions are:
-  *   - GE_ALPHA_SRC_COLOR
-  *   - GE_ALPHA_ONE_MINUS_SRC_COLOR
-  *   - GE_ALPHA_SRC_ALPHA
-  *   - GE_ALPHA_ONE_MINUS_SRC_ALPHA
-  *   - GE_ALPHA_DST_COLOR
-  *   - GE_ALPHA_ONE_MINUS_DST_COLOR
-  *   - GE_ALPHA_FIX
+  *   - GU_SRC_COLOR
+  *   - GU_ONE_MINUS_SRC_COLOR
+  *   - GU_SRC_ALPHA
+  *   - GU_ONE_MINUS_SRC_ALPHA
+  *   - GU_DST_COLOR
+  *   - GU_ONE_MINUS_DST_COLOR
+  *   - GU_FIX
   *
   * @param op - Blending Operation
   * @param src - Blending function for source operand
   * @param dest - Blending function for dest operand
-  * @param srcfix - Fix value for GL_ALPHA_FIX (source operand)
-  * @param destfix - Fix value for GL_ALPHA_FIX (dest operand)
+  * @param srcfix - Fix value for GU_FIX (source operand)
+  * @param destfix - Fix value for GU_FIX (dest operand)
 **/
 void sceGuBlendFunc(int op, int src, int dest, unsigned int srcfix, unsigned int destfix);
 
@@ -533,11 +660,11 @@ void sceGuSpecular(float power);
 /**
   * Set the current face-order (for culling)
   *
-  * This only has effect when culling is enabled (GE_STATE_CULL)
+  * This only has effect when culling is enabled (GU_CULL_FACE)
   *
   * Culling order can be:
-  *   - GE_FACE_CW - Clockwise primitives are not culled
-  *   - GE_FACE_CCW - Counter-clockwise are not culled
+  *   - GU_CW - Clockwise primitives are not culled
+  *   - GU_CCW - Counter-clockwise are not culled
   *
   * @param order - Which order to use
 **/
@@ -550,8 +677,8 @@ void sceGuSetDither(const ScePspIMatrix4* matrix);
   * Set how primitives are shaded
   *
   * The available shading-methods are:
-  *   - GE_SHADE_FLAT - Primitives are flatshaded, the last vertex-color takes effet
-  *   - GE_SHADE_GOURAUD - Primtives are gouraud-shaded, all vertex-colors take effect
+  *   - GU_FLAT - Primitives are flatshaded, the last vertex-color takes effet
+  *   - GU_SMOOTH - Primtives are gouraud-shaded, all vertex-colors take effect
   *
   * @param mode - Which mode to use
 **/
@@ -565,8 +692,8 @@ void sceGuTexEnvColor(unsigned int color);
   * Set how the texture is filtered
   *
   * Available filters are:
-  *   - GE_FILTER_POINT - Texture is point-filtered
-  *   - GE_FILTER_LINEAR - Texture is bilinear-filtered
+  *   - GU_NEAREST - Texture is point-filtered
+  *   - GU_LINEAR - Texture is bilinear-filtered
   *
   * @param a0 - Filter to use (when magnifying? mag?)
   * @param a1 - Filter to use (when minimizing? min?)
@@ -585,13 +712,13 @@ void sceGuTexFlush(void);
   * Set how textures are applied
   *
   * Available apply-modes are: (TFX)
-  *   - GE_TFX_MODULATE - The texture is multiplied with the current diffuse fragment
-  *   - GE_TFX_REPLACE - The texture replaces the fragment
-  *   - GE_TFX_ADD - The texture is added on-top of the diffuse fragment
+  *   - GU_TFX_MODULATE - The texture is multiplied with the current diffuse fragment
+  *   - GU_TFX_REPLACE - The texture replaces the fragment
+  *   - GU_TFX_ADD - The texture is added on-top of the diffuse fragment
   *   
   * Available component-modes are: (TCC)
-  *   - GE_TCC_RGB - The texture alpha does not have any effect
-  *   - GE_TCC_RGBA - The texture alpha is taken into account
+  *   - GU_TCC_RGB - The texture alpha does not have any effect
+  *   - GU_TCC_RGBA - The texture alpha is taken into account
   *
   * @param tfx - Which apply-mode to use
   * @param tcc - Which component-mode to use
@@ -601,8 +728,8 @@ void sceGuTexFunc(int tfx, int tcc);
 /**
   * Set current texturemap
   *
-  * The texture may reside in main RAM, but the GE can only read from RAM with 50MB/s,
-  * instead as from VRAM with 500MB/s (at almost optimal conditions)
+  * Textures may reside in main RAM, but it has a huge speed-penalty. Swizzle textures
+  * to get maximum speed.
   *
   * @param mipmap - Mipmap level
   * @param width - Width of texture (must be a power of 2)
@@ -618,17 +745,17 @@ void sceGuTexMapMode(unsigned int a0, unsigned int a1, unsigned int a2);
   * Set texture-mode parameters
   *
   * Available texture-formats are:
-  *   - GE_TPSM_5650 - Hicolor, 16-bit
-  *   - GE_TPSM_5551 - Hicolor, 16-bit
-  *   - GE_TPSM_4444 - Hicolor, 16-bit
-  *   - GE_TPSM_8888 - Truecolor, 32-bit
-  *   - GE_TPSM_T4 - Indexed, 4-bit (2 pixels per byte)
-  *   - GE_TPSM_T8 - Indexed, 8-bit
+  *   - GU_PSM_5650 - Hicolor, 16-bit
+  *   - GU_PSM_5551 - Hicolor, 16-bit
+  *   - GU_PSM_4444 - Hicolor, 16-bit
+  *   - GU_PSM_8888 - Truecolor, 32-bit
+  *   - GU_PSM_T4 - Indexed, 4-bit (2 pixels per byte)
+  *   - GU_PSM_T8 - Indexed, 8-bit
   *
   * @param tpsm - Which texture format to use
   * @param a1 - Unknown, set to 0
   * @param a2 - Unknown, set to 0
-  * @param swizzle - Set to 1 to swizzle texture-reads
+  * @param swizzle - GU_TRUE to swizzle texture-reads
 **/
 void sceGuTexMode(int tpsm, int a1, int a2, int swizzle);
 void sceGuTexOffset(float u, float v);
@@ -641,8 +768,8 @@ void sceGuTexSync();
   * Set if the texture should repeat or clamp
   *
   * Available modes are:
-  *   - GE_WRAP_CLAMP - Texture clamps at the border
-  *   - GE_WRAP_REPEAT - The texture repeats after crossing the border
+  *   - GU_REPEAT - The texture repeats after crossing the border
+  *   - GU_CLAMP - Texture clamps at the border
   *
   * @param u - Wrap-mode for the U direction
   * @param v - Wrap-mode for the V direction
@@ -661,10 +788,10 @@ void sceGuClutLoad(int num_blocks, const void* cbp);
   * Set current CLUT mode
   *
   * Available pixel formats for palettes are:
-  *   - GE_TPSM_5650
-  *   - GE_TPSM_5551
-  *   - GE_TPSM_4444
-  *   - GE_TPSM_8888
+  *   - GU_PSM_5650
+  *   - GU_PSM_5551
+  *   - GU_PSM_4444
+  *   - GU_PSM_8888
   *
   * @param cpsm - Which pixel format to use for the palette
   * @param a1 - Unknown, set to 0
@@ -691,7 +818,7 @@ void sceGuOffset(unsigned int x, unsigned int y);
 /**
   * Set what to scissor within the current viewport
   *
-  * Note that scissoring is only performed if the custom scissoring is enabled (GU_STATE_SCISSOR)
+  * Note that scissoring is only performed if the custom scissoring is enabled (GU_SCISSOR_TEST)
   *
   * @param x - Left of scissor region
   * @param y - Top of scissor region
@@ -716,7 +843,7 @@ void sceGuScissor(int x, int y, int w, int h);
 void sceGuViewport(int cx, int cy, int width, int height);
 
 /* patches */
-void sceGuDrawBezier(int vertex_type, int a1, int a2, void* indices, void* vertices);
+void sceGuDrawBezier(int vertex_type, int a1, int a2, const void* indices, const void* vertices);
 void sceGuPatchDivide(unsigned int a0, unsigned int a1);
 void sceGuPatchFrontFace(unsigned int a0);
 void sceGuPatchPrim(unsigned int a0);
@@ -725,10 +852,10 @@ void sceGuPatchPrim(unsigned int a0);
   * Set transform matrices
   *
   * Available matrices are:
-  *   - GE_MATRIX_PROJECTION - View->Projection matrix, 4x4
-  *   - GE_MATRIX_VIEW - World->View matrix, 3*4
-  *   - GE_MATRIX_WORLD - Object->World matrix, 3*4
-  *   - GE_MATRIX_TEXTURE - Untested, only assumed, 3*4
+  *   - GU_PROJECTION - View->Projection matrix
+  *   - GU_VIEW - World->View matrix
+  *   - GU_MODEL - Model->World matrix
+  *   - GU_TEXTURE - Texture matrix
   *
   * @param type - Which matrix-type to set
   * @param matrix - Matrix to load

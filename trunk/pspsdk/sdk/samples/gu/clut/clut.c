@@ -79,24 +79,24 @@ int main(int argc, char* argv[])
 	// setup GU
 
 	sceGuInit();
-	sceGuStart(0,list);
+	sceGuStart(GU_DIRECT,list);
 
-	sceGuDrawBuffer(GE_PSM_8888,(void*)0,BUF_WIDTH);
+	sceGuDrawBuffer(GU_PSM_8888,(void*)0,BUF_WIDTH);
 	sceGuDispBuffer(SCR_WIDTH,SCR_HEIGHT,(void*)FRAME_SIZE,BUF_WIDTH);
 	sceGuDepthBuffer((void*)(FRAME_SIZE*2),BUF_WIDTH);
 	sceGuOffset(2048 - (SCR_WIDTH/2),2048 - (SCR_HEIGHT/2));
 	sceGuViewport(2048,2048,SCR_WIDTH,SCR_HEIGHT);
 	sceGuDepthRange(0xc350,0x2710);
 	sceGuScissor(0,0,SCR_WIDTH,SCR_HEIGHT);
-	sceGuEnable(GU_STATE_SCISSOR);
-	sceGuFrontFace(GE_FACE_CW);
-	sceGuEnable(GU_STATE_TEXTURE);
-	sceGuClear(GE_CLEAR_COLOR|GE_CLEAR_DEPTH);
+	sceGuEnable(GU_SCISSOR_TEST);
+	sceGuFrontFace(GU_CW);
+	sceGuEnable(GU_TEXTURE_2D);
+	sceGuClear(GU_COLOR_BUFFER_BIT|GU_DEPTH_BUFFER_BIT);
 	sceGuFinish();
 	sceGuSync(0,0);
 
 	sceDisplayWaitVblankStart();
-	sceGuDisplay(GU_DISPLAY_ON);
+	sceGuDisplay(GU_TRUE);
 
 	// run sample
 
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 
 	for(;;)
 	{
-		sceGuStart(0,list);
+		sceGuStart(GU_DIRECT,list);
 
 		// animate palette
 
@@ -118,18 +118,18 @@ int main(int argc, char* argv[])
 		// clear screen
 
 		sceGuClearColor(0xff00ff);
-		sceGuClear(GE_CLEAR_COLOR);
+		sceGuClear(GU_COLOR_BUFFER_BIT);
 
 		// setup CLUT texture
 
-		sceGuClutMode(GE_TPSM_8888,0,0xff,0); // 32-bit palette
+		sceGuClutMode(GU_PSM_8888,0,0xff,0); // 32-bit palette
 		sceGuClutLoad((256/8),clut256); // upload 32*8 entries (256)
-		sceGuTexMode(GE_TPSM_T8,0,0,0); // 8-bit image
+		sceGuTexMode(GU_PSM_T8,0,0,0); // 8-bit image
 		sceGuTexImage(0,256,256,256,tex256);
-		sceGuTexFunc(GE_TFX_REPLACE,0);
-		sceGuTexFilter(GE_FILTER_LINEAR,GE_FILTER_LINEAR);
-		sceGuTexScale(1,1);
-		sceGuTexOffset(0,0);
+		sceGuTexFunc(GU_TFX_REPLACE,GU_TCC_RGB);
+		sceGuTexFilter(GU_LINEAR,GU_LINEAR);
+		sceGuTexScale(1.0f,1.0f);
+		sceGuTexOffset(0.0f,0.0f);
 		sceGuAmbientColor(0xffffffff);
 
 		// render sprite
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
 		vertices[0].x = 0; vertices[0].y = 0; vertices[0].z = 0;
 		vertices[1].u = 256; vertices[1].v = 256;
 		vertices[1].x = 480; vertices[1].y = 272; vertices[1].z = 0;
-		sceGuDrawArray(GU_PRIM_SPRITES,GE_SETREG_VTYPE(GE_TT_32BITF,0,0,GE_MT_32BITF,0,0,0,0,GE_BM_2D),2,0,vertices);
+		sceGuDrawArray(GU_SPRITES,GU_TEXTURE_32BITF|GU_VERTEX_32BITF|GU_TRANSFORM_2D,2,0,vertices);
 
 		// wait for next frame
 

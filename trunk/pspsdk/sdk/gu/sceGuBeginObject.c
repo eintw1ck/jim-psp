@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuBeginObject(int vertex_type, int a1, void* indices, void* vertices)
+void sceGuBeginObject(int vertex_type, int a1, const void* indices, const void* vertices)
 {
 	if (vertex_type)
 		sendCommandi(18,vertex_type);

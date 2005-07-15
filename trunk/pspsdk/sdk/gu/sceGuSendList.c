@@ -13,7 +13,7 @@
 
 int sceGeListEnQueueHead(void* list, void* stall, int cbid, void* arg);
 
-void sceGuSendList(unsigned int mode, void* list, void* data)
+void sceGuSendList(unsigned int mode, const void* list, void* data)
 {
 	gu_settings.signal_offset = 0;
 

@@ -14,6 +14,7 @@ EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = Sprite Sample
 
 PSPSDK=$(shell psp-config --pspsdk-path)
+USE_PSPSDK_LIBC=1
 include $(PSPSDK)/lib/build.mak
 
 ball.o: ball.raw

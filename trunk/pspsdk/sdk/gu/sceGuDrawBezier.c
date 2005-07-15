@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuDrawBezier(int vertex_type, int a1, int a2, void* indices, void* vertices)
+void sceGuDrawBezier(int vertex_type, int a1, int a2, const void* indices, const void* vertices)
 {
   if (vertex_type)
     sendCommandi(18,vertex_type);

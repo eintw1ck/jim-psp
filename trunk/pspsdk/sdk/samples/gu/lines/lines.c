@@ -91,22 +91,21 @@ int main(int argc, char* argv[])
 	// setup GU
 
 	sceGuInit();
-	sceGuStart(0,list);
 
-	sceGuDrawBuffer(GE_PSM_8888,(void*)0,BUF_WIDTH);
+	sceGuStart(GU_DIRECT,list);
+	sceGuDrawBuffer(GU_PSM_8888,(void*)0,BUF_WIDTH);
 	sceGuDispBuffer(SCR_WIDTH,SCR_HEIGHT,(void*)FRAME_SIZE,BUF_WIDTH);
 	sceGuDepthBuffer((void*)(FRAME_SIZE*2),BUF_WIDTH);
 	sceGuOffset(2048 - (SCR_WIDTH/2),2048 - (SCR_HEIGHT/2));
 	sceGuViewport(2048,2048,SCR_WIDTH,SCR_HEIGHT);
 	sceGuDepthRange(0xc350,0x2710);
 	sceGuScissor(0,0,SCR_WIDTH,SCR_HEIGHT);
-	sceGuEnable(GU_STATE_SCISSOR);
-
+	sceGuEnable(GU_SCISSOR_TEST);
 	sceGuFinish();
 	sceGuSync(0,0);
 
 	sceDisplayWaitVblankStart();
-	sceGuDisplay(GU_DISPLAY_ON);
+	sceGuDisplay(GU_TRUE);
 
 	// run sample
 
@@ -160,12 +159,12 @@ int main(int argc, char* argv[])
 			color_index = (color_index+1) & 7;
 		}
 
-		sceGuStart(0,list);
+		sceGuStart(GU_DIRECT,list);
 
 		// clear screen
 
 		sceGuClearColor(0);
-		sceGuClear(GE_CLEAR_COLOR);
+		sceGuClear(GU_COLOR_BUFFER_BIT);
 
 		// render lines
 
@@ -191,7 +190,7 @@ int main(int argc, char* argv[])
 				vertices[j] = lines[i][j];
 			vertices[NUM_VERTICES] = lines[i][0];
 		
-			sceGuDrawArray(GU_PRIM_LINESTRIPS,GE_SETREG_VTYPE(0,0,0,GE_MT_32BITF,0,0,0,0,GE_BM_2D),(NUM_VERTICES+1),0,vertices);
+			sceGuDrawArray(GU_LINE_STRIP,GU_VERTEX_32BITF|GU_TRANSFORM_2D,(NUM_VERTICES+1),0,vertices);
 		}
 
 		// wait for next frame

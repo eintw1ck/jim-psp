@@ -8,31 +8,27 @@
 
 #include "guInternal.h"
 
-void sceGuLightColor(int light, int type, unsigned int color)
+void sceGuLightColor(int light, int component, unsigned int color)
 {
 	GuLightSettings* settings = &light_settings[light];
 
-	switch (type)
+	switch (component)
 	{
-		case 1: sendCommandi(settings->row2[0], color & 0xffffff); break;
-		case 2: sendCommandi(settings->row2[1], color & 0xffffff); break;
-
-		case 3:
+		case GU_AMBIENT: sendCommandi(settings->row2[0], color & 0xffffff); break;
+		case GU_DIFFUSE: sendCommandi(settings->row2[1], color & 0xffffff); break;
+		case GU_AMBIENT_AND_DIFFUSE:
 		{
 			sendCommandi(settings->row2[0], color & 0xffffff); break;
 			sendCommandi(settings->row2[1], color & 0xffffff); break;
 		}
 		break;
 		
-		case 4: sendCommandi(settings->row2[2], color & 0xffffff); break;
-		
-		case 6:
+		case GU_SPECULAR: sendCommandi(settings->row2[2], color & 0xffffff); break;
+		case GU_DIFFUSE_AND_SPECULAR:
 		{
 			sendCommandi(settings->row2[1], color & 0xffffff); break;
 			sendCommandi(settings->row2[2], color & 0xffffff); break;
 		}
 		break;
-
-		default: case 0: case 5: break;
 	}
 }

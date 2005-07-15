@@ -108,26 +108,27 @@ int main(int argc, char* argv[])
 	// setup GU
 
 	sceGuInit();
-	sceGuStart(0,list);
-	sceGuDrawBuffer(GE_PSM_8888,(void*)0,BUF_WIDTH);
+
+	sceGuStart(GU_DIRECT,list);
+	sceGuDrawBuffer(GU_PSM_8888,(void*)0,BUF_WIDTH);
 	sceGuDispBuffer(SCR_WIDTH,SCR_HEIGHT,(void*)0x88000,BUF_WIDTH);
 	sceGuDepthBuffer((void*)0x110000,BUF_WIDTH);
 	sceGuOffset(2048 - (SCR_WIDTH/2),2048 - (SCR_HEIGHT/2));
 	sceGuViewport(2048,2048,SCR_WIDTH,SCR_HEIGHT);
 	sceGuDepthRange(0xc350,0x2710);
 	sceGuScissor(0,0,SCR_WIDTH,SCR_HEIGHT);
-	sceGuEnable(GU_STATE_SCISSOR);
-	sceGuDepthFunc(GE_TEST_GEQUAL);
-	sceGuEnable(GU_STATE_ZTE);
-	sceGuFrontFace(GE_FACE_CW); // NOTE: not CCW
-	sceGuShadeModel(GE_SHADE_GOURAUD);
-	sceGuEnable(GU_STATE_CULL);
-	sceGuEnable(GU_STATE_TEXTURE);
+	sceGuEnable(GU_SCISSOR_TEST);
+	sceGuDepthFunc(GU_GEQUAL);
+	sceGuEnable(GU_DEPTH_TEST);
+	sceGuFrontFace(GU_CW);
+	sceGuShadeModel(GU_SMOOTH);
+	sceGuEnable(GU_CULL_FACE);
+	sceGuEnable(GU_TEXTURE_2D);
 	sceGuFinish();
 	sceGuSync(0,0);
 
 	sceDisplayWaitVblankStart();
-	sceGuDisplay(GU_DISPLAY_ON);
+	sceGuDisplay(GU_TRUE);
 
 	// run sample
 
@@ -139,42 +140,42 @@ int main(int argc, char* argv[])
 
 	for(;;)
 	{
-		sceGuStart(0,list);
+		sceGuStart(GU_DIRECT,list);
 
 		// clear screen
 
 		sceGuClearColor(0xff554433);
 		sceGuClearDepth(0);
-		sceGuClear(GE_CLEAR_COLOR|GE_CLEAR_DEPTH);
+		sceGuClear(GU_COLOR_BUFFER_BIT|GU_DEPTH_BUFFER_BIT);
 
 
 		// setup matrices for cube
 
 		matrix_identity((float*)&projection);
-		matrix_projection((float*)&projection,75.0f,16.0/9.0f,0.01f,1000.0f);
-		sceGuSetMatrix(GU_MATRIX_PROJECTION,&projection);
+		matrix_projection((float*)&projection,75.0f,16.0/9.0f,1.0f,1000.0f);
+		sceGuSetMatrix(GU_PROJECTION,&projection);
 
 		matrix_identity((float*)&view);
-		sceGuSetMatrix(GU_MATRIX_VIEW,&view);
+		sceGuSetMatrix(GU_VIEW,&view);
 
 		matrix_identity((float*)&world);
 		matrix_translate((float*)&world,0,0,-3.0f);
 		matrix_rotate((float*)&world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
-		sceGuSetMatrix(2,&world);
+		sceGuSetMatrix(GU_MODEL,&world);
 
 		// setup texture
 
-		sceGuTexMode(GE_TPSM_4444,0,0,0);
+		sceGuTexMode(GU_PSM_4444,0,0,0);
 		sceGuTexImage(0,64,64,64,logo_start);
-		sceGuTexFunc(GE_TFX_ADD,0);
-		sceGuTexFilter(GE_FILTER_LINEAR,GE_FILTER_LINEAR);
-		sceGuTexScale(1,1);
-		sceGuTexOffset(0,0);
+		sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
+		sceGuTexFilter(GU_LINEAR,GU_LINEAR);
+		sceGuTexScale(1.0f,1.0f);
+		sceGuTexOffset(0.0f,0.0f);
 		sceGuAmbientColor(0xffffffff);
 
 		// draw cube
 
-		sceGuDrawArray(GU_PRIM_TRIANGLES,GE_SETREG_VTYPE(GE_TT_32BITF,GE_CT_8888,0,GE_MT_32BITF,0,0,0,0,0),12*3,0,vertices);
+		sceGuDrawArray(GU_TRIANGLES,GU_TEXTURE_32BITF|GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_3D,12*3,0,vertices);
 
 		sceGuFinish();
 		sceGuSync(0,0);

@@ -80,18 +80,18 @@ int main(int argc, char* argv[])
 	sceGuInit();
 
 	// setup
-	sceGuStart(0,list);
-	sceGuDrawBuffer(GE_PSM_4444,(void*)0,512);
+	sceGuStart(GU_DIRECT,list);
+	sceGuDrawBuffer(GU_PSM_4444,(void*)0,512);
 	sceGuDispBuffer(480,272,(void*)0x88000,512);
 	sceGuDepthBuffer((void*)0x110000,512);
 	sceGuOffset(2048 - (480/2),2048 - (272/2));
 	sceGuViewport(2048,2048,480,272);
 	sceGuDepthRange(0xc350,0x2710);
 	sceGuScissor(0,0,480,272);
-	sceGuEnable(GU_STATE_SCISSOR);
-	sceGuFrontFace(GE_FACE_CW);
-	sceGuEnable(GU_STATE_TEXTURE);
-	sceGuClear(GE_CLEAR_COLOR|GE_CLEAR_DEPTH);
+	sceGuEnable(GU_SCISSOR_TEST);
+	sceGuFrontFace(GU_CW);
+	sceGuEnable(GU_TEXTURE_2D);
+	sceGuClear(GU_COLOR_BUFFER_BIT|GU_DEPTH_BUFFER_BIT);
 	sceGuFinish();
 	sceGuSync(0,0);
 
@@ -119,15 +119,15 @@ int main(int argc, char* argv[])
 		unsigned int j;
 		struct Vertex* vertices;
 
-		sceGuStart(0,list);
+		sceGuStart(GU_DIRECT,list);
 
 		// setup the source buffer as a 512x512 texture, but only copy 480x272
-		sceGuTexMode(GE_TPSM_4444,0,0,0);
+		sceGuTexMode(GU_PSM_4444,0,0,0);
 		sceGuTexImage(0,512,512,512,pixels);
-		sceGuTexFunc(GE_TFX_REPLACE,0);
-		sceGuTexFilter(GE_FILTER_POINT,GE_FILTER_POINT);
+		sceGuTexFunc(GU_TFX_REPLACE,GU_TCC_RGB);
+		sceGuTexFilter(GU_NEAREST,GU_NEAREST);
 		sceGuTexScale(1.0f/512.0f,1.0f/512.0f); // scale UVs to 0..1
-		sceGuTexOffset(0,0);
+		sceGuTexOffset(0.0f,0.0f);
 		sceGuAmbientColor(0xffffffff);
 
 		// do a striped blit (takes the page-cache into account)
@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
 			vertices[1].color = 0;
 			vertices[1].x = j+SLICE_SIZE; vertices[1].y = 272; vertices[1].z = 0;
 
-			sceGuDrawArray(GU_PRIM_SPRITES,GE_SETREG_VTYPE(GE_TT_16BIT,GE_CT_4444,0,GE_MT_16BIT,0,0,0,0,GE_BM_2D),2,0,vertices);
+			sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_COLOR_4444|GU_VERTEX_16BIT|GU_TRANSFORM_2D,2,0,vertices);
 		}
 
 		sceGuFinish();
