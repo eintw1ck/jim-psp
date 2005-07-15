@@ -1,9 +1,13 @@
+Requirements:
+
+   SDL
+
 To configure:
 
    ./autogen.sh
    LDFLAGS="-L`psp-config --pspsdk-path`/lib -lc -lpspglue -lpspuser" \
      ./configure --host psp --with-sdl-prefix=`psp-config --pspsdk-path`/.. \
-     --prefix=`psp-config --pspsdk-path`/..
+     --disable-music-mp3 --prefix=`psp-config --pspsdk-path`/..
 
 Then run:
 
