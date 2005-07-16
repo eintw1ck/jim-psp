@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"StdioForUser",0x40010000,0x00090005
 	STUB_FUNC	0x3054D478,sceKernelStdioRead

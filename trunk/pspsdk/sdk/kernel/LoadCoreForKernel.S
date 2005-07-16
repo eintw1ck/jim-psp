@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"LoadCoreForKernel",0x00010000,0x001E0005
 	STUB_FUNC	0xACE23476,sceKernelCheckPspConfig

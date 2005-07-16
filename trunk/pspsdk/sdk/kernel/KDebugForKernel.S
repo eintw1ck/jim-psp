@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"KDebugForKernel",0x00010000,0x00140005
 	STUB_FUNC	0xE7A3874D,sceKernelRegisterAssertHandler

@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"sceGe_user",0x40010000,0x00110005
 	STUB_FUNC	0x1F6752AD,sceGeEdramGetSize

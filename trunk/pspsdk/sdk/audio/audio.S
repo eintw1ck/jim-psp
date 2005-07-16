@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"sceAudio",0x40010000,0x000a0005 
 	STUB_FUNC	0x8C1009B2,sceAudioOutput

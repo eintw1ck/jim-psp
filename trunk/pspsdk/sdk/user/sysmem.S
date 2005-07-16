@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"SysMemUserForUser",0x40000000,0x00060005
 	STUB_FUNC	0xA291F107,sceKernelMaxFreeMemSize

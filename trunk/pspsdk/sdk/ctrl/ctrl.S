@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"sceCtrl",0x40010000,0x000E0005
 	STUB_FUNC	0x6A2774F3,sceCtrlSetSamplingCycle

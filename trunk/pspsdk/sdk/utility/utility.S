@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"sceUtility",0x40010000,0x00220005
 	STUB_FUNC	0xC492F751,sceUtilityGameSharingInitStart

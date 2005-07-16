@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"LoadExecForUser",0x40010000,0x00040005
 	STUB_FUNC	0xBD2F1094,sceKernelLoadExec

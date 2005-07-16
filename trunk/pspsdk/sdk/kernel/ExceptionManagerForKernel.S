@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"ExceptionManagerForKernel",0x00010000,0x00080005
 	STUB_FUNC	0x3FB264FC,sceKernelRegisterExceptionHandler

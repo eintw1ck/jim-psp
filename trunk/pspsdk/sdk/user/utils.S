@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"UtilsForUser",0x40010000,0x00180005
 	STUB_FUNC	0xBFA98062,sceKernelDcacheInvalidateRange

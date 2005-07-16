@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"ThreadManForUser",0x40010000,0x007E0005
 	STUB_FUNC	0x6E9EA350,_sceKernelReturnFromCallback

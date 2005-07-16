@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"sceHprm",0x40010000,0x00080005
 	STUB_FUNC	0xC7154136,sceHprmRegisterCallback

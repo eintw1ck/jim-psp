@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"sceUsbstorBoot",0x90000,0x00060005
 	STUB_FUNC	0xe58818a8,sceUsbstorBootSetCapacity

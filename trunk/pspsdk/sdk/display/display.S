@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"sceDisplay",0x40010000,0x00110005
 	STUB_FUNC	0x0E20F177,sceDisplaySetMode

@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"IoFileMgrForUser",0x40010000,0x00240005
 	STUB_FUNC	0xe95a012b, sceIoIoctlAsync

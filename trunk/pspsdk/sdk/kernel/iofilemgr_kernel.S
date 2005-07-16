@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"IoFileMgrForKernel",0x00010000,0x00050005
 	STUB_FUNC	0xa905b705, sceIoCloseAll

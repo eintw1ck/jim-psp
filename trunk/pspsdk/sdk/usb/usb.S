@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"sceUsb",0x40010000,0x00090005
 	STUB_FUNC	0xae5de6af,sceUsbStart

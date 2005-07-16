@@ -1,6 +1,6 @@
 	.set noreorder
 
-#include "common.s"
+#include "pspstub.s"
 
 	STUB_START	"ModuleMgrForUser",0x40010000,0x000A0005
 	STUB_FUNC	0xB7F46618,sceKernelLoadModuleByID
