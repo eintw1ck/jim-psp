@@ -40,5 +40,6 @@ static void _pspDebugKprintfHandler(void *arg, const char *format, u32 *args)
 /* Install a kprintf handler */
 int pspDebugInstallKprintfHandler(PspDebugKprintfHandler handler)
 {
+	curr_handler = handler;
 	return sceKernelRegisterKprintfHandler(_pspDebugKprintfHandler, NULL);
 }
