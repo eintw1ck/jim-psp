@@ -91,7 +91,7 @@ extern "C" {
 #define GU_WEIGHT_16BIT		GU_WEIGHT_SHIFT(2)
 #define GU_WEIGHT_32BITF	GU_WEIGHT_SHIFT(3)
 
-#define GU_INDEX_SHIFT(n)	((n)<<11))
+#define GU_INDEX_SHIFT(n)	((n)<<11)
 #define GU_INDEX_8BIT		GU_INDEX_SHIFT(1)
 #define GU_INDEX_16BIT		GU_INDEX_SHIFT(2)
 #define GU_INDEX_RES3		GU_INDEX_SHIFT(3)
@@ -192,6 +192,7 @@ extern "C" {
 #define GU_SPECULAR		(4)
 #define GU_AMBIENT_AND_DIFFUSE	(GU_AMBIENT|GU_DIFFUSE)
 #define GU_DIFFUSE_AND_SPECULAR	(GU_DIFFUSE|GU_SPECULAR)
+#define GU_UNKNOWN_LIGHT_COMPONENT (8)
 
 /* Light Type */
 #define GU_DIRECTIONAL		(0)
@@ -290,11 +291,11 @@ int sceGuDisplay(int state);
 void sceGuDepthFunc(int function);
 
 /**
-  * Depth write mask
+  * Mask depth buffer writes
   *
-  * @param mask - Which bits to mask writes to?
+  * @param mask - GU_TRUE(1) to disable Z writes, GU_FALSE(0) to enable
 **/
-void sceGuDepthMask(unsigned int mask);
+void sceGuDepthMask(int mask);
 
 void sceGuDepthOffset(unsigned int offset);
 void sceGuDepthRange(int near, int far);
@@ -548,11 +549,9 @@ void sceGuDisable(int state);
   *   - GU_SPOTLIGHT - Point-light with a cone
   *
   * Available light components are:
-  *   - GU_AMBIENT
-  *   - GU_DIFFUSE
-  *   - GU_SPECULAR
   *   - GU_AMBIENT_AND_DIFFUSE
   *   - GU_DIFFUSE_AND_SPECULAR
+  *   - GU_UNKNOWN_LIGHT_COMPONENT
   *
   * @param light - Light index
   * @param type - Light type
@@ -562,9 +561,14 @@ void sceGuDisable(int state);
 void sceGuLight(int light, int type, int components, const ScePspFVector3* position);
 
 /**
-  * Set light attenuation (falloff)
+  * Set light attenuation
+  *
+  * @param light - Light index
+  * @param atten0 - Constant attenuation factor
+  * @param atten1 - Linear attenuation factor
+  * @param atten2 - Quadratic attenuation factor
 **/
-void sceGuLightAtt(int index, float f12, float f13, float f14);
+void sceGuLightAtt(int light, float atten0, float atten1, float atten2);
 
 /**
   * Set light color
@@ -622,7 +626,19 @@ void sceGuPixelMask(unsigned int mask);
 void sceGuColor(unsigned int color);
 
 void sceGuColorFunc(int a0, unsigned int color, int a2);
-void sceGuColorMaterial(int a0);
+
+/**
+  * Set which color components that the material will receive
+  *
+  * The components are ORed together from the following values:
+  *   - GU_AMBIENT
+  *   - GU_DIFFUSE
+  *   - GU_SPECULAR
+  *
+  * @param components - Which components to receive
+**/
+void sceGuColorMaterial(int components);
+
 void sceGuAlphaFunc(int a0, int a1, int a2);
 void sceGuAmbient(unsigned int color);
 void sceGuAmbientColor(unsigned int color);
@@ -755,7 +771,7 @@ void sceGuTexMapMode(unsigned int a0, unsigned int a1, unsigned int a2);
   * @param tpsm - Which texture format to use
   * @param a1 - Unknown, set to 0
   * @param a2 - Unknown, set to 0
-  * @param swizzle - GU_TRUE to swizzle texture-reads
+  * @param swizzle - GU_TRUE(1) to swizzle texture-reads
 **/
 void sceGuTexMode(int tpsm, int a1, int a2, int swizzle);
 void sceGuTexOffset(float u, float v);

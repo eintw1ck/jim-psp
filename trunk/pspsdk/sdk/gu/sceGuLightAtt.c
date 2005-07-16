@@ -8,11 +8,11 @@
 
 #include "guInternal.h"
 
-void sceGuLightAtt(int index, float f12, float f13, float f14)
+void sceGuLightAtt(int light, float atten0, float atten1, float atten2)
 {
-	GuLightSettings* settings = &light_settings[index];
+	GuLightSettings* settings = &light_settings[light];
 
-	sendCommandf(settings->row2[3],f12);
-	sendCommandf(settings->row3[0],f13);
-	sendCommandf(settings->row3[1],f14);
+	sendCommandf(settings->row2[3],atten0);
+	sendCommandf(settings->row3[0],atten1);
+	sendCommandf(settings->row3[1],atten2);
 }

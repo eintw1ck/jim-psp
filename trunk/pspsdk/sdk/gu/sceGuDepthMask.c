@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuDepthMask(unsigned int mask)
+void sceGuDepthMask(int mask)
 {
 	sendCommandi(231,mask);
 }

@@ -45,7 +45,7 @@ void sceGuStart(int cid, void* list)
 
 		sceGuSetDither((ScePspIMatrix4*)dither_matrix);
 		sceGuPatchDivide(16,16);
-		sceGuColorMaterial(7);
+		sceGuColorMaterial(GU_AMBIENT|GU_DIFFUSE|GU_SPECULAR);
 
 		sceGuSpecular(1.0f);
 		sceGuTexScale(1.0f,1.0f);
