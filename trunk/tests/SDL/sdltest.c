@@ -71,17 +71,6 @@ int main(int argc, char *argv[])
 	SDL_Event event;
 	SDL_TimerID t1, t2, t3;
 	int done = 0;
-	char tmp[32];
-
-	setenv("PSP_DPAD","0",1);        /* dpad should act as buttons */
-	setenv("PSP_ANALOG","1",1);      /* analog stick should act as mouse */
-	setenv("PSP_CROSS","J0",1);      /* cross is joystick button 0 */
-	setenv("PSP_LTRIGGER","M0",1);   /* ltrigger is left mouse button */
-	setenv("PSP_RTRIGGER","M2",1);   /* rtrigger is right mouse button */
-	sprintf(tmp,"K%d",SDLK_ESCAPE);  /* start = escape */
-	setenv("PSP_START",tmp,1);
-	sprintf(tmp,"K%d",SDLK_SPACE);   /* select = space */
-	setenv("PSP_SELECT",tmp,1);
 
 	/* Initialize SDL. */
 	if (SDL_Init(SDL_INIT_VIDEO |

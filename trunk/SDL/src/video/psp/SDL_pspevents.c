@@ -35,78 +35,12 @@ static char rcsid =
 #include "SDL_events_c.h"
 #include "SDL_pspvideo.h"
 #include "SDL_pspevents_c.h"
-#include "SDL_pspinput.h"
 
 void PSP_PumpEvents(_THIS)
 {
-	SceCtrlData pad; 
-	enum PspCtrlButtons changed;
-	static enum PspCtrlButtons old_buttons = 0;
-	static int old_x, old_y;
-	int x, y;
-	PspButtonConfig *pbc;
-	SDL_keysym sym;
-
-	SDL_SemWait(psp_input_sem);
-	pad = psp_input_pad;
-	x = psp_rel_mouse_x;
-	y = psp_rel_mouse_y;
-	psp_rel_mouse_x = psp_rel_mouse_y = 0;
-	SDL_SemPost(psp_input_sem);
-
-	changed = old_buttons ^ pad.Buttons;
-	old_buttons = pad.Buttons;
-
-	/* Mouse motion */
-	switch(psp_analog_mode) 
-	{
-	case pam_mouse:
-		if(x || y) 
-			SDL_PrivateMouseMotion(0, 1, x, y);
-		break;
-	case pam_absmouse:
-		x = (int)(pad.Lx * 480) / 256;
-		y = (int)(pad.Ly * 272) / 256;
-		if(x != old_x || y != old_y) {
-			SDL_PrivateMouseMotion(0, 0, x, y);
-			old_x = x;
-			old_y = y;
-		}
-		break;
-	default:
-		break;
-	}
-
-	/* Keyboard and mouse buttons */
-	for(pbc = psp_button_config; pbc->name != NULL; pbc++)
-	{
-		if(changed & pbc->id) {
-			switch(pbc->type) {
-			case bc_keyboard:
-				sym.scancode = pbc->id;
-				sym.sym = pbc->value;
-				SDL_PrivateKeyboard(
-					(pad.Buttons & pbc->id) ? 
-					SDL_PRESSED : SDL_RELEASED, &sym);
-				break;
-			case bc_mouse:
-				SDL_PrivateMouseButton(
-					(pad.Buttons & pbc->id) ? 
-					SDL_PRESSED : SDL_RELEASED, 
-					pbc->value + 1, 0, 0);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
-
-	/* Process callbacks.  This is required so that the Home
-	 * button can exit the game.  This also happens in the
-	 * joystick subsystem, but that subsystem may not have been
-	 * initialized by the user. */
-        sceKernelDelayThreadCB(0);
+	/* No mouse or keyboard input */
+	sceKernelDelayThreadCB(0);
+	return;
 }
 
 void PSP_InitOSKeymap(_THIS)

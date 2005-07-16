@@ -72,57 +72,23 @@ strangely at runtime.
 
 Input
 -----
-The PSP's input scheme can be configured through environment
-variables.  These environment variables will typically be created by
-the application prior to calling SDL_Init, with calls like
-    setenv("PSP_CROSS","K88",1);
-    setenv("PSP_ANALOG","1",1);
-    setenv("PSP_LTRIGGER","M0",1);
-    setenv("PSP_RTRIGGER","M2",1);
-The above examples would make the cross button send an "X" keypress,
-make the analog stick the mouse, and make the left and right triggers
-the left and right mouse buttons.
+The PSP's controls provide a joystick with a two axes on the analog
+stick and 14 independent buttons.  The button mapping is fixed:
 
-These variables and values are recognized:
+ 0 Triangle
+ 1 Circle
+ 2 Cross
+ 3 Square
+ 4 Left trigger
+ 5 Right trigger
+ 6 Down
+ 7 Left
+ 8 Up
+ 9 Right
+10 Select
+11 Start
+12 Home
+13 Hold
 
-PSP_DPAD:
-   0 - dpad is just buttons (default)
-   1 - dpad is joystick axes 
-
-PSP_ANALOG:
-   0 - analog stick is axes (default)
-   1 - analog stick is mouse
-   2 - analog stick is mouse with absolute positioning
-
-PSP_name: (where "name" is from the list below)
-   J0 - J13:  map to joystick button 0-13 (defaults, see below)
-   M0 - M4:   map to mouse button 0-4
-   K0 - K511: map to keyboard keycode 0-511 (matches SDLKey enum)
-
-Available PSP button names, and default mapping:
-   TRIANGLE J0
-   CIRCLE   J1
-   CROSS    J2
-   SQUARE   J3
-   LTRIGGER J4
-   RTRIGGER J5
-   DOWN     J6  (only if PSP_DPAD=0)
-   LEFT     J7  (only if PSP_DPAD=0)
-   UP       J8  (only if PSP_DPAD=0)
-   RIGHT    J9  (only if PSP_DPAD=0)
-   SELECT   J10
-   START    J11
-   HOME     J12
-   HOLD     J13
-
-The joystick device always has 14 buttons.  The mouse always has 5
-(left=0, middle=1, right=2, wheelup=3, wheeldown=4).  Joystick or
-mouse buttons that have nothing assigned to them will never generate
-events.  If both PSP_DPAD and PSP_ANALOG are axes, the dpad axes come
-first.  To remove the default mapping without setting a new one, just
-use an empty value.
-
-Note: A "home" button press is sometimes generated when the screen
-turns off after being idle ("backlight auto-off" setting).  This
-generated event does not trigger the usual PSP exit callback.
-
+There is no mouse support, although an application could be written to
+simulate it by receiving joystick events and using SDL_WarpMouse.
