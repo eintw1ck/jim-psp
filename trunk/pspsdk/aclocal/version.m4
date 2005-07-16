@@ -3,7 +3,7 @@ dnl AC_PSPSDK_VERSION()
 dnl
 dnl Determine the pspsdk package version.
 
-AC_DEFUN(AC_PSPSDK_VERSION,
+AC_DEFUN([AC_PSPSDK_VERSION],
 [
   AC_BEFORE([$0], [AM_INIT_AUTOMAKE])
 

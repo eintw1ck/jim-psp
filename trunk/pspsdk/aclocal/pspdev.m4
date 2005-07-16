@@ -3,7 +3,7 @@ dnl AC_PSPDEV_PATH()
 dnl
 dnl Check for a valid pspdev installation.
 
-AC_DEFUN(AC_PSPDEV_PATH,
+AC_DEFUN([AC_PSPDEV_PATH],
 [
   AC_ARG_WITH(pspdev,
               [  --with-pspdev=DIR       Path where the pspdev toolchain is installed (default is $PSPDEV)],
@@ -36,7 +36,7 @@ AC_DEFUN(AC_PSPDEV_PATH,
 
 dnl Check for a tool prefixed with "psp-".
 dnl __PSPDEV_CHECK_TOOL(VARIABLE, PREFIX, PROG-TO-CHECK-FOR[, VALUE-IF-NOT-FOUND [, PATH]])
-AC_DEFUN(__PSPDEV_CHECK_TOOL,
+AC_DEFUN([__PSPDEV_CHECK_TOOL],
 [
   pspdev_tool_prefix="psp-"
   AC_CHECK_PROG($1, ${pspdev_tool_prefix}$2, ${pspdev_tool_prefix}$2, $3, $4)
@@ -49,7 +49,7 @@ dnl Make sure all of the required pspdev tools exist.
 dnl TODO: This could be made more robust just in case someone installs the tools wihthout
 dnl the psp- prefix.  That's highly unlikely though.
 
-AC_DEFUN(AC_PSPDEV_TOOLCHAIN,
+AC_DEFUN([AC_PSPDEV_TOOLCHAIN],
 [
   __PSPDEV_CHECK_TOOL(PSP_CC, gcc, no)
   __PSPDEV_CHECK_TOOL(PSP_CXX, g++, no)
