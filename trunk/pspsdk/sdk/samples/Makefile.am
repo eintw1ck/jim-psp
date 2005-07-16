@@ -18,6 +18,7 @@ SAMPLES = \
 	ir/sircs \
 	ir/irda \
 	kernel/kdumper \
+	kernel/loadmodule \
 	kernel/threadstatus \
 	kernel/fileio \
 	power \
