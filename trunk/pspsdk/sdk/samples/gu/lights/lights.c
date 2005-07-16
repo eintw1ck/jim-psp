@@ -212,7 +212,7 @@ int main(int argc, char* argv[])
 	
 		for (i = 0; i < 4; ++i)
 		{
-			ScePspFVector3 pos = { cosf(i*(M_PI/2) + val * (M_PI/180)) * LIGHT_DISTANCE, 0, sinf(i*(M_PI/2) + val * (M_PI/180)) * LIGHT_DISTANCE - 5.0f };
+			ScePspFVector3 pos = { cosf(i*(M_PI/2) + val * (M_PI/180)) * LIGHT_DISTANCE, 0, sinf(i*(M_PI/2) + val * (M_PI/180)) * LIGHT_DISTANCE - 3.5f };
 			sceGuLight(i,GU_POINTLIGHT,GU_DIFFUSE_AND_SPECULAR,&pos);
 			sceGuLightColor(i,GU_DIFFUSE,colors[i]);
 			sceGuLightColor(i,GU_SPECULAR,0xffffffff);
@@ -232,7 +232,7 @@ int main(int argc, char* argv[])
 		sceGuSetMatrix(GU_VIEW,&view);
 
 		matrix_identity((float*)&world);
-		matrix_translate((float*)&world,0,-1.5,-7.5f);
+		matrix_translate((float*)&world,0,-1.5,-3.5f);
 		sceGuSetMatrix(GU_MODEL,&world);
 
 		// draw grid
@@ -243,7 +243,7 @@ int main(int argc, char* argv[])
 		// draw torus
 
 		matrix_identity((float*)&world);
-		matrix_translate((float*)&world,0,0,-5.0f);
+		matrix_translate((float*)&world,0,0,-3.5f);
 		matrix_rotate((float*)&world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
 		sceGuSetMatrix(GU_MODEL,&world);
 

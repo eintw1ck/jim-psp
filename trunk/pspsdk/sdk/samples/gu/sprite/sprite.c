@@ -150,14 +150,14 @@ int main(int argc, char* argv[])
 		sceGuClear(GU_COLOR_BUFFER_BIT|GU_DEPTH_BUFFER_BIT);
 
 		matrix_identity((float*)&projection);
-		matrix_projection((float*)&projection,75.0f,16.0/9.0f,0.01f,1000.0f);
+		matrix_projection((float*)&projection,75.0f,16.0/9.0f,0.5f,1000.0f);
 		sceGuSetMatrix(GU_PROJECTION,&projection);
 
 		matrix_identity((float*)&view);
 		sceGuSetMatrix(GU_VIEW,&view);
 
 		matrix_identity((float*)&world);
-		matrix_translate((float*)&world,0,0,-5.0f);
+		matrix_translate((float*)&world,0,0,-3.5f);
 		matrix_rotate((float*)&world,val * 0.3f * (M_PI/180.0f), val * 0.7f * (M_PI/180.0f), val * 1.3f * (M_PI/180.0f));
 		sceGuSetMatrix(GU_MODEL,&world);
 

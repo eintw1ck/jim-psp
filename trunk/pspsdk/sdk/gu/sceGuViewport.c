@@ -8,10 +8,10 @@
 
 #include "guInternal.h"
 
-void sceGuViewport(int a0, int a1, int a2, int a3)
+void sceGuViewport(int cx, int cy, int width, int height)
 {
-	sendCommandf(66,(float)a2);
-	sendCommandf(67,(float)((-a3) + ((-a3) >> 31)));
-	sendCommandf(69,(float)a0);
-	sendCommandf(70,(float)a1);
+	sendCommandf(66,(float)(width>>1));
+	sendCommandf(67,(float)(((-height) + ((-height) >> 31))>>1));
+	sendCommandf(69,(float)cx);
+	sendCommandf(70,(float)cy);
 }

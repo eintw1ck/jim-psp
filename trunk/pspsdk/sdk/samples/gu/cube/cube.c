@@ -152,14 +152,14 @@ int main(int argc, char* argv[])
 		// setup matrices for cube
 
 		matrix_identity((float*)&projection);
-		matrix_projection((float*)&projection,75.0f,16.0/9.0f,1.0f,1000.0f);
+		matrix_projection((float*)&projection,75.0f,16.0/9.0f,0.5f,1000.0f);
 		sceGuSetMatrix(GU_PROJECTION,&projection);
 
 		matrix_identity((float*)&view);
 		sceGuSetMatrix(GU_VIEW,&view);
 
 		matrix_identity((float*)&world);
-		matrix_translate((float*)&world,0,0,-3.0f);
+		matrix_translate((float*)&world,0,0,-2.5f);
 		matrix_rotate((float*)&world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
 		sceGuSetMatrix(GU_MODEL,&world);
 
