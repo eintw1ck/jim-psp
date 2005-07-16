@@ -54,6 +54,49 @@ typedef struct SceModule {
 	unsigned int		segmentsize[4];
 } SceModule;
 
+/** Defines a library and its exported functions and variables.  Use the len
+    member to determine the real size of the table (size = len * 4). */
+typedef struct SceLibraryEntryTable {
+	/**The library's name. */
+	const char *		libname;
+	/** Library version. */
+	unsigned char		version[2];
+	/** Library attributes. */
+	unsigned short		attribute;
+	/** Length of this entry table in 32-bit WORDs. */
+	unsigned char		len;
+	/** The number of variables exported by the library. */
+	unsigned char		vstubcount;
+	/** The number of functions exported by the library. */
+	unsigned short		stubcount;
+	/** Pointer to the entry table; an array of NIDs followed by
+	    pointers to functions and variables. */
+	void *				entrytable;
+} SceLibraryEntryTable;
+
+/** Specifies a library and a set of imports from that library.  Use the len
+    member to determine the real size of the table (size = len * 4). */
+typedef struct SceLibraryStubTable {
+	/* The name of the library we're importing from. */
+	const char *		libname;
+	/** Minimum required version of the library we want to import. */
+	unsigned char		version[2];
+	/* Import attributes. */
+	unsigned short		attribute;
+	/** Length of this stub table in 32-bit WORDs. */
+	unsigned char		len;
+	/** The number of variables imported from the library. */
+	unsigned char		vstubcount;
+	/** The number of functions imported from the library. */
+	unsigned short		stubcount;
+	/** Pointer to an array of NIDs. */
+	unsigned int *		nidtable;
+	/** Pointer to the imported function stubs. */
+	void *				stubtable;
+	/** Pointer to the imported variable stubs. */
+	void *				vstubtable;
+} SceLibraryStubTable;
+
 
 /**
  * Find a module by it's name.
