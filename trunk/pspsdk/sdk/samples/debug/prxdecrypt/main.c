@@ -156,7 +156,7 @@ void decrypt_files(const char *basedir, const char *destdir)
 			}
 		}
 
-		sceIoClose(fd);
+		sceIoDclose(fd);
 	}
 }
 
