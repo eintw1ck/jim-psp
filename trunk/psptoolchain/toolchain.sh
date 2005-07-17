@@ -76,11 +76,15 @@
   fi
 
   ## Check for patch.
-  if test "`patch -v`" ; then
-   PATCH="patch -p1"
+  if test "`gpatch -v`" ; then
+   PATCH="gpatch -p1"
   else
-   echo "ERROR: Please make sure you have 'patch' installed."
-   exit
+   if test "`patch -v`" ; then
+    PATCH="patch -p1"
+   else
+    echo "ERROR: Please make sure you have 'patch' installed."
+    exit
+   fi
   fi
 
   ## Check for wget.
@@ -134,21 +138,21 @@
 
   ## Unpack and patch the binutils source.
   if test $BUILD_BINUTILS ; then
-   rm -Rf $BINUTILS; tar xfvz "$SRCDIR/$BINUTILS.tar.gz"
+   rm -Rf $BINUTILS; gzip -cd "$SRCDIR/$BINUTILS.tar.gz" | tar xvf -
    cd $BINUTILS; cat "$SRCDIR/$BINUTILS.patch" | $PATCH || { echo "ERROR PATCHING BINUTILS"; exit; }
    cd ..
   fi
 
   ## Unpack and patch the gcc source.
   if test $BUILD_GCC ; then
-   rm -Rf $GCC; tar xfvj "$SRCDIR/$GCC.tar.bz2"
+   rm -Rf $GCC; bzip2 -cd "$SRCDIR/$GCC.tar.bz2" | tar xvf -
    cd $GCC; cat "$SRCDIR/$GCC.patch" | $PATCH || { echo "ERROR PATCHING GCC"; exit; }
    cd ..
   fi
 
   ## Unpack and patch the newlib source.
   if test $BUILD_NEWLIB ; then
-   rm -Rf $NEWLIB; tar xfvz "$SRCDIR/$NEWLIB.tar.gz"
+   rm -Rf $NEWLIB; gzip -cd "$SRCDIR/$NEWLIB.tar.gz" | tar xvf -
    cd $NEWLIB; cat "$SRCDIR/$NEWLIB.patch" | $PATCH || { echo "ERROR PATCHING NEWLIB"; exit; }
    cd ..
   fi
