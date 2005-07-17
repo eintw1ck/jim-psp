@@ -63,6 +63,16 @@ enum IoAssignPerms
 SceUID sceIoOpen(const char *file, int flags, SceMode mode);
 
 /**
+ * Open or create a file for reading or writing (asynchronous)
+ *
+ * @param file - Pointer to a string holding the name of the file to open
+ * @param flags - Libc styled flags that are or'ed together
+ * @param mode - File access mode.
+ * @return A non-negative integer is a valid fd, anything else an error
+ */
+SceUID sceIoOpenAsync(const char *file, int flags, SceMode mode);
+
+/**
  * Delete a descriptor
  *
  * @code
@@ -73,6 +83,14 @@ SceUID sceIoOpen(const char *file, int flags, SceMode mode);
  * @return < 0 on error
  */
 int sceIoClose(SceUID fd);
+
+/**
+ * Delete a descriptor (asynchronous)
+ *
+ * @param fd - File descriptor to close
+ * @return < 0 on error
+ */
+int sceIoCloseAsync(SceUID fd);
 
 /**
  * Read input
@@ -91,6 +109,22 @@ int sceIoClose(SceUID fd);
 int sceIoRead(SceUID fd, void *data, SceSize size);
 
 /**
+ * Read input (asynchronous)
+ *
+ * @par Example:
+ * @code
+ * bytes_read = sceIoRead(fd, data, 100);
+ * @endcode
+ *
+ * @param fd - Opened file descriptor to read from
+ * @param data - Pointer to the buffer where the read data will be placed
+ * @param size - Size of the read in bytes
+ * 
+ * @return < 0 on error.
+ */
+int sceIoReadAsync(SceUID fd, void *data, SceSize size);
+
+/**
  * Write output
  *
  * @par Example:
@@ -105,6 +139,17 @@ int sceIoRead(SceUID fd, void *data, SceSize size);
  * @return The number of bytes written
  */
 int sceIoWrite(SceUID fd, const void *data, SceSize size);
+
+/**
+ * Write output (asynchronous)
+ *
+ * @param fd - Opened file descriptor to write to
+ * @param data - Pointer to the data to write
+ * @param size - Size of data to write
+ *
+ * @return < 0 on error.
+ */
+int sceIoWriteAsync(SceUID fd, const void *data, SceSize size);
 
 /**
  * Reposition read/write file descriptor offset
@@ -124,6 +169,18 @@ int sceIoWrite(SceUID fd, const void *data, SceSize size);
 SceOff sceIoLseek(SceUID fd, SceOff offset, int whence);
 
 /**
+ * Reposition read/write file descriptor offset (asynchronous)
+ *
+ * @param fd - Opened file descriptor with which to seek
+ * @param offset - Relative offset from the start position given by whence
+ * @param whence - Set to SEEK_SET to seek from the start of the file, SEEK_CUR
+ * seek from the current position and SEEK_END to seek from the end.
+ *
+ * @return < 0 on error. Actual value should be passed returned by the ::sceIoWaitAsync call.
+ */
+int sceIoLseekAsync(SceUID fd, SceOff offset, int whence);
+
+/**
  * Reposition read/write file descriptor offset (32bit mode)
  *
  * @par Example:
@@ -141,11 +198,19 @@ SceOff sceIoLseek(SceUID fd, SceOff offset, int whence);
 int sceIoLseek32(SceUID fd, int offset, int whence);
 
 /**
- * Remove directory entry
+ * Reposition read/write file descriptor offset (32bit mode, asynchronous)
  *
- * @par Example1:
- * @code
- * @endcode
+ * @param fd - Opened file descriptor with which to seek
+ * @param offset - Relative offset from the start position given by whence
+ * @param whence - Set to SEEK_SET to seek from the start of the file, SEEK_CUR
+ * seek from the current position and SEEK_END to seek from the end.
+ *
+ * @return < 0 on error.
+ */
+int sceIoLseek32Async(SceUID fd, int offset, int whence);
+
+/**
+ * Remove directory entry
  *
  * @param file - Path to the file to remove
  * @return < 0 on error
@@ -155,10 +220,6 @@ int sceIoRemove(const char *file);
 /**
  * Make a directory file
  *
- * @par Example1:
- * @code
- * @endcode
- *
  * @param dir
  * @param mode - Access mode.
  * @return Returns the value 0 if its succesful otherwise -1
@@ -167,10 +228,6 @@ int sceIoMkdir(const char *dir, SceMode mode);
 
 /**
  * Remove a directory file
- *
- * @par Example1:
- * @code
- * @endcode
  *
  * @param path - Removes a directory file pointed by the string path
  * @return Returns the value 0 if its succesful otherwise -1
@@ -188,13 +245,9 @@ int sceIoChdir(const char *path);
 /**
  * Change the name of a file
  *
- * @par Example:
- * @code
- * @endcode
- *
- * @param oldname*
- * @param newname*
- * @return Returns the value 0 if its succesful otherwise -1
+ * @param oldname - The old filename
+ * @param newname - The new filename
+ * @return < 0 on error.
  */
 int sceIoRename(const char *oldname, const char *newname);
 
@@ -313,6 +366,107 @@ int sceIoChstat(const char *file, SceIoStat *stat, int bits);
   * @return 0 on success, < 0 on error
   */
 int sceIoIoctl(const char *dev, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
+
+/**
+  * Perform an ioctl on a device. (asynchronous)
+  *
+  * @param dev - String for the device to send the devctl to (e.g. "ms0:")
+  * @param cmd - The command to send to the device
+  * @param indata - A data block to send to the device, if NULL sends no data
+  * @param inlen - Length of indata, if 0 sends no data
+  * @param outdata - A data block to receive the result of a command, if NULL receives no data
+  * @param outlen - Length of outdata, if 0 receives no data
+  * @return 0 on success, < 0 on error
+  */
+int sceIoIoctlAsync(const char *dev, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
+
+/**
+  * Synchronise the file data on the device.
+  *
+  * @param device - The device to synchronise (e.g. msfat0:)
+  * @param unk - Unknown
+  */
+int sceIoSync(const char *device, unsigned int unk);
+
+/**
+  * Wait for asyncronous completion.
+  * 
+  * @param fd - The file descriptor which is current performing an asynchronous action.
+  * @param res - The result of the async action.
+  *
+  * @return < 0 on error.
+  */
+int sceIoWaitAsync(SceUID fd, long long *res);
+
+/**
+  * Wait for asyncronous completion (with callbacks).
+  * 
+  * @param fd - The file descriptor which is current performing an asynchronous action.
+  * @param res - The result of the async action.
+  *
+  * @return < 0 on error.
+  */
+int sceIoWaitAsyncCB(SceUID fd, long long *res);
+
+/**
+  * Poll for asyncronous completion.
+  * 
+  * @param fd - The file descriptor which is current performing an asynchronous action.
+  * @param res - The result of the async action.
+  *
+  * @return < 0 on error.
+  */
+int sceIoPollAsync(SceUID fd, long long *res);
+
+/**
+  * Get the asyncronous completion status.
+  * 
+  * @param fd - The file descriptor which is current performing an asynchronous action.
+  * @param poll - If 0 then waits for the status, otherwise it polls the fd.
+  * @param res - The result of the async action.
+  *
+  * @return < 0 on error.
+  */
+int sceIoGetAsyncStat(SceUID fd, int poll, long long *res);
+
+/**
+  * Cancel an asynchronous operation on a file descriptor.
+  *
+  * @param fd - The file descriptor to perform cancel on.
+  *
+  * @return < 0 on error.
+  */
+int sceIoCancel(SceUID fd);
+
+/**
+  * Get the device type of the currently opened file descriptor.
+  *
+  * @param fd - The opened file descriptor.
+  *
+  * @return < 0 on error. Otherwise the device type?
+  */
+int sceIoGetDevType(SceUID fd);
+
+/**
+  * Change the priority of the asynchronous thread.
+  *
+  * @param fd - The opened fd on which the priority should be changed.
+  * @param pri - The priority of the thread.
+  *
+  * @return < 0 on error.
+  */
+int sceIoChangeAsyncPriority(SceUID fd, int pri);
+
+/**
+  * Sets a callback for the asynchronous action.
+  *
+  * @param fd - The filedescriptor currently performing an asynchronous action.
+  * @param cb - The UID of the callback created with ::sceKernelCreateCallback
+  * @param argp - Pointer to an argument to pass to the callback.
+  *
+  * @return < 0 on error.
+  */
+int sceIoSetAsyncCallback(SceUID fd, SceUID cb, void *argp);
 
 /*@}*/
 
