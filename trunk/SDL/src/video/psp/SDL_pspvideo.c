@@ -55,6 +55,8 @@ static SDL_Rect **PSP_ListModes(_THIS, SDL_PixelFormat *format, Uint32 flags);
 static SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current, int width, int height, int bpp, Uint32 flags);
 static int PSP_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors);
 static void PSP_VideoQuit(_THIS);
+void PSP_EventInit(_THIS);
+void PSP_EventQuit(_THIS);
 
 /* Hardware surface functions */
 static int PSP_AllocHWSurface(_THIS, SDL_Surface *surface);
@@ -146,6 +148,8 @@ int PSP_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	vformat->BytesPerPixel = 4;
 
 	this->hidden->vram_base = (void *)sceGeEdramGetAddr();
+
+	PSP_EventInit(this);
 	
 	return(0);
 }
@@ -243,6 +247,8 @@ int PSP_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 */
 void PSP_VideoQuit(_THIS)
 {
+	PSP_EventQuit(this);
+
 	return;
 }
 

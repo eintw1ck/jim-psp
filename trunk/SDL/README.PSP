@@ -72,6 +72,7 @@ strangely at runtime.
 
 Input
 -----
+Joystick:
 The PSP's controls provide a joystick with a two axes on the analog
 stick and 14 independent buttons.  The button mapping is fixed:
 
@@ -90,5 +91,17 @@ stick and 14 independent buttons.  The button mapping is fixed:
 12 Home
 13 Hold
 
+Mouse:
 There is no mouse support, although an application could be written to
 simulate it by receiving joystick events and using SDL_WarpMouse.
+
+Keyboard:
+The headphone remote control is treated as a keyboard that sends the
+following keypresses:
+
+F10 Play/Pause
+F11 Forward
+F12 Back
+F13 Volume Up
+F14 Volume Down
+F15 Hold
