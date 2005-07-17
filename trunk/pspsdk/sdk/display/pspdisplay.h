@@ -47,20 +47,29 @@ void sceDisplaySetMode(long unk1, long width, long height);
  * @endcode
  *
  * @param topaddr* - address of start of framebuffer
- * @param bufferwidth* - buffer width (must be power of 2)
- * @param pixelformat* - one of the following: 0 - BGRA 5551, 3 - ABGR 8888
+ * @param bufferwidth - buffer width (must be power of 2)
+ * @param pixelformat - one of the following: 0 - BGRA 5551, 3 - ABGR 8888
  * @param unk1 - unknown, always 1? (vblank sync?)
  */
 void sceDisplaySetFrameBuf(char *topaddr, long bufferwidth, long pixelformat, long
 	unk1);
-
 /**
- * Set display mode
+ * Get display mode
  *
+ * @param unknown - pass 0
+ * @param width - pointer to int to receive width
+ * @param height - pointer to int to receive height
  * @return 0 on success
  */
 int sceDisplayGetMode(int *unknown, int *width, int *height);
-
+/**
+ * Get Display Framebuffer information
+ *
+ * @param topaddr - pointer to char* to receive address of start of framebuffer
+ * @param bufferwidth - pointer to int to receive buffer width (must be power of 2)
+ * @param pixelformat - pointer to int to receive one of the following: 0 - BGRA 5551, 3 - ABGR 8888
+ * @param unk1 - pointer to int, receives unknown, always 1? (vblank sync?)
+ */
 int sceDisplayGetFrameBuf(char **topaddr, long *bufferwidth, long *pixelformat, long *unknown);
 
 #ifdef __cplusplus
