@@ -24,8 +24,8 @@
 #include "ogg.h"
 #include "misc.h"
 
-#include "/usr/local/pspdev/psp/sdk/include/psptypes.h"
-#include "/usr/local/pspdev/psp/sdk/include/pspdebug.h"
+#include "psptypes.h"
+#include "pspdebug.h"
 #define printf pspDebugScreenPrintf
 
 /* A complete description of Ogg framing exists in docs/framing.html */

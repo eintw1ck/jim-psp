@@ -26,8 +26,8 @@
 #include "ivorbisfile.h"
 
 #include "misc.h"
-#include "/usr/local/pspdev/psp/sdk/include/psptypes.h"
-#include "/usr/local/pspdev/psp/sdk/include/pspdebug.h"
+#include "psptypes.h"
+#include "pspdebug.h"
 #define printf pspDebugScreenPrintf
 
 /* A 'chained bitstream' is a Vorbis bitstream that contains more than
