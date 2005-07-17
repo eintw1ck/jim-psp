@@ -12,6 +12,10 @@
 #ifndef __PSPUSB_H__
 #define __PSPUSB_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define PSP_USBBUS_DRIVERNAME "USBBusDriver"
 
 //Defines for use with status function return values
@@ -81,6 +85,10 @@ int sceUsbGetDrvState(const char* driverName);
 int sceUsbGetDrvList(u32 r4one, u32* r5ret, u32 r6one);
 int sceUsbWaitState(?);
 int sceUsbWaitCancel(void);
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif
