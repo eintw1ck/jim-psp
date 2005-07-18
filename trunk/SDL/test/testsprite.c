@@ -14,6 +14,13 @@
 #define NUM_SPRITES	100
 #define MAX_SPEED 	1
 
+#ifdef PSP
+#include <pspdebug.h>
+
+#define fprintf(x, args...) pspDebugScreenPrintf(args)
+#define printf(args...) pspDebugScreenPrintf(args)
+#endif /* PSP */
+
 SDL_Surface *sprite;
 int numsprites;
 SDL_Rect *sprite_rects;
@@ -157,16 +164,20 @@ int main(int argc, char *argv[])
 	Uint32 then, now, frames;
 
 	/* Initialize SDL */
-	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+	if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0 ) {
 		fprintf(stderr, "Couldn't initialize SDL: %s\n",SDL_GetError());
 		exit(1);
 	}
 	atexit(SDL_Quit);
 
+	if (SDL_NumJoysticks()) {
+		SDL_JoystickOpen(0);
+	}
+
 	numsprites = NUM_SPRITES;
-	videoflags = SDL_SWSURFACE|SDL_ANYFORMAT;
-	width = 640;
-	height = 480;
+	videoflags = SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF;
+	width = 480;
+	height = 272;
 	video_bpp = 8;
 	while ( argc > 1 ) {
 		--argc;
@@ -214,7 +225,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* Load the sprite */
-	if ( LoadSprite(screen, "icon.bmp") < 0 ) {
+	if ( LoadSprite(screen, "ms0:/icon.bmp") < 0 ) {
 		exit(1);
 	}
 
@@ -291,6 +302,7 @@ int main(int argc, char *argv[])
 				case SDL_MOUSEBUTTONDOWN:
 					SDL_WarpMouse(screen->w/2, screen->h/2);
 					break;
+				case SDL_JOYBUTTONDOWN:
 				case SDL_KEYDOWN:
 					/* Any keypress quits the app... */
 				case SDL_QUIT:
