@@ -30,6 +30,13 @@ enum PspDisplayPixelFormats {
 	PSP_DISPLAY_PIXEL_FORMAT_8888
 };
 
+enum PspDisplaySetBufSync {
+	/** Buffer change effective immediately */
+	PSP_DISPLAY_SETBUF_IMMEDIATE = 0, 
+	/** Buffer change effective next frame */
+	PSP_DISPLAY_SETBUF_NEXTFRAME = 1
+};
+
 /**
  * Set display mode
  *
@@ -62,9 +69,9 @@ int sceDisplayGetMode(int *pmode, int *pwidth, int *pheight);
  * @param topaddr - address of start of framebuffer
  * @param bufferwidth - buffer width (must be power of 2)
  * @param pixelformat - One of ::PspDisplayPixelFormats.
- * @param unk1 - unknown, always 1? (vblank sync?)
+ * @param sync - One of ::PspDisplaySetBufSync
  */
-void sceDisplaySetFrameBuf(void *topaddr, int bufferwidth, int pixelformat, int unk1);
+void sceDisplaySetFrameBuf(void *topaddr, int bufferwidth, int pixelformat, int sync);
 
 /**
  * Get Display Framebuffer information
