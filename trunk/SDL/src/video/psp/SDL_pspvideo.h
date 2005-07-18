@@ -52,7 +52,9 @@ static char rcsid =
 
 struct SDL_PrivateVideoData {
 	void *vram_base;
-	/* The current frame for double-buffered displays. */
+	/* Current display's pixel format. */
+	int pixel_format;
+	/* The current draw frame for double-buffered displays. */
 	int frame;
 	/* Byte offset of the start of the second frame. */
 	unsigned int frame_offset;

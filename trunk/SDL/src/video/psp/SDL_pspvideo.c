@@ -168,7 +168,7 @@ SDL_Rect **PSP_ListModes(_THIS, SDL_PixelFormat *format, Uint32 flags)
 SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 				int width, int height, int bpp, Uint32 flags)
 {
-	int pitch;
+	int pitch, pixel_format;
 	Uint32 Amask, Rmask, Gmask, Bmask;
 
 	if (width != 480 || height != 272) {
@@ -177,19 +177,36 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	}
 
 	switch(bpp) {
-	case 32: 
+	case 15: /* 5-5-5-1 */
+		pitch = 512 * 2;
+		Amask = 0x00008000;
+		Rmask = 0x0000001f;
+		Gmask = 0x000003e0;
+		Bmask = 0x00007c00;
+		pixel_format = PSP_DISPLAY_PIXEL_FORMAT_5551;
+		break;
+	case 16: /* 5-6-5 */
+		pitch = 512 * 2;
+		Amask = 0;
+		Rmask = 0x0000001f;
+		Gmask = 0x000007e0;
+		Bmask = 0x0000f800;
+		pixel_format = PSP_DISPLAY_PIXEL_FORMAT_565;
+		break;
+	case 32: /* 8-8-8-8 */
 		pitch = 512 * 4;
 		Amask = 0xff000000;
 		Rmask = 0x000000ff;
 		Gmask = 0x0000ff00;
 		Bmask = 0x00ff0000;
+		pixel_format = PSP_DISPLAY_PIXEL_FORMAT_8888;
 		break;
 	default:
 		SDL_SetError("Couldn't find requested mode");
 		return(NULL);
 	}
 	
-	if ( ! SDL_ReallocFormat(current, bpp, Rmask, Gmask, Bmask, 0) ) {
+	if ( ! SDL_ReallocFormat(current, bpp, Rmask, Gmask, Bmask, Amask) ) {
 		SDL_SetError("Couldn't allocate color format");
 		return(NULL);
 	}
@@ -200,9 +217,11 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	current->pitch = pitch;
 
 	sceDisplaySetMode(0, width, height);
-	sceDisplaySetFrameBuf(this->hidden->vram_base, 512, 3, 1);
+	sceDisplaySetFrameBuf(this->hidden->vram_base, 512, pixel_format, PSP_DISPLAY_SETBUF_NEXTFRAME);
 	current->pixels = this->hidden->vram_base;
 	current->flags |= SDL_PREALLOC; /* so SDL doesn't free ->pixels */
+
+	this->hidden->pixel_format = pixel_format;
 	this->hidden->frame = 0;
 	this->hidden->frame_offset = 0;
 
@@ -249,7 +268,8 @@ static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface)
 
 	if (surface->flags & SDL_DOUBLEBUF) {
 		/* Show the draw buffer as the display buffer, and setup the next draw buffer. */
-		sceDisplaySetFrameBuf(surface->pixels, 512, 3, 0);
+		sceDisplaySetFrameBuf(surface->pixels, 512,
+				this->hidden->pixel_format, PSP_DISPLAY_SETBUF_IMMEDIATE);
 		this->hidden->frame ^= 1;
 		new_pixels = (void *) ((Uint32) this->hidden->vram_base +
 				(this->hidden->frame_offset * this->hidden->frame));
