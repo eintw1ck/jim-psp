@@ -18,15 +18,18 @@
 extern "C" {
 #endif
 
-/**
- * Wait for vertical blank
- *
- * @par Example1:
- * @code
- * @endcode
- *
- */
-void sceDisplayWaitVblankStart();
+/** Framebuffer pixel formats. */
+enum PspDisplayPixelFormats {
+	/** 16-bit RGB 5:6:5. */
+	PSP_DISPLAY_PIXEL_FORMAT_565 = 0,
+	/** 16-bit RGBA 5:5:5:1. */
+	PSP_DISPLAY_PIXEL_FORMAT_5551,
+	/* 16-bit RGBA 4:4:4:4. */
+	PSP_DISPLAY_PIXEL_FORMAT_4444,
+	/* 32-bit RGBA 8:8:8:8. */
+	PSP_DISPLAY_PIXEL_FORMAT_8888
+};
+
 /**
  * Set display mode
  *
@@ -34,43 +37,50 @@ void sceDisplayWaitVblankStart();
  * @code
  * @endcode
  *
- * @param unk1 - unknown always 0?
- * @param width - width of screen in pixels
- * @param height - height of screen in pixels
- */
-void sceDisplaySetMode(long unk1, long width, long height);
-/**
- * Display set framebuf
+ * @param mode - Display mode, normally 0.
+ * @param width - Width of screen in pixels.
+ * @param height - Height of screen in pixels.
  *
- * @par Example1:
- * @code
- * @endcode
- *
- * @param topaddr* - address of start of framebuffer
- * @param bufferwidth - buffer width (must be power of 2)
- * @param pixelformat - one of the following: 0 - BGRA 5551, 3 - ABGR 8888
- * @param unk1 - unknown, always 1? (vblank sync?)
+ * @returns ???
  */
-void sceDisplaySetFrameBuf(char *topaddr, long bufferwidth, long pixelformat, long
-	unk1);
+int sceDisplaySetMode(int mode, int width, int height);
+
 /**
  * Get display mode
  *
- * @param unknown - pass 0
- * @param width - pointer to int to receive width
- * @param height - pointer to int to receive height
+ * @param pmode - Pointer to an integer to receive the current mode.
+ * @param pwidth - Pointer to an integer to receive the current width.
+ * @param pheight - Pointer to an integer to receive the current height,
+ * 
  * @return 0 on success
  */
-int sceDisplayGetMode(int *unknown, int *width, int *height);
+int sceDisplayGetMode(int *pmode, int *pwidth, int *pheight);
+
+/**
+ * Display set framebuf
+ *
+ * @param topaddr - address of start of framebuffer
+ * @param bufferwidth - buffer width (must be power of 2)
+ * @param pixelformat - One of ::PspDisplayPixelFormats.
+ * @param unk1 - unknown, always 1? (vblank sync?)
+ */
+void sceDisplaySetFrameBuf(void *topaddr, int bufferwidth, int pixelformat, int unk1);
+
 /**
  * Get Display Framebuffer information
  *
- * @param topaddr - pointer to char* to receive address of start of framebuffer
+ * @param topaddr - pointer to void* to receive address of start of framebuffer
  * @param bufferwidth - pointer to int to receive buffer width (must be power of 2)
- * @param pixelformat - pointer to int to receive one of the following: 0 - BGRA 5551, 3 - ABGR 8888
+ * @param pixelformat - pointer to int to receive one of ::PspDisplayPixelFormats.
  * @param unk1 - pointer to int, receives unknown, always 1? (vblank sync?)
  */
-int sceDisplayGetFrameBuf(char **topaddr, long *bufferwidth, long *pixelformat, long *unknown);
+int sceDisplayGetFrameBuf(void **topaddr, int *bufferwidth, int *pixelformat, int *unk1);
+
+/**
+ * Wait for vertical blank
+ *
+ */
+int sceDisplayWaitVblankStart(void);
 
 #ifdef __cplusplus
 }
