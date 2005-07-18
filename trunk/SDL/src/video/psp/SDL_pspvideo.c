@@ -158,6 +158,8 @@ int PSP_VideoInit(_THIS, SDL_PixelFormat *vformat)
 SDL_Rect **PSP_ListModes(_THIS, SDL_PixelFormat *format, Uint32 flags)
 {
 	switch(format->BitsPerPixel) {
+	case 15:
+	case 16:
 	case 32:
 		return (SDL_Rect **)modelist;
 	default:
@@ -206,7 +208,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 		return(NULL);
 	}
 	
-	if ( ! SDL_ReallocFormat(current, bpp, Rmask, Gmask, Bmask, Amask) ) {
+	if ( ! SDL_ReallocFormat(current, bpp, Rmask, Gmask, Bmask, 0/*Amask*/) ) {
 		SDL_SetError("Couldn't allocate color format");
 		return(NULL);
 	}
