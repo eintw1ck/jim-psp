@@ -268,6 +268,7 @@ static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface)
 
 	if (surface->flags & SDL_DOUBLEBUF) {
 		/* Show the draw buffer as the display buffer, and setup the next draw buffer. */
+		sceKernelDcacheWritebackAll();
 		sceDisplaySetFrameBuf(surface->pixels, 512,
 				this->hidden->pixel_format, PSP_DISPLAY_SETBUF_IMMEDIATE);
 		this->hidden->frame ^= 1;
