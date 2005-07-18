@@ -21,7 +21,7 @@
 
 /* Default thread parameters for the main program thread. */
 #define DEFAULT_THREAD_PRIORITY 32
-#define DEFAULT_THREAD_ATTRIBUTE THREAD_ATTR_USER
+#define DEFAULT_THREAD_ATTRIBUTE PSP_THREAD_ATTR_USER
 #define DEFAULT_THREAD_STACK_KB_SIZE 256
 
 /* If these variables are defined by the program, then they override the
@@ -63,10 +63,8 @@ void _main(SceSize args, void *argp)
 	}
 	argv[argc] = NULL;
 
-	/* Make sure _fini() is called when the program ends, and call _init() to
-	   initialize global constructors. */
+	/* Make sure _fini() is called when the program ends. */
 	atexit((void *) _fini);
-	_init();
 
 	/* Call main(). */
 	int res = main(argc, argv);
@@ -85,11 +83,25 @@ void _main(SceSize args, void *argp)
  */
 int _start(SceSize args, void *argp)
 {
-	void (*_main_ptr)(SceSize args, void *argp);
+	void (*_main_func)(SceSize args, void *argp) = _main;
+	void (*_init_func)(void) = _init;
+
+	if ((&module_info != NULL) && (module_info.modattribute & 0x1000)) {
+		/* If we're running in kernel mode, the addresses of our _main() thread
+		   and _init() function must also reside in kernel mode. */
+		_main_func = (void *) ((u32) _main_func | 0x80000000);
+		_init_func = (void *) ((u32) _init_func | 0x80000000);
+	}
+
+	/* Call _init() here, because an app may have code that needs to run in
+	   kernel mode, but want their main() thread to run in user mode.  If they
+	   define "constructors" they can do any kernel mode initialization here
+	   before their app is switched. */
+	_init_func();
 
 	if (&sce_newlib_nocreate_thread_in_start != NULL) {
 		/* The program does not want main() to be run in a seperate thread. */
-		_main(args, argp);
+		_main_func(args, argp);
 		return 1;
 	}
 
@@ -107,21 +119,14 @@ int _start(SceSize args, void *argp)
 		stackSize = sce_newlib_stack_kb_size * 1024;
 	}
 
-	/* Set default main pointer */
-	_main_ptr = _main;
-	if(((attribute & THREAD_ATTR_USER) == 0) && (&module_info != NULL))
-	{
-		if(module_info.modattribute & 0x1000)
-		{
-			u32 main_val;
-
-			main_val = (u32) _main;
-			_main_ptr = (void*) (main_val | 0x80000000);
-		}
+	/* Does the _main() thread belong to the User, VSH, or USB/WLAN APIs? */
+	if (attribute & (PSP_THREAD_ATTR_USER | PSP_THREAD_ATTR_USBWLAN | PSP_THREAD_ATTR_VSH)) {
+		/* Remove the kernel mode addressing from the pointer to _main(). */
+		_main_func = (void *) ((u32) _main_func & 0x7fffffff);
 	}
 
 	SceUID thid;
-	thid = sceKernelCreateThread("user_main", (void *) _main_ptr, priority, stackSize, attribute, 0);
+	thid = sceKernelCreateThread("user_main", (void *) _main_func, priority, stackSize, attribute, 0);
 	sceKernelStartThread(thid, args, argp);
 
 	return 0;
