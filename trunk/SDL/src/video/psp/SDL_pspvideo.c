@@ -63,6 +63,7 @@ static int PSP_AllocHWSurface(_THIS, SDL_Surface *surface);
 static int PSP_LockHWSurface(_THIS, SDL_Surface *surface);
 static void PSP_UnlockHWSurface(_THIS, SDL_Surface *surface);
 static void PSP_FreeHWSurface(_THIS, SDL_Surface *surface);
+static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface);
 
 /* etc. */
 static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects);
@@ -115,7 +116,7 @@ static SDL_VideoDevice *PSP_CreateDevice(int devindex)
 	device->SetHWAlpha = NULL;
 	device->LockHWSurface = PSP_LockHWSurface;
 	device->UnlockHWSurface = PSP_UnlockHWSurface;
-	device->FlipHWSurface = NULL;
+	device->FlipHWSurface = PSP_FlipHWSurface;
 	device->FreeHWSurface = PSP_FreeHWSurface;
 	device->SetCaption = NULL;
 	device->SetIcon = NULL;
@@ -202,6 +203,17 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	sceDisplaySetFrameBuf(this->hidden->vram_base, 512, 3, 1);
 	current->pixels = this->hidden->vram_base;
 	current->flags |= SDL_PREALLOC; /* so SDL doesn't free ->pixels */
+	this->hidden->frame = 0;
+	this->hidden->frame_offset = 0;
+
+	if (flags & SDL_DOUBLEBUF) {
+		current->flags |= SDL_DOUBLEBUF;
+		this->hidden->frame_offset = pitch * height;
+		/* Set the draw buffer to the second frame. */
+		this->hidden->frame = 1;
+		current->pixels =
+			(void *) ((Uint32) this->hidden->vram_base + this->hidden->frame_offset);
+	}
 
 	/* We're done */
 	return(current);
@@ -229,6 +241,22 @@ static void PSP_UnlockHWSurface(_THIS, SDL_Surface *surface)
 	sceKernelDcacheWritebackAll();
 
 	return;
+}
+
+static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface)
+{
+	void *new_pixels;
+
+	if (surface->flags & SDL_DOUBLEBUF) {
+		/* Show the draw buffer as the display buffer, and setup the next draw buffer. */
+		sceDisplaySetFrameBuf(surface->pixels, 512, 3, 0);
+		this->hidden->frame ^= 1;
+		new_pixels = (void *) ((Uint32) this->hidden->vram_base +
+				(this->hidden->frame_offset * this->hidden->frame));
+		surface->pixels = new_pixels;
+	}
+
+	return 0;
 }
 
 static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
