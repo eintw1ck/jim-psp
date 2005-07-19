@@ -132,6 +132,11 @@ SceModule * sceKernelFindModuleByUID(SceUID modid);
  */
 int sceKernelModuleCount(void);
 
+/**
+ * Invalidate the CPU's instruction cache.
+ */
+void sceKernelIcacheClearAll(void);
+
 /*@}*/
 
 #ifdef __cplusplus
