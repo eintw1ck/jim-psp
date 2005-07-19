@@ -360,7 +360,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x41EFADE7</NID>
-						<NAME>sceAudio_driver_41EFADE7</NAME>
+						<NAME>sceAudioOneshotOutput</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6FC46853</NID>
@@ -442,7 +442,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x41EFADE7</NID>
-						<NAME>sceAudio_41EFADE7</NAME>
+						<NAME>sceAudioOneshotOutput</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6FC46853</NID>
@@ -2280,11 +2280,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xC80181A2</NID>
-						<NAME>sceNetIfhandle_C80181A2</NAME>
+						<NAME>sceNetGetDropRate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFD8585E1</NID>
-						<NAME>sceNetIfhandle_FD8585E1</NAME>
+						<NAME>sceNetSetDropRate</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -2640,11 +2640,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC80181A2</NID>
-						<NAME>sceNetIfhandle_driver_C80181A2</NAME>
+						<NAME>sceNetGetDropRate</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFD8585E1</NID>
-						<NAME>sceNetIfhandle_driver_FD8585E1</NAME>
+						<NAME>sceNetSetDropRate</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -3764,11 +3764,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68AB0F86</NID>
-						<NAME>sceHttp_68AB0F86</NAME>
+						<NAME>sceHttpsInitWithPath</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87797BDD</NID>
-						<NAME>sceHttp_87797BDD</NAME>
+						<NAME>sceHttpsLoadDefaultCert</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF9D8EB63</NID>
@@ -5416,7 +5416,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x234586AE</NID>
-						<NAME>sceMpeg_234586AE</NAME>
+						<NAME>sceMpegChangeGetAvcAuMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9DCFB7EA</NID>
@@ -6134,7 +6134,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB9D28DD</NID>
-						<NAME>scePower_DB9D28DD</NAME>
+						<NAME>scePowerUnregitserCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x843FBF43</NID>
@@ -6364,7 +6364,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDB9D28DD</NID>
-						<NAME>scePower_driver_DB9D28DD</NAME>
+						<NAME>scePowerUnregitserCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD24E6BEB</NID>
@@ -6444,7 +6444,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x50647530</NID>
-						<NAME>sceNet_50647530</NAME>
+						<NAME>sceNetFreeThreadinfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAD6844C6</NID>
@@ -6452,11 +6452,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x89360950</NID>
-						<NAME>sceNet_89360950</NAME>
+						<NAME>sceNetEtherNtostr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD27961C9</NID>
-						<NAME>sceNet_D27961C9</NAME>
+						<NAME>sceNetEtherStrton</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0BF0A3AE</NID>
@@ -7576,11 +7576,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB3888AD4</NID>
-						<NAME>sceNetInet_B3888AD4</NAME>
+						<NAME>sceNetInetGetTcpcbstat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x39B0C7D3</NID>
-						<NAME>sceNetInet_39B0C7D3</NAME>
+						<NAME>sceNetInetGetUdpcbstat</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB75D5B0A</NID>
@@ -9636,7 +9636,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC29D614E</NID>
-						<NAME>sceSysreg_driver_C29D614E</NAME>
+						<NAME>sceSysregTopResetEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDC6139A4</NID>
@@ -9728,11 +9728,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x44F6CDA7</NID>
-						<NAME>sceSysreg_driver_44F6CDA7</NAME>
+						<NAME>sceSysregMeBusClockEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x158AD4FC</NID>
-						<NAME>sceSysreg_driver_158AD4FC</NAME>
+						<NAME>sceSysregMeBusClockDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4D4CE2B8</NID>
@@ -9784,19 +9784,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x16909002</NID>
-						<NAME>sceSysreg_driver_16909002</NAME>
+						<NAME>sceSysregAtaBusClockEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6C10DF0</NID>
-						<NAME>sceSysregDropFilterRol</NAME>
+						<NAME>sceSysregAtaBusClockDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3E216017</NID>
-						<NAME>sceSysreg_driver_3E216017</NAME>
+						<NAME>sceSysregUsbBusClockEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBFBABB63</NID>
-						<NAME>sceSysreg_driver_BFBABB63</NAME>
+						<NAME>sceSysregUsbBusClockDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4716E71E</NID>
@@ -9816,11 +9816,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF97D9D73</NID>
-						<NAME>sceSysreg_driver_F97D9D73</NAME>
+						<NAME>sceSysregEmcsmBusClockEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2D0F7755</NID>
-						<NAME>sceSysreg_driver_2D0F7755</NAME>
+						<NAME>sceSysregEmcsmBusClockDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x63B9EB65</NID>
@@ -9832,11 +9832,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAA63C8BD</NID>
-						<NAME>sceSysreg_driver_AA63C8BD</NAME>
+						<NAME>sceSysregAudioBusClockEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x054AC8C6</NID>
-						<NAME>sceSysreg_driver_054AC8C6</NAME>
+						<NAME>sceSysregAudioBusClockDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6B01D71B</NID>
@@ -9984,11 +9984,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9DD1F821</NID>
-						<NAME>sceSysreg_driver_9DD1F821</NAME>
+						<NAME>sceSysregEmcsmIoEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1C4C4C7A</NID>
-						<NAME>sceSysreg_driver_1C4C4C7A</NAME>
+						<NAME>sceSysregEmcsmIoDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBC68D9B6</NID>
@@ -12122,11 +12122,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x47A0B729</NID>
-						<NAME>Kernel_Library_47A0B729</NAME>
+						<NAME>sceKernelIsCpuIntrSuspended</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB55249D2</NID>
-						<NAME>Kernel_Library_B55249D2</NAME>
+						<NAME>sceKernelIsCpuIntrEnable</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -13134,7 +13134,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x93440B11</NID>
-						<NAME>sceWlanGPBindRegError</NAME>
+						<NAME>sceWlanDevIsPowerOn</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD7763699</NID>
@@ -13246,7 +13246,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x93440B11</NID>
-						<NAME>sceWlanGPBindRegError</NAME>
+						<NAME>sceWlanDevIsPowerOn</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x19E51F54</NID>
