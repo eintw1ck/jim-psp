@@ -34,16 +34,14 @@ extern "C" {
 static __inline__
 void pspKernelSetKernelPC(void)
 {
-	int new_pc, kaddr;
-
 	__asm__ volatile (
-	"la     %0, 1f\n\t"     \
-	"lui    %1, 0x8000\n\t" \
-	"or     %0, %1\n\t"     \
-	"jr     %0\n\t"         \
+	"la     $8, 1f\n\t"     \
+	"lui    $9, 0x8000\n\t" \
+	"or     $8, $9\n\t"     \
+	"jr     $8\n\t"         \
 	" nop\n\t"              \
 	"1:\n\t"
-	: : "r" (new_pc) , "r" (kaddr));
+	: : : "$8", "$9");
 
 	/* We need to invalidate the I-cache, to purge any instructions that still
 	   refer to addresses in userspace. */
