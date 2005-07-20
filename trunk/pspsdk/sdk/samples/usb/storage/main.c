@@ -188,7 +188,6 @@ int main(void)
 	       state & PSP_USB_CONNECTION_ESTABLISHED ? "established" :
 	       "not present");
 	printf("\nPress X to establish or destroy the USB connection\n");
-	printf("Pressing Home will exit immediately (no confirmation)\n");
 
 	if (oldButtons != pad.Buttons) {
 	    if (pad.Buttons & PSP_CTRL_CROSS) {
