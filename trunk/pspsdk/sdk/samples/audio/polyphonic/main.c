@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2005 Frank Buss <fb@frank-buss.de> (aka Shine)
  *
- * $Id $
+ * $Id$
  */
 #include <pspkernel.h>
 #include <pspdebug.h>
@@ -66,8 +66,6 @@ int  pspAudioInit();
 void pspAudioEndPre();
 void pspAudioEnd();
 
-#define SIN_ITERATOR 20
-
 #define SAMPLE_COUNT 0x10000
 float sample[SAMPLE_COUNT];
 
@@ -94,7 +92,7 @@ typedef struct {
 ChannelState_t channelStates[3];
 
 // "S" means "#"
-#define NOTE_END -1
+#define NOTE_END -2
 #define NOTE_PAUSE -1
 #define NOTE_C 0
 #define NOTE_CS 1
@@ -366,32 +364,7 @@ Note_t channel1[] = {
 	{ NOTE_END, 0, 0 }
 };
 
-Note_t channel2[] = {
-	EIGHT_NOTE(NOTE_PAUSE, 0, 12),
-	EIGHT_NOTE(NOTE_PAUSE, 0, 12),
-	EIGHT_NOTE(NOTE_PAUSE, 0, 12),
-	EIGHT_NOTE(NOTE_PAUSE, 0, 12),
-	EIGHT_NOTE(NOTE_PAUSE, 0, 12),
-	EIGHT_NOTE(NOTE_PAUSE, 0, 12),
-	EIGHT_NOTE(NOTE_PAUSE, 0, 12),
-	EIGHT_NOTE(NOTE_D, 5, 9),
-	EIGHT_NOTE(NOTE_C, 5, 3),
-	EIGHT_NOTE(NOTE_B, 4, 6),
-	EIGHT_NOTE(NOTE_A, 4, 6),
-	EIGHT_NOTE(NOTE_D, 5, 7),
-	EIGHT_NOTE(NOTE_PAUSE, 0, 5),
-	EIGHT_NOTE(NOTE_B, 4, 6),
-	EIGHT_NOTE(NOTE_A, 4, 6),
-	EIGHT_NOTE(NOTE_C, 5, 9),
-	EIGHT_NOTE(NOTE_B, 4, 3),
-	EIGHT_NOTE(NOTE_E, 4, 12),
-	EIGHT_NOTE(NOTE_C, 5, 7),
-	EIGHT_NOTE(NOTE_PAUSE, 0, 5),
-	EIGHT_NOTE(NOTE_E, 4, 12),
-	{ NOTE_END, 0, 0 }
-};
-
-Note_t* channels[] = { channel0, channel1, channel2 };
+Note_t* channels[] = { channel0, channel1 };
 
 void nextNote(int channel)
 {
@@ -452,7 +425,6 @@ void audioOutCallback(int channel, unsigned short* buf, unsigned int reqn)
 
 void audioOutCallback0(unsigned short* buf, unsigned int reqn) { audioOutCallback(0, buf, reqn); }
 void audioOutCallback1(unsigned short* buf, unsigned int reqn) { audioOutCallback(1, buf, reqn); }
-void audioOutCallback2(unsigned short* buf, unsigned int reqn) { audioOutCallback(2, buf, reqn); }
 
 void createPitches(float base, float* target)
 {
@@ -467,9 +439,9 @@ int main(void)
 {
 	pspDebugScreenInit();
 	SetupCallbacks();
-	printf("Audiotest by Shine\n\n");
+	printf("Polyphonic sample by Shine\n\n");
 	printf("Soundtrack of the movie\n");
-	printf("\"Le fabuleux destin d'Amélie Poulain\"\n");
+	printf("\"Le fabuleux destin d'Amelie Poulain\"\n");
 	printf("by Yann Tiersen\n");
 
         int i;
@@ -490,15 +462,12 @@ int main(void)
 	}
 	channelStates[0].noteIndex = 0; nextNote(0);
 	channelStates[1].noteIndex = 0; nextNote(1);
-	channelStates[2].noteIndex = 0; nextNote(2);
 
 	pspAudioInit();
 	pspAudioSetVolume(0, 0x4000, 0x4000);
 	pspAudioSetVolume(1, 0x4000, 0x4000);
-	pspAudioSetVolume(2, 0x4000, 0x4000);
 	pspAudioSetChannelCallback(0, audioOutCallback0);
 	pspAudioSetChannelCallback(1, audioOutCallback1);
-	pspAudioSetChannelCallback(2, audioOutCallback2);
 	sceKernelSleepThread();
 
 	return 0;
