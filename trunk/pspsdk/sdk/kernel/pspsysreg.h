@@ -9,7 +9,7 @@
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  *
- * $Id: psploadcore.h 693 2005-07-19 15:29:37Z mrbrown $
+ * $Id$
  */
 
 #ifndef PSPSYSREG_H
