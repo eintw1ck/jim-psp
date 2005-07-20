@@ -52,6 +52,11 @@ int sceKernelLibcGettimeofday(struct timeval *tp, struct timezone *tzp);
   */
 void sceKernelDcacheWritebackAll(void);
 
+/**
+  * Write back and invalidate the data cache
+  */
+void sceKernelDcacheWritebackInvalidateAll(void);
+
 /** Structure for holding a mersenne twister context */
 typedef struct _SceKernelUtilsMt19937Context {
 	unsigned int 	count;
