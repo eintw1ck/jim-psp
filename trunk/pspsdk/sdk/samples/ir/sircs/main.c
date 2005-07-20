@@ -56,7 +56,7 @@ void send_code(int type, int dev, int cmd)
 }
 
 /* Exit callback */
-int exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
 	sceKernelExitGame();
 

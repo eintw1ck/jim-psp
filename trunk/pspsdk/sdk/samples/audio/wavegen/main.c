@@ -30,7 +30,7 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 #define printf	pspDebugScreenPrintf
 
 /* Exit callback */
-int exitCallback(void) {
+int exitCallback(int arg1, int arg2, void *common) {
 	sceKernelExitGame();
 	return 0;
 }

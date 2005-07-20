@@ -26,13 +26,15 @@ char powerCBMessage[256];
 #define printf  pspDebugScreenPrintf
 
 /* Exit callback */
-void exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
     sceKernelExitGame();
+
+	return 0;
 }
 
 /* Power Callback */
-void power_callback(int unknown, int pwrflags)
+int power_callback(int unknown, int pwrflags, void *common)
 {
     /* check for power switch and suspending as one is manual and the other automatic */
     if (pwrflags & PSP_POWER_CB_POWER_SWITCH || pwrflags & PSP_POWER_CB_SUSPENDING) {
@@ -52,6 +54,8 @@ void power_callback(int unknown, int pwrflags)
 	sprintf(powerCBMessage, "first arg: 0x%08X, flags: 0x%08X: Unhandled power event\n", unknown, pwrflags);
     }
     sceDisplayWaitVblankStart();
+
+	return 0;
 }
 
 /* Callback thread */

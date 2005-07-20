@@ -28,18 +28,22 @@ PSP_MODULE_INFO("NetParam Sample", 0, 1, 00);
 #define printf  pspDebugScreenPrintf
 
 /* Exit callback */
-void exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
     sceKernelExitGame();
+
+	return 0;
 }
 
 /* Callback thread */
-void CallbackThread(void *arg)
+int CallbackThread(SceSize args, void *argp)
 {
     int cbid;
     cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
     sceKernelRegisterExitCallback(cbid);
     sceKernelSleepThreadCB();
+
+	return 0;
 }
 
 /* Sets up the callback thread and returns its thread id */

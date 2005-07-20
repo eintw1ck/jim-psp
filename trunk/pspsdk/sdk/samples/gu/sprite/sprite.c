@@ -241,7 +241,7 @@ void create_torus_billboards(struct Vertex* vertices, float* world)
 }
 
 /* Exit callback */
-int exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
 	sceKernelExitGame();
 	return 0;

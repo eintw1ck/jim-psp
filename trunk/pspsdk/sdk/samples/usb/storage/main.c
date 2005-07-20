@@ -57,7 +57,7 @@ void loaderInit()
 }
 
 /* Exit callback */
-void exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
     int retVal;
 
@@ -77,6 +77,8 @@ void exit_callback(void)
 	printf("Error stopping USB BUS driver (0x%08X)\n", retVal);
 
     sceKernelExitGame();
+
+	return 0;
 }
 
 /* Callback thread */

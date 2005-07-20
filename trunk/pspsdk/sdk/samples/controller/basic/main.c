@@ -33,7 +33,7 @@ void dump_threadstatus(void);
 int done = 0;
 
 /* Exit callback */
-int exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
 	done = 1;
 	return 0;

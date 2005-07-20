@@ -28,7 +28,7 @@ static unsigned int __attribute__((aligned(16))) list[262144];
 
 int done = 0;
 /* Exit callback */
-int exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
 	done = 1;
 	return 0;

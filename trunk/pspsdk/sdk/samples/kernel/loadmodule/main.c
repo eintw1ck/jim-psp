@@ -41,7 +41,7 @@ const int module_count = sizeof(module_list) / sizeof(module_list[0]);
 SceUID load_module(const char *path, int flags, int type);
 
 /* Exit callback */
-int exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
 	sceKernelExitGame();
 	return 0;

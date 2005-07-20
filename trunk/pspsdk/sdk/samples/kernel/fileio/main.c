@@ -25,7 +25,7 @@ PSP_MODULE_INFO("Dumper", 0, 1, 1);
 
 
 /* Exit callback */
-int exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
 	sceKernelExitGame();
 

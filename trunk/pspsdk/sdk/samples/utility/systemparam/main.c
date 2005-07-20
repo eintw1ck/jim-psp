@@ -27,9 +27,11 @@ PSP_MODULE_INFO("SystemParam Sample", 0, 0, 71);
 #define printf  pspDebugScreenPrintf
 
 /* Exit callback */
-void exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
     sceKernelExitGame();
+
+	return 0;
 }
 
 /* Callback thread */
