@@ -26,37 +26,43 @@ extern "C" {
 /** @addtogroup Ctrl Controller Kernel Library */
 /*@{*/
 
-/** Enumeration for the digital controller buttons. */
+/**
+ * Enumeration for the digital controller buttons.
+ *
+ * @note PSP_CTRL_NOTE can only be read in kernel mode
+ */
 enum PspCtrlButtons
 {
 	/** Select button. */
-	PSP_CTRL_SELECT     = 0x00001,
+	PSP_CTRL_SELECT     = 0x000001,
 	/** Start button. */
-	PSP_CTRL_START      = 0x00008,
+	PSP_CTRL_START      = 0x000008,
 	/** Up D-Pad button. */
-	PSP_CTRL_UP         = 0x00010,
+	PSP_CTRL_UP         = 0x000010,
 	/** Right D-Pad button. */
-	PSP_CTRL_RIGHT      = 0x00020,
+	PSP_CTRL_RIGHT      = 0x000020,
 	/** Down D-Pad button. */
-	PSP_CTRL_DOWN      	= 0x00040,
+	PSP_CTRL_DOWN      	= 0x000040,
 	/** Left D-Pad button. */
-	PSP_CTRL_LEFT      	= 0x00080,
+	PSP_CTRL_LEFT      	= 0x000080,
 	/** Left trigger. */
-	PSP_CTRL_LTRIGGER   = 0x00100,
+	PSP_CTRL_LTRIGGER   = 0x000100,
 	/** Right trigger. */
-	PSP_CTRL_RTRIGGER   = 0x00200,
+	PSP_CTRL_RTRIGGER   = 0x000200,
 	/** Triangle button. */
-	PSP_CTRL_TRIANGLE   = 0x01000,
+	PSP_CTRL_TRIANGLE   = 0x001000,
 	/** Circle button. */
-	PSP_CTRL_CIRCLE     = 0x02000,
+	PSP_CTRL_CIRCLE     = 0x002000,
 	/** Cross button. */
-	PSP_CTRL_CROSS      = 0x04000,
+	PSP_CTRL_CROSS      = 0x004000,
 	/** Square button. */
-	PSP_CTRL_SQUARE     = 0x08000,
+	PSP_CTRL_SQUARE     = 0x008000,
 	/** Home button. */
-	PSP_CTRL_HOME       = 0x10000,
+	PSP_CTRL_HOME       = 0x010000,
 	/** Hold button. */
-	PSP_CTRL_HOLD       = 0x20000,
+	PSP_CTRL_HOLD       = 0x020000,
+	/** Music Note button. */
+	PSP_CTRL_NOTE       = 0x800000,
 };
 
 /** Controller mode. */
@@ -102,7 +108,7 @@ int sceCtrlSetSamplingCycle(int cycle);
  * Get the controller current cycle setting.
  *
  * @param pcycle - Return value.
- * 
+ *
  * @returns 0.
  */
 int sceCtrlGetSamplingCycle(int *pcycle);
@@ -138,7 +144,7 @@ int sceCtrlPeekBufferNegative(SceCtrlData *pad_data, int count);
 
  * sceCtrlSetSamplingCycle(0);
  * sceCtrlSetSamplingMode(1);
- * sceCtrlReadBufferPositive(&pad, 1); 
+ * sceCtrlReadBufferPositive(&pad, 1);
  * // Do something with the read controller data
  * @endcode
  *
