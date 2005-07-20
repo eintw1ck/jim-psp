@@ -51,6 +51,18 @@ int sceKernelStdoutReopen(const char *file, int flags, SceMode mode);
   * @return < 0 on error.
   */
 int sceKernelStderrReopen(const char *file, int flags, SceMode mode);
+
+
+/** 
+  * fprintf but for file descriptors
+  *
+  * @param fd - file descriptor from sceIoOpen
+  * @param format - format string
+  * @param ... - variables
+  * 
+  * @return number of characters printed, <0 on error
+  */
+int fdprintf(int fd, const char *format, ...);
 /*@}*/
 
 #ifdef __cplusplus

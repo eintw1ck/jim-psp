@@ -170,6 +170,17 @@ int sceKernelDeleteThread(SceUID thid);
 int sceKernelStartThread(SceUID thid, SceSize args, void *argp);
 
 /**
+ * Get a list of threads
+ *
+ * @param type - type of thread to get
+ * @param list - array of thread ids
+ * @param listSize - size of thread list
+ * @param count - pointer to an int to hold number of threads
+ * @return number of threads, < 0 on error
+ */
+int sceKernelGetThreadmanIdList(int type, SceUID *list, int listSize, int *count);
+
+/**
  * Exit a thread
  *
  * @param status - Exit status.
