@@ -19,6 +19,7 @@
 #include <pspiofilemgr_kernel.h>
 #include <psploadcore.h>
 #include <pspstdio_kernel.h>
+#include <pspsysreg.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -16,7 +16,8 @@ libpspkernelinclude_HEADERS =	\
 	pspiofilemgr_kernel.h	\
 	pspkernel.h		\
 	psploadcore.h		\
-	pspstdio_kernel.h
+	pspstdio_kernel.h	\
+	pspsysreg.h	
 
 lib_LIBRARIES = libpspkernel.a
 
@@ -25,4 +26,5 @@ libpspkernel_a_SOURCES =	\
 	KDebugForKernel.S	\
 	LoadCoreForKernel.S	\
 	iofilemgr_kernel.S	\
-	StdioForKernel.S
+	StdioForKernel.S	\
+	sceSysreg_driver.S
