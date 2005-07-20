@@ -12,6 +12,10 @@
 #ifndef __PSPUSBSTOR_H__
 #define __PSPUSBSTOR_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define PSP_USBSTOR_DRIVERNAME "USBStor_Driver"
 
 /**
@@ -51,6 +55,10 @@ int sceUsbstorBootGetDataSize(void); // what for ?
 int sceUsbstorBootSetLoadAddr(u32 addr); // ?
 int sceUsbstorBootSetStatus(u32 status); // 1=?
 int sceUsbstorGetStatus(?)
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif
