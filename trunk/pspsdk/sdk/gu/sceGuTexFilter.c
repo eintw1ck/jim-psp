@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuTexFilter(unsigned int a0, unsigned int a1)
+void sceGuTexFilter(int min, int mag)
 {
-	sendCommandi(198,(a1 << 8)|a0);
+	sendCommandi(198,(mag << 8)|min);
 }

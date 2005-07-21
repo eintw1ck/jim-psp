@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuLogicalOp(int a0)
+void sceGuLogicalOp(int op)
 {
-	sendCommandi(230,a0 & 0x0f);
+	sendCommandi(230,op & 0x0f);
 }

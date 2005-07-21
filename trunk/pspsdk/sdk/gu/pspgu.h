@@ -50,7 +50,7 @@ extern "C" {
 #define GU_UNKNOWN_15		(15)
 #define GU_UNKNOWN_16		(16)
 #define GU_UNKNOWN_17		(17)
-#define GU_UNKNOWN_18		(18)
+#define GU_COLOR_LOGIC_OP	(18)
 #define GU_UNKNOWN_19		(19)
 #define GU_PATCH_FACE		(20)
 #define GU_UNKNOWN_21		(21)
@@ -333,7 +333,7 @@ void sceGuSendCommandf(int cmd, float argument);
 /**
   * Send raw command to the GE
   *
-  * Only the 24 lower bits of the command is passed along.
+  * Only the 24 lower bits of the argument is passed along.
   *
   * @param cmd - Which command to send
   * @param argument - Argument to pass along
@@ -364,7 +364,7 @@ void* sceGuGetMemory(int size);
 void sceGuStart(int cid, void* list);
 
 /**
-  * Finish current display list and goes back to the parent context
+  * Finish current display list and go back to the parent context
   *
   * If the context is GU_DIRECT, the stall-address is updated so that the entire list will
   * execute. Otherwise, only the terminating action is written to the list, depending on
@@ -514,18 +514,20 @@ int sceGuGetAllStatus(void);
   * Enable GE state
   *
   * The currently available states are:
-  *   - GU_ALPHA_TEST - Alpha testing
-  *   - GU_DEPTH_TEST - Depth testing
-  *   - GU_SCISSOR_TEST - Display custom scissoring
-  *   - GU_BLEND - Alpha blending
-  *   - GU_CULL_FACE - Primitive culling
-  *   - GU_DITHER - Dither matrix
-  *   - GU_TEXTURE_2D - Texture mapping
-  *   - GU_LIGHTING - Hardware lighting enable
-  *   - GU_LIGHT0 - Light 0 enable
-  *   - GU_LIGHT1 - Light 1 enable
-  *   - GU_LIGHT2 - Light 2 enable
-  *   - GU_LIGHT3 - Light 3 enable
+  *   - GU_ALPHA_TEST
+  *   - GU_DEPTH_TEST
+  *   - GU_SCISSOR_TEST
+  *   - GU_BLEND
+  *   - GU_CULL_FACE
+  *   - GU_DITHER
+  *   - GU_CLIP_PLANES
+  *   - GU_TEXTURE_2D
+  *   - GU_LIGHTING
+  *   - GU_LIGHT0
+  *   - GU_LIGHT1
+  *   - GU_LIGHT2
+  *   - GU_LIGHT3
+  *   - GU_COLOR_LOGIC_OP
   *
   * @param state - Which state to enable
 **/
@@ -686,7 +688,40 @@ void sceGuSpecular(float power);
 **/
 void sceGuFrontFace(int order);
 
-void sceGuLogicalOp(int a0);
+/**
+  * Set color logical operation
+  *
+  * Available operations are:
+  *   - GU_CLEAR
+  *   - GU_AND
+  *   - GU_AND_REVERSE
+  *   - GU_COPY
+  *   - GU_AND_INVERTED
+  *   - GU_NOOP
+  *   - GU_XOR
+  *   - GU_OR
+  *   - GU_NOR
+  *   - GU_EQUIV
+  *   - GU_INVERT
+  *   - GU_OR_REVERSE
+  *   - GU_COPY_INVERTED
+  *   - GU_OR_INVERTED
+  *   - GU_NAND
+  *   - GU_SET
+  *
+  * This operation only has effect if GU_COLOR_LOGIC_OP is enabled.
+  *
+  * @param op - Operation to execute
+**/
+void sceGuLogicalOp(int op);
+
+/**
+  * Set ordered pixel dither matrix
+  *
+  * This dither matrix is only applied if GU_DITHER is enabled.
+  *
+  * @param matrix - Dither matrix
+**/
 void sceGuSetDither(const ScePspIMatrix4* matrix);
 
 /**
@@ -708,13 +743,17 @@ void sceGuTexEnvColor(unsigned int color);
   * Set how the texture is filtered
   *
   * Available filters are:
-  *   - GU_NEAREST - Texture is point-filtered
-  *   - GU_LINEAR - Texture is bilinear-filtered
+  *   - GU_NEAREST
+  *   - GU_LINEAR
+  *   - GU_NEAREST_MIPMAP_NEAREST
+  *   - GU_LINEAR_MIPMAP_NEAREST
+  *   - GU_NEAREST_MIPMAP_LINEAR
+  *   - GU_LINEAR_MIPMAP_LINEAR
   *
-  * @param a0 - Filter to use (when magnifying? mag?)
-  * @param a1 - Filter to use (when minimizing? min?)
+  * @param min - Minimizing filter
+  * @param mag - Magnifying filter
 **/
-void sceGuTexFilter(unsigned int a0, unsigned int a1);
+void sceGuTexFilter(int min, int mag);
 
 /**
   * Flush texture page-cache
