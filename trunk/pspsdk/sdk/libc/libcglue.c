@@ -38,12 +38,12 @@ extern char * __psp_argv_0;
 
 /* Wrappers of the standard open(), close(), read(), write(), unlink() and lseek() routines. */
 #ifdef F__open
-static int cwd_initialized = 0;
+int __psp_cwd_initialized = 0;
 
 /* Set the current working directory (CWD) to the path where the module was launched. */
 void __psp_init_cwd(void)
 {
-	if (!cwd_initialized && (__psp_argv_0 != NULL)) {
+	if (!__psp_cwd_initialized && (__psp_argv_0 != NULL)) {
 		char base_path[MAXPATHLEN + 1];
 		char *end;
 
@@ -55,7 +55,7 @@ void __psp_init_cwd(void)
 			sceIoChdir(base_path);
 		}
 
-		cwd_initialized = 1;
+		__psp_cwd_initialized = 1;
 	}
 }
 
@@ -64,7 +64,7 @@ int _open(const char *name, int flags, int mode)
 	int sce_flags;
 
 	/* Make sure the CWD has been set. */
-	if (!cwd_initialized) {
+	if (!__psp_cwd_initialized) {
 		__psp_init_cwd();
 	}
 
@@ -193,10 +193,18 @@ int _link(const char *name1, const char *name2)
 #endif
 
 #ifdef F__opendir
+extern int __psp_cwd_initialized;
+extern void __psp_init_cwd(void);
+
 DIR *_opendir(const char *filename)
 {
 	DIR *dirp;
 	SceUID uid;
+
+	/* Make sure the CWD has been set. */
+	if (!__psp_cwd_initialized) {
+		__psp_init_cwd();
+	}
 
 	dirp = (DIR *)malloc(sizeof(DIR));
 
