@@ -12,7 +12,9 @@ SAMPLES = \
 	gu/blit \
 	gu/clut \
 	gu/cube \
+	gu/lights \
 	gu/lines \
+	gu/logic \
 	gu/sprite \
 	gu/blend \
 	ir/sircs \
