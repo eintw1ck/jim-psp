@@ -39,7 +39,7 @@
 
 extern int SDL_main(int argc, char *argv[]);
 
-PSP_MODULE_INFO("SDL App", 0, 1, 1);
+PSP_MODULE_INFO("SDL App", 0x1000, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 
 int sdl_psp_exit_callback(void)
