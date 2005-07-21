@@ -41,6 +41,10 @@ extern void _fini(void);
 
 extern int main(int argc, char *argv[]);
 
+/* argv[0] contains the full path to the module.  Save it here so that other
+   code can use it. */
+char * __psp_argv_0 = NULL;
+
 /**
  * Main program thread
  *
@@ -62,6 +66,7 @@ void _main(SceSize args, void *argp)
 		} while ((argc < ARG_MAX) && (((char *) argp - ap) < args));
 	}
 	argv[argc] = NULL;
+	__psp_argv_0 = argv[0];
 
 	/* Make sure _fini() is called when the program ends. */
 	atexit((void *) _fini);

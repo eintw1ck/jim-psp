@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <malloc.h>
 #include <stdarg.h>
+#include <string.h>
 #include <time.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
@@ -33,11 +34,39 @@ int sceKernelStdin(void);
 int sceKernelStdout(void);
 int sceKernelStderr(void);
 
+extern char * __psp_argv_0;
+
 /* Wrappers of the standard open(), close(), read(), write(), unlink() and lseek() routines. */
 #ifdef F__open
+static int cwd_initialized = 0;
+
+/* Set the current working directory (CWD) to the path where the module was launched. */
+void __psp_init_cwd(void)
+{
+	if (!cwd_initialized && (__psp_argv_0 != NULL)) {
+		char base_path[MAXPATHLEN + 1];
+		char *end;
+
+		strncpy(base_path, __psp_argv_0, sizeof(base_path) - 1);
+		base_path[sizeof(base_path) - 1] = '\0';
+		end = strrchr(base_path, '/');
+		if (end != NULL) {
+			*(end + 1) = '\0';
+			sceIoChdir(base_path);
+		}
+
+		cwd_initialized = 1;
+	}
+}
+
 int _open(const char *name, int flags, int mode)
 {
 	int sce_flags;
+
+	/* Make sure the CWD has been set. */
+	if (!cwd_initialized) {
+		__psp_init_cwd();
+	}
 
 	/* O_RDONLY starts at 0, where PSP_O_RDONLY starts at 1, so remap the read/write
 	   flags by adding 1. */
