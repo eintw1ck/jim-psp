@@ -1,0 +1,18 @@
+TARGET = logic
+OBJS = logic.o
+
+INCDIR =
+CFLAGS = -G0 -Wall -O2
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+ASFLAGS = $(CFLAGS)
+
+LIBDIR =
+LDFLAGS =
+LIBS= -lpspgu
+
+EXTRA_TARGETS = EBOOT.PBP
+PSP_EBOOT_TITLE = Logic Sample
+
+PSPSDK=$(shell psp-config --pspsdk-path)
+USE_PSPSDK_LIBC=1
+include $(PSPSDK)/lib/build.mak
