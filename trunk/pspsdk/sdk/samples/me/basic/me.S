@@ -8,10 +8,10 @@
 me_run:
 	li $2, 0xbfc00060
 	li $3, 0
-1:
+loop:
 	addiu $3, $3, 1
 	sw $3, 0($2)
-	j	1b
+	b loop
 	nop
 me_end:
 
