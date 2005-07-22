@@ -8,6 +8,7 @@
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ * Copyright (c) 2005 Jim Paris <jim@jtan.com>
  *
  * $Id$
  */
@@ -35,30 +36,78 @@ int sceKernelStdout(void);
 int sceKernelStderr(void);
 
 extern char * __psp_argv_0;
+extern int __psp_cwd_initialized;
+extern char __psp_cwd[MAXPATHLEN + 1];
+extern void __psp_init_cwd(void);
+extern int __psp_path_absolute(const char *in, char *out, int len);
+
+#ifdef F_getcwd
+char *getcwd(char *buf, size_t size)
+{
+	if(!__psp_cwd_initialized)
+		__psp_init_cwd();
+
+	if(!buf) {
+		errno = EINVAL;
+		return NULL;
+	}		
+
+	if(strlen(__psp_cwd) >= size) {
+		errno = ERANGE;
+		return NULL;
+	}
+
+	strcpy(buf, __psp_cwd);
+	return buf;
+}
+#endif
+
+#ifdef F_chdir
+int chdir(const char *path)
+{
+	char dest[MAXPATHLEN + 1];
+	SceUID uid;
+
+	if(!__psp_cwd_initialized)
+		__psp_init_cwd();
+
+	if(__psp_path_absolute(path, dest, MAXPATHLEN) < 0) {
+		errno = ENAMETOOLONG;
+		return -1;
+	}
+
+	/* sceIoChdir doesn't give an indication of whether it worked,
+	   so test for existance by attempting to open the dir */
+	uid = sceIoDopen(dest);
+	if(uid < 0) {
+		errno = ENOTDIR;
+		return -1;
+	}
+	sceIoDclose(uid);
+
+	sceIoChdir(dest);
+	strcpy(__psp_cwd, dest);
+	return 0;
+}
+#endif
+
+#ifdef F_realpath
+char *realpath(const char *path, char *resolved_path)
+{
+	if(!path || !resolved_path) {
+		errno = EINVAL;
+		return NULL;
+	}		
+	if(__psp_path_absolute(path, resolved_path, MAXPATHLEN) < 0) {
+		errno = ENAMETOOLONG;
+		return NULL;
+	}
+	return resolved_path;
+}
+#endif
 
 /* Wrappers of the standard open(), close(), read(), write(), unlink() and lseek() routines. */
 #ifdef F__open
-int __psp_cwd_initialized = 0;
-
-/* Set the current working directory (CWD) to the path where the module was launched. */
-void __psp_init_cwd(void)
-{
-	if (!__psp_cwd_initialized && (__psp_argv_0 != NULL)) {
-		char base_path[MAXPATHLEN + 1];
-		char *end;
-
-		strncpy(base_path, __psp_argv_0, sizeof(base_path) - 1);
-		base_path[sizeof(base_path) - 1] = '\0';
-		end = strrchr(base_path, '/');
-		if (end != NULL) {
-			*(end + 1) = '\0';
-			sceIoChdir(base_path);
-		}
-
-		__psp_cwd_initialized = 1;
-	}
-}
-
 int _open(const char *name, int flags, int mode)
 {
 	int sce_flags;
@@ -181,6 +230,10 @@ off_t _lseek(int fd, off_t offset, int whence)
 #ifdef F__unlink
 int _unlink(const char *path)
 {
+	/* Make sure the CWD has been set. */
+	if (!__psp_cwd_initialized) {
+		__psp_init_cwd();
+	}
 	return sceIoRemove(path);
 }
 #endif
@@ -193,9 +246,6 @@ int _link(const char *name1, const char *name2)
 #endif
 
 #ifdef F__opendir
-extern int __psp_cwd_initialized;
-extern void __psp_init_cwd(void);
-
 DIR *_opendir(const char *filename)
 {
 	DIR *dirp;

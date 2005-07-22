@@ -22,6 +22,7 @@ SAMPLES = \
 	kernel/kdumper \
 	kernel/loadmodule \
 	kernel/threadstatus \
+	kernel/cwd \
 	kernel/fileio \
 	power \
 	usb/storage \

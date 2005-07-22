@@ -37,7 +37,7 @@ LDFLAGS  := $(addprefix -L,$(LIBDIR)) $(LDFLAGS)
 
 # Library selection.  By default we link with Newlib's libc.  Allow the
 # user to link with PSPSDK's libc if USE_PSPSDK_LIBC is set to 1.
-PSPSDK_LIBC_LIB = -lc -lpspglue
+PSPSDK_LIBC_LIB = -lc -lpspglue -lc
 ifeq ($(USE_PSPSDK_LIBC),1)
 PSPSDK_LIBC_LIB = -lpsplibc
 endif

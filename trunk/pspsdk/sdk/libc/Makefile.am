@@ -73,10 +73,10 @@ $(GLUE_OBJS): libcglue.c
 ## libpspglue.a sources.
 LIBCGLUE_MULT_OBJS = _close.o _exit.o _fork.o _fstat.o _getpid.o _gettimeofday.o _kill.o _lseek.o \
 	_open.o _read.o _sbrk.o _wait.o _write.o clock.o isatty.o time.o _link.o _unlink.o \
-	_opendir.o _readdir.o _closedir.o
+	_opendir.o _readdir.o _closedir.o getcwd.o chdir.o realpath.o
 
 libpspglue_a_SOURCES = libcglue.c
-libpspglue_a_LIBADD  = $(LIBCGLUE_MULT_OBJS)
+libpspglue_a_LIBADD  = $(LIBCGLUE_MULT_OBJS) pspcwd.o
 
 $(LIBCGLUE_MULT_OBJS): libcglue.c
 	$(COMPILE) -DF_$* $< -c -o $@
