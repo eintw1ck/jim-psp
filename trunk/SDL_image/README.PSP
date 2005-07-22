@@ -1,7 +1,7 @@
 To configure:
 
    ./autogen.sh
-   LDFLAGS="-L`psp-config --pspsdk-path`/lib -lc -lpspglue -lpspuser" \
+   LDFLAGS="-L`psp-config --pspsdk-path`/lib -lc -lpspglue -lc -lpspuser" \
      ./configure --host psp --with-sdl-prefix=`psp-config --pspsdk-path`/.. \
      --prefix=`psp-config --pspsdk-path`/..
 

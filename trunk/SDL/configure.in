@@ -1883,7 +1883,7 @@ CheckPSPSDK()
     # Compile SDL with -G0 to disable the $gp register.
     CFLAGS="$CFLAGS -G0 -I\"${pspsdk_path}/include\""
     SYSTEM_LIBS="$SYSTEM_LIBS -L${pspsdk_path}/lib -lpspdebug -lpspgu -lpspctrl"
-    SYSTEM_LIBS="$SYSTEM_LIBS -lpspaudio -lc -lpspglue -lpspkernel -lpspuser"
+    SYSTEM_LIBS="$SYSTEM_LIBS -lpspaudio -lc -lpspglue -lc -lpspkernel -lpspuser"
     SYSTEM_LIBS="$SYSTEM_LIBS -lpspge -lpspdisplay -lpsphprm"
 }
 
