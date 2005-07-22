@@ -22,8 +22,7 @@
 /* Define the module info section, note the 0x1000 flag to enable start in kernel mode */
 PSP_MODULE_INFO("SDKTEST", 0x1000, 1, 1);
 
-/* Define the thread attribute as 0 so that the main thread does not get converted to user mode */
-PSP_MAIN_THREAD_ATTR(0);
+PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER);
 
 /* Define printf, just to make typing easier */
 #define printf	pspDebugScreenPrintf
@@ -39,6 +38,26 @@ struct module_list {
 const int module_count = sizeof(module_list) / sizeof(module_list[0]);
 
 SceUID load_module(const char *path, int flags, int type);
+
+
+void MyExceptionHandler(PspDebugRegBlock *regs)
+{
+	printf("\n\n");
+	pspDebugDumpException(regs);
+}
+
+/* This function is called by the startup code before main() is called.  Since
+   it runs in kernel mode we can access kernel-only features. */
+__attribute__((constructor))
+void KernelSetup(void)
+{
+	pspDebugScreenInit();
+	pspDebugInstallKprintfHandler(NULL);
+	pspDebugInstallErrorHandler(MyExceptionHandler);
+
+	/* Very important - patch the module manager so that we can load modules from user mode. */
+	pspSdkInstallNoDeviceCheckPatch();
+}
 
 /* Exit callback */
 int exit_callback(int arg1, int arg2, void *common)
@@ -95,12 +114,16 @@ SceUID load_module(const char *path, int flags, int type)
 	option.position = 0;
 	option.access = 1;
 
-	return sceKernelLoadModule(path, flags, type > 0 ? &option : NULL);
+	return sceKernelLoadModule(path, flags, &option);
 }
 
-int load_thread(SceSize argsize, void *argp)
+int main(void)
 {
 	int i;
+
+	SetupCallbacks();
+
+	printf("Loadmodule sample program.\n\n");
 
 	/* Try loading and starting the network modules. */
 	for (i = 0; i < module_count; i++) {
@@ -115,7 +138,7 @@ int load_thread(SceSize argsize, void *argp)
 
 		res = sceKernelStartModule(modid, 0, NULL, &status, NULL);
 		if (res < 0) {
-			printf("sceKenrelStartModule('%s') failed with %x\n", module_list[i].path, res);
+			printf("sceKernelStartModule('%s') failed with %x\n", module_list[i].path, res);
 			break;
 		}
 
@@ -123,36 +146,6 @@ int load_thread(SceSize argsize, void *argp)
 	}
 
 	printf("\nAll done!\n");
-	return 0;
-}
-
-void MyExceptionHandler(PspDebugRegBlock *regs)
-{
-	printf("\n\n");
-	pspDebugDumpException(regs);
-}
-
-int main(void)
-{
-	SceUID thid;
-
-	pspDebugScreenInit();
-	pspDebugInstallKprintfHandler(NULL);
-	pspDebugInstallErrorHandler(MyExceptionHandler);
-	SetupCallbacks();
-
-	printf("Loadmodule sample program.\n\n");
-
-	/* Very important - patch the module manager so that we can load modules from user mode. */
-	pspSdkInstallNoDeviceCheckPatch();
-
-	/* Create a user mode thread to load modules from. */
-	thid = sceKernelCreateThread("load_thread", load_thread, 0x15, 0x1000, PSP_THREAD_ATTR_USER, NULL);
-	if (thid > 0) {
-		sceKernelStartThread(thid, 0, NULL);
-	} else {
-		printf("sceKernelCreateThread failed with %x\n", thid);
-	}
 
 	sceKernelSleepThread();
 	return 0;
