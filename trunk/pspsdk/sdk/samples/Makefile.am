@@ -27,7 +27,8 @@ SAMPLES = \
 	power \
 	usb/storage \
 	utility/netconf \
-	utility/systemparam
+	utility/systemparam \
+	me/basic
 
 all:
 
