@@ -18,6 +18,7 @@ SAMPLES = \
 	gu/sprite \
 	gu/blend \
 	gu/envmap \
+	gu/rendertarget \
 	ir/sircs \
 	ir/irda \
 	kernel/kdumper \
