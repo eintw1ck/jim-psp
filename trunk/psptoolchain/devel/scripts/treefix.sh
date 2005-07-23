@@ -6,17 +6,22 @@
 
 [ "$#" -ne "1" ] && echo "Usage: $0 <tree to fix>" && exit 1
 
-ODIR=${PWD}
+CPWD=`which pwd`
+ODIR=`$CPWD`
 cd $1 || exit 1
-LDIR=${PWD}
+LDIR=`$CPWD`
 echo -n "Finding .orig files ... "
 LIST=`find . -name \*.orig`
 echo -e "done."
 
-echo -n "Fixing tree ... "
+echo "Fixing tree ... "
 for file in $LIST; do
-	basefile=`dirname $file`/`basename $file .orig`
-	rm -f $file
+	if test -f $file ; then
+		basefile=`dirname $file`/`basename $file .orig`
+		cp $basefile $file
+		mv $file $basefile
+		echo "Fixed \`$basefile'."
+	fi
 done
-echo -e "done."
+echo "done."
 cd $ODIR
