@@ -189,6 +189,9 @@ case ${target} in
  | ip2k-*-elf		\
  | ns32k-*-netbsdelf*	\
  | ns32k-*-netbsd*	\
+ | c4x-*		\
+ | tic4x-*		\
+ | hppa1.1-*-rtems*	\
  )
     if test "x$enable_obsolete" != xyes; then
       echo "*** Configuration ${target} is obsolete." >&2
@@ -247,6 +250,9 @@ strongarm*-*-*)
 arm*-*-*)
 	cpu_type=arm
 	extra_headers="mmintrin.h"
+	;;
+bfin*-*)
+	cpu_type=bfin
 	;;
 ep9312*-*-*)
 	cpu_type=arm
@@ -723,6 +729,16 @@ avr-*-*)
 	tm_file="avr/avr.h dbxelf.h"
 	use_fixproto=yes
 	;;
+bfin*-elf*)
+	tm_file="${tm_file} dbxelf.h elfos.h bfin/elf.h"
+        tmake_file=bfin/t-bfin-elf
+        use_collect2=no
+        ;;  
+bfin*-*)
+	tm_file="${tm_file} dbxelf.h elfos.h bfin/elf.h"
+        tmake_file=bfin/t-bfin
+        use_collect2=no
+        ;;  
 c4x-*-rtems* | tic4x-*-rtems*)
 	tmake_file="c4x/t-c4x t-rtems c4x/t-rtems"
 	tm_file="c4x/c4x.h c4x/rtems.h rtems.h"
@@ -765,9 +781,13 @@ frv-*-*linux*)
 	         linux.h frv/linux.h frv/frv-abi.h"
 	tmake_file="${tmake_file} frv/t-frv frv/t-linux"
 	;;
-h8300-*-rtems*)
+h8300-*-rtemscoff*)
 	tmake_file="h8300/t-h8300 t-rtems h8300/t-rtems"
 	tm_file="h8300/h8300.h dbxcoff.h h8300/coff.h h8300/rtems.h rtems.h"
+	;;
+h8300-*-rtems*)
+	tmake_file="h8300/t-h8300 h8300/t-elf t-rtems h8300/t-rtems"
+	tm_file="h8300/h8300.h dbxelf.h elfos.h h8300/elf.h h8300/rtems.h rtems.h"
 	;;
 h8300-*-elf*)
 	tmake_file="h8300/t-h8300 h8300/t-elf"
@@ -1539,9 +1559,6 @@ pdp11-*-bsd)
 	use_fixproto=yes
         ;;
 pdp11-*-*)
-	use_fixproto=yes
-	;;
-avr-*-*)
 	use_fixproto=yes
 	;;
 # port not yet contributed
