@@ -17,6 +17,7 @@ SAMPLES = \
 	gu/logic \
 	gu/sprite \
 	gu/blend \
+	gu/envmap \
 	ir/sircs \
 	ir/irda \
 	kernel/kdumper \
