@@ -1,0 +1,76 @@
+CC = arm-thumb-elf-gcc
+AR = arm-thumb-elf-ar
+AS = arm-thumb-elf-as
+LD = arm-thumb-elf-gcc
+
+
+TARGET_GL = /usr/arm-thumb-elf/lib/libTinyGL.a
+TARGET_GLU = /usr/arm-thumb-elf/lib/libTinyGLU.a
+
+all: $(TARGET_GL) $(TARGET_GLU)
+
+#DEFS= -DENABLE_GP32 -DGP32 -DNDEBUG 
+DEFS= -DENABLE_GP32 -DGP32 -DNDEBUG -DMAX_SPECULAR_BUFFERS=4 -DSPECULAR_BUFFER_SIZE=128 -DSPECULAR_BUFFER_RESOLUTION=128 -DUSE_FIXED_POINT
+
+OPTFLAGS=-mtune=arm920 -march=armv4t -marm -mno-thumb-interwork -msoft-float -ffast-math -nostdlib -fno-common -ffreestanding -fno-builtin -fno-exceptions -mstructure-size-boundary=8 -O3 -fomit-frame-pointer -fstrict-aliasing -Wall
+
+#OPTFLAGS=-O2 -mtune=arm920 -DGFXST -Wall -Wno-uninitialized -msoft-float -mthumb-interwork
+
+CFLAGS=-Iinclude-gp32 -Iinclude -I. -Isrc $(OPTFLAGS) $(DEFS)
+
+SRCS_GL = \
+	src/api.c \
+	src/list.c \
+	src/vertex.c \
+	src/init.c \
+	src/matrix.c \
+	src/texture.c \
+	src/misc.c \
+	src/clear.c \
+	src/light.c \
+	src/clip.c \
+	src/select.c \
+	src/get.c \
+	src/error.c \
+	src/zbuffer.c \
+	src/zline.c \
+	src/zdither.c \
+	src/ztriangle.c \
+	src/zmath.c \
+	src/image_util.c \
+	src/oscontext.c \
+	src/msghandling.c \
+	src/arrays.c \
+	src/specbuf.c \
+	src/memory.c \
+	src/sdlswgl.c \
+
+
+OBJS_GL = $(SRCS_GL:.c=.o)
+
+
+
+SRCS_GLU = \
+	src/glu/glu.c \
+	src/glu/glu_cylinder.c \
+	src/glu/glu_disk.c \
+	src/glu/glu_perspective.c \
+	src/glu/glu_sphere.c \
+	src/glu/glu_torus.c \
+
+OBJS_GLU = $(SRCS_GLU:.c=.o)
+
+
+
+clean:
+	rm -f $(OBJS_GL)
+	rm -f $(OBJS_GLU)
+
+$(TARGET_GL) : $(OBJS_GL)
+	rm -f $(TARGET_GL)
+	$(AR) rcs $(TARGET_GL) $(OBJS_GL)
+
+
+$(TARGET_GLU) : $(OBJS_GLU)
+	rm -f $(TARGET_GLU)
+	$(AR) rcs $(TARGET_GLU) $(OBJS_GLU)
