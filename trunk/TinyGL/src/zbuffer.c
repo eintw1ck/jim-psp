@@ -94,11 +94,7 @@ void ZB_resize(ZBuffer * zb, void *frame_buffer, int xsize, int ysize)
 
     zb->xsize = xsize;
     zb->ysize = ysize;
-#ifndef PSP
     zb->linesize = (xsize * PSZB + 3) & ~3;
-#else
-    zb->linesize = 512;
-#endif
 
     size = zb->xsize * zb->ysize * sizeof(unsigned short);
 

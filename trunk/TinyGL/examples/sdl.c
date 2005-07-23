@@ -14,6 +14,8 @@
 #  define M_PI 3.14159265
 #endif
 
+int done = 0;
+
 #ifdef PSP
 /*
  * todo: use sdlmain instead of all this guff
@@ -30,6 +32,7 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 /* Exit callback */
 int exit_callback(int arg1, int arg2, void *common)
 {
+	done = 1;
 	return 0;
 }
 
@@ -71,6 +74,7 @@ int ui_loop(int argc, char **argv, const char *name)
 	SDL_Surface *screen;
 	sdl_swgl_Context *ctx=sdl_swgl_CreateContext();
 
+	SetupCallbacks();
 	SDL_Init(SDL_INIT_VIDEO);
 
 	screen=SDL_SetVideoMode(480,272,8,SDL_HWSURFACE|SDL_DOUBLEBUF);
@@ -78,8 +82,6 @@ int ui_loop(int argc, char **argv, const char *name)
 
 	init();
 	reshape(480,272);
-
-	int done=0;
 
 	while(!done)
 	{
@@ -124,6 +126,10 @@ int ui_loop(int argc, char **argv, const char *name)
 //		SDL_Delay(250);
 #endif
 	}
+
+#ifdef PSP
+        sceKernelExitGame();
+#endif
 
 	SDL_Quit();
 	return 0;

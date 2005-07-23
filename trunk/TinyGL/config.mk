@@ -8,7 +8,6 @@ AR= psp-ar
 RANLIB= psp-ranlib
 #CC= g++-3.2
 CFLAGS= -g -Wall -O0 -G0
-CFLAGS += -DMAX_SPECULAR_BUFFERS=4 -DSPECULAR_BUFFER_SIZE=128 -DSPECULAR_BUFFER_RESOLUTION=128
 LFLAGS= -L`psp-config --pspsdk-path`/lib 
 
 # for BeOS PPC
