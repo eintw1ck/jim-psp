@@ -1,3 +1,14 @@
+--- binutils-2.16.orig/bfd/Makefile.am	2005-05-02 12:45:42.000000000 -0700
++++ binutils-psp/bfd/Makefile.am	2005-07-22 22:17:36.000000000 -0700
+@@ -3,7 +3,7 @@
+ AUTOMAKE_OPTIONS = 1.9 cygnus
+ 
+ # Uncomment the following line when doing a release.
+-RELEASE=y
++#RELEASE=y
+ 
+ INCDIR = $(srcdir)/../include
+ CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
 --- binutils-2.16.orig/bfd/bfd-in2.h	2005-03-02 13:23:20.000000000 -0800
 +++ binutils-psp/bfd/bfd-in2.h	2005-06-19 18:09:32.000000000 -0700
 @@ -1600,6 +1600,7 @@
@@ -69,6 +80,24 @@
  };
  
  /* The default architecture is mips:3000, but with a machine number of
+--- binutils-2.16.orig/bfd/Makefile.in	2005-05-02 12:45:46.000000000 -0700
++++ binutils-psp/bfd/Makefile.in	2005-07-22 22:17:46.000000000 -0700
+@@ -250,7 +250,7 @@
+ AUTOMAKE_OPTIONS = 1.9 cygnus
+ 
+ # Uncomment the following line when doing a release.
+-RELEASE=y
++#RELEASE=y
+ INCDIR = $(srcdir)/../include
+ CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
+ MKDEP = gcc -MM
+--- binutils-2.16.orig/bfd/version.h	2005-05-02 12:43:09.000000000 -0700
++++ binutils-psp/bfd/version.h	2005-07-22 22:18:05.000000000 -0700
+@@ -1,3 +1,3 @@
+-#define BFD_VERSION_DATE 20050502
++#define BFD_VERSION_DATE (PSPDEV 20050722)
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING @bfd_version_string@
 --- binutils-2.16.orig/binutils/readelf.c	2005-04-20 11:43:36.000000000 -0700
 +++ binutils-psp/binutils/readelf.c	2005-06-19 18:09:27.000000000 -0700
 @@ -2043,6 +2043,7 @@
@@ -266,6 +295,13 @@
       || 0)	/* Please keep this term for easier source merging.  */
  
  /* This is a list of macro expanded instructions.
+--- binutils-2.16.orig/include/bin-bugs.h	2004-07-23 08:40:19.000000000 -0700
++++ binutils-psp/include/bin-bugs.h	2005-07-22 22:38:52.887916384 -0700
+@@ -1,3 +1,3 @@
+ #ifndef REPORT_BUGS_TO
+-#define REPORT_BUGS_TO	"<URL:http://www.sourceware.org/bugzilla/>"
++#define REPORT_BUGS_TO	"<URL:http://wiki.pspdev.org/psp:toolchain#bugs>"
+ #endif
 --- binutils-2.16.orig/ld/Makefile.am	2005-01-20 11:37:49.000000000 -0800
 +++ binutils-psp/ld/Makefile.am	2005-06-25 02:44:52.000000000 -0700
 @@ -190,6 +190,7 @@
@@ -318,7 +354,7 @@
  mips*-*-elf*)		targ_emul=elf32ebmip ;;
  mips*el-*-rtems*)	targ_emul=elf32elmip ;;
 --- binutils-2.16.orig/ld/emulparams/elf_mipsallegrexel_psp.sh	1969-12-31 16:00:00.000000000 -0800
-+++ binutils-psp/ld/emulparams/elf_mipsallegrexel_psp.sh	2005-07-12 03:44:26.006909824 -0700
++++ binutils-psp/ld/emulparams/elf_mipsallegrexel_psp.sh	2005-07-12 03:44:26.000000000 -0700
 @@ -0,0 +1,22 @@
 +# Based off of the default elf32 MIPS target.  However, we use a seperate
 +# script template because the PSP architecture defines sections that normally
