@@ -14,6 +14,53 @@
 #  define M_PI 3.14159265
 #endif
 
+#ifdef PSP
+/*
+ * todo: use sdlmain instead of all this guff
+ */
+#include <pspkernel.h>
+#include <pspdebug.h>
+
+PSP_MODULE_INFO("SDL App", 0x1000, 1, 1);
+PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
+
+#define fprintf(x, args...) pspDebugScreenPrintf(args)
+#define printf(args...) pspDebugScreenPrintf(args)
+
+/* Exit callback */
+int exit_callback(int arg1, int arg2, void *common)
+{
+	return 0;
+}
+
+/* Callback thread */
+int CallbackThread(SceSize args, void *argp)
+{
+	int cbid;
+
+	cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
+	sceKernelRegisterExitCallback(cbid);
+	sceKernelSleepThreadCB();
+
+	return 0;
+}
+
+/* Sets up the callback thread and returns its thread id */
+int SetupCallbacks(void)
+{
+	int thid = 0;
+
+	thid = sceKernelCreateThread("update_thread", CallbackThread,
+				     0x11, 0xFA0, 0, 0);
+	if(thid >= 0)
+	{
+		sceKernelStartThread(thid, 0, 0);
+	}
+
+	return thid;
+}
+#endif
+
 void tkSwapBuffers(void)
 {
 	sdl_swgl_SwapBuffers();
@@ -26,11 +73,11 @@ int ui_loop(int argc, char **argv, const char *name)
 
 	SDL_Init(SDL_INIT_VIDEO);
 
-	screen=SDL_SetVideoMode(320,240,8,SDL_HWSURFACE|SDL_DOUBLEBUF);
+	screen=SDL_SetVideoMode(480,272,8,SDL_HWSURFACE|SDL_DOUBLEBUF);
 	sdl_swgl_MakeCurrent(screen,ctx);
 
 	init();
-	reshape(320,240);
+	reshape(480,272);
 
 	int done=0;
 

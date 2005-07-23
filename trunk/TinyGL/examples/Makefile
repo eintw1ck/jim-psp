@@ -1,7 +1,8 @@
 include ../config.mk
 
-#PROGS = mech texobj gears spin cube
-PROGS = texobj spin cube
+LFLAGS += -L../lib
+
+PROGS = mech texobj gears spin cube
 
 all: $(PROGS)
 

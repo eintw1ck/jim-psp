@@ -1,11 +1,15 @@
 #####################################################################
 # C compiler
 
+
 # linux
-CC= gcc-3.2
+CC= psp-gcc
+AR= psp-ar
+RANLIB= psp-ranlib
 #CC= g++-3.2
-CFLAGS= -g -Wall -O2
-LFLAGS=
+CFLAGS= -g -Wall -O0 -G0
+CFLAGS += -DMAX_SPECULAR_BUFFERS=4 -DSPECULAR_BUFFER_SIZE=128 -DSPECULAR_BUFFER_RESOLUTION=128
+LFLAGS= -L`psp-config --pspsdk-path`/lib 
 
 # for BeOS PPC
 #CC= mwcc
@@ -17,7 +21,7 @@ LFLAGS=
 # Fixed Point 
 
 #####################################################################
-CFLAGS += -DUSE_FIXED_POINT -Wall
+CFLAGS += -Wall
 #CFLAGS += -DSLL_DEBUG -Wall
 
 #####################################################################
@@ -69,8 +73,14 @@ endif
 # SDL configuration (for the examples only)
 
 ifdef TINYGL_USE_SDL
-UI_LIBS= -lSDL -lpthread
+#UI_LIBS= -lSDL -lpthread
+UI_LIBS= -lSDL 
 UI_INCLUDES=
+
+PSPSDK_LIBC_LIB = -lm -lc -lpspglue -lc
+PSPSDK_LIBS = -lpsphprm -lpspdebug -lpspdisplay -lpspge -lpspaudio -lpspctrl -lpspsdk
+UI_LIBS += $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpspuser -lpspkernel
+UI_INCLUDES += -I`psp-config --pspsdk-path`/include -I`psp-config --pspsdk-path`/../include
 
 UI_OBJS=sdl.o
 endif
@@ -79,10 +89,10 @@ endif
 # OpenGL configuration (for the examples only)
 
 # use TinyGL 
-GL_LIBS= -L../lib -lTinyGL 
+GL_LIBS= -lTinyGL
 GLU_LIBS= -lTinyGLU
 GL_INCLUDES= -I../include
-GL_DEPS= ../lib/libTinyGL.a
+#GL_DEPS= ../lib/libTinyGL.a
 
 # use Mesa
 #GL_LIBS= -lMesaGL 

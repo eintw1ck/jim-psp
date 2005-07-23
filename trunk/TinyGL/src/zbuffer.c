@@ -94,7 +94,11 @@ void ZB_resize(ZBuffer * zb, void *frame_buffer, int xsize, int ysize)
 
     zb->xsize = xsize;
     zb->ysize = ysize;
+#ifndef PSP
     zb->linesize = (xsize * PSZB + 3) & ~3;
+#else
+    zb->linesize = 512;
+#endif
 
     size = zb->xsize * zb->ysize * sizeof(unsigned short);
 
@@ -263,7 +267,9 @@ static void ZB_copyFrameBufferRGB24(ZBuffer * zb,
 	    p += 3;
 	} while (--n > 0);
 
-	(char *) p1 += linesize;
+//	(char *) p1 += linesize;
+// todo: ...
+	p1 += linesize;
     }
 }
 

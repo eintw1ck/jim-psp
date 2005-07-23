@@ -1,7 +1,13 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#define NDEBUG
+#ifdef PSP
+#define vfprintf(x, args...) pspDebugScreenPrintf(args)
+#define fprintf(x, args...) pspDebugScreenPrintf(args)
+#define printf(args...) pspDebugScreenPrintf(args)
+#endif
+
+//#define NDEBUG
 
 #ifdef NDEBUG
 #define NO_DEBUG_OUTPUT

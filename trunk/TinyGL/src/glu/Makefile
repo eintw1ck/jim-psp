@@ -10,7 +10,7 @@ all: $(LIB)
 
 $(LIB): $(OBJS)
 	rm -f $(LIB)
-	ar rcs $(LIB) $(OBJS)
+	$(AR) rcs $(LIB) $(OBJS)
 	cp $(LIB) ../../lib
 
 clean:
