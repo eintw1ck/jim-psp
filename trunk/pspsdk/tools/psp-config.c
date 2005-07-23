@@ -26,12 +26,21 @@
 #endif
 /************************/
 
+enum PspConfigMode
+{
+	PSP_CONFIG_UNKNOWN,
+	PSP_CONFIG_PSPSDK_PATH,
+	PSP_CONFIG_PSPDEV_PATH,
+	PSP_CONFIG_PSPLIB_PATH,
+};
+
 /* Specifies that the current usage is to the print the pspsdk path */
-static int g_printpath;
+static enum PspConfigMode g_configmode;
 
 static struct option arg_opts[] = 
 {
 	{"pspsdk-path", no_argument, NULL, 'p'},
+	{"pspdev-path", no_argument, NULL, 'd'},
 	{ NULL, 0, NULL, 0 }
 };
 
@@ -41,14 +50,17 @@ int process_args(int argc, char **argv)
 	int ret = 0;
 	int ch;
 
-	g_printpath = 0;
+	g_configmode = PSP_CONFIG_UNKNOWN;
 
 	ch = getopt_long(argc, argv, "p", arg_opts, NULL);
 	while(ch != -1)
 	{
 		switch(ch)
 		{
-			case 'p' : g_printpath = 1;
+			case 'p' : g_configmode = PSP_CONFIG_PSPSDK_PATH;
+					   ret = 1;
+					   break;
+			case 'd' : g_configmode = PSP_CONFIG_PSPDEV_PATH;
 					   ret = 1;
 					   break;
 			default  : fprintf(stderr, "Invalid option '%c'\n", ch);
@@ -66,6 +78,7 @@ void print_help(void)
 	fprintf(stderr, "Usage: psp-config [opts]\n");
 	fprintf(stderr, "Options:\n");
 	fprintf(stderr, "--pspsdk-path       : Print the base directory of PSPSDK\n");
+	fprintf(stderr, "--pspdev-path       : Print the base install directory\n");
 }
 
 /* Find the path to the pspdev dir (e.g. /usr/local/pspdev) */
@@ -182,9 +195,7 @@ char *find_pspdev_path(char *name)
 
 void print_path(char *name)
 {
-	char pspdev_path[MAX_PATH];
 	char *pspdev_env;
-	int found = 0;
 
 	pspdev_env = getenv(PSPDEV_ENV);
 	if(pspdev_env == NULL)
@@ -192,27 +203,24 @@ void print_path(char *name)
 		/* Could not find the PSPDEV environment variable */
 		/* Let's try and find where psp-config is */
 		pspdev_env = find_pspdev_path(name);
-		if(pspdev_env != NULL)
-		{
-			strcpy(pspdev_path, pspdev_env);
-		}
-	}
-	else
-	{
-		strcpy(pspdev_path, pspdev_env);
-		found = 1;
 	}
 
 	if (pspdev_env != NULL) {
-		strcat(pspdev_path, DIR_SEP_STR);
-		strcat(pspdev_path, PSPSDK_TOPDIR);
-		printf("%s\n", pspdev_path);
+		switch(g_configmode)
+		{
+			case PSP_CONFIG_PSPSDK_PATH : printf("%s%c%s\n", pspdev_env, DIR_SEP, PSPSDK_TOPDIR);
+										  break;
+			case PSP_CONFIG_PSPDEV_PATH : printf("%s\n", pspdev_env);
+										  break;
+			default : fprintf(stderr, "Error, invalida configuration mode\n");
+					  break;
+		};
 	}
 }
 
 int main(int argc, char **argv)
 {
-	if((process_args(argc, argv)) && (g_printpath))
+	if(process_args(argc, argv))
 	{
 		print_path(argv[0]);
 	}
