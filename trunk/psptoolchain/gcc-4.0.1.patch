@@ -1,6 +1,6 @@
---- gcc-4.0.0.orig/config.sub	2005-01-17 17:20:48.000000000 -0800
-+++ gcc-psp/config.sub	2005-06-24 17:02:58.000000000 -0700
-@@ -253,6 +253,7 @@
+--- gcc-4.0.1.orig/config.sub	2005-04-25 03:36:56.000000000 -0700
++++ gcc-psp/config.sub	2005-07-22 17:40:49.770216296 -0700
+@@ -254,6 +254,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
  	| mipstx39 | mipstx39el \
@@ -8,7 +8,7 @@
  	| mn10200 | mn10300 \
  	| msp430 \
  	| ns16k | ns32k \
-@@ -326,6 +327,7 @@
+@@ -328,6 +329,7 @@
  	| mipsisa64sb1-* | mipsisa64sb1el-* \
  	| mipsisa64sr71k-* | mipsisa64sr71kel-* \
  	| mipstx39-* | mipstx39el-* \
@@ -16,7 +16,7 @@
  	| mmix-* \
  	| msp430-* \
  	| none-* | np1-* | ns16k-* | ns32k-* \
-@@ -665,6 +667,10 @@
+@@ -668,6 +670,10 @@
  		basic_machine=m68k-atari
  		os=-mint
  		;;
@@ -27,7 +27,7 @@
  	mips3*-*)
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
---- gcc-4.0.0.orig/gcc/config/mips/t-allegrex	1969-12-31 16:00:00.000000000 -0800
+--- gcc-4.0.1.orig/gcc/config/mips/t-allegrex	1969-12-31 16:00:00.000000000 -0800
 +++ gcc-psp/gcc/config/mips/t-allegrex	2005-06-19 18:09:38.000000000 -0700
 @@ -0,0 +1,29 @@
 +# Suppress building libgcc1.a, since the MIPS compiler port is complete
@@ -59,8 +59,8 @@
 +
 +LIBGCC = stmp-multilib
 +INSTALL_LIBGCC = install-multilib
---- gcc-4.0.0.orig/gcc/config/mips/mips.c	2005-04-15 00:00:27.000000000 -0700
-+++ gcc-psp/gcc/config/mips/mips.c	2005-06-19 18:09:38.000000000 -0700
+--- gcc-4.0.1.orig/gcc/config/mips/mips.c	2005-05-08 04:56:53.000000000 -0700
++++ gcc-psp/gcc/config/mips/mips.c	2005-07-22 17:40:31.113052616 -0700
 @@ -673,6 +673,7 @@
  
    /* MIPS II */
@@ -69,7 +69,7 @@
  
    /* MIPS III */
    { "r4000", PROCESSOR_R4000, 3 },
---- gcc-4.0.0.orig/gcc/config/mips/mips.h	2005-04-15 00:00:18.000000000 -0700
+--- gcc-4.0.1.orig/gcc/config/mips/mips.h	2005-04-15 00:00:18.000000000 -0700
 +++ gcc-psp/gcc/config/mips/mips.h	2005-06-19 18:09:38.000000000 -0700
 @@ -59,7 +59,8 @@
    PROCESSOR_R8000,
@@ -131,8 +131,8 @@
                                       ))
  
  /* True if the result of a load is not available to the next instruction.
---- gcc-4.0.0.orig/gcc/config/mips/psp.h	1969-12-31 16:00:00.000000000 -0800
-+++ gcc-psp/gcc/config/mips/psp.h	2005-07-12 03:05:10.650978352 -0700
+--- gcc-4.0.1.orig/gcc/config/mips/psp.h	1969-12-31 16:00:00.000000000 -0800
++++ gcc-psp/gcc/config/mips/psp.h	2005-07-12 03:05:10.000000000 -0700
 @@ -0,0 +1,31 @@
 +/* Support for Sony's Playstation Portable (PSP).
 +   Copyright (C) 2005 Free Software Foundation, Inc.
@@ -165,9 +165,9 @@
 +/* Get rid of the .pdr section. */
 +#undef SUBTARGET_ASM_SPEC
 +#define SUBTARGET_ASM_SPEC "-mno-pdr"
---- gcc-4.0.0.orig/gcc/config.gcc	2005-03-30 19:17:08.000000000 -0800
-+++ gcc-psp/gcc/config.gcc	2005-06-25 11:39:25.000000000 -0700
-@@ -1500,6 +1500,18 @@
+--- gcc-4.0.1.orig/gcc/config.gcc	2005-05-05 13:11:50.000000000 -0700
++++ gcc-psp/gcc/config.gcc	2005-07-22 17:40:41.468478352 -0700
+@@ -1520,6 +1520,18 @@
  	tmake_file=mips/t-r3900
  	use_fixproto=yes
  	;;

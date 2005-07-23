@@ -16,7 +16,7 @@
 
   ## Source code versions.
   BINUTILS="binutils-2.16"
-  GCC="gcc-4.0.0"
+  GCC="gcc-4.0.1"
   NEWLIB="newlib-1.13.0"
 
  #########################
