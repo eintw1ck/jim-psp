@@ -1,5 +1,5 @@
 --- gcc-4.0.1.orig/config.sub	2005-04-25 03:36:56.000000000 -0700
-+++ gcc-psp/config.sub	2005-07-22 17:40:49.770216296 -0700
++++ gcc-psp/config.sub	2005-07-22 17:40:49.000000000 -0700
 @@ -254,6 +254,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
@@ -60,7 +60,7 @@
 +LIBGCC = stmp-multilib
 +INSTALL_LIBGCC = install-multilib
 --- gcc-4.0.1.orig/gcc/config/mips/mips.c	2005-05-08 04:56:53.000000000 -0700
-+++ gcc-psp/gcc/config/mips/mips.c	2005-07-22 17:40:31.113052616 -0700
++++ gcc-psp/gcc/config/mips/mips.c	2005-07-22 17:40:31.000000000 -0700
 @@ -673,6 +673,7 @@
  
    /* MIPS II */
@@ -165,8 +165,25 @@
 +/* Get rid of the .pdr section. */
 +#undef SUBTARGET_ASM_SPEC
 +#define SUBTARGET_ASM_SPEC "-mno-pdr"
+--- gcc-4.0.1.orig/gcc/version.c	2005-07-07 11:41:54.000000000 -0700
++++ gcc-psp/gcc/version.c	2005-07-22 21:43:07.757453512 -0700
+@@ -5,7 +5,7 @@
+    please modify this string to indicate that, e.g. by putting your
+    organization's name in parentheses at the end of the string.  */
+ 
+-const char version_string[] = "4.0.1";
++const char version_string[] = "4.0.1 (PSPDEV 20050722)";
+ 
+ /* This is the location of the online document giving instructions for
+    reporting bugs.  If you distribute a modified version of GCC,
+@@ -14,4 +14,4 @@
+    forward us bugs reported to you, if you determine that they are
+    not bugs in your modifications.)  */
+ 
+-const char bug_report_url[] = "<URL:http://gcc.gnu.org/bugs.html>";
++const char bug_report_url[] = "<URL:http://wiki.pspdev.org/psp:toolchain#bugs>";
 --- gcc-4.0.1.orig/gcc/config.gcc	2005-05-05 13:11:50.000000000 -0700
-+++ gcc-psp/gcc/config.gcc	2005-07-22 17:40:41.468478352 -0700
++++ gcc-psp/gcc/config.gcc	2005-07-22 17:40:41.000000000 -0700
 @@ -1520,6 +1520,18 @@
  	tmake_file=mips/t-r3900
  	use_fixproto=yes
@@ -186,3 +203,42 @@
  mmix-knuth-mmixware)
  	need_64bit_hwint=yes
  	;;
+--- gcc-4.0.1.orig/gcc/hwint.h	2004-11-23 20:31:57.000000000 -0800
++++ gcc-psp/gcc/hwint.h	2005-07-22 21:50:31.138049416 -0700
+@@ -80,7 +80,7 @@
+ #  define HOST_WIDE_INT_PRINT_DOUBLE_HEX "0x%lx%08lx"
+ # endif
+ #else
+-# define HOST_WIDE_INT_PRINT "ll"
++# define HOST_WIDE_INT_PRINT HOST_LONG_LONG_FORMAT
+ # define HOST_WIDE_INT_PRINT_C "LL"
+   /* We can assume that 'long long' is at least 64 bits.  */
+ # define HOST_WIDE_INT_PRINT_DOUBLE_HEX \
+--- gcc-4.0.1.orig/gcc/c-incpath.c	2005-01-23 07:05:27.000000000 -0800
++++ gcc-psp/gcc/c-incpath.c	2005-07-22 21:49:25.870971520 -0700
+@@ -331,13 +331,18 @@
+   cpp_dir *p;
+ 
+ #if defined (HAVE_DOS_BASED_FILE_SYSTEM)
+-  /* Convert all backslashes to slashes.  The native CRT stat()
+-     function does not recognize a directory that ends in a backslash
+-     (unless it is a drive root dir, such "c:\").  Forward slashes,
+-     trailing or otherwise, cause no problems for stat().  */
+-  char* c;
+-  for (c = path; *c; c++)
+-    if (*c == '\\') *c = '/';
++  /* Remove unnecessary trailing slashes.  On some versions of MS
++     Windows, trailing  _forward_ slashes cause no problems for stat().
++     On newer versions, stat() does not recognise a directory that ends
++     in a '\\' or '/', unless it is a drive root dir, such as "c:/",
++     where it is obligatory.  */
++  int pathlen = strlen (path);
++  char* end = path + pathlen - 1;
++  /* Preserve the lead '/' or lead "c:/".  */
++  char* start = path + (pathlen > 2 && path[1] == ':' ? 3 : 1);
++   
++  for (; end > start && IS_DIR_SEPARATOR (*end); end--)
++    *end = 0;
+ #endif
+ 
+   p = xmalloc (sizeof (cpp_dir));
