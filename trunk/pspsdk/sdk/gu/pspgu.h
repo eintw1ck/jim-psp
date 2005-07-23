@@ -51,9 +51,9 @@ extern "C" {
 #define GU_UNKNOWN_16		(16)
 #define GU_UNKNOWN_17		(17)
 #define GU_COLOR_LOGIC_OP	(18)
-#define GU_UNKNOWN_19		(19)
+#define GU_FACE_NORMAL_REVERSE	(19)
 #define GU_PATCH_FACE		(20)
-#define GU_UNKNOWN_21		(21)
+#define GU_FRAGMENT_2X		(21)
 
 /* Matrix modes */
 #define GU_PROJECTION		(0)
@@ -138,6 +138,17 @@ extern "C" {
 #define GU_LINEAR_MIPMAP_NEAREST (5)
 #define GU_NEAREST_MIPMAP_LINEAR (6)
 #define GU_LINEAR_MIPMAP_LINEAR	(7)
+
+/* Texture Map Mode */
+#define GU_TEXTURE_COORDS	(0)
+#define GU_TEXTURE_MATRIX	(1)
+#define GU_ENVIRONMENT_MAP	(2)
+
+/* Texture Projection Map Mode */
+#define GU_POSITION		(0)
+#define GU_UV			(1)
+#define GU_NORMALIZED_NORMAL	(2)
+#define GU_NORMAL		(3)
 
 /* Wrap Mode */
 #define GU_REPEAT		(0)
@@ -794,7 +805,20 @@ void sceGuTexFunc(int tfx, int tcc);
 **/
 void sceGuTexImage(int mipmap, int width, int height, int tbw, const void* tbp);
 void sceGuTexLevelMode(unsigned int a0, float f12);
-void sceGuTexMapMode(unsigned int a0, unsigned int a1, unsigned int a2);
+
+/**
+  * Set the texture-mapping mode
+  *
+  * Available modes are:
+  *   - GU_TEXTURE_COORDS
+  *   - GU_TEXTURE_MATRIX
+  *   - GU_ENVIRONMENT_MAP
+  *
+  * @param mode - Which mode to use
+  * @param a1 - Unknown
+  * @param a2 - Unknown
+**/
+void sceGuTexMapMode(int mode, unsigned int a1, unsigned int a2);
 
 /**
   * Set texture-mode parameters
@@ -814,7 +838,20 @@ void sceGuTexMapMode(unsigned int a0, unsigned int a1, unsigned int a2);
 **/
 void sceGuTexMode(int tpsm, int a1, int a2, int swizzle);
 void sceGuTexOffset(float u, float v);
-void sceGuTexProjMapMode(unsigned int mode);
+
+/**
+  * Set texture projection-map mode
+  *
+  * Available modes are:
+  *   - GU_POSITION
+  *   - GU_UV
+  *   - GU_NORMALIZED_NORMAL
+  *   - GU_NORMAL
+  *
+  * @param mode - Which mode to use
+**/
+void sceGuTexProjMapMode(int mode);
+
 void sceGuTexScale(float u, float v);
 void sceGuTexSlope(float slope);
 void sceGuTexSync();

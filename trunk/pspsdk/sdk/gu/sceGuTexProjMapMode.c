@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuTexProjMapMode(unsigned int mode)
+void sceGuTexProjMapMode(int mode)
 {
 	GuContext* context = &gu_contexts[gu_curr_context];
 

@@ -180,7 +180,7 @@ int main(int argc, char* argv[])
 
 		// setup envmap texture coord generation
 		sceGuTexMapMode(
-			2,	// envmap mode on	// TODO: define in pspgu.h
+			GU_ENVIRONMENT_MAP,	// envmap mode on
 			2,	// use 2nd light position as an envmap matrix 1st column
 			3	// use 3rd light position as an envmap matrix 2nd column
 			);
