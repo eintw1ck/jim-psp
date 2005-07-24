@@ -14,7 +14,7 @@ CCASFLAGS = $(CFLAGS) $(INCLUDES)
 
 EXTRA_DIST = LIB.status
 
-lib_LIBRARIES = libpsplibc.a libpspglue.a
+lib_LIBRARIES = libpsplibc.a
 
 ## libpsplibc.a sources.
 CORE_SOURCES = terminate.c setjmp.S qsort.c init.c cxx.cpp
@@ -45,7 +45,7 @@ STDLIB_OBJS = abs.o atexit.o atof.o bsearch.o div.o getenv.o _itoa.o labs.o \
 	__stdlib_internals.o 
 
 ## Use a few functions from libpspglue.a.
-GLUE_OBJS = glue__exit.o glue__sbrk.o glue___errno.o glue_clock.o glue_gettimeofday.o glue_time.o
+#GLUE_OBJS = glue__exit.o glue__sbrk.o glue___errno.o glue_clock.o glue_gettimeofday.o glue_time.o
 
 MULT_OBJS = $(XPRINTF_OBJS) $(ALLOC_OBJS) $(STRING_C_OBJS) $(STDIO_OBJS) $(STDLIB_OBJS) $(GLUE_OBJS)
 
@@ -67,16 +67,5 @@ $(STDIO_OBJS): stdio.c
 $(STDLIB_OBJS): stdlib.c
 	$(COMPILE) -DF_$* $< -c -o $@
 
-$(GLUE_OBJS): libcglue.c
-	$(COMPILE) -DF_$* $< -c -o $@
-
-## libpspglue.a sources.
-LIBCGLUE_MULT_OBJS = _close.o _exit.o _fork.o _fstat.o _getpid.o _gettimeofday.o _kill.o _lseek.o \
-	_open.o _read.o _sbrk.o _wait.o _write.o clock.o isatty.o time.o _link.o _unlink.o \
-	_opendir.o _readdir.o _closedir.o getcwd.o chdir.o realpath.o
-
-libpspglue_a_SOURCES = libcglue.c
-libpspglue_a_LIBADD  = $(LIBCGLUE_MULT_OBJS) pspcwd.o
-
-$(LIBCGLUE_MULT_OBJS): libcglue.c
-	$(COMPILE) -DF_$* $< -c -o $@
+#$(GLUE_OBJS): libcglue.c
+#	$(COMPILE) -DF_$* $< -c -o $@

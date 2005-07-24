@@ -10,7 +10,6 @@
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  * Copyright (c) 2005 Jim Paris <jim@jtan.com>
  *
- * $Id$
  */
 #include <string.h>
 #include <sys/types.h>
