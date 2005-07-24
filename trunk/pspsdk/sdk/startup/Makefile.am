@@ -12,10 +12,15 @@ CCASFLAGS = $(CFLAGS) $(INCLUDES)
 noinst_LIBRARIES = lib.a
 lib_a_SOURCES = dummy.c
 
-startupdir = @PSPDEV_LIBDIR@
-startup_DATA = crt0.o
-
 all: crt0.o
+
+startupdir = @PSPDEV_LIBDIR@
+install-exec-hook:
+	$(mkinstalldirs) $(DESTDIR)$(startupdir)
+	$(INSTALL_DATA) crt0.o $(DESTDIR)$(startupdir)/crt0.o
+
+uninstall-hook:
+	rm -f $(DESTDIR)$(startupdir)/crt0.o
 
 CLEANFILES = crt0.o
 
