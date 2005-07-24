@@ -18,7 +18,7 @@ lib_LIBRARIES = libpsplibc.a
 
 ## libpsplibc.a sources.
 CORE_SOURCES = terminate.c setjmp.S qsort.c init.c cxx.cpp
-MULT_SOURCES = xprintf.c alloc.c string.c stdio.c stdlib.c
+MULT_SOURCES = xprintf.c alloc.c string.c stdio.c stdlib.c libcglue.c
 
 ALLOC_OBJS = malloc.o realloc.o calloc.o memalign.o free.o __builtin_alloc.o __alloc_internals.o __mem_walk.o
 
@@ -45,7 +45,7 @@ STDLIB_OBJS = abs.o atexit.o atof.o bsearch.o div.o getenv.o _itoa.o labs.o \
 	__stdlib_internals.o 
 
 ## Use a few functions from libpspglue.a.
-#GLUE_OBJS = glue__exit.o glue__sbrk.o glue___errno.o glue_clock.o glue_gettimeofday.o glue_time.o
+GLUE_OBJS = glue__exit.o glue__sbrk.o glue_clock.o glue_gettimeofday.o glue_time.o
 
 MULT_OBJS = $(XPRINTF_OBJS) $(ALLOC_OBJS) $(STRING_C_OBJS) $(STDIO_OBJS) $(STDLIB_OBJS) $(GLUE_OBJS)
 
@@ -67,5 +67,5 @@ $(STDIO_OBJS): stdio.c
 $(STDLIB_OBJS): stdlib.c
 	$(COMPILE) -DF_$* $< -c -o $@
 
-#$(GLUE_OBJS): libcglue.c
-#	$(COMPILE) -DF_$* $< -c -o $@
+$(GLUE_OBJS): libcglue.c
+	$(COMPILE) -DF_$* $< -c -o $@

@@ -118,4 +118,4 @@ $(PSP_EBOOT): $(TARGET).elf $(PSP_EBOOT_SFO)
 	-rm -f $(TARGET)_strip.elf
 
 clean: $(EXTRA_CLEAN)
-	-rm -f $(FINAL_TARGET) $(OBJS) $(PSP_EBOOT_SFO) $(PSP_EBOOT)
+	-rm -f $(FINAL_TARGET) $(OBJS) $(PSP_EBOOT_SFO) $(PSP_EBOOT) $(EXTRA_TARGETS)
