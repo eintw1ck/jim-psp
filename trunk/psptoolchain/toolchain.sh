@@ -59,6 +59,12 @@
 
   fi
 
+  # Newlib depends on PSPSDK headers, so if it's being built
+  # then make sure that PSPSDK is being built.
+  if test $BUILD_NEWLIB ; then
+   BUILD_PSPSDK=1
+  fi
+
  ###########################
  ## SOFTWARE DEPENDENCIES ##
  ###########################
@@ -157,6 +163,12 @@
    cd ..
   fi
 
+  ## Grab the latest PSPSDK from Subversion.
+  if test $BUILD_PSPSDK ; then
+   rm -Rf pspsdk
+   $SVN checkout svn://svn.pspdev.org/psp/trunk/pspsdk
+  fi
+
  ################################
  ## BUILD AND INSTALL BINUTILS ##
  ################################
@@ -217,6 +229,29 @@
 
   fi
 
+ ############################
+ ## INSTALL PSPSDK HEADERS ##
+ ############################
+
+  if test $BUILD_PSPSDK ; then
+
+   ## Enter the source directory.
+   cd pspsdk
+
+   ## Bootstrap the source.
+   ./bootstrap || { echo "ERROR RUNNING PSPSDK BOOSTRAP"; exit; }
+
+   ## Configure the source.
+   ./configure || { echo "ERROR RUNNING PSPSDK CONFIGURE"; exit; }
+
+   ## Install the headers that Newlib requires.
+   $MAKE clean; $MAKE install-data || { echo "ERROR BUILDING PSPSDK"; exit; }
+
+   ## Exit the source directory.
+   cd ..
+
+  fi
+
  ##############################
  ## BUILD AND INSTALL NEWLIB ##
  ##############################
@@ -273,7 +308,7 @@
    $MAKE clean
 
    ## Exit the build and source directories.
-   cd ..
+   cd ..; cd ..
 
   fi
 
@@ -284,19 +319,10 @@
   ## If we've been told to build pspsdk...
   if test $BUILD_PSPSDK ; then
 
-   ## Remove any previous builds.
-   rm -Rf pspsdk
-
-   ## Check out the latest source.
-   $SVN checkout svn://svn.pspdev.org/psp/trunk/pspsdk
-
    ## Enter the source directory.
    cd pspsdk
 
-   ## Bootstrap the source.
-   ./bootstrap || { echo "ERROR RUNNING PSPSDK BOOSTRAP"; exit; }
-
-   ## Configure the source.
+   ## Reconfigure the source (to pick up the C++ compiler).
    ./configure || { echo "ERROR RUNNING PSPSDK CONFIGURE"; exit; }
 
    ## Build the source.
