@@ -14,7 +14,6 @@ EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = Cube Sample
 
 PSPSDK=$(shell psp-config --pspsdk-path)
-USE_PSPSDK_LIBC=1
 include $(PSPSDK)/lib/build.mak
 
 logo.o: logo.raw
