@@ -26,5 +26,6 @@
 #include <psputils.h>
 #include <pspkerror.h>
 #include <pspstdio.h>
+#include <pspintmanager.h>
 
 #endif /* PSPUSER_H */

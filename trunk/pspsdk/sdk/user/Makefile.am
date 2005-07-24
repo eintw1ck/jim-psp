@@ -25,7 +25,8 @@ libpspuserinclude_HEADERS =	\
 	pspthreadman.h		\
 	pspstdio.h		\
 	pspuser.h		\
-	psputils.h
+	psputils.h		\
+	pspintmanager.h
 
 lib_LIBRARIES = libpspuser.a
 
@@ -39,4 +40,5 @@ libpspuser_a_SOURCES =	\
 	sysmem.S		\
 	threadman.S		\
 	utils.S			\
-	StdioForUser.S	
+	StdioForUser.S		\
+	InterruptManager.S
