@@ -51,6 +51,15 @@ int pspSdkQueryModuleInfoV1(SceUID uid, SceKernelModuleInfo *modinfo);
  */
 int pspSdkInstallNoDeviceCheckPatch(void);
 
+/**
+ * Patch sceLoadCore module to remove loading plain module checks
+ *
+ * @note This function must be called while running in kernel mode.
+ *
+ * @returns 0 on success, otherwise one of ::PspKernelErrorCodes.
+ */
+int pspSdkInstallNoPlainModuleCheckPatch(void);
+
 /*@}*/
 
 #ifdef __cplusplus

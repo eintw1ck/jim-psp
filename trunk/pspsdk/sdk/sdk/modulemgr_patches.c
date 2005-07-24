@@ -15,6 +15,7 @@
 #include <psptypes.h>
 #include <psploadcore.h>
 #include <pspkerror.h>
+#include <psputils.h>
 #include <pspsdk.h>
 #include <string.h>
 
@@ -71,3 +72,45 @@ int pspSdkInstallNoDeviceCheckPatch(void)
 	return SCE_KERNEL_ERROR_ERROR;
 }
 #endif /* F_InstallNoDeviceCheckPatch */
+
+#ifdef F_InstallNoPlainModuleCheckPatch
+
+#define LOAD_EXEC_PLAIN_CHECK 0x4000B000 /* mfc0 *, $22 */
+#define LOAD_EXEC_PLAIN_PATCH 0x34000001 /* li   *, 1 */
+
+
+extern u32 sceKernelProbeExecutableObject;
+extern u32 sceKernelCheckPspConfig;
+
+int pspSdkInstallNoPlainModuleCheckPatch(void)
+{
+    u32 *addr;
+    int i;
+
+    addr = (u32*) (0x80000000 | ((sceKernelProbeExecutableObject & 0x03FFFFFF) << 2));
+    //printf("sceKernelProbeExecutableObject %p\n", addr);
+    for(i = 0; i < 100; i++)
+    {
+        if((addr[i] & 0xFFE0FFFF) == LOAD_EXEC_PLAIN_CHECK)
+        {
+            //printf("Found instruction %p\n", &addr[i]);
+            addr[i] = (LOAD_EXEC_PLAIN_PATCH | (addr[i] & ~0xFFE0FFFF));
+        }
+    }
+
+    addr = (u32*) (0x80000000 | ((sceKernelCheckPspConfig & 0x03FFFFFF) << 2));
+    //printf("sceCheckPspConfig %p\n", addr);
+    for(i = 0; i < 100; i++)
+    {
+        if((addr[i] & 0xFFE0FFFF) == LOAD_EXEC_PLAIN_CHECK)
+        {
+            //printf("Found instruction %p\n", &addr[i]);
+            addr[i] = (LOAD_EXEC_PLAIN_PATCH | (addr[i] & ~0xFFE0FFFF));
+        }
+    }
+
+    sceKernelDcacheWritebackAll();
+
+    return 0;
+}
+#endif /* F_InstallNoPlainModuleCheckPatch */

@@ -17,7 +17,9 @@ libpspsdkinclude_HEADERS = pspsdk.h
 
 lib_LIBRARIES = libpspsdk.a
 
-MODULEMGR_PATCHES_OBJS = InstallNoDeviceCheckPatch.o
+MODULEMGR_PATCHES_OBJS = \
+	InstallNoDeviceCheckPatch.o \
+	InstallNoPlainModuleCheckPatch.o
 
 MULT_SRCS = modulemgr_patches.c
 MULT_OBJS = $(MODULEMGR_PATCHES_OBJS)
