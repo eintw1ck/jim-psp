@@ -31,7 +31,7 @@ enum PspConfigMode
 	PSP_CONFIG_UNKNOWN,
 	PSP_CONFIG_PSPSDK_PATH,
 	PSP_CONFIG_PSPDEV_PATH,
-	PSP_CONFIG_PSPLIB_PATH,
+	PSP_CONFIG_PSP_PREFIX,
 };
 
 /* Specifies that the current usage is to the print the pspsdk path */
@@ -41,6 +41,7 @@ static struct option arg_opts[] =
 {
 	{"pspsdk-path", no_argument, NULL, 'p'},
 	{"pspdev-path", no_argument, NULL, 'd'},
+	{"psp-prefix",  no_argument, NULL, 'P'},
 	{ NULL, 0, NULL, 0 }
 };
 
@@ -63,6 +64,9 @@ int process_args(int argc, char **argv)
 			case 'd' : g_configmode = PSP_CONFIG_PSPDEV_PATH;
 					   ret = 1;
 					   break;
+			case 'P' : g_configmode = PSP_CONFIG_PSP_PREFIX;
+					   ret = 1;
+					   break;
 			default  : fprintf(stderr, "Invalid option '%c'\n", ch);
 					   break;
 		};
@@ -77,8 +81,9 @@ void print_help(void)
 {
 	fprintf(stderr, "Usage: psp-config [opts]\n");
 	fprintf(stderr, "Options:\n");
-	fprintf(stderr, "--pspsdk-path       : Print the base directory of PSPSDK\n");
-	fprintf(stderr, "--pspdev-path       : Print the base install directory\n");
+	fprintf(stderr, "-p, --pspsdk-path       : Print the base directory of PSPSDK\n");
+	fprintf(stderr, "-d, --pspdev-path       : Print the base install directory\n");
+	fprintf(stderr, "-P, --psp-prefix        : Print the prefix of PSP-hosted software\n");
 }
 
 /* Find the path to the pspdev dir (e.g. /usr/local/pspdev) */
@@ -211,6 +216,8 @@ void print_path(char *name)
 			case PSP_CONFIG_PSPSDK_PATH : printf("%s%c%s\n", pspdev_env, DIR_SEP, PSPSDK_TOPDIR);
 										  break;
 			case PSP_CONFIG_PSPDEV_PATH : printf("%s\n", pspdev_env);
+										  break;
+			case PSP_CONFIG_PSP_PREFIX :  printf("%s%c%s\n", pspdev_env, DIR_SEP, "psp");
 										  break;
 			default : fprintf(stderr, "Error, invalida configuration mode\n");
 					  break;
