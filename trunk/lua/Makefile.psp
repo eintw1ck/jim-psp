@@ -4,7 +4,7 @@ LUA= .
 include $(LUA)/config
 
 PSPSDK = $(shell psp-config --pspsdk-path)
-PSPDIR = $(PSPSDK)/..
+PSPDIR = $(shell psp-config --psp-prefix)
 
 CFLAGS = -O2 -G0 -I$(LUA)/include
 

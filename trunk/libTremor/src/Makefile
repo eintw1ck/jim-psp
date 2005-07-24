@@ -1,5 +1,5 @@
-PSPSDK=$(shell psp-config --pspsdk-path)
-PSPLIBSDIR = $(PSPSDK)/..
+PSPSDK = $(shell psp-config --pspsdk-path)
+PSPDIR = $(shell psp-config --psp-prefix)
 
 TARGET_LIB = ../lib/libvorbisidec.a
 OBJS = mdct.o block.o window.o synthesis.o info.o floor1.o floor0.o vorbisfile.o res012.o mapping0.o registry.o codebook.o sharedbook.o framing.o bitwise.o
@@ -10,13 +10,13 @@ ASFLAGS = $(CFLAGS)
 include $(PSPSDK)/lib/build.mak
 
 install: $(PSP_LIB)
-	@echo "Installing Tremor into $(PSPLIBSDIR)/libTremor"
-	@mkdir  -p $(PSPLIBSDIR)/libTremor/include $(PSPLIBSDIR)/libTremor/lib
-	@cp ../include/ogg.h $(PSPLIBSDIR)/libTremor/include
-	@cp ../include/os_types.h $(PSPLIBSDIR)/libTremor/include
-	@cp ../include/config_types.h $(PSPLIBSDIR)/libTremor/include
-	@cp ../include/ivorbisfile.h $(PSPLIBSDIR)/libTremor/include
-	@cp ../include/ivorbiscodec.h $(PSPLIBSDIR)/libTremor/include
-	@cp ../lib/libvorbisidec.a $(PSPLIBSDIR)/libTremor/lib
+	@echo "Installing Tremor into $(PSPDIR)"
+	@mkdir  -p $(PSPDIR)/include $(PSPDIR)/lib
+	@cp ../include/ogg.h $(PSPDIR)/include
+	@cp ../include/os_types.h $(PSPDIR)/include
+	@cp ../include/config_types.h $(PSPDIR)/include
+	@cp ../include/ivorbisfile.h $(PSPDIR)/include
+	@cp ../include/ivorbiscodec.h $(PSPDIR)/include
+	@cp ../lib/libvorbisidec.a $(PSPDIR)/lib
 	@echo "Done."
 

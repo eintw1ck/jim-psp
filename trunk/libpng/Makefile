@@ -1,5 +1,5 @@
 PSPSDK=$(shell psp-config --pspsdk-path)
-PSPLIBSDIR=$(PSPSDK)/..
+PSPDIR=$(shell psp-config --psp-prefix)
 TARGET_LIB = libpng.a
 OBJS = png.o pngerror.o pngget.o pngmem.o pngpread.o \
 	pngread.o pngrio.o pngrtran.o pngrutil.o pngset.o \
@@ -10,8 +10,8 @@ CFLAGS = -O2 -G0
 include $(PSPSDK)/lib/build.mak
 
 install: $(TARGET_LIB)
-	@echo "Installing libpng into $(PSPLIBSDIR)"
-	@mkdir -p $(PSPLIBSDIR)/include $(PSPLIBSDIR)/lib
-	@cp png.h pngconf.h $(PSPLIBSDIR)/include
-	@cp libpng.a  $(PSPLIBSDIR)/lib
+	@echo "Installing libpng into $(PSPDIR)"
+	@mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
+	@cp png.h pngconf.h $(PSPDIR)/include
+	@cp libpng.a  $(PSPDIR)/lib
 	@echo "Done"

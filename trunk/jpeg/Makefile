@@ -1,5 +1,5 @@
 PSPSDK=$(shell psp-config --pspsdk-path)
-PSPLIBSDIR=$(PSPSDK)/..
+PSPDIR=$(shell psp-config --psp-prefix)
 TARGET_LIB = libjpeg.a
 OBJS =	jcmainct.o jctrans.o jdhuff.o jdsample.o jidctint.o jcapimin.o \
 	jcmarker.o jdapimin.o jdinput.o  jdtrans.o jidctred.o jcapistd.o \
@@ -15,8 +15,8 @@ CFLAGS = -O2 -G0
 include $(PSPSDK)/lib/build.mak
 
 install: $(TARGET_LIB)
-	@echo "Installing libjpeg into $(PSPLIBSDIR)"
-	@mkdir -p $(PSPLIBSDIR)/include $(PSPLIBSDIR)/lib
-	@cp jconfig.h jpeglib.h jmorecfg.h jerror.h $(PSPLIBSDIR)/include
-	@cp libjpeg.a  $(PSPLIBSDIR)/lib
+	@echo "Installing libjpeg into $(PSPDIR)"
+	@mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
+	@cp jconfig.h jpeglib.h jmorecfg.h jerror.h $(PSPDIR)/include
+	@cp libjpeg.a  $(PSPDIR)/lib
 	@echo "Done"

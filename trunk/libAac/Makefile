@@ -1,5 +1,5 @@
 PSPSDK = $(shell psp-config --pspsdk-path)
-PSPLIBSDIR = $(PSPSDK)/..
+PSPDIR = $(shell psp-config --psp-prefix)
 
 TARGET_LIB = lib/libAac.a
 OBJS = src/aactabs.o src/aacdec.o src/bitstream.o src/fft.o src/noiseless.o src/sbrhfadj.o src/sbrqmf.o src/trigtabs.o src/buffers.o src/filefmt.o src/pns.o src/sbrhfgen.o src/sbrside.o src/trigtabs_fltgen.o src/dct4.o src/huffman.o src/sbr.o src/sbrhuff.o src/sbrtabs.o src/decelmnt.o src/hufftabs.o src/sbrfft.o src/sbrimdct.o src/stproc.o src/dequant.o src/imdct.o src/sbrfreq.o src/sbrmath.o src/tns.o
@@ -15,10 +15,10 @@ include $(PSPSDK)/lib/build.mak
 extra-clean:
 	rm -f src/*.o
 install: 
-	@echo "Installing libAac into $(PSPLIBSDIR)/libAac"
-	@mkdir -p $(PSPLIBSDIR)/libAac/include $(PSPLIBSDIR)/libAac/lib
-	@cp include/aaccommon.h $(PSPLIBSDIR)/libAac/include
-	@cp include/aacdec.h $(PSPLIBSDIR)/libAac/include
-	@cp include/statname.h $(PSPLIBSDIR)/libAac/include
-	@cp lib/libAac.a  $(PSPLIBSDIR)/libAac/lib
+	@echo "Installing libAac into $(PSPDIR)"
+	@mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
+	@cp include/aaccommon.h $(PSPDIR)/include
+	@cp include/aacdec.h $(PSPDIR)/include
+	@cp include/statname.h $(PSPDIR)/include
+	@cp lib/libAac.a  $(PSPDIR)/lib
 	@echo "Done"
