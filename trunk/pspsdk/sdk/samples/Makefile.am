@@ -20,6 +20,7 @@ SAMPLES = \
 	gu/envmap \
 	gu/spharm \
 	gu/rendertarget \
+	gu/reflection \
 	ir/sircs \
 	ir/irda \
 	kernel/kdumper \
