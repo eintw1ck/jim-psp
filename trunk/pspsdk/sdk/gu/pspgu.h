@@ -789,8 +789,28 @@ void sceGuSetDither(const ScePspIMatrix4* matrix);
 **/
 void sceGuShadeModel(int mode);
 
-/* textures */
-void sceGuCopyImage(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3, unsigned int t0, unsigned int t1, void* ptr1, unsigned int t3, unsigned int stack0, unsigned int stack1, void* ptr2);
+/**
+  * Image transfer using the GE
+  *
+  * @par Example: Copy a fullscreen 32-bit image from RAM to VRAM
+  * @code
+  * sceGuCopyImage(GU_PSM_8888,0,0,480,272,512,pixels,0,0,512,(void*)(((unsigned int)framebuffer)+0x4000000));
+  * @endcode
+  *
+  * @param psm - Pixel format for buffer
+  * @param sx - Source X
+  * @param sy - Source Y
+  * @param width - Image width
+  * @param height - Image height
+  * @param srcw - Source buffer width (block aligned)
+  * @param src - Source pointer
+  * @param dx - Destination X
+  * @param dy - Destination Y
+  * @param destw - Destination buffer width (block aligned)
+  * @param dest - Destination pointer
+**/
+void sceGuCopyImage(int psm, int sx, int sy, int width, int height, int srcw, void* src, int dx, int dy, int destw, void* dest);
+
 void sceGuTexEnvColor(unsigned int color);
 
 /**
