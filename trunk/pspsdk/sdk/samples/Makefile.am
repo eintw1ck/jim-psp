@@ -11,6 +11,7 @@ SAMPLES = \
 	debug/profiler \
 	gu/blit \
 	gu/clut \
+	gu/copy \
 	gu/cube \
 	gu/lights \
 	gu/lines \
