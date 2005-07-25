@@ -18,8 +18,8 @@ include $(PSPSDK)/lib/build.mak
 
 convlogo:
 	bin2o -i logo.raw logo.o logo
-	bin2o -i image1.raw logo2.o logo2
-	bin2o -i image2.raw logo3.o logo3
+	bin2o -i Image1.raw logo2.o logo2
+	bin2o -i Image2.raw logo3.o logo3
 
 copyms:
 	cp -f EBOOT.PBP /cygdrive/I/PSP/GAME/SPHARM
