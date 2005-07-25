@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuStencilOp(unsigned int a0, unsigned int a1, unsigned int a2)
+void sceGuStencilOp(int fail, int zfail, int zpass)
 {
-	sendCommandi(221,a0 | (a1 << 8) | (a2 << 16));
+	sendCommandi(221,fail | (zfail << 8) | (zpass << 16));
 }

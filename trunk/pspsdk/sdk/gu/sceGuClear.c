@@ -64,8 +64,8 @@ void sceGuClear(int flags)
     }
 
   }
-  
+
    sendCommandi(211,((flags & 0x07) << 8) | 0x01);
-   sceGuDrawArray(6,0x80011c,count,0,buffer);
+   sceGuDrawArray(6,GU_COLOR_8888|GU_VERTEX_16BIT|GU_TRANSFORM_2D,count,0,buffer);
    sendCommandi(211,0);
 }

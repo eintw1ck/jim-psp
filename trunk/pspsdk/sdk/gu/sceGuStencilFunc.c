@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuStencilFunc(unsigned int a0, unsigned int a1, unsigned int a2)
+void sceGuStencilFunc(int func, int ref, int mask)
 {
-	sendCommandi(220,a0 | ((a1 & 0xff) << 8) | ((a2 & 0xff) << 16));
+	sendCommandi(220,func | ((ref & 0xff) << 8) | ((mask & 0xff) << 16));
 }

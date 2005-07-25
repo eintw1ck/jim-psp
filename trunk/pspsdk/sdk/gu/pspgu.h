@@ -35,7 +35,7 @@ extern "C" {
 #define GU_ALPHA_TEST		(0)
 #define GU_DEPTH_TEST		(1)
 #define GU_SCISSOR_TEST		(2)
-#define GU_UNKNOWN_3		(3)
+#define GU_STENCIL_TEST		(3)
 #define GU_BLEND		(4)
 #define GU_CULL_FACE		(5)
 #define GU_DITHER		(6)
@@ -158,7 +158,7 @@ extern "C" {
 #define GU_CW			(0)
 #define GU_CCW			(1)
 
-/* Alpha & Depth Test (Stencil aswell???) */
+/* Test Function */
 #define GU_NEVER		(0)
 #define GU_ALWAYS		(1)
 #define GU_EQUAL		(2)
@@ -170,7 +170,7 @@ extern "C" {
 
 /* Clear Buffer Mask */
 #define GU_COLOR_BUFFER_BIT	(1)
-#define GU_UNKNOWN_BUFFER_BIT	(2)
+#define GU_STENCIL_BUFFER_BIT	(2)
 #define GU_DEPTH_BUFFER_BIT	(4)
 
 /* Texture Effect */
@@ -196,6 +196,14 @@ extern "C" {
 #define GU_DST_COLOR		(0)
 #define GU_ONE_MINUS_DST_COLOR	(1)
 #define GU_FIX			(10)
+
+/* Stencil Operations */
+#define GU_KEEP			(0)
+#define GU_ZERO			(1) // untested
+#define GU_REPLACE		(2)
+#define GU_INCR			(3) // untested
+#define GU_DECR			(4) // untested
+/*#define GU_INVERT		(5) */ // untested
 
 /* Light Components */
 #define GU_AMBIENT		(1)
@@ -682,8 +690,43 @@ void sceGuBlendFunc(int op, int src, int dest, unsigned int srcfix, unsigned int
 
 void sceGuMaterial(int mode, int color);
 void sceGuModelColor(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3);
-void sceGuStencilFunc(unsigned int a0, unsigned int a1, unsigned int a2);
-void sceGuStencilOp(unsigned int a0, unsigned int a1, unsigned int a2);
+
+/**
+  * Set stencil function and reference value for stencil testing
+  *
+  * Availablefunctions are:
+  *   - GU_NEVER
+  *   - GU_ALWAYS
+  *   - GU_EQUAL
+  *   - GU_NOTEQUAL
+  *   - GU_LESS
+  *   - GU_LEQUAL
+  *   - GU_GREATER
+  *   - GU_GEQUAL
+  *
+  * @param func - Test function
+  * @param ref - The reference value for the stencil test
+  * @param mask - Mask that is ANDed with both the reference value and stored stencil value when the test is done
+**/
+void sceGuStencilFunc(int func, int ref, int mask);
+
+/**
+  * Set the stencil test actions
+  *
+  * Available actions are:
+  *   - GU_KEEP - Keeps the current value
+  *   - GU_ZERO - UNTESTED - Sets the stencil buffer value to zero
+  *   - GU_REPLACE - Sets the stencil buffer value to ref, as specified by sceGuStencilFunc()
+  *   - GU_INCR - UNTESTED - Increments the current stencil buffer value
+  *   - GU_DECR - UNTESTED - Decrease the current stencil buffer value
+  *   - GU_INVERT - UNTESTED - Bitwise invert the current stencil buffer value (Undefined right now, clashes with the logical operation)
+  *
+  * @param fail - The action to take when the stencil test fails
+  * @param zfail - The action to take when stencil test passes, but the depth test fails
+  * @param zpass - The action to take when both stencil test and depth test passes
+**/
+void sceGuStencilOp(int fail, int zfail, int zpass);
+
 void sceGuSpecular(float power);
 
 /**
