@@ -49,7 +49,7 @@ extern "C" {
 #define GU_LIGHT3		(14)
 #define GU_UNKNOWN_15		(15)
 #define GU_UNKNOWN_16		(16)
-#define GU_UNKNOWN_17		(17)
+#define GU_COLOR_TEST		(17)
 #define GU_COLOR_LOGIC_OP	(18)
 #define GU_FACE_NORMAL_REVERSE	(19)
 #define GU_PATCH_FACE		(20)
@@ -646,7 +646,27 @@ void sceGuPixelMask(unsigned int mask);
 **/
 void sceGuColor(unsigned int color);
 
-void sceGuColorFunc(int a0, unsigned int color, int a2);
+/**
+  * Set the color test function
+  *
+  * The color test is only performed while GU_COLOR_TEST is enabled.
+  *
+  * Available functions are:
+  *   - GU_NEVER
+  *   - GU_ALWAYS
+  *   - GU_EQUAL
+  *   - GU_NOTEQUAL
+  *
+  * @par Example: Reject any pixel that does not have 0 as the blue channel
+  * @code
+  * sceGuColorFunc(GU_EQUAL,0,0xff0000);
+  * @endcode
+  *
+  * @param func - Color test function
+  * @param color - Color to test against
+  * @param mask - Mask ANDed against both source and destination when testing
+**/
+void sceGuColorFunc(int a0, unsigned int color, unsigned int mask);
 
 /**
   * Set which color components that the material will receive

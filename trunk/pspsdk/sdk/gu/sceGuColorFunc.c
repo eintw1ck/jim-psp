@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuColorFunc(int a0, unsigned int color, int a2)
+void sceGuColorFunc(int func, unsigned int color, unsigned int mask)
 {
 	sendCommandi(216,a0 & 0x03);
 	sendCommandi(217,color & 0xffffff);
