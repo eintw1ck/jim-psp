@@ -1,5 +1,5 @@
-TARGET = shadowmap
-OBJS = shadowmap.o
+TARGET = shadowprojection
+OBJS = shadowprojection.o
 
 INCDIR =
 CFLAGS = -G0 -Wall
@@ -11,7 +11,7 @@ LDFLAGS =
 LIBS = -lpspgu
 
 EXTRA_TARGETS = EBOOT.PBP
-PSP_EBOOT_TITLE = Shadow Map Sample
+PSP_EBOOT_TITLE = Shadow Projection Sample
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
