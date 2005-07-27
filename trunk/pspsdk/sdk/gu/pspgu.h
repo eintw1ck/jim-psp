@@ -39,7 +39,7 @@ extern "C" {
 #define GU_BLEND		(4)
 #define GU_CULL_FACE		(5)
 #define GU_DITHER		(6)
-#define GU_UNKNOWN_7		(7)
+#define GU_FOG			(7)
 #define GU_CLIP_PLANES		(8)
 #define GU_TEXTURE_2D		(9)
 #define GU_LIGHTING		(10)
