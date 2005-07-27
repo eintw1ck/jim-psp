@@ -89,11 +89,10 @@ SceSize sceKernelMaxFreeMemSize(void);
 
 /**
  * Get the firmware version.
- *
- * @returns The firmware version.
  * 
- * @note This seems to be a leftover function from the official PSP development kit.
- * There's no way of knowing if the value returned is indicative of the real firmware version.
+ * @returns The firmware version.
+ * 0x01000300 on v1.00 unit
+ * 0x01050001 on v1.50 unit
  */
 int sceKernelDevkitVersion(void);
 

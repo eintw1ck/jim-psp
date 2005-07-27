@@ -32,6 +32,9 @@ extern "C" {
 /** @addtogroup ModuleMgr Module Manager Library */
 /*@{*/
 
+#define PSP_MEMORY_PARTITION_KERNEL 1
+#define PSP_MEMORY_PARTITION_USER 2
+
 typedef struct SceKernelLMOption {
 	SceSize 		size;
 	SceUID 			mpidtext;

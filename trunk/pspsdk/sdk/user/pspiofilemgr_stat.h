@@ -30,9 +30,9 @@ enum IOAccessModes
 	/** Symbolic link */
 	FIO_S_IFLNK		= 0x4000,
 	/** Directory */
-	FIO_S_IFDIR		= 0x2000,
+	FIO_S_IFDIR		= 0x1000,
 	/** Regular file */
-	FIO_S_IFREG		= 0x1000,
+	FIO_S_IFREG		= 0x2000,
 
 	/** Set UID */
 	FIO_S_ISUID		= 0x0800,
