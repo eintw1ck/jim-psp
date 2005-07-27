@@ -812,6 +812,8 @@ void sceGuShadeModel(int mode);
 /**
   * Image transfer using the GE
   *
+  * NOTE: Pointers must be aligned to 1 quad word (16 bytes)
+  *
   * @par Example: Copy a fullscreen 32-bit image from RAM to VRAM
   * @code
   * sceGuCopyImage(GU_PSM_8888,0,0,480,272,512,pixels,0,0,512,(void*)(((unsigned int)framebuffer)+0x4000000));
@@ -879,6 +881,8 @@ void sceGuTexFunc(int tfx, int tcc);
   *
   * Textures may reside in main RAM, but it has a huge speed-penalty. Swizzle textures
   * to get maximum speed.
+  *
+  * NOTE: Pointers must be aligned to 1 quad word (16 bytes)
   *
   * @param mipmap - Mipmap level
   * @param width - Width of texture (must be a power of 2)
@@ -953,6 +957,8 @@ void sceGuTexWrap(int u, int v);
 
 /**
   * Upload CLUT (Color Lookup Table)
+  *
+  * NOTE: Pointers must be aligned to 1 quad word (16 bytes)
   *
   * @param num_blocks - How many blocks of 8 entries to upload (32*8 is 256 colors)
   * @param cbp - Pointer to palette (16 byte aligned)
