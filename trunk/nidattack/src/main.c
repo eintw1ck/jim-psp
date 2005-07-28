@@ -213,8 +213,8 @@ void fillsearchtable()
   { //  Find the first firstbyte in the hashlist that matches this value
     hashpos = 0;
     searchval = (count<<24);
-    while ((hash[hashpos++]&0xff000000) < searchval);
-    hashpos--;
+    while ((hash[hashpos]&0xff000000) < searchval &&
+	   hashpos < hash_count - 1) hashpos++;
     if ((hash[hashpos]&0xff000000) == searchval)
     { 
       // Now Search for a twobyte combo
@@ -222,8 +222,8 @@ void fillsearchtable()
       { //  Find the first secondbyte in the hashlist from this pos
         hashpos2 = hashpos;
         searchval = (count<<24) | (count2<<16);
-        while ((hash[hashpos2++]&0xffff0000) < searchval);
-        hashpos2--;
+        while ((hash[hashpos2]&0xffff0000) < searchval &&
+	       hashpos2 < hash_count - 1) hashpos2++;
         if ((hash[hashpos2]&0xffff0000) == searchval)
         { //  Add this entry
           midsearch[(count<<8)+count2] = hashpos2;
@@ -233,8 +233,8 @@ void fillsearchtable()
           { //  Find the first thirdbyte in the hashlist from this pos
             hashpos3 = hashpos2;
             searchval = (count<<24) | (count2<<16) | (count3<<8);
-            while ((hash[hashpos3++]&0xffffff00) < searchval);
-            hashpos3--;
+            while ((hash[hashpos3]&0xffffff00) < searchval &&
+		   hashpos3 < hash_count - 1) hashpos3++;
             if ((hash[hashpos3]&0xffffff00) == searchval)
             { //  Add this entry
               bigsearch[(count<<16)+(count2<<8)+count3] = hashpos2;
