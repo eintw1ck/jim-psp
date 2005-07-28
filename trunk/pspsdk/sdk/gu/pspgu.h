@@ -415,6 +415,8 @@ void sceGuSendList(unsigned int mode, const void* list, void* data);
 
 /**
   * Swap display and draw buffer
+  *
+  * @returns Pointer to the new backbuffer
 **/
 void* sceGuSwapBuffers(void);
 
