@@ -26,9 +26,6 @@
 #include "ivorbisfile.h"
 
 #include "misc.h"
-#include "psptypes.h"
-#include "pspdebug.h"
-#define printf pspDebugScreenPrintf
 
 /* A 'chained bitstream' is a Vorbis bitstream that contains more than
    one logical bitstream arranged end to end (the only form of Ogg
@@ -59,28 +56,17 @@
  * harder to understand anyway.  The high level functions are last.  Begin
  * grokking near the end of the file */
 
-
 /* read a little more data from the file/pipe into the ogg_sync framer */
 static long _get_data(OggVorbis_File *vf){
   errno=0;
   if(vf->datasource){
-	  char *buffer;
-	  long bytes;
-	  printf("\togg sync bufferin\n");
-	  sceDisplayWaitVblankStart();
-    buffer=ogg_sync_bufferin(vf->oy,CHUNKSIZE);
-    printf("\tread func\n");
-	bytes=(vf->callbacks.read_func)(buffer,1,CHUNKSIZE,vf->datasource);
-    printf("\tread $d bytes\n", bytes);
+    char *buffer=ogg_sync_bufferin(vf->oy,CHUNKSIZE);
+    long bytes=(vf->callbacks.read_func)(buffer,1,CHUNKSIZE,vf->datasource);
     if(bytes>0)ogg_sync_wrote(vf->oy,bytes);
-    printf("\tafter sync wrote\n");
     if(bytes==0 && errno)return(-1);
     return(bytes);
-  }else {
-	  printf("\treturn data\n");
-	  sceDisplayWaitVblankStart();
+  }else
     return(0);
-   }
 }
 
 /* save a tiny smidge of verbosity to make the code more readable */
@@ -112,15 +98,13 @@ static void _seek_helper(OggVorbis_File *vf,ogg_int64_t offset){
 
 static ogg_int64_t _get_next_page(OggVorbis_File *vf,ogg_page *og,
 				  ogg_int64_t boundary){
-printf("\tin get next page (bound %d)\n",(int) boundary);
-	if(boundary>0)boundary+=vf->offset;
+  if(boundary>0)boundary+=vf->offset;
   while(1){
     long more;
 
     if(boundary>0 && vf->offset>=boundary)return(OV_FALSE);
-    printf("\tsync pageseek\n");
     more=ogg_sync_pageseek(vf->oy,og);
-   printf("\tafter pageseek, ret = %d\n",more); 
+    
     if(more<0){
       /* skipped n bytes */
       vf->offset-=more;
@@ -129,17 +113,13 @@ printf("\tin get next page (bound %d)\n",(int) boundary);
 	/* send more paramedics */
 	if(!boundary)return(OV_FALSE);
 	{
-		long ret;
-	printf("\tbefore get data\n");
-	  ret=_get_data(vf);
-	  printf("\tget data = %d\n", ret);
+	  long ret=_get_data(vf);
 	  if(ret==0)return(OV_EOF);
 	  if(ret<0)return(OV_EREAD);
 	}
       }else{
 	/* got a page.  Return the offset at the page beginning,
            advance the internal offset past the page end */
-	      printf("\tgot a page\n");
 	ogg_int64_t ret=vf->offset;
 	vf->offset+=more;
 	return(ret);
@@ -261,30 +241,26 @@ static int _fetch_headers(OggVorbis_File *vf,
   int i,ret;
   
   if(!og_ptr){
-	  printf("\tget next page\n");
     ogg_int64_t llret=_get_next_page(vf,&og,CHUNKSIZE);
     if(llret==OV_EREAD)return(OV_EREAD);
     if(llret<0)return OV_ENOTVORBIS;
     og_ptr=&og;
   }
- printf("\tstream reset serialno\n");
+
   ogg_stream_reset_serialno(vf->os,ogg_page_serialno(og_ptr));
   if(serialno)*serialno=vf->os->serialno;
   vf->ready_state=STREAMSET;
   
   /* extract the initial header from the first page and verify that the
      Ogg bitstream is in fact Vorbis data */
-  printf("\tinfo init\n");
+  
   vorbis_info_init(vi);
-  printf("\tcomment_init\n");
   vorbis_comment_init(vc);
   
   i=0;
   while(i<3){
-	 printf("\tpagein\n");
     ogg_stream_pagein(vf->os,og_ptr);
     while(i<3){
-	    
       int result=ogg_stream_packetout(vf->os,&op);
       if(result==0)break;
       if(result==-1){
@@ -302,13 +278,12 @@ static int _fetch_headers(OggVorbis_File *vf,
 	goto bail_header;
       }
   }
-printf("\tpacket release\n");
+
   ogg_packet_release(&op);
   ogg_page_release(&og);
   return 0; 
 
  bail_header:
-  printf("\tbail header\n");
   ogg_packet_release(&op);
   ogg_page_release(&og);
   vorbis_info_clear(vi);
@@ -682,18 +657,18 @@ static int _fetch_and_process_packet(OggVorbis_File *vf,
    fseek64 */
 static int _fseek64_wrap(FILE *f,ogg_int64_t off,int whence){
   if(f==NULL)return(-1);
-  return fseek(f,(ogg_int32_t)off,whence);
+  return fseek(f,off,whence);
 }
 
 static int _ov_open1(void *f,OggVorbis_File *vf,char *initial,
 		     long ibytes, ov_callbacks callbacks){
   int offsettest=(f?callbacks.seek_func(f,0,SEEK_CUR):-1);
   int ret;
-printf("\tmemset\n");
+
   memset(vf,0,sizeof(*vf));
   vf->datasource=f;
   vf->callbacks = callbacks;
-printf("\tsync create\n");
+
   /* init the framing state */
   vf->oy=ogg_sync_create();
 
@@ -702,11 +677,8 @@ printf("\tsync create\n");
      previously read data (as we may be reading from a non-seekable
      stream) */
   if(initial){
-	  printf("\tbuffer in\n");
     char *buffer=ogg_sync_bufferin(vf->oy,ibytes);
-    printf("\tmemcpy\n");
     memcpy(buffer,initial,ibytes);
-    printf("\togg_sync_wrote\n");
     ogg_sync_wrote(vf->oy,ibytes);
   }
 
@@ -716,14 +688,11 @@ printf("\tsync create\n");
   /* No seeking yet; Set up a 'single' (current) logical bitstream
      entry for partial open */
   vf->links=1;
-  printf("\togg_calloc x2\n");
   vf->vi=_ogg_calloc(vf->links,sizeof(*vf->vi));
   vf->vc=_ogg_calloc(vf->links,sizeof(*vf->vc));
-  printf("\togg stream create\n");
   vf->os=ogg_stream_create(-1); /* fill in the serialno later */
 
   /* Try to fetch the headers, maintaining all the storage */
-  printf("\tfetch headers\n");
   if((ret=_fetch_headers(vf,vf->vi,vf->vc,&vf->current_serialno,NULL))<0){
     vf->datasource=NULL;
     ov_clear(vf);
@@ -788,10 +757,8 @@ int ov_clear(OggVorbis_File *vf){
 
 int ov_open_callbacks(void *f,OggVorbis_File *vf,char *initial,long ibytes,
     ov_callbacks callbacks){
-  printf("calling ov_open1\n");
   int ret=_ov_open1(f,vf,initial,ibytes,callbacks);
   if(ret)return ret;
-  printf("calling_ov_open2\n");
   return _ov_open2(vf);
 }
 
@@ -802,7 +769,7 @@ int ov_open(FILE *f,OggVorbis_File *vf,char *initial,long ibytes){
     (int (*)(void *))                             fclose,
     (long (*)(void *))                            ftell
   };
-printf("calling ov_open_callbacks\n");
+
   return ov_open_callbacks((void *)f, vf, initial, ibytes, callbacks);
 }
   
