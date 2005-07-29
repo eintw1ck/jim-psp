@@ -5200,7 +5200,7 @@ beq\t%2,%.,1b\;\
 		 (const_int 0)])
 	 (match_operand:GPR 2 "reg_or_0_operand" "dJ,0")
 	 (match_operand:GPR 3 "reg_or_0_operand" "0,dJ")))]
-  "ISA_HAS_CONDMOVE"
+  "ISA_HAS_CONDMOVE || ISA_HAS_INT_CONDMOVE"
   "@
     mov%T4\t%0,%z2,%1
     mov%t4\t%0,%z3,%1"
@@ -5230,8 +5230,12 @@ beq\t%2,%.,1b\;\
 	(if_then_else:GPR (match_dup 5)
 			  (match_operand:GPR 2 "reg_or_0_operand")
 			  (match_operand:GPR 3 "reg_or_0_operand")))]
-  "ISA_HAS_CONDMOVE"
+  "ISA_HAS_CONDMOVE || ISA_HAS_INT_CONDMOVE"
 {
+  if (ISA_HAS_INT_CONDMOVE
+      && GET_MODE_CLASS (GET_MODE (cmp_operands[0])) == MODE_FLOAT)
+    FAIL;
+
   gen_conditional_move (operands);
   DONE;
 })
