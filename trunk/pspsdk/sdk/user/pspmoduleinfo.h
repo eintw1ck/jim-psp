@@ -96,7 +96,7 @@ extern char _gp[];
 	SceModuleInfo module_info                                       \
 		__attribute__((section(".rodata.sceModuleInfo"),        \
 			       aligned(16), unused)) = {                \
-	  attributes, { minor_version, major_version }, #name, 0, _gp,  \
+	  attributes, { minor_version, major_version }, name, 0, _gp,  \
 	  __lib_ent_top, __lib_ent_bottom,                              \
 	  __lib_stub_top, __lib_stub_bottom                             \
 	}
