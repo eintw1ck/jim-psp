@@ -27,7 +27,7 @@ void abort()
 }
 
 __attribute__((weak))
-void exit(int retval)
+void _Exit(int retval)
 {
 	while (1)
 		_exit(retval);

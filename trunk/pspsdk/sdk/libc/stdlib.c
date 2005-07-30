@@ -251,7 +251,7 @@ div_t div(int n, int d)
 #endif
 
 
-#if 0
+#if F_exit
 /*
 **
 **  [func] - exit.
@@ -267,11 +267,10 @@ void exit(int status)
 {
   int i;
 
-  for (i = (__stdlib_exit_index - 1); i <= 0; --i) (__stdlib_exit_func[i])();
-  // wrong... have to do _exit rather... see abort.c
-  // but we should also provide a __process_atexit so the crt0 could call
-  // it when main() returns.
-  Exit(status);
+  for (i=(__stdlib_exit_index-1); i>=0; i--)
+	__stdlib_exit_func[i]();
+
+  _Exit(status);
 }
 #endif
 

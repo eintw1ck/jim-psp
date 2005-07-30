@@ -39,7 +39,7 @@ STDIO_OBJS = clearerr.o fclose.o fcloseall.o feof.o ferror.o fflush.o fflushall.
 	rewind.o skipatoi.o sscanf.o _stdio.o tmpfile.o tmpnam.o ungetc.o updatestdoutxy.o strerror.o \
 	__stdio_internals.o 
 
-STDLIB_OBJS = abs.o atexit.o atof.o bsearch.o div.o getenv.o _itoa.o labs.o \
+STDLIB_OBJS = abs.o atexit.o atof.o bsearch.o div.o exit.o getenv.o _itoa.o labs.o \
 	ldiv.o llabs.o lldiv.o _lltoa.o _ltoa.o rand.o setenv.o srand.o \
 	strtod.o strtol.o strtoul.o __assert_fail.o \
 	__stdlib_internals.o 
