@@ -96,6 +96,9 @@ extern "C" {
 #define GU_INDEX_16BIT		GU_INDEX_SHIFT(2)
 #define GU_INDEX_RES3		GU_INDEX_SHIFT(3)
 
+#define GU_WEIGHTS(n)		((((n)-1)&7)<<14)
+#define GU_VERTICES(n)		((((n)-1)&7)<<18)
+
 #define GU_TRANSFORM_SHIFT(n)	((n)<<23)
 #define GU_TRANSFORM_3D		GU_TRANSFORM_SHIFT(0)
 #define GU_TRANSFORM_2D		GU_TRANSFORM_SHIFT(1)
@@ -476,6 +479,15 @@ int sceGuSync(int mode, int a1);
   *   - GU_TRANSFORM_3D - Coordinate is transformed before passed to rasterizer
   *
   * NOTE: Every vertex must align to 32 bits, which means that you HAVE to pad if it does not add up!
+  *
+  * Vertex order:
+  * [for vertices(1-8)]
+  * [texture uv]
+  * [weights (0-8)]
+  * [color]
+  * [normal]
+  * [vertex]
+  * [/for]
   *
   * @par Example: Render 400 triangles, with floating-point texture coordinates, and floating-point position, no indices
   * @code
@@ -1045,7 +1057,34 @@ void sceGuPatchPrim(unsigned int a0);
 **/
 void sceGuSetMatrix(int type, const ScePspFMatrix4* matrix);
 
+/**
+  * Specify skinning matrix entry
+  *
+  * To enable vertex skinning, pass GU_WEIGHTS(n), where n is between
+  * 1-8, and pass available GU_WEIGHT_??? declaration. This will change
+  * the amount of weights passed in the vertex araay, and by setting the skinning,
+  * matrices, you will multiply each vertex every weight and vertex passed.
+  *
+  * Please see sceGuDrawArray() for vertex format information.
+  *
+  * @param index - Skinning matrix index (0-7)
+  * @param matrix - Matrix to set
+**/
 void sceGuBoneMatrix(unsigned int index, const ScePspFMatrix4* matrix);
+
+/**
+  * Specify morph weight entry
+  *
+  * To enable vertex morphing, pass GU_VERTICES(n), where n is between
+  * 1-8. This will change the amount of vertices passed in the vertex array,
+  * and by setting the morph weights for every vertex entry in the array,
+  * you can blend between them.
+  *
+  * Please see sceGuDrawArray() for vertex format information.
+  *
+  * @param index - Morph weight index (0-7)
+  * @param matrix - Weight to set
+**/
 void sceGuMorphWeight(int index, float weight);
 
 /* sprites */
