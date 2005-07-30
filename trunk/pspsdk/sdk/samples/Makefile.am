@@ -22,6 +22,7 @@ SAMPLES = \
 	gu/spharm \
 	gu/rendertarget \
 	gu/reflection \
+	gu/morph \
 	ir/sircs \
 	ir/irda \
 	kernel/kdumper \
