@@ -23,6 +23,7 @@ SAMPLES = \
 	gu/rendertarget \
 	gu/reflection \
 	gu/morph \
+	gu/skinning \
 	ir/sircs \
 	ir/irda \
 	kernel/kdumper \
