@@ -48,7 +48,7 @@ void pspDebugScreenInit()
 {
    X = Y = 0;
    /* Place vram in uncached memory */
-   g_vram_base = (void *) (0x40000000 | sceGeEdramGetAddr());
+   g_vram_base = (void *) (0x40000000 | (u32) sceGeEdramGetAddr());
    sceDisplaySetMode(0, PSP_SCREEN_WIDTH, PSP_SCREEN_HEIGHT);
    sceDisplaySetFrameBuf((void *) g_vram_base, PSP_LINE_SIZE, PSP_PIXEL_FORMAT, 1);
    clear_screen(bg_col);

@@ -11,8 +11,6 @@
 #include <pspkernel.h>
 #include <pspge.h>
 
-int sceGeListEnQueueHead(void* list, void* stall, int cbid, void* arg);
-
 void sceGuSendList(unsigned int mode, const void* list, void* data)
 {
 	gu_settings.signal_offset = 0;

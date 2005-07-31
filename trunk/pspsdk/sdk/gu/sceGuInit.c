@@ -47,7 +47,7 @@ unsigned int __attribute__((aligned(16))) ge_init_list[] =
 
 void sceGuInit(void)
 {
-	GeCallbackData callback;
+	PspGeCallbackData callback;
 	callback.signal_func = callbackSig;
 	callback.signal_arg = &gu_settings;
 	callback.finish_func = callbackFin;
@@ -56,7 +56,7 @@ void sceGuInit(void)
 /*
 	gu_settings.ge_callback_id = sceGeSetCallback(&gu_callback);
 */
-	ge_edram_address = (void*)sceGeEdramGetAddr();
+	ge_edram_address = sceGeEdramGetAddr();
 
 	// initialize graphics hardware
 	ge_list_executed[0] = sceGeListEnQueue((void*)((unsigned int)ge_init_list & 0x1fffffff),0,gu_settings.ge_callback_id,0);
