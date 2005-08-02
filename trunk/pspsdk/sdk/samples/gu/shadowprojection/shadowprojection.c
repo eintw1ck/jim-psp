@@ -213,7 +213,7 @@ int main(int argc, char* argv[])
 	Texture shadowmap = {
 		GU_PSM_4444,
 		0, 128, 128, 128,
-		sceGeEdramGetAddr() + renderTarget
+		sceGeEdramGetAddr() + (int)renderTarget
 	};
 
 	// define geometry
