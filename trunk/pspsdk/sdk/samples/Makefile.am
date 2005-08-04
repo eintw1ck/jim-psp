@@ -32,7 +32,6 @@ SAMPLES = \
 	kernel/cwd \
 	kernel/fileio \
 	power \
-	rtc \
 	usb/storage \
 	utility/netconf \
 	utility/systemparam \
