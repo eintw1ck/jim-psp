@@ -10,6 +10,7 @@ SUBDIRS = \
 	kernel \
 	libc \
 	power \
+	rtc \
 	sircs \
 	sdk \
 	startup \

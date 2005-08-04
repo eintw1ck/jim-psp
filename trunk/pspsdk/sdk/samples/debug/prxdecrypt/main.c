@@ -159,19 +159,20 @@ void decrypt_files(const char *basedir, const char *destdir)
 		sceIoDclose(fd);
 	}
 }
-
+int Kprintf(char *format, ...);
 int main(void)
 {
 	pspDebugScreenInit();
 	SetupCallbacks();
-
+	pspDebugInstallKprintfHandler(NULL);
+	pspDebugInstallStdoutHandler(Kprintf);
+	pspDebugInstallStderrHandler(Kprintf);
 	/* Decrypt kernel modules */
-	sceIoMkdir("ms0:/kd", 0777);
-	decrypt_files("flash0:/kd/", "ms0:/kd/");
+	//sceIoMkdir("ms0:/kd", 0777);
+	//decrypt_files("flash0:/kd/", "ms0:/kd/");
 	/* Decrypt VShell modules */
-	sceIoMkdir("ms0:/vsh", 0777);
-	decrypt_files("flash0:/vsh/module/", "ms0:/vsh/");
-
+	//sceIoMkdir("ms0:/vsh", 0777);
+	decrypt_files("ms0:/prxes/", "ms0:/decrypted/");
 	printf("Done\n");
 	sceKernelExitDeleteThread(0);
 
