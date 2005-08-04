@@ -18,7 +18,7 @@
 #include <psputility.h>
 
 /* Define the module info section */
-PSP_MODULE_INFO("SystemParam Sample", 0, 0, 71);
+PSP_MODULE_INFO("SystemParam Sample", 0, 1, 0);
 
 //Just to leave room for expansion
 #define NUM_SYSTEMPARAMS 15
@@ -49,7 +49,7 @@ int CallbackThread(SceSize args, void *argp)
 int SetupCallbacks(void)
 {
     int thid = 0;
-    thid = sceKernelCreateThread("update_thread", CallbackThread, 0x11, 0xFA0, 0, 0);
+    thid = sceKernelCreateThread("update_thread", CallbackThread, 0x11, 0xFA0, THREAD_ATTR_USER, 0);
     if (thid >= 0)
 	sceKernelStartThread(thid, 0, 0);
     return thid;
