@@ -4724,7 +4724,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x8BDB1A3E</NID>
-						<NAME>memlmd_8BDB1A3E</NAME>
+						<NAME>sceUtilsGetLoadModuleABLength</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x185F0A2A</NID>
