@@ -1,0 +1,76 @@
+
+ --> MikMod Sound System  v3.0
+  -> UniFormat Conversion Program (MIKCVT.EXE)
+
+
+
+-/- Introduction
+================
+
+ MikMod utilizes its own internal format called UniMod (or UniFormat).
+ This internal format can 100% accurately represent any of the modules
+ that MikMod supports.  The advantage of UniMod is that the programmer
+ can convert all modules of any type to this native MikMod format, and
+ simply include the UniMod loader alone into the program.
+
+ For more information about UniMod, see UNIMOD30.TXT.
+
+ MikMod comes with a program called MIKCVT.EXE, which converts modules
+ to the UniMod format.  MIKCVT will load any module supported by
+ MikMod, optimize and compress the pattern data, and save out a file
+ with the .UNI extension.  MIKCVT also supports wildcards, so that you
+ can easily convert several modules at a time.
+
+
+-/- Distribution
+================
+
+ MIKCVT is a totally free utility, and can be downloaded separately
+ from MikMod.  MIKCVT comes with full source code, and the programmer
+ can feel free to modify this source code in any way for PERSONAL use
+ only (to rearrange the format to prevent module ripping for instance).
+ PLEASE DO NOT REDISTRIBUTE A MODIFIED VERSION OF MIKCVT.  The last
+ thing anyone wants is to have odd non-std versions of UniMod modules
+ floating around.
+
+
+
+-/- Usage
+=========
+
+ MIKCVT has a very simple command line interface, as follows:
+
+   MIKCVT  [-strip] infile [infile] [infile] ...
+
+   MIKCVT  song1.s3m song2.xm
+   MIKCVT  -strip *.s3m
+   MIKCVT  *.*
+
+ The first example shows the general syntax of MIKCVT.  Note that
+ -strip is optional, but if present MUST be the first option on
+ the command line.
+
+ In any instance, the -strip is optional, and if present will tell
+ MIKCVT to remove all text strings from the module.  This includes
+ the title, sample names, instrument names, comments and other forms
+ of text.  This feature is generally intended for use by game and demo
+ developers, who may not require such information in the release pro-
+ duct.
+
+ 
+-/- Miscellaneous
+=================
+
+ There will probably be a future version of MIKCVT that will further
+ optimize modules in -strip mode.
+
+ For information, questions, comments, or various chit-chat, contact
+ Jake Stine / Divine Entertainment at jstine@hotmail.com.
+
+ For updates and other updated information, check out the Divine Ent-
+ ertainment website at http://www.epix.net/~dracoirs/
+
+
+ That's all for today.  Have fun!
+
+

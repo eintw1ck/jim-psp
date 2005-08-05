@@ -1,0 +1,361 @@
+ --> MikMod Sound Libraries Version 3.0
+  -> Updates and Changes Text - August 20st, 1997
+
+
+Updates to MikMod 3.0 Public from Beta Release 03.
+==================================================
+
+I warn you now:  There are a LOT of changes in this version.  :-)
+
+
+-/- Soundcard Drivers:
+
+ - The Soundscape and WSS soundcard drivers were effectively disabled.
+   They should work now.
+
+ - There is now a Gravis Ultrasound software mixer.  To use the old
+   hardware-only one, register 'drv_gus2' in the place of 'drv_gus'.
+   The drv_gus driver now supports BOTH software and hardware mixing
+   at the same time!
+   
+ - Fixed some small stereo bugs in the software mixer [VIRTCH.C].
+   Stereo would get skewed in rare circumstances.
+
+ - Added Dolby Surround Sound to the software mixer.
+
+ - Added real reverb to the software mixer.
+
+ - Added a second software mixer [VIRTCH2.C] that is geared toward
+   high-quality output at the cost of speed.  This mixer is by default
+   used by the RAW and WAV to-disk drivers.
+
+ - Added a WAV out driver.  This generates standard RIFF-WAVE format
+   files as the name MUSIC.WAV.
+
+
+-/- Functions and API:
+
+ - Big Yay!  There is nicely written and formatted documentation!
+   Check out 'docs/mikmod.doc' for the MS Word 2.0 or 'docs/mikmod.txt'
+   for the std text versions of the documentation.  Note that the docs
+   are still in the process of being written and there are most likely
+   a handful of inaccuracies and missing topics (to be fixed soon).
+
+ - Big Yay!  You can now change driver settings on the FLY!
+
+     Changes to md_mixfreq, md_device, md_dmabufsize, and md_mode after
+     mikmod has been initialized will have no effect on replay.  To have
+     any new settings take effect, call MikMod_Reset(), which will reset
+      the driver to use
+     the new settings.
+     
+     Also, note that the following flags of md_mode will take effect im-
+     midiately no matter what:
+        DMODE_SURROUND, DMODE_REVERSE,
+        and DMODE_INTERP (when it is supported :).
+ 
+ - md_dmabufsize is in MILLISECONDS now (and this time it will stay :).
+   The new default value is 50 milliseconds, which comes out to about the
+   same buffer size as the old default of 8192 bytes.
+   
+   NOTE: To achieve the maximum size buffer, use a value of 4000 or more.
+         That will guaruntee that the largest DMA buffer is always used.
+
+ - MD_SetNumChannels has been renamed to MikMod_SetNumVoices and has sev-
+   eral other changes:
+
+    - A value of -1 for either parameter (music or sndfx) will keep the
+      current setting.
+
+    - It can now be called at any time.  If it is called while playback is
+      active, there will be a brief skip in playback and the new settings
+      will be active.
+
+ - ML_RegisterLoader() and MD_RegisterDriver(), although still supported,
+   should be replaced with:
+
+     MikMod_RegisterLoader(load_format);
+     MikMod_RegisterDriver(drv_sound);
+
+   NOTE: The '&' (address-of) preceeding the loader/driver should not be
+   used with these procedures.
+
+ - Also added the functions:
+
+      MikMod_RegisterAllLoaders();
+      MikMod_RegisterAllDrivers();
+   
+   These are defined in MDREG.C and MLREG.C, and can only support drivers
+   that are distributed with MikMod or that I am aware of.  If you are a
+   driver developer, simply register your driver by hand as you did be-
+   fore.
+
+ - A new naming convention is now being used.  This system should be quite
+   a bit more intuitive for the avaerage MikMod user.  Note that for this
+   version, and probably the next few updates, the old API will still be
+   useable (#define macros in MIKMOD.H).  These will be removed in the
+   near future, however.
+   
+   The [hopefully] complete list of function name changes are as follows:
+
+             Old                          New
+
+     MD_RegisterPlayer(x)        MikMod_RegisterPlayer(x)
+     MD_Init                     MikMod_Init
+     MD_Exit                     MikMod_Exit
+     MD_Update                   MikMod_Update
+     ML_Free(x)                  MikMod_FreeSong(x)
+     MD_SetNumChannels(x,y)      MikMod_SetNumVoices(x,y)
+     MD_SetNumVoices(x,y)        MikMod_SetNumVoices(x,y)
+     MD_PlayStart                MikMod_EnableOutput
+     MD_PlayStop                 MikMod_DisableOutput
+
+     MD_VoiceSetVolume(x,y)      Voice_SetVolume(x,y)
+     MD_VoiceSetFrequency(x,y)   Voice_SetFrequency(x,y)
+     MD_VoiceSetPanning(x,y)     Voice_SetPanning(x,y)
+     MD_VoicePlay(x,y,z)         Voice_Play(x,y,z)
+     MD_VoiceStop(x)             Voice_Stop(x)
+     MD_VoiceReleaseSustain(x)   Voice_ReleaseSustain(x)
+     MD_VoiceStopped(x)          Voice_Stopped(x)
+     MD_VoiceGetPosition(x)      Voice_GetPosition(x)
+     MD_VoiceRealVolume(x)       Voice_RealVolume(x)
+
+     ML_LoadFN(x,y)              MikMod_LoadSong(x,y)
+     ML_LoadFP(x,y)              MikMod_LoadSongFP(x,y)
+
+     MP_HandleTick               Player_HandleTick
+     MP_PlayStart(x)             Player_Start(x)
+     MP_PlayStop                 Player_Stop
+
+
+ - A new array of procedures have been added that affect the current playing
+   song (as opposed to the old MP_ functions, which required a UNIMOD handle).
+   The functions are [see the MikMod docs for descriptions]:
+   
+     void Player_Start(UNIMOD *mf);
+     BOOL Player_Active(void);
+     void Player_Stop(void);
+     void Player_TogglePause(void);
+     void Player_NextPosition(void);
+     void Player_PrevPosition(void);
+     void Player_SetPosition(UWORD pos);
+     void Player_Mute(SLONG arg1, ...);
+     void Player_UnMute(SLONG arg1, ...);
+     void Player_ToggleMute(SLONG arg1, ...);
+     BOOL Player_Muted(int chan);
+     void Player_HandleTick(void);
+
+
+ - Note to beta testers: The following files, if existing, should be de-
+   leted (they are residue from older betas):
+
+       pt_share.c
+       pt_play.c
+       mp_chart.c
+
+   Actually, I suggest you remove any old versions of mikmod completely
+   before installing this one.
+
+ - If no soundcard is found, MikMod will automatically default to the
+   No-Sound driver.  This fixes crashes caused when no soundcard was
+   present.
+
+
+-/- Loader:
+
+ - The 15-instrument module loader has been adapted to support Ultimate
+   SoundTracker modules (very old :), and general 15-instrument support
+   and detection has been improved as well.
+
+ - The UniMod Module Loader (load_uni) has been reinstated.  See MIKCVT.C
+   for the conversion program that you can use to change any supported
+   format into a UniMod module.
+
+ - The MED loader has been fixed (although it is still very non-func-
+   tional).
+
+ - The 669 loader has been fixed up a tiny bit.
+
+ - A title loading command has been added, for those making module players
+   who want to add the song titles to directory listings:
+
+      CHAR *MikMod_LoadSongTitle(CHAR *filename);
+
+   Returns a malloc'ed string containing the title of the song, or NULL
+   if the song was not able to be opened or no title was present.
+
+
+-/- Player:
+
+ - ImpulseTracker sample vibrato support has been improved.  Linear mode
+   sample vibratos are now supported perfectly, but modules in Amiga mode
+   will not sound exactly correct (but close).
+   
+   NOTE: This does NOT affect standard effects vibratos, which are correct
+   whether in Linear or Amiga (logrithmic) mode.
+
+ - A small handful of modules with rare envelope sustain / loop setups
+   would confuse mikmod and end up with silent samples.
+
+ - Note Delays were not being implimented properly.
+
+   - a note delay would distort the sample that had been playing before it.
+
+   - a note off or note cut triggered with a note delay too effect im-
+     midiately, rather than after the delay had expired.
+
+ - A 'bug' in ImpulseTracker's Sample Offset (Oxx) has been fixed.  The
+   IT documentation wrongly reported that offsets past the end of a sample
+   would not be played (they are, duh).
+
+ - An IT Retrig (Qxx) indescrepency - Qx0 is the same as Qx1 [std Pro-
+   Tracker and ST3 simply ignore Qx0 commands].  Fixed.
+
+ - Fixed an IT/S3M bug where Qxx would mess up any pitch slide commands
+   immidiately following it that had a data part of 00 (ie, D00).
+
+ - Overall NNA has been optimized and improved in many ways.
+
+
+---------------
+Updates to Build 03 of MikMod 3.0 over Build 02.
+
+-/- General:
+
+ - The volume scale for song volume has been redone to 0->128 instead of
+   0->100.
+
+ - You can also control song volume via "md_musicvolume", which is also
+   on a scale of 0->128.
+
+ - When registering loaders or drivers, you no longer put them in reverse
+   order.
+
+ - ML_LoadFN() has been modified.  It now accepts two parameters, the
+   filename of the song, and the maximum number of channels allowed to be
+   allocated.  See the MIKMOD.C example for more details.
+
+ - Sound Effects support has been added.  See MIKMOD.TXT for complete
+   details on how to fully utilize MikMod's sound effects routines.
+
+
+ - Additions to the MIKMOD.C example file:
+
+   - F1 through F10 now set volumes of 10 through 100.
+
+   - Songs can be paused and resumed via pressing 'P'
+
+   - Added panning separation control via the command line option
+     '/pansep xx' where x is a value from 0 to 100% (100% being full
+     stereo).  [default = 100%]
+
+   - Added reverse stereo panning option (/revpan).
+
+   - Added volume control via F1 (10%) thru F10 (100%).
+
+   - Maximum allowed mixer channels can be set with the '/c xxx' option.
+     The max value is 255 channels, the minimum is 2.  This will affect
+     ALL song formats.  [default = 64]
+
+
+-/- Player:
+
+ - ImpulseTracker (IT) support is nearly completed.  New note actions are
+   now supported in full.
+
+ - IT Linear slide functions are now fully functional, and greatly op-
+   timized for both speed and size.
+
+ - IT and XM KeyOff / KeyFade effects should be supported correctly now.
+
+ - Several IT panning bugs have been fixed.
+
+ - There is no longer a need to call MD_PlayStart() or MP_PlayStop() if
+   no sound effects channels have been specified - they will automatic-
+   ally be called by MP_PlayStart() and MP_PlayStop()
+
+ - New function:  MP_TogglePause(UNIMOD *mf);
+   Pauses or unpauses a song using MP_PlayStart and MP_PlayStop
+
+ - Channel muting is now availble via the functions:
+     MP_Mute();
+     MP_UnMute();
+     MP_ToggleMute();
+
+
+-/- Loaders:
+
+ - Many IT modules that would not load before will now load.
+
+ - Support for scaling samples to fit into availible memory (for use on
+   hardware mixer cards, but optional for software mixing as well).
+
+ - Sample Loader functions have been separated from MDRIVER.C into a new
+   source file, SLOADER.C.
+
+ - XM loader bug fixed that caused a small handful of XMs to crash.
+   [thanks to Urban Meuller]
+
+
+-/- Software Mixer:
+
+ - Support for reverb and stereo delay have been added, but are not yet
+   availible in assembly mixer form (C mixer only, see VIRTCH.C).
+
+ - VIRTCH.C can be compiled as a 16 bit sample mixer.  This about 50%
+   slower than the 8 bit sample mixer on Intel machines, and requires
+   twice as much memory for samples (not yet availible in assembly
+   mixer form).
+
+   [See VIRTCH.C for information on how to recompile to support these
+    options]
+
+ - Reverse Stereo is available for all soundcards.
+     Set "md_mode |= DMODE_REVERSE;"
+
+ - Dolby Surround Sound features are planned for but not yet supported.
+   To enable surround (for future upgrades of MikMod):
+     Set "md_mode |= DMODE_SURROUND;"
+
+
+---------------
+Updates to Build 02 of MikMod 3.0 over Build 01.
+
+ - SLOADER has been renamed back to MLOADER.
+
+ - Error messaging has been worked back to the old style of returning a
+   string and no error code.
+
+ - All references to strings have been defined as UBYTE instead of char.
+   (is this a problem for anyone?)
+
+ - SB/AWE32 drivers have been added.
+     (thanks to Steffen Rusitschka)
+
+ - Windows Sound System [WSS] support has been added.
+     (thanks to Mario Koeppen)
+
+   However, for the driver to detect the card, the following environment
+   variable must be set:  set WSS=A[port] I[irq] D[dma]
+
+ - Several older module loaders have been reinstated (thanks to Dimitry
+   Boldyrev):  FAR, 669, MED, and DSM.  These loaders most likely have
+   some bugs to be worked out.
+
+ - A new version of the "BigMultiply" function has been made, that is both
+   big-endian friendly and C based.  It uses the FPU to do the 64-bit mul-
+   tiply, and is only used on non-Watcom compilers.
+
+ - A bunch of IT replated replay bugs weeded out.
+
+ - IT and S3M loaders have been optimized to act like other players' load-
+   ers that detect the REAL number of channels used.  One wonders whatever
+   happened to a simple "numchn" variable in a module format rather than
+   pre-processing all pattern data to figure out what is used and what is
+   not.
+
+ - The GUS drivers have been split apart - there were both VTIMER and GUS
+   timer based drivers.  The VTIMER one is for timing-critical DOS appli-
+   cations, while the GUS timer is exellent for programs that will be run
+   from a Windows95 dos-box.
+

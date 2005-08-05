@@ -1,0 +1,26 @@
+
+ --> MikMod Sound Libraries Version 3.0
+  -> Changes Planned for the Future - August 20th, 1997
+
+
+ - Optional Interpolated mixing in VIRTCH.C [real-time].
+
+ - Floating point alternative to 64-bit ints in VIRTCH2.C.
+
+ - Support for stereo samples and sound effects.
+
+ - Audio streaming from disk for large raw audio files (WAV, etc).
+
+ - Native Gravis Ultrasound Plug and Play soundcard support.
+
+ - Better AWE32 support (AWE32 does not support software sound-fx
+   mixing).
+
+ - Native AWE64 support [does anyone have GOOD specs on this or the
+   AWE32?]
+
+ - Windows 95 and DirectSound [ugh] Drivers.
+
+ - Things people suggest - send suggestions to dracoirs@epix.net and
+   don't forget to visit the webpage at http://www.epix.net/~dracoirs/
+

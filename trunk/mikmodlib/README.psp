@@ -1,0 +1,30 @@
+Mikmodlib by Jim Shaw (http://members.iinet.net.au/~jimshaw/)
+Repackaged and example by nevyn <joachimb@gmail.com>
+====================================================
+
+If you don't know what mikmod is, see README.mikmod.
+
+Jim Shaw ported Mikmod as a player to psp ( http://members.iinet.net.au/~jimshaw/PSP/mikmod-3.0.3.zip and http://forums.ps2dev.org/viewtopic.php?t=2540 ). However, I thought it would be nice to have the files in library format, for easier implementation into other projects, so I have just repackaged everything for nicer pspsdk integration.
+
+Note: this is NOT libmikmod. This is code from -98, before mikmod was split into player and library parts. That's why I'm calling this mikmodlib.
+
+
+Installing
+-----------
+% make install
+
+("make libs" to just build)
+
+(I'm not too good with makefiles; just "make" doesn't do what you'd expect)
+
+How to use
+------------
+See the example (just "make" (and "make kxploit" if you have 1.5)) and the docs ( in docs/ ). The example requires a music.xm and a sound.wav (MONO!) in the same folder as the eboot to run.
+
+Your own makefile will have to contain this:
+LIBS = $(PSPDIR)/lib/libmikmod.a $(PSPDIR)/lib/libmmio.a -lpspaudiolib -lpspaudio
+
+and your app will need to include "mikmod.h".
+
+
+ - nevyn

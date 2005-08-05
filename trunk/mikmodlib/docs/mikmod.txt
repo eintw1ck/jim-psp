@@ -1,0 +1,2571 @@
+[ Note: this was converted from a Microsoft word doc file, a few weird
+things may be kicking around from the conversion.  Also, it refers to the
+DOS version is places - although obviously this isn't the DOS version you have 
+in your hot little hands, this is the UNIX version.  Anyway, I guess there
+is some stuff of use in here
+	- Pete ]
+
+
+
+Introduction to the MikMod Sound System
+
+The MikMod sound system is one of the best ways for a programmer to add
+music and sound effects to a game.  It is a powerful and flexible
+library of code, with an API that is both simple and very powerful. 
+With MikMod, programmers can add music and/or sound effects to any DOS
+program, or can simply use MikMod for its array of soundcard device
+drivers.
+
+MikMod supports a variety of soundcards, and runs on a large array of
+platforms, including MS-DOS, Windows95, Linux, Macintosh, and more. 
+Note that only the MS-DOS platform is currently officially supported by
+Divine Entertainment, and that drivers for other platforms are
+maintained by third party programmers on an independent basis.
+
+The purpose of this document is to cover the general usage of the MikMod
+Sound System.  This document also details some additional information
+about the internal workings of the module player and various soundcards
+in the appendixes.  For other miscellaneous information, check the
+various .TXT files that also come with the MikMod package.
+
+Using MikMod to play Music
+
+For simply playing music from MikMod [a module player, for example], the
+process of function calls is simple.  Below is a sample block of code
+that illustrates the process [see also EXAMPLES/MIKMOD.C]:
+
+{
+
+  UNIMOD *mf;       /* module handle for loaded songs */
+
+       .
+
+       .
+
+  MikMod_RegisterAllLoaders();
+
+  MikMod_RegisterAllDrivers();
+
+  MikMod_Init();
+
+       .
+
+       .
+
+  mf = MikMod_LoadSong("songname.it", maxchan);
+
+  MikMod_PlayStart();
+
+       .
+
+       .
+
+       .
+
+  MikMod_PlayStop();
+
+  MikMod_FreeSong(mf);
+
+       .
+
+       .
+
+  MikMod_Exit();
+
+}
+
+Note the `maxchan' value passed to MikMod_LoadSong;  This parameter
+specifies the maximum number of mixer voices the loader is allowed to
+allocate.
+
+Extra unused mixing voices have no impact on the speed of module
+playback (255 silent voices is no slower than 2 silent voices).
+
+The absolute maximum number of mixer voices that MikMod currently
+supports is 255.  Hardware mixer voices supported varies from soundcard
+to soundcard.
+
+Using MikMod to play Sound Effects
+
+Like in MikMod's music engine, sound effects use the generic SAMPLE
+structure, which has most of the information needed to properly play
+back the sample.  Actually, the only difference between sound effects
+and music samples are which procedures you call to load and play them. 
+With MikMod, you can control whether sound effects are loaded and played
+using the software or hardware mixers (when available) using the md_mode
+flag DMODE_SOFT_SNDFX.
+
+Software Mixing	This is the suggested method of doing sound effects
+playback, especially if you will be loading and unloading samples
+frequently, as many games do.  Soundcard RAM is simply too inflexible
+and often there is not much installed for it to be cluttered by sound
+effects.	
+	
+	Hardware Mixing 	This should only be used for sound effects if you plan
+to have a set of static sounds for use throughout an entire program! 
+One such example would be a module player that has a special beep sound
+or two it uses for interface errors.  Also, the sound effects should be
+loaded first, before any modules, for optimal soundcard RAM usage.	
+
+Loading Sound Effects
+
+MikMod current comes with support for loading and playing the RIFF WAVE
+[.WAV] format sound files directly, and a set of low-level functions by
+which a user can write their own custom sample loader.  The simplest way
+to load a sample is through the WAV loader, assuming the samples are in
+WAV format.
+
+The WAV loader can behave in two different ways, depending on if you are
+using hardware or software mixing for the sound effects.  If you plan to
+be using hardware mixing, see Listing 5 below under Advanced Sound
+Effects.
+
+Below are two examples to demonstrate loading samples under software
+mixing mode using WAV_LoadFN and WAV_LoadFP [see also
+EXAMPLES/MIKWAV.C]:
+
+Listing 1: Loading a Sound Effect Using WAV_LoadFN
+
+{
+
+    SAMPLE *sound01, *sound02;
+
+    sound01 = WAV_LoadFN("sound01.wav");
+
+    sound02 = WAV_LoadFN("sound02.wav");
+
+     ..
+
+     ..
+
+    WAV_Free(sound01);    // unload the sound effects when
+
+    WAV_Free(sound02);    // done with them.
+
+}
+
+Listing 2: Loading a Sound Effect Using WAV_LoadFP
+
+{
+
+    SAMPLE *sound01, *sound02;
+
+    FILE   *sndfp;
+
+    sndfp = fopen(``sounds.pak'',''rb'');
+
+    fseek(sndfp, SOUND01_SEEKPOS, SEEK_SET);
+
+    sound01 = WAV_LoadFP(sndfp);
+
+    fseek(sndfp, SOUND02_SEEKPOS, SEEK_SET);
+
+    sound02 = WAV_LoadFP(sndfp);
+
+    fclose(sndfp);
+
+     ..
+
+     ..
+
+    WAV_Free(sound01);    // unload the sound effects when
+
+    WAV_Free(sound02);    // done with them.
+
+}
+
+As shown in Listing 2, a single file which contains more than one sample
+is opened, and before each call to WAV_LoadFP, the file's seek position
+is set to the respective locations of `SOUND01' and `SOUND02.' Also, you
+can cut back on the use of the fseek function [which can be sluggish,
+especially if loading from a CD-ROM] if the samples are stored within
+the file in the sample sequence in which  you load them.  In such a
+case, individual calls to fseek before loading each sample is unneeded
+since the file pointer will be updated as each sample is read by
+WAV_LoadFP.
+
+Playing Sound Effects
+
+To play a sound effects sample use MikMod_PlaySample.  This procedure
+will start the sample in an empty sound effects voice (or cut another if
+all are taken), and takes three parameters:
+
+Syntax: MikMod_PlaySample(SAMPLE *sample, ULONG start, UBYTE flags)
+
+sample	Pointer to the SAMPLE structure of the sample to play.	
+	
+	start	Position from which to start playing the sample.  This is not in
+bytes, which means that on a 16 bit sample, a starting position of 20
+will actually start at the 40th byte.	
+	
+	flags	Either zero or set to SFX_CRITICAL, which will prevent future
+calls to MikMod_PlaySample from cutting this sample.  This would be used
+for things like a constant looping background sound or voices which
+should finish playing through once. [more options may be added in the
+future]	
+
+Each sample has a set of default attributes within the SAMPLE structure
+which control the playback of the sample.  These are speed, panning, and
+volume.  In addition, one can change the playback settings of any
+particular playing sound effect by saving the voice returned by
+MikMod_PlaySample and calling the Voice_XXXX functions.
+
+Speed	Voice_SetSpeed	The playback speed (also referred to as the
+frequency) controls how fast the sample is played.  This gives the
+effect of higher and lower pitches, and can be used to speed up the hum
+of an engine, or to simulate the Doppler Effect.	
+	
+	
+Panning	Voice_SetPanning	Panning refers to the stereo positioning of the
+sample.  Panning can be from full left (0) to full right (255). 
+PAN_LEFT, PAN_RIGHT, PAN_MIDDLE, and PAN_SURROUND are also defined.	
+	
+	
+Volume	Voice_SetVolume	The default volume of the sample can range from 0
+(silence to 64, and the voice volume ranges from 0 to 256.  To convert
+from sample volume to voice volume, simply multiply the sample volume by
+four.	
+
+Listing 3: Basic Demonstration for Playing and Controlling a Sound
+Effect
+
+{
+
+    SAMPLE *sndfx;
+
+    int    voice;
+
+    // Assume that the sound effect has already been loaded.
+
+    // Start sample, and record the voice it is assigned.
+
+    voice = MikMod_PlaySample(sndfx, 0, 0);
+
+    // Make the voice  HALF the volume of it's default value (note the
+
+    // different scale between sndfx->volume [0->64] and Voice_SetVolume
+
+    // [0-255].
+
+    Voice_SetVolume(voice, sndfx->volume * 2);
+
+    // Now let's slide the sample from left to right.
+
+    for(i=0; i<256; i++)
+
+    {   Voice_SetPanning(voice, i);
+
+        MikMod_Update();
+
+        delay(10);
+
+    }
+
+}
+
+Advanced Sound Effects
+
+In some situations it might be preferred that the sound effects are
+loaded into soundcard hardware and accelerated.  This situation is only
+prudent if the sound effects are uploaded at the start of the program
+and left untouched until the program exits.  Such a situation would be a
+module player that uploads its own warning sound, played when illegal
+commands or values are entered.  Listing 5 below shows an example of
+such a setup.
+
+Listing 5: Loading WAVs for Hardware Mixed Sound Effects
+
+{
+
+    SAMPLE *sound01, *sound02;
+
+    FILE   *sndfp01, *sndfp02;
+
+    sndfp01 = fopen(``sound1.wav'',''rb'');
+
+    sound01 = WAV_LoadFP(sndfp1);
+
+    sndfp02 = fopen(``sound1.wav'',''rb'');
+
+    sound02 = WAV_LoadFP(sndfp2);
+
+    MikMod_LoadSamples();
+
+    fclose(sndfp1);
+
+    fclose(sndfp2);
+
+}
+
+Listing 5 is a good deal more complex, and this is needed in order for
+MikMod to perform crucial memory management and sample compression if
+the sample sizes exceed available RAM.  This can only be done if MikMod
+knows all the sample sizes before loading the sample data, which is why
+there is MikMod_LoadSamples.
+
+Using To-Disk Mixing
+
+A special feature of MikMod is its high-quality to-disk mixer [found in
+VIRTCH2.C].  This mixer is specially designed for optimum quality of
+sound.  As a result this mixer is incredibly slow.  The purpose of this
+mixer is intended for creating high quality audio files for purposes
+such as audio tracks on a CD.  The to-disk mixer can also be used to
+generate wavefile audio for songs that would otherwise not be able to be
+played back real-time (complex ImpluseTracker files that require 64 or
+more voices, for instance).
+
+Features of the to-disk mixer include:
+
+8 Step Reverb	Real reverberation effects.  The depth of the reverb is
+controllable via md_reverb, which accepts valid values between 0 and 16.
+ The length of the reverb can also be controlled by modifying the
+REVERBERATION constant and recompiling VIRTCH2.C.	
+	
+	2x to 32x Sampling	The process of multiplying the mixing rate by the
+given factor, and taking the average of the extra samples when
+down-mixing.  This system helps smooth the sounds and remove clicks and
+pops, but can drastically reduce the speed of the mixing.  This factor
+is controlled via the SAMPLING_SHIFT constant in VIRTCH2.C	
+	
+	Interpolated Mixing	Interpolated mixing is always enabled for the
+to-disk mixer.	
+	
+	Dolby Surround Sound	Dolby Surround is enabled or disabled with the
+md_mode & DMODE_SURROUND flag.	
+	
+	
+
+It is recommended that an external audio editor, such as Sound Forge or
+Goldwave, be used to further improve the quality of the mixed output. 
+Generally, it is a good idea to apply a low-pass filter, which will help
+remove unwanted overtones and other artifacts of the mixing process.
+
+The UniMod Internal Format
+
+The UniMod module format is MikMod's own internal structure and native
+file format.  UniMod has been adapted to be flexible enough to
+accommodate all supported module formats without any quality loss.  In
+addition, the UniMod disk format is often smaller than the same module
+in its original format, and loads faster than all other formats. 
+However, the UniMod format is not good for use as a distributed module
+format.  The format will change frequently in order to support any new
+module formats that are released, and this makes it difficult for other
+module players other than MikMod to maintain playable UniMod support.
+
+To convert any module composed in one of the supported module formats
+(see Appendix A) to the UniMod internal format, use the MIKCVT utility,
+which is distributed both separately and with the MikMod package.  For
+information on how to use MIKCVT, see MIKCVT.TXT.
+
+Since both MIKCVT and MikMod come with full source code, it is possible
+for any programmer to customize the UniMod format for specific tasks. 
+Simply modify the data written out by MIKCVT, and the LOAD_UNI.C of
+MikMod accordingly.  Tailoring the format can be useful for
+optimizations or simply rearranging the format to help prevent hacking
+of the music from games or demos.  Modifications should be for private
+use only, please do not redistribute a modified version of MIKCVT or
+LOAD_UNI.C! 
+
+Appendix A: Module Loader Reference
+
+Below is a chart of all of the module types supported by MikMod and the
+names of the loader objects you can register.
+
+load_m15	The SoundTracker / Ultimate SoundTracker module format.  This
+loader is not registered by MikMod_RegisterAllLoaders because of its
+unstable detection routine.	
+	
+	load_mod	Protracker / Startracker / FastTracker / etc. loader.	
+	
+	load_xm	FastTracker II loader.	
+	
+	load_it	ImpulseTracker loader.	
+	
+	load_s3m	ScreamTracker 3 loader.	
+	
+	load_stm	ScreamTracker 2 loader.	
+	
+	load_mtm	MultiTracker module loader.	
+	
+	load_669	669 module loader.	
+	
+	load_far	Farandole loader.	
+	
+	load_dsm	DSIK internal format loader.	
+	
+	load_med	OctaMed MMD0 / MMD1 loader.	
+	
+	load_ult	UltraTracker loader.	
+	
+	load_uni	MikMod internal UniMod loader.	
+	
+	
+	
+
+Format Information
+
+The module music format is based on a concept similar to MIDI, where
+music is `tracked' into several channels, and notes control when sounds
+(usually instruments such as drums or pianos) are played.  Module music
+introduces increased flexibility over General MIDI because each module
+can have its own individual set of sampled instruments.  Also, modules
+offer an array of technically specific commands that allow for excellent
+control over how an instrument sounds each time it is played.  As other
+bonuses, modules tend to process faster than MIDI.  However, modules
+usually consume a great deal more space.
+
+Below is a list of all the module formats that MikMod supports for
+loading, playing, and for conversion to UniMod.
+
+Ultimate Soundtracker	UST / MOD	This was one of the earliest module
+formats, developed and used only on the Amiga back in 1987 to 1988. 
+This format has no file ID (pretty dumb), and only supported 4 channels
+because that was what the Amiga hardware supported.  Because of the lack
+of a file ID, it is always checked for last, so to not be confused with
+other module types.	
+	
+	
+Soundtracker	MOD	Came into use shortly after UST, and sports a few minor
+enhancments.  Like UST, this format has no file ID, and autodetection
+can be unreliable.	
+	
+	
+Protracker	MOD	The most popular of all Amiga-based module formats.  This
+was the most widely used format for many years.  It had many effects
+support, but a maximum of four channels.  It became the standard for
+modules.	
+	
+	
+StarTracker
+
+TakeTracker
+
+Atari Oktalyzer
+
+FastTracker	MOD	All basically identical to Protracker, but supported
+more channels (Star Tracker and Atari up to 32, and TakeTracker and
+FastTracker up to 8).	
+	
+	
+ScreamTracker 2	STM	This was the first tracker and module format
+developed for the IBM PC.  It is based on the Soundtracker module
+specifications, and does not sport many of the features offered by
+Protracker.	
+	
+	
+ScreamTracker 3	S3M	The format now supports 16 channels, all Protracker
+effects, and a handful of new features as well.	
+	
+	
+MultiTracker	MTM	Supported Protracker effects and 32 channels.	
+	
+	
+669 Tracker	669	An early module format with few effects and support for
+32 channels.  This format was never documented, and is only partially
+supported.  Some modules will play incorrectly with in MikMod.	
+	
+	
+Farandole	FAR	An enhanced version of the 669 format complete with
+Protracker-comparable effects support.  This format is not completely
+supported by MikMod either.	
+	
+	
+OctaMED	MED	Officially called MMD0 and MMD1, and were a mix of MIDI and
+Protracker module.  Support up to 8 channels.	
+	
+	
+UltraTracker	ULT	The UltraTracker was much like Protracker with one
+major difference: the ability to have two effects per channel.	
+	
+	
+DSIK	DSM	Internal format for DSIK.  Designed to be universally
+supportive, like MikMod's UniMOD format.	
+	
+	
+Fasttracker 2	XM	Radically different from the Protracker and
+Soundtracker format standards.  XMs also have additional features such
+as volume envelopes, and support up to 32 channels.	
+	
+	
+Impulse Tracker	IT	Another radically unique module format, which is
+based on the S3M format, but incorporates tons of new features including
+everything XMs have to offer and more.  Most notably, it utilizes New
+Note Actions.	
+
+Global Variable Reference
+
+MikMod uses several global variables for monitoring and controlling
+sound output and quality and music playback.
+
+Module Information [UNIMOD Structure]
+
+When any type of song is loaded, all of its information is saved
+internally in a UNIMOD structure, as returned by MikMod_LoadSong,
+MikMod_LoadSongFP, and Player_GetUnimod.  For the actual structure
+definition, refer to PTFORM.H.  The elements of the UNIMOD structure are
+as follows:
+
+Disk Format Elements
+
+Unless you are making a module composer, these variables are generally
+read-only.  Other than the instruments and samples elements, the
+variables are only used by the player during loading and initialization.
+
+flags	UWORD	See UNIMOD mode flags.	
+	
+	
+numchn	UBYTE	Number of effects control channels used by the module.	
+	
+	
+numvoices	UBYTE	Maximum number of mixing voices needed for best
+playback.  Used at load-time only to set the number of song voices via
+MikMod_SetNumVoices.  The player will use all song voices allocated
+regardless of this value.	
+	
+	
+numpos	UWORD	Number of pattern positions [also called orders].  See also
+Tracks and Patterns.	
+	
+	
+numpat	UWORD	Number of different patterns.  See also Tracks and
+Patterns.	
+	
+	
+numtrk	UWORD	Number of different tracks.  See also Tracks and Patterns.	
+	
+	
+numins	UWORD	Number of instruments.	
+	
+	
+numsmp	UWORD	Number of samples.	
+	
+	
+reppos	UWORD	Pattern position to jump to when a song loops.  	
+	
+	
+initspeed	UBYTE	Initial song speed.  Set a loading time.	
+	
+	
+inittempo	UBYTE	Initial tempo [beats per minute].  Set at loading time.
+
+Legal range: 33 to 240.	
+	
+	
+initvolume	UBYTE	Initial global volume.  Set at loading time.
+
+Legal range 0 to 128.	
+	
+	
+songname	CHAR *	Name of the song.	
+	
+	
+composer	CHAR *	Name of the composer.	
+	
+	
+comment	CHAR *	Comment field.	
+	
+	
+instruments	INSTRUMENT *	Array of instrument information.  See also
+Instrument Structure.	
+	
+	
+samples	SAMPLE *	Array of sample information.  See also Sample
+Structure.	
+	
+	
+tracks	UWORD **	Array of numtrk track pointers to UniTrack Streams
+[which can be of variable length].  Tracks are the basic building blocks
+of the module.	
+	
+	
+patterns	UWORD *	Array of patterns, allocated as numpat * numchn.  Each
+element of the array references an associated UniTrack Pointer in the
+tracks array [above], so there are numchn pointers for each pattern. 
+Indexing looks like: 
+
+patterns[(sngpos * numchn) + track]	
+	
+	
+pattrows	UWORD *	Number of rows in each pattern.  This array has numpat
+elements, and each pattern length goes for all tracks referenced for
+that pattern from the patterns array [above].	
+	
+	
+positions	UWORD *	Array of numpos pattern positions.  Each element of
+the array references a pattern, and controls the order in which the song
+is played.  See patterns array [above].	
+	
+	
+
+Current Module Replay Status
+
+Most of these variables are updated continuously [except for modtype,
+which is set at loading time].  If you are making a tracker or module
+player, you can read these parts of UNIMOD and display the info to the
+end user.
+
+Can be changed at any time [changes take effect immediately]:
+
+modtype	UBYTE	String indicating the type of module that the song was
+loaded from.  For example, this might be `ScreamTracker 2.xx' or
+`ImpulseTracker 2.xx'.	
+	
+	
+bpm	UBYTE	Current tempo [beats per minute] of the song.
+
+Legal range: 33 to 240.	
+	
+	
+volume	UBYTE	Global song volume.  This value can be set by and
+controlled by modules that support global volume effects.  See also
+md_songvolume.
+
+Default: 128 [or song specified]
+
+Legal range: 0 to 128.  	
+	
+	
+
+Should not be changed directly
+
+patpos	UWORD	Current position within the current pattern.	
+	
+	
+sngpos	SWORD	Current pattern position.  This indexes the positions array
+in the UNIMOD structure.  This should not be changed directly.  Use
+MikMod_SetPostion, MikMod_NextPosition, and MikMod_PrevPosition.	
+	
+	
+numrow	UWORD	Number of rows in the current playing pattern.	
+	
+	
+vbtick	UBYTE	Internal tick counter used to controlling the song speed. 
+For each row of a module, the tick counter starts at 0 and counts up to
+sngspd, at which point the next row is processed.	
+	
+	
+control	MP_CONTROL *	Named so because it contains player information for
+each effects control channel in the module.  This array has numchn
+elements.  See also MP_CONTROL structure.	
+	
+	
+voice	MP_VOICE *	Array of player information for each mixing voice used
+by the module.  Array has md_sngchn elements.  See also MP_VOICE
+structure.	
+	
+	
+
+Module Replay Flags [changes take effect immediately]:
+
+All flages are defined as individual UBYTE elements within the
+structure, and modifications can be made at any time, and will take
+effect immidiately.
+
+extspd	Protracker extended speed enable / disable.  A few older modules
+will not play at the correct speed unless this flag is cleared.	
+	
+	panflag	Extended panning effects enable / disable.  If set to FALSE,
+8xx effects will be ignored.  Some older modules used in games or demos
+use 8xx commands to trigger events in the program, and this flag must be
+disabled else the module's stereo effects will be erratic at best.	
+	
+	loop	Automatic song looping enable / disable.  If TRUE, Player_Active
+will always be true.  Note that some older modules use a position jump
+to loop the song, and will always loop no matter the setting of this
+variable.	
+	
+	forbid	Set this flag to TRUE to stop the player from updating.  All
+voice activity will continue, with all samples playing until end or
+looping.  This is also set and cleared by Player_Start and Player_Stop.	
+	
+	
+
+MLOADER.C [Module Loader]
+
+When you are making a module player that has to support several
+different module formats, it is best to create and use your own internal
+format.  In MikMod, this is called the UniMod format, which is flexible
+enough to accommodate all supported module formats.  The MLOADER is a
+software layer that will load and convert any supported module format to
+the UniMod format internally.
+
+The loaders that you want to use must first be registered using
+MikMod_RegisterLoader or MikMod_RegisterAllLoaders (described below). 
+Only the loaders that are registered will be linked into the executable.
+ The MLOADER will autodetect modules in the order that they have been
+registered, and you must always register the 15-instrument loader
+[load_m15] last.
+
+The main functions are MikMod_LoadSong, MikMod_LoadFP, MikMod_FreeSong,
+and MikMod_LoadTitle.  The MLOADER also has many internal functions that
+are generally for use by the individual module loaders only.  This
+aspect of the MLOADER will be documented in the next version of MikMod.
+
+MDRIVER.C [Audio Driver]
+
+The MDRIVER module is a set of universal routines for producing sound
+and managing the activity of the sound hardware.  These routines are
+nearly 100% hardware independent, allowing all other parts of the
+program to use any soundcard or sound driver without modification.  At a
+closer look, the MDRIVER is simply a set of `glue' functions that
+redirect requested settings and function calls to the actual selected
+system hardware driver.
+
+As with the MLOADER, the drivers that you want to use must first be
+registered using MikMod_RegisterDriver or MikMod_RegisterAllDrivers. 
+Only the drivers that are registered will be linked into the executable.
+ The MDRIVER will autodetect soundcards in the order that they have been
+registered, so take care to put the most functional soundcards first
+(ie, SB AWE32 should come before SB16, and SB16 should come before
+SBPro).  If you use MikMod_RegisterAllDrivers, MikMod will choose the
+most appropriate ordering of soundcard autodetection.
+
+The MDRIVER also defines several global variables which control the
+initialization of MikMod and the sound card, and various aspects of
+music and sound effects playback.  These variables are categorized and
+listed in this section.
+
+Make sure to check the conditions involved with changing a variable. 
+Some are read-only and some others require special action after
+modification.
+
+If no legal range is specified, then the range of the number is only
+restricted by the type.
+
+Driver Control Variables
+
+These global variables control the functionality of the soundcard and
+driver.  These variables can be changed at any time, at which point
+their new values will take effect upon calling MikMod_Init at the start
+of the program, or MikMod_Reset anytime there-after.  Both of these
+procedures take the liberty to modify any driver control settings that
+are not supported to the closest possible settings allowed for the
+particular driver in use.
+
+For example, most soundcards have a maximum mixing rate of 44100 Hz, but
+some can go up to 48000 Hz.  If you set md_mixfreq to 48000 Hz (which it
+defaults to if you do not change the setting), it will be truncated to
+44100 Hz for those soundcards that only support that mixing rate.  Note
+that the actual value in md_mixfreq will be changed to reflect the
+current mixing frequency.
+
+md_device	The number of the driver you want to use.  Drivers are
+numbered starting at 1 as the first driver registered with
+MikMod_RegisterDriver.  Set this to '0' to use soundcard autodetection.	
+	
+	md_mixfreq	The mixing frequency to be used.  Higher mixing frequencies
+sound better, but are slower.  Most soundcards max out at 44100Hz, some
+at 48000Hz.	
+	
+	md_dmabufsize	DMA buffer size in milliseconds (used only for software
+mixing and wave audio streaming).	
+	
+	md_mode	Flags what output mode to use.  Use the bitwise OR ( | )
+operator to combine flags.  Available mixing mode flags are listed
+below:	
+
+Mixing Mode Flags [use with md_mode]
+
+There are two categories of flags in the md_mode variable: Those that
+take effect immediately, and those which only take effect if set before
+MikMod_Init or MikMod_Reset.
+
+Take effect immidiately:
+
+DMODE_SURROUND	Dolby Surround Sound.	
+	
+	DMODE_REVERSE	Reverse stereo (left<->right).	
+	
+	DMODE_INTERP	Interpolated software mixing [not yet supported].	
+
+Take effect after reinitialization only:
+
+DMODE_STEREO	Enable Stereo output.	
+	
+	DMODE_16BITS	Enable 16 bits output.	
+	
+	DMODE_SOFT_SNDFX	Force software mixing of sound effects. *	
+	
+	DMODE_SOFT_MUSIC	Force software mixing of music. *	
+
+* Software mixing may not be available on all sound drivers.  Also,
+changing these settings after samples have been loaded could cause
+unpredictable results because MikMod may look in the wrong place (either
+system or soundcard memory) for the samples.
+
+_______________________________________________
+
+MikMod_RegisterLoader
+
+Syntax
+
+void MikMod_RegisterLoader(MLOADER loader)
+
+Module
+
+MLOADER.C [as ML_RegisterLoader]
+
+MIKMOD.H [macro definition]
+
+Input Parameters
+
+loader	Handle for the MikMod module loader to register. [Available
+loaders are listed above]	
+
+Description
+
+Adds the specified loader to an internal list of useable loaders.  This
+also informs the compiler to link in the code for the specified loader.
+
+Before you can load any modules with MikMod_LoadSong or
+MikMod_LoadSongFP you must first register the loaders you want to use. 
+Only the registered loaders will be linked into the executable, giving
+you better control over executable size.  The smallest and fastest
+loader is the UniMod [load_uni] loader.
+
+Notes
+
+The loaders are autodetected in the order they are registered in. 
+Hence, you should register the more common module types [XM, IT, S3M,
+MOD] first to help speed up autodetection.
+
+The 15-instrument module loader should always be registered last. The
+header ID for this format is very poor, and many modules and non-modules
+can be mistaken as being 15-instrument modules.
+
+See Also
+
+MikMod_RegisterAllLoaders, MikMod_LoaderInfo.
+
+Example
+
+[ at the start of the main program: ]
+
+{
+
+     ..
+
+    ML_RegisterLoader(&load_uni);
+
+    ML_RegisterLoader(&load_mod);
+
+    ML_RegisterLoader(&load_s3m);
+
+    ML_InfoLoader();
+
+     ..
+
+     ..
+
+}
+
+_______________________________________________
+
+MikMod_RegisterAllLoaders
+
+Syntax
+
+void MikMod_RegisterAllLoaders(void)
+
+Module
+
+MLREG.C
+
+Description
+
+Registers all module loaders that MikMod supports except the
+SoundTracker / UST (load_m15) loader.  This is particularly convenient
+for module players.  For games and demos, however, it is more efficient
+to convert all songs to the UniMod format and simply register load_uni
+alone using MikMod_RegisterLoader(load_uni).
+
+The 15-instrument module loader is not automatically registered because
+of its inherent inaccuracy in autodetection (the format has no real
+header identifier).  To register the 15-instrument loader, do it
+manually using MikMod_RegisterLoader(load_m15), and make sure to
+register it last.
+
+See Also
+
+MikMod_RegisterLoader, MikMod_LoaderInfo.
+
+_______________________________________________
+
+MikMod_LoaderInfo
+
+Syntax
+
+void MikMod_LoaderInfo(void)
+
+Module
+
+MLOADER.C
+
+Description:
+
+This function produces a list of all registered loader modules to stdout
+[using the infamous printf]. Use it after you have registered all
+loaders using MikMod_RegisterLoader or MikMod_RegisterAllLoaders.
+
+See Also
+
+MikMod_RegisterLoader, MikMod_RegisterAllLoaders.
+
+_______________________________________________
+
+MikMod_RegisterDriver
+
+Syntax
+
+void MikMod_RegisterDriver(MDRIVER driver)
+
+Module
+
+MDRIVER.C [as MD_RegisterDriver]
+
+MIKMOD.H [macro definition]
+
+Input Parameters
+
+driver	Handle for the MikMod module driver to register. [Available
+drivers are listed above]	
+
+Description
+
+Adds the specified hardware driver to an internal list of useable
+drivers.  This also informs the compiler to link in the code for the
+driver.  You should register all of the drivers you want to be
+autodetected or individually selected from before initializing with
+MikMod_Init.
+
+Generally, this function need only be used by programmers who have
+developed their own drivers that are not part of the standard MikMod
+distribution.  Otherwise, simply use MikMod_RegisterAllDrivers, seen
+below.
+
+Notes
+
+The drivers are autodetected in the order they are registered in. 
+Hence, you should make sure to register the most functional hardware
+first (ie, SB AWE32 should come before SB16).
+
+The No-Sound (drv_nos) driver is automatically linked in and need not be
+registered unless you want to actually select it specifically.
+
+See Also
+
+MikMod_RegisterAllDrivers, MikMod_DriverInfo.
+
+_______________________________________________
+
+MikMod_RegisterAllDrivers
+
+Syntax
+
+void MikMod_RegisterAllDrivers(void)
+
+Module
+
+MDREG.C
+
+Description
+
+Registers all drivers available for the system MikMod is being compiled
+for.
+
+Notes
+
+If you are using a driver that is not distributed with this version of
+MikMod, then you must register it yourself using MikMod_RegisterDriver.
+
+See Also
+
+MikMod_RegisterDriver, MikMod_DriverInfo.
+
+_______________________________________________
+
+MikMod_DriverInfo
+
+Syntax
+
+void MikMod_DriverInfo(void)
+
+Module
+
+MDRIVER.C
+
+Description
+
+This function produces a list of all registered soundcard drivers to
+stdout [using the ever famous printf]. Use it after you have registered
+drivers using MikMod_RegisterDriver or MikMod_RegisterAllDrivers.
+
+See Also
+
+MikMod_RegisterDriver, MikMod_RegisterAllDrivers.
+
+_______________________________________________
+
+MikMod_Init
+
+Syntax
+
+BOOL MikMod_Init(void)
+
+Module
+
+MDRIVER.C
+
+Description
+
+Performs most general MikMod initialization.  Configures the soundcard
+hardware and allocates needed resources for sound output.  The list of
+global variables use at initialization time are listed and described
+below.
+
+   
+
+Returns
+
+true	Error occurred during initialization.	
+false	Initialization successful.	
+
+Notes:
+
+The No-Sound driver [drv_nos] is used in cases where driver
+initialization fails.  The No-Sound driver is a skeleton do-nothing
+driver that allows the programmer to call all MikMod related functions
+without crashing or undesired side effects.
+
+See Also
+
+MikMod_Reset, Global Variable Reference.
+
+_______________________________________________
+
+MikMod_Reset
+
+Syntax
+
+BOOL MikMod_Reset(void)
+
+Module
+
+MDRIVER.C
+
+Description
+
+Resets MikMod and reinitializes the soundcards.  Use this function if
+you have changed any of the MikMod configuration variables: md_mode,
+md_mixfreq, md_dmabufsize, md_device.
+
+See Also
+
+MikMod_Init, Global Variable Reference.
+
+_______________________________________________
+
+MikMod_SetNumVoices 
+
+Syntax
+
+BOOL MikMod_SetNumVoices(int music, int sndfx)
+
+Module
+
+MDRIVER.C
+
+Input Parameters
+
+music	Number of voices to allocate for music.  A value of -1 will retain
+the current setting.	
+	
+	sndfx	Number of voices to allocate for sound effects.  A value of -1
+will retain the current setting.	
+
+Description
+
+This sets the number of mixed voices that can be used for music and
+sound effects playback.  Maximum voices vary from driver to driver (most
+hardware max out at 32 or 64 total voices, while the software mixer can
+handle up to 255).  Values exceeding the maximum for the current driver
+will be truncated, and the new values can be found in the global
+variables md_numchn, md_sfxchn, md_sngchn, md_hardchn, and md_softchn
+[see the Global Variable Reference for details].
+
+Returns
+
+true	Error occurred during initialization.	
+False	Initialization successful.	
+
+Notes
+
+Calling this function while the hardware is playing will cause a skip or
+pop in the sound.
+
+For the software mixer, more channels means more CPU time mixing and
+more memory used.
+
+For hardware mixers, more channels often means a lower quality of sound.
+
+See Also
+
+MikMod_Init, Global Variable Reference.
+
+_______________________________________________
+
+MikMod_EnableOutput
+
+MikMod_DisableOutput
+
+Syntax
+
+void MikMod_EnableOutput(void)
+
+void MikMod_DisableOutput(void)
+
+Module
+
+MDRIVER.C
+
+Description
+
+Starts and stops the mixing process of the soundcard.  These functions
+affect playing on a hardware level, activating and shutting down DMA and
+interrupts.  All calls to MikMod_Update are ignored while output is
+disabled.
+
+_______________________________________________
+
+MikMod_Exit
+
+Syntax
+
+void MikMod_Exit(void)
+
+Module
+
+MDRIVER.C
+
+Description
+
+Deinitializes the soundcard and frees all memory and resources used by
+MikMod.
+
+See Also
+
+MikMod_Init, MikMod_Reset.
+
+_______________________________________________
+
+MikMod_LoadSong 
+
+Syntax
+
+UNIMOD *MikMod_LoadSong(CHAR *filename, int maxchan)
+
+Module
+
+MLOADER.C
+
+Input Parameters:
+
+filename	Name of the file to open.	
+	
+	maxchan	Maximum number of channels that the song is allowed to request
+of the mixer.	
+
+Description
+
+Loads a music module by filename.  The file will be opened and closed
+automatically, and the module will be ready to play with a call to
+MikMod_PlaySong. Use MikMod_FreeSong to unload the UNIMOD module when
+you are done with it.
+
+If you are loading a module from a compounded [wad-type] file, see
+MikMod_LoadSongFP.
+
+Returns
+
+A pointer to a UNIMOD structure, which has all information about the
+loaded module, and is used as a handle for playing and later unloading
+the module.  If an error occurs, NULL is returned.
+
+See Also
+
+MikMod_LoadSongFP, MikMod_PlaySong, MikMod_FreeSong.
+
+_______________________________________________
+
+MikMod_LoadSongFP
+
+Syntax
+
+UNIMOD *MikMod_LoadSongFP(FILE *fp, int maxchan)
+
+Module
+
+MLOADER.C
+
+Input parameters
+
+fp	File-pointer to a music module.  Module will be read from the current
+file seek position.	
+	
+	maxchan	Maximum number of channels that the song is allowed to request
+of the mixer.	
+ 
+
+Description
+
+Loads a module from the specified file starting at the current seek
+position for that file. Use MikMod_FreeSong to unload the UNIMOD module
+when you are done with it.
+
+Returns
+
+A pointer to a UNIMOD structure, which has all information about the
+loaded module, and is used as a handle for playing and later unloading
+the module.  If an error occurs, NULL is returned.
+
+Notes
+
+This routine does not close the file, and it does not automatically load
+the module's samples like MikMod_LoadSong does.
+
+See Also
+
+MikMod_LoadSong, MikMod_PlaySong, MikMod_FreeSong.
+
+_______________________________________________
+
+MikMod_LoadSongTitle
+
+Syntax
+
+UNIMOD *MikMod_LoadSongTitle(CHAR *filename)
+
+Module
+
+MLOADER.C
+
+Input parameters
+
+filename	Filename of the module to load the song title from.	
+ 
+
+Description
+
+Loads a module title from the specified file.  This function performs
+the same autodetection of file type as does MikMod_LoadSong and
+MikMod_LoadSongFP.  If the song has no title, or the file wa unable to
+be opened, then a NULL string will be returned.
+
+Returns
+
+A pointer to a CHAR string of the title.
+
+NULL if the file does not exist.
+
+Notes
+
+This routine loads the song title and immediately closes the file when
+done.
+
+See Also
+
+MikMod_LoadSong, MikMod_LoadSongFP.
+
+_______________________________________________
+
+MikMod_LoadSamples
+
+Syntax
+
+BOOL MikMod_LoadSamples(void)
+
+Module
+
+SLOADER.C
+
+Description
+
+Loads all samples that have been registered with SL_RegisterSample, or
+loaded through any of the built-in MikMod sample-loader modules such as
+the WAV loader.  Note that all files that will be used must remain open
+until after this procedure has been called!
+
+Returns
+
+0 if successful, or 1 on error.
+
+_______________________________________________
+
+MikMod_FreeSong
+
+Syntax
+
+void MikMod_FreeSong(UNIMOD *mf)
+
+Module
+
+MLOADER.C
+
+Input parameters:
+
+mf	UNIMOD handle of the song to be removed form memory.	
+
+Description:
+
+Unloads the module from memory.  This includes pattern data and sample
+data associated with this module only.  This should only be used to free
+modules loaded with MikMod_LoadSong or MikMod_LoadSongFP.
+
+See Also
+
+MikMod_LoadSong, MikMod_LoadSongFP, MikMod_PlaySong.
+
+_______________________________________________
+
+MikMod_PlaySample
+
+Syntax
+
+int MikMod_PlaySample(SAMPLE *samp, ULONG start, UBYTE flags)
+
+Module
+
+MDRIVER.C
+
+Input Parameters
+
+samp	The sample to play as a sound effect.	
+	
+	start	The starting offset within the sample to begin play (measured in
+samples).	
+	
+	flags	Specifing SFX_CRITICAL causes the sample to be critical, and it
+cannot be interrupted by additional calls to MikMod_PlaySample.	
+
+Description
+
+Plays a sample as a sound effect.  This procedure automatically picks a
+channel from the allocated sound effects channels (set using
+MikMod_SetNumVoices).
+
+To make a sample non-interruptible, set `flags' to SFX_CRITICAL, which
+will inform MikMod_PlaySample not to interrupt this sample for any
+reason.  You must cut the sample yourself using Voice_Stop.
+
+Returns
+
+A channel handle for the sound effect is returned.  This channel handle
+can be used with all of the Voice_ functions.
+
+Voice selection method
+
+Each new sound effect is played in a new voice.  The voice selector
+cycles through all sndfx voices and wraps to the first voice [cutting
+sounds if needed].
+
+Examples:
+
+ 
+
+// Here we play the sample 'kaboom'.  The sample handle is not
+
+// important here because we won't be needing any of the Voice_
+
+// functions, so we ignore it:
+
+MD_PlaySound(kaboom, 0, 0);      // play sample kaboom.
+
+     
+
+// Here we start a background water effect, which is critical to the
+
+// game and should not be cut, so we set the SFX_CRITICAL flag:
+
+   
+
+waterbg_handle = MD_PlaySound(water_sound, 0, SFX_CRITICAL);
+
+ ..
+
+ ..
+
+Voice_Stop(waterbg_handle);    // then we stop the sample later
+
+_______________________________________________
+
+Voice_Play
+
+Syntax
+
+void Voice_Play(UBYTE voice, SAMPLE *samp, ULONG start)
+
+Module
+
+MDRIVER.C
+
+Input parameters
+
+voice	Number of the voice to be processed  (0 is voice 1).	
+	
+	samp	The sample to play.	
+	
+	start	The initial start offset to play from (in samples!)	
+
+Description
+
+Starts playing a new sample on the specified voice, using the size and
+loop parameters specified in the SAMPLE structure given.  The sample
+will be played at the current volume, panning, and frequency settings of
+the voice.  You can change these settings either before or after calling
+Voice_Play.
+
+See Also
+
+MikMod_PlaySample, Voice_SetVolume, Voice_SetFrequency, Voice_Stop.
+
+_______________________________________________
+
+Voice_Stop
+
+Syntax
+
+void Voice_Stop(UBYTE voice)
+
+Module
+
+MDRIVER.C
+
+Input parameters
+
+voice	Number of the voice to be stopped  (0 is voice 1).	
+
+Description
+
+Completely stops the currently playing sample of specified voice.  After
+this is called, Voice_Stopped will return TRUE for the given channel.
+
+Another method of silencing a voice is by using Voice_SetVolume(voice,
+0) to set the volume to 0.  This will not cause Voice_Stopped to return
+true.
+
+See Also
+
+MikMod_PlaySample, Voice_Play, Voice_SetVolume, Voice_SetFrequency,
+Voice_Stopped.
+
+_______________________________________________
+
+Voice_SetFrequency
+
+Syntax
+
+void Voice_SetFrequency(UBYTE voice, ULONG speed)
+
+Module
+
+MDRIVER.C
+
+Input parameters
+
+voice	Number of the voice to be processed  (0 is voice 1).	
+	
+	Speed	new playback frequency / speed.	
+
+Description
+
+Sets the playback frequency / speed of a single voice (frequency and
+speed are the same thing).  
+
+Example
+
+Voice_SetFrequency(12, 22000)    /* Set speed of voice 13 */
+
+See Also
+
+MikMod_PlaySample, Voice_Play, Voice_SetVolume, Voice_SetPanning,
+Voice_Stop.
+
+_______________________________________________
+
+Voice_SetPanning
+
+Syntax
+
+void Voice_SetPanning(UBYTE voice, UBYTE pan)
+
+Module
+
+MDRIVER.C
+
+Input parameters
+
+voice	Number of the voice to be processed  (0 is voice 1).	
+	
+	pan	New panning position for this voice.	
+
+Description
+
+Changes the panning position (balance) for the specified voice.  A
+balance of 0 is left, 127 is center, and 255 is right.  Dolby Surround
+Sound can be enabled by specifying PAN_SURROUND.  PAN_LEFT, PAN_CENTER,
+and PAN_RIGHT are also defined.
+
+See Also
+
+MikMod_PlaySample, Voice_Play, Voice_SetVolume, Voice_SetFrequency,
+Voice_Stop.
+
+_______________________________________________
+
+Voice_Stopped
+
+Syntax
+
+void Voice_Stopped(UBYTE voice)
+
+Module
+
+MDRIVER.C
+
+Input parameters
+
+voice	Number of the voice to check (0 is voice 1).	
+
+Description
+
+Checks the playing status of a voice to see if it is active or not.
+
+Returns
+
+true	Voice is active playing a sample.	
+false	No sample is assigned to the voice or is stopped.	
+
+See Also
+
+Voice_Stop.
+
+_______________________________________________
+
+Voice_GetPosition 
+
+Syntax
+
+void Voice_GetPosition(UBYTE voice)
+
+Module
+
+MDRIVER.C
+
+Input parameters:
+
+voice	Number of the voice to get sample position (0 is voice 1).	
+
+Description:
+
+Gets the sample position (in samples) of the current sample playing the
+specified voice.
+
+Returns:
+
+The current play location of the sample playing on the specified voice
+(measured in samples).  Returns zero if the function is either not
+supported or if no sample is associated with the voice.
+
+ 
+
+Note:
+
+This may not work on all soundcards.  If not supported by the driver,
+this function returns zero.
+
+See Also
+
+MikMod_PlaySample, Voice_Play.
+
+_______________________________________________
+
+Voice_RealVolume
+
+Syntax
+
+void Voice_RealVolume(UBYTE voice)
+
+Module
+
+MDRIVER.C
+
+Input parameters
+
+voice	Number of the voice (0 is voice 1).	
+
+Description
+
+Determines the actual playing volume of an individual voice at the time
+the function is called.  This good for making real volume bars.  Note
+that this function does require a small amount of CPU to run.
+
+Returns
+
+A value that represents the real volume of the voice at its current
+playing position when the function is called.  Values are always in 16
+bit, and range from 0 to 65535.
+
+Notes
+
+This function does not work on some soundcards, such as the AWE32.
+
+Calculating the real volume can be processor intensive.
+
+The volume returned is the real volume of the sample data, and is not
+related to the volume assigned to a voice via Voice_SetVolume.
+
+See Also
+
+MikMod_PlaySample, Voice_Play, Voice_SetVolume.
+
+_______________________________________________
+
+MikMod_Update
+
+Syntax
+
+void MikMod_Update(void)
+
+Module
+
+MDRIVER.C
+
+Description
+
+Call this routine regularly to update the sound.  When called it fills
+the DMA buffer.  The larger the DMA buffer, the less frequently
+MikMod_Update needs to be called [DMA buffer size is determined by the
+global md_dmabufsize].
+
+Notes
+
+This routine is needed for software mixing only, and need not be called
+at all if the program will use hardware-only soundcard drivers.
+
+If you plan on modifying voice information using any of the Voice_
+functions above, you should call this procedure afterward and not
+before.
+
+Larger DMA buffers cause a desync'ed timing between the sound being
+played and the reported state of the module player or driver.  The
+buffer is filled ahead of time, and therefore the player will report
+itself as being further along than the song is audibly.
+
+See Also
+
+md_dmabufsize [Global Variable Reference].
+
+_______________________________________________
+
+MikMod_RegisterPlayer
+
+Syntax
+
+void MikMod_RegisterPlayer(void (*player)(void))
+
+Module
+
+MDRIVER.C
+
+Input Parameters
+
+player	The procedure the driver should call to process each `tick' of
+the module.	
+
+Description
+
+Tells MikMod which function to call for each `tick' of a module. 
+Modules are processed in a resolution of ticks, and at each tick
+interval pitch, volume, panning, and other effects are processed and
+updated as needed.  The rate at which this tickhandler is called is
+controlled by the sound driver, and is determined by the following
+equations:
+
+(BPM*50)/125 timer per second -OR- every 125000/(BPM*50) milliseconds.
+
+The BPM [beats per minute] can be set by changing the md_bpm global
+variable.  While playing a module, MikMod will change the BPM if
+requested by the song, and will override any user settings.
+
+By default, MikMod calls MP_HandleTick, and generally speaking this
+should not have to be changed.  However, if you would like to have other
+things done for each tick of the module, then follow the example below
+for using your own tickhandler.
+
+See Also
+
+MD_SetBPM, MP_HandleTick, Global Variable Reference.
+
+Example
+
+void tickhandler(void)
+
+{
+
+    MP_HandleTick();    /* Without this no music would be played */
+
+     ..
+
+     ..
+
+    tick_count++;       /* possible addition */
+
+}
+
+void main(void)
+
+{
+
+     ..
+
+    /* make sure to register the new player
+
+       [this can be done at any time] */
+
+    MikMod_RegisterPlayer(tickhandler);
+
+     ..
+
+     ..
+
+}
+
+MPLAYER.C [Module Player]
+
+The MPLAYER is the main effects processor for the internal UNIMOD
+format.  It consists of a 'tick handler' called at a certain rate (as
+determined by the hardware driver in use), which processes song
+information beat-by-beat.
+
+ 
+
+You can communicate with the MPLAYER via a set of routines (described
+below) and through the UNIMOD structure (see ptform.h).  The UNIMOD
+structure contains information about all aspects of song replay, and is
+especially handy for programmers writing module players or trackers.
+
+_______________________________________________
+
+MP_Init
+
+Syntax
+
+BOOL MP_Init(UNIMOD *mf)
+
+Module
+
+MPLAYER.C
+
+Input Parameters
+
+mf	Pointer to the UNIMOD structure (module handle)	
+
+Returns
+
+true	Error occurred during initialization.	
+False	Initialization successful.	
+
+Description
+
+Initializes the specified UNIMOD module.  Generally used by MikMod
+internal purposes only.
+
+Notes
+
+This procedure is automatically called by MikMod_LoadSong and
+MikMod_LoadSongFP, and therefore there is little reason for the end user
+to have to use it.
+
+See Also
+
+MikMod_LoadSong, MikMod_LoadSongFP, MikMod_PlayStart.
+
+_______________________________________________
+
+MikMod_PlayStart
+
+Syntax
+
+void MikMod_PlayStart(UNIMOD *mf)
+
+Module
+
+MPLAYER.C
+
+Input Parameters
+
+mf	Pointer to the UNIMOD structure (module handle)	
+
+Description
+
+Prepares the module player for playing the specified song.  Subsequent
+calls to MikMod_SetPosition, MikMod_Mute, MikMod_TogglePause, etc. will
+have effect on the newly playing module. Also, MP_HandleTick will
+process the module data.
+
+See Also
+
+MikMod_PlayStop, MikMod_TogglePause, MikMod_SetPosition, MikMod_Mute.
+
+_______________________________________________
+
+MikMod_PlayStop
+
+Syntax
+
+void MikMod_PlayStop(void)
+
+Module
+
+MPLAYER.C
+
+Description
+
+Shuts down the module player and stops all song-related mixing voices. 
+Calls to MP_HandleTick and to will be ignored.
+
+See Also
+
+MikMod_PlayStart, MikMod_TogglePause.
+
+_______________________________________________
+
+MikMod_TogglePause
+
+Syntax
+
+void MP_TogglePause(void)
+
+Module
+
+MPLAYER.C
+
+Description
+
+Either enables or disables playing of the specified song, depending on
+it's current status.  Calls to MikMod_SetPosition, MikMod_Mute, etc.
+will still have effect whether the module is paused or playing.
+
+See Also
+
+MikMod_PlayStart, MikMod_PlayStop.
+
+_______________________________________________
+
+MikMod_Playing
+
+Syntax
+
+BOOL MikMod_Playing(void)
+
+Module
+
+MPLAYER.C
+
+Returns
+
+true	The module is still playing.	
+false	End of the module encountered, playing has stopped.	
+
+Description
+
+Use this procedure to check if a module has finished playing.  This is
+only useful if you disable song looping (set mf->loop to 0).
+
+Notes
+
+Pausing the song does not affect the return status.
+
+Calling MikMod_PlayStop will result in a return status of FALSE.
+
+Some modules have a pattern jump back to the beginning or middle of the
+song at the end and will always loop forever no matter the setting of
+the loop flag.  There is no sure way to detect these type modules.
+
+See Also
+
+MikMod_PlayStart, MikMod_PlayStop, UNIMOD Structure.
+
+_______________________________________________
+
+MikMod_NextPosition
+
+MikMod_PrevPosition
+
+Syntax
+
+void MikMod_NextPosition(void)
+
+void MikMod_PrevPosition(void)
+
+Module
+
+MPLAYER.C
+
+Description
+
+Jumps to the next or previous pattern position in the currently playing
+song.  All playing samples and active song voices are cut to avoid
+hanging notes.
+
+Notes
+
+The current song position can be read from the global mp_sngpos.
+
+ See Also
+
+MikMod_SetPosition, MP_SetPosition, MP_NextPosition, MP_PrevPosition,
+UNIMOD Structure.
+
+_______________________________________________
+
+MikMod_SetPosition
+
+Syntax
+
+void MikMod_SetPosition(UWORD pos)
+
+Module
+
+MPLAYER.C
+
+Input Parameters
+
+pos	pattern position to jump to.	
+
+Description
+
+Jumps to the specified pattern position in the song.  All playing
+samples and active channels are cut to avoid hanging notes.
+
+Notes
+
+The current song position can be read from the global mp_sngpos.
+
+ See Also
+
+MikMod_NextPosition, MikMod_PrevPosition, MP_SetPosition, UNIMOD
+Structure.
+
+_______________________________________________
+
+MP_NextPosition
+
+MP_PrevPosition
+
+Syntax
+
+void MP_NextPosition(UNIMOD *mf)
+
+void MP_PrevPosition(UNIMOD *mf)
+
+Module
+
+MPLAYER.C
+
+Input Parameters
+
+mf	Pointer to the UNIMOD structure (module handle)	
+
+Description
+
+Jumps to the next or previous pattern position in the song.  The song
+need not be currently playing, and if not the changes will take effect
+when after calling MikMod_PlayStart.  If the song is currently playing,
+all playing samples and active song voices are cut to avoid hanging
+notes.
+
+Notes
+
+The current song position can be read from the global mp_sngpos.
+
+ See Also
+
+MikMod_NextPosition, MikMod_PrevPosition, MikMod_SetPosition,
+MP_SetPosition, UNIMOD Structure.
+
+_______________________________________________
+
+MP_SetPosition
+
+Syntax
+
+void MP_SetPosition(UNIMOD *mf, UWORD pos)
+
+Module
+
+MPLAYER.C
+
+Input Parameters
+
+mf	Pointer to the UNIMOD structure (module handle).	
+	
+	pos	pattern position to jump to.	
+
+Description
+
+Jumps to the specified pattern position in the song. The song need not
+be currently playing, and if not the changes will take effect when after
+calling MikMod_PlayStart.  If the song is currently playing, all playing
+samples and active song voices are cut to avoid hanging notes.
+
+Notes
+
+The current song position can be read from the global mp_sngpos.
+
+ See Also
+
+MP_NextPosition, MP_PrevPosition, MikMod_SetPosition, UNIMOD Structure.
+
+_______________________________________________
+
+MP_Mute
+
+MP_UnMute
+
+MP_ToggleMute
+
+Syntax
+
+void MP_Mute(UNIMOD *mf, SLONG arg1, ...)
+
+void MP_UnMute(UNIMOD *mf, SLONG arg1, ...)
+
+void MP_ToggleMute(UNIMOD *mf, SLONG arg1, ...)
+
+Module
+
+MPLAYER.C
+
+Input Parameters:
+
+mf	Pointer to the UNIMOD structure (module handle)	
+	
+	arg1	Song channel to be muted / unmuted, or MUTE_INCLUSIVE or
+MUTE_EXCLUSIVE.	
+
+Description
+
+Functions used for muting or unmuting channels of a module. You can
+simply mute or unmute a single channel of the song by passing that
+channel number, or mute a range of channels by specifying `arg1' as
+either MUTE_INCLUSIVE or MUTE_EXCLUSIVE.  If either is given, then two
+more parameters of type int are expected which indicate the range of
+channels that should be muted or unmuted.
+
+MP_ToggleMute will toggle the mute status of the given channel or range
+of channels.
+
+See Also
+
+MP_Muted, UNIMOD Structure.
+
+Examples
+
+MP_Mute(mf, 10);                      // Mute channel 10
+
+MP_Mute(mf, MUTE_INCLUSIVE, 5, 15);   // Mute channels 5 through 15
+
+MP_Unmute(mf, MUTE_EXCLUSIVE, 5, 15); // Unmute channels 6 through 14
+
+_______________________________________________
+
+MP_HandleTick
+
+Syntax
+
+void MP_HandleTick(void)
+
+Module
+
+MPLAYER.C
+
+Description
+
+Plays one `tick' of a module.  Modules are processed in a resolution of
+ticks, and at each tick interval pitch, volume, panning, and other
+effects are processed and updated.
+
+This is the default `player' procedure called by the sound driver.  If
+you make your own tickhandler using MikMod_RegisterPlayer, you should
+make sure to call this procedure from it if you want to use the module
+player.
+
+SLOADER.C [Raw Sample Data Loader and Converter]
+
+The SLOADER is a loader and converter for loading raw sample data.  It
+performs conversions at load-time to and from 8 bit and 16 bit, signed
+and unsigned, and does sample scaling (reducing sample quality to allow
+more samples to fit in a limited memory-space). 
+
+ 
+
+The SLOADER is used by both MLOADER.C and MWAV.C.  Generally, the end
+user need not worry about this aspect of MikMod.  However, some advanced
+areas of usage may benefit from this information, so it has been
+included for completeness.
+
+ 
+
+_______________________________________________
+
+SL_RegisterSample 
+
+Syntax
+
+SAMPLOAD SL_RegisterSample(SAMPLE *sample, FILE *fp)
+
+Module
+
+SLOADER.C
+
+Input Parameters
+
+sample	Pointer to an allocated SAMPLE structure.  This structure cannot
+be changed after SL_RegisterSample has been called.	
+	
+	Fp	Pointer of the file the sample should be loaded from.  Note that the
+seekpos within the file is stored in the SAMPLE structure.	
+
+Description
+
+@
+
+@
+
+@
+
+@
+
+@
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+U
+
+(rocedure tells the SLOADER crucial sample information needed for
+load-time conversions that will be done later (after all samples to be
+loaded have been specified), when SL_LoadSamples is called. The SAMPLOAD
+structure returned is used as a handle for controlling the conversions.
+
+ÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑld not
+be changed after SL_RegisterSample has been called.  This can cause
+unpredictable results.
+
+Notes
+
+All files registered must remain open until after SL_LoadSamples has
+been called.  The sample data is not actually read until that point.
+
+_______________________________________________
+
+SL_Sample8to16
+
+SL_Sample16to8
+
+SL_SampleSigned
+
+SL_SampleUnsigned
+
+Syntax
+
+void SL_Sample8to16(SAMPLOAD *s)
+
+void SL_Sample16to8(SAMPLOAD *s)
+
+void SL_SampleSigned(SAMPLOAD *s)
+
+void SL_SampleUnsigned(SAMPLOAD *s)
+
+Module
+
+SLOADER.C
+
+Input Parameters 
+
+s	a SAMPLOAD handle, as returned by SL_RegisterSample.	
+
+Description
+
+These procedures control the format sampled data should be converted to
+while loading.  Samples can be converted to and from 8 bit and 16 bit,
+or signed and unsigned data.  Note that the SAMPLE structure associated
+with the SAMPLOAD handle will be modified immediately to reflect these
+changes (the 'flags' element).
+
+_______________________________________________
+
+SL_HalveSample 
+
+Syntax
+
+void SL_HalveSample(SAMPLOAD *s)
+
+Module
+
+SLOADER.C
+
+Input Parameters:
+
+s	a SAMPLOAD handle, as returned by SL_RegisterSample.	
+
+Description:
+
+The name of this procedure is somewhat misleading; I could not think of
+a better one.  It does not actually halve the sample data each call.  It
+increments a divisor, which makes the size progression as such with each
+call:
+
+divfactor = 2,  scale = 1/2
+
+divfactor = 3,  scale = 1/3
+
+divfactor = 4,  scale = 1/4
+
+  ..
+
+  ..
+
+Note that the SAMPLE structure associated with the SAMPLOAD handle will
+be modified immediately to reflect these changes (the 'length',
+'loopstart', 'loopend' elements, etc).
+
+Notes
+
+Scaling is averaged to help reduce static.
+
+Generally, one should never have to call this procedure themselves.  The
+SLOADER will use it automatically to make samples fit into available
+soundcard memory.
+
+I may change this in the future to use fixed or floating point math, and
+hence increment by smaller intervals.  I also may remove it in favor of
+a new procedure which simply accepts a 'scale' parameter. [Done if I
+receive requests for such features]
+
+_______________________________________________
+
+SL_LoadSamples
+
+Syntax
+
+BOOL SL_LoadSamples(void)
+
+Module
+
+SLOADER.C
+
+Description
+
+Loads all samples that have been registered with SL_RegisterSample. Note
+that all files that will be used must remain open until after this
+procedure has been called!
+
+Returns
+
+0 if successful, or 1 on error.
+
+Soundcard Reference
+
+Generic Drivers for All Platforms
+
+The following drivers are available on all supported platforms.
+
+No-Sound Driver
+
+Sound Quality	N/A	
+MikMod Driver	drv_nosound	
+Manufacturer	Creative Silencetm	
+	
+	Notes / Tips	This driver is the default driver MikMod falls back upon
+if no other drivers can be successfully initialized.  The No-Sound
+driver essentially does nothing at all, not even update the module
+player (so the NOS driver does not do adequate substitution if parts of
+your program are timed to the music replay).	
+
+RAW Out Driver
+
+Sound Quality	Any Hz / Stereo / 16-bit *	
+MikMod Driver	drv_raw	
+	
+	Notes / Tips	The raw driver makes a file called RAW.OUT and dumps the
+raw mixer data to the file.  Any mixing rate can be used, even
+outrageous values such as 176,400 Hz.  See also the WAV Out driver
+[drv_wav].	
+
+RAW Out Driver
+
+Sound Quality	Any Hz / Stereo / 16-bit *	
+MikMod Driver	drv_wav	
+	
+	Notes / Tips	The WAV driver makes a file called RAW.WAV and dumps the
+raw mixer data to the file, along with a RIFF WAVE file header (so that
+it can be replayed with most any common multimedia player).  See also
+the RAW Out driver [drv_raw].	
+
+* Generally speaking, the output quality of the RAW and WAV drives will
+be significantly better than that of the real-time mixer used for
+playback on soundcards like the SB16.  The RAW and WAV drivers can use
+methods of audio improvement that are not an option in real-time
+playback because of speed constraints [real-time mixing uses virtch.c,
+while RAW-out and WAV-out use virtch2.c].  For more detailed
+information, see Using To-Disk Mixing.
+
+MS-DOS and Windows Soundcards
+
+There are a huge array of soundcards for the PC, all with varying
+abilities and functionality.  MikMod houses most of the more popular
+soundcards under one API.  Below is a table of all the soundcards MikMod
+has direct support for.
+
+Gravis Ultrasound / MAX
+
+Sound Quality	44100 Hz / Stereo / 16 Bit (CD Quality)	
+MikMod Driver	drv_gus	
+Hardware Mixer	30 Voices	
+Onboard RAM	256k (max. 1 MB)	
+Sound Blaster compatible	No	
+Manufacturer	Advanced Gravis Computer Technology Ltd.	
+	
+	Notes / Tips	The Gravis Ultrasound has the capability of combining
+voices mixed by both hardware and software.  The standard MikMod driver
+supports this ability.  However, programmers that do not need to use the
+software mixing feature (demo coders in particular) should use drv_gus2
+instead, which uses only the native hardware mixer and is smaller and
+faster.	
+
+Gravis Ultrasound PnP
+
+Sound Quality	48000 Hz / Stereo / 16 Bit (CD Quality)	
+MikMod Driver	Not yet supported, but will be soon.	
+Hardware Mixer	30 Voices, Reverb	
+Onboard RAM	512k (max. 14 MB)	
+Sound Blaster compatible	No	
+Manufacturer	Advanced Gravis Computer Technology Ltd.	
+
+Sound Blaster 16
+
+Sound Quality	44100 Hz / Stereo / 16 Bit (CD Quality)	
+MikMod Driver	drv_sb16 / drv_sbpro / drv_sb	
+Hardware Mixer	None	
+Onboard RAM	None	
+Sound Blaster compatible	Yes	
+Manufacturer	Creative Labs, Inc.	
+
+Sound Blaster 32
+
+Sound Quality	44100 Hz / Stereo / 16 Bit (CD Quality)	
+MikMod Driver	drv_awe	
+Hardware Mixer	30 Voices	
+Onboard RAM	None (max. 28 MB)	
+Sound Blaster compatible	Yes	
+Manufacturer	Creative Labs, Inc.	
+	
+	Notes / Tips	The Sound Blaster 32 is nothing more than the SB AWE 32
+without the standard 512k of RAM.  If the SB32 has RAM installed, it
+behaves just like an AWE 32, but without any RAM it can only be used as
+an SB16 [software mixing only].	
+
+Sound Blaster AWE 32 / 64
+
+Sound Quality	44100 Hz / Stereo / 16 Bit (CD Quality)	
+MikMod Driver	drv_awe	
+Hardware Mixer	30 Voices	
+Onboard RAM	512k (max. 28 MB)	
+Sound Blaster compatible	Yes	
+Manufacturer	Creative Labs, Inc.	
+	
+	Notes / Tips	The AWE 32 driver for MikMod currently cannot do both
+hardware and software mixing at the same time, as can the Gravis
+Ultrasound.  Hopefully this will be fixed at a later date.  In the
+meantime, if you are in need of dynamically loading or loading many
+large sound effects, we suggest you use the SB16 driver only.
+
+Currently, the features of the AWE 64 are not actually taken advantage
+of (namely the availability of 64 hardware voices).  Support for the AWE
+64 will be improved in a future version of MikMod.	
+
+Pro Audio Spectrum 16
+
+Sound Quality	441000 Hz / Stereo / 16 Bit (CD Quality)	
+MikMod Driver	drv_pas16	
+Hardware Mixer	None	
+Onboard RAM	None	
+Sound Blaster compatible	Yes (mono only)	
+Manufacturer	Media Vision	
+
+Ensoniq Soundscape
+
+Sound Quality	441000 Hz / Stereo / 16 Bit (CD Quality)	
+MikMod Driver	drv_ess	
+Hardware Mixer	None	
+Onboard RAM	None	
+Sound Blaster compatible	Yes (mono only)	
+Manufacturer	Ensoniq Corporation	
+	
+	Notes / Tips	This Soundscape driver is not compatible with the Ensoniq
+Soundscape Plug-and-Play card.	
+
+ ÑÑ
+
+	
+
+Version 3.0
+
+Aug.20th, 1997	
+
+Divine Entertainment
+
+2970 Laurel Run Road
+
+Wilkes-Barre, PA  18702-9483
+
+mailto:dracoirs@epix.net
+
+http://www.epix.net/~dracoirs/
+[ this is out of date.  Check README.UNIX for Jake Stine's new
+	web page ]
+
+Disclaimer
+
+The author (Divine Entertainment) specifically disclaims all warranties,
+expressed or implied, including but not limited to implied warranties of
+merchantability and fitness for a particular purpose with respect to
+defects in the software and documentation.
+
+In no event shall the author be liable for any loss of profit or damage,
+including but not limited to special, incidental, or consequential
+damages.
+
+Sound Blaster is a registered trademark of Creative Labs, Inc.
+
+All product names, trademarks and registered trademarks contained in
+this document are the property of their respective holders.
+
+Those Honorable People
+
+MikMod documentation and the distribution package are maintained by Jake
+Stine of Divine Entertainment.  Most of the source code in MikMod is
+written by Jake Stine and Jean-Paul Mikkers, with some parts written by
+third-party individuals, who are credited here:
+
+Arnout Cosman	Pro Audio Spectrum drivers for DOS.	
+	
+	Mario Koeppen	Windows Sound System drivers for DOS.	
+	
+	Steffen Rusitschka	AWE32 drivers for DOS.	
+	
+	Jeremy McDonald	Fast ASM mixer for Watcom/DOS.	
+	
+	Dmitry Boldyrev	Macintosh audio drivers.
+
+VIRTCH (software mixer) enhancements.	
+	
+	
+
+And on the UNIX side of things:
+
+Peter Amsutez
+
+Steve McIntyre	Put together the UNIX distribution.	
+	
+	Chris Conn	Linux (OSS) sound driver.	
+	
+	Andy Lo A Foe	Linux Ultra (Gravis Ultrasound) driver.	
+	
+	Valtteri Vuorikoski	Sun / Solaris sound drivers.	
+	
+	Roine Gustafsson	Alpha sound driver.	
+	
+	Stephan Kanthak	HP-UX / AIX sound drivers.	
+	
+	Lutz Vieweg	SGI sound driver.	
+	
+	
+
+Special thanks to these people for contributing to MikMod.
+
+Thanks also go out to the many beta testers of MikMod 3.0, who have
+helped to find bugs and give helpful suggestions.  If you feel you have
+been forgotten from this list, mail Jake Stine and give him a piece of
+your mind and demand credit where credit is due.
+
+Table of Contents
+
+This document file has not been completed yet.  The sections exist, most
+in partial form, but are not yet organized.  For now, this file is short
+enough that you can page through and find what you need without much
+trouble.  A future version of this fill will have a completed table of
+contents and more in-depth sections.
+
+Introduction to the MikMod Sound System
+
+The MikMod sound system is one of the best ways for a programmer to add
+music and sound effects to a game.  It is a powerful and flexible
+library of code, with an API that is both simple and very powerful. 
+With MikMod, programmers can add music and/or sound effects to any DOS
+program, or can simply use MikMod for its array of soundcard device
+drivers.
+
+MikMod supports a variety of soundcards, and runs on a large array of
+platforms, including MS-DOS, Windows95, Linux, Macintosh, and more. 
+Note that only the MS-DOS platform is currently officially supported by
+Divine Entertainment, and that drivers for other platforms are
+maintained by third party programmers on an independent basis.
+

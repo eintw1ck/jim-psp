@@ -1,0 +1,64 @@
+
+ --> MikMod 3.0
+  -> Various Programming Tips and Tricks!
+
+
+ Here are some tips and tricks that I have jotted down as I think of them.
+ The list is short for now, but it will no doubt grow as more are thought
+ up.  Also, check for additional information on the Divine Entertainment
+ website at http://www.epix.net/~dracoirs/
+
+ Ok, so this little text file is pretty short right now.  These things
+ take time to think of.. :-)
+
+
+-/- Compiling / Makefiles
+
+ Watcom:
+
+   The example files that come with MikMod default to 30k stack buffers
+   (option stack=30000 on the wlink command line).  This is a safety pre-
+   caution and by no means a requirement.
+
+   You can usually safely use a 10k stack if you are using an interrupt
+   driven MikMod_Update() and you can safely use a 5k stack if you are
+   using polling (calling MikMod_Update() from a main program loop).
+
+                               ----------
+
+   If you are writing a module player and are NOT calling MikMod_Update()
+   from an interrupt, then you can safely remove /ZU from the following
+   modules in the /MikMod directory:
+
+      MDRIVER.C
+      VIRTCH.C
+
+   Removing /ZU will slightly reduce code size and increase replay speed.
+
+                               ----------
+   
+   If you are using the IDE and want to add PMODE/W to the list of valid
+   targets, follow these steps:
+
+     a) copy PMWBIND.EXE and PMODEW.LNK to your watcom/binw diectory.
+
+     b) Load WSYSTEM.LNK, and inster the contents of PMODEW.LINK into it
+        at the very top.
+
+     c) Load IDEDOS32.CFG.  Insert a line that reads:
+            Target *.exe, dw2e_, "PMODE/W Executable"
+
+     d) Load IDE.CFG.  Around line 840, you will find the following line:
+          VSwitch  0, dr2??, "System:", SYS, " ", ONE, REQ, dos4g
+        Inser this line below it:
+          VSwitch  0, dw2??, "System:", SYS, " ", ONE, REQ, pmodew
+
+     e) This is the tricky part.  There are several lines in IDE.CFG that
+        contain 'dr2'.  Each of these [excluding the special case in step
+        d] must be duplicated, and 'dr2' replaced with 'dw2' (no other
+        changes required).  Do this right and you will have full IDE cap-
+        ability with the pmode/w extender!
+
+   There you go, all set to compile with pmode/w within the Watcom IDE!
+
+                               ----------

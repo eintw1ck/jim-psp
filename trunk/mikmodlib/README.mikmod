@@ -1,0 +1,222 @@
+NOTE: a few weeks ago, Jake Stine decided to drop all obligations
+on MikMod.  You don't owe him anything, he doesn't owe you anything.
+It is FREE, no strings attached.  We aren't responsible for anything
+strange this program might do.  Have fun!  See licence.txt for more info.
+
+
+ --> MikMod Sound Libraries Version 3.0
+  -> Release Notes - August 20th, 1997
+
+
+ Welcome to the long awaited MikMod 3.0 public release.  Although this
+ product has been delayed countless times, hopefully it will be worth
+ the wait.  We have added tons of new features and worked weeks on end
+ to trace down all know bugs.
+
+ Notes about this release:
+
+   The documentation is there, but is not finished.
+
+   Streaming audio has been promised, but it is not functional in this
+   version of MikMod.  I promise that a 3.xx update will be released
+   prety soon that will have support for streaming audio.
+
+   The Unix side of things is pretty messy.  If you want Unix drivers
+   for your particular platform, ask me about it!  I have a handful of
+   partially converted drivers and it just might help save you time
+   rather than hack from 2.10 by yourself.
+
+   VIRTCH2.C, the high-quality mixer used for the WAV and RAW drivers,
+   currently requires that your compiler supports 64 bit integers.
+   If it does not, ignore VIRTCH2.C and switch drv_raw.c and drv_wav.c
+   back to VIRTCH.C.  I will have a floating point alternative to the
+   64 bit integer VIRTCH2.C very soon.
+
+   And as usual, please report all bugs to Jake Stine at:
+                                                   dracoirs@epix.net.
+
+
+-/- Compiling for Watcom
+
+ If you have Watcom for DOS only (no IDE), you should be able to compile
+ MIKMOD.EXE in the Examples/ directory by running WCMAKE.BAT.  The in-
+ dividual makefiles are in the three source trees as MAKEFILE.WC.
+
+ Users of the IDE (v10.6 or better) can hopefully use the mikmod.wpj lo-
+ cated in root directory (same location as this file).  MIKMOD.WPJ can
+ compile all of the Watcom examples.  Or you can make your own project
+ and include the MIKMOD.TGT, MMIO.TGT, and EXTDOS.TGT files found in
+ the Lib/ directory.
+
+ Remember that if you are going to be running code from interrupt-driven
+ situations (ie, from the system timer), you have to use Watcom's /ZU
+ compiler option for any module that will have code called while in an
+ interrupt.
+
+
+-/- Compiling for DJGPP
+
+ Working DJGPP makefiles have been included as MAKEFILE.GCC in each of
+ the source trees.  MikMod now works 100% with DJGPP version 2.0 and
+ above.
+
+
+-/- Other Compilers
+
+ If you have another compiler and you manage to get Mikmod to work with
+ it, drop me a line and we will see about making the needed changes to
+ my copy for the next release.
+
+ If you get into trouble, you can e-mail me for help.  Otherwise, make
+ sure to check the example files for general useage and some other misc-
+ ellaneous information.
+
+
+
+Documentation
+=============
+
+There are several documentation files in the Docs/ directory.  They are:
+
+  MIKMOD.DOC: General and specific useage of the MikMod Sound System in
+              programs.  Contains a reference to all API calls, global
+              variables, and soundcards supported.
+
+              This file is in Microsoft Word fr Windows 2.0 format.  If
+              you do not have a program to read this format, you can
+              download a free Word viewer from [assuming Microsoft does
+              not rearrange their site (yea, right)]:
+
+                http://www.microsoft.com/officefreestuff/word/
+
+  MIKCVT.TXT: Text file on how to use the MIKCVT.EXE conversion utility.
+
+  TIPS.TXT: Various tips, tricks, and optimizations that I jot down as
+            I think of them.
+
+
+
+Example sources
+===============
+
+This version of MikMod includes four sample sources:
+
+  MIKMOD: A basic module player with a simple interface.
+
+  MIKWAV: An example of WAV loading and sound effects usage.
+          This example includes the three wave files also included,
+          EXPLODE.WAV, MECHA.WAV, and SLASH.WAV.
+
+  MIKINTER: A simplified module player which attaches MikMod_Update()
+            to the timer interrupt, which is convienient for games
+            and demos (MS-DOS only).
+
+  MIKCVT: A conversion utility to convert all types of supported mod-
+          ules to MikMod's internal UniFormat.  See docs\mikcvt.txt for
+          more useage informaion.
+
+
+
+
+How to contact us
+=================
+
+Please send your questions, registration forms, comments, bugreports,
+bugfixes, loaders, drivers, soundcards etc. to:
+
+
+ -/- Jake Stine [Air Richter]
+
+      Email:
+         dracoirs@epix.net (preferred)
+         dkstine@microserve.com
+        
+      Snail-mail:
+         Jake Stine
+         2970 Laurel Run Road
+         Wilkes-Barre, PA  18702
+         United States
+
+      Phone:
+         (717) 822-2794
+
+
+And if you want to contact MikMak, the original author of MikMod:
+
+ -/- Jean-Paul Mikkers [MikMak]
+
+      Email:
+         mikmak@via.nl (preferred)        
+         mikmak@stack.urc.tue.nl
+        
+        
+      Snail-mail:
+         Jean-Paul Mikkers
+         Godartstr. 16
+         5932AX Tegelen,
+         The Netherlands
+
+      Phone:  
+         +31 (0)77-3732736
+
+
+
+Legal Stuff
+===========
+
+MikMod has been released under a special liscencing agreement.  This
+software package is free to use for home and educational purposes only,
+and all users are permitted to redistribute the software in its complete
+and original form only.  Unregistered use of this software in a com-
+mercial package or program is prohibited. Basic translation: IF YOU ARE
+ASKING MONEY FOR THE PRODUCT YOU USE THIS SOFTWARE WITH, YOU HAVE TO
+REGISTER!  Please see Registration Instructions below for information on
+how to register.
+
+ - Registration is only $40 US dollars.
+
+ - Registering is for the distribution rights of binaries only.  Com-
+   mercial distribution of the sources or portions of the sources in
+   any form is strictly prohibited without special granted permission
+   from Divine Entertainment.
+
+ - Registering MikMod gives you the right to sell an unlimited number of 
+   copies of the product you're using it for.. pretty flexible huh?
+
+ - Registering is good for all minor versions under the current major
+   version. For example, if you register for MikMod 3.00 now, all possi-
+   ble updates through 3.99 will also be registered. This allows for
+   bugfixes and updates without the need to register again.
+
+ - A MikMod registration cannot be transferred from one person to another,
+   or from one person to a company, or from one company to another company.
+
+ - Contributors to a library (bug-fixes, new code) will get automatic
+   registration for all future versions.  Divine Entertainment reserves
+   the right to decide if your contribution is good enough for registra-
+   tion.
+
+ - Registered users will be optionally added to a mailing list.
+
+ - If you use MikMod on a regular basis for home or educational use, we
+   encourage you to register to help support the product (although you
+   do not have to).
+
+ - If you have any questions concerning registration, mail your query to
+   dracoirs@epix.net.
+
+
+Disclaimer:
+
+ The author (Jake Stine) specifically disclaims all warranties, expressed
+ or implied, including but not limited to implied warranties of merchant-
+ ability and fitness for a particular purpose with respect to defects in
+ the software and documentation.
+
+ In no event shall the author be liable for any loss of profit or damage,
+ including but not limited to special, incidental, or consequential
+ damages.
+
+ All product names, trademarks and registered trademarks contained in this
+ document are the property of their respective holders.
+

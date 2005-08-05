@@ -1,0 +1,25 @@
+
+ --> MikMod Sound Libraries Version 3.0
+  -> Known Bugs - August 20st, 1997
+
+
+ If anyone knows of a fix for any of the bugs listed below, please contact
+ me at dracoirs@epix.net and tell me about it.
+
+ - The DSM loader has been changed from MikMod 2.10 to 3.0 and is un-
+   tested.  It may not work.
+ 
+ - 669 loader is far from perfect.  Thanks go out to the complete lack of
+   useful docs for this format.  It seems to play most 669's adequately,
+   however.
+
+ - Since there is no 100% sure detection of UST / Soundtracker the 15-
+   instrument loader may, under very rare circumstances, detect a sound-
+   tracker module as UST and play it incorrectly.
+
+ - MikMod locks Aztec soundcards (SB clones distributed with Packard Bell
+   computers).  MikMod will work, but it hard locks the card and the
+   user must turn off the computer to reset it (Windows can't even do it!)
+
+   This bug may not exist anymore; someone tell me if it does.
+
