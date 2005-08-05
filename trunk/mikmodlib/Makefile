@@ -3,7 +3,9 @@ PSPDIR=$(shell psp-config --psp-prefix)
 
 OBJS = example.o
 
+
 LIBS = $(PSPDIR)/lib/libmikmod.a $(PSPDIR)/lib/libmmio.a -lpspaudiolib -lpspaudio
+TARGET = mikmodtest
 
 EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = mikmodtest
@@ -29,5 +31,5 @@ install: libs
 clean:
 	$(MAKE) -C mmio clean
 	$(MAKE) -C playercode clean
-	rm -f *.o PARAM.SFO EBOOT.PBP libmikmod.a
+	rm -f *.o PARAM.SFO EBOOT.PBP libmikmod.a mikmodtest.elf
 

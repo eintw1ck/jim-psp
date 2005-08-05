@@ -88,10 +88,11 @@ int main(void)
 	UNIMOD *mf = NULL; // for mod
 	SAMPLE *sf = NULL; // for wav
 	int voice = 0; 	   // for wav
+// ]]
 	int pan = 127;
 	int vol = 127;
 	int freq = 22000;
-// ]]
+
 	BOOL playing = false;
 
 	pspDebugScreenInit();
@@ -151,29 +152,29 @@ int main(void)
 
 		
 		if(pad.Buttons & PSP_CTRL_LTRIGGER) {
-			Voice_setPanning(voice, (pan<2)?pan:--pan);
+			Voice_SetPanning(voice, (pan<2)?pan:--pan);
 			printf("pan is %d\n", pan);
 		}
 		if(pad.Buttons & PSP_CTRL_RTRIGGER) {
-			Voice_setPanning(voice, (pan>254)?pan:++pan);
+			Voice_SetPanning(voice, (pan>254)?pan:++pan);
 			printf("pan is %d\n", pan);
 		}
 			
 		if(pad.Buttons & PSP_CTRL_UP) {
-			Voice_setVolume(voice, (vol>254)?vol:++vol);
+			Voice_SetVolume(voice, (vol>254)?vol:++vol);
 			printf("vol is %d\n", vol);
 		}
 		if(pad.Buttons & PSP_CTRL_DOWN) {
-			Voice_setVolume(voice, (vol<2)?vol:--vol);
+			Voice_SetVolume(voice, (vol<2)?vol:--vol);
 			printf("vol is %d\n", vol);
 		}
 			
 		if(pad.Buttons & PSP_CTRL_LEFT) {
-			Voice_setFrequency(voice, (freq<1001)?freq:(freq -=1000));
+			Voice_SetFrequency(voice, (freq<1001)?freq:(freq -=1000));
 			printf("freq is %d\n", freq);
 		}
 		if(pad.Buttons & PSP_CTRL_RIGHT) {
-			Voice_setFrequency(voice, (freq>44000)?freq:(freq +=1000));
+			Voice_SetFrequency(voice, (freq>44000)?freq:(freq +=1000));
 			printf("freq is %d\n", freq);
 		}
 
