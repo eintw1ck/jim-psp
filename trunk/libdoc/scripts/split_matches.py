@@ -64,7 +64,7 @@ def has_uppercase_uppercase (name):
 	return False
 
 
-def owiethohwetowehiroiwehrjoiwejr (split_name_list):
+def print_splits (split_name_list):
 
 	for i in xrange(len(split_name_list)):
 		for j in xrange(i,len(split_name_list)):
@@ -92,7 +92,7 @@ def main ():
 				if name.find(nid[2:]) < 0:
 					words = split_name(name)
 #					print nid, name, words
-					owiethohwetowehiroiwehrjoiwejr(words)
+					print_splits(words)
 				nid = None
 
 	file.close()
@@ -110,7 +110,7 @@ def test ():
 	for name in names:
 		words = split_name(name)
 		print name, words
-		owiethohwetowehiroiwehrjoiwejr(words)
+		print_splits(words)
 
 
 if __name__ == "__main__":
