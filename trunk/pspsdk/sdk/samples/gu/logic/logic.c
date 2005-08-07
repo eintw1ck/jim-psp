@@ -47,7 +47,7 @@ const char* names[16] =
 	"GU_OR",
 	"GU_NOR",
 	"GU_EQUIV",
-	"GU_INVERT",
+	"GU_INVERTED",
 	"GU_OR_REVERSE",
 	"GU_COPY_INVERTED",
 	"GU_OR_INVERTED",

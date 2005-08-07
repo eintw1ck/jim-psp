@@ -757,11 +757,11 @@ void sceGuStencilFunc(int func, int ref, int mask);
   *
   * Available actions are:
   *   - GU_KEEP - Keeps the current value
-  *   - GU_ZERO - UNTESTED - Sets the stencil buffer value to zero
+  *   - GU_ZERO - Sets the stencil buffer value to zero
   *   - GU_REPLACE - Sets the stencil buffer value to ref, as specified by sceGuStencilFunc()
-  *   - GU_INCR - UNTESTED - Increments the current stencil buffer value
-  *   - GU_DECR - UNTESTED - Decrease the current stencil buffer value
-  *   - GU_INVERT - UNTESTED - Bitwise invert the current stencil buffer value (Undefined right now, clashes with the logical operation)
+  *   - GU_INCR - Increments the current stencil buffer value
+  *   - GU_DECR - Decrease the current stencil buffer value
+  *   - GU_INVERT - Bitwise invert the current stencil buffer value (Undefined right now, clashes with the logical operation)
   *
   * @param fail - The action to take when the stencil test fails
   * @param zfail - The action to take when stencil test passes, but the depth test fails
@@ -798,7 +798,7 @@ void sceGuFrontFace(int order);
   *   - GU_OR
   *   - GU_NOR
   *   - GU_EQUIV
-  *   - GU_INVERT
+  *   - GU_INVERTED
   *   - GU_OR_REVERSE
   *   - GU_COPY_INVERTED
   *   - GU_OR_INVERTED
