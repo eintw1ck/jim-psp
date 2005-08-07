@@ -66,6 +66,7 @@ extern "C" {
 #define GU_TEXTURE_8BIT		GU_TEXTURE_SHIFT(1)
 #define GU_TEXTURE_16BIT	GU_TEXTURE_SHIFT(2)
 #define GU_TEXTURE_32BITF	GU_TEXTURE_SHIFT(3)
+#define GU_TEXTURE_BITS		GU_TEXTURE_SHIFT(3)
 
 #define GU_COLOR_SHIFT(n)	((n)<<2)
 #define GU_COLOR_RES1		GU_COLOR_SHIFT(1)
@@ -75,33 +76,40 @@ extern "C" {
 #define GU_COLOR_5551		GU_COLOR_SHIFT(5)
 #define GU_COLOR_4444		GU_COLOR_SHIFT(6)
 #define GU_COLOR_8888		GU_COLOR_SHIFT(7)
+#define GU_COLOR_BITS		GU_COLOR_SHIFT(7)
 
 #define GU_NORMAL_SHIFT(n)	((n)<<5)
 #define GU_NORMAL_8BIT		GU_NORMAL_SHIFT(1)
 #define GU_NORMAL_16BIT		GU_NORMAL_SHIFT(2)
 #define GU_NORMAL_32BITF	GU_NORMAL_SHIFT(3)
+#define GU_NORMAL_BITS		GU_NORMAL_SHIFT(3)
 
 #define GU_VERTEX_SHIFT(n)	((n)<<7)
 #define GU_VERTEX_8BIT		GU_VERTEX_SHIFT(1)
 #define GU_VERTEX_16BIT		GU_VERTEX_SHIFT(2)
 #define GU_VERTEX_32BITF	GU_VERTEX_SHIFT(3)
+#define GU_VERTEX_BITS		GU_VERTEX_SHIFT(3)
 
 #define GU_WEIGHT_SHIFT(n)	((n)<<9)
 #define GU_WEIGHT_8BIT		GU_WEIGHT_SHIFT(1)
 #define GU_WEIGHT_16BIT		GU_WEIGHT_SHIFT(2)
 #define GU_WEIGHT_32BITF	GU_WEIGHT_SHIFT(3)
+#define GU_WEIGHT_BITS		GU_WEIGHT_SHIFT(3)
 
 #define GU_INDEX_SHIFT(n)	((n)<<11)
 #define GU_INDEX_8BIT		GU_INDEX_SHIFT(1)
 #define GU_INDEX_16BIT		GU_INDEX_SHIFT(2)
-#define GU_INDEX_RES3		GU_INDEX_SHIFT(3)
+#define GU_INDEX_BITS		GU_INDEX_SHIFT(3)
 
 #define GU_WEIGHTS(n)		((((n)-1)&7)<<14)
+#define GU_WEIGHTS_BITS		GU_WEIGHTS(8)
 #define GU_VERTICES(n)		((((n)-1)&7)<<18)
+#define GU_VERTICES_BITS	GU_VERTICES(8)
 
 #define GU_TRANSFORM_SHIFT(n)	((n)<<23)
 #define GU_TRANSFORM_3D		GU_TRANSFORM_SHIFT(0)
 #define GU_TRANSFORM_2D		GU_TRANSFORM_SHIFT(1)
+#define GU_TRANSFORM_BITS	GU_TRANSFORM_SHIFT(1)
 /* Vertex Declarations End */
 
 /* Pixel Formats */
@@ -127,7 +135,7 @@ extern "C" {
 #define GU_OR			(7)
 #define GU_NOR			(8)
 #define GU_EQUIV		(9)
-#define GU_INVERT		(10)
+#define GU_INVERTED		(10)
 #define GU_OR_REVERSE		(11)
 #define GU_COPY_INVERTED	(12)
 #define GU_OR_INVERTED		(13)
@@ -202,11 +210,11 @@ extern "C" {
 
 /* Stencil Operations */
 #define GU_KEEP			(0)
-#define GU_ZERO			(1) // untested
+#define GU_ZERO			(1)
 #define GU_REPLACE		(2)
-#define GU_INCR			(3) // untested
-#define GU_DECR			(4) // untested
-/*#define GU_INVERT		(5) */ // untested
+#define GU_INVERT		(3)
+#define GU_INCR			(4)
+#define GU_DECR			(5)
 
 /* Light Components */
 #define GU_AMBIENT		(1)
