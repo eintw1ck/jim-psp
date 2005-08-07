@@ -720,6 +720,8 @@ void sceGuAmbientColor(unsigned int color);
   *   - GU_ONE_MINUS_SRC_COLOR
   *   - GU_SRC_ALPHA
   *   - GU_ONE_MINUS_SRC_ALPHA
+  *   - GU_DST_ALPHA
+  *   - GU_ONE_MINUS_DST_ALPHA
   *   - GU_DST_COLOR
   *   - GU_ONE_MINUS_DST_COLOR
   *   - GU_FIX
