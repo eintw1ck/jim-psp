@@ -206,6 +206,8 @@ extern "C" {
 #define GU_ONE_MINUS_SRC_ALPHA	(3)
 #define GU_DST_COLOR		(0)
 #define GU_ONE_MINUS_DST_COLOR	(1)
+#define GU_DST_ALPHA		(4)
+#define GU_ONE_MINUS_DST_ALPHA	(5)
 #define GU_FIX			(10)
 
 /* Stencil Operations */
