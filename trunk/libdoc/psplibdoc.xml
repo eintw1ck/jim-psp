@@ -1346,7 +1346,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4B980588</NID>
-						<NAME>sceDmacplus_driver_4B980588</NAME>
+						<NAME>sceDmacplusSc2MeNormal16</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3438DA0B</NID>
@@ -1378,7 +1378,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBE693828</NID>
-						<NAME>sceDmacplus_driver_BE693828</NAME>
+						<NAME>sceDmacplusMe2ScNormal16</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2D5940FF</NID>
@@ -11353,15 +11353,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x69BCBEF1</NID>
-						<NAME>Uart4ForKernel_69BCBEF1</NAME>
+						<NAME>sceKernelUart4SendCharFix</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2518C2F3</NID>
-						<NAME>Uart4ForKernel_2518C2F3</NAME>
+						<NAME>sceKernelUart4SendBytesFix</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2FD96F62</NID>
-						<NAME>Uart4ForKernel_2FD96F62</NAME>
+						<NAME>sceKernelUart4ReceiveBytesFix</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -11729,7 +11729,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAAA4ED91</NID>
-						<NAME>sceUmdMan_driver_AAA4ED91</NAME>
+						<NAME>sceUmdManGetDiscInfo4VSH</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x208089C2</NID>
@@ -20737,11 +20737,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBD2F51C1</NID>
-						<NAME>sceSuspendCancler_BD2F51C1</NAME>
+						<NAME>sceSuspendCancelerGetMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x558C30C8</NID>
-						<NAME>sceSuspendCancler_558C30C8</NAME>
+						<NAME>sceSuspendCancelerSetMode</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -20751,11 +20751,11 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0xBD2F51C1</NID>
-						<NAME>sceSuspendCancler_driver_BD2F51C1</NAME>
+						<NAME>sceSuspendCancelerGetMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x558C30C8</NID>
-						<NAME>sceSuspendCancler_driver_558C30C8</NAME>
+						<NAME>sceSuspendCancelerSetMode</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -20771,7 +20771,7 @@
 				<FUNCTIONS>
 					<FUNCTION>
 						<NID>0x2342B106</NID>
-						<NAME>sceTestMode_driver_2342B106</NAME>
+						<NAME>sceTestModeStartTestMode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB347D587</NID>
