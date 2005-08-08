@@ -35,7 +35,8 @@ SAMPLES = \
 	usb/storage \
 	utility/netconf \
 	utility/systemparam \
-	me/basic
+	me/basic \
+	wlan
 
 all:
 

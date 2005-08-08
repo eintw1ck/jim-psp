@@ -98,6 +98,7 @@ AC_CONFIG_FILES([Makefile
                  sdk/usb/Makefile
                  sdk/usbstor/Makefile
                  sdk/utility/Makefile
+                 sdk/wlan/Makefile
                  sdk/samples/Makefile
                  tools/Makefile])
 AC_OUTPUT

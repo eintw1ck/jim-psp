@@ -19,4 +19,5 @@ SUBDIRS = \
 	usbstor \
 	user \
 	utility \
+	wlan \
 	samples
