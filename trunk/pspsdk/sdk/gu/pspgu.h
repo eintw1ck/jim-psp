@@ -198,6 +198,10 @@ extern "C" {
 /* Blending Op */
 #define GU_ADD			(0)
 #define GU_SUBTRACT		(1)
+#define GU_REVERSE_SUBTRACT	(2)
+#define GU_MIN			(3)
+#define GU_MAX			(4)
+#define GU_BLENDFUNC_5		(5) /* unknown function, figure it out */
 
 /* Blending Factor */
 #define GU_SRC_COLOR		(0)
@@ -485,6 +489,9 @@ int sceGuSync(int mode, int a1);
   *   - GU_INDEX_8BIT - 8-bit vertex index
   *   - GU_INDEX_16BIT - 16-bit vertex index
   *
+  *   - GU_WEIGHTS(n) - Number of weights (1-8)
+  *   - GU_VERTICES(n) - Number of vertices (1-8)
+  *
   *   - GU_TRANSFORM_2D - Coordinate is passed directly to the rasterizer
   *   - GU_TRANSFORM_3D - Coordinate is transformed before passed to rasterizer
   *
@@ -660,7 +667,20 @@ void sceGuClearColor(unsigned int color);
 **/
 void sceGuClearDepth(unsigned int depth);
 
+/**
+  * Set the current stencil clear value
+  *
+  * @param stencil - Set which stencil value to clear with (0-255)
+  *
+**/
 void sceGuClearStencil(unsigned int stencil);
+
+/**
+  * Set mask for which bits of the pixels to write
+  *
+  * @param mask - Which bits to filter against writes
+  *
+**/
 void sceGuPixelMask(unsigned int mask);
 
 /**
@@ -704,16 +724,43 @@ void sceGuColorFunc(int a0, unsigned int color, unsigned int mask);
 **/
 void sceGuColorMaterial(int components);
 
-void sceGuAlphaFunc(int a0, int a1, int a2);
+/**
+  * Set the alpha test parameters
+  * 
+  * Available comparison functions are:
+  *   - GU_NEVER
+  *   - GU_ALWAYS
+  *   - GU_EQUAL
+  *   - GU_NOTEQUAL
+  *   - GU_LESS
+  *   - GU_LEQUAL
+  *   - GU_GREATER
+  *   - GU_GEQUAL
+  *
+  * @param func - Specifies the alpha comparison function.
+  * @param ref - Specifies the reference value that incoming alpha values are compared to.
+  * @param mask - Specifies the mask that both values are ANDed with before comparison.
+**/
+void sceGuAlphaFunc(int func, int value, int mask);
+
 void sceGuAmbient(unsigned int color);
 void sceGuAmbientColor(unsigned int color);
 
 /**
   * Set the blending-mode
   *
+  * Keys for the blending operations:
+  *   - Cs - Source color
+  *   - Cd - Destination color
+  *   - Bs - Blend function for source fragment
+  *   - Bd - Blend function for destination fragment
+  *
   * Available blending-operations are:
-  *   - GU_ADD - Additive blend
-  *   - GU_SUBTRACT - Subtractive blend
+  *   - GU_ADD - (Cs*Bs) + (Cd*Bd)
+  *   - GU_SUBTRACT - (Cs*Bs) - (Cd*Bd)
+  *   - GU_REVERSE_SUBTRACT - (Cd*Bd) - (Cs*Bs)
+  *   - GU_MIN - Cs < Cd ? Cs : Cd
+  *   - GU_MAX - Cs < Cd ? Cd : Cs
   *
   * Available blending-functions are:
   *   - GU_SRC_COLOR
@@ -740,7 +787,7 @@ void sceGuModelColor(unsigned int a0, unsigned int a1, unsigned int a2, unsigned
 /**
   * Set stencil function and reference value for stencil testing
   *
-  * Availablefunctions are:
+  * Available functions are:
   *   - GU_NEVER
   *   - GU_ALWAYS
   *   - GU_EQUAL
@@ -773,6 +820,12 @@ void sceGuStencilFunc(int func, int ref, int mask);
 **/
 void sceGuStencilOp(int fail, int zfail, int zpass);
 
+/**
+  * Set the specular power for the material
+  *
+  * @param power - Specular power
+  *
+**/
 void sceGuSpecular(float power);
 
 /**
@@ -859,6 +912,15 @@ void sceGuShadeModel(int mode);
 **/
 void sceGuCopyImage(int psm, int sx, int sy, int width, int height, int srcw, void* src, int dx, int dy, int destw, void* dest);
 
+/**
+  * Specify the texture environment color
+  *
+  * This is used in the texture function when a constant color is needed.
+  *
+  * See sceGuTexFunc() for more information.
+  *
+  * @param color - Constant color (0x00BBGGRR)
+**/
 void sceGuTexEnvColor(unsigned int color);
 
 /**
@@ -888,7 +950,22 @@ void sceGuTexFlush(void);
 /**
   * Set how textures are applied
   *
+  * Key for the apply-modes:
+  *   - Cv - Color value result
+  *   - Ct - Texture color
+  *   - Cf - Fragment color
+  *   - Cc - Constant color (specified by sceGuTexEnvColor())
+  *
   * Available apply-modes are: (TFX)
+  *   - GU_TFX_MODULATE - Cv=Ct*Cf TCC_RGB: Av=Af TCC_RGBA: Av=At*Af
+  *   - GU_TFX_DECAL - TCC_RGB: Cv=Ct,Av=Af TCC_RGBA: Cv=Cf*(1-At)+Ct*At Av=Af
+  *   - GU_TFX_BLEND - Cv=(Cf*(1-Ct))+(Cc*Ct) TCC_RGB: Av=Af TCC_RGBA: Av=At*Af
+  *   - GU_TFX_REPLACE - Cv=Ct TCC_RGB: Av=Af TCC_RGBA: Av=At
+  *   - GU_TFX_ADD - Cv=Cf+Ct TCC_RGB: Av=Af TCC_RGBA: Av=At*Af
+  *
+  * The fields TCC_RGB and TCC_RGBA specify components that differ between
+  * the two different component modes.
+  *
   *   - GU_TFX_MODULATE - The texture is multiplied with the current diffuse fragment
   *   - GU_TFX_REPLACE - The texture replaces the fragment
   *   - GU_TFX_ADD - The texture is added on-top of the diffuse fragment
@@ -1099,10 +1176,7 @@ void sceGuBoneMatrix(unsigned int index, const ScePspFMatrix4* matrix);
 **/
 void sceGuMorphWeight(int index, float weight);
 
-/* sprites */
 void sceGuSpriteMode(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3);
-
-/* debugging */
 void sceGuDebugFlush(void);
 
 /*@}*/
