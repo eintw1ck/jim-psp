@@ -1,12 +1,7 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/TR/WD-xsl">
-  <xsl:template match="root">
-   <html><head><title>PSPLIBDOC XML Viewer</title></head><body>
-     <xsl:apply-templates/>
-   </body></html> 
-  </xsl:template>
-
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:template match="/">
+   <html><head><title>PSPLIBDOC XML Viewer</title></head><body>
     <TABLE STYLE="border:0px solid black; width=100%">
       <TR STYLE="font-size:12pt; font-family:Verdana; font-weight:bold; text-decoration:underline">
         <TD>Libname</TD>
@@ -38,7 +33,7 @@
         <TD>Mode</TD>
         <TD></TD>
     </TR>
-    <xsl:for-each select="PSPLIBDOC/PRXFILES/PRXFILE" order-by="PRX">
+    <xsl:for-each select="PSPLIBDOC/PRXFILES/PRXFILE">
         <TR STYLE="font-family:Verdana; font-size:12pt; padding:5px 6px">
           <TD STYLE="background-color:lightgrey"><xsl:value-of select="PRX"/></TD>
           <TD STYLE="background-color:lightgrey"><A><xsl:attribute name="href">#<xsl:value-of select="PRXNAME"/></xsl:attribute></A><xsl:value-of select="PRXNAME"/></TD>
@@ -57,7 +52,7 @@
         <TD></TD>
         <TD></TD>
       </TR>
-      <xsl:for-each select="PSPLIBDOC/PRXFILES/PRXFILE" order-by="PRX">
+      <xsl:for-each select="PSPLIBDOC/PRXFILES/PRXFILE">
         <TR STYLE="font-family:Verdana; font-size:12pt; padding:5px 6px">
           <TD STYLE="background-color:lightgrey"><xsl:value-of select="PRX"/></TD>
           <TD STYLE="background-color:lightgrey"><A><xsl:attribute name="id">#<xsl:value-of select="PRXNAME"/></xsl:attribute></A><xsl:value-of select="PRXNAME"/></TD>
@@ -65,7 +60,7 @@
           <TD STYLE="background-color:lightgrey"><xsl:value-of select="MODE"/></TD>
           <TD></TD>
         </TR>
-        <xsl:for-each select="LIBRARIES/LIBRARY" order-by="PRX">
+        <xsl:for-each select="LIBRARIES/LIBRARY">
           <TR STYLE="font-family:Verdana; font-size:12pt; padding:5px 6px">
             <TD></TD>
             <TD STYLE="background-color:lightgrey"><xsl:value-of select="VERSION"/></TD>
@@ -80,7 +75,7 @@
             <TD></TD>
             <TD></TD>
           </TR>      
-		  <xsl:for-each select="FUNCTIONS/FUNCTION" order-by="PRX">
+		  <xsl:for-each select="FUNCTIONS/FUNCTION">
                 <TR STYLE="font-family:Verdana; font-size:12pt; padding:5px 6px">
                   <TD></TD>
                   <TD></TD>
@@ -96,7 +91,7 @@
                 <TD></TD>
                 <TD></TD>
               </TR>      
-		  <xsl:for-each select="VARIABLES/VARIABLE" order-by="PRX">
+		  <xsl:for-each select="VARIABLES/VARIABLE">
 		    <TR STYLE="font-family:Verdana; font-size:12pt; padding:5px 6px">
                   <TD></TD>
                   <TD></TD>
@@ -108,5 +103,6 @@
            </xsl:for-each>
       </xsl:for-each>
     </TABLE>
+   </body></html> 
   </xsl:template>
 </xsl:stylesheet>
