@@ -11,6 +11,11 @@
  *
  * $Id$
  */
+
+/* Note: Some of the structures, types, and definitions in this file were
+   extrapolated from symbolic debugging information found in the Japanese
+   version of Puzzle Bobble. */
+
 #ifndef __LOADEXEC_H__
 #define __LOADEXEC_H__
 
@@ -51,16 +56,28 @@ int sceKernelRegisterExitCallback(int cbid);
  */
 void sceKernelExitGame(void);
 
+/** Structure to pass to loadexec */
+struct SceKernelLoadExecParam {
+	/** Size of the structure */
+	SceSize     size;
+	/** Size of the arg string */
+	SceSize     args;
+	/** Pointer to the arg string */
+	void *  argp;
+	/** Encryption key ? */
+	const char *    key;
+};
+
 /** 
   * Execute a new game executable, limited when not running in kernel mode.
   * 
   * @param file - The file to execute.
-  * @param unk  - Unknown, set to NULL.
+  * @param param - Pointer to a ::SceKernelLoadExecParam structure, or NULL.
   *
   * @return < 0 on error, probably.
   *
   */
-int sceKernelLoadExec(const char *file, void *unk);
+int sceKernelLoadExec(const char *file, struct SceKernelLoadExecParam *param);
 
 #ifdef __cplusplus
 }
