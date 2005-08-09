@@ -21,7 +21,7 @@ libpspgu_a_SOURCES = callbackFin.c callbackSig.c guInternal.c resetValues.c sceG
 	sceGuAmbientColor.c sceGuBeginObject.c sceGuBlendFunc.c sceGuBoneMatrix.c sceGuBreak.c sceGuCallList.c \
 	sceGuCallMode.c sceGuCheckList.c sceGuClear.c sceGuClearColor.c sceGuClearDepth.c sceGuClearStencil.c \
 	sceGuClutLoad.c sceGuClutMode.c sceGuColor.c sceGuColorFunc.c sceGuColorMaterial.c sceGuContinue.c \
-	sceGuCopyImage.c sceGuDebugFlush.c sceGuDepthBuffer.c sceGuDepthFunc.c sceGuDepthMask.c sceGuDepthOffset.c \
+	sceGuCopyImage.c sceGuDepthBuffer.c sceGuDepthFunc.c sceGuDepthMask.c sceGuDepthOffset.c \
 	sceGuDepthRange.c sceGuDisable.c sceGuDispBuffer.c sceGuDisplay.c sceGuDrawArray.c sceGuDrawArrayN.c \
 	sceGuDrawBezier.c sceGuDrawBuffer.c sceGuDrawBufferList.c sceGuDrawSpline.c sceGuEnable.c sceGuEndObject.c \
 	sceGuFinish.c sceGuFog.c sceGuFrontFace.c sceGuGetAllStatus.c sceGuGetMemory.c sceGuGetStatus.c sceGuInit.c \

@@ -10,6 +10,7 @@
 #define __pspgu_h__
 
 #include <psptypes.h>
+#include <pspge.h>
 
 /** @defgroup GU Graphics Utility Library
  *
@@ -119,6 +120,8 @@ extern "C" {
 #define GU_PSM_8888		(3) /* Display, Texture, Palette */
 #define GU_PSM_T4		(4) /* Texture */
 #define GU_PSM_T8		(5) /* Texture */
+#define GU_PSM_T16		(6) /* Texture */
+#define GU_PSM_T32		(7) /* Texture */
 
 /* Shading Model */
 #define GU_FLAT			(0)
@@ -201,7 +204,7 @@ extern "C" {
 #define GU_REVERSE_SUBTRACT	(2)
 #define GU_MIN			(3)
 #define GU_MAX			(4)
-#define GU_BLENDFUNC_5		(5) /* unknown function, figure it out */
+#define GU_ABS			(5)
 
 /* Blending Factor */
 #define GU_SRC_COLOR		(0)
@@ -239,6 +242,10 @@ extern "C" {
 #define GU_DIRECT		(0)
 #define GU_CALL			(1)
 #define GU_SEND			(2)
+
+/* List Queue */
+#define GU_TAIL			(0)
+#define GU_HEAD			(1)
 
 /** @addtogroup GU */
 /*@{*/
@@ -428,12 +435,23 @@ void sceGuCallMode(int mode);
 **/
 int sceGuCheckList(void);
 
-void sceGuSendList(unsigned int mode, const void* list, void* data);
+/**
+  * Send a list to the GE directly
+  *
+  * Available modes are:
+  *   - GU_TAIL - Place list last in the queue, so it executes in-order
+  *   - GU_HEAD - Place list first in queue so that it executes as soon as possible
+  *
+  * @param mode - Wether to place the list first or last in queue
+  * @param list - List to send
+  * @param context - Temporary storage for the GE context
+**/
+void sceGuSendList(int mode, const void* list, PspGeContext* context);
 
 /**
   * Swap display and draw buffer
   *
-  * @returns Pointer to the new backbuffer
+  * @returns Pointer to the new drawbuffer
 **/
 void* sceGuSwapBuffers(void);
 
@@ -761,6 +779,7 @@ void sceGuAmbientColor(unsigned int color);
   *   - GU_REVERSE_SUBTRACT - (Cd*Bd) - (Cs*Bs)
   *   - GU_MIN - Cs < Cd ? Cs : Cd
   *   - GU_MAX - Cs < Cd ? Cd : Cs
+  *   - GU_ABS - |Cs-Cd|
   *
   * Available blending-functions are:
   *   - GU_SRC_COLOR
@@ -812,7 +831,7 @@ void sceGuStencilFunc(int func, int ref, int mask);
   *   - GU_REPLACE - Sets the stencil buffer value to ref, as specified by sceGuStencilFunc()
   *   - GU_INCR - Increments the current stencil buffer value
   *   - GU_DECR - Decrease the current stencil buffer value
-  *   - GU_INVERT - Bitwise invert the current stencil buffer value (Undefined right now, clashes with the logical operation)
+  *   - GU_INVERT - Bitwise invert the current stencil buffer value
   *
   * @param fail - The action to take when the stencil test fails
   * @param zfail - The action to take when stencil test passes, but the depth test fails
@@ -847,7 +866,7 @@ void sceGuFrontFace(int order);
   * Available operations are:
   *   - GU_CLEAR
   *   - GU_AND
-  *   - GU_AND_REVERSE
+  *   - GU_AND_REVERSE 
   *   - GU_COPY
   *   - GU_AND_INVERTED
   *   - GU_NOOP
@@ -1022,11 +1041,11 @@ void sceGuTexMapMode(int mode, unsigned int a1, unsigned int a2);
   *   - GU_PSM_T8 - Indexed, 8-bit
   *
   * @param tpsm - Which texture format to use
-  * @param a1 - Unknown, set to 0
+  * @param maxmips - Number of mipmaps to use (0-8)
   * @param a2 - Unknown, set to 0
   * @param swizzle - GU_TRUE(1) to swizzle texture-reads
 **/
-void sceGuTexMode(int tpsm, int a1, int a2, int swizzle);
+void sceGuTexMode(int tpsm, int maxmips, int a2, int swizzle);
 void sceGuTexOffset(float u, float v);
 
 /**
@@ -1177,7 +1196,6 @@ void sceGuBoneMatrix(unsigned int index, const ScePspFMatrix4* matrix);
 void sceGuMorphWeight(int index, float weight);
 
 void sceGuSpriteMode(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3);
-void sceGuDebugFlush(void);
 
 /*@}*/
 
