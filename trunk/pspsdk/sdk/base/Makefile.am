@@ -10,4 +10,7 @@ pspsdkinclude_HEADERS =		\
 buildmakdir = @PSPSDK_LIBDIR@
 buildmak_DATA = build.mak
 
-EXTRA_DIST = build.mak
+buildmakprxdir = @PSPSDK_LIBDIR@
+buildmakprx_DATA = build_prx.mak linkfile.prx
+
+EXTRA_DIST = build.mak build_prx.mak linkfile.prx

@@ -1,0 +1,13 @@
+Just a few notes.
+
+Firstly, you _must_ have a working copy of prxtool in your path (for the moment). Without it you cannot
+convert from the elf to a prx. Secondly DO NOT strip the prx file as it will currently break it, you
+have been warned.
+
+And to test this prx file out try the prx loader which is supplied as a second sample in this
+directory. Just copy the mymodule.prx to the root of the memory stick and install the EBOOT for 
+prx_loader where you see fit, then run it.
+
+That is all.
+
+Tyranid

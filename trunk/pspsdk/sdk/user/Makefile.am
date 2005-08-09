@@ -26,7 +26,8 @@ libpspuserinclude_HEADERS =	\
 	pspstdio.h		\
 	pspuser.h		\
 	psputils.h		\
-	pspintmanager.h
+	pspintmanager.h \
+	pspmoduleexport.h
 
 lib_LIBRARIES = libpspuser.a
 

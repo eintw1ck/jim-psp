@@ -32,6 +32,8 @@ SAMPLES = \
 	kernel/cwd \
 	kernel/fileio \
 	power \
+	prx/prx_loader \
+	prx/testprx \
 	usb/storage \
 	utility/netconf \
 	utility/systemparam \
