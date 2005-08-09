@@ -36,7 +36,7 @@
     <xsl:for-each select="PSPLIBDOC/PRXFILES/PRXFILE">
         <TR STYLE="font-family:Verdana; font-size:12pt; padding:5px 6px">
           <TD STYLE="background-color:lightgrey"><xsl:value-of select="PRX"/></TD>
-          <TD STYLE="background-color:lightgrey"><A><xsl:attribute name="href">#<xsl:value-of select="PRXNAME"/></xsl:attribute></A><xsl:value-of select="PRXNAME"/></TD>
+          <TD STYLE="background-color:lightgrey"><A><xsl:attribute name="href">#<xsl:value-of select="PRXNAME"/></xsl:attribute><xsl:value-of select="PRXNAME"/></A></TD>
           <TD STYLE="background-color:lightgrey"><xsl:value-of select="VERSION"/></TD>
           <TD STYLE="background-color:lightgrey"><xsl:value-of select="MODE"/></TD>
           <TD></TD>
@@ -55,7 +55,7 @@
       <xsl:for-each select="PSPLIBDOC/PRXFILES/PRXFILE">
         <TR STYLE="font-family:Verdana; font-size:12pt; padding:5px 6px">
           <TD STYLE="background-color:lightgrey"><xsl:value-of select="PRX"/></TD>
-          <TD STYLE="background-color:lightgrey"><A><xsl:attribute name="id">#<xsl:value-of select="PRXNAME"/></xsl:attribute></A><xsl:value-of select="PRXNAME"/></TD>
+          <TD STYLE="background-color:lightgrey"><A><xsl:attribute name="id"><xsl:value-of select="PRXNAME"/></xsl:attribute><xsl:value-of select="PRXNAME"/></A></TD>
           <TD STYLE="background-color:lightgrey"><xsl:value-of select="VERSION"/></TD>
           <TD STYLE="background-color:lightgrey"><xsl:value-of select="MODE"/></TD>
           <TD></TD>
