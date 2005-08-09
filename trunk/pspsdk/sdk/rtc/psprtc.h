@@ -14,6 +14,10 @@
 #ifndef __PSPRTC_H__
 #define __PSPRTC_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
 	u16 year;
 	u16 month;
@@ -33,6 +37,7 @@ enum pspRtcCheckValidErrors {
 	PSP_TIME_INVALID_SECONDS = -6,
 	PSP_TIME_INVALID_MICROSECONDS = -7
 };
+
 /**
  * Get the resolution of the tick counter
  *
@@ -252,4 +257,9 @@ sceRtcFormatRFC3339LocalTime
 
 sceRtcParseRFC3339
 */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

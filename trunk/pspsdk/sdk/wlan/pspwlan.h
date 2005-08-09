@@ -12,6 +12,10 @@
 #ifndef __PSPWLAN_H__
 #define __PSPWLAN_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Determine if the wlan device is currently powered on
  *
@@ -37,4 +41,9 @@ int sceWlanGetEtherAddr(char *etherAddr);
 /*
 int sceWlanGPBindRegError();
 */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
