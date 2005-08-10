@@ -4,10 +4,20 @@ Firstly, you _must_ have a working copy of prxtool in your path (for the moment)
 convert from the elf to a prx. Secondly DO NOT strip the prx file as it will currently break it, you
 have been warned.
 
+Please note that you cannot simply turn your regular program elfs into prxes using prxtool. You MUST
+fashion your program after the one contained in this directory. That is, your makefile must use 
+'module_start' instead of 'main' and your makefile must include build_prx.mak instead of build.mak.
+To start out it is probably easiest to modify the sampel to get a feel for things. If you want to
+export more functions you must add them to the "export our function" section of exports.exp and
+also add them to the stub that is included in prx_loader so that it gets linked in. If you
+change the name of your module you also have to change its name in the PSP_EXPORT_START macro in
+exports.exp and in the stub that prx_loader uses. DO NOT add any entries to the 'syslib' exports
+in exports.exp
+ 
 And to test this prx file out try the prx loader which is supplied as a second sample in this
 directory. Just copy the mymodule.prx to the root of the memory stick and install the EBOOT for 
 prx_loader where you see fit, then run it.
 
 That is all.
 
-Tyranid
+Tyranid & Warren
