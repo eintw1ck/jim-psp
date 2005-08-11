@@ -1,3 +1,11 @@
+/*
+ * PSP Software Development Kit - http://www.pspdev.org
+ * -----------------------------------------------------------------------
+ * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
+ *
+ * Copyright (c) 2005 Jesper Svennevid
+ */
+
 #ifndef __gumInternal_h__
 #define __gumInternal_h__
 
