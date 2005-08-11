@@ -6,6 +6,7 @@ SUBDIRS = \
 	display \
 	ge \
 	gu \
+	gum \
 	hprm \
 	kernel \
 	libc \

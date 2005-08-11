@@ -85,6 +85,7 @@ AC_CONFIG_FILES([Makefile
                  sdk/display/Makefile
                  sdk/ge/Makefile
                  sdk/gu/Makefile
+                 sdk/gum/Makefile
                  sdk/hprm/Makefile
                  sdk/kernel/Makefile
                  sdk/libc/Makefile
