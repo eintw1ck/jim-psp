@@ -17,7 +17,7 @@ EXTRA_DIST = LIB.status
 lib_LIBRARIES = libpsplibc.a
 
 ## libpsplibc.a sources.
-CORE_SOURCES = terminate.c setjmp.S qsort.c init.c cxx.cpp
+CORE_SOURCES = terminate.c setjmp.S qsort.c init.c cxx.cpp ctype_.c
 MULT_SOURCES = xprintf.c alloc.c string.c stdio.c stdlib.c libcglue.c
 
 ALLOC_OBJS = malloc.o realloc.o calloc.o memalign.o free.o __builtin_alloc.o __alloc_internals.o __mem_walk.o
