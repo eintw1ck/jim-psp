@@ -50,7 +50,7 @@ static char rcsid =
 
 #define PSPVID_DRIVER_NAME "psp"
 
-#define SLICE_SIZE	64
+#define SLICE_SIZE	32
 #define PSP_LINE_SIZE (512)
 #define SCREEN_WIDTH (480)
 #define SCREEN_HEIGHT (272)
@@ -385,7 +385,6 @@ static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 			if (!old_slice) {
 
 				/* load it */
-
 				pixels += 512 * (screen->format->BitsPerPixel / 8);
 				sceGuTexImage(0, 512, 512, 1024, pixels);
 				sceGuTexSync();
