@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2005 Marcus Comstedt <marcus@mc.pp.se>
  *
- * $Id: main.c 540 2005-07-08 19:35:10Z warren $
+ * $Id$
  */
 #include <pspkernel.h>
 #include <pspdisplay.h>
