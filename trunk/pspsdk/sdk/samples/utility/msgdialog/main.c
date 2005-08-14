@@ -192,30 +192,31 @@ static void DrawStuff(void)
 
 /* Utility dialog functions */
 
-static void ConfigureDialog(int *dialog, size_t dialog_size)
+static void ConfigureDialog(SceUtilityMsgDialogParams *dialog, size_t dialog_size)
 {
     memset(dialog, 0, dialog_size);
 
-    dialog[0] = dialog_size;
+    dialog->size = dialog_size;
     sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_LANGUAGE,
-				&dialog[1]); // Prompt language
+				&dialog->language); // Prompt language
     sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_UNKNOWN,
-				&dialog[2]); // X/O button swap
-    dialog[3] = 0x11;	// ???
-    dialog[4] = 0x13;
-    dialog[5] = 0x12;
-    dialog[6] = 0x10;
-    dialog[13] = 1;
+				&dialog->buttonSwap); // X/O button swap
+
+    dialog->unknown[0] = 0x11;	// ???
+    dialog->unknown[1] = 0x13;
+    dialog->unknown[2] = 0x12;
+    dialog->unknown[3] = 0x10;
+    dialog->unknown[10] = 1;
 }
 
 static void ShowMessageDialog(const char *message)
 {
-    int dialog[143];
+    SceUtilityMsgDialogParams dialog;
 
-    ConfigureDialog(dialog, sizeof(dialog));
-    strcpy((char *)(dialog+15), message);
+    ConfigureDialog(&dialog, sizeof(dialog));
+    strcpy(dialog.message, message);
 
-    sceUtilityMsgDialogInitStart(dialog);
+    sceUtilityMsgDialogInitStart(&dialog);
 
     for(;;) {
 
@@ -236,7 +237,7 @@ static void ShowMessageDialog(const char *message)
 	    
 	}
 
-	sceDisplayWaitVblankStartCB();
+	sceDisplayWaitVblankStart();
 	sceGuSwapBuffers();
     }
 }
