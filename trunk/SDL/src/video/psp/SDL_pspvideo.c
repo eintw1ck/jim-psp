@@ -51,7 +51,6 @@ static char rcsid =
 #define PSPVID_DRIVER_NAME "psp"
 
 #define SLICE_SIZE	64
-#define QUADRANT_SIZE (272/4)
 #define PSP_LINE_SIZE (512)
 #define SCREEN_WIDTH (480)
 #define SCREEN_HEIGHT (272)
@@ -164,13 +163,9 @@ VideoBootStrap PSP_bootstrap = {
 const static SDL_Rect RECT_480x272 = { .w = 480, .h = 272 };
 /* swsurface only */
 const static SDL_Rect RECT_640x480 = { .w = 640, .h = 480 }; 
-const static SDL_Rect RECT_800x600 = { .w = 800, .h = 600 }; 
-const static SDL_Rect RECT_1024x768 = { .w = 1024, .h = 768 }; 
 const static SDL_Rect *modelist[] = {
 	&RECT_480x272,
 	&RECT_640x480,
-	&RECT_800x600,
-	&RECT_1024x768,
 	NULL
 };
 
@@ -281,14 +276,12 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
         sceGuFinish();
         sceGuSync(0, 0);
 
-		sceDisplayWaitVblankStart();
-		sceGuDisplay(1);
+        sceDisplayWaitVblankStart();
+        sceGuDisplay(1);
 
-// 		in the perfect world... 
-//	    current->pixels = malloc(current->w * current->h * (bpp/8)); // todo: handle <= 512x512
-//		current->pitch = current->w * (bpp/8);
-
-	    current->pixels = malloc(1024 * 1024 * (bpp/8)); // todo: handle <= 512x512
+		// todo: handle <= 512x512
+		// 513 horizontal pixels to compensate for 2 texture trickery in UpdateRects
+        current->pixels = malloc(1024 * 513 * (bpp/8)); 
 		current->pitch = 1024 * (bpp/8);
 
 		this->hidden->gu_format = gu_format;
@@ -356,47 +349,72 @@ static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface)
 // todo: only update specified rects
 static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 {
-	unsigned int quadrant, slice;
+	unsigned int x, slice;
+	unsigned short old_slice = 0; /* set when we load 2nd tex */
 	struct Vertex *vertices;
 	SDL_Surface *screen = SDL_PublicSurface;
+	void *pixels;
 
 	/* todo: nullify this func if hwsurface */
 	if (!screen || ((screen->flags & SDL_HWSURFACE) != SDL_SWSURFACE)) 
 		return;
+
+	pixels = screen->pixels;
+
+	sceKernelDcacheWritebackAll();
 
 	sceGuStart(GU_DIRECT,list);
 	sceGuEnable(GU_TEXTURE_2D);
 	sceGuTexMode(this->hidden->gu_format,0,0,0);
 	sceGuTexFunc(GU_TFX_REPLACE, GU_TCC_RGB);
 	sceGuTexFilter(GU_LINEAR, GU_LINEAR);
+	sceGuTexImage(0, 512, 512, 1024, pixels);
+	sceGuTexSync();
 
-	// todo: don't assume width is bigger than height
-	sceGuTexImage(0, screen->w, screen->w, 1024, this->screen->pixels);
+	for (slice = 0; slice < (480 / SLICE_SIZE); slice++) {
 
-	// todo: optimise 
-	for (quadrant = 0; quadrant < 4; quadrant++) {
-		for (slice = 0; slice < (screen->w / SLICE_SIZE); slice++) {
+		vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
 
-			vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
+		vertices[0].x = slice * SLICE_SIZE;
+		vertices[1].x = (slice + 1) * SLICE_SIZE;
 
+		if ((slice * SLICE_SIZE * screen->w / 480) >= 512) {
+
+			/* time for the second 512x512 texture */
+
+			if (!old_slice) {
+
+				/* load it */
+
+				pixels += 512 * (screen->format->BitsPerPixel / 8);
+				sceGuTexImage(0, 512, 512, 1024, pixels);
+				sceGuTexSync();
+				old_slice = slice;
+			}
+
+			vertices[0].u = (slice - old_slice) * SLICE_SIZE * screen->w / 480;
+			vertices[1].u = (slice - old_slice + 1) * SLICE_SIZE * screen->w / 480;
+
+		} else {
+
+			/* first 512x512 texture */
 			vertices[0].u = slice * SLICE_SIZE * screen->w / 480;
-			vertices[0].v = quadrant * QUADRANT_SIZE * screen->h / 272;
-			vertices[0].color = 0;
-			vertices[0].x = slice * SLICE_SIZE; 
-			vertices[0].y = quadrant * QUADRANT_SIZE; 
-			vertices[0].z = 0;
-
 			vertices[1].u = (slice + 1) * SLICE_SIZE * screen->w / 480;
-			vertices[1].v = (quadrant + 1) * QUADRANT_SIZE * screen->h / 272;
-			vertices[1].color = 0;
-			vertices[1].x = (slice + 1) * SLICE_SIZE;
-			vertices[1].y = (quadrant + 1) * QUADRANT_SIZE; 
-			vertices[1].z = 0;
 
-			sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_COLOR_4444|GU_VERTEX_16BIT|
-				GU_TRANSFORM_2D,2,0,vertices);
 		}
 
+		vertices[0].v = 0;
+		vertices[0].color = 0;
+		vertices[0].y = 0;
+		vertices[0].z = 0;
+
+		vertices[1].v = screen->h;
+		vertices[1].color = 0;
+		vertices[1].y = 272; 
+		vertices[1].z = 0;
+
+		sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_COLOR_4444|GU_VERTEX_16BIT|
+			GU_TRANSFORM_2D,2,0,vertices);
 	}
 
 	sceGuFinish();
