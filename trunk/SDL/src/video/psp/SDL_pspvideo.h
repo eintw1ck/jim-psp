@@ -43,6 +43,7 @@ static char rcsid =
 #include <pspkernel.h>
 #include <psputils.h>
 #include <pspdisplay.h>
+#include <pspgu.h>
 
 /* Hidden "this" pointer for the video functions */
 #define _THIS	SDL_VideoDevice *this
@@ -58,6 +59,8 @@ struct SDL_PrivateVideoData {
 	int frame;
 	/* Byte offset of the start of the second frame. */
 	unsigned int frame_offset;
+	/* Texture format used for hw accelerated swsurface */
+	int gu_format;		
 };
 
 #endif /* _SDL_pspvideo_h */
