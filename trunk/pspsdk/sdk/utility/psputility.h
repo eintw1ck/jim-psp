@@ -14,5 +14,6 @@
 
 #include <psputility_sysparam.h>
 #include <psputility_netconf.h>
+#include <psputility_dialogs.h>
 
 #endif
