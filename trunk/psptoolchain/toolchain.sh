@@ -59,8 +59,8 @@
 
   fi
 
-  # Newlib depends on PSPSDK headers, so if it's being built
-  # then make sure that PSPSDK is being built.
+  ## Newlib depends on PSPSDK headers, so if it's being
+  ## built then make sure that PSPSDK is being built.
   if test $BUILD_NEWLIB ; then
    BUILD_PSPSDK=1
   fi
@@ -70,10 +70,10 @@
  ###########################
 
   ## Check for make.
-  if test "`gmake -v`" ; then
+  if test "`gmake -v 2> /dev/null`" ; then
    MAKE="gmake"
   else
-   if test "`make -v`" ; then
+   if test "`make -v 2> /dev/null`" ; then
     MAKE="make"
    else
     echo "ERROR: Please make sure you have GNU 'make' installed."
@@ -82,10 +82,10 @@
   fi
 
   ## Check for patch.
-  if test "`gpatch -v`" ; then
+  if test "`gpatch -v 2> /dev/null`" ; then
    PATCH="gpatch -p1"
   else
-   if test "`patch -v`" ; then
+   if test "`patch -v 2> /dev/null`" ; then
     PATCH="patch -p1"
    else
     echo "ERROR: Please make sure you have 'patch' installed."
@@ -94,15 +94,15 @@
   fi
 
   ## Check for wget.
-  if test "`wget -V`" ; then
-   WGET="wget --passive-ftp"
+  if test "`wget -V 2> /dev/null`" ; then
+   WGET="wget -c --passive-ftp"
   else
    echo "ERROR: Please make sure you have 'wget' installed."
    exit
   fi
 
   ## Check for subversion.
-  if test "`svn help`" ; then
+  if test "`svn help 2> /dev/null`" ; then
    SVN="svn"
   else
    echo "ERROR: Please make sure you have 'subversion (svn)' installed."
@@ -330,6 +330,9 @@
 
    ## Install the result.
    $MAKE install || { echo "ERROR INSTALLING PSPSDK"; exit; }
+
+   ## Install the pspsdk documentation.
+   $MAKE doxygen-doc || { echo "NON-FATAL ERROR INSTALLING PSPSDK DOCUMENTATION, CONTINUING..."; }
 
    ## Clean up the result.
    $MAKE clean
