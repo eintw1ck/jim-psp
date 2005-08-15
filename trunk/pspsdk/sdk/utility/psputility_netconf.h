@@ -19,56 +19,57 @@ extern "C" {
 
 #include <psptypes.h>
 
-/**
- * Datatype for sceUtilityGetNetParam
- * since it can return a u32 or a string
- * we use a union to avoid ugly casting
- */
-typedef union {
-	u32 asUint;
-	char asString[128];
-} netData;
+enum pspUtilityNetconfActions {
+	PSP_NETCONF_ACTION_CONNECTAP,
+	PSP_NETCONF_ACTION_DISPLAYSTATUS
+};
 
-#define PSP_NETPARAM_NAME          0 // string
-#define PSP_NETPARAM_SSID          1 // string
-#define PSP_NETPARAM_SECURE        2 // int
-#define PSP_NETPARAM_WEPKEY        3 // string
-#define PSP_NETPARAM_IS_STATIC_IP  4 // int
-#define PSP_NETPARAM_IP            5 // string
-#define PSP_NETPARAM_NETMASK       6 // string
-#define PSP_NETPARAM_ROUTE         7 // string
-#define PSP_NETPARAM_MANUAL_DNS    8 // int
-#define PSP_NETPARAM_PRIMARYDNS    9 // string
-#define PSP_NETPARAM_SECONDARYDNS 10 // string
-#define PSP_NETPARAM_PROXY_USER   11 // string
-#define PSP_NETPARAM_PROXY_PASS   12 // string
-#define PSP_NETPARAM_USE_PROXY    13 // int
-#define PSP_NETPARAM_PROXY_SERVER 14 // string
-#define PSP_NETPARAM_PROXY_PORT   15 // int
-#define PSP_NETPARAM_UNKNOWN1     16 // int
-#define PSP_NETPARAM_UNKNOWN2     17 // int
+enum pspUtilityNetconfStatus {
+	PSP_NETCONF_STATUS_INIT = 1,
+	PSP_NETCONF_STATUS_RUNNING,
+	PSP_NETCONF_STATUS_FINISHED
+};
 
-#define PSP_NETPARAM_ERROR_BAD_NETCONF	0x80110601
-#define PSP_NETPARAM_ERROR_BAD_PARAM	0x80110604
+typedef struct _pspUtilityNetconfData {
+	u32 size;
+	int language;
+	int buttonSwap;
+	int unknown[4];
+	int result;
+	int unknown2[4];
+	int action; //one of pspUtilityNetconfActions
+	u32 unknown3;
+} pspUtilityNetconfData;
 
 /**
- * Check existance of a Net Configuration
+ * Init the Network Configuration Dialog Utility
  *
- * @param id - id of net Configuration (1 to n)
- * @returns 0 on success, 
+ * @param data - pointer to pspUtilityNetconfData to be initialized
+ * @return 0 on success, < 0 on error
  */
-int sceUtilityCheckNetParam(int id);
+int sceUtilityNetconfInitStart (pspUtilityNetconfData *data);
 
 /**
- * Get Net Configuration Parameter
+ * Shutdown the Network Configuration Dialog Utility
  *
- * @param conf - Net Configuration number (1 to n)
- * (0 returns valid but seems to be a copy of the last config requested)
- * @param param - which parameter to get
- * @param data - parameter data
- * @returns 0 on success, 
+ * @return 0 on success, < 0 on error
  */
-int sceUtilityGetNetParam(int conf, int param, netData *data);
+int sceUtilityNetconfShutdownStart (void);
+
+/**
+ * Update the Network Configuration Dialog GUI
+ * 
+ * @param unknown - unknown; set to 1
+ * @return 0 on success, < 0 on error
+ */
+int sceUtilityNetconfUpdate (int unknown);
+
+/**
+ * Get the status of a running Network Configuration Dialog
+ *
+ * @return one of pspUtilityNetconfStatus on success, < 0 on error
+ */
+int sceUtilityNetconfGetStatus (void);
 
 #ifdef __cplusplus
 }

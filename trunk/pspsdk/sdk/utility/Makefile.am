@@ -14,7 +14,8 @@ libpsputilityincludedir = @PSPSDK_INCLUDEDIR@
 libpsputilityinclude_HEADERS = psputility.h \
                                psputility_sysparam.h \
                                psputility_netconf.h \
-			       psputility_dialogs.h
+                               psputility_netparam.h \
+                               psputility_msgdialog.h
 
 lib_LIBRARIES = libpsputility.a
 libpsputility_a_SOURCES = utility.S

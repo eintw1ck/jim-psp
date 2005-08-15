@@ -32,8 +32,9 @@ typedef struct _SceUtilityMsgDialogParams {
     int         buttonSwap;
 
     /** ? */
-    int		unknown[12];
-
+    int		unknown[4];
+    int		returnValue;
+    int		unknown2[7];
     /** The message to display (may contain embedded linefeeds) */
     char	message[512];
 
