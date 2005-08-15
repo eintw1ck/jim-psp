@@ -440,7 +440,7 @@ void PSP_VideoQuit(_THIS)
 {
 	SDL_Surface *screen = SDL_PublicSurface;
 
-	if (!screen || ((screen->flags & SDL_HWSURFACE) == SDL_SWSURFACE)) 
+	if (screen && ((screen->flags & SDL_HWSURFACE) == SDL_SWSURFACE)) 
 		sceGuTerm();
 
 	PSP_EventQuit(this);
