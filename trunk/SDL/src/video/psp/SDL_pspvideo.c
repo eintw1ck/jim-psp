@@ -279,10 +279,15 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
         sceDisplayWaitVblankStart();
         sceGuDisplay(1);
 
-		// todo: handle <= 512x512
+		if (width > 512)
+			this->hidden->stride = 1024;
+		else
+			this->hidden->stride = 512;
+
+		current->pitch = this->hidden->stride * (bpp/8);
+
 		// 513 horizontal pixels to compensate for 2 texture trickery in UpdateRects
-        current->pixels = malloc(1024 * 513 * (bpp/8)); 
-		current->pitch = 1024 * (bpp/8);
+        current->pixels = malloc(current->pitch * 513); 
 
 		this->hidden->gu_format = gu_format;
     }
@@ -368,7 +373,7 @@ static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 	sceGuTexMode(this->hidden->gu_format,0,0,0);
 	sceGuTexFunc(GU_TFX_REPLACE, GU_TCC_RGB);
 	sceGuTexFilter(GU_LINEAR, GU_LINEAR);
-	sceGuTexImage(0, 512, 512, 1024, pixels);
+	sceGuTexImage(0, 512, 512, this->hidden->stride, pixels);
 	sceGuTexSync();
 
 	for (slice = 0; slice < (480 / SLICE_SIZE); slice++) {
@@ -386,7 +391,7 @@ static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 
 				/* load it */
 				pixels += 512 * (screen->format->BitsPerPixel / 8);
-				sceGuTexImage(0, 512, 512, 1024, pixels);
+				sceGuTexImage(0, 512, 512, this->hidden->stride, pixels);
 				sceGuTexSync();
 				old_slice = slice;
 			}

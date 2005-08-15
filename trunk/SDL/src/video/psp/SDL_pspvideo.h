@@ -59,8 +59,9 @@ struct SDL_PrivateVideoData {
 	int frame;
 	/* Byte offset of the start of the second frame. */
 	unsigned int frame_offset;
-	/* Texture format used for hw accelerated swsurface */
+	/* Texture format and stride used for hw accelerated swsurface */
 	int gu_format;		
+	int stride;		
 };
 
 #endif /* _SDL_pspvideo_h */
