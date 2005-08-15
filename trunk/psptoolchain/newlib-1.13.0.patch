@@ -52,7 +52,7 @@
      noconfigdirs="$noconfigdirs gprof ${libgcj}"
      ;;
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/Makefile.am	1969-12-31 16:00:00.000000000 -0800
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2005-07-23 23:17:04.411476352 -0700
++++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2005-07-23 23:17:04.000000000 -0700
 @@ -0,0 +1,22 @@
 +## Process this file with automake to generate Makefile.in
 +
@@ -77,7 +77,7 @@
 +ACLOCAL_AMFLAGS = -I ../../..
 +CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)/configure.host
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/configure.in	1969-12-31 16:00:00.000000000 -0800
-+++ newlib-psp/newlib/libc/sys/psp/configure.in	2005-07-23 22:43:33.280214776 -0700
++++ newlib-psp/newlib/libc/sys/psp/configure.in	2005-07-23 22:43:33.000000000 -0700
 @@ -0,0 +1,12 @@
 +dnl This is the newlib/libc/sys/psp configure.in file.
 +dnl Process this file with autoconf to produce a configure script.
@@ -92,7 +92,7 @@
 +
 +AC_OUTPUT(Makefile)
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/Makefile.in	1969-12-31 16:00:00.000000000 -0800
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2005-07-23 23:18:52.843992104 -0700
++++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2005-07-23 23:18:52.000000000 -0700
 @@ -0,0 +1,343 @@
 +# Makefile.in generated automatically by automake 1.4-p6 from Makefile.am
 +
@@ -438,7 +438,7 @@
 +# Otherwise a system limit (for SysV at least) may be exceeded.
 +.NOEXPORT:
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/libcglue.c	1969-12-31 16:00:00.000000000 -0800
-+++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-07-23 21:49:02.782406016 -0700
++++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-07-23 21:49:02.000000000 -0700
 @@ -0,0 +1,494 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -935,7 +935,7 @@
 +}
 +#endif
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/pspcwd.c	1969-12-31 16:00:00.000000000 -0800
-+++ newlib-psp/newlib/libc/sys/psp/pspcwd.c	2005-07-23 21:49:44.089126440 -0700
++++ newlib-psp/newlib/libc/sys/psp/pspcwd.c	2005-07-23 21:49:44.000000000 -0700
 @@ -0,0 +1,170 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -1108,7 +1108,7 @@
 +}
 +
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/README	1969-12-31 16:00:00.000000000 -0800
-+++ newlib-psp/newlib/libc/sys/psp/README	2005-07-23 23:25:55.991663880 -0700
++++ newlib-psp/newlib/libc/sys/psp/README	2005-07-23 23:25:55.000000000 -0700
 @@ -0,0 +1,16 @@
 +Newlib for PSP
 +--
@@ -1127,7 +1127,7 @@
 +--
 +Marcus R. Brown <mrbrown@ocgnet.org>
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/aclocal.m4	1969-12-31 16:00:00.000000000 -0800
-+++ newlib-psp/newlib/libc/sys/psp/aclocal.m4	2005-07-23 23:18:42.061631272 -0700
++++ newlib-psp/newlib/libc/sys/psp/aclocal.m4	2005-07-23 23:18:42.000000000 -0700
 @@ -0,0 +1,1185 @@
 +dnl aclocal.m4 generated automatically by aclocal 1.4-p6
 +
@@ -2315,7 +2315,7 @@
 +)
 +
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/configure	1969-12-31 16:00:00.000000000 -0800
-+++ newlib-psp/newlib/libc/sys/psp/configure	2005-07-23 22:50:02.214087840 -0700
++++ newlib-psp/newlib/libc/sys/psp/configure	2005-07-23 22:50:02.000000000 -0700
 @@ -0,0 +1,1880 @@
 +#! /bin/sh
 +
@@ -4198,13 +4198,28 @@
 +test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 +
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/crt0.c	1969-12-31 16:00:00.000000000 -0800
-+++ newlib-psp/newlib/libc/sys/psp/crt0.c	2005-07-23 23:27:06.800899240 -0700
++++ newlib-psp/newlib/libc/sys/psp/crt0.c	2005-07-23 23:27:06.000000000 -0700
 @@ -0,0 +1,3 @@
 +/* The real crt0.c lives in PSPSDK. */
 +
 +void _start() { }
+--- newlib-1.13.0.orig/newlib/libc/include/sys/config.h	2004-06-22 14:54:51.000000000 -0700
++++ newlib-psp/newlib/libc/include/sys/config.h	2005-08-15 14:11:50.806728088 -0700
+@@ -94,6 +94,12 @@
+ #endif
+ #endif
+ 
++/* We compile newlib with -G0 for PSP, but if we're compiling an app with $gp enabled,
++   then _impure_ptr is expected to live in .sdata. */
++#if defined(__psp__)
++#define __ATTRIBUTE_IMPURE_PTR__ __attribute__((__section__(".sdata")))
++#endif
++
+ #ifdef __xstormy16__
+ #define __SMALL_BITFIELDS
+ #undef INT_MAX
 --- newlib-1.13.0.orig/newlib/configure.host	2004-10-05 12:44:24.000000000 -0700
-+++ newlib-psp/newlib/configure.host	2005-07-23 23:02:26.023011696 -0700
++++ newlib-psp/newlib/configure.host	2005-07-23 23:02:26.000000000 -0700
 @@ -570,7 +570,14 @@
  	;;
    mips*-*-elf*)
