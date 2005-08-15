@@ -280,14 +280,12 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
         sceGuDisplay(1);
 
 		if (width > 512)
-			this->hidden->stride = 1024;
+			this->hidden->stride = 640;
 		else
 			this->hidden->stride = 512;
 
 		current->pitch = this->hidden->stride * (bpp/8);
-
-		// 513 horizontal pixels to compensate for 2 texture trickery in UpdateRects
-        current->pixels = malloc(current->pitch * 513); 
+        current->pixels = malloc(current->pitch * 512); 
 
 		this->hidden->gu_format = gu_format;
     }
@@ -351,7 +349,6 @@ static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface)
 	return 0;
 }
 
-// todo: only update specified rects
 static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 {
 	unsigned int x, slice;
@@ -360,7 +357,7 @@ static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 	SDL_Surface *screen = SDL_PublicSurface;
 	void *pixels;
 
-	/* todo: nullify this func if hwsurface */
+	/* todo: investigate, add empty updaterects func for hw and remove following check */
 	if (!screen || ((screen->flags & SDL_HWSURFACE) != SDL_SWSURFACE)) 
 		return;
 
@@ -385,13 +382,13 @@ static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 
 		if ((slice * SLICE_SIZE * screen->w / 480) >= 512) {
 
-			/* time for the second 512x512 texture */
+			/* time for the second texture (128x512) */
 
 			if (!old_slice) {
 
 				/* load it */
 				pixels += 512 * (screen->format->BitsPerPixel / 8);
-				sceGuTexImage(0, 512, 512, this->hidden->stride, pixels);
+				sceGuTexImage(0, this->hidden->stride - 512, 512, this->hidden->stride, pixels);
 				sceGuTexSync();
 				old_slice = slice;
 			}
