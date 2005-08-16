@@ -26,7 +26,7 @@ extern "C" {
  * @param unknown - unknown, pass NULL
  * @return ?, < 0 on error
  */
-int sceGzipDecompress(u8 *dest, u32 destSize, const u8 *src, u32 unknown);
+int sceKernelGzipDecompress(u8 *dest, u32 destSize, const u8 *src, u32 unknown);
 
 #ifdef __cplusplus
 }
