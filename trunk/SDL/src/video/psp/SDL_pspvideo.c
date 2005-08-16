@@ -162,9 +162,13 @@ VideoBootStrap PSP_bootstrap = {
 
 const static SDL_Rect RECT_480x272 = { .w = 480, .h = 272 };
 /* swsurface only */
+const static SDL_Rect RECT_416x352 = { .w = 416, .h = 352 }; 
+const static SDL_Rect RECT_640x400 = { .w = 640, .h = 400 }; 
 const static SDL_Rect RECT_640x480 = { .w = 640, .h = 480 }; 
 const static SDL_Rect *modelist[] = {
+	&RECT_416x352, 
 	&RECT_480x272,
+	&RECT_640x400,
 	&RECT_640x480,
 	NULL
 };
@@ -280,7 +284,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
         sceGuDisplay(1);
 
 		if (width > 512)
-			this->hidden->stride = 640;
+			this->hidden->stride = width;
 		else
 			this->hidden->stride = 512;
 
@@ -351,7 +355,7 @@ static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface)
 
 static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 {
-	unsigned int x, slice;
+	unsigned int slice;
 	unsigned short old_slice = 0; /* set when we load 2nd tex */
 	struct Vertex *vertices;
 	SDL_Surface *screen = SDL_PublicSurface;
@@ -378,11 +382,11 @@ static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 		vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
 
 		vertices[0].x = slice * SLICE_SIZE;
-		vertices[1].x = (slice + 1) * SLICE_SIZE;
+		vertices[1].x = vertices[0].x + SLICE_SIZE;
 
 		if ((slice * SLICE_SIZE * screen->w / 480) >= 512) {
 
-			/* time for the second texture (128x512) */
+			/* time for the second texture (?x512) */
 
 			if (!old_slice) {
 
@@ -391,6 +395,7 @@ static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 				sceGuTexImage(0, this->hidden->stride - 512, 512, this->hidden->stride, pixels);
 				sceGuTexSync();
 				old_slice = slice;
+
 			}
 
 			vertices[0].u = (slice - old_slice) * SLICE_SIZE * screen->w / 480;
