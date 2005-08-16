@@ -53,7 +53,7 @@ int process_args(int argc, char **argv)
 
 	g_configmode = PSP_CONFIG_UNKNOWN;
 
-	ch = getopt_long(argc, argv, "p", arg_opts, NULL);
+	ch = getopt_long(argc, argv, "pdP", arg_opts, NULL);
 	while(ch != -1)
 	{
 		switch(ch)
