@@ -17,8 +17,9 @@ libpspkernelinclude_HEADERS =	\
 	pspkernel.h		\
 	psploadcore.h		\
 	pspstdio_kernel.h	\
-	pspsysreg.h	
-
+	pspsysreg.h		\
+	psputilsforkernel.h
+	
 lib_LIBRARIES = libpspkernel.a
 
 libpspkernel_a_SOURCES =	\
@@ -27,4 +28,5 @@ libpspkernel_a_SOURCES =	\
 	LoadCoreForKernel.S	\
 	iofilemgr_kernel.S	\
 	StdioForKernel.S	\
-	sceSysreg_driver.S
+	sceSysreg_driver.S	\
+	utils.S
