@@ -206,7 +206,7 @@ int parse_string(char *line, char **params, int max_params)
 	int param_count;
 
 	assert(line != NULL);
-	assert((params != NULL) && (*params != NULL));
+	assert(params != NULL);
 
 	pos = 0;
 
