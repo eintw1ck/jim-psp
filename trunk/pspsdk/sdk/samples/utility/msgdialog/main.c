@@ -206,7 +206,40 @@ static void ConfigureDialog(SceUtilityMsgDialogParams *dialog, size_t dialog_siz
     dialog->unknown[1] = 0x13;
     dialog->unknown[2] = 0x12;
     dialog->unknown[3] = 0x10;
-    dialog->unknown[10] = 1;
+}
+
+static void ShowErrorDialog(const unsigned int error)
+{
+    SceUtilityMsgDialogParams dialog;
+
+    ConfigureDialog(&dialog, sizeof(dialog));
+    dialog.unknown[10] = 0;
+    dialog.unknown[11] = error;
+
+    sceUtilityMsgDialogInitStart(&dialog);
+
+    for(;;) {
+
+	DrawStuff();
+	
+	switch(sceUtilityMsgDialogGetStatus()) {
+	    
+	case 2:
+	    sceUtilityMsgDialogUpdate(2);
+	    break;
+	    
+	case 3:
+	    sceUtilityMsgDialogShutdownStart();
+	    break;
+	    
+	case 0:
+	    return;
+	    
+	}
+
+	sceDisplayWaitVblankStart();
+	sceGuSwapBuffers();
+    }
 }
 
 static void ShowMessageDialog(const char *message)
@@ -214,6 +247,7 @@ static void ShowMessageDialog(const char *message)
     SceUtilityMsgDialogParams dialog;
 
     ConfigureDialog(&dialog, sizeof(dialog));
+    dialog.unknown[10] = 1;
     strcpy(dialog.message, message);
 
     sceUtilityMsgDialogInitStart(&dialog);
@@ -232,7 +266,7 @@ static void ShowMessageDialog(const char *message)
 	    sceUtilityMsgDialogShutdownStart();
 	    break;
 	    
-	case 4:
+	case 0:
 	    return;
 	    
 	}
@@ -247,6 +281,12 @@ int main(int argc, char *argv[])
 {
     SetupCallbacks();
     SetupGu();
+
+    ShowMessageDialog("This is a utility message dialog.\n"
+		      "After you acknowledge it, this program will\n"
+		      "show an error message dialog.");
+
+    ShowErrorDialog(0x80020001);
 
     ShowMessageDialog("This is a utility message dialog.\n"
 		      "After you acknowledge it, this program will\n"

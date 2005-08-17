@@ -7,10 +7,10 @@
 	STUB_FUNC	0xEFC6F80F,sceUtilityGameSharingShutdownStart
 	STUB_FUNC	0x7853182D,sceUtilityGameSharingUpdate
 	STUB_FUNC	0x946963F3,sceUtilityGameSharingGetStatus
-	STUB_FUNC	0x3AD50AE7,sceUtility_3AD50AE7
-	STUB_FUNC	0xBC6B6296,sceUtility_BC6B6296
-	STUB_FUNC	0x417BED54,sceUtility_417BED54
-	STUB_FUNC	0xB6CEE597,sceUtility_B6CEE597
+	STUB_FUNC	0x3AD50AE7,sceNetplayDialogInitStart
+	STUB_FUNC	0xBC6B6296,sceNetplayDialogShutdownStart
+	STUB_FUNC	0x417BED54,sceNetplayDialogUpdate
+	STUB_FUNC	0xB6CEE597,sceNetplayDialogGetStatus
 	STUB_FUNC	0x4DB1E739,sceUtilityNetconfInitStart
 	STUB_FUNC	0xF88155F6,sceUtilityNetconfShutdownStart
 	STUB_FUNC	0x91E70E35,sceUtilityNetconfUpdate
