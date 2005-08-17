@@ -27,8 +27,35 @@ AC_C_CONST
 dnl Set for C compiler by default
 AC_LANG_C
 
+dnl Check for a valid PSPSDK installation
+CheckPSPSDK()
+{
+    AC_CHECK_PROG(psp_config, psp-config, psp-config, no)
+    if test x$psp_config = xno; then
+        AC_MSG_ERROR(Couldn't locate psp-config.)
+    fi
+
+    AC_MSG_CHECKING(for PSPSDK)
+    pspsdk_path=`$psp_config --pspsdk-path`
+    if test ! -d $pspsdk_path -o -z $pspsdk_path; then
+        AC_MSG_RESULT(not found)
+        AC_MSG_ERROR(Couldn't locate PSPSDK.)
+    fi
+    AC_MSG_RESULT($pspsdk_path)
+
+    # Compile SDL with -G0 to disable the $gp register.
+    CFLAGS="$CFLAGS -G0 -I\"${pspsdk_path}/include\""
+    SYSTEM_LIBS="$SYSTEM_LIBS -L${pspsdk_path}/lib -lpspdebug -lpspgu -lpspctrl"
+    SYSTEM_LIBS="$SYSTEM_LIBS -lpspge -lpspdisplay -lpsphprm"
+    SYSTEM_LIBS="$SYSTEM_LIBS -lpspaudio -lc -lpspuser -lpspkernel"
+}
+
 dnl Setup target flagsw
 case "$target" in
+    *-psp-*)
+       	ARCH=psp
+       	CheckPSPSDK
+       	;;
     *-*-cygwin* | *-*-mingw32*)
 	CFLAGS="$CFLAGS -DWIN32"
         if test "$build" != "$target"; then # cross-compiling
@@ -77,7 +104,7 @@ dnl Check for the SDL_gfx lib
 have_sdlgfx=no
 AC_CHECK_LIB(SDL_gfx, pixelColor , have_sdlgfx=yes)
 if test x$have_sdlgfx = xyes; then
-    LIBS="$LIBS -lSDL_gfx"
+    LIBS="-lSDL_gfx $LIBS"
 else
     AC_MSG_ERROR([
 *** Unable to find SDL_gfx library

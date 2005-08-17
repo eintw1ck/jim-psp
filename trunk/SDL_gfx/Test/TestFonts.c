@@ -66,6 +66,12 @@ void ClearScreen(SDL_Surface *screen)
 	}
 }
 
+#ifdef PSP
+#define RELPATH ""
+#else
+#define RELPATH "../"
+#endif
+
 void Draw(SDL_Surface *screen)
 {
  FILE *file;
@@ -77,7 +83,7 @@ void Draw(SDL_Surface *screen)
 
  /* Load a font and draw with it */
  myfont=(char *)malloc(1792);
- file = fopen("../Fonts/5x7.fnt","r");
+ file = fopen(RELPATH "Fonts/5x7.fnt","r");
  fread(myfont,1792,1,file);
  fclose(file);
  gfxPrimitivesSetFont(myfont,5,7);
@@ -87,19 +93,19 @@ void Draw(SDL_Surface *screen)
  /* Load a font and draw with it */
  myfont=(char *)malloc(3328);
  //
- file = fopen("../Fonts/7x13.fnt","r");
+ file = fopen(RELPATH "Fonts/7x13.fnt","r");
  fread(myfont,3328,1,file);
  fclose(file);
  gfxPrimitivesSetFont(myfont,7,13);
  stringRGBA(screen,10,30,mytext,255,255,255,255);
  //
- file = fopen("../Fonts/7x13B.fnt","r");
+ file = fopen(RELPATH "Fonts/7x13B.fnt","r");
  fread(myfont,3328,1,file);
  fclose(file);
  gfxPrimitivesSetFont(myfont,7,13);
  stringRGBA(screen,10,50,mytext,255,255,255,255);
  //
- file = fopen("../Fonts/7x13O.fnt","r");
+ file = fopen(RELPATH "Fonts/7x13O.fnt","r");
  fread(myfont,3328,1,file);
  fclose(file);
  gfxPrimitivesSetFont(myfont,7,13);
@@ -110,13 +116,13 @@ void Draw(SDL_Surface *screen)
  /* Load a font and draw with it */
  myfont=(char *)malloc(9216);
  //
- file = fopen("../Fonts/9x18.fnt","r");
+ file = fopen(RELPATH "Fonts/9x18.fnt","r");
  fread(myfont,9216,1,file);
  fclose(file);
  gfxPrimitivesSetFont(myfont,9,18);
  stringRGBA(screen,10,90,mytext,255,255,255,255);
  //
- file = fopen("../Fonts/9x18B.fnt","r");
+ file = fopen(RELPATH "Fonts/9x18B.fnt","r");
  fread(myfont,9216,1,file);
  fclose(file);
  gfxPrimitivesSetFont(myfont,9,18);
@@ -164,10 +170,16 @@ void Draw(SDL_Surface *screen)
 	fprintf (stderr,"Font Test\n");
 
 	/* Set default options and check command-line */
+#ifndef PSP
 	w = 640;
 	h = 480;
-	desired_bpp = 0;
 	video_flags = 0;
+#else
+	w = 480;
+	h = 272;
+	video_flags = SDL_HWSURFACE | SDL_FULLSCREEN;
+#endif
+	desired_bpp = 0;
 	while ( argc > 1 ) {
 		if ( strcmp(argv[1], "-width") == 0 ) {
 			if ( argv[2] && ((w = atoi(argv[2])) > 0) ) {
@@ -219,7 +231,9 @@ void Draw(SDL_Surface *screen)
 	}
 
 	/* Force double buffering */
+#ifndef PSP
 	video_flags |= SDL_DOUBLEBUF;
+#endif
 
 	/* Initialize SDL */
 	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {

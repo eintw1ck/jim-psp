@@ -231,6 +231,7 @@ case $basic_machine in
 		| mips64orion | mips64orionel | mipstx39 | mipstx39el \
 		| mips64vr4300 | mips64vr4300el | mips64vr4100 | mips64vr4100el \
 		| mips64vr5000 | miprs64vr5000el | mcore \
+		| mipsallegrex | mipsallegrexel \
 		| sparc | sparclet | sparclite | sparc64 | sparcv9 | v850 | c4x \
 		| thumb | d10v | d30v | fr30 | avr | openrisc)
 		basic_machine=$basic_machine-unknown
@@ -274,6 +275,7 @@ case $basic_machine in
 	      | mips64el-* | mips64orion-* | mips64orionel-* \
 	      | mips64vr4100-* | mips64vr4100el-* | mips64vr4300-* | mips64vr4300el-* \
 	      | mipstx39-* | mipstx39el-* | mcore-* \
+	      | mipsallegrex-* | mipsallegrexel-* \
 	      | f30[01]-* | f700-* | s390-* | sv1-* | t3e-* \
 	      | m88110-* | m680[01234]0-* | m683?2-* | m68360-* | z8k-* | d10v-* \
 	      | thumb-* | v850-* | d30v-* | tic30-* | c30-* | fr30-* \
@@ -729,6 +731,10 @@ case $basic_machine in
 		;;
 	ps2)
 		basic_machine=i386-ibm
+		;;
+	psp)
+		basic_machine=mipsallegrexel-psp
+		os=-elf
 		;;
 	rom68k)
 		basic_machine=m68k-rom68k

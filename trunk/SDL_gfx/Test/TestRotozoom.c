@@ -420,10 +420,17 @@ void Draw (SDL_Surface *screen, int start)
 	fprintf (stderr,"SDL_rotozoom test\n");
 
 	/* Set default options and check command-line */
+#ifndef PSP
 	w = 640;
 	h = 480;
-	desired_bpp = 0;
 	video_flags = 0;
+	desired_bpp = 0;
+#else
+	w = 480;
+	h = 272;
+	video_flags = SDL_SWSURFACE;
+	desired_bpp = 32;
+#endif
 	start = 1;
 	while ( argc > 1 ) {
 		if ( strcmp(argv[1], "-start") == 0 ) {
@@ -486,7 +493,9 @@ void Draw (SDL_Surface *screen, int start)
 	}
 
 	/* Force double buffering */
+#ifndef PSP
 	video_flags |= SDL_DOUBLEBUF;
+#endif
 
 	/* Initialize SDL */
 	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {

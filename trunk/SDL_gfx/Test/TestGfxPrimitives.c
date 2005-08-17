@@ -16,8 +16,13 @@
 
 #include "SDL_gfxPrimitives.h"
 
+#ifndef PSP
 #define WIDTH	640
 #define HEIGHT	480
+#else
+#define WIDTH	480
+#define HEIGHT	272
+#endif
 
 #define NUM_RANDOM	512
 
@@ -1788,11 +1793,26 @@ int main(int argc, char *argv[])
 	int oldprim, curprim;
         
 	/* Initialize SDL */
+#ifndef PSP
 	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+#else
+	if ( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_JOYSTICK) < 0 ) {
+#endif
 		fprintf(stderr, "Couldn't initialize SDL: %s\n",SDL_GetError());
 		exit(1);
 	}
 	atexit(SDL_Quit);
+
+#ifdef PSP
+          
+	if (!SDL_JoystickOpen(0))
+	{
+		fprintf(stderr,
+                      "\nWarning: Could not open joystick 1.\n"
+                      "The Simple DirectMedia error that occured was:\n"
+                      "%s\n\n", SDL_GetError());
+	}
+#endif
 
 	/* Alpha blending doesn't work well at 8-bit color */
 	info = SDL_GetVideoInfo();
@@ -2049,6 +2069,9 @@ int main(int argc, char *argv[])
 		/* Check for events */
 		while ( SDL_PollEvent(&event) ) {
 			switch (event.type) {
+	  			case SDL_JOYBUTTONDOWN:
+					curprim++;
+					break;
 				case SDL_MOUSEBUTTONDOWN:
 					if ( event.button.button == 1 ) {
 						/* Switch to next graphics */
