@@ -34,8 +34,10 @@ typedef struct WAV
 SAMPLE *WAV_LoadFP(FILE *fp)
 {
     SAMPLE     *si;
-    static WAV  wh;
-    static CHAR dID[4];
+    WAV  wh;
+    ULONG chunkLen;
+    CHAR dID[4];
+    int found;
 
     /* read wav header */
 
@@ -64,6 +66,7 @@ SAMPLE *WAV_LoadFP(FILE *fp)
     wh.nAvgBytesPerSec = _mm_read_I_ULONG(fp);
     wh.nBlockAlign     = _mm_read_I_UWORD(fp);
     wh.nFormatSpecific = _mm_read_I_UWORD(fp);
+    _mm_fseek(fp, wh.fLen - 16, SEEK_CUR);
 
     /* check it */
 
@@ -74,11 +77,19 @@ SAMPLE *WAV_LoadFP(FILE *fp)
 
     /* skip other crap */
 
-    _mm_fseek(fp,wh.fLen-16,SEEK_CUR);
-    _mm_read_string(dID,4,fp);
-
-    if(memcmp(dID,"data",4))
-    {   _mm_errno = MMERR_UNKNOWN_WAVE_TYPE;
+    found = 0;
+    while (1) {
+        if (_mm_feof(fp)) break;
+        _mm_read_string(dID, 4, fp);
+        chunkLen = _mm_read_I_ULONG(fp);
+        if (memcmp(dID, "data", 4) == 0) {
+            found = 1;
+            break;
+        }
+        _mm_fseek(fp, chunkLen, SEEK_CUR);
+    }
+    if (!found) {
+        _mm_errno = MMERR_UNKNOWN_WAVE_TYPE;
         return NULL;
     }
 
@@ -95,7 +106,7 @@ SAMPLE *WAV_LoadFP(FILE *fp)
 
     si->speed  = wh.nSamplesPerSec;
     si->volume = 64;
-    si->length = _mm_read_I_ULONG(fp);
+    si->length = chunkLen;
 
     if(wh.nBlockAlign == 2)
     {   si->flags    = SF_16BITS | SF_SIGNED;
