@@ -563,7 +563,7 @@ int internal_do_export(const char *name, unsigned int nid, struct psp_export **p
 	return 1;
 }
 
-int psp_export_func(char **params)
+int psp_export_func_nid(char **params)
 {
 	unsigned int nid;
 
@@ -624,7 +624,7 @@ int psp_export_func_hash(char **params)
 	return 0;
 }
 
-int psp_export_var(char **params)
+int psp_export_var_nid(char **params)
 {
 	unsigned int nid;
 
@@ -691,9 +691,11 @@ struct export_cmd commands[] =
 	{ "PSP_END_EXPORTS", 0, psp_end_exports },
 	{ "PSP_EXPORT_START", 3, psp_export_start },
 	{ "PSP_EXPORT_END", 0, psp_export_end },
-	{ "PSP_EXPORT_FUNC", 2, psp_export_func },
+	{ "PSP_EXPORT_FUNC_NID", 2, psp_export_func_nid },
 	{ "PSP_EXPORT_FUNC_HASH", 1, psp_export_func_hash },
-	{ "PSP_EXPORT_VAR", 2, psp_export_var },
+	{ "PSP_EXPORT_FUNC", 1, psp_export_func_hash },
+	{ "PSP_EXPORT_VAR_NID", 2, psp_export_var_nid },
+	{ "PSP_EXPORT_VAR", 1, psp_export_var_hash },
 	{ "PSP_EXPORT_VAR_HASH", 1, psp_export_var_hash },
 	{ NULL, 0, NULL }
 };
