@@ -15,7 +15,7 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#include <stdint.h>
+#include "_stdint.h"
 #else
 #include <sys/types.h>
 #define uint8_t u_int8_t
