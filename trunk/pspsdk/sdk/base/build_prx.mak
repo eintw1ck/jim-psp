@@ -50,7 +50,7 @@ $(TARGET).elf: $(OBJS)
 	$(LINK.c) $^ $(LIBS) -o $@
 
 %.prx: %.elf
-	prxtool -p -o $@ $<
+	psp-prxgen $< $@
 
 %.c: %.exp
 	psp-build-exports -b $< > $@
