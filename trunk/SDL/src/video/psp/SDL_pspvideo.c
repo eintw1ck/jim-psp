@@ -91,9 +91,10 @@ static int PSP_LockHWSurface(_THIS, SDL_Surface *surface);
 static void PSP_UnlockHWSurface(_THIS, SDL_Surface *surface);
 static void PSP_FreeHWSurface(_THIS, SDL_Surface *surface);
 static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface);
+static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects);
 
 /* etc. */
-static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects);
+static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects);
 
 /* PSP driver bootstrap functions */
 
@@ -299,6 +300,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
         current->pixels = malloc(current->pitch * 512); 
 
 		this->hidden->gu_format = gu_format;
+		this->UpdateRects = PSP_GuUpdateRects;
     }
 
 	this->hidden->pixel_format = pixel_format;
@@ -362,14 +364,22 @@ static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface)
 
 static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 {
+	/* do nothing */
+}
+
+/**
+ * Update the screen using Gu textures and sprites.  
+ * Useful for scaling dimensions when using SWSURFACE.
+ */
+static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects)
+{
 	unsigned int slice;
 	unsigned short old_slice = 0; /* set when we load 2nd tex */
 	struct Vertex *vertices;
 	SDL_Surface *screen = SDL_PublicSurface;
 	void *pixels;
 
-	/* todo: investigate, add empty updaterects func for hw and remove following check */
-	if (!screen || ((screen->flags & SDL_HWSURFACE) != SDL_SWSURFACE)) 
+	if (!screen) 
 		return;
 
 	pixels = screen->pixels;
