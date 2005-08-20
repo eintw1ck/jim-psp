@@ -161,15 +161,8 @@ VideoBootStrap PSP_bootstrap = {
 };
 
 const static SDL_Rect RECT_480x272 = { .w = 480, .h = 272 };
-/* swsurface only */
-const static SDL_Rect RECT_416x352 = { .w = 416, .h = 352 }; 
-const static SDL_Rect RECT_640x400 = { .w = 640, .h = 400 }; 
-const static SDL_Rect RECT_640x480 = { .w = 640, .h = 480 }; 
 const static SDL_Rect *modelist[] = {
-	&RECT_416x352, 
 	&RECT_480x272,
-	&RECT_640x400,
-	&RECT_640x480,
 	NULL
 };
 
@@ -188,6 +181,10 @@ int PSP_VideoInit(_THIS, SDL_PixelFormat *vformat)
 
 SDL_Rect **PSP_ListModes(_THIS, SDL_PixelFormat *format, Uint32 flags)
 {
+	/* x dimension should be a multiple of SLICE_SIZE */
+	if ((flags & SDL_HWSURFACE) == SDL_SWSURFACE)
+		return (SDL_Rect **)-1;
+
 	switch(format->BitsPerPixel) {
 	case 15:
 	case 16:
