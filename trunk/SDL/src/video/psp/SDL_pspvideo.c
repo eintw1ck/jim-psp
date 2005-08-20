@@ -369,7 +369,7 @@ static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 	void *pixels;
 
 	/* todo: investigate, add empty updaterects func for hw and remove following check */
-	if (!screen || (IS_HWSURFACE(screen->flags)));
+	if (!screen || ((screen->flags & SDL_HWSURFACE) != SDL_SWSURFACE)) 
 		return;
 
 	pixels = screen->pixels;
