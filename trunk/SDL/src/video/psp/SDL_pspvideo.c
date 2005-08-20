@@ -199,7 +199,7 @@ SDL_Rect **PSP_ListModes(_THIS, SDL_PixelFormat *format, Uint32 flags)
 }
 
 
-static init_gu(int gu_format) {
+static void init_gu(int gu_format) {
 	/* gu is used for SWSURFACE */
 	sceGuInit();
 	sceGuStart(GU_DIRECT, list); 
