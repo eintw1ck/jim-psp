@@ -30,8 +30,12 @@
 #include "SDL_main.h"
 #include <pspkernel.h>
 #include <pspdebug.h>
+#include <pspsdk.h>
 #include <pspthreadman.h>
 #include <stdlib.h>
+#include <stdio.h>
+
+#define STDERR_FILE	"stderr.txt"
 
 /* If application's main() is redefined as SDL_main, and libSDLmain is
    linked, then this file will create the standard exit callback,
@@ -69,6 +73,19 @@ int sdl_psp_setup_callbacks(void)
 	return thid;
 }
 
+#ifndef NO_STDIO_REDIRECT
+int sdl_psp_stderr_handler(const char *data, int len)
+{
+	int ret;
+	FILE *stderr_fp;
+
+	stderr_fp = fopen(STDERR_FILE, "a");
+	ret = fwrite (data, len, 1, stderr_fp);
+	fclose(stderr_fp);
+	return 0;
+}
+#endif
+
 void sdl_psp_exception_handler(PspDebugRegBlock *regs)
 {
         pspDebugScreenInit();
@@ -85,9 +102,12 @@ void sdl_psp_exception_handler(PspDebugRegBlock *regs)
 __attribute__ ((constructor))
 void loaderInit()
 {
-    pspKernelSetKernelPC();
-    pspSdkInstallNoDeviceCheckPatch();
-    pspDebugInstallErrorHandler(sdl_psp_exception_handler);
+	pspKernelSetKernelPC();
+	pspSdkInstallNoDeviceCheckPatch();
+	pspDebugInstallErrorHandler(sdl_psp_exception_handler);
+#ifndef NO_STDIO_REDIRECT
+	pspDebugInstallStderrHandler(sdl_psp_stderr_handler);
+#endif
 }
 
 int main(int argc, char *argv[])
