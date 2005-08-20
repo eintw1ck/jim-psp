@@ -163,8 +163,7 @@ VideoBootStrap PSP_bootstrap = {
 	PSP_Available, PSP_CreateDevice
 };
 
-const static SDL_Rect RECT_480x272 = 
-	{ .w = SCREEN_WIDTH, .h = SCREEN_HEIGHT };
+const static SDL_Rect RECT_480x272 = { .w = 480, .h = 272 };
 const static SDL_Rect *modelist[] = {
 	&RECT_480x272,
 	NULL
