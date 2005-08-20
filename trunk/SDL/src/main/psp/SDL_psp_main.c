@@ -35,8 +35,8 @@
 
 /* If application's main() is redefined as SDL_main, and libSDLmain is
    linked, then this file will create the standard exit callback,
-   define the PSP_* macros, define an exception handler and exit back 
-   to the browser when the program is finished. */
+   define the PSP_* macros, add an exception handler, nullify device 
+   checks and exit back to the browser when the program is finished. */
 
 extern int SDL_main(int argc, char *argv[]);
 
