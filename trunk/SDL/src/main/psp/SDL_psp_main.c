@@ -24,6 +24,7 @@
     PSP port contributed by:
     Marcus R. Brown <mrbrown@ocgnet.org>
     Jim Paris <jim@jtan.com>
+    Matthew H <matthewh@webone.com.au>
 */
 
 #include "SDL_main.h"
@@ -34,15 +35,15 @@
 
 /* If application's main() is redefined as SDL_main, and libSDLmain is
    linked, then this file will create the standard exit callback,
-   define the PSP_* macros, and exit back to the browser when the
-   program is finished. */
+   define the PSP_* macros, define an exception handler and exit back 
+   to the browser when the program is finished. */
 
 extern int SDL_main(int argc, char *argv[]);
 
 PSP_MODULE_INFO("SDL App", 0x1000, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 
-int sdl_psp_exit_callback(void)
+int sdl_psp_exit_callback(int arg1, int arg2, void *common)
 {
 	sceKernelExitGame();
 	return 0;
@@ -66,6 +67,27 @@ int sdl_psp_setup_callbacks(void)
 	if(thid >= 0)
 		sceKernelStartThread(thid, 0, 0);
 	return thid;
+}
+
+void sdl_psp_exception_handler(PspDebugRegBlock *regs)
+{
+        pspDebugScreenInit();
+
+        pspDebugScreenSetBackColor(0x00FF0000);
+        pspDebugScreenSetTextColor(0xFFFFFFFF);
+        pspDebugScreenClear();
+
+        pspDebugScreenPrintf("I regret to inform you your psp has just crashed\n\n");
+        pspDebugScreenPrintf("Exception Details:\n");
+        pspDebugDumpException(regs);
+}
+
+__attribute__ ((constructor))
+void loaderInit()
+{
+    pspKernelSetKernelPC();
+    pspSdkInstallNoDeviceCheckPatch();
+    pspDebugInstallErrorHandler(sdl_psp_exception_handler);
 }
 
 int main(int argc, char *argv[])
