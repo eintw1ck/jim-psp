@@ -102,9 +102,9 @@ inline u16 lh_be(u16 data)
 
 
 #ifdef WORDS_BIGENDIAN
-inline void sw_le(u32 &data, u32 val)
+inline void sw_le(u32 *data, u32 val)
 {
-	u8* ptr = (u8*) &data;
+	u8* ptr = (u8*) data;
 
 	ptr[0] = (u8) (val & 0xFF);
 	ptr[1] = (u8) ((val >> 8) & 0xFF);
@@ -112,9 +112,9 @@ inline void sw_le(u32 &data, u32 val)
 	ptr[3] = (u8) ((val >> 24) & 0xFF);
 }
 
-inline void sh_le(u16 &data, u16 val)
+inline void sh_le(u16 *data, u16 val)
 {
-	u8 *ptr = (u8*) &data;
+	u8 *ptr = (u8*) data;
 
 	ptr[0] = (u8) (val & 0xFF);
 	ptr[1] = (u8) ((val >> 8) & 0xFF);
