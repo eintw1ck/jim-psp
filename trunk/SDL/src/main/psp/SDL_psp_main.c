@@ -76,11 +76,10 @@ int sdl_psp_setup_callbacks(void)
 #ifndef NO_STDIO_REDIRECT
 int sdl_psp_stderr_handler(const char *data, int len)
 {
-	int ret;
 	FILE *stderr_fp;
 
 	stderr_fp = fopen(STDERR_FILE, "a");
-	ret = fwrite (data, len, 1, stderr_fp);
+	fwrite (data, len, 1, stderr_fp);
 	fclose(stderr_fp);
 	return 0;
 }
@@ -88,15 +87,18 @@ int sdl_psp_stderr_handler(const char *data, int len)
 
 void sdl_psp_exception_handler(PspDebugRegBlock *regs)
 {
-        pspDebugScreenInit();
+	pspDebugScreenInit();
 
-        pspDebugScreenSetBackColor(0x00FF0000);
-        pspDebugScreenSetTextColor(0xFFFFFFFF);
-        pspDebugScreenClear();
+	pspDebugScreenSetBackColor(0x00FF0000);
+	pspDebugScreenSetTextColor(0xFFFFFFFF);
+	pspDebugScreenClear();
 
-        pspDebugScreenPrintf("I regret to inform you your psp has just crashed\n\n");
-        pspDebugScreenPrintf("Exception Details:\n");
-        pspDebugDumpException(regs);
+	pspDebugScreenPrintf("I regret to inform you your psp has just crashed\n\n");
+	pspDebugScreenPrintf("Exception Details:\n");
+	pspDebugDumpException(regs);
+	pspDebugScreenPrintf("\nThe offending routine may be identified with:\n\n"
+		"\tpsp-addr2line -e target.elf -f -C 0x%x 0x%x 0x%x\n",
+		regs->epc, regs->badvaddr, regs->r[31]);
 }
 
 __attribute__ ((constructor))
