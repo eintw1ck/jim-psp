@@ -55,19 +55,51 @@ static const enum PspCtrlButtons button_map[] = {
 	PSP_CTRL_SELECT, PSP_CTRL_START, PSP_CTRL_HOME, PSP_CTRL_HOLD };
 static int analog_map[256];  /* Map analog inputs to -32768 -> 32767 */
 
+typedef struct
+{
+  int x;
+  int y;
+} point;
+
+// 4 points define the bezier-curve.  
+static point a = { 0, 0 };
+static point b = { 50, 0  };
+static point c = { 78, 32767 };
+static point d = { 128, 32767 };
+
+// simple linear interpolation between two points
+static void lerp (point *dest, point *a, point *b, float t)
+{
+	dest->x = a->x + (b->x - a->x)*t;
+	dest->y = a->y + (b->y - a->y)*t;
+}
+
+// evaluate a point on a bezier-curve. t goes from 0 to 1.0
+static int calc_bezier_y(float t)
+{
+	point ab, bc, cd, abbc, bccd, dest;
+	lerp (&ab, &a, &b, t);           // point between a and b
+	lerp (&bc, &b, &c, t);           // point between b and c
+	lerp (&cd, &c, &d, t);           // point between c and d
+	lerp (&abbc, &ab, &bc, t);       // point between ab and bc
+	lerp (&bccd, &bc, &cd, t);       // point between bc and cd
+	lerp (&dest, &abbc, &bccd, t);   // point on the bezier-curve
+	return dest.y;
+}
+
 /*
  * Collect pad data about once per frame
  */
 int JoystickUpdate(void *data)
 {
 	while (running) {
-                SDL_SemWait(pad_sem);
-                sceCtrlReadBufferPositive(&pad, 1); 
-                SDL_SemPost(pad_sem);
-                /* Delay 1/60th of a second */
-                sceKernelDelayThread(1000000 / 60);  
-        }
-        return 0;
+		SDL_SemWait(pad_sem);
+		sceCtrlReadBufferPositive(&pad, 1); 
+		SDL_SemPost(pad_sem);
+		/* Delay 1/60th of a second */
+		sceKernelDelayThread(1000000 / 60);  
+	}
+	return 0;
 }
 
 
@@ -100,8 +132,12 @@ int SDL_SYS_JoystickInit(void)
 
 	/* Create an accurate map from analog inputs (0 to 255) 
 	   to SDL joystick positions (-32768 to 32767) */
-	for(i=0; i<=255; i++)
-		analog_map[i] = ((i * 65535) / 255) - 32768;
+	for (i = 0; i < 128; i++)
+	{
+		float t = (float)i/127.0;
+		analog_map[i+128] = calc_bezier_y(t);
+		analog_map[127-i] = -1 * analog_map[i+128];
+	}
 
 	return 1;
 }
