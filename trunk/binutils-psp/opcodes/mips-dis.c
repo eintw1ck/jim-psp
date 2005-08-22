@@ -1222,7 +1222,7 @@ print_insn_args (d, l, pc, info)
 	    case '\0':
 	      /* xgettext:c-format */
 	      (*info->fprintf_func) (info->stream,
-				     _("# internal error, incomplete extension sequence (?)"));
+				     _("# internal error, incomplete VFPU extension sequence (?)"));
 	      return;
 
 	    case 'o':
@@ -1237,12 +1237,48 @@ print_insn_args (d, l, pc, info)
 	    case '1':
 	    case '2':
 	    case '3':
+	      {
+		unsigned int pos = *d, base = '0';
+		unsigned int negation = (l >> (pos - (base - VFPU_SH_PFX_NEG))) & VFPU_MASK_PFX_NEG;
+		unsigned int constant = (l >> (pos - (base - VFPU_SH_PFX_CST))) & VFPU_MASK_PFX_CST;
+		unsigned int abs_consthi =
+		    (l >> (pos - (base - VFPU_SH_PFX_ABS_CSTHI))) & VFPU_MASK_PFX_ABS_CSTHI;
+		unsigned int swz_constlo = (l >> ((pos - base) * 2)) & VFPU_MASK_PFX_SWZ_CSTLO;
+
+		if (negation)
+		  (*info->fprintf_func) (info->stream, "-");
+		if (constant)
+		  {
+		    (*info->fprintf_func) (info->stream, "%s",
+                                           pfx_cst_names[(abs_consthi << 2) | swz_constlo]);
+		  }
+		else
+		  {
+		    if (abs_consthi)
+		      (*info->fprintf_func) (info->stream, "|%s|",
+					     pfx_swz_names[swz_constlo]);
+		    else
+		      (*info->fprintf_func) (info->stream, "%s",
+					     pfx_swz_names[swz_constlo]);
+		  }
+	      }
 	      break;
 
 	    case '4':
 	    case '5':
 	    case '6':
 	    case '7':
+	      {
+		unsigned int pos = *d, base = '4';
+		unsigned int mask = (l >> (pos - (base - VFPU_MASK_PFX_MASK))) & VFPU_MASK_PFX_MASK;
+		unsigned int saturation = (l >> ((pos - base) * 2)) & VFPU_MASK_PFX_SAT;
+
+		if (mask)
+		  (*info->fprintf_func) (info->stream, "m");
+		else
+		  (*info->fprintf_func) (info->stream, "%s",
+                                         pfx_sat_names[saturation]);
+	      }
 	      break;
 
 	    case 'a':
@@ -1277,7 +1313,7 @@ print_insn_args (d, l, pc, info)
 	    case 'f':
 	      /* Conditional compare.  */
 	      (*info->fprintf_func) (info->stream, "%s",
-				     vfpu_cond_names[l & 0x0f]);
+				     vfpu_cond_names[(l >> OP_SH_VFPU_COND) & OP_MASK_VFPU_COND]);
 	      /* Apparently this specifier is unused.  */
 	      d++;
 	      break;
@@ -1291,19 +1327,123 @@ print_insn_args (d, l, pc, info)
 	    case 'q':
 	      /* VFPU control register (vmtvc).  */
 	      (*info->fprintf_func) (info->stream, "$%d",
-				     l & 0xff);
+				     (l >> OP_SH_VFPU_VMTVC) & OP_MASK_VFPU_VMTVC);
 	      break;
 
 	    case 'r':
 	      /* VFPU control register (vmfvc).  */
 	      (*info->fprintf_func) (info->stream, "$%d",
-				     (l >> 8) & 0xff);
+				     (l >> OP_SH_VFPU_VMFVC) & OP_MASK_VFPU_VMFVC);
 	      break;
 
 	    case 'u':
+	      /* Convert a VFPU 16-bit floating-point number to IEEE754. */
+	      {
+		union float2int {
+			unsigned int i;
+			float f;
+		} float2int;
+		unsigned short float16 = (l >> OP_SH_VFPU_FLOAT16) & OP_MASK_VFPU_FLOAT16;
+		unsigned int sign = (float16 >> VFPU_SH_FLOAT16_SIGN) & VFPU_MASK_FLOAT16_SIGN;
+		int exponent = (float16 >> VFPU_SH_FLOAT16_EXP) & VFPU_MASK_FLOAT16_EXP;
+		unsigned int fraction = float16 & VFPU_MASK_FLOAT16_FRAC;
+		char signchar = '+' + ((sign == 1) * 2);
+
+		if (exponent == VFPU_FLOAT16_EXP_MAX)
+		  {
+		    if (fraction == 0)
+		      (*info->fprintf_func) (info->stream, "%cInf", signchar);
+		    else
+		      (*info->fprintf_func) (info->stream, "%cNaN", signchar);
+		  }
+		else if (exponent == 0 && fraction == 0)
+		  {
+		    (*info->fprintf_func) (info->stream, "%c0", signchar);
+		  }
+		else
+		  {
+		    if (exponent == 0)
+		      {
+			do
+			  {
+			    fraction <<= 1;
+			    exponent--;
+			  }
+			while (!(fraction & (VFPU_MASK_FLOAT16_FRAC + 1)));
+
+			fraction &= VFPU_MASK_FLOAT16_FRAC;
+		      }
+
+		    /* Convert to 32-bit single-precision IEEE754. */
+		    float2int.i = sign << 31;
+		    float2int.i |= (exponent + 112) << 23;
+		    float2int.i |= fraction << 13;
+		    (*info->fprintf_func) (info->stream, "%g", float2int.f);
+		  }
+	      }
 	      break;
 
 	    case 'w':
+	      {
+		const char *elements[4];
+		unsigned int opcode = l & VFPU_MASK_OP_SIZE;
+		unsigned int rotators = (l >> OP_SH_VFPU_ROT) & OP_MASK_VFPU_ROT;
+		unsigned int opsize, rothi, rotlo, negation, i;
+
+		/* Determine the operand size so we'll know how many elements to output. */
+		if (opcode == VFPU_OP_SIZE_PAIR)
+		  opsize = 2;
+		else if (opcode == VFPU_OP_SIZE_TRIPLE)
+		  opsize = 3;
+		else
+		  opsize = (opcode == VFPU_OP_SIZE_QUAD) * 4;	/* Sanity check. */
+
+		rothi = (rotators >> VFPU_SH_ROT_HI) & VFPU_MASK_ROT_HI;
+		rotlo = (rotators >> VFPU_SH_ROT_LO) & VFPU_MASK_ROT_LO;
+		negation = (rotators >> VFPU_SH_ROT_NEG) & VFPU_MASK_ROT_NEG;
+
+		if (rothi == rotlo)
+		  {
+		    if (negation)
+		      {
+			elements[0] = "-s";
+			elements[1] = "-s";
+			elements[2] = "-s";
+			elements[3] = "-s";
+		      }
+		    else
+		      {
+			elements[0] = "s";
+			elements[1] = "s";
+			elements[2] = "s";
+			elements[3] = "s";
+		      }
+		  }
+		else
+		  {
+		    elements[0] = "0";
+		    elements[1] = "0";
+		    elements[2] = "0";
+		    elements[3] = "0";
+		  }
+		if (negation)
+		  elements[rothi] = "-s";
+		else
+		  elements[rothi] = "s";
+		elements[rotlo] = "c";
+
+		(*info->fprintf_func) (info->stream, "[");
+		i = 0;
+		for (;;)
+		  {
+		    (*info->fprintf_func) (info->stream, "%s",
+					   elements[i++]);
+		    if (i >= opsize)
+		      break;
+		    (*info->fprintf_func) (info->stream, ",");
+		  }
+		(*info->fprintf_func) (info->stream, "]");
+	      }
 	      break;
 
 	    case 'd':
@@ -1313,19 +1453,107 @@ print_insn_args (d, l, pc, info)
 	    case 't':
 	    case 'v':
 	    case 'x':
+	      {
+		unsigned int vreg = 0;
+
+		/* The first char specifies the bitfield that contains the register number. */
+		switch (*d)
+		  {
+		  case 'd':
+		  case 'v':
+		  case 'x':
+		    vreg = (l >> OP_SH_VFPU_VD) & OP_MASK_VFPU_VD;
+		    break;
+
+		  case 'm':
+		    /* Combine bits 0-4 of vt with bits 5-6 of vt. */
+		    vreg = ((l >> OP_SH_VFPU_VT_LO) & OP_MASK_VFPU_VT_LO)
+			    | ((l & OP_MASK_VFPU_VT_HI2) << OP_SH_VFPU_VT_HI);
+		    break;
+
+		  case 'n':
+		    /* Combine bits 0-4 of vt with bit 5 of vt. */
+		    vreg = ((l >> OP_SH_VFPU_VT_LO) & OP_MASK_VFPU_VT_LO)
+			    | ((l & OP_MASK_VFPU_VT_HI1) << OP_SH_VFPU_VT_HI);
+		    break;
+
+		  case 's':
+		    {
+			unsigned int temp_vreg = l >> OP_SH_VFPU_VS;
+
+			vreg = temp_vreg & OP_MASK_VFPU_VS;
+			if ((l & VFPU_OP_VT_VS_VD) == VFPU_OPCODE_VMMUL)
+			  {
+			    /* vmmul instructions have the RXC bit (bit 13) inverted. */
+			    if (temp_vreg & 0x20)
+			      vreg = temp_vreg & 0x5f;
+			    else
+			      vreg |= 0x20;
+			  }
+		    }
+		    break;
+
+		  case 't':
+		    vreg = (l >> OP_SH_VFPU_VT) & OP_MASK_VFPU_VT;
+		    break;
+		  }
+
+		/* The next char is the register set vreg comes from. */
+		d++;
+		switch (*d)
+		  {
+		  case '0':
+		    (*info->fprintf_func) (info->stream, "%s.s",
+					   vfpu_sreg_names[vreg]);
+		    break;
+
+		  case '1':
+		    (*info->fprintf_func) (info->stream, "%s.p",
+					   vfpu_vpreg_names[vreg]);
+		    break;
+
+		  case '2':
+		    (*info->fprintf_func) (info->stream, "%s.t",
+					   vfpu_vtreg_names[vreg]);
+		    break;
+
+		  case '3':
+		    (*info->fprintf_func) (info->stream, "%s.q",
+					   vfpu_vqreg_names[vreg]);
+		    break;
+
+		  case '5':
+		    (*info->fprintf_func) (info->stream, "%s.p",
+					   vfpu_mpreg_names[vreg]);
+		    break;
+
+		  case '6':
+		    (*info->fprintf_func) (info->stream, "%s.t",
+					   vfpu_mtreg_names[vreg]);
+		    break;
+
+		  case '7':
+		    (*info->fprintf_func) (info->stream, "%s.q",
+					   vfpu_mqreg_names[vreg]);
+		    break;
+
+		  default:
+		    /* xgettext:c-format */
+		    (*info->fprintf_func) (info->stream,
+					   _("# internal error, undefined vreg modifier(%c)"),
+					   *d);
+		    break;
+		  }
+
+		/* The last char is unused for disassembly. */
+		d++;
+	      }
 	      break;
 
 	    case 'z':
 	      (*info->fprintf_func) (info->stream, "%s",
-				     vfpu_rwb_names[(l >> 1) & 0x1]);
+				     vfpu_rwb_names[(l >> OP_SH_VFPU_RWB) & OP_MASK_VFPU_RWB]);
 	      break;
-
-	    default:
-	      /* xgettext:c-format */
-	      (*info->fprintf_func) (info->stream,
-				     _("# internal error, undefined extension sequence (?%c)"),
-				     *d);
-	      return;
 	    }
 	  break;
 
