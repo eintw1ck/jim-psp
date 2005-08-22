@@ -378,7 +378,7 @@ void build_stubs_output_lib(struct psp_lib *pLib)
 
 		fprintf(fp, "\t.set noreorder\n\n");
 		fprintf(fp, "#include \"pspstub.s\"\n\n");
-		fprintf(fp, "\tSTUB_START \"%s\",0x%08X,0x%08X\n", pLib->name, (pLib->attr << 16) | pLib->ver,
+		fprintf(fp, "\tSTUB_START \"%s\",0x%08X,0x%08X\n", pLib->name, ((pLib->attr | 0x8) << 16) | pLib->ver,
 						(pLib->funcCount << 16) | 5);
 
 		pExp = pLib->pFuncHead;
