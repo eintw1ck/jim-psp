@@ -68,7 +68,7 @@ static point c = { 78, 32767 };
 static point d = { 128, 32767 };
 
 // simple linear interpolation between two points
-static void lerp (point *dest, point *a, point *b, float t)
+static __inline__ void lerp (point *dest, point *a, point *b, float t)
 {
 	dest->x = a->x + (b->x - a->x)*t;
 	dest->y = a->y + (b->y - a->y)*t;
@@ -134,7 +134,7 @@ int SDL_SYS_JoystickInit(void)
 	   to SDL joystick positions (-32768 to 32767) */
 	for (i = 0; i < 128; i++)
 	{
-		float t = (float)i/127.0;
+		float t = (float)i/127.0f;
 		analog_map[i+128] = calc_bezier_y(t);
 		analog_map[127-i] = -1 * analog_map[i+128];
 	}
