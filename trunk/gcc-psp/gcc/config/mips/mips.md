@@ -5328,6 +5328,28 @@
   "reload_completed"
   [(match_dup 0)]
   { operands[0] = mips_rewrite_small_data (operands[0]); })
+ 
+; Sony ALLEGREX instructions.
+
+; Min and max.
+
+(define_insn "sminsi3"
+  [(set (match_operand:SI 0 "register_operand" "=d")
+        (smin:SI (match_operand:SI 1 "register_operand" "d")
+                 (match_operand:SI 2 "register_operand" "d")))]
+  "TARGET_ALLEGREX"
+  "min\t%0,%1,%2"
+  [(set_attr "type"	"arith")
+   (set_attr "mode"	"SI")])
+
+(define_insn "smaxsi3"
+  [(set (match_operand:SI 0 "register_operand" "=d")
+        (smax:SI (match_operand:SI 1 "register_operand" "d")
+                 (match_operand:SI 2 "register_operand" "d")))]
+  "TARGET_ALLEGREX"
+  "max\t%0,%1,%2"
+  [(set_attr "type"	"arith")
+   (set_attr "mode"	"SI")])
 
 ; The MIPS Paired-Single Floating Point and MIPS-3D Instructions.
 
