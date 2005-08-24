@@ -999,6 +999,12 @@ extern const struct mips_cpu_info *mips_tune_info;
                                      || TARGET_ALLEGREX                \
                                      ))
 
+/* ISA includes the MIPS32/64 rev 2 ext and ins instructions.  */
+#define ISA_HAS_EXT_INS         (!TARGET_MIPS16                        \
+                                 && (ISA_MIPS32R2                      \
+                                     || TARGET_ALLEGREX                \
+                                     ))
+
 /* True if the result of a load is not available to the next instruction.
    A nop will then be needed between instructions like "lw $4,..."
    and "addiu $4,$4,1".  */
@@ -1436,6 +1442,11 @@ extern const struct mips_cpu_info *mips_tune_info;
 
 /* Define if loading short immediate values into registers sign extends.  */
 #define SHORT_IMMEDIATES_SIGN_EXTEND
+
+/* The [d]clz instructions have the natural values at 0.  */
+
+#define CLZ_DEFINED_VALUE_AT_ZERO(MODE, VALUE) \
+  ((VALUE) = GET_MODE_BITSIZE (MODE), true)
 
 /* Standard register usage.  */
 
