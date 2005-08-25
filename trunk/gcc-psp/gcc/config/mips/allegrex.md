@@ -37,3 +37,32 @@
   "max\t%0,%1,%2"
   [(set_attr "type"	"arith")
    (set_attr "mode"	"SI")])
+
+; Extended shift instructions.
+
+(define_insn "allegrex_bitrev"
+  [(set (match_operand:SI 0 "register_operand" "=d")
+	(unspec:SI [(match_operand:SI 1 "register_operand" "d")]
+		   UNSPEC_BITREV))]
+  "TARGET_ALLEGREX"
+  "bitrev\t%0,%1"
+  [(set_attr "type"	"arith")
+   (set_attr "mode"	"SI")])
+
+(define_insn "allegrex_wsbh"
+  [(set (match_operand:SI 0 "register_operand" "=d")
+	(unspec:SI [(match_operand:SI 1 "register_operand" "d")]
+		   UNSPEC_WSBH))]
+  "TARGET_ALLEGREX"
+  "wsbh\t%0,%1"
+  [(set_attr "type"	"arith")
+   (set_attr "mode"	"SI")])
+
+(define_insn "allegrex_wsbw"
+  [(set (match_operand:SI 0 "register_operand" "=d")
+	(unspec:SI [(match_operand:SI 1 "register_operand" "d")]
+		   UNSPEC_WSBW))]
+  "TARGET_ALLEGREX"
+  "wsbw\t%0,%1"
+  [(set_attr "type"	"arith")
+   (set_attr "mode"	"SI")])

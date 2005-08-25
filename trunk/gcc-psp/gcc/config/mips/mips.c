@@ -150,6 +150,9 @@ enum mips_function_type
   MIPS_DF_FTYPE_DF,
   MIPS_DF_FTYPE_DF_DF,
 
+  /* For the Sony ALLEGREX.  */
+  MIPS_SI_FTYPE_SI,
+
   /* The last type.  */
   MIPS_MAX_FTYPE_MAX
 };
@@ -9531,6 +9534,29 @@ static const struct builtin_description sb1_bdesc[] =
   DIRECT_BUILTIN (sqrt_ps, MIPS_V2SF_FTYPE_V2SF, MASK_PAIRED_SINGLE)
 };
 
+/* Builtin functions for the Sony ALLEGREX processor.
+
+   These have the `__builtin_allgrex_' prefix instead of `__builtin_mips_'
+   to maintain compatibility with Sony's ALLEGREX GCC port.
+
+   Some of the builtins may seem redundant, but they are the same as the
+   builtins defined in the Sony compiler.  I chose to map redundant and
+   trivial builtins to the original instruction instead of creating
+   duplicate patterns specifically for the ALLEGREX (as Sony does).  */
+
+/* Define a MIPS_BUILTIN_DIRECT function for instruction CODE_FOR_allegrex_<INSN>.
+   FUNCTION_TYPE and TARGET_FLAGS are builtin_description fields.  */
+#define DIRECT_ALLEGREX_BUILTIN(INSN, FUNCTION_TYPE, TARGET_FLAGS)	\
+  { CODE_FOR_allegrex_ ## INSN, 0, "__builtin_allegrex_" #INSN,		\
+    MIPS_BUILTIN_DIRECT, FUNCTION_TYPE, TARGET_FLAGS }
+
+static const struct builtin_description allegrex_bdesc[] =
+{
+  DIRECT_ALLEGREX_BUILTIN(bitrev, MIPS_SI_FTYPE_SI, 0),
+  DIRECT_ALLEGREX_BUILTIN(wsbh, MIPS_SI_FTYPE_SI, 0),
+  DIRECT_ALLEGREX_BUILTIN(wsbw, MIPS_SI_FTYPE_SI, 0)
+};
+
 /* This helps provide a mapping from builtin function codes to bdesc
    arrays.  */
 
@@ -9550,7 +9576,8 @@ struct bdesc_map
 static const struct bdesc_map bdesc_arrays[] =
 {
   { mips_bdesc, ARRAY_SIZE (mips_bdesc), PROCESSOR_DEFAULT },
-  { sb1_bdesc, ARRAY_SIZE (sb1_bdesc), PROCESSOR_SB1 }
+  { sb1_bdesc, ARRAY_SIZE (sb1_bdesc), PROCESSOR_SB1 },
+  { allegrex_bdesc, ARRAY_SIZE (allegrex_bdesc), PROCESSOR_ALLEGREX }
 };
 
 /* Take the head of argument list *ARGLIST and convert it into a form
@@ -9655,68 +9682,79 @@ mips_init_builtins (void)
   tree V2SF_type_node;
   unsigned int offset;
 
-  /* We have only builtins for -mpaired-single and -mips3d.  */
-  if (!TARGET_PAIRED_SINGLE_FLOAT)
+  /* We have only builtins for -mpaired-single, -mips3d, and the Sony ALLEGREX.  */
+  if (!TARGET_PAIRED_SINGLE_FLOAT && !TARGET_ALLEGREX)
     return;
 
-  V2SF_type_node = build_vector_type_for_mode (float_type_node, V2SFmode);
+  if (TARGET_PAIRED_SINGLE_FLOAT)
+    {
+      V2SF_type_node = build_vector_type_for_mode (float_type_node, V2SFmode);
 
-  types[MIPS_V2SF_FTYPE_V2SF]
-    = build_function_type_list (V2SF_type_node, V2SF_type_node, NULL_TREE);
+      types[MIPS_V2SF_FTYPE_V2SF]
+	= build_function_type_list (V2SF_type_node, V2SF_type_node, NULL_TREE);
 
-  types[MIPS_V2SF_FTYPE_V2SF_V2SF]
-    = build_function_type_list (V2SF_type_node,
-				V2SF_type_node, V2SF_type_node, NULL_TREE);
+      types[MIPS_V2SF_FTYPE_V2SF_V2SF]
+	= build_function_type_list (V2SF_type_node,
+				    V2SF_type_node, V2SF_type_node, NULL_TREE);
 
-  types[MIPS_V2SF_FTYPE_V2SF_V2SF_INT]
-    = build_function_type_list (V2SF_type_node,
-				V2SF_type_node, V2SF_type_node,
-				integer_type_node, NULL_TREE);
+      types[MIPS_V2SF_FTYPE_V2SF_V2SF_INT]
+	= build_function_type_list (V2SF_type_node,
+				    V2SF_type_node, V2SF_type_node,
+				    integer_type_node, NULL_TREE);
 
-  types[MIPS_V2SF_FTYPE_V2SF_V2SF_V2SF_V2SF]
-    = build_function_type_list (V2SF_type_node,
-				V2SF_type_node, V2SF_type_node,
-				V2SF_type_node, V2SF_type_node, NULL_TREE);
+      types[MIPS_V2SF_FTYPE_V2SF_V2SF_V2SF_V2SF]
+	= build_function_type_list (V2SF_type_node,
+				    V2SF_type_node, V2SF_type_node,
+				    V2SF_type_node, V2SF_type_node, NULL_TREE);
 
-  types[MIPS_V2SF_FTYPE_SF_SF]
-    = build_function_type_list (V2SF_type_node,
-				float_type_node, float_type_node, NULL_TREE);
+      types[MIPS_V2SF_FTYPE_SF_SF]
+	= build_function_type_list (V2SF_type_node,
+				    float_type_node, float_type_node, NULL_TREE);
 
-  types[MIPS_INT_FTYPE_V2SF_V2SF]
-    = build_function_type_list (integer_type_node,
-				V2SF_type_node, V2SF_type_node, NULL_TREE);
+      types[MIPS_INT_FTYPE_V2SF_V2SF]
+	= build_function_type_list (integer_type_node,
+				    V2SF_type_node, V2SF_type_node, NULL_TREE);
 
-  types[MIPS_INT_FTYPE_V2SF_V2SF_V2SF_V2SF]
-    = build_function_type_list (integer_type_node,
-				V2SF_type_node, V2SF_type_node,
-				V2SF_type_node, V2SF_type_node, NULL_TREE);
+      types[MIPS_INT_FTYPE_V2SF_V2SF_V2SF_V2SF]
+	= build_function_type_list (integer_type_node,
+				    V2SF_type_node, V2SF_type_node,
+				    V2SF_type_node, V2SF_type_node, NULL_TREE);
 
-  types[MIPS_INT_FTYPE_SF_SF]
-    = build_function_type_list (integer_type_node,
-				float_type_node, float_type_node, NULL_TREE);
+      types[MIPS_INT_FTYPE_SF_SF]
+	= build_function_type_list (integer_type_node,
+				    float_type_node, float_type_node, NULL_TREE);
 
-  types[MIPS_INT_FTYPE_DF_DF]
-    = build_function_type_list (integer_type_node,
-				double_type_node, double_type_node, NULL_TREE);
+      types[MIPS_INT_FTYPE_DF_DF]
+	= build_function_type_list (integer_type_node,
+				    double_type_node, double_type_node, NULL_TREE);
 
-  types[MIPS_SF_FTYPE_V2SF]
-    = build_function_type_list (float_type_node, V2SF_type_node, NULL_TREE);
+      types[MIPS_SF_FTYPE_V2SF]
+	= build_function_type_list (float_type_node, V2SF_type_node, NULL_TREE);
 
-  types[MIPS_SF_FTYPE_SF]
-    = build_function_type_list (float_type_node,
-				float_type_node, NULL_TREE);
+      types[MIPS_SF_FTYPE_SF]
+	= build_function_type_list (float_type_node,
+				    float_type_node, NULL_TREE);
 
-  types[MIPS_SF_FTYPE_SF_SF]
-    = build_function_type_list (float_type_node,
-				float_type_node, float_type_node, NULL_TREE);
+      types[MIPS_SF_FTYPE_SF_SF]
+	= build_function_type_list (float_type_node,
+				    float_type_node, float_type_node, NULL_TREE);
 
-  types[MIPS_DF_FTYPE_DF]
-    = build_function_type_list (double_type_node,
-				double_type_node, NULL_TREE);
+      types[MIPS_DF_FTYPE_DF]
+	= build_function_type_list (double_type_node,
+				    double_type_node, NULL_TREE);
 
-  types[MIPS_DF_FTYPE_DF_DF]
-    = build_function_type_list (double_type_node,
-				double_type_node, double_type_node, NULL_TREE);
+      types[MIPS_DF_FTYPE_DF_DF]
+	= build_function_type_list (double_type_node,
+				    double_type_node, double_type_node, NULL_TREE);
+    }
+
+  if (TARGET_ALLEGREX)
+    {
+      types[MIPS_SI_FTYPE_SI]
+	= build_function_type_list (intSI_type_node,
+				    intSI_type_node,
+				    NULL_TREE);
+    }
 
   /* Iterate through all of the bdesc arrays, initializing all of the
      builtin functions.  */

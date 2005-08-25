@@ -70,6 +70,11 @@
    (UNSPEC_RSQRT2		209)
    (UNSPEC_RECIP1		210)
    (UNSPEC_RECIP2		211)
+
+   ;; Sony ALLEGREX instructions
+   (UNSPEC_BITREV       400)
+   (UNSPEC_WSBH         401)
+   (UNSPEC_WSBW         402)
   ]
 )
 
