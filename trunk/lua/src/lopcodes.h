@@ -182,11 +182,17 @@ OP_SETLIST,/*	A Bx	R(A)[Bx-Bx%FPF+i] := R(A+i), 1 <= i <= Bx%FPF+1	*/
 OP_SETLISTO,/*	A Bx							*/
 
 OP_CLOSE,/*	A 	close all variables in the stack up to (>=) R(A)*/
-OP_CLOSURE/*	A Bx	R(A) := closure(KPROTO[Bx], R(A), ... ,R(A+n))	*/
+OP_CLOSURE,/*	A Bx	R(A) := closure(KPROTO[Bx], R(A), ... ,R(A+n))	*/
+
+OP_BNOT,   /* A B     R(A) := bitwise-complement R(B) */
+OP_BAND,   /* A B C   R(A) := R(B) bitwise-and R(C) */
+OP_BOR,    /* A B C   R(A) := R(B) bitwise-or  R(C) */
+OP_BXOR    /* A B C   R(A) := R(B) bitwise-xor R(C) */
+
 } OpCode;
 
 
-#define NUM_OPCODES	(cast(int, OP_CLOSURE+1))
+#define NUM_OPCODES	(cast(int, OP_BXOR+1))
 
 
 

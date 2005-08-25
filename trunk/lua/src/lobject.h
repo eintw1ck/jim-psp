@@ -327,6 +327,7 @@ int luaO_int2fb (unsigned int x);
 
 int luaO_rawequalObj (const TObject *t1, const TObject *t2);
 int luaO_str2d (const char *s, lua_Number *result);
+int luaO_str2x (const char *s, lua_Number *result);
 
 const char *luaO_pushvfstring (lua_State *L, const char *fmt, va_list argp);
 const char *luaO_pushfstring (lua_State *L, const char *fmt, ...);

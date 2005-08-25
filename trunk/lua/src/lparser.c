@@ -752,6 +752,7 @@ static UnOpr getunopr (int op) {
   switch (op) {
     case TK_NOT: return OPR_NOT;
     case '-': return OPR_MINUS;
+    case '#': return OPR_BNOT;
     default: return OPR_NOUNOPR;
   }
 }
@@ -773,6 +774,9 @@ static BinOpr getbinopr (int op) {
     case TK_GE: return OPR_GE;
     case TK_AND: return OPR_AND;
     case TK_OR: return OPR_OR;
+    case '&': return OPR_BAND;
+    case '|': return OPR_BOR;
+    case '#': return OPR_BXOR;
     default: return OPR_NOBINOPR;
   }
 }
@@ -786,7 +790,8 @@ static const struct {
    {10, 9}, {5, 4},                 /* power and concat (right associative) */
    {3, 3}, {3, 3},                  /* equality */
    {3, 3}, {3, 3}, {3, 3}, {3, 3},  /* order */
-   {2, 2}, {1, 1}                   /* logical (and/or) */
+   {2, 2}, {1, 1},                  /* logical (and/or) */
+   {6, 6}, {6, 6}, {6, 6}           /* bit-wise (band/bor/bxor) */
 };
 
 #define UNARY_PRIORITY	8  /* priority for unary operators */

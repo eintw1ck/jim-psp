@@ -585,6 +585,17 @@ void luaK_prefix (FuncState *fs, UnOpr op, expdesc *e) {
       e->k = VRELOCABLE;
     }
   }
+  else if (op == OPR_BNOT) {
+    luaK_exp2val(fs, e);
+    if (e->k == VK && ttisnumber(&fs->f->k[e->info]))
+      e->info = luaK_numberK(fs, ~ (long) nvalue(&fs->f->k[e->info]));
+    else {
+      luaK_exp2anyreg(fs, e);
+      freeexp(fs, e);
+      e->info = luaK_codeABC(fs, OP_BNOT, 0, e->info, 0);
+      e->k = VRELOCABLE;
+    }
+  }
   else  /* op == NOT */
     codenot(fs, e);
 }
@@ -620,6 +631,11 @@ static void codebinop (FuncState *fs, expdesc *res, BinOpr op,
                        int o1, int o2) {
   if (op <= OPR_POW) {  /* arithmetic operator? */
     OpCode opc = cast(OpCode, (op - OPR_ADD) + OP_ADD);  /* ORDER OP */
+    res->info = luaK_codeABC(fs, opc, 0, o1, o2);
+    res->k = VRELOCABLE;
+  }
+  else if ((op >= OPR_BAND) && (op <= OPR_BXOR)) {
+    OpCode opc = cast(OpCode, (op - OPR_BAND) + OP_BAND);  /* ORDER OP */
     res->info = luaK_codeABC(fs, opc, 0, o1, o2);
     res->k = VRELOCABLE;
   }

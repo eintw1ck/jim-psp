@@ -100,6 +100,17 @@ int luaO_str2d (const char *s, lua_Number *result) {
 }
 
 
+int luaO_str2x (const char *s, lua_Number *result) {
+  char *endptr;
+  lua_Number res = (lua_Number) strtol(s, &endptr, 16);
+  if (endptr == s) return 0;  /* no conversion */
+  while (isspace((unsigned char)(*endptr))) endptr++;
+  if (*endptr != '\0') return 0;  /* invalid trailing characters? */
+  *result = res;
+  return 1;
+}
+
+
 
 static void pushstr (lua_State *L, const char *str) {
   setsvalue2s(L->top, luaS_new(L, str));

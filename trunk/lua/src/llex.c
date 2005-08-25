@@ -171,10 +171,35 @@ static size_t readname (LexState *LS) {
 
 
 /* LUA_NUMBER */
-static void read_numeral (LexState *LS, int comma, SemInfo *seminfo) {
+static int hexval(char c)
+{
+  if ((c >= '0') && (c <= '9')) return c - '0';
+  if ((c >= 'a') && (c <= 'f')) return 10 + c - 'a';
+  if ((c >= 'A') && (c <= 'F')) return 10 + c - 'A';
+  return 0;
+}
+
+static void read_hexadecimal (LexState *LS, char xchar, SemInfo *seminfo) {
   size_t l = 0;
   checkbuffer(LS, l);
-  if (comma) save(LS, '.', l);
+  save(LS, '0', l);
+  checkbuffer(LS, l);
+  save(LS, xchar, l);
+  next(LS);
+  while (isxdigit(LS->current)) {
+    checkbuffer(LS, l);
+    save_and_next(LS, l);
+  }
+  save(LS, '\0', l);
+
+  if (!luaO_str2x(luaZ_buffer(LS->buff), &seminfo->r))
+    luaX_lexerror(LS, "malformed hexadecimal number", TK_NUMBER);
+}   /* read_hexadecimal */
+
+static void read_numeral (LexState *LS, char pushchar, SemInfo *seminfo) {
+  size_t l = 0;
+  checkbuffer(LS, l);
+  if (pushchar) save(LS, pushchar, l);
   while (isdigit(LS->current)) {
     checkbuffer(LS, l);
     save_and_next(LS, l);
@@ -206,7 +231,6 @@ static void read_numeral (LexState *LS, int comma, SemInfo *seminfo) {
   if (!luaO_str2d(luaZ_buffer(LS->buff), &seminfo->r))
     luaX_lexerror(LS, "malformed number", TK_NUMBER);
 }
-
 
 static void read_long_string (LexState *LS, SemInfo *seminfo) {
   int cont = 0;
@@ -281,6 +305,22 @@ static void read_string (LexState *LS, int del, SemInfo *seminfo) {
           case 't': save(LS, '\t', l); next(LS); break;
           case 'v': save(LS, '\v', l); next(LS); break;
           case '\n': save(LS, '\n', l); inclinenumber(LS); break;
+          case 'x': case 'X': {
+            int c = 0;
+            next(LS);
+            if (!isxdigit(LS->current)) {
+              save(LS, '\0', l);
+              luaX_lexerror(LS, "no hex digits given in hex escape sequence", TK_STRING);
+            }
+            c = hexval(LS->current);
+            next(LS);
+            if (isxdigit(LS->current)) {
+              c = 16*c + hexval(LS->current);
+              next(LS);
+            }
+            save(LS, c, l);
+            break;
+          }
           case EOZ: break;  /* will raise an error next loop */
           default: {
             if (!isdigit(LS->current))
@@ -298,13 +338,14 @@ static void read_string (LexState *LS, int del, SemInfo *seminfo) {
               }
               save(LS, c, l);
             }
-          }
-        }
+          }   /* default '\\' case - check for decimal digits, etc. */
+        }   /* switch on character after '\\' */
         break;
       default:
         save_and_next(LS, l);
     }
   }
+
   save_and_next(LS, l);  /* skip delimiter */
   save(LS, '\0', l);
   seminfo->ts = luaS_newlstr(LS->L, luaZ_buffer(LS->buff) + 1, l - 3);
@@ -376,12 +417,23 @@ int luaX_lex (LexState *LS, SemInfo *seminfo) {
         }
         else if (!isdigit(LS->current)) return '.';
         else {
-          read_numeral(LS, 1, seminfo);
+          read_numeral(LS, '.', seminfo);
           return TK_NUMBER;
         }
       }
       case EOZ: {
         return TK_EOS;
+      }
+      case '0': {
+        next(LS);
+        if ((LS->current == 'x') || (LS->current == 'X')) {
+          read_hexadecimal(LS, LS->current, seminfo);
+          return TK_NUMBER;
+        }
+        else {
+          read_numeral(LS, '0', seminfo);
+          return TK_NUMBER;
+        }
       }
       default: {
         if (isspace(LS->current)) {

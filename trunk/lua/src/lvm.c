@@ -774,7 +774,39 @@ StkId luaV_execute (lua_State *L) {
         luaC_checkGC(L);
         break;
       }
-    }
+
+      case OP_BNOT: {
+        const TObject *rb = RKB(i);
+        if (ttisnumber(rb)) {
+          setnvalue(ra, ~ (long) nvalue(rb));
+        }
+        break;
+      }
+      case OP_BAND: {
+        TObject *rb = RKB(i);
+        TObject *rc = RKC(i);
+        if (ttisnumber(rb) && ttisnumber(rc)) {
+          setnvalue(ra, (long) nvalue(rb) & (long) nvalue(rc));
+        }
+        break;
+      }
+      case OP_BOR: {
+        TObject *rb = RKB(i);
+        TObject *rc = RKC(i);
+        if (ttisnumber(rb) && ttisnumber(rc)) {
+          setnvalue(ra, (long) nvalue(rb) | (long) nvalue(rc));
+        }
+        break;
+      }
+      case OP_BXOR: {
+        TObject *rb = RKB(i);
+        TObject *rc = RKC(i);
+        if (ttisnumber(rb) && ttisnumber(rc)) {
+          setnvalue(ra, (long) nvalue(rb) ^ (long) nvalue(rc));
+        }
+        break;
+      }
+    }   /* switch */
   }
 }
 
