@@ -152,6 +152,8 @@ enum mips_function_type
 
   /* For the Sony ALLEGREX.  */
   MIPS_SI_FTYPE_SI,
+  MIPS_SI_FTYPE_SI_SI,
+  MIPS_VOID_FTYPE_VOID,
 
   /* The last type.  */
   MIPS_MAX_FTYPE_MAX
@@ -9554,6 +9556,12 @@ static const struct builtin_description sb1_bdesc[] =
   { CODE_FOR_allegrex_ ## INSN, 0, "__builtin_allegrex_" #INSN,		\
     MIPS_BUILTIN_DIRECT, FUNCTION_TYPE, TARGET_FLAGS }
 
+/* Same as the above, but mapped to an instruction that doesn't share the
+   NAME.  NAME is the name of the builtin without the builtin prefix.  */
+#define DIRECT_ALLEGREX_NAMED_BUILTIN(NAME, INSN, FUNCTION_TYPE, TARGET_FLAGS)	\
+  { CODE_FOR_ ## INSN, 0, "__builtin_allegrex_" #NAME,				\
+    MIPS_BUILTIN_DIRECT, FUNCTION_TYPE, TARGET_FLAGS }
+
 /* Define a MIPS_BUILTIN_DIRECT_NO_TARGET function for instruction
    CODE_FOR_allegrex_<INSN>.  FUNCTION_TYPE and TARGET_FLAGS are
    builtin_description fields.  */
@@ -9565,7 +9573,20 @@ static const struct builtin_description allegrex_bdesc[] =
 {
   DIRECT_ALLEGREX_BUILTIN(bitrev, MIPS_SI_FTYPE_SI, 0),
   DIRECT_ALLEGREX_BUILTIN(wsbh, MIPS_SI_FTYPE_SI, 0),
-  DIRECT_ALLEGREX_BUILTIN(wsbw, MIPS_SI_FTYPE_SI, 0)
+  DIRECT_ALLEGREX_BUILTIN(wsbw, MIPS_SI_FTYPE_SI, 0),
+  DIRECT_ALLEGREX_NAMED_BUILTIN(clz, clzsi2, MIPS_SI_FTYPE_SI, 0),
+  DIRECT_ALLEGREX_BUILTIN(clo, MIPS_SI_FTYPE_SI, 0),
+  DIRECT_ALLEGREX_BUILTIN(ctz, MIPS_SI_FTYPE_SI, 0),
+  DIRECT_ALLEGREX_BUILTIN(cto, MIPS_SI_FTYPE_SI, 0),
+  /* TODO: These next two can break in copy_to_mode_reg() so they need
+     special handling.  They should probably get forced to seb and seh but
+     I can't imagine someone needing these when GCC automatically expands
+     them.  */
+  DIRECT_ALLEGREX_NAMED_BUILTIN(seb, extendqisi2, MIPS_SI_FTYPE_SI, 0),
+  DIRECT_ALLEGREX_NAMED_BUILTIN(seh, extendhisi2, MIPS_SI_FTYPE_SI, 0),
+  DIRECT_ALLEGREX_NAMED_BUILTIN(max, smaxsi3, MIPS_SI_FTYPE_SI_SI, 0),
+  DIRECT_ALLEGREX_NAMED_BUILTIN(min, sminsi3, MIPS_SI_FTYPE_SI_SI, 0),
+  DIRECT_ALLEGREX_NO_TARGET_BUILTIN(sync, MIPS_VOID_FTYPE_VOID, 0)
 };
 
 /* This helps provide a mapping from builtin function codes to bdesc
@@ -9776,6 +9797,14 @@ mips_init_builtins (void)
 	= build_function_type_list (intSI_type_node,
 				    intSI_type_node,
 				    NULL_TREE);
+
+      types[MIPS_SI_FTYPE_SI_SI]
+	= build_function_type_list (intSI_type_node,
+				    intSI_type_node, intSI_type_node,
+				    NULL_TREE);
+
+      types[MIPS_VOID_FTYPE_VOID]
+	= build_function_type_list (void_type_node, void_type_node, NULL_TREE);
     }
 
   /* Iterate through all of the bdesc arrays, initializing all of the
@@ -9820,6 +9849,10 @@ mips_expand_builtin_direct (enum insn_code icode, rtx target, tree arglist,
 
   switch (i)
     {
+    case 0:
+      emit_insn (GEN_FCN (icode) (0));
+      break;
+
     case 2:
       emit_insn (GEN_FCN (icode) (ops[0], ops[1]));
       break;

@@ -38,6 +38,7 @@
   [(set_attr "type"	"arith")
    (set_attr "mode"	"SI")])
 
+
 ; Extended shift instructions.
 
 (define_insn "allegrex_bitrev"
@@ -66,3 +67,53 @@
   "wsbw\t%0,%1"
   [(set_attr "type"	"arith")
    (set_attr "mode"	"SI")])
+
+
+; Count leading ones, count trailing zeros, and count trailing ones (clz is
+; already defined).
+
+(define_insn "allegrex_clo"
+  [(set (match_operand:SI 0 "register_operand" "=d")
+      	(unspec:SI [(match_operand:SI 1 "register_operand" "d")]
+		   UNSPEC_CLO))]
+  "TARGET_ALLEGREX"
+  "clo\t%0,%1"
+  [(set_attr "type"	"clz")
+   (set_attr "mode"	"SI")])
+
+(define_expand "allegrex_ctz"
+  [(set (match_operand:SI 0 "register_operand")
+      	(ctz:SI (match_operand:SI 1 "register_operand")))]
+  "TARGET_ALLEGREX"
+{
+  rtx r1;
+
+  r1 = gen_reg_rtx (SImode);
+  emit_insn (gen_allegrex_bitrev (r1, operands[1]));
+  emit_insn (gen_clzsi2 (operands[0], r1));
+  DONE;
+})
+
+(define_expand "allegrex_cto"
+  [(set (match_operand:SI 0 "register_operand")
+      	(unspec:SI [(match_operand:SI 1 "register_operand")]
+		   UNSPEC_CTO))]
+  "TARGET_ALLEGREX"
+{
+  rtx r1;
+
+  r1 = gen_reg_rtx (SImode);
+  emit_insn (gen_allegrex_bitrev (r1, operands[1]));
+  emit_insn (gen_allegrex_clo (operands[0], r1));
+  DONE;
+})
+
+
+; Misc.
+
+(define_insn "allegrex_sync"
+  [(unspec_volatile [(const_int 0)] UNSPEC_SYNC)]
+  "TARGET_ALLEGREX"
+  "sync"
+  [(set_attr "type"	"unknown")
+   (set_attr "mode"	"none")])

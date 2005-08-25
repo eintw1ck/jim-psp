@@ -73,8 +73,14 @@
 
    ;; Sony ALLEGREX instructions
    (UNSPEC_BITREV		400)
-   (UNSPEC_WSBH			401)
-   (UNSPEC_WSBW			402)
+   (UNSPEC_WSBH 		401)
+   (UNSPEC_WSBW 		402)
+
+   (UNSPEC_CLO			403)
+   (UNSPEC_CTO			404)
+
+   (UNSPEC_CACHE		430)
+   (UNSPEC_SYNC 		431)
   ]
 )
 
