@@ -165,6 +165,10 @@ enum mips_builtin_type
      operands 1 and above.  */
   MIPS_BUILTIN_DIRECT,
 
+  /* The builtin corresponds directly to an .md pattern.  There is no return
+     value and the arguments are mapped to operands 0 and above.  */
+  MIPS_BUILTIN_DIRECT_NO_TARGET,
+
   /* The builtin corresponds to a comparison instruction followed by
      a mips_cond_move_tf_ps pattern.  The first two arguments are the
      values to compare and the second two arguments are the vector
@@ -364,7 +368,7 @@ static rtx mips_prepare_builtin_arg (enum insn_code, unsigned int, tree *);
 static rtx mips_prepare_builtin_target (enum insn_code, unsigned int, rtx);
 static rtx mips_expand_builtin (tree, rtx, rtx, enum machine_mode, int);
 static void mips_init_builtins (void);
-static rtx mips_expand_builtin_direct (enum insn_code, rtx, tree);
+static rtx mips_expand_builtin_direct (enum insn_code, rtx, tree, bool);
 static rtx mips_expand_builtin_movtf (enum mips_builtin_type,
 				      enum insn_code, enum mips_fp_condition,
 				      rtx, tree);
@@ -9550,6 +9554,13 @@ static const struct builtin_description sb1_bdesc[] =
   { CODE_FOR_allegrex_ ## INSN, 0, "__builtin_allegrex_" #INSN,		\
     MIPS_BUILTIN_DIRECT, FUNCTION_TYPE, TARGET_FLAGS }
 
+/* Define a MIPS_BUILTIN_DIRECT_NO_TARGET function for instruction
+   CODE_FOR_allegrex_<INSN>.  FUNCTION_TYPE and TARGET_FLAGS are
+   builtin_description fields.  */
+#define DIRECT_ALLEGREX_NO_TARGET_BUILTIN(INSN, FUNCTION_TYPE, TARGET_FLAGS)	\
+  { CODE_FOR_allegrex_ ## INSN, 0, "__builtin_allegrex_" #INSN,			\
+    MIPS_BUILTIN_DIRECT_NO_TARGET, FUNCTION_TYPE, TARGET_FLAGS }
+
 static const struct builtin_description allegrex_bdesc[] =
 {
   DIRECT_ALLEGREX_BUILTIN(bitrev, MIPS_SI_FTYPE_SI, 0),
@@ -9594,7 +9605,15 @@ mips_prepare_builtin_arg (enum insn_code icode,
   value = expand_expr (TREE_VALUE (*arglist), NULL_RTX, VOIDmode, 0);
   mode = insn_data[icode].operand[op].mode;
   if (!insn_data[icode].operand[op].predicate (value, mode))
-    value = copy_to_mode_reg (mode, value);
+    {
+      value = copy_to_mode_reg (mode, value);
+      /* Check the predicate again.  */
+      if (!insn_data[icode].operand[op].predicate (value, mode))
+	{
+	  error ("invalid argument to builtin function");
+	  return const0_rtx;
+	}
+    }
 
   *arglist = TREE_CHAIN (*arglist);
   return value;
@@ -9651,7 +9670,10 @@ mips_expand_builtin (tree exp, rtx target, rtx subtarget ATTRIBUTE_UNUSED,
   switch (type)
     {
     case MIPS_BUILTIN_DIRECT:
-      return mips_expand_builtin_direct (icode, target, arglist);
+      return mips_expand_builtin_direct (icode, target, arglist, true);
+
+    case MIPS_BUILTIN_DIRECT_NO_TARGET:
+      return mips_expand_builtin_direct (icode, target, arglist, false);
 
     case MIPS_BUILTIN_MOVT:
     case MIPS_BUILTIN_MOVF:
@@ -9774,30 +9796,40 @@ mips_init_builtins (void)
 
 /* Expand a MIPS_BUILTIN_DIRECT function.  ICODE is the code of the
    .md pattern and ARGLIST is the list of function arguments.  TARGET,
-   if nonnull, suggests a good place to put the result.  */
+   if nonnull, suggests a good place to put the result.
+   HAS_TARGET indicates the function must return something.  */
 
 static rtx
-mips_expand_builtin_direct (enum insn_code icode, rtx target, tree arglist)
+mips_expand_builtin_direct (enum insn_code icode, rtx target, tree arglist,
+			    bool has_target)
 {
   rtx ops[MAX_RECOG_OPERANDS];
-  int i;
+  int i = 0;
 
-  target = mips_prepare_builtin_target (icode, 0, target);
-  for (i = 1; i < insn_data[icode].n_operands; i++)
+  if (has_target)
+    {
+      /* We save target to ops[0].  */
+      ops[0] = mips_prepare_builtin_target (icode, 0, target);
+      i = 1;
+    }
+
+  /* We need to test if arglist is not zero.  Some instructions have extra
+     clobber registers.  */
+  for (; i < insn_data[icode].n_operands && arglist != 0; i++)
     ops[i] = mips_prepare_builtin_arg (icode, i, &arglist);
 
-  switch (insn_data[icode].n_operands)
+  switch (i)
     {
     case 2:
-      emit_insn (GEN_FCN (icode) (target, ops[1]));
+      emit_insn (GEN_FCN (icode) (ops[0], ops[1]));
       break;
 
     case 3:
-      emit_insn (GEN_FCN (icode) (target, ops[1], ops[2]));
+      emit_insn (GEN_FCN (icode) (ops[0], ops[1], ops[2]));
       break;
 
     case 4:
-      emit_insn (GEN_FCN (icode) (target, ops[1], ops[2], ops[3]));
+      emit_insn (GEN_FCN (icode) (ops[0], ops[1], ops[2], ops[3]));
       break;
 
     default:
