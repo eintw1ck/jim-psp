@@ -6,7 +6,7 @@ include $(LUA)/config
 PSPSDK = $(shell psp-config --pspsdk-path)
 PSPDIR = $(shell psp-config --psp-prefix)
 
-CFLAGS = -O2 -G0 -I$(LUA)/include -DLUA_USER_H='"../etc/luser_number.h"' -DUSE_FLOAT
+CFLAGS = -O2 -G0 -I$(LUA)/include
 
 LIBLUA_OBJS = src/lapi.o src/lcode.o src/ldebug.o src/ldo.o src/ldump.o src/lfunc.o \
 	src/lgc.o src/llex.o src/lmem.o src/lobject.o src/lopcodes.o \

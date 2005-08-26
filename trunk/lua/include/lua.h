@@ -83,11 +83,9 @@ typedef int (*lua_Chunkwriter) (lua_State *L, const void* p,
 
 
 /* type of numbers in Lua */
-#ifndef LUA_NUMBER
-typedef double lua_Number;
-#else
-typedef LUA_NUMBER lua_Number;
-#endif
+typedef float lua_Number;
+#define LUA_NUMBER_SCAN		"%f"
+#define LUA_NUMBER_FMT		"%.5g"
 
 
 /* mark for all API functions */
