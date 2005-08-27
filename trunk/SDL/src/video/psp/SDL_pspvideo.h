@@ -62,6 +62,8 @@ struct SDL_PrivateVideoData {
 	/* Texture format and stride used for hw accelerated swsurface */
 	int gu_format;		
 	int stride;		
+	/* Pointer to the CLUT used in 8-bit modes. */
+	void *gu_palette;
 };
 
 #endif /* _SDL_pspvideo_h */

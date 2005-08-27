@@ -35,6 +35,7 @@ static char rcsid =
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 
 #include "SDL.h"
 #include "SDL_error.h"
@@ -205,12 +206,17 @@ static void init_gu(int gu_format) {
 	sceGuInit();
 	sceGuStart(GU_DIRECT, list); 
 	sceGuDispBuffer(SCREEN_WIDTH, SCREEN_HEIGHT, (void*)0, PSP_LINE_SIZE);
-	sceGuDrawBuffer(gu_format, (void*)0, PSP_LINE_SIZE);
+	if (gu_format == GU_PSM_T8) {
+		sceGuDrawBuffer(GU_PSM_8888, (void*)0, PSP_LINE_SIZE);
+		sceGuClutMode(GU_PSM_8888, 0, 255, 0);
+	} else {
+		sceGuDrawBuffer(gu_format, (void*)0, PSP_LINE_SIZE);
+	}
 	sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
 	sceGuDepthBuffer((void*) 0x110000, PSP_LINE_SIZE);
 	sceGuOffset(2048 - (SCREEN_WIDTH / 2), 2048 - (SCREEN_HEIGHT / 2));
 	sceGuViewport(2048, 2048, SCREEN_WIDTH, SCREEN_HEIGHT);
-	sceGuDepthRange(0xc350, 0x2710);
+	sceGuDepthRange(50000, 10000);
 	sceGuScissor(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	sceGuEnable(GU_SCISSOR_TEST);
 	sceGuFrontFace(GU_CW);
@@ -225,7 +231,7 @@ static void init_gu(int gu_format) {
 SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 				int width, int height, int bpp, Uint32 flags)
 {
-	int pitch, pixel_format, gu_format;
+	int pitch = 512, pixel_format, gu_format;
 	Uint32 Amask, Rmask, Gmask, Bmask;
 
 	if (IS_HWSURFACE(flags) &&
@@ -236,8 +242,20 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	}
 
 	switch(bpp) {
+	case 8:
+		if (IS_HWSURFACE(flags)) {
+			SDL_SetError("8-bit surfaces are only supported on software surfaces.");
+			return NULL;
+		}
+		Amask = 0;
+		Rmask = 0;
+		Gmask = 0;
+		Bmask = 0;
+		pixel_format = PSP_DISPLAY_PIXEL_FORMAT_8888; 
+		gu_format = GU_PSM_T8;
+		break;
 	case 15: /* 5-5-5-1 */
-		pitch = 512 * 2;
+		pitch *= 2;
 		Amask = 0x00008000;
 		Rmask = 0x0000001f;
 		Gmask = 0x000003e0;
@@ -246,7 +264,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 		gu_format = GU_PSM_5551;
 		break;
 	case 16: /* 5-6-5 */
-		pitch = 512 * 2;
+		pitch *= 2;
 		Amask = 0;
 		Rmask = 0x0000001f;
 		Gmask = 0x000007e0;
@@ -255,7 +273,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 		gu_format = GU_PSM_5650;
 		break;
 	case 32: /* 8-8-8-8 */
-		pitch = 512 * 4;
+		pitch *= 4;
 		Amask = 0xff000000;
 		Rmask = 0x000000ff;
 		Gmask = 0x0000ff00;
@@ -301,6 +319,10 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 
 		this->hidden->gu_format = gu_format;
 		this->UpdateRects = PSP_GuUpdateRects;
+
+		if (bpp == 8 && this->hidden->gu_palette == NULL) {
+			this->hidden->gu_palette = memalign(16, 4 * 256);
+		}
     }
 
 	this->hidden->pixel_format = pixel_format;
@@ -448,8 +470,22 @@ static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects)
 
 int PSP_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 {
-	/* do nothing of note. */
-	return(1);
+	int i, j;
+	unsigned int *palette = this->hidden->gu_palette;
+
+	if (this->hidden->gu_format != GU_PSM_T8 || palette == NULL)
+		return 0;
+
+	for (i=firstcolor, j=0; j < ncolors; i++, j++) {
+		palette[i] = (colors[j].b << 16) | (colors[j].g << 8) | (colors[j].r);
+	}
+
+	sceKernelDcacheWritebackAll();
+	sceGuStart(GU_DIRECT, list);
+	sceGuClutLoad(32, this->hidden->gu_palette);
+	sceGuFinish();
+
+	return 1;
 }
 
 /* Note:  If we are terminated, this could be called in the middle of
@@ -459,8 +495,14 @@ void PSP_VideoQuit(_THIS)
 {
 	SDL_Surface *screen = SDL_PublicSurface;
 
-	if (screen && IS_SWSURFACE(screen->flags))
+	if (screen && IS_SWSURFACE(screen->flags)) {
+		if (this->hidden->gu_palette != NULL) {
+			free(this->hidden->gu_palette);
+			this->hidden->gu_palette = NULL;
+		}
+
 		sceGuTerm();
+	}
 
 	PSP_EventQuit(this);
 
