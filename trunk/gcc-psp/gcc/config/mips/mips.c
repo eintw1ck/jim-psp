@@ -151,9 +151,13 @@ enum mips_function_type
   MIPS_DF_FTYPE_DF_DF,
 
   /* For the Sony ALLEGREX.  */
+  MIPS_SI_FTYPE_QI,
+  MIPS_SI_FTYPE_HI,
   MIPS_SI_FTYPE_SI,
   MIPS_SI_FTYPE_SI_SI,
   MIPS_VOID_FTYPE_VOID,
+  MIPS_VOID_FTYPE_SI_SI,
+  MIPS_SI_FTYPE_SF,
 
   /* The last type.  */
   MIPS_MAX_FTYPE_MAX
@@ -194,7 +198,12 @@ enum mips_builtin_type
   MIPS_BUILTIN_CMP_LOWER,
 
   /* As above, but the instruction only sets a single $fcc register.  */
-  MIPS_BUILTIN_CMP_SINGLE
+  MIPS_BUILTIN_CMP_SINGLE,
+
+  /* The builtin corresponds to the ALLEGREX cache instruction.  Operand 0
+     is the function code (must be less than 32) and operand 1 is the base
+     address.  */
+  MIPS_BUILTIN_CACHE
 };
 
 /* Invokes MACRO (COND) for each c.cond.fmt condition.  */
@@ -377,6 +386,7 @@ static rtx mips_expand_builtin_movtf (enum mips_builtin_type,
 static rtx mips_expand_builtin_compare (enum mips_builtin_type,
 					enum insn_code, enum mips_fp_condition,
 					rtx, tree);
+static rtx mips_expand_builtin_cache (enum insn_code icode, rtx, tree);
 
 /* Structure to be filled in by compute_frame_size with register
    save masks, and offsets for the current function.  */
@@ -9569,6 +9579,11 @@ static const struct builtin_description sb1_bdesc[] =
   { CODE_FOR_allegrex_ ## INSN, 0, "__builtin_allegrex_" #INSN,			\
     MIPS_BUILTIN_DIRECT_NO_TARGET, FUNCTION_TYPE, TARGET_FLAGS }
 
+/* Define a builtin with a specific function TYPE.  */
+#define SPECIAL_ALLEGREX_BUILTIN(TYPE, INSN, FUNCTION_TYPE, TARGET_FLAGS)	\
+  { CODE_FOR_allegrex_ ## INSN, 0, "__builtin_allegrex_" #INSN,			\
+    MIPS_BUILTIN_ ## TYPE, FUNCTION_TYPE, TARGET_FLAGS }
+
 static const struct builtin_description allegrex_bdesc[] =
 {
   DIRECT_ALLEGREX_BUILTIN(bitrev, MIPS_SI_FTYPE_SI, 0),
@@ -9576,17 +9591,24 @@ static const struct builtin_description allegrex_bdesc[] =
   DIRECT_ALLEGREX_BUILTIN(wsbw, MIPS_SI_FTYPE_SI, 0),
   DIRECT_ALLEGREX_NAMED_BUILTIN(clz, clzsi2, MIPS_SI_FTYPE_SI, 0),
   DIRECT_ALLEGREX_BUILTIN(clo, MIPS_SI_FTYPE_SI, 0),
-  DIRECT_ALLEGREX_BUILTIN(ctz, MIPS_SI_FTYPE_SI, 0),
+  DIRECT_ALLEGREX_NAMED_BUILTIN(ctz, ctzsi2, MIPS_SI_FTYPE_SI, 0),
   DIRECT_ALLEGREX_BUILTIN(cto, MIPS_SI_FTYPE_SI, 0),
-  /* TODO: These next two can break in copy_to_mode_reg() so they need
-     special handling.  They should probably get forced to seb and seh but
-     I can't imagine someone needing these when GCC automatically expands
-     them.  */
-  DIRECT_ALLEGREX_NAMED_BUILTIN(seb, extendqisi2, MIPS_SI_FTYPE_SI, 0),
-  DIRECT_ALLEGREX_NAMED_BUILTIN(seh, extendhisi2, MIPS_SI_FTYPE_SI, 0),
+  DIRECT_ALLEGREX_NAMED_BUILTIN(rotr, rotrsi3, MIPS_SI_FTYPE_SI_SI, 0),
+  DIRECT_ALLEGREX_NAMED_BUILTIN(rotl, rotlsi3, MIPS_SI_FTYPE_SI_SI, 0),
+
+  DIRECT_ALLEGREX_NAMED_BUILTIN(seb, extendqisi2, MIPS_SI_FTYPE_QI, 0),
+  DIRECT_ALLEGREX_NAMED_BUILTIN(seh, extendhisi2, MIPS_SI_FTYPE_HI, 0),
   DIRECT_ALLEGREX_NAMED_BUILTIN(max, smaxsi3, MIPS_SI_FTYPE_SI_SI, 0),
   DIRECT_ALLEGREX_NAMED_BUILTIN(min, sminsi3, MIPS_SI_FTYPE_SI_SI, 0),
-  DIRECT_ALLEGREX_NO_TARGET_BUILTIN(sync, MIPS_VOID_FTYPE_VOID, 0)
+
+  DIRECT_ALLEGREX_NO_TARGET_BUILTIN(sync, MIPS_VOID_FTYPE_VOID, 0),
+  SPECIAL_ALLEGREX_BUILTIN(CACHE, cache, MIPS_VOID_FTYPE_SI_SI, 0),
+
+  DIRECT_ALLEGREX_NAMED_BUILTIN(sqrt_s, sqrtsf2, MIPS_SF_FTYPE_SF, 0),
+  DIRECT_ALLEGREX_BUILTIN(ceil_w_s, MIPS_SI_FTYPE_SF, 0),
+  DIRECT_ALLEGREX_BUILTIN(floor_w_s, MIPS_SI_FTYPE_SF, 0),
+  DIRECT_ALLEGREX_BUILTIN(round_w_s, MIPS_SI_FTYPE_SF, 0),
+  DIRECT_ALLEGREX_NAMED_BUILTIN(trunc_w_s, fix_truncsfsi2_insn, MIPS_SI_FTYPE_SF, 0)
 };
 
 /* This helps provide a mapping from builtin function codes to bdesc
@@ -9709,6 +9731,9 @@ mips_expand_builtin (tree exp, rtx target, rtx subtarget ATTRIBUTE_UNUSED,
       return mips_expand_builtin_compare (type, icode, bdesc[fcode].cond,
 					  target, arglist);
 
+    case MIPS_BUILTIN_CACHE:
+      return mips_expand_builtin_cache (icode, target, arglist);
+
     default:
       return 0;
     }
@@ -9793,6 +9818,16 @@ mips_init_builtins (void)
 
   if (TARGET_ALLEGREX)
     {
+      types[MIPS_SI_FTYPE_QI]
+	= build_function_type_list (intSI_type_node,
+				    intQI_type_node,
+				    NULL_TREE);
+
+      types[MIPS_SI_FTYPE_HI]
+	= build_function_type_list (intSI_type_node,
+				    intHI_type_node,
+				    NULL_TREE);
+
       types[MIPS_SI_FTYPE_SI]
 	= build_function_type_list (intSI_type_node,
 				    intSI_type_node,
@@ -9805,6 +9840,18 @@ mips_init_builtins (void)
 
       types[MIPS_VOID_FTYPE_VOID]
 	= build_function_type_list (void_type_node, void_type_node, NULL_TREE);
+
+      types[MIPS_VOID_FTYPE_SI_SI]
+	= build_function_type_list (void_type_node,
+				    intSI_type_node, intSI_type_node, NULL_TREE);
+
+      types[MIPS_SF_FTYPE_SF]
+	= build_function_type_list (float_type_node,
+				    float_type_node, NULL_TREE);
+
+      types[MIPS_SI_FTYPE_SF]
+	= build_function_type_list (intSI_type_node,
+				    float_type_node, NULL_TREE);
     }
 
   /* Iterate through all of the bdesc arrays, initializing all of the
@@ -9990,6 +10037,28 @@ mips_expand_builtin_compare (enum mips_builtin_type builtin_type,
   emit_move_insn (target, target_if_unequal);
   emit_label (label2);
 
+  return target;
+}
+
+/* Expand a __builtin_allegrex_cache() function.  Make sure the passed
+   cache function code is less than 32.  */
+
+static rtx
+mips_expand_builtin_cache (enum insn_code icode, rtx target, tree arglist)
+{
+  rtx op0, op1;
+
+  op0 = mips_prepare_builtin_arg (icode, 0, &arglist);
+  op1 = mips_prepare_builtin_arg (icode, 1, &arglist);
+
+  if (GET_CODE (op0) == CONST_INT)
+    if (INTVAL (op0) < 0 || INTVAL (op0) > 0x1f)
+      {
+	error ("invalid function code '%d'", INTVAL (op0));
+	return const0_rtx;
+      }
+
+  emit_insn (GEN_FCN (icode) (op0, op1));
   return target;
 }
 

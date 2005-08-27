@@ -1033,7 +1033,8 @@ extern const struct mips_cpu_info *mips_tune_info;
 #define ISA_HAS_HILO_INTERLOCKS	(ISA_MIPS32				\
 				 || ISA_MIPS32R2			\
 				 || ISA_MIPS64				\
-				 || TARGET_MIPS5500)
+				 || TARGET_MIPS5500			\
+				 || TARGET_ALLEGREX)
 
 /* Add -G xx support.  */
 

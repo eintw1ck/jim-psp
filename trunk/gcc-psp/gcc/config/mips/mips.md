@@ -79,8 +79,12 @@
    (UNSPEC_CLO			403)
    (UNSPEC_CTO			404)
 
-   (UNSPEC_CACHE		430)
-   (UNSPEC_SYNC 		431)
+   (UNSPEC_CACHE		405)
+   (UNSPEC_SYNC 		406)
+
+   (UNSPEC_CEIL_W_S		407)
+   (UNSPEC_FLOOR_W_S		408)
+   (UNSPEC_ROUND_W_S		409)
   ]
 )
 
@@ -1525,9 +1529,9 @@
 	   (mult:DI
 	      (any_extend:DI (match_operand:SI 1 "register_operand" "d"))
 	      (any_extend:DI (match_operand:SI 2 "register_operand" "d")))))]
-  "!TARGET_64BIT && ISA_HAS_MSAC"
+  "!TARGET_64BIT && (ISA_HAS_MSAC || TARGET_ALLEGREX)"
 {
-  if (TARGET_MIPS5500)
+  if (TARGET_MIPS5500 || TARGET_ALLEGREX)
     return "msub<u>\t%1,%2";
   else
     return "msac<u>\t$0,%1,%2";
@@ -1642,12 +1646,12 @@
 	 (mult:DI (any_extend:DI (match_operand:SI 1 "register_operand" "d"))
 		  (any_extend:DI (match_operand:SI 2 "register_operand" "d")))
 	 (match_operand:DI 3 "register_operand" "0")))]
-  "(TARGET_MAD || ISA_HAS_MACC)
+  "(TARGET_MAD || ISA_HAS_MACC || TARGET_ALLEGREX)
    && !TARGET_64BIT"
 {
   if (TARGET_MAD)
     return "mad<u>\t%1,%2";
-  else if (TARGET_MIPS5500)
+  else if (TARGET_MIPS5500 || TARGET_ALLEGREX)
     return "madd<u>\t%1,%2";
   else
     /* See comment in *macc.  */
@@ -4126,6 +4130,25 @@
 }
   [(set_attr "type" "shift")
    (set_attr "mode" "<MODE>")])
+
+(define_expand "rotl<mode>3"
+  [(set (match_operand:GPR 0 "register_operand")
+      	(rotate:GPR (match_operand:GPR 1 "register_operand")
+		    (match_operand:SI 2 "arith_operand")))]
+  "ISA_HAS_ROTR_<MODE>"
+{
+  rtx temp;
+
+  if (GET_CODE (operands[2]) == CONST_INT)
+    temp = GEN_INT (GET_MODE_BITSIZE (<MODE>mode) - INTVAL (operands[2]));
+  else
+    {
+      temp = gen_reg_rtx (<MODE>mode);
+      emit_insn (gen_neg<mode>2 (temp, operands[2]));
+    }
+  emit_insn (gen_rotr<mode>3 (operands[0], operands[1], temp));
+  DONE;
+})
 
 ;;
 ;;  ....................

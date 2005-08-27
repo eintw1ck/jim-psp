@@ -18,6 +18,31 @@
 ;; the Free Software Foundation, 59 Temple Place - Suite 330,
 ;; Boston, MA 02111-1307, USA.
 
+; Multiply Add and Subtract.
+
+(define_insn "allegrex_madd"
+  [(set (match_operand:SI 0 "register_operand" "+l")
+      	(plus:SI (mult:SI (match_operand:SI 1 "register_operand" "d")
+			  (match_operand:SI 2 "register_operand" "d"))
+		 (match_dup 0)))
+   (clobber (match_scratch:SI 3 "=h"))]
+  "TARGET_ALLEGREX"
+  "madd\t%1,%2"
+  [(set_attr "type"	"imadd")
+   (set_attr "mode"	"SI")])
+
+(define_insn "allegrex_msub"
+  [(set (match_operand:SI 0 "register_operand" "+l")
+      	(minus:SI (match_dup 0)
+		  (mult:SI (match_operand:SI 1 "register_operand" "d")
+			   (match_operand:SI 2 "register_operand" "d"))))
+   (clobber (match_scratch:SI 3 "=h"))]
+  "TARGET_ALLEGREX"
+  "msub\t%1,%2"
+  [(set_attr "type"	"imadd")
+   (set_attr "mode"	"SI")])
+
+
 ; Min and max.
 
 (define_insn "sminsi3"
@@ -81,7 +106,7 @@
   [(set_attr "type"	"clz")
    (set_attr "mode"	"SI")])
 
-(define_expand "allegrex_ctz"
+(define_expand "ctzsi2"
   [(set (match_operand:SI 0 "register_operand")
       	(ctz:SI (match_operand:SI 1 "register_operand")))]
   "TARGET_ALLEGREX"
@@ -117,3 +142,42 @@
   "sync"
   [(set_attr "type"	"unknown")
    (set_attr "mode"	"none")])
+
+(define_insn "allegrex_cache"
+  [(unspec_volatile [(match_operand:SI 0 "const_int_operand" "")
+		     (match_operand:SI 1 "register_operand" "d")]
+		    UNSPEC_CACHE)]
+  "TARGET_ALLEGREX"
+  "cache\t%0,0(%1)"
+  [(set_attr "type"	"unknown")
+   (set_attr "mode"	"none")])
+
+
+; Floating-point builtins.
+
+(define_insn "allegrex_ceil_w_s"
+  [(set (match_operand:SI 0 "register_operand" "=f")
+      	(unspec:SI [(match_operand:SF 1 "register_operand" "f")]
+		   UNSPEC_CEIL_W_S))]
+  "TARGET_ALLEGREX"
+  "ceil.w.s\t%0,%1"
+  [(set_attr "type"	"fcvt")
+   (set_attr "mode"	"SF")])
+
+(define_insn "allegrex_floor_w_s"
+  [(set (match_operand:SI 0 "register_operand" "=f")
+      	(unspec:SI [(match_operand:SF 1 "register_operand" "f")]
+		   UNSPEC_FLOOR_W_S))]
+  "TARGET_ALLEGREX"
+  "floor.w.s\t%0,%1"
+  [(set_attr "type"	"fcvt")
+   (set_attr "mode"	"SF")])
+
+(define_insn "allegrex_round_w_s"
+  [(set (match_operand:SI 0 "register_operand" "=f")
+      	(unspec:SI [(match_operand:SF 1 "register_operand" "f")]
+		   UNSPEC_ROUND_W_S))]
+  "TARGET_ALLEGREX"
+  "round.w.s\t%0,%1"
+  [(set_attr "type"	"fcvt")
+   (set_attr "mode"	"SF")])
