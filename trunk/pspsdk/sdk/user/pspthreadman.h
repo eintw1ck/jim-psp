@@ -680,6 +680,155 @@ typedef struct _SceKernelEventFlagInfo SceKernelEventFlagInfo;
   */
 int sceKernelReferEventFlagStatus(SceUID event, SceKernelEventFlagInfo *status);
 
+
+/** Additional options used when creating messageboxes. */
+typedef struct SceKernelMbxOptParam {
+	/** Size of the ::SceKernelMbxOptParam structure. */
+	SceSize 	size;
+} SceKernelMbxOptParam;
+
+/** Current state of a messagebox.
+ * @see sceKernelReferMbxStatus.
+ */
+typedef struct SceKernelMbxInfo {
+	/** Size of the ::SceKernelMbxInfo structure. */
+	SceSize 	size;
+	/** NUL-terminated name of the messagebox. */
+	char 		name[32];
+	/** Attributes. */
+	SceUInt 	attr;
+	/** The number of threads waiting on the messagebox. */
+	int 		numWaitThreads;
+	/** Number of messages currently in the messagebox. */
+	int 		numMessages;
+	/** The message currently at the head of the queue. */
+	void		*firstMessage;
+} SceKernelMbxInfo;
+
+/**
+ * Creates a new messagebox
+ *
+ * @par Example:
+ * @code
+ * int mbxid;
+ * mbxid = sceKernelCreateMbx("MyMessagebox", 0, NULL);
+ * @endcode
+ *
+ * @param name - Specifies the name of the mbx
+ * @param attr - Mbx attribute flags (normally set to 0)
+ * @param option - Mbx options (normally set to NULL)
+ * @return A messagebox id
+ */
+SceUID sceKernelCreateMbx(const char *name, SceUInt attr, SceKernelMbxOptParam *option);
+
+/**
+ * Destroy a messagebox
+ *
+ * @param mbxid - The mbxid returned from a previous create call.
+ * @return Returns the value 0 if its succesful otherwise an error code
+ */
+int sceKernelDeleteMbx(SceUID mbxid);
+
+/**
+ * Send a message to a messagebox
+ *
+ * @par Example:
+ * @code
+ * // Send the message
+ * sceKernelSendMbx(mbxid, "Hello");
+ * @endcode
+ *
+ * @param mbxid - The mbx id returned from sceKernelCreateMbx
+ * @param message - A message to be forwarded to the receiver.
+ *                  The first word in the message will be used
+ *                  by the kernel to link messages together,
+ *                  but the rest is used defined.
+ *
+ * @return < 0 On error.
+ */
+int sceKernelSendMbx(SceUID mbxid, void *message);
+
+/**
+ * Wait for a message to arrive in a messagebox
+ *
+ * @par Example:
+ * @code
+ * void *msg;
+ * sceKernelReceiveMbx(mbxid, &msg, NULL);
+ * @endcode
+ *
+ * @param mbxid - The mbx id returned from sceKernelCreateMbx
+ * @param pmessage - A pointer to where a pointer to the
+ *                   received message should be stored
+ * @param timeout - Timeout in microseconds
+ *
+ * @return < 0 on error.
+ */
+int sceKernelReceiveMbx(SceUID mbxid, void **pmessage, SceUInt *timeout);
+
+/**
+ * Wait for a message to arrive in a messagebox and handle callbacks if necessary.
+ *
+ * @par Example:
+ * @code
+ * void *msg;
+ * sceKernelReceiveMbxCB(mbxid, &msg, NULL);
+ * @endcode
+ *
+ * @param mbxid - The mbx id returned from sceKernelCreateMbx
+ * @param pmessage - A pointer to where a pointer to the
+ *                   received message should be stored
+ * @param timeout - Timeout in microseconds
+ *
+ * @return < 0 on error.
+ */
+int sceKernelReceiveMbxCB(SceUID mbxid, void **pmessage, SceUInt *timeout);
+
+/**
+ * Check if a message has arrived in a messagebox
+ *
+ * @par Example:
+ * @code
+ * void *msg;
+ * sceKernelPollMbx(mbxid, &msg);
+ * @endcode
+ *
+ * @param mbxid - The mbx id returned from sceKernelCreateMbx
+ * @param pmessage - A pointer to where a pointer to the
+ *                   received message should be stored
+ *
+ * @return < 0 on error (SCE_KERNEL_ERROR_MBOX_NOMSG if the mbx is empty).
+ */
+int sceKernelPollMbx(SceUID mbxid, void **pmessage);
+
+/**
+ * Abort all wait operations on a messagebox
+ *
+ * @par Example:
+ * @code
+ * sceKernelCancelReceiveMbx(mbxid, NULL);
+ * @endcode
+ *
+ * @param mbxid - The mbx id returned from sceKernelCreateMbx
+ * @param pnum  - A pointer to where the number of threads which
+ *                were waiting on the mbx should be stored (NULL
+ *                if you don't care)
+ *
+ * @return < 0 on error
+ */
+int sceKernelCancelReceiveMbx(SceUID mbxid, int *pnum);
+
+/**
+ * Retrieve information about a messagebox.
+ *
+ * @param mbxid - UID of the messagebox to retrieve info for.
+ * @param info - Pointer to a ::SceKernelMbxInfo struct to receive the info.
+ *
+ * @returns < 0 on error.
+ */
+int sceKernelReferMbxStatus(SceUID mbxid, SceKernelMbxInfo *info);
+
+
 /*@}*/
 
 #ifdef __cplusplus
