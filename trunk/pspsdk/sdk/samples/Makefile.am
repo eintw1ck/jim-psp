@@ -31,11 +31,13 @@ SAMPLES = \
 	kernel/threadstatus \
 	kernel/cwd \
 	kernel/fileio \
+	kernel/messagebox \
 	power \
 	prx/prx_loader \
 	prx/testprx \
 	usb/storage \
 	utility/netconf \
+	utility/msgdialog \
 	utility/systemparam \
 	me/basic \
 	wlan
