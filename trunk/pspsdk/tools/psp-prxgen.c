@@ -299,6 +299,11 @@ int load_sections(unsigned char *data)
 				{
 					g_modinfo = &g_elfsections[i];
 				}
+				else if(strcmp(g_elfsections[i].szName, PSP_MODULE_REMOVE_REL) == 0)
+				{
+					/* Don't output .rel.lib.stub relocations */
+					g_elfsections[i].blOutput = 0;
+				}
 			}
 
 			if(g_verbose)

@@ -4,7 +4,8 @@ pspsdkincludedir = @PSPSDK_INCLUDEDIR@
 pspsdkinclude_HEADERS =		\
 	as_reg_compat.h		\
 	psptypes.h		\
-	pspstub.s	
+	pspstub.s		\
+	pspimport.s
 
 ## Install the build.mak fragment to $PSPSDK/lib.
 buildmakdir = @PSPSDK_LIBDIR@

@@ -37,6 +37,7 @@ enum PspConfigMode
 	PSP_BUILD_UNKNOWN,
 	PSP_BUILD_EXPORTS,
 	PSP_BUILD_STUBS,
+	PSP_BUILD_STUBS_NEW,
 };
 
 struct psp_export
@@ -121,6 +122,7 @@ static struct option arg_opts[] =
 {
 	{"build-exports", no_argument, NULL, 'b'},
 	{"build-stubs", no_argument, NULL, 's'},
+	{"build-stubs-new", no_argument, NULL, 'k'},
 	{"verbose", no_argument, NULL, 'v'},
 	{ NULL, 0, NULL, 0 }
 };
@@ -133,7 +135,7 @@ int process_args(int argc, char **argv)
 
 	g_outputmode = PSP_BUILD_UNKNOWN;
 
-	ch = getopt_long(argc, argv, "bsv", arg_opts, NULL);
+	ch = getopt_long(argc, argv, "bsvk", arg_opts, NULL);
 	while(ch != -1)
 	{
 		switch(ch)
@@ -146,11 +148,14 @@ int process_args(int argc, char **argv)
 					   break;
 			case 'v' : g_verbose = 1;
 					   break;
+			case 'k' : g_outputmode = PSP_BUILD_STUBS_NEW;
+					   ret = 1;
+					   break;
 			default  : //fprintf(stderr, "Invalid option '%c'\n", ch);
 					   break;
 		};
 
-		ch = getopt_long(argc, argv, "bsv", arg_opts, NULL);
+		ch = getopt_long(argc, argv, "bsvk", arg_opts, NULL);
 	}
 
 	argc -= optind;
@@ -168,10 +173,11 @@ int process_args(int argc, char **argv)
 
 void print_help(void)
 {
-	fprintf(stderr, "Usage: psp-build-exports -b|-s [-v] export.exp\n");
+	fprintf(stderr, "Usage: psp-build-exports -b|-s|-k [-v] export.exp\n");
 	fprintf(stderr, "Options:\n");
 	fprintf(stderr, "-b, --build-exports     : Build an export file to stdout\n");
 	fprintf(stderr, "-s, --build-stubs       : Build a batch of stub files for the exports\n");
+	fprintf(stderr, "-k, --build-stubs-new   : Build a batch of stub files (in new format)\n");
 	fprintf(stderr, "-v, --verbose           : Verbose output\n");
 }
 
@@ -398,6 +404,55 @@ void build_stubs_output_lib(struct psp_lib *pLib)
 	}
 }
 
+void build_stubs_output_lib_new(struct psp_lib *pLib)
+{
+	FILE *fp;
+	char filename[256];
+
+	snprintf(filename, 256, "%s.S", pLib->name);
+	if(g_verbose)
+	{
+		fprintf(stderr, "Writing output file %s\n", filename);
+	}
+	fp = fopen(filename, "w");
+	if(fp != NULL)
+	{
+		struct psp_export *pExp;
+
+		fprintf(fp, "\t.set noreorder\n\n");
+		fprintf(fp, "#include \"pspimport.s\"\n\n");
+
+		fprintf(fp, "// Build files\n");
+		fprintf(fp, "// stub_%s.o ", pLib->name);
+		pExp = pLib->pFuncHead;
+		while(pExp != NULL)
+		{
+			fprintf(fp, "%s.o ", pExp->name);
+			pExp = pExp->pNext;
+		}
+		fprintf(fp, "\n\n");
+
+		fprintf(fp, "#ifdef F_stub_%s\n", pLib->name);
+		fprintf(fp, "\tIMPORT_START \"%s\",0x%08X\n", pLib->name, ((pLib->attr | 0x8) << 16) | pLib->ver);
+		fprintf(fp, "#endif\n");
+
+		pExp = pLib->pFuncHead;
+		while(pExp != NULL)
+		{
+			fprintf(fp, "#ifdef F_%s\n", pExp->name);
+			fprintf(fp, "\tIMPORT_FUNC  \"%s\",0x%08X,%s\n", pLib->name, pExp->nid, pExp->name);
+			fprintf(fp, "#endif\n");
+			pExp = pExp->pNext;
+		}
+
+		fclose(fp);
+	}
+	else
+	{
+		fprintf(stderr, "Error, couldn't open file %s for writing\n", filename);
+	}
+}
+
 void build_stubs(void)
 {
 	struct psp_lib *pLib;
@@ -408,7 +463,14 @@ void build_stubs(void)
 	{
 		if(strcmp(pLib->name, SYSTEM_LIB_NAME))
 		{
-			build_stubs_output_lib(pLib);
+			if(g_outputmode == PSP_BUILD_STUBS)
+			{
+				build_stubs_output_lib(pLib);
+			}
+			else
+			{
+				build_stubs_output_lib_new(pLib);
+			}
 		}
 
 		pLib = pLib->pNext;
@@ -861,6 +923,8 @@ int main(int argc, char **argv)
 			{
 				case PSP_BUILD_EXPORTS: build_exports();
 										break;
+										/* Do the same for both */
+				case PSP_BUILD_STUBS_NEW: 
 				case PSP_BUILD_STUBS  : build_stubs();
 										break;
 				default				  : /* Argh */

@@ -24,6 +24,9 @@
 
 #define PSP_MODULE_INFO_NAME ".rodata.sceModuleInfo"
 
+/* Remove the .rel.lib.stub section as it shouldn't have been there */
+#define PSP_MODULE_REMOVE_REL ".rel.sceStub.text"
+
 /* Define a name for the unnamed first export */
 #define PSP_SYSTEM_EXPORT "syslib"
 
@@ -42,14 +45,16 @@ struct PspModuleExport
 	u32 flags;
 	u32 counts;
 	u32 exports;
-};
+} __attribute__((packed));
 
 /* Structure to hold the module import information */
 struct PspModuleImport
 {
 	u32 name;
 	u32 flags;
-	u32 counts;
+	u8  entry_size;
+	u8  var_count;
+	u16 func_count;
 	u32 nids;
 	u32 funcs;
 };
