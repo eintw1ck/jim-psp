@@ -65,7 +65,7 @@ void gumCrossProduct(ScePspFVector3*r, const ScePspFVector3* a, const ScePspFVec
 
 void gumNormalize(ScePspFVector3* v)
 {
-	float l = (v->x*v->x) + (v->y*v->y) + (v->z*v->z);
+	float l = sqrtf((v->x*v->x) + (v->y*v->y) + (v->z*v->z));
 	if (l > GUM_EPSILON)
 	{
 		float il = 1.0f / l;
