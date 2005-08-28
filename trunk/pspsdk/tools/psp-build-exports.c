@@ -408,6 +408,7 @@ void build_stubs_output_lib_new(struct psp_lib *pLib)
 {
 	FILE *fp;
 	char filename[256];
+	int i;
 
 	snprintf(filename, 256, "%s.S", pLib->name);
 	if(g_verbose)
@@ -425,9 +426,10 @@ void build_stubs_output_lib_new(struct psp_lib *pLib)
 		fprintf(fp, "// Build files\n");
 		fprintf(fp, "// stub_%s.o ", pLib->name);
 		pExp = pLib->pFuncHead;
+		i = 0;
 		while(pExp != NULL)
 		{
-			fprintf(fp, "%s.o ", pExp->name);
+			fprintf(fp, "%08X_%s.o ", i++, pExp->name);
 			pExp = pExp->pNext;
 		}
 		fprintf(fp, "\n\n");
@@ -437,9 +439,10 @@ void build_stubs_output_lib_new(struct psp_lib *pLib)
 		fprintf(fp, "#endif\n");
 
 		pExp = pLib->pFuncHead;
+		i = 0;
 		while(pExp != NULL)
 		{
-			fprintf(fp, "#ifdef F_%s\n", pExp->name);
+			fprintf(fp, "#ifdef F_%08X_%s\n", i++, pExp->name);
 			fprintf(fp, "\tIMPORT_FUNC  \"%s\",0x%08X,%s\n", pLib->name, pExp->nid, pExp->name);
 			fprintf(fp, "#endif\n");
 			pExp = pExp->pNext;

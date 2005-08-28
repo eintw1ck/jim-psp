@@ -24,7 +24,7 @@
 
 #define PSP_MODULE_INFO_NAME ".rodata.sceModuleInfo"
 
-/* Remove the .rel.lib.stub section as it shouldn't have been there */
+/* Remove the .rel.sceStub.text section as it shouldn't have been there */
 #define PSP_MODULE_REMOVE_REL ".rel.sceStub.text"
 
 /* Define a name for the unnamed first export */
