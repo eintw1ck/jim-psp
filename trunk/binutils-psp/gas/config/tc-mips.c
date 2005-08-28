@@ -397,6 +397,7 @@ static int mips_32bitmode = 0;
    || mips_opts.arch == CPU_R12000                    \
    || mips_opts.arch == CPU_RM7000                    \
    || mips_opts.arch == CPU_VR5500                    \
+   || mips_opts.arch == CPU_ALLEGREX                  \
    )
 
 /* Whether the processor uses hardware interlocks to protect reads
@@ -8151,6 +8152,296 @@ do_msbd:
 		  /* Further processing is fruitless.  */
 		  return;
 		}
+	      break;
+
+	    case '?':		/* VFPU extension character.  */
+	      switch (*++args)
+	        {
+	        case '[':	/* these must match exactly */
+	        case ']':
+		  if (*s++ == *args)
+		    continue;
+		  break;
+
+	        case '0':
+	        case '1':
+	        case '2':
+	        case '3':
+		  continue;
+
+	        case '4':
+	        case '5':
+	        case '6':
+	        case '7':
+    		  continue;
+
+	        case 'a':	/* Constant. */
+		  {
+		    static const char * const vfpu_const_names[20] = {
+		      "", "VFPU_HUGE", "VFPU_SQRT2", "VFPU_SQRT1_2",
+		      "VFPU_2_SQRTPI", "VFPU_2_PI", "VFPU_1_PI", "VFPU_PI_4",
+		      "VFPU_PI_2", "VFPU_PI", "VFPU_E", "VFPU_LOG2E",
+		      "VFPU_LOG10E", "VFPU_LN2", "VFPU_LN10", "VFPU_2PI",
+		      "VFPU_PI_6", "VFPU_LOG10TWO", "VFPU_LOG2TEN", "VFPU_SQRT3_2"
+		    };
+		    const int vfpu_num_constants = ARRAY_SIZE (vfpu_const_names) - 1;
+		    int i;
+
+		    if (!ISDIGIT (*s))
+		      {
+			/* Try to match one of the predefined constants.  */
+			for (i = 1; i <= vfpu_num_constants; i++)
+			  if (!strcasecmp (s, vfpu_const_names[i]))
+			    break;
+			if (i <= vfpu_num_constants)
+			  s += strlen (vfpu_const_names[i]);
+			else
+			  as_bad (_("Invalid constant code (%s)"), s);
+		        INSERT_OPERAND (VFPU_CONST, *ip, i);
+		      }
+		    else
+		      {
+			my_getExpression (&imm_expr, s);
+			check_absolute_expr (ip, &imm_expr);
+			if (imm_expr.X_add_number == 0
+			    || imm_expr.X_add_number > vfpu_num_constants)
+			  as_bad (_("Improper constant code (%lu)"),
+				    (unsigned long) imm_expr.X_add_number);
+			INSERT_OPERAND (VFPU_CONST, *ip, imm_expr.X_add_number);
+			imm_expr.X_op = O_absent;
+			s = expr_end;
+		      }
+		  }
+		  continue;
+
+	        case 'b':
+		  my_getExpression (&imm_expr, s);
+		  check_absolute_expr (ip, &imm_expr);
+		  if ((unsigned long) imm_expr.X_add_number > 31)
+		    as_bad (_("Improper scale (%lu)"),
+			    (unsigned long) imm_expr.X_add_number);
+		  INSERT_OPERAND (VFPU_IMM5, *ip, imm_expr.X_add_number);
+		  imm_expr.X_op = O_absent;
+		  s = expr_end;
+    		  continue;
+
+	        case 'c':	/* Condition code bit. */
+		  my_getExpression (&imm_expr, s);
+		  check_absolute_expr (ip, &imm_expr);
+		  if ((unsigned long) imm_expr.X_add_number > 5)
+		    as_bad (_("Improper condition bit (%lu)"),
+			    (unsigned long) imm_expr.X_add_number);
+		  INSERT_OPERAND (VFPU_CC, *ip, imm_expr.X_add_number);
+		  imm_expr.X_op = O_absent;
+		  s = expr_end;
+		  continue;
+
+		case 'e':	/* Condition code bit for conditional moves. */
+		  my_getExpression (&imm_expr, s);
+		  check_absolute_expr (ip, &imm_expr);
+		  if ((unsigned long) imm_expr.X_add_number > 6)
+		    as_bad (_("Improper condition bit (%lu)"),
+			    (unsigned long) imm_expr.X_add_number);
+		  INSERT_OPERAND (VFPU_IMM3, *ip, imm_expr.X_add_number);
+		  imm_expr.X_op = O_absent;
+		  s = expr_end;
+		  continue;
+
+	        case 'f':	/* Condition code. */
+		  {
+		    static const char * const vfpu_cond_names[16] = {
+		      "FL",  "EQ",  "LT",  "LE",  "TR",  "NE",  "GE",  "GT",
+		      "EZ",  "EN",  "EI",  "ES",  "NZ",  "NN",  "NI",  "NS"
+		    };
+		    unsigned long cond;
+		    int i, arg_count;
+
+		    if (!ISDIGIT (*s))
+		      {
+			for (i = 0; i < VFPU_NUM_CONDS; i++)
+			  if (!strncasecmp (s, vfpu_cond_names[i], 2))
+			    break;
+			if (i < VFPU_NUM_CONDS)
+			  s += 2;
+			else
+			  as_bad (_("Invalid VFPU condition code (%s)"), s);
+			cond = i;
+		      }
+		    else
+		      {
+			my_getExpression (&imm_expr, s);
+			check_absolute_expr (ip, &imm_expr);
+			cond = imm_expr.X_add_number;
+			if (cond >= VFPU_NUM_CONDS)
+			  as_bad (_("Invalid VFPU condition code (%lu)"), cond);
+			imm_expr.X_op = O_absent;
+			s = expr_end;
+		      }
+
+		    /* Verify that the right number of arguments were passed
+		       for the selected condition code. */
+		    arg_count = *++args - '0';
+		    if (cond != VFPU_COND_FL && cond != VFPU_COND_TR
+			&& ((cond >= VFPU_COND_EZ && arg_count < 1)
+			    || (arg_count <= 1)))
+		      as_bad (_("Invalid VFPU condition operation"));
+		    INSERT_OPERAND (VFPU_COND, *ip, cond);
+		  }
+		  continue;
+
+	        case 'i':	/* Wrap. */
+		  my_getExpression (&imm_expr, s);
+		  check_absolute_expr (ip, &imm_expr);
+		  if ((unsigned long) imm_expr.X_add_number > 255)
+		    as_bad (_("Improper wrap (%lu)"),
+			    (unsigned long) imm_expr.X_add_number);
+		  INSERT_OPERAND (VFPU_IMM8, *ip, imm_expr.X_add_number);
+		  imm_expr.X_op = O_absent;
+		  s = expr_end;
+		  continue;
+
+		case 'o':	/* VFPU 16-bit offset. */
+		  /* Check whether there is only a single bracketed expression
+		     left.  If so, it must be the base register and the
+		     constant must be zero.  */
+		  if (*s == '(' && strchr (s + 1, '(') == 0)
+		    {
+		      offset_expr.X_op = O_constant;
+		      offset_expr.X_add_number = 0;
+		      continue;
+		    }
+
+		  /* If this value won't fit into a 16 bit offset, then go
+		     find a macro that will generate the 32 bit offset
+		     code pattern.  */
+		  if (my_getSmallExpression (&offset_expr, offset_reloc, s) == 0
+		      && (offset_expr.X_op != O_constant
+			  || offset_expr.X_add_number >= 0x8000
+			  || offset_expr.X_add_number < -0x8000))
+		    break;
+
+		  s = expr_end;
+		  continue;
+
+	        case 'q':
+	        case 'r':	/* VFPU control register. */
+		  if (s[0] != '$' || !ISDIGIT (s[1]))
+		    {
+		      as_bad (_("Invalid VFPU control register name (%s)"), s);
+		      continue;
+		    }
+
+		  ++s;
+		  regno = 0;
+		  do
+		    {
+		      regno *= 10;
+		      regno += *s - '0';
+		      ++s;
+		    }
+		  while (ISDIGIT (*s));
+		  if (regno < 128 || regno > 143)
+		    as_bad (_("Invalid VFPU control register number (%d)"), regno);
+		  else if (regno == 133 || regno == 134)
+		    as_bad (_("Improper VFPU control register number (%d)"), regno);
+		  if (*args == 'q')
+		    INSERT_OPERAND (VFPU_VMTVC, *ip, regno);
+		  else
+		    INSERT_OPERAND (VFPU_VMFVC, *ip, regno);
+		  continue;
+
+	        case 'u':	/* 16-bit floating point constant. */
+		  {
+		    if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X'))
+		      {
+			my_getExpression (&imm_expr, s);
+			check_absolute_expr (ip, &imm_expr);
+			if ((unsigned long) imm_expr.X_add_number > 0xffff)
+			  as_bad (_("Improper half floating point constant: (%lu)"),
+				  (unsigned long) imm_expr.X_add_number);
+			INSERT_OPERAND (VFPU_FLOAT16, *ip, imm_expr.X_add_number);
+			imm_expr.X_op = O_absent;
+			s = expr_end;
+		      }
+		    else
+		      {
+			union flt2int {
+			  unsigned long i;
+			  float f;
+			} flt2int;
+			unsigned char temp[8];
+			char *save_in;
+			char *err;
+			int len;
+			int sign, exponent, fraction, exponent16;
+			unsigned int float16 = 0;
+
+			save_in = input_line_pointer;
+			input_line_pointer = s;
+			err = md_atof ('f', (char *) temp, &len);
+			s = input_line_pointer;
+			input_line_pointer = save_in;
+			if (err != NULL && *err != '\0')
+			  {
+			    as_bad (_("Bad half floating point constant: %s"), err);
+			    memset (temp, '\0', sizeof temp);
+			  }
+
+			/* Convert the 32-bit IEEE754 float into the VFPU
+			   16-bit float format.  */
+			if (! target_big_endian)
+			  flt2int.i = bfd_getl32 (temp);
+			else
+			  flt2int.i = bfd_getb32 (temp);
+			/* TODO: There must be constants for these somewhere... */
+			sign = (flt2int.i >> 31) & 0x1;
+			exponent = (flt2int.i >> 23) & 0xff;
+			fraction = flt2int.i & 0x7fffff;
+			exponent16 = exponent - 112;
+			if (exponent16 >= 0)
+			  {
+			    if (exponent16 > VFPU_FLOAT16_EXP_MAX
+				&& exponent != 0xff)
+			      {
+				as_warn (_("Half floating point overflow: %g"),
+					 flt2int.f);
+				exponent16 = VFPU_FLOAT16_EXP_MAX;
+				fraction = 0;
+			      }
+			    else if (exponent16 <= VFPU_FLOAT16_EXP_MAX)
+			      fraction = (flt2int.i >> 13) & VFPU_MASK_FLOAT16_FRAC;
+			    else if (exponent == 0xff)
+			      {
+				exponent16 = VFPU_FLOAT16_EXP_MAX;
+				if (! fraction)
+				  fraction = 0;
+				else
+				  fraction = 1;
+			      }
+			  }
+			else
+			  {
+			    if (exponent != 0 || fraction != 0)
+			      as_warn (_("Half floating point underflow: %g"),
+				       flt2int.f);
+			    exponent16 = 0;
+			    fraction = 0;
+			  }
+			INSERT_BITS (float16, sign, VFPU_MASK_FLOAT16_SIGN,
+				     VFPU_SH_FLOAT16_SIGN);
+			INSERT_BITS (float16, exponent16, VFPU_MASK_FLOAT16_EXP,
+				     VFPU_SH_FLOAT16_EXP);
+			INSERT_BITS (float16, fraction, VFPU_MASK_FLOAT16_FRAC,
+				     VFPU_SH_FLOAT16_FRAC);
+			INSERT_OPERAND (VFPU_FLOAT16, *ip, float16);
+			/* Parse the 16-bit constant.  */
+			sprintf ((char *) temp, "0x%04x", float16);
+			my_getExpression (&imm_expr, (char *) temp);
+		      }
+		  }
+		  continue;
+
+	        }
 	      break;
 
 	    case '<':		/* must be at least one digit */

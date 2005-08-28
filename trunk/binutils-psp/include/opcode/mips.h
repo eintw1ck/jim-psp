@@ -212,6 +212,18 @@ Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  *
 #define VFPU_OP_VT_VS_VD	0xff800000
 #define VFPU_OPCODE_VMMUL	0xf0000000
 
+/* VFPU condition codes.  FL and TR accept no arguments, while any conditions
+   above and including EZ only accept one argument.  The rest require two
+   arguments.  */
+enum
+{
+  VFPU_COND_FL, VFPU_COND_EQ, VFPU_COND_LT, VFPU_COND_LE,
+  VFPU_COND_TR, VFPU_COND_NE, VFPU_COND_GE, VFPU_COND_GT,
+  VFPU_COND_EZ, VFPU_COND_EN, VFPU_COND_EI, VFPU_COND_ES,
+  VFPU_COND_NZ, VFPU_COND_NN, VFPU_COND_NI, VFPU_COND_NS,
+  VFPU_NUM_CONDS
+};
+
 /* VFPU prefix instruction operands.  The *_SH_* values really specify where
    the bitfield begins, as VFPU prefix instructions have four operands
    encoded within the immediate field. */
