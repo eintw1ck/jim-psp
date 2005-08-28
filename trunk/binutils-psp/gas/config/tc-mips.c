@@ -1166,6 +1166,20 @@ static bfd_boolean mips16_small, mips16_ext;
 static segT pdr_seg;
 #endif
 
+/* Expressions saved for use in VFPU immediate mode macros.  */
+
+static expressionS vimm_expr[4];
+static expressionS voffset_expr[4];
+
+/* VFPU instruction prefixes to apply to the current VFPU instruction.  */
+
+static int vfpu_has_dprefix;
+static int vfpu_has_sprefix;
+static int vfpu_has_tprefix;
+static char vfpu_dprefix_operands[64];
+static char vfpu_sprefix_operands[64];
+static char vfpu_tprefix_operands[64];
+
 /* The default target format to use.  */
 
 const char *
@@ -1644,6 +1658,58 @@ md_assemble (char *str)
     {
       as_bad ("%s `%s'", insn_error, str);
       return;
+    }
+
+  /* If we've generated operands for a VFPU prefix instruction then we need
+     to assemble and append the prefix instruction before emitting the
+     instruction it prefixes.  Note that in mips_ip prefix operands do not
+     cause any side effects with imm_expr or offset_expr.  If they did
+     we'd have to save and restore them here.  */
+  if (CPU_IS_ALLEGREX (mips_opts.arch)
+      && (vfpu_has_dprefix || vfpu_has_sprefix || vfpu_has_tprefix))
+    {
+      if (mips_opts.noreorder &&
+	  (history[0].insn_mo->pinfo & (INSN_UNCOND_BRANCH_DELAY
+					| INSN_COND_BRANCH_DELAY
+					| INSN_COND_BRANCH_LIKELY)))
+	as_bad (_("VFPU instruction with prefix can't be used in a branch delay slot"));
+
+      if (vfpu_has_dprefix)
+        {
+	  struct mips_cl_insn dprefix_insn;
+	  bfd_reloc_code_real_type dprefix_unused_reloc[3]
+	    = {BFD_RELOC_UNUSED, BFD_RELOC_UNUSED, BFD_RELOC_UNUSED};
+	  char dprefix_str[80];
+
+	  sprintf (dprefix_str, "vpfxd %s", vfpu_dprefix_operands);
+	  mips_ip (str, &dprefix_insn);
+	  append_insn (&dprefix_insn, NULL, dprefix_unused_reloc);
+	  vfpu_has_dprefix = 0;
+        }
+      if (vfpu_has_sprefix)
+        {
+	  struct mips_cl_insn sprefix_insn;
+	  bfd_reloc_code_real_type sprefix_unused_reloc[3]
+	    = {BFD_RELOC_UNUSED, BFD_RELOC_UNUSED, BFD_RELOC_UNUSED};
+	  char sprefix_str[80];
+
+	  sprintf (sprefix_str, "vpfxs %s", vfpu_sprefix_operands);
+	  mips_ip (str, &sprefix_insn);
+	  append_insn (&sprefix_insn, NULL, sprefix_unused_reloc);
+	  vfpu_has_sprefix = 0;
+        }
+      if (vfpu_has_tprefix)
+        {
+	  struct mips_cl_insn tprefix_insn;
+	  bfd_reloc_code_real_type tprefix_unused_reloc[3]
+	    = {BFD_RELOC_UNUSED, BFD_RELOC_UNUSED, BFD_RELOC_UNUSED};
+	  char tprefix_str[80];
+
+	  sprintf (tprefix_str, "vpfxt %s", vfpu_tprefix_operands);
+	  mips_ip (str, &tprefix_insn);
+	  append_insn (&tprefix_insn, NULL, tprefix_unused_reloc);
+	  vfpu_has_tprefix = 0;
+        }
     }
 
   if (insn.insn_mo->pinfo == INSN_MACRO)
@@ -8438,6 +8504,42 @@ do_msbd:
 			sprintf ((char *) temp, "0x%04x", float16);
 			my_getExpression (&imm_expr, (char *) temp);
 		      }
+		  }
+		  continue;
+
+	        case 'y':
+		  /* Save the current immediate and offset expressions for
+		     the lvi macro.  */
+		  {
+		    int slot = *++args - '0';
+
+		    assert (slot >= 0 && slot < 4);
+
+		    memcpy (&vimm_expr[slot], &imm_expr, sizeof (imm_expr));
+		    memcpy (&voffset_expr[slot], &offset_expr, sizeof (offset_expr));
+		    imm_expr.X_op = O_absent;
+		    offset_expr.X_op = O_absent;
+		    imm_reloc[0] = BFD_RELOC_UNUSED;
+		    imm_reloc[1] = BFD_RELOC_UNUSED;
+		    imm_reloc[2] = BFD_RELOC_UNUSED;
+		    offset_reloc[0] = BFD_RELOC_UNUSED;
+		    offset_reloc[1] = BFD_RELOC_UNUSED;
+		    offset_reloc[2] = BFD_RELOC_UNUSED;
+		  }
+		  continue;
+
+	        case 'z':	/* Store to write buffer. */
+		  {
+		    int wb = 0;
+
+		    if (strncasecmp (s, "WT", 2) == 0)
+		      wb = 0;
+		    else if (strncasecmp (s, "WB", 2) == 0)
+		      wb = 1;
+		    else
+		      as_bad (_("Invalid memory access type (%s)"), s);
+		    s += 2;
+		    INSERT_OPERAND (VFPU_RWB, *ip, wb);
 		  }
 		  continue;
 
