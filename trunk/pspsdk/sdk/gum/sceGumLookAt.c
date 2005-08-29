@@ -37,8 +37,7 @@ void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* u
   m.y.z = -forward.y;
   m.z.z = -forward.z;
 
-  sceGumMultMatrix(&m);
-
   ieye.x = -eye->x; ieye.y = -eye->y; ieye.z = -eye->z;
   sceGumTranslate(&ieye);
+  sceGumMultMatrix(&m);
 }

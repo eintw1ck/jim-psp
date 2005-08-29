@@ -58,9 +58,9 @@ void gumMakeIdentity(ScePspFMatrix4* m)
 
 void gumCrossProduct(ScePspFVector3*r, const ScePspFVector3* a, const ScePspFVector3* b)
 {
-	r->x = (a->y * b->z) + (a->z * b->y);
-	r->y = (a->z * b->x) + (a->x * b->z);
-	r->z = (a->x * b->y) + (a->y * b->x);
+	r->x = (a->y * b->z) - (a->z * b->y);
+	r->y = (a->z * b->x) - (a->x * b->z);
+	r->z = (a->x * b->y) - (a->y * b->x);
 }
 
 void gumNormalize(ScePspFVector3* v)
