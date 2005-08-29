@@ -1,14 +1,31 @@
 	.set noreorder
 
-#include "pspstub.s"
+#include "pspimport.s"
 
-	STUB_START	"ExceptionManagerForKernel",0x00010000,0x00080005
-	STUB_FUNC	0x3FB264FC,sceKernelRegisterExceptionHandler
-	STUB_FUNC	0x5A837AD4,sceKernelRegisterPriorityExceptionHandler
-	STUB_FUNC	0x565C0B0E,sceKernelRegisterDefaultExceptionHandler
-	STUB_FUNC	0x1AA6CFFA,sceKernelReleaseExceptionHandler
-	STUB_FUNC	0xDF83875E,sceKernelGetActiveDefaultExceptionHandler
-	STUB_FUNC	0x291FF031,sceKernelReleaseDefaultExceptionHandler
-	STUB_FUNC	0x15ADC862,sceKernelRegisterNmiHandler
-	STUB_FUNC	0xB15357C9,sceKernelReleaseNmiHandler
-	STUB_END
+#ifdef F_stub_ExceptionManagerForKernel
+	IMPORT_START	"ExceptionManagerForKernel",0x00010000
+#endif
+#ifdef F_00000000_sceKernelRegisterExceptionHandler
+	IMPORT_FUNC	"ExceptionManagerForKernel",0x3FB264FC,sceKernelRegisterExceptionHandler
+#endif
+#ifdef F_00000001_sceKernelRegisterPriorityExceptionHandler
+	IMPORT_FUNC	"ExceptionManagerForKernel",0x5A837AD4,sceKernelRegisterPriorityExceptionHandler
+#endif
+#ifdef F_00000002_sceKernelRegisterDefaultExceptionHandler
+	IMPORT_FUNC	"ExceptionManagerForKernel",0x565C0B0E,sceKernelRegisterDefaultExceptionHandler
+#endif
+#ifdef F_00000003_sceKernelReleaseExceptionHandler
+	IMPORT_FUNC	"ExceptionManagerForKernel",0x1AA6CFFA,sceKernelReleaseExceptionHandler
+#endif
+#ifdef F_00000004_sceKernelGetActiveDefaultExceptionHandler
+	IMPORT_FUNC	"ExceptionManagerForKernel",0xDF83875E,sceKernelGetActiveDefaultExceptionHandler
+#endif
+#ifdef F_00000005_sceKernelReleaseDefaultExceptionHandler
+	IMPORT_FUNC	"ExceptionManagerForKernel",0x291FF031,sceKernelReleaseDefaultExceptionHandler
+#endif
+#ifdef F_00000006_sceKernelRegisterNmiHandler
+	IMPORT_FUNC	"ExceptionManagerForKernel",0x15ADC862,sceKernelRegisterNmiHandler
+#endif
+#ifdef F_00000007_sceKernelReleaseNmiHandler
+	IMPORT_FUNC	"ExceptionManagerForKernel",0xB15357C9,sceKernelReleaseNmiHandler
+#endif

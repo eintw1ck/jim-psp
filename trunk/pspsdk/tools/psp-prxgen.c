@@ -355,6 +355,21 @@ int load_sections(unsigned char *data)
 	return ret;
 }
 
+/* Reindex the sections we are keeping */
+void reindex_sections(void)
+{
+	int i;
+	int sect = 1;
+
+	for(i = 0; i < g_elfhead.iShnum; i++)
+	{
+		if(g_elfsections[i].blOutput)
+		{
+			g_elfsections[i].iIndex = sect++;
+		}
+	}
+}
+
 /* Load an ELF file */
 int load_elf(const char *elf)
 {
@@ -378,26 +393,13 @@ int load_elf(const char *elf)
 			break;
 		}
 
+		reindex_sections();
+
 		ret = 1;
 	}
 	while(0);
 
 	return ret;
-}
-
-/* Reindex the sections we are keeping */
-void reindex_sections(void)
-{
-	int i;
-	int sect = 0;
-
-	for(i = 0; i < g_elfhead.iShnum; i++)
-	{
-		if(g_elfsections[i].blOutput)
-		{
-			g_elfsections[i].iIndex = sect++;
-		}
-	}
 }
 
 int calculate_outsize(void)

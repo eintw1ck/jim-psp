@@ -24,6 +24,7 @@ RANLIB   = psp-ranlib
 STRIP    = psp-strip
 MKSFO    = mksfo
 PACK_PBP = pack-pbp
+FIXUP    = psp-fixup-imports
 
 # Add in PSPSDK includes and libraries.
 INCDIR   := $(INCDIR) . $(PSPSDK)/include
@@ -102,6 +103,7 @@ kxploit: $(TARGET).elf $(PSP_EBOOT_SFO)
 
 $(TARGET).elf: $(OBJS)
 	$(LINK.c) $^ $(LIBS) -o $@
+	$(FIXUP) $@
 
 $(TARGET_LIB): $(OBJS)
 	$(AR) cru $@ $(OBJS)

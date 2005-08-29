@@ -19,6 +19,7 @@ CC       = psp-gcc
 CXX      = psp-g++
 AS       = psp-gcc
 LD       = psp-gcc
+FIXUP    = psp-fixup-imports
 
 # Add in PSPSDK includes and libraries.
 INCDIR   := $(INCDIR) . $(PSPSDK)/include
@@ -48,6 +49,7 @@ all: $(FINAL_TARGET)
 
 $(TARGET).elf: $(OBJS)
 	$(LINK.c) $^ $(LIBS) -o $@
+	$(FIXUP) $@
 
 %.prx: %.elf
 	psp-prxgen $< $@
