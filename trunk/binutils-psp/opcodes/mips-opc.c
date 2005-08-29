@@ -272,7 +272,7 @@ const struct mips_opcode mips_builtin_opcodes[] =
 {"bnel",    "s,t,p",	0x54000000, 0xfc000000,	CBL|RD_s|RD_t, 		0,		I2|T3	},
 {"bnel",    "s,I,p",	0,    (int) M_BNEL_I,	INSN_MACRO,		0,		I2|T3	},
 {"break",   "",		0x0000000d, 0xffffffff,	TRAP,			0,		I1	},
-{"break",   "B",	0x0000000d, 0xfc00003f,	TRAP,			0,		I32|AL	},
+{"break",   "B",	0x0000000d, 0xfc00003f,	TRAP,			0,		AL	},
 {"break",   "c",	0x0000000d, 0xfc00ffff,	TRAP,			0,		I1	},
 {"break",   "c,q",	0x0000000d, 0xfc00003f,	TRAP,			0,		I1	},
 {"c.f.d",   "S,T",	0x46200030, 0xffe007ff,	RD_S|RD_T|WR_CC|FP_D,	0,		I1	},

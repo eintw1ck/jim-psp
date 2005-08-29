@@ -382,6 +382,9 @@ mips_arch_create vr5400	64	mips4	{ ror } \
 mips_arch_create sb1 	64	mips64	{ mips3d } \
 			{ -march=sb1 -mtune=sb1 } { -mmips:sb1 } \
 			{ mipsisa64sb1-*-* mipsisa64sb1el-*-* }
+mips_arch_create allegrex 32	mips2	{ ror } \
+			{ -march=allegrex -mtune=allegrex } { -mmips:allegrex } \
+			{ mipsallegrex-*-* mipsallegrexel-*-* }
 
 
 #
