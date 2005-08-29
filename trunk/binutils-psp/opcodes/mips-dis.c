@@ -1270,7 +1270,7 @@ print_insn_args (d, l, pc, info)
 	    case '7':
 	      {
 		unsigned int pos = *d, base = '4';
-		unsigned int mask = (l >> (pos - (base - VFPU_MASK_PFX_MASK))) & VFPU_MASK_PFX_MASK;
+		unsigned int mask = (l >> (pos - (base - VFPU_SH_PFX_MASK))) & VFPU_MASK_PFX_MASK;
 		unsigned int saturation = (l >> ((pos - base) * 2)) & VFPU_MASK_PFX_SAT;
 
 		if (mask)

@@ -233,9 +233,11 @@ enum
 #define VFPU_MASK_PFX_CST	0x1	/* Constant. */
 #define VFPU_SH_PFX_ABS_CSTHI	8
 #define VFPU_MASK_PFX_ABS_CSTHI	0x1	/* Abs/Constant (bit 2). */
+#define VFPU_SH_PFX_SWZ_CSTLO	0
 #define VFPU_MASK_PFX_SWZ_CSTLO	0x3	/* Swizzle/Constant (bits 0-1). */
 #define VFPU_SH_PFX_MASK	8
 #define VFPU_MASK_PFX_MASK	0x1	/* Mask. */
+#define VFPU_SH_PFX_SAT		0
 #define VFPU_MASK_PFX_SAT	0x3	/* Saturation. */
 
 /* Special handling of the vrot instructions. */

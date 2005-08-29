@@ -8229,16 +8229,179 @@ do_msbd:
 		    continue;
 		  break;
 
-	        case '0':
+	        case '0':	/* Source or target prefix. */
 	        case '1':
 	        case '2':
 	        case '3':
+		  {
+		    char *orig_s = s;
+		    int pos = *args - '0';
+		    int negation = 0;
+		    int is_constant = 0;
+		    int abs_consthi = 0;
+		    int swz_constlo = 0;
+		    int constant_code = 0;
+		    int bad_format = 0;
+		    unsigned int operand;
+
+		    if (*s == '-')
+		      {
+			negation = 1;
+			++s;
+		      }
+		    if (ISDIGIT (*s))
+		      {
+			is_constant = 1;
+			if (*s == '0')
+			  constant_code = 0;
+			else if (*s == '1')
+			  {
+			    if (s[1] == '/')
+			      {
+				s += 2;
+				if (*s == '2')
+				  constant_code = 3;
+				else if (*s == '3')
+				  constant_code = 5;
+				else if (*s == '4')
+				  constant_code = 6;
+				else if (*s == '6')
+				  constant_code = 7;
+				else
+				  bad_format = 1;
+			      }
+			    else
+			      constant_code = 1;
+			  }
+			else if (*s == '2')
+			  constant_code = 2;
+			else if (*s == '3')
+			  constant_code = 4;
+			else
+			  bad_format = 1;
+
+			/* Bits 0-1 of the constant code are stored in the
+			   SWZ/CST[1:0] field, and bit 2 is stored in the
+			   ABS/CST[2] field.  */
+			swz_constlo = constant_code & VFPU_MASK_PFX_SWZ_CSTLO;
+			abs_consthi = constant_code >> 2;
+		      }
+		    else
+		      {
+			if (*s == '|')
+			  {
+			    abs_consthi = 1;
+			    ++s;
+			  }
+			if (*s == 'x' || *s == 'X')
+			  {
+			    swz_constlo = 0;
+			    ++s;
+			  }
+			else if (*s == 'y' || *s == 'Y')
+			  {
+			    swz_constlo = 1;
+			    ++s;
+			  }
+			else if (*s == 'z' || *s == 'Z')
+			  {
+			    swz_constlo = 2;
+			    ++s;
+			  }
+			else if (*s == 'w' || *s == 'W')
+			  {
+			    swz_constlo = 3;
+			    ++s;
+			  }
+			else if (*s != ',' && *s != '|'
+				 && ! IS_SPACE_OR_NUL (*s))
+			  bad_format = 1;
+			if (! bad_format)
+			  {
+			    /* Make sure the abs value was written properly.  */
+			    if (*s == '|')
+			      {
+			        ++s;
+				if (! abs_consthi)
+				  bad_format = 1;
+			      }
+			    else if (abs_consthi)
+			      bad_format = 1;
+			  }
+		      }
+
+		    if (bad_format
+			|| (*s != ',' && ! IS_SPACE_OR_NUL (*s)))
+		      as_bad (_("Invalid prefix format (%s)"), orig_s);
+
+		    /* The bit positions of each field vary depending on the
+		       position of our operand.  We can't use INSERT_OPERAND()
+		       as it would mask out the values set by other operands.  */
+		    operand = (((negation & VFPU_MASK_PFX_NEG)
+				<< (VFPU_SH_PFX_NEG + pos))
+			       || ((is_constant & VFPU_MASK_PFX_CST)
+				   << (VFPU_SH_PFX_CST + pos))
+			       || ((abs_consthi & VFPU_MASK_PFX_ABS_CSTHI)
+				   << (VFPU_SH_PFX_ABS_CSTHI + pos))
+			       || ((swz_constlo & VFPU_MASK_PFX_SWZ_CSTLO)
+				   << (VFPU_SH_PFX_SWZ_CSTLO + pos * 2)));
+		    ip->insn_opcode |= operand;
+		  }
 		  continue;
 
-	        case '4':
+	        case '4':	/* Destination prefix. */
 	        case '5':
 	        case '6':
 	        case '7':
+		  {
+		    char *orig_s = s;
+		    int mask = 0;
+		    int saturation = 0;
+		    int pos = *args - '4';
+		    unsigned int operand;
+
+		    if (*s == '[')
+		      ++s;
+		    if (*s == '-')
+		      ++s;
+		    if (*s == 'm' || *s == 'M')
+		      {
+			mask = 1;
+			++s;
+		      }
+		    else if (*s == '0')
+		      {
+		        saturation = 1;
+		        ++s;
+		      }
+		    else if (*s == '1')
+		      {
+		        saturation = 3;
+		        ++s;
+		      }
+		    if (*s == ':')
+		      {
+		        ++s;
+		        if (*s == '+')
+		          ++s;
+		        if (*s == '1')
+		          ++s;
+		      }
+		    if (*s == ']')
+		      ++s;
+		    if (*s != ',' && ! IS_SPACE_OR_NUL (*s))
+		      as_bad (_("Invalid prefix format (%s)"), orig_s);
+
+		    /* The position of the stored mask and saturation code
+		       depend on the position of the prefix operand.  Because
+		       the bits aren't consecutive, we have to be careful to
+		       insert them without masking out any other operands.  */
+		    operand = (((mask & VFPU_MASK_PFX_MASK)
+				<< (VFPU_SH_PFX_MASK + pos))
+			       || ((saturation & VFPU_MASK_PFX_SAT)
+				   << (VFPU_SH_PFX_SAT + pos * 2)));
+		    ip->insn_opcode |= operand;
+		  }
     		  continue;
 
 	        case 'a':	/* Constant. */
