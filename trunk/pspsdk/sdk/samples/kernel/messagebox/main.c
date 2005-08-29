@@ -104,6 +104,7 @@ static int SubThread(SceSize args, void *argp)
 	   and then check the messagebox status */
 	sceKernelDelayThread(1000000);
 	printf("SUB: Checking messagebox status\n");
+	info.size = sizeof(info);
 	error = sceKernelReferMbxStatus(myMessagebox, &info);
 	if(error < 0)
 		printf("SUB: ERROR %08x\n", error);
