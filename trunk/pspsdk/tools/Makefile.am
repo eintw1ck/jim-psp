@@ -18,4 +18,4 @@ psp_prxgen_SOURCES = psp-prxgen.c getopt.c getopt1.c
 
 psp_fixup_imports_SOURCES = psp-fixup-imports.c getopt.c getopt1.c
 
-noinst_HEADERS = _stdint.h elftypes.h getopt.h prxtypes.h sha1.h types.h
+noinst_HEADERS = elftypes.h getopt.h prxtypes.h sha1.h types.h
