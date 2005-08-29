@@ -13,15 +13,19 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#include "_stdint.h"
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#else
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
 #else
 #include <sys/types.h>
 #define uint8_t u_int8_t
 #define uint16_t u_int16_t
 #define uint32_t u_int32_t
 #define uint64_t u_int64_t
+#endif
 #endif
 
 /* Re-define some system types */
