@@ -8,7 +8,7 @@ noinst_LIBRARIES = lib.a
 
 LIBCGLUE_MULT_OBJS = _close.o _exit.o _fork.o _fstat.o _getpid.o _gettimeofday.o _kill.o _lseek.o \
 	_open.o _read.o _sbrk.o _wait.o _write.o clock.o isatty.o time.o _link.o _unlink.o \
-	_opendir.o _readdir.o _closedir.o getcwd.o chdir.o realpath.o
+	_opendir.o _readdir.o _closedir.o getcwd.o chdir.o mkdir.o rmdir.o realpath.o _stat.o truncate.o access.o
 
 lib_a_SOURCES = libcglue.c pspcwd.c
 lib_a_LIBADD  = $(LIBCGLUE_MULT_OBJS)
