@@ -2930,7 +2930,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0FC68A56</NID>
-						<NAME>InterruptManagerForKernel_0FC68A56</NAME>
+						<NAME>sceKernelSetPrimarySyscallHandler</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF4D443F3</NID>
@@ -3916,7 +3916,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x54AB2675</NID>
-						<NAME>LoadCoreForKernel_54AB2675</NAME>
+						<NAME>sceKernelApplyPspRelSection</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2952F5AC</NID>
@@ -8952,7 +8952,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD1B501E8</NID>
-						<NAME>sceSysconsceResolverPowerdown</NAME>
+						<NAME>sceSyscon_driver_D1B501E8</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3DE38336</NID>
@@ -11761,7 +11761,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3A437AD7</NID>
-						<NAME>sceUmdMan_driver_3A437AD7</NAME>
+						<NAME>sceUmdManRetryAdjust</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF7C603A2</NID>
@@ -19791,7 +19791,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x006D3BF8</NID>
-						<NAME>sceLeptonUpdate_006D3BF8</NAME>
+						<NAME>sceLeptonUpdateSetDebugCode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x14847053</NID>
@@ -19815,7 +19815,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6B2405D</NID>
-						<NAME>sceLeptonUpdate_B6B2405D</NAME>
+						<NAME>sceLeptonUpdateChangeLeptonState</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -19837,7 +19837,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x006D3BF8</NID>
-						<NAME>sceLeptonUpdate_driver_006D3BF8</NAME>
+						<NAME>sceLeptonUpdateSetDebugCode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x14847053</NID>
@@ -19861,7 +19861,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB6B2405D</NID>
-						<NAME>sceLeptonUpdate_driver_B6B2405D</NAME>
+						<NAME>sceLeptonUpdateChangeLeptonState</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -19889,7 +19889,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x27F6E642</NID>
-						<NAME>sceLibFont_27F6E642</NAME>
+						<NAME>sceFontGetNumFontList</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBC75D85B</NID>
@@ -19909,7 +19909,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5333322D</NID>
-						<NAME>sceLibFont_5333322D</NAME>
+						<NAME>sceFontGetFontInfoByIndexNumber</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA834319D</NID>
@@ -19945,7 +19945,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCA1E6945</NID>
-						<NAME>sceLibFont_CA1E6945</NAME>
+						<NAME>sceFontGetCharGlyphImage_Clip</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x74B21701</NID>
@@ -19965,23 +19965,23 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEE232411</NID>
-						<NAME>sceLibFont_EE232411</NAME>
+						<NAME>sceFontSetAltCharacterCode</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAA3DE7B5</NID>
-						<NAME>sceLibFont_AA3DE7B5</NAME>
+						<NAME>sceFontGetShadowInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x48B06520</NID>
-						<NAME>sceLibFont_48B06520</NAME>
+						<NAME>sceFontGetShadowImageRect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x568BE516</NID>
-						<NAME>sceLibFont_568BE516</NAME>
+						<NAME>sceFontGetShadowGlyphImage</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5DCF6858</NID>
-						<NAME>sceLibFont_5DCF6858</NAME>
+						<NAME>sceFontGetShadowGlyphImage_Clip</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
