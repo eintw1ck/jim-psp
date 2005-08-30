@@ -10,12 +10,7 @@ INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/user
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) $(INCLUDES)
 
-AUDIO_OBJS = stub_sceAudio.o 00000000_sceAudioOutput.o 00000001_sceAudioOutputBlocking.o 00000002_sceAudioOutputPanned.o \
-			 00000003_sceAudioOutputPannedBlocking.o 00000004_sceAudioChReserve.o 00000005_sceAudioOneshotOutput.o \
-			 00000006_sceAudioChRelease.o 00000007_sceAudioGetChannelRestLen.o 00000008_sceAudioSetChannelDataLen.o \
-			 00000009_sceAudioChangeChannelConfig.o 0000000A_sceAudioChangeChannelVolume.o 0000000B_sceAudio_38553111.o \
-			 0000000C_sceAudio_5C37C0AE.o 0000000D_sceAudio_E0727056.o 0000000E_sceAudioInputBlocking.o \
-			 0000000F_sceAudioInput.o 00000010_sceAudioGetInputLength.o 00000011_sceAudioWaitInputEnd.o 00000012_sceAudioInputInit.o 
+AUDIO_OBJS = sceAudio_0000.o sceAudio_0001.o sceAudio_0002.o sceAudio_0003.o sceAudio_0004.o sceAudio_0005.o sceAudio_0006.o sceAudio_0007.o sceAudio_0008.o sceAudio_0009.o sceAudio_0010.o sceAudio_0011.o sceAudio_0012.o sceAudio_0013.o sceAudio_0014.o sceAudio_0015.o sceAudio_0016.o sceAudio_0017.o sceAudio_0018.o sceAudio_0019.o
 
 libpspaudioincludedir = @PSPSDK_INCLUDEDIR@
 libpspaudioinclude_HEADERS = pspaudio.h

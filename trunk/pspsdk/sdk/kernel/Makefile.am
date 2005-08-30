@@ -10,138 +10,19 @@ INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/user
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) $(INCLUDES)
 
-EXCEPTION_OBJS = stub_ExceptionManagerForKernel.o 00000000_sceKernelRegisterExceptionHandler.o \
-				 00000001_sceKernelRegisterPriorityExceptionHandler.o 00000002_sceKernelRegisterDefaultExceptionHandler.o \
-				 00000003_sceKernelReleaseExceptionHandler.o 00000004_sceKernelGetActiveDefaultExceptionHandler.o \
-				 00000005_sceKernelReleaseDefaultExceptionHandler.o 00000006_sceKernelRegisterNmiHandler.o \
-				 00000007_sceKernelReleaseNmiHandler.o 
-				 
-KDEBUG_OBJS = stub_KDebugForKernel.o 00000000_sceKernelRegisterAssertHandler.o 00000001_sceKernelAssert.o \
-			  00000002_sceKernelGetDebugPutchar.o 00000003_sceKernelRegisterDebugPutchar.o \
-			  00000004_sceKernelRegisterKprintfHandler.o 00000005_Kprintf.o 00000006_sceKernelDebugWrite.o \
-			  00000007_sceKernelRegisterDebugWrite.o 00000008_sceKernelDebugRead.o 00000009_sceKernelRegisterDebugRead.o \
-			  0000000A_sceKernelDebugEcho.o 0000000B_sceKernelDebugEchoSet.o 0000000C_KDebugForKernel_24C32559.o \
-			  0000000D_sceKernelRemoveByDebugSection.o 0000000E_KDebugForKernel_5282DD5E.o \
-			  0000000F_KDebugForKernel_9F8703E4.o 00000010_KDebugForKernel_333DCEC7.o \
-			  00000011_KDebugForKernel_E892D9A1.o 00000012_KDebugForKernel_A126F497.o \
-			  00000013_KDebugForKernel_B7251823.o 
+EXCEPTION_OBJS = ExceptionManagerForKernel_0000.o ExceptionManagerForKernel_0001.o ExceptionManagerForKernel_0002.o ExceptionManagerForKernel_0003.o ExceptionManagerForKernel_0004.o ExceptionManagerForKernel_0005.o ExceptionManagerForKernel_0006.o ExceptionManagerForKernel_0007.o ExceptionManagerForKernel_0008.o 
 
-LOADCORE_OBJS = stub_LoadCoreForKernel.o 00000000_sceKernelCheckPspConfig.o 00000001_sceKernelCheckExecFile.o \
-				00000002_sceKernelProbeExecutableObject.o 00000003_sceKernelLoadExecutableObject.o \
-				00000004_sceKernelApplyElfRelSection.o 00000005_LoadCoreForKernel_54AB2675.o \
-				00000006_sceKernelDcacheWBinvAll.o 00000007_sceKernelIcacheClearAll.o \
-				00000008_sceKernelRegisterLibrary.o 00000009_sceKernelRegisterLibraryForUser.o \
-				0000000A_sceKernelReleaseLibrary.o 0000000B_sceKernelCanReleaseLibrary.o \
-				0000000C_sceKernelLinkLibraryEntries.o 0000000D_sceKernelLinkLibraryEntriesForUser.o \
-				0000000E_sceKernelUnLinkLibraryEntries.o 0000000F_sceKernelQueryLoadCoreCB.o \
-				00000010_LoadCoreForKernel_616FCCCD.o 00000011_sceKernelModuleFromUID.o \
-				00000012_sceKernelCreateModule.o 00000013_sceKernelDeleteModule.o 00000014_sceKernelModuleAssign.o \
-				00000015_sceKernelAllocModule.o 00000016_sceKernelFreeModule.o 00000017_sceKernelRegisterModule.o \
-				00000018_sceKernelReleaseModule.o 00000019_sceKernelFindModuleByName.o \
-				0000001A_sceKernelFindModuleByAddress.o 0000001B_sceKernelFindModuleByUID.o \
-				0000001C_sceKernelModuleCount.o 0000001D_sceKernelGetModuleList.o 
+KDEBUG_OBJS = KDebugForKernel_0000.o KDebugForKernel_0001.o KDebugForKernel_0002.o KDebugForKernel_0003.o KDebugForKernel_0004.o KDebugForKernel_0005.o KDebugForKernel_0006.o KDebugForKernel_0007.o KDebugForKernel_0008.o KDebugForKernel_0009.o KDebugForKernel_0010.o KDebugForKernel_0011.o KDebugForKernel_0012.o KDebugForKernel_0013.o KDebugForKernel_0014.o KDebugForKernel_0015.o KDebugForKernel_0016.o KDebugForKernel_0017.o KDebugForKernel_0018.o KDebugForKernel_0019.o KDebugForKernel_0020.o 
 
-IO_OBJS = stub_IoFileMgrForKernel.o 00000000_sceIoPollAsync.o 00000001_sceIoWaitAsync.o 00000002_sceIoWaitAsyncCB.o \
-		  00000003_sceIoGetAsyncStat.o 00000004_sceIoChangeAsyncPriority.o 00000005_sceIoSetAsyncCallback.o \
-		  00000006_sceIoClose.o 00000007_sceIoCloseAsync.o 00000008_sceIoCloseAll.o 00000009_sceIoOpen.o \
-		  0000000A_sceIoOpenAsync.o 0000000B_sceIoReopen.o 0000000C_sceIoRead.o 0000000D_sceIoReadAsync.o \
-		  0000000E_sceIoWrite.o 0000000F_sceIoWriteAsync.o 00000010_sceIoLseek.o 00000011_sceIoLseekAsync.o \
-		  00000012_sceIoLseek32.o 00000013_sceIoLseek32Async.o 00000014_sceIoIoctl.o 00000015_sceIoIoctlAsync.o \
-		  00000016_sceIoDopen.o 00000017_sceIoDread.o 00000018_sceIoDclose.o 00000019_sceIoRemove.o \
-		  0000001A_sceIoMkdir.o 0000001B_sceIoRmdir.o 0000001C_sceIoChdir.o 0000001D_sceIoSync.o \
-		  0000001E_sceIoGetstat.o 0000001F_sceIoChstat.o 00000020_sceIoRename.o 00000021_sceIoDevctl.o \
-		  00000022_sceIoGetDevType.o 00000023_sceIoAssign.o 00000024_sceIoUnassign.o 00000025_sceIoGetThreadCwd.o \
-		  00000026_sceIoChangeThreadCwd.o 00000027_sceIoCancel.o 00000028_sceIoAddDrv.o 00000029_sceIoDelDrv.o 
+LOADCORE_OBJS = LoadCoreForKernel_0000.o LoadCoreForKernel_0001.o LoadCoreForKernel_0002.o LoadCoreForKernel_0003.o LoadCoreForKernel_0004.o LoadCoreForKernel_0005.o LoadCoreForKernel_0006.o LoadCoreForKernel_0007.o LoadCoreForKernel_0008.o LoadCoreForKernel_0009.o LoadCoreForKernel_0010.o LoadCoreForKernel_0011.o LoadCoreForKernel_0012.o LoadCoreForKernel_0013.o LoadCoreForKernel_0014.o LoadCoreForKernel_0015.o LoadCoreForKernel_0016.o LoadCoreForKernel_0017.o LoadCoreForKernel_0018.o LoadCoreForKernel_0019.o LoadCoreForKernel_0020.o LoadCoreForKernel_0021.o LoadCoreForKernel_0022.o LoadCoreForKernel_0023.o LoadCoreForKernel_0024.o LoadCoreForKernel_0025.o LoadCoreForKernel_0026.o LoadCoreForKernel_0027.o LoadCoreForKernel_0028.o LoadCoreForKernel_0029.o LoadCoreForKernel_0030.o 
 
-STDIO_OBJS = stub_StdioForKernel.o 00000000_fdprintf.o 00000001_printf.o 00000002_fdputc.o 00000003_putchar.o \
-			 00000004_fdputs.o 00000005_puts.o 00000006_fdgetc.o 00000007_getchar.o 00000008_fdgets.o 00000009_gets.o \
-			 0000000A_sceKernelStdin.o 0000000B_sceKernelStdout.o 0000000C_sceKernelStderr.o \
-			 0000000D_sceKernelStdoutReopen.o 0000000E_sceKernelStderrReopen.o 
-SYSREG_OBJS = stub_sceSysreg_driver.o 00000000_sceSysregInit.o 00000001_sceSysregEnd.o \
-			  00000002_sceSysreg_driver_E88B77ED.o 00000003_sceSysreg_driver_CD0F6715.o \
-			  00000004_sceSysreg_driver_844AF6BD.o 00000005_sceSysreg_driver_E2A5D1EE.o \
-			  00000006_sceSysreg_driver_4F46EEDE.o 00000007_sceSysreg_driver_8F4F4E96.o \
-			  00000008_sceSysregTopResetEnable.o 00000009_sceSysregScResetEnable.o \
-			  0000000A_sceSysregMeResetEnable.o 0000000B_sceSysregMeResetDisable.o 0000000C_sceSysregAwResetEnable.o \
-			  0000000D_sceSysregAwResetDisable.o 0000000E_sceSysregVmeResetEnable.o 0000000F_sceSysregVmeResetDisable.o \
-			  00000010_sceSysregAvcResetEnable.o 00000011_sceSysregAvcResetDisable.o 00000012_sceSysregUsbResetEnable.o \
-			  00000013_sceSysregUsbResetDisable.o 00000014_sceSysregAtaResetEnable.o 00000015_sceSysregAtaResetDisable.o \
-			  00000016_sceSysregMsifResetEnable.o 00000017_sceSysregMsifResetDisable.o 00000018_sceSysregKirkResetEnable.o \
-			  00000019_sceSysregKirkResetDisable.o 0000001A_sceSysreg_driver_B21B6CBF.o \
-			  0000001B_sceSysreg_driver_BB3623DF.o 0000001C_sceSysreg_driver_53A6838B.o \
-			  0000001D_sceSysreg_driver_B4560C45.o 0000001E_sceSysreg_driver_DCA57573.o \
-			  0000001F_sceSysregMeBusClockEnable.o 00000020_sceSysregMeBusClockDisable.o \
-			  00000021_sceSysreg_driver_4D4CE2B8.o 00000022_sceSysreg_driver_789BD609.o \
-			  00000023_sceSysreg_driver_391CE1C0.o 00000024_sceSysreg_driver_82D35024.o \
-			  00000025_sceSysreg_driver_AF904657.o 00000026_sceSysreg_driver_438AECE9.o \
-			  00000027_sceSysregDmacplusBusClockEnable.o 00000028_sceSysregDmacplusBusClockDisable.o \
-			  00000029_sceSysregDmacBusClockEnable.o 0000002A_sceSysregDmacBusClockDisable.o \
-			  0000002B_sceSysregKirkBusClockEnable.o 0000002C_sceSysregKirkBusClockDisable.o \
-			  0000002D_sceSysregAtaBusClockEnable.o 0000002E_sceSysregAtaBusClockDisable.o \
-			  0000002F_sceSysregUsbBusClockEnable.o 00000030_sceSysregUsbBusClockDisable.o \
-			  00000031_sceSysregMsifBusClockEnable.o 00000032_sceSysregMsifBusClockDisable.o \
-			  00000033_sceSysreg_driver_7CC6CBFD.o 00000034_sceSysreg_driver_EE6B9411.o \
-			  00000035_sceSysregEmcsmBusClockEnable.o 00000036_sceSysregEmcsmBusClockDisable.o \
-			  00000037_sceSysreg_driver_63B9EB65.o 00000038_sceSysreg_driver_E1AA9788.o \
-			  00000039_sceSysregAudioBusClockEnable.o 0000003A_sceSysregAudioBusClockDisable.o \
-			  0000003B_sceSysreg_driver_6B01D71B.o 0000003C_sceSysreg_driver_FC186A83.o \
-			  0000003D_sceSysreg_driver_7234EA80.o 0000003E_sceSysreg_driver_38EC3281.o \
-			  0000003F_sceSysreg_driver_31154490.o 00000040_sceSysreg_driver_8E2D835D.o \
-			  00000041_sceSysreg_driver_8835D1E1.o 00000042_sceSysreg_driver_8B90B8B5.o \
-			  00000043_sceSysreg_driver_7725CA08.o 00000044_sceSysreg_driver_A3E4154C.o \
-			  00000045_sceSysreg_driver_E8533DCA.o 00000046_sceSysreg_driver_F6D83AD0.o \
-			  00000047_sceSysreg_driver_A9CD1C1F.o 00000048_sceSysreg_driver_2F216F38.o \
-			  00000049_sceSysreg_driver_A24C242A.o 0000004A_sceSysreg_driver_E89243BE.o \
-			  0000004B_sceSysreg_driver_7DCA8302.o 0000004C_sceSysreg_driver_45225F8F.o \
-			  0000004D_sceSysreg_driver_D74D3AB6.o 0000004E_sceSysreg_driver_AD7C4ACB.o \
-			  0000004F_sceSysreg_driver_DC68A93F.o 00000050_sceSysreg_driver_94B0323C.o \
-			  00000051_sceSysreg_driver_6417CDD6.o 00000052_sceSysreg_driver_20388C9E.o \
-			  00000053_sceSysreg_driver_E3AECFFA.o 00000054_sceSysreg_driver_3BBD0C0C.o \
-			  00000055_sceSysreg_driver_C1DA05D2.o 00000056_sceSysreg_driver_DE170397.o \
-			  00000057_sceSysreg_driver_1969E840.o 00000058_sceSysreg_driver_1D382514.o \
-			  00000059_sceSysreg_driver_833E6FB1.o 0000005A_sceSysreg_driver_03340297.o \
-			  0000005B_sceSysreg_driver_9100B4E5.o 0000005C_sceSysreg_driver_0A83FC7B.o \
-			  0000005D_sceSysreg_driver_D6628A48.o 0000005E_sceSysreg_driver_1E18EA43.o \
-			  0000005F_sceSysregEmcsmIoEnable.o 00000060_sceSysregEmcsmIoDisable.o \
-			  00000061_sceSysregUsbIoEnable.o 00000062_sceSysregUsbIoDisable.o 00000063_sceSysregAtaIoEnable.o \
-			  00000064_sceSysregAtaIoDisable.o 00000065_sceSysregMsifIoEnable.o 00000066_sceSysregMsifIoDisable.o \
-			  00000067_sceSysregLcdcIoEnable.o 00000068_sceSysregLcdcIoDisable.o 00000069_sceSysregAudioIoEnable.o \
-			  0000006A_sceSysregAudioIoDisable.o 0000006B_sceSysregIicIoEnable.o 0000006C_sceSysregIicIoDisable.o \
-			  0000006D_sceSysregSircsIoEnable.o 0000006E_sceSysregSircsIoDisable.o 0000006F_sceSysreg_driver_F844DDF3.o \
-			  00000070_sceSysreg_driver_29A119A1.o 00000071_sceSysregKeyIoEnable.o 00000072_sceSysregKeyIoDisable.o \
-			  00000073_sceSysregPwmIoEnable.o 00000074_sceSysregPwmIoDisable.o 00000075_sceSysregUartIoEnable.o \
-			  00000076_sceSysregUartIoDisable.o 00000077_sceSysregSpiIoEnable.o 00000078_sceSysregSpiIoDisable.o \
-			  00000079_sceSysregGpioIoEnable.o 0000007A_sceSysregGpioIoDisable.o 0000007B_sceSysreg_driver_55B18B84.o \
-			  0000007C_sceSysreg_driver_2112E686.o 0000007D_sceSysreg_driver_7B9E9A53.o 0000007E_sceSysreg_driver_7BDF0556.o \
-			  0000007F_sceSysreg_driver_8D0FED1E.o 00000080_sceSysreg_driver_A46E9CA8.o \
-			  00000081_sceSysreg_driver_633595F2.o 00000082_sceSysregUsbQueryIntr.o \
-			  00000083_sceSysregUsbAcquireIntr.o 00000084_sceSysreg_driver_D43E98F6.o \
-			  00000085_sceSysreg_driver_BF91FBDA.o 00000086_sceSysreg_driver_36A75390.o \
-			  00000087_sceSysregIntrInit.o 00000088_sceSysregIntrEnd.o 00000089_sceSysregInterruptToOther.o \
-			  0000008A_sceSysregSemaTryLock.o 0000008B_sceSysregSemaUnlock.o 0000008C_sceSysregEnableIntr.o \
-			  0000008D_sceSysregDisableIntr.o 0000008E_sceSysregRequestIntr.o 0000008F_sceSysreg_driver_5664F8B5.o \
-			  00000090_sceSysreg_driver_44704E1D.o 00000091_sceSysreg_driver_584AD989.o \
-			  00000092_sceSysreg_driver_377F035F.o 00000093_sceSysreg_driver_AB3185FD.o \
-			  00000094_sceSysreg_driver_0EA487FA.o 00000095_sceSysreg_driver_136E8F5A.o \
-			  00000096_sceSysreg_driver_F4811E00.o 
+IO_OBJS = IoFileMgrForKernel_0000.o IoFileMgrForKernel_0001.o IoFileMgrForKernel_0002.o IoFileMgrForKernel_0003.o IoFileMgrForKernel_0004.o IoFileMgrForKernel_0005.o IoFileMgrForKernel_0006.o IoFileMgrForKernel_0007.o IoFileMgrForKernel_0008.o IoFileMgrForKernel_0009.o IoFileMgrForKernel_0010.o IoFileMgrForKernel_0011.o IoFileMgrForKernel_0012.o IoFileMgrForKernel_0013.o IoFileMgrForKernel_0014.o IoFileMgrForKernel_0015.o IoFileMgrForKernel_0016.o IoFileMgrForKernel_0017.o IoFileMgrForKernel_0018.o IoFileMgrForKernel_0019.o IoFileMgrForKernel_0020.o IoFileMgrForKernel_0021.o IoFileMgrForKernel_0022.o IoFileMgrForKernel_0023.o IoFileMgrForKernel_0024.o IoFileMgrForKernel_0025.o IoFileMgrForKernel_0026.o IoFileMgrForKernel_0027.o IoFileMgrForKernel_0028.o IoFileMgrForKernel_0029.o IoFileMgrForKernel_0030.o IoFileMgrForKernel_0031.o IoFileMgrForKernel_0032.o IoFileMgrForKernel_0033.o IoFileMgrForKernel_0034.o IoFileMgrForKernel_0035.o IoFileMgrForKernel_0036.o IoFileMgrForKernel_0037.o IoFileMgrForKernel_0038.o IoFileMgrForKernel_0039.o IoFileMgrForKernel_0040.o IoFileMgrForKernel_0041.o IoFileMgrForKernel_0042.o 
 
-UTILS_OBJS = stub_UtilsForKernel.o 00000000_sceUtilsKernelDcacheWBinvRange.o 00000001_sceKernelUtilsMd5Digest.o \
-			 00000002_sceKernelUtilsMd5BlockInit.o 00000003_sceKernelUtilsMd5BlockUpdate.o \
-			 00000004_sceKernelUtilsMd5BlockResult.o 00000005_sceKernelUtilsSha1Digest.o \
-			 00000006_sceKernelUtilsSha1BlockInit.o 00000007_sceKernelUtilsSha1BlockUpdate.o \
-			 00000008_sceKernelUtilsSha1BlockResult.o 00000009_sceKernelUtilsMt19937Init.o \
-			 0000000A_sceKernelUtilsMt19937UInt.o 0000000B_sceKernelSetGPIMask.o 0000000C_sceKernelSetGPOMask.o \
-			 0000000D_sceKernelGetGPI.o 0000000E_sceKernelSetGPO.o 0000000F_sceKernelRegisterLibcRtcFunc.o \
-			 00000010_sceKernelReleaseLibcRtcFunc.o 00000011_sceKernelLibcClock.o 00000012_sceKernelLibcTime.o \
-			 00000013_sceKernelLibcGettimeofday.o 00000014_sceKernelDcacheWritebackAll.o \
-			 00000015_sceKernelDcacheWritebackInvalidateAll.o 00000016_sceKernelDcacheInvalidateAll.o \
-			 00000017_sceKernelDcacheWritebackRange.o 00000018_sceKernelDcacheWritebackInvalidateRange.o \
-			 00000019_sceKernelDcacheInvalidateRange.o 0000001A_sceKernelDcacheProbe.o \
-			 0000001B_sceKernelDcacheReadTag.o 0000001C_sceKernelIcacheInvalidateAll.o \
-			 0000001D_sceKernelIcacheInvalidateRange.o 0000001E_sceKernelIcacheProbe.o \
-			 0000001F_sceKernelIcacheReadTag.o 00000020_sceKernelGzipDecompress.o 00000021_sceKernelGzipIsValid.o \
-			 00000022_sceKernelGzipGetInfo.o 00000023_sceKernelGzipGetName.o 00000024_sceKernelGzipGetComment.o \
-			 00000025_sceKernelGzipGetCompressedData.o 00000026_sceKernelDeflateDecompress.o 
+STDIO_OBJS = StdioForKernel_0000.o StdioForKernel_0001.o StdioForKernel_0002.o StdioForKernel_0003.o StdioForKernel_0004.o StdioForKernel_0005.o StdioForKernel_0006.o StdioForKernel_0007.o StdioForKernel_0008.o StdioForKernel_0009.o StdioForKernel_0010.o StdioForKernel_0011.o StdioForKernel_0012.o StdioForKernel_0013.o StdioForKernel_0014.o StdioForKernel_0015.o 
+
+SYSREG_OBJS = sceSysreg_driver_0000.o sceSysreg_driver_0001.o sceSysreg_driver_0002.o sceSysreg_driver_0003.o sceSysreg_driver_0004.o sceSysreg_driver_0005.o sceSysreg_driver_0006.o sceSysreg_driver_0007.o sceSysreg_driver_0008.o sceSysreg_driver_0009.o sceSysreg_driver_0010.o sceSysreg_driver_0011.o sceSysreg_driver_0012.o sceSysreg_driver_0013.o sceSysreg_driver_0014.o sceSysreg_driver_0015.o sceSysreg_driver_0016.o sceSysreg_driver_0017.o sceSysreg_driver_0018.o sceSysreg_driver_0019.o sceSysreg_driver_0020.o sceSysreg_driver_0021.o sceSysreg_driver_0022.o sceSysreg_driver_0023.o sceSysreg_driver_0024.o sceSysreg_driver_0025.o sceSysreg_driver_0026.o sceSysreg_driver_0027.o sceSysreg_driver_0028.o sceSysreg_driver_0029.o sceSysreg_driver_0030.o sceSysreg_driver_0031.o sceSysreg_driver_0032.o sceSysreg_driver_0033.o sceSysreg_driver_0034.o sceSysreg_driver_0035.o sceSysreg_driver_0036.o sceSysreg_driver_0037.o sceSysreg_driver_0038.o sceSysreg_driver_0039.o sceSysreg_driver_0040.o sceSysreg_driver_0041.o sceSysreg_driver_0042.o sceSysreg_driver_0043.o sceSysreg_driver_0044.o sceSysreg_driver_0045.o sceSysreg_driver_0046.o sceSysreg_driver_0047.o sceSysreg_driver_0048.o sceSysreg_driver_0049.o sceSysreg_driver_0050.o sceSysreg_driver_0051.o sceSysreg_driver_0052.o sceSysreg_driver_0053.o sceSysreg_driver_0054.o sceSysreg_driver_0055.o sceSysreg_driver_0056.o sceSysreg_driver_0057.o sceSysreg_driver_0058.o sceSysreg_driver_0059.o sceSysreg_driver_0060.o sceSysreg_driver_0061.o sceSysreg_driver_0062.o sceSysreg_driver_0063.o sceSysreg_driver_0064.o sceSysreg_driver_0065.o sceSysreg_driver_0066.o sceSysreg_driver_0067.o sceSysreg_driver_0068.o sceSysreg_driver_0069.o sceSysreg_driver_0070.o sceSysreg_driver_0071.o sceSysreg_driver_0072.o sceSysreg_driver_0073.o sceSysreg_driver_0074.o sceSysreg_driver_0075.o sceSysreg_driver_0076.o sceSysreg_driver_0077.o sceSysreg_driver_0078.o sceSysreg_driver_0079.o sceSysreg_driver_0080.o sceSysreg_driver_0081.o sceSysreg_driver_0082.o sceSysreg_driver_0083.o sceSysreg_driver_0084.o sceSysreg_driver_0085.o sceSysreg_driver_0086.o sceSysreg_driver_0087.o sceSysreg_driver_0088.o sceSysreg_driver_0089.o sceSysreg_driver_0090.o sceSysreg_driver_0091.o sceSysreg_driver_0092.o sceSysreg_driver_0093.o sceSysreg_driver_0094.o sceSysreg_driver_0095.o sceSysreg_driver_0096.o sceSysreg_driver_0097.o sceSysreg_driver_0098.o sceSysreg_driver_0099.o sceSysreg_driver_0100.o sceSysreg_driver_0101.o sceSysreg_driver_0102.o sceSysreg_driver_0103.o sceSysreg_driver_0104.o sceSysreg_driver_0105.o sceSysreg_driver_0106.o sceSysreg_driver_0107.o sceSysreg_driver_0108.o sceSysreg_driver_0109.o sceSysreg_driver_0110.o sceSysreg_driver_0111.o sceSysreg_driver_0112.o sceSysreg_driver_0113.o sceSysreg_driver_0114.o sceSysreg_driver_0115.o sceSysreg_driver_0116.o sceSysreg_driver_0117.o sceSysreg_driver_0118.o sceSysreg_driver_0119.o sceSysreg_driver_0120.o sceSysreg_driver_0121.o sceSysreg_driver_0122.o sceSysreg_driver_0123.o sceSysreg_driver_0124.o sceSysreg_driver_0125.o sceSysreg_driver_0126.o sceSysreg_driver_0127.o sceSysreg_driver_0128.o sceSysreg_driver_0129.o sceSysreg_driver_0130.o sceSysreg_driver_0131.o sceSysreg_driver_0132.o sceSysreg_driver_0133.o sceSysreg_driver_0134.o sceSysreg_driver_0135.o sceSysreg_driver_0136.o sceSysreg_driver_0137.o sceSysreg_driver_0138.o sceSysreg_driver_0139.o sceSysreg_driver_0140.o sceSysreg_driver_0141.o sceSysreg_driver_0142.o sceSysreg_driver_0143.o sceSysreg_driver_0144.o sceSysreg_driver_0145.o sceSysreg_driver_0146.o sceSysreg_driver_0147.o sceSysreg_driver_0148.o sceSysreg_driver_0149.o sceSysreg_driver_0150.o sceSysreg_driver_0151.o 
+
+UTILS_OBJS = UtilsForKernel_0000.o UtilsForKernel_0001.o UtilsForKernel_0002.o UtilsForKernel_0003.o UtilsForKernel_0004.o UtilsForKernel_0005.o UtilsForKernel_0006.o UtilsForKernel_0007.o UtilsForKernel_0008.o UtilsForKernel_0009.o UtilsForKernel_0010.o UtilsForKernel_0011.o UtilsForKernel_0012.o UtilsForKernel_0013.o UtilsForKernel_0014.o UtilsForKernel_0015.o UtilsForKernel_0016.o UtilsForKernel_0017.o UtilsForKernel_0018.o UtilsForKernel_0019.o UtilsForKernel_0020.o UtilsForKernel_0021.o UtilsForKernel_0022.o UtilsForKernel_0023.o UtilsForKernel_0024.o UtilsForKernel_0025.o UtilsForKernel_0026.o UtilsForKernel_0027.o UtilsForKernel_0028.o UtilsForKernel_0029.o UtilsForKernel_0030.o UtilsForKernel_0031.o UtilsForKernel_0032.o UtilsForKernel_0033.o UtilsForKernel_0034.o UtilsForKernel_0035.o UtilsForKernel_0036.o UtilsForKernel_0037.o UtilsForKernel_0038.o UtilsForKernel_0039.o 
 
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 

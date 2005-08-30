@@ -10,19 +10,7 @@ INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 
-RTC_OBJS = stub_sceRtc.o 00000000_sceRtcGetTickResolution.o 00000001_sceRtcGetCurrentTick.o \
-		   00000002_sceRtc_029CA3B3.o 00000003_sceRtcGetCurrentClock.o 00000004_sceRtcGetCurrentClockLocalTime.o \
-		   00000005_sceRtcConvertUtcToLocalTime.o 00000006_sceRtcConvertLocalTimeToUTC.o \
-		   00000007_sceRtcIsLeapYear.o 00000008_sceRtcGetDaysInMonth.o 00000009_sceRtcGetDayOfWeek.o \
-		   0000000A_sceRtcCheckValid.o 0000000B_sceRtcSetTime_t.o 0000000C_sceRtcGetTime_t.o \
-		   0000000D_sceRtcSetDosTime.o 0000000E_sceRtcGetDosTime.o 0000000F_sceRtcSetWin32FileTime.o \
-		   00000010_sceRtcGetWin32FileTime.o 00000011_sceRtcSetTick.o 00000012_sceRtcGetTick.o \
-		   00000013_sceRtcCompareTick.o 00000014_sceRtcTickAddTicks.o 00000015_sceRtcTickAddMicroseconds.o \
-		   00000016_sceRtcTickAddSeconds.o 00000017_sceRtcTickAddMinutes.o 00000018_sceRtcTickAddHours.o \
-		   00000019_sceRtcTickAddDays.o 0000001A_sceRtcTickAddWeeks.o 0000001B_sceRtcTickAddMonths.o \
-		   0000001C_sceRtcTickAddYears.o 0000001D_sceRtcFormatRFC2822.o 0000001E_sceRtcFormatRFC2822LocalTime.o \
-		   0000001F_sceRtcFormatRFC3339.o 00000020_sceRtcFormatRFC3339LocalTime.o 00000021_sceRtcParseDateTime.o \
-		   00000022_sceRtcParseRFC3339.o 
+RTC_OBJS = sceRtc_0000.o sceRtc_0001.o sceRtc_0002.o sceRtc_0003.o sceRtc_0004.o sceRtc_0005.o sceRtc_0006.o sceRtc_0007.o sceRtc_0008.o sceRtc_0009.o sceRtc_0010.o sceRtc_0011.o sceRtc_0012.o sceRtc_0013.o sceRtc_0014.o sceRtc_0015.o sceRtc_0016.o sceRtc_0017.o sceRtc_0018.o sceRtc_0019.o sceRtc_0020.o sceRtc_0021.o sceRtc_0022.o sceRtc_0023.o sceRtc_0024.o sceRtc_0025.o sceRtc_0026.o sceRtc_0027.o sceRtc_0028.o sceRtc_0029.o sceRtc_0030.o sceRtc_0031.o sceRtc_0032.o sceRtc_0033.o sceRtc_0034.o sceRtc_0035.o 
 
 libpsprtcincludedir = @PSPSDK_INCLUDEDIR@
 libpsprtcinclude_HEADERS = psprtc.h

@@ -2,123 +2,123 @@
 
 #include "pspimport.s"
 
-#ifdef F_stub_UtilsForKernel
+#ifdef F_UtilsForKernel_0000
 	IMPORT_START	"UtilsForKernel",0x00090000
 #endif
-#ifdef F_00000000_sceUtilsKernelDcacheWBinvRange
+#ifdef F_UtilsForKernel_0001
 	IMPORT_FUNC	"UtilsForKernel",0x80FE032E,sceUtilsKernelDcacheWBinvRange
 #endif
-#ifdef F_00000001_sceKernelUtilsMd5Digest
+#ifdef F_UtilsForKernel_0002
 	IMPORT_FUNC	"UtilsForKernel",0xC8186A58,sceKernelUtilsMd5Digest
 #endif
-#ifdef F_00000002_sceKernelUtilsMd5BlockInit
+#ifdef F_UtilsForKernel_0003
 	IMPORT_FUNC	"UtilsForKernel",0x9E5C5086,sceKernelUtilsMd5BlockInit
 #endif
-#ifdef F_00000003_sceKernelUtilsMd5BlockUpdate
+#ifdef F_UtilsForKernel_0004
 	IMPORT_FUNC	"UtilsForKernel",0x61E1E525,sceKernelUtilsMd5BlockUpdate
 #endif
-#ifdef F_00000004_sceKernelUtilsMd5BlockResult
+#ifdef F_UtilsForKernel_0005
 	IMPORT_FUNC	"UtilsForKernel",0xB8D24E78,sceKernelUtilsMd5BlockResult
 #endif
-#ifdef F_00000005_sceKernelUtilsSha1Digest
+#ifdef F_UtilsForKernel_0006
 	IMPORT_FUNC	"UtilsForKernel",0x840259F1,sceKernelUtilsSha1Digest
 #endif
-#ifdef F_00000006_sceKernelUtilsSha1BlockInit
+#ifdef F_UtilsForKernel_0007
 	IMPORT_FUNC	"UtilsForKernel",0xF8FCD5BA,sceKernelUtilsSha1BlockInit
 #endif
-#ifdef F_00000007_sceKernelUtilsSha1BlockUpdate
+#ifdef F_UtilsForKernel_0008
 	IMPORT_FUNC	"UtilsForKernel",0x346F6DA8,sceKernelUtilsSha1BlockUpdate
 #endif
-#ifdef F_00000008_sceKernelUtilsSha1BlockResult
+#ifdef F_UtilsForKernel_0009
 	IMPORT_FUNC	"UtilsForKernel",0x585F1C09,sceKernelUtilsSha1BlockResult
 #endif
-#ifdef F_00000009_sceKernelUtilsMt19937Init
+#ifdef F_UtilsForKernel_0010
 	IMPORT_FUNC	"UtilsForKernel",0xE860E75E,sceKernelUtilsMt19937Init
 #endif
-#ifdef F_0000000A_sceKernelUtilsMt19937UInt
+#ifdef F_UtilsForKernel_0011
 	IMPORT_FUNC	"UtilsForKernel",0x06FB8A63,sceKernelUtilsMt19937UInt
 #endif
-#ifdef F_0000000B_sceKernelSetGPIMask
+#ifdef F_UtilsForKernel_0012
 	IMPORT_FUNC	"UtilsForKernel",0x193D4036,sceKernelSetGPIMask
 #endif
-#ifdef F_0000000C_sceKernelSetGPOMask
+#ifdef F_UtilsForKernel_0013
 	IMPORT_FUNC	"UtilsForKernel",0x95035FEF,sceKernelSetGPOMask
 #endif
-#ifdef F_0000000D_sceKernelGetGPI
+#ifdef F_UtilsForKernel_0014
 	IMPORT_FUNC	"UtilsForKernel",0x37FB5C42,sceKernelGetGPI
 #endif
-#ifdef F_0000000E_sceKernelSetGPO
+#ifdef F_UtilsForKernel_0015
 	IMPORT_FUNC	"UtilsForKernel",0x6AD345D7,sceKernelSetGPO
 #endif
-#ifdef F_0000000F_sceKernelRegisterLibcRtcFunc
+#ifdef F_UtilsForKernel_0016
 	IMPORT_FUNC	"UtilsForKernel",0x7B7ED3FD,sceKernelRegisterLibcRtcFunc
 #endif
-#ifdef F_00000010_sceKernelReleaseLibcRtcFunc
+#ifdef F_UtilsForKernel_0017
 	IMPORT_FUNC	"UtilsForKernel",0x6151A7C3,sceKernelReleaseLibcRtcFunc
 #endif
-#ifdef F_00000011_sceKernelLibcClock
+#ifdef F_UtilsForKernel_0018
 	IMPORT_FUNC	"UtilsForKernel",0x91E4F6A7,sceKernelLibcClock
 #endif
-#ifdef F_00000012_sceKernelLibcTime
+#ifdef F_UtilsForKernel_0019
 	IMPORT_FUNC	"UtilsForKernel",0x27CC57F0,sceKernelLibcTime
 #endif
-#ifdef F_00000013_sceKernelLibcGettimeofday
+#ifdef F_UtilsForKernel_0020
 	IMPORT_FUNC	"UtilsForKernel",0x71EC4271,sceKernelLibcGettimeofday
 #endif
-#ifdef F_00000014_sceKernelDcacheWritebackAll
+#ifdef F_UtilsForKernel_0021
 	IMPORT_FUNC	"UtilsForKernel",0x79D1C3FA,sceKernelDcacheWritebackAll
 #endif
-#ifdef F_00000015_sceKernelDcacheWritebackInvalidateAll
+#ifdef F_UtilsForKernel_0022
 	IMPORT_FUNC	"UtilsForKernel",0xB435DEC5,sceKernelDcacheWritebackInvalidateAll
 #endif
-#ifdef F_00000016_sceKernelDcacheInvalidateAll
+#ifdef F_UtilsForKernel_0023
 	IMPORT_FUNC	"UtilsForKernel",0x864A9D72,sceKernelDcacheInvalidateAll
 #endif
-#ifdef F_00000017_sceKernelDcacheWritebackRange
+#ifdef F_UtilsForKernel_0024
 	IMPORT_FUNC	"UtilsForKernel",0x3EE30821,sceKernelDcacheWritebackRange
 #endif
-#ifdef F_00000018_sceKernelDcacheWritebackInvalidateRange
+#ifdef F_UtilsForKernel_0025
 	IMPORT_FUNC	"UtilsForKernel",0x34B9FA9E,sceKernelDcacheWritebackInvalidateRange
 #endif
-#ifdef F_00000019_sceKernelDcacheInvalidateRange
+#ifdef F_UtilsForKernel_0026
 	IMPORT_FUNC	"UtilsForKernel",0xBFA98062,sceKernelDcacheInvalidateRange
 #endif
-#ifdef F_0000001A_sceKernelDcacheProbe
+#ifdef F_UtilsForKernel_0027
 	IMPORT_FUNC	"UtilsForKernel",0x80001C4C,sceKernelDcacheProbe
 #endif
-#ifdef F_0000001B_sceKernelDcacheReadTag
+#ifdef F_UtilsForKernel_0028
 	IMPORT_FUNC	"UtilsForKernel",0x16641D70,sceKernelDcacheReadTag
 #endif
-#ifdef F_0000001C_sceKernelIcacheInvalidateAll
+#ifdef F_UtilsForKernel_0029
 	IMPORT_FUNC	"UtilsForKernel",0x920F104A,sceKernelIcacheInvalidateAll
 #endif
-#ifdef F_0000001D_sceKernelIcacheInvalidateRange
+#ifdef F_UtilsForKernel_0030
 	IMPORT_FUNC	"UtilsForKernel",0xC2DF770E,sceKernelIcacheInvalidateRange
 #endif
-#ifdef F_0000001E_sceKernelIcacheProbe
+#ifdef F_UtilsForKernel_0031
 	IMPORT_FUNC	"UtilsForKernel",0x4FD31C9D,sceKernelIcacheProbe
 #endif
-#ifdef F_0000001F_sceKernelIcacheReadTag
+#ifdef F_UtilsForKernel_0032
 	IMPORT_FUNC	"UtilsForKernel",0xFB05FAD0,sceKernelIcacheReadTag
 #endif
-#ifdef F_00000020_sceKernelGzipDecompress
+#ifdef F_UtilsForKernel_0033
 	IMPORT_FUNC	"UtilsForKernel",0x78934841,sceKernelGzipDecompress
 #endif
-#ifdef F_00000021_sceKernelGzipIsValid
+#ifdef F_UtilsForKernel_0034
 	IMPORT_FUNC	"UtilsForKernel",0xE0CE3E29,sceKernelGzipIsValid
 #endif
-#ifdef F_00000022_sceKernelGzipGetInfo
+#ifdef F_UtilsForKernel_0035
 	IMPORT_FUNC	"UtilsForKernel",0xB0E9C31F,sceKernelGzipGetInfo
 #endif
-#ifdef F_00000023_sceKernelGzipGetName
+#ifdef F_UtilsForKernel_0036
 	IMPORT_FUNC	"UtilsForKernel",0xE0E6BA96,sceKernelGzipGetName
 #endif
-#ifdef F_00000024_sceKernelGzipGetComment
+#ifdef F_UtilsForKernel_0037
 	IMPORT_FUNC	"UtilsForKernel",0x8C1FBE04,sceKernelGzipGetComment
 #endif
-#ifdef F_00000025_sceKernelGzipGetCompressedData
+#ifdef F_UtilsForKernel_0038
 	IMPORT_FUNC	"UtilsForKernel",0x23FFC828,sceKernelGzipGetCompressedData
 #endif
-#ifdef F_00000026_sceKernelDeflateDecompress
+#ifdef F_UtilsForKernel_0039
 	IMPORT_FUNC	"UtilsForKernel",0xE8DB3CE6,sceKernelDeflateDecompress
 #endif

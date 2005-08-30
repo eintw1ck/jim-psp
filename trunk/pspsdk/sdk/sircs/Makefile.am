@@ -10,7 +10,7 @@ INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 
-SIRCS_OBJS = stub_sceSircs.o 00000000_sceSircsSend.o 
+SIRCS_OBJS = sceSircs_0000.o sceSircs_0001.o 
 
 libpspsircsincludedir = @PSPSDK_INCLUDEDIR@
 libpspsircsinclude_HEADERS = pspsircs.h

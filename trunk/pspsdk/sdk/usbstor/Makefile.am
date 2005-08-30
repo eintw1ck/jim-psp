@@ -10,8 +10,8 @@ INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) $(INCLUDES) 
 
-USBSTOR_OBJS = stub_sceUsbstor.o 00000000_sceUsbstorGetStatus.o 
-USBSTORBOOT_OBJS = stub_sceUsbstorBoot.o 00000000_sceUsbstorBootSetCapacity.o 00000001_sceUsbstorBootSetLoadAddr.o 00000002_sceUsbstorBootGetDataSize.o 00000003_sceUsbstorBootSetStatus.o 00000004_sceUsbstorBootRegisterNotify.o 00000005_sceUsbstorBootUnregisterNotify.o 
+USBSTOR_OBJS = sceUsbstor_0000.o sceUsbstor_0001.o 
+USBSTORBOOT_OBJS = sceUsbstorBoot_0000.o sceUsbstorBoot_0001.o sceUsbstorBoot_0002.o sceUsbstorBoot_0003.o sceUsbstorBoot_0004.o sceUsbstorBoot_0005.o sceUsbstorBoot_0006.o 
 
 libpspusbstorincludedir = @PSPSDK_INCLUDEDIR@
 

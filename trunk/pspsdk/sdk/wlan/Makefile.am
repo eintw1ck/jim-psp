@@ -10,7 +10,7 @@ INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel
 
-WLAN_OBJS = stub_sceWlanDrv.o 00000000_sceWlanDevIsPowerOn.o 00000001_sceWlanGetSwitchState.o 00000002_sceWlanGetEtherAddr.o 
+WLAN_OBJS = sceWlanDrv_0000.o sceWlanDrv_0001.o sceWlanDrv_0002.o sceWlanDrv_0003.o 
 
 libpspwlanincludedir = @PSPSDK_INCLUDEDIR@
 libpspwlaninclude_HEADERS = pspwlan.h
