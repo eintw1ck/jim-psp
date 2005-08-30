@@ -424,25 +424,25 @@ void build_stubs_output_lib_new(struct psp_lib *pLib)
 		fprintf(fp, "#include \"pspimport.s\"\n\n");
 
 		fprintf(fp, "// Build files\n");
-		fprintf(fp, "// stub_%s.o ", pLib->name);
+		fprintf(fp, "// %s_0000.o ", pLib->name);
 		pExp = pLib->pFuncHead;
-		i = 0;
+		i = 1;
 		while(pExp != NULL)
 		{
-			fprintf(fp, "%08X_%s.o ", i++, pExp->name);
+			fprintf(fp, "%s_%04d.o ", pLib->name, i++);
 			pExp = pExp->pNext;
 		}
 		fprintf(fp, "\n\n");
 
-		fprintf(fp, "#ifdef F_stub_%s\n", pLib->name);
+		fprintf(fp, "#ifdef F_%s_0000\n", pLib->name);
 		fprintf(fp, "\tIMPORT_START \"%s\",0x%08X\n", pLib->name, ((pLib->attr | 0x8) << 16) | pLib->ver);
 		fprintf(fp, "#endif\n");
 
 		pExp = pLib->pFuncHead;
-		i = 0;
+		i = 1;
 		while(pExp != NULL)
 		{
-			fprintf(fp, "#ifdef F_%08X_%s\n", i++, pExp->name);
+			fprintf(fp, "#ifdef F_%s_%04d\n", pLib->name, i++);
 			fprintf(fp, "\tIMPORT_FUNC  \"%s\",0x%08X,%s\n", pLib->name, pExp->nid, pExp->name);
 			fprintf(fp, "#endif\n");
 			pExp = pExp->pNext;
