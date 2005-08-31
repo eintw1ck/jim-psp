@@ -13699,7 +13699,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC403411C</NID>
-						<NAME>sceVshCommonUtil_C403411C</NAME>
+						<NAME>vshRegSysconfInitRegistry</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB48D135B</NID>
