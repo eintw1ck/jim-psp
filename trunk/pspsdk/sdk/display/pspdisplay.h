@@ -84,8 +84,12 @@ void sceDisplaySetFrameBuf(void *topaddr, int bufferwidth, int pixelformat, int 
 int sceDisplayGetFrameBuf(void **topaddr, int *bufferwidth, int *pixelformat, int *unk1);
 
 /**
+ * Number of vertical blank pulses up to now
+ */
+int sceDisplayGetVcount(void);
+
+/**
  * Wait for vertical blank
- *
  */
 int sceDisplayWaitVblankStart(void);
 
