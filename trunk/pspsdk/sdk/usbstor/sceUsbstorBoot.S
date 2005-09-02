@@ -3,7 +3,7 @@
 #include "pspimport.s"
 
 #ifdef F_sceUsbstorBoot_0000
-	IMPORT_START	"sceUsbstorBoot",0x40010000
+	IMPORT_START	"sceUsbstorBoot",0x40090000
 #endif
 #ifdef F_sceUsbstorBoot_0001
 	IMPORT_FUNC	"sceUsbstorBoot",0xE58818A8,sceUsbstorBootSetCapacity
