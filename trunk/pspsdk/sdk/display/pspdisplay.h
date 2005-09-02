@@ -86,7 +86,7 @@ int sceDisplayGetFrameBuf(void **topaddr, int *bufferwidth, int *pixelformat, in
 /**
  * Number of vertical blank pulses up to now
  */
-int sceDisplayGetVcount(void);
+unsigned int sceDisplayGetVcount(void);
 
 /**
  * Wait for vertical blank
