@@ -6,6 +6,7 @@
  * psputilsforkernel.h - Include file for UtilsForKernel
  *
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ * Copyright (c) 2005 adresd
  *
  * $Id$
  */
@@ -24,7 +25,7 @@ extern "C" {
  * @param destSizr - size of destination buffer
  * @param src - pointer to source (compressed) data
  * @param unknown - unknown, pass NULL
- * @return ?, < 0 on error
+ * @return size decompressed on success, < 0 on error
  */
 int sceKernelGzipDecompress(u8 *dest, u32 destSize, const u8 *src, u32 unknown);
 
