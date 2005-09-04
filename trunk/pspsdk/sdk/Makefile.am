@@ -8,6 +8,7 @@ SUBDIRS = \
 	gu \
 	gum \
 	hprm \
+	hprm_kernel \
 	kernel \
 	libc \
 	power \
