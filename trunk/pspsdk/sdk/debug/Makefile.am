@@ -30,4 +30,5 @@ libpspdebug_a_SOURCES =		\
 	kprintf.c	\
 	stacktrace.c	\
 	profiler.c \
-	stdio.c
+	stdio.c		\
+	sio.c

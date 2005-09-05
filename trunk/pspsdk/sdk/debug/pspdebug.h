@@ -254,6 +254,56 @@ int pspDebugInstallStdoutHandler(PspDebugPrintHandler handler);
   */
 int pspDebugInstallStderrHandler(PspDebugPrintHandler handler);
 
+/**
+ * Put a character to the remote sio.
+ *
+ * @param ch - Character to write.
+ */
+void pspDebugSioPutchar(int ch);
+
+/**
+ * Get a character from the remote sio
+ *
+ * @return The character read or -1 if no characters available.
+ */
+int pspDebugSioGetchar(void);
+
+/**
+ * Write a string to the sio port.
+ *
+ * @param str - String to write.
+ */
+void pspDebugSioPuts(const char *str);
+
+/**
+ * Write a set of data to the sio port
+ *
+ * @param data - Pointer to the data to send.
+ * @param len - Length of the data.
+ *
+ * @return Number of characters written.
+ */
+int pspDebugSioPutData(const char *data, int len);
+
+/**
+ * Initialise the remote SIO port (defaults to 4800 8N1).
+ * @note will delay 2 seconds to wait for the power to come up.
+ */
+void pspDebugSioInit(void);
+
+/**
+ * Enable debug character output. Needs to be called in order
+ * for the default Kprintf handler to work.
+ */
+void pspDebugEnablePutchar(void);
+
+/**
+ * Install a kprintf debug putchar handler. Implicitly calls ::pspDebugEnablePutchar
+ * so you do not need to call it explicitly. Sio must be initialised before calling
+ * this function however.
+ */
+void pspDebugSioInstallKprintf(void);
+
 /*@}*/
 
 #ifdef __cplusplus

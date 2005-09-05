@@ -20,6 +20,7 @@
 #include <psploadcore.h>
 #include <pspstdio_kernel.h>
 #include <pspsysreg.h>
+#include <pspkdebug.h>
 
 #ifdef __cplusplus
 extern "C" {

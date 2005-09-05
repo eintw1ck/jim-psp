@@ -9,6 +9,7 @@ SAMPLES = \
 	debug/kprintf \
 	debug/prxdecrypt \
 	debug/profiler \
+	debug/sio \
 	gu/blit \
 	gu/clut \
 	gu/copy \
