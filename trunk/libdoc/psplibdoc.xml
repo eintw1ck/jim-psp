@@ -5627,7 +5627,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x47F7DAFC</NID>
-						<NAME>sceMSAudio_driver_47F7DAFC</NAME>
+						<NAME>sceMSAudioCheckICV</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7B953C1A</NID>
@@ -5639,7 +5639,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x80BD1592</NID>
-						<NAME>sceMSAudio_driver_80BD1592</NAME>
+						<NAME>sceMSAudioDeauth</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5D1C9867</NID>
@@ -5667,7 +5667,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x86666DA6</NID>
-						<NAME>sceMSAudio_driver_86666DA6</NAME>
+						<NAME>sceMSAudioInvalidateICV</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFE7BC654</NID>
@@ -5683,7 +5683,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC1B87E96</NID>
-						<NAME>sceMSAudio_driver_C1B87E96</NAME>
+						<NAME>sceMSAudioFormatICV</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x60577DBD</NID>
@@ -12941,7 +12941,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5350C073</NID>
-						<NAME>sceVshBridge_5350C073</NAME>
+						<NAME>vshMSAudioFormatICV</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2380DC08</NID>
@@ -12969,7 +12969,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x53BFD101</NID>
-						<NAME>sceVshBridge_53BFD101</NAME>
+						<NAME>vshMSAudioCheckICV</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE174218C</NID>
@@ -12977,7 +12977,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7EA32357</NID>
-						<NAME>sceVshBridge_7EA32357</NAME>
+						<NAME>vshMSAudioDeauth</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x14877197</NID>
@@ -13005,7 +13005,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD46D4528</NID>
-						<NAME>sceVshBridge_D46D4528</NAME>
+						<NAME>vshMSAudioInvalidateICV</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7A63BE73</NID>
