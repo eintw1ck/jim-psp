@@ -44,6 +44,7 @@ libpspkernel_a_SOURCES =	\
 	LoadCoreForKernel.S	\
 	IoFileMgrForKernel.S	\
 	StdioForKernel.S	\
+	sceSyscon_driver.S	\
 	sceSysreg_driver.S	\
 	UtilsForKernel.S
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
