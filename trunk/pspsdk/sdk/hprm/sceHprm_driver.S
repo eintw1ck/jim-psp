@@ -2,9 +2,6 @@
 
 #include "pspimport.s"
 
-// Build List
-// sceHprm_driver_0000.o sceHprm_driver_0001.o sceHprm_driver_0002.o sceHprm_driver_0003.o sceHprm_driver_0004.o sceHprm_driver_0005.o sceHprm_driver_0006.o sceHprm_driver_0007.o sceHprm_driver_0008.o sceHprm_driver_0009.o sceHprm_driver_0010.o sceHprm_driver_0011.o sceHprm_driver_0012.o sceHprm_driver_0013.o sceHprm_driver_0014.o sceHprm_driver_0015.o sceHprm_driver_0016.o sceHprm_driver_0017.o sceHprm_driver_0018.o 
-
 #ifdef F_sceHprm_driver_0000
 	IMPORT_START	"sceHprm_driver",0x00010000
 #endif
