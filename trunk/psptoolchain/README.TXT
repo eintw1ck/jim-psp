@@ -43,6 +43,21 @@
 
    The script grabs the latest version of pspsdk from the svn repository.
 
+  ============================
+   HOW CAN I STAY UP TO DATE?
+  ============================
+
+   The psp toolchain itself isn't updated nearly as often as pspsdk itself
+   so you can usually stay up to date by just running:
+
+    ./toolchain.sh -p
+
+   However, you can update the entire psp toolchain script, patches and sdk
+   by grabbing the latest version direct from the svn server:
+
+    svn update
+    ./toolchain.sh
+
   ======================
    HOW DO I CONTRIBUTE?
   ======================
