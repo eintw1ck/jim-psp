@@ -13,9 +13,13 @@
 #include <pspkernel.h>
 #include <pspdebug.h>
 
-/* Define some important parameters */
+/* Define some important parameters, not really sure on names. Probably doesn't matter */
 #define PSP_UART4_FIFO 0xBE500000
 #define PSP_UART4_STAT 0xBE500018
+#define PSP_UART4_DIV1 0xBE500024
+#define PSP_UART4_DIV2 0xBE500028
+#define PSP_UART4_CTRL 0xBE50002C
+#define PSP_UART_CLK   96000000
 #define PSP_UART_TXFULL  0x20
 #define PSP_UART_RXEMPTY 0x10
 
@@ -63,6 +67,24 @@ int pspDebugSioPutData(const char *data, int len)
 	}
 
 	return len;
+}
+
+void pspDebugSioSetBaud(int baud)
+{
+	int div1, div2;
+
+	/* rate set using the rough formula div1 = (PSP_UART_CLK / baud) >> 6 and
+	 * div2 = (PSP_UART_CLK / baud) & 0x3F
+	 * The uart4 driver actually uses a slightly different formula for div 2 (it
+	 * adds 32 before doing the AND, but it doesn't seem to make a difference
+	 */
+	div1 = PSP_UART_CLK / baud;
+	div2 = div1 & 0x3F;
+	div1 >>= 6;
+
+	_sw(div1, PSP_UART4_DIV1);
+	_sw(div2, PSP_UART4_DIV2);
+	_sw(0x60, PSP_UART4_CTRL);
 }
 
 void pspDebugSioInit(void)

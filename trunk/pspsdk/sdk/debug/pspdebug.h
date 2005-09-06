@@ -292,6 +292,12 @@ int pspDebugSioPutData(const char *data, int len);
 void pspDebugSioInit(void);
 
 /**
+ * Set the baud rate of the SIO, e.g. 4800/9600..115200.
+ * @param baud - The baudrate to set.
+ */
+void pspDebugSioSetBaud(int baud);
+
+/**
  * Enable debug character output. Needs to be called in order
  * for the default Kprintf handler to work.
  */
