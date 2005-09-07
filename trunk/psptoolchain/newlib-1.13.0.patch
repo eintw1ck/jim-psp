@@ -4332,3 +4332,14 @@
  	;;
    mmix-*)
  	syscall_dir=syscalls
+--- newlib-1.13.0.orig/newlib/libc/include/time.h       2004-02-09 22:56:46.000000000 +0000
++++ newlib-psp/newlib/libc/include/time.h       2005-09-07 17:17:31.929445856 +0100
+@@ -18,7 +18,7 @@
+ #include <machine/time.h>
+
+ #ifndef _CLOCKS_PER_SEC_
+-#define _CLOCKS_PER_SEC_ 1000
++#define _CLOCKS_PER_SEC_ 1000000
+ #endif
+
+ #define CLOCKS_PER_SEC _CLOCKS_PER_SEC_
