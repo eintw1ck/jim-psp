@@ -318,7 +318,7 @@ int sceIoDevctl(const char *dev, unsigned int cmd, void *indata, int inlen, void
   * @par Example: Reassign flash0 in read/write mode.
   * @code 
   *	sceIoUnassign("flash0");
-  * sceIoAssign("flash0", "lflash0:0,0", "fatflash0:", IOASSIGN_RDWR, NULL, 0);
+  * sceIoAssign("flash0", "lflash0:0,0", "flashfat0:", IOASSIGN_RDWR, NULL, 0);
   * @endcode
   * 
   */
