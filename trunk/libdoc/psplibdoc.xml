@@ -2208,7 +2208,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFEFA40C2</NID>
-						<NAME>sceIdStorage_driver_FEFA40C2</NAME>
+						<NAME>sceIdStorageIsFormatted</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2D633688</NID>
