@@ -629,7 +629,9 @@ static int getfield (lua_State *L, const char *key, int d) {
 
 static int io_date (lua_State *L) {
   const char *s = luaL_optstring(L, 1, "%c");
-  time_t t = (time_t)(luaL_optnumber(L, 2, -1));
+  time_t t = -1;
+  if (lua_gettop(L) >= 2)
+    t = (time_t) lua_touserdata(L, 2);
   struct tm *stm;
   if (t == (time_t)(-1))  /* no time given? */
     t = time(NULL);  /* use current time */
@@ -666,7 +668,7 @@ static int io_date (lua_State *L) {
 
 static int io_time (lua_State *L) {
   if (lua_isnoneornil(L, 1))  /* called without args? */
-    lua_pushnumber(L, time(NULL));  /* return current time */
+    lua_pushlightuserdata(L, (void*) time(NULL));  /* return current time */
   else {
     time_t t;
     struct tm ts;
@@ -683,15 +685,19 @@ static int io_time (lua_State *L) {
     if (t == (time_t)(-1))
       lua_pushnil(L);
     else
-      lua_pushnumber(L, t);
+      lua_pushlightuserdata(L, (void*) t);
   }
   return 1;
 }
 
 
 static int io_difftime (lua_State *L) {
-  lua_pushnumber(L, difftime((time_t)(luaL_checknumber(L, 1)),
-                             (time_t)(luaL_optnumber(L, 2, 0))));
+  time_t t1 = 0, t2 = 0;
+  if (lua_gettop(L) >= 1)
+    t1 = (time_t) lua_touserdata(L, 1);
+  if (lua_gettop(L) >= 2)
+    t2 = (time_t) lua_touserdata(L, 2);
+  lua_pushnumber(L, difftime(t1, t2));
   return 1;
 }
 
