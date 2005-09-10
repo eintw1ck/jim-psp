@@ -60,9 +60,6 @@ int scePowerRegisterCallback(int slot, SceUID cbid);
 
 /**
  * Check if unit is plugged in
- *
- * @param slot - slot of the callback in the list
- * @param cbid - callback id from calling sceKernelCreateCallback
  */
 int scePowerIsPowerOnline(void);
 
