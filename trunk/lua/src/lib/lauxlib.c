@@ -182,9 +182,15 @@ LUALIB_API const char *luaL_optlstring (lua_State *L, int narg,
 }
 
 
+LUALIB_API int luaL_checkint (lua_State *L, int narg) {
+  if (lua_islightuserdata(L, narg)) return (int) lua_touserdata(L, narg);
+  return luaL_checknumber(L, narg);
+}
+
+
 LUALIB_API lua_Number luaL_checknumber (lua_State *L, int narg) {
   lua_Number d = lua_tonumber(L, narg);
-  if (d == 0 && !lua_isnumber(L, narg))  /* avoid extra test when d is not 0 */
+  if (d == 0 && !lua_isnumber(L, narg) && !lua_islightuserdata(L, narg))  /* avoid extra test when d is not 0 */
     tag_error(L, narg, LUA_TNUMBER);
   return d;
 }

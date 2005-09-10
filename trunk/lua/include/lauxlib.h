@@ -74,10 +74,11 @@ LUALIB_API int luaL_loadbuffer (lua_State *L, const char *buff, size_t sz,
                                                luaL_argerror(L, numarg,extramsg)
 #define luaL_checkstring(L,n)	(luaL_checklstring(L, (n), NULL))
 #define luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), NULL))
-#define luaL_checkint(L,n)	((int)luaL_checknumber(L, n))
 #define luaL_checklong(L,n)	((long)luaL_checknumber(L, n))
 #define luaL_optint(L,n,d)	((int)luaL_optnumber(L, n,(lua_Number)(d)))
 #define luaL_optlong(L,n,d)	((long)luaL_optnumber(L, n,(lua_Number)(d)))
+
+LUALIB_API int luaL_checkint(lua_State *L, int n);
 
 
 /*
