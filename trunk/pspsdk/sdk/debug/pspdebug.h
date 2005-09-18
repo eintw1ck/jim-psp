@@ -335,6 +335,16 @@ void pspDebugEnablePutchar(void);
  */
 void pspDebugSioInstallKprintf(void);
 
+/**
+  * Install the gdb stub handler.
+  */
+void pspDebugGdbStubInit(void);
+
+/** 
+  * Generate a breakpoint exception.
+  */
+void pspDebugBreakpoint(void);
+
 /*@}*/
 
 #ifdef __cplusplus

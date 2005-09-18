@@ -10,6 +10,7 @@ SAMPLES = \
 	debug/prxdecrypt \
 	debug/profiler \
 	debug/sio \
+	debug/gdb \
 	gu/blit \
 	gu/clut \
 	gu/copy \

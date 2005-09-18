@@ -18,7 +18,7 @@ libpspdebugincludedir = @PSPSDK_INCLUDEDIR@
 libpspdebuginclude_HEADERS =	\
 	pspdebug.h
 
-lib_LIBRARIES = libpspdebug.a
+lib_LIBRARIES = libpspdebug.a libpspgdb.a libpspgdb_user.a libpspgdb_kernel.a
 
 libpspdebug_a_SOURCES =		\
 	callstack.c		\
@@ -32,3 +32,9 @@ libpspdebug_a_SOURCES =		\
 	profiler.c \
 	stdio.c		\
 	sio.c
+
+libpspgdb_a_SOURCES = gdb-stub.c
+
+libpspgdb_user_a_SOURCES = gdb-userlib.c
+
+libpspgdb_kernel_a_SOURCES = gdb-kernellib.c
