@@ -20,7 +20,7 @@ void sceGuSendList(int mode, const void* list, PspGeContext* context)
 	s[0] = 8;
 	s[1] = (unsigned int)context;
 
-	int list_id;
+	int list_id = 0;
 	int callback = gu_settings.ge_callback_id;
 
 	switch (mode)
