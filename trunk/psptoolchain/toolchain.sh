@@ -18,6 +18,7 @@
   BINUTILS="binutils-2.16"
   GCC="gcc-4.0.1"
   NEWLIB="newlib-1.13.0"
+  GDB="gdb-6.3"
 
  #########################
  ## PARSE THE ARGUMENTS ##
@@ -32,6 +33,7 @@
    BUILD_GCC=1
    BUILD_NEWLIB=1
    BUILD_PSPSDK=1
+   BUILD_GDB=1
 
   ## Else...
   else
@@ -53,6 +55,9 @@
       shift;;
      -p)
       BUILD_PSPSDK=1
+      shift;;
+     -e)
+      BUILD_GDB=1
       shift;;
     esac
    done
@@ -137,6 +142,12 @@
     fi
    fi
 
+   if test $BUILD_GDB ; then
+     if test ! -f "$GDB.tar.gz" ; then
+      $WGET ftp://ftp.gnu.org/pub/gnu/gdb/$GDB.tar.gz || { echo "ERROR DOWNLOADING GDB"; exit; }
+     fi
+   fi
+
   fi
 
   ## Create and enter the temp directory.
@@ -160,6 +171,13 @@
   if test $BUILD_NEWLIB ; then
    rm -Rf $NEWLIB; gzip -cd "$SRCDIR/$NEWLIB.tar.gz" | tar xvf -
    cd $NEWLIB; cat "$SRCDIR/$NEWLIB.patch" | $PATCH || { echo "ERROR PATCHING NEWLIB"; exit; }
+   cd ..
+  fi
+
+  ## Unpack and patch the gdb source
+  if test $BUILD_GDB ; then
+   rm -Rf $GDB; gzip -cd "$SRCDIR/$GDB.tar.gz" | tar xvf -
+   cd $GDB; cat "$SRCDIR/$GDB.patch" | $PATCH || { echo "ERROR PATCHING GDB"; exit; }
    cd ..
   fi
 
@@ -312,6 +330,35 @@
 
   fi
 
+ #################################
+ ## BUILD AND INSTALL GDB       ##
+ #################################
+
+  if test $BUILD_GDB ; then
+
+   ## Enter the source directory.
+   cd $GDB
+
+   ## Create and enter the build directory.
+   mkdir build-gdb; cd build-gdb
+
+   ## Configure the source.
+   ../configure --prefix=$PSPDEV --target=psp || { echo "ERROR CONFIGURING GDB"; exit; }
+
+   ## Build the source.
+   $MAKE clean; $MAKE || { echo "ERROR BUILDING GDB"; exit; }
+
+   ## Install the result.
+   $MAKE install || { echo "ERROR INSTALLING GDB"; exit; }
+
+   ## Clean up the result.
+   $MAKE clean
+
+   ## Exit the build and source directories.
+   cd ..; cd ..
+
+  fi
+
  ##############################
  ## BUILD AND INSTALL PSPSDK ##
  ##############################
@@ -354,6 +401,9 @@
 
   ## Clean up the newlib source.
   rm -Rf $NEWLIB
+
+  ## Clean up the gdb source
+  rm -Rf $GDB
 
   ## Clean up the pspsdk source.
   rm -Rf pspsdk
