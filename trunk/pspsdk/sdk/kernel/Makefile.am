@@ -26,6 +26,8 @@ UTILS_OBJS = UtilsForKernel_0000.o UtilsForKernel_0001.o UtilsForKernel_0002.o U
 
 SYSCON_OBJS = sceSyscon_driver_0000.o sceSyscon_driver_0001.o sceSyscon_driver_0002.o sceSyscon_driver_0003.o sceSyscon_driver_0004.o sceSyscon_driver_0005.o sceSyscon_driver_0006.o sceSyscon_driver_0007.o sceSyscon_driver_0008.o sceSyscon_driver_0009.o sceSyscon_driver_0010.o sceSyscon_driver_0011.o sceSyscon_driver_0012.o sceSyscon_driver_0013.o sceSyscon_driver_0014.o sceSyscon_driver_0015.o sceSyscon_driver_0016.o sceSyscon_driver_0017.o sceSyscon_driver_0018.o sceSyscon_driver_0019.o sceSyscon_driver_0020.o sceSyscon_driver_0021.o sceSyscon_driver_0022.o sceSyscon_driver_0023.o sceSyscon_driver_0024.o sceSyscon_driver_0025.o sceSyscon_driver_0026.o sceSyscon_driver_0027.o sceSyscon_driver_0028.o sceSyscon_driver_0029.o sceSyscon_driver_0030.o sceSyscon_driver_0031.o sceSyscon_driver_0032.o sceSyscon_driver_0033.o sceSyscon_driver_0034.o sceSyscon_driver_0035.o sceSyscon_driver_0036.o sceSyscon_driver_0037.o sceSyscon_driver_0038.o sceSyscon_driver_0039.o sceSyscon_driver_0040.o sceSyscon_driver_0041.o sceSyscon_driver_0042.o sceSyscon_driver_0043.o sceSyscon_driver_0044.o sceSyscon_driver_0045.o sceSyscon_driver_0046.o sceSyscon_driver_0047.o sceSyscon_driver_0048.o sceSyscon_driver_0049.o sceSyscon_driver_0050.o sceSyscon_driver_0051.o sceSyscon_driver_0052.o sceSyscon_driver_0053.o sceSyscon_driver_0054.o sceSyscon_driver_0055.o sceSyscon_driver_0056.o sceSyscon_driver_0057.o sceSyscon_driver_0058.o sceSyscon_driver_0059.o sceSyscon_driver_0060.o sceSyscon_driver_0061.o sceSyscon_driver_0062.o sceSyscon_driver_0063.o sceSyscon_driver_0064.o sceSyscon_driver_0065.o sceSyscon_driver_0066.o sceSyscon_driver_0067.o sceSyscon_driver_0068.o sceSyscon_driver_0069.o sceSyscon_driver_0070.o sceSyscon_driver_0071.o sceSyscon_driver_0072.o sceSyscon_driver_0073.o sceSyscon_driver_0074.o sceSyscon_driver_0075.o sceSyscon_driver_0076.o sceSyscon_driver_0077.o sceSyscon_driver_0078.o sceSyscon_driver_0079.o sceSyscon_driver_0080.o sceSyscon_driver_0081.o sceSyscon_driver_0082.o sceSyscon_driver_0083.o sceSyscon_driver_0084.o sceSyscon_driver_0085.o sceSyscon_driver_0086.o sceSyscon_driver_0087.o sceSyscon_driver_0088.o sceSyscon_driver_0089.o sceSyscon_driver_0090.o sceSyscon_driver_0091.o sceSyscon_driver_0092.o sceSyscon_driver_0093.o sceSyscon_driver_0094.o sceSyscon_driver_0095.o sceSyscon_driver_0096.o sceSyscon_driver_0097.o sceSyscon_driver_0098.o sceSyscon_driver_0099.o sceSyscon_driver_0100.o sceSyscon_driver_0101.o sceSyscon_driver_0102.o sceSyscon_driver_0103.o sceSyscon_driver_0104.o sceSyscon_driver_0105.o sceSyscon_driver_0106.o sceSyscon_driver_0107.o sceSyscon_driver_0108.o sceSyscon_driver_0109.o sceSyscon_driver_0110.o sceSyscon_driver_0111.o sceSyscon_driver_0112.o sceSyscon_driver_0113.o 
 
+INTR_OBJS = InterruptManagerForKernel_0000.o InterruptManagerForKernel_0001.o InterruptManagerForKernel_0002.o InterruptManagerForKernel_0003.o InterruptManagerForKernel_0004.o InterruptManagerForKernel_0005.o InterruptManagerForKernel_0006.o InterruptManagerForKernel_0007.o InterruptManagerForKernel_0008.o InterruptManagerForKernel_0009.o InterruptManagerForKernel_0010.o InterruptManagerForKernel_0011.o InterruptManagerForKernel_0012.o InterruptManagerForKernel_0013.o InterruptManagerForKernel_0014.o InterruptManagerForKernel_0015.o InterruptManagerForKernel_0016.o InterruptManagerForKernel_0017.o InterruptManagerForKernel_0018.o InterruptManagerForKernel_0019.o InterruptManagerForKernel_0020.o InterruptManagerForKernel_0021.o InterruptManagerForKernel_0022.o InterruptManagerForKernel_0023.o InterruptManagerForKernel_0024.o InterruptManagerForKernel_0025.o InterruptManagerForKernel_0026.o InterruptManagerForKernel_0027.o InterruptManagerForKernel_0028.o InterruptManagerForKernel_0029.o InterruptManagerForKernel_0030.o InterruptManagerForKernel_0031.o InterruptManagerForKernel_0032.o InterruptManagerForKernel_0033.o InterruptManagerForKernel_0034.o InterruptManagerForKernel_0035.o InterruptManagerForKernel_0036.o InterruptManagerForKernel_0037.o InterruptManagerForKernel_0038.o InterruptManagerForKernel_0039.o InterruptManagerForKernel_0040.o InterruptManagerForKernel_0041.o InterruptManagerForKernel_0042.o InterruptManagerForKernel_0043.o InterruptManagerForKernel_0044.o 
+
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
@@ -47,9 +49,10 @@ libpspkernel_a_SOURCES =	\
 	StdioForKernel.S	\
 	sceSyscon_driver.S	\
 	sceSysreg_driver.S	\
-	UtilsForKernel.S
+	UtilsForKernel.S	\
+	InterruptManagerForKernel.S 
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
-						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS)
+						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS)
 
 $(EXCEPTION_OBJS): ExceptionManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -73,4 +76,7 @@ $(UTILS_OBJS): UtilsForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(SYSCON_OBJS): sceSyscon_driver.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(INTR_OBJS): InterruptManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
