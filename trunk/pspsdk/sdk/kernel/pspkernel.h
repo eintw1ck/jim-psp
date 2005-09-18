@@ -33,21 +33,17 @@ extern "C" {
  * from the kernel's address space.  Use this function to set $pc to the kernel
  * address space, before calling a kernel library stub.
  */
-static __inline__
-void pspKernelSetKernelPC(void)
-{
-	__asm__ volatile (
+#define pspKernelSetKernelPC()  \
+{     \
+	__asm__ volatile (      \
 	"la     $8, 1f\n\t"     \
 	"lui    $9, 0x8000\n\t" \
 	"or     $8, $9\n\t"     \
 	"jr     $8\n\t"         \
 	" nop\n\t"              \
-	"1:\n\t"
-	: : : "$8", "$9");
-
-	/* We need to invalidate the I-cache, to purge any instructions that still
-	   refer to addresses in userspace. */
-	sceKernelIcacheClearAll();
+	"1:\n\t"                \
+	: : : "$8", "$9");      \
+	sceKernelIcacheClearAll(); \
 }
 
 #ifdef __cplusplus
