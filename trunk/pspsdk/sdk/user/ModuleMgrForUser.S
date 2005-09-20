@@ -35,3 +35,6 @@
 #ifdef F_ModuleMgrForUser_0010
 	IMPORT_FUNC	"ModuleMgrForUser",0x748CBED9,sceKernelQueryModuleInfo
 #endif
+#ifdef F_ModuleMgrForUser_0011
+	IMPORT_FUNC "ModuleMgrForUser", 0x644395E2,sceKernelGetModuleIdList
+#endif
