@@ -7,7 +7,7 @@ CCAS = $(CC)
 AR = @PSP_AR@
 RANLIB = @PSP_RANLIB@
 
-INCLUDES = -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel -I$(top_srcdir)/sdk/user
+INCLUDES = -I$(top_srcdir)/sdk/libc/include -I$(top_srcdir)/sdk/base -I$(top_srcdir)/sdk/kernel -I$(top_srcdir)/sdk/user
 CFLAGS = @PSPSDK_CFLAGS@
 CXXFLAGS = @PSPSDK_CXXFLAGS@
 CCASFLAGS = $(CFLAGS) $(INCLUDES)
@@ -17,7 +17,7 @@ EXTRA_DIST = LIB.status
 lib_LIBRARIES = libpsplibc.a
 
 ## libpsplibc.a sources.
-CORE_SOURCES = terminate.c setjmp.S qsort.c init.c cxx.cpp ctype_.c
+CORE_SOURCES = terminate.c setjmp.S qsort.c init.c cxx.cpp
 MULT_SOURCES = xprintf.c alloc.c string.c stdio.c stdlib.c libcglue.c
 
 ALLOC_OBJS = malloc.o realloc.o calloc.o memalign.o free.o __builtin_alloc.o __alloc_internals.o __mem_walk.o
@@ -49,6 +49,8 @@ GLUE_OBJS = glue__exit.o glue__sbrk.o glue_clock.o glue_gettimeofday.o glue_time
 
 MULT_OBJS = $(XPRINTF_OBJS) $(ALLOC_OBJS) $(STRING_C_OBJS) $(STDIO_OBJS) $(STDLIB_OBJS) $(GLUE_OBJS)
 
+libpsplibcincludedir = @PSPSDK_INCLUDEDIR@/libc
+libpsplibcinclude_HEADERS = assert.h ctype.h malloc.h stdio.h stdlib.h string.h time.h unistd.h 
 libpsplibc_a_SOURCES = $(CORE_SOURCES) $(MULT_SOURCES)
 libpsplibc_a_LIBADD  = $(MULT_OBJS)
 

@@ -36,6 +36,7 @@ LDFLAGS  := $(addprefix -L,$(LIBDIR)) -Wl,-q,-T$(PSPSDK)/lib/linkfile.prx -mno-c
 PSPSDK_LIBC_LIB = -lc
 ifeq ($(USE_PSPSDK_LIBC),1)
 PSPSDK_LIBC_LIB = -lpsplibc
+CFLAGS := -I$(PSPSDK)/include/libc $(CFLAGS)
 endif
 
 # Link with following default libraries.  Other libraries should be specified in the $(LIBS) variable.

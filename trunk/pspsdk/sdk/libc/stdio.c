@@ -40,8 +40,10 @@
 /* ensure FILE is defined. */
 /* This is specific to psplibc, so we have to make sure it doesn't conflict with
    newlib's FILE definition. */;
+/*
 #ifndef __FILE_DEFINED
 #define __FILE_DEFINED
+*/
 typedef struct {
         int  type;
         int  fd;
@@ -50,7 +52,7 @@ typedef struct {
         int  has_putback;
         u8   putback;
 } __psplibc_FILE;
-#endif // __FILE_DEFINED
+//#endif // __FILE_DEFINED
 
 /* Override newlib's definition of a FILE. */
 #define LOCAL_FILE(f) ((__psplibc_FILE *) (f))
@@ -1258,8 +1260,8 @@ int sscanf(const char *buf, const char *format, ...)
 /* stdio data variables. */
 FILE __iob[_NFILE] = {
   { -1,                 0, 0, 0 },     // stdin
-  { STD_IOBUF_TYPE_STDOUTHOST, 0, 0, 0 }, // stdout
-  { STD_IOBUF_TYPE_STDOUTHOST, 0, 0, 0 }, // stdout
+  { STD_IOBUF_TYPE_STDOUTHOST, 1, 0, 0 }, // stdout
+  { STD_IOBUF_TYPE_STDOUTHOST, 2, 0, 0 }, // stdout
   { 0, -1, 0, 0 },
   { 0, -1, 0, 0 },
   { 0, -1, 0, 0 },
