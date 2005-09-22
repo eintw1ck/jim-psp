@@ -490,7 +490,7 @@ int sceGuSync(int mode, int a1);
   *   - GU_COLOR_5650 - 16-bit color (R5G6B5A0)
   *   - GU_COLOR_5551 - 16-bit color (R5G5B5A1)
   *   - GU_COLOR_4444 - 16-bit color (R4G4B4A4)
-  *   - GU_COLOR_8888 - 16-bit color (R8G8B8A8)
+  *   - GU_COLOR_8888 - 32-bit color (R8G8B8A8)
   *
   *   - GU_NORMAL_8BIT - 8-bit normals
   *   - GU_NORMAL_16BIT - 16-bit normals
