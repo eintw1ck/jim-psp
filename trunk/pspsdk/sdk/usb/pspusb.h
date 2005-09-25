@@ -48,9 +48,7 @@ int sceUsbStop(const char* driverName, int unknown1, int unknown2);
 /**
   * Activate a USB driver.
   * 
-  * @param driverName - name of the USB driver to stop
-  * @param unknown1 - Unknown, set to 0 
-  * @param unknown2 - Unknown, set to 0
+  * @param flag - Unknown, set to 0x1c8
   *
   * @return 0 on success
   */

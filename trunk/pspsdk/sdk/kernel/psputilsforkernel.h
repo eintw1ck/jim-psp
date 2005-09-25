@@ -22,7 +22,7 @@ extern "C" {
  * Decompress gzip'd data (requires kernel mode)
  *
  * @param dest - pointer to destination buffer
- * @param destSizr - size of destination buffer
+ * @param destSize - size of destination buffer
  * @param src - pointer to source (compressed) data
  * @param unknown - unknown, pass NULL
  * @return size decompressed on success, < 0 on error

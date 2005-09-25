@@ -17,7 +17,7 @@
 
 #include <pspkerneltypes.h>
 
-/** @defgroup Interface to the LoadCoreForKernel library.
+/** @defgroup Sysreg Interface to the sceSysreg_driver library.
  */
 
 #ifdef __cplusplus

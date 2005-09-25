@@ -17,7 +17,7 @@
 
 #include <pspkerneltypes.h>
 
-/** @defgroup Interface to the LoadCoreForKernel library.
+/** @defgroup LoadCore Interface to the LoadCoreForKernel library.
  */
 
 #ifdef __cplusplus

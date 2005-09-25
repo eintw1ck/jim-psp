@@ -206,14 +206,14 @@ int scePowerGetIdleTimer(void);
  *
  * @param unknown - pass 0
  */
-int scePowerIdleTimerEnable();
+int scePowerIdleTimerEnable(int unknown);
 
 /**
  * Disable Idle timer
  *
  * @param unknown - pass 0
  */
-int scePowerIdleTimerDisable();
+int scePowerIdleTimerDisable(int unknown);
 
 #ifdef __cplusplus
 }

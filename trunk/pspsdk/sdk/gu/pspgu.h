@@ -728,7 +728,7 @@ void sceGuColor(unsigned int color);
   * @param color - Color to test against
   * @param mask - Mask ANDed against both source and destination when testing
 **/
-void sceGuColorFunc(int a0, unsigned int color, unsigned int mask);
+void sceGuColorFunc(int func, unsigned int color, unsigned int mask);
 
 /**
   * Set which color components that the material will receive
@@ -756,7 +756,7 @@ void sceGuColorMaterial(int components);
   *   - GU_GEQUAL
   *
   * @param func - Specifies the alpha comparison function.
-  * @param ref - Specifies the reference value that incoming alpha values are compared to.
+  * @param value - Specifies the reference value that incoming alpha values are compared to.
   * @param mask - Specifies the mask that both values are ANDed with before comparison.
 **/
 void sceGuAlphaFunc(int func, int value, int mask);
@@ -1191,7 +1191,7 @@ void sceGuBoneMatrix(unsigned int index, const ScePspFMatrix4* matrix);
   * Please see sceGuDrawArray() for vertex format information.
   *
   * @param index - Morph weight index (0-7)
-  * @param matrix - Weight to set
+  * @param weight - Weight to set
 **/
 void sceGuMorphWeight(int index, float weight);
 

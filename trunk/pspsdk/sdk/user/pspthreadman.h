@@ -159,15 +159,11 @@ int sceKernelDeleteThread(SceUID thid);
 /**
  * Start a created thread
  *
- * @par Example:
- * @code
- * @endcode
- *
  * @param thid - Thread id from sceKernelCreateThread
- * @param arglen - Length of the args pointed to by the args parameter
- * @param args - Pointer to the arguments.
+ * @param arglen - Length of the data pointed to by argp, in bytes
+ * @param argp - Pointer to the arguments.
  */
-int sceKernelStartThread(SceUID thid, SceSize args, void *argp);
+int sceKernelStartThread(SceUID thid, SceSize arglen, void *argp);
 
 /**
  * Exit a thread
@@ -353,14 +349,14 @@ int sceKernelGetThreadId(void);
   * Get the status information for the specified thread.
   * 
   * @param thid - Id of the thread to get status
-  * @param status - Pointer to the status structure to receive the data.
-  * Note: The structures size field should be set to sizeof(ThreadStatus) 
-  * before calling this function.
+  * @param info - Pointer to the info structure to receive the data.
+  * Note: The structures size field should be set to
+  * sizeof(SceKernelThreadInfo) before calling this function.
   *
   * @par Example:
   * @code
-  * ThreadStatus status;
-  * status.size = sizeof(ThreadStatus);
+  * SceKernelThreadInfo status;
+  * status.size = sizeof(SceKernelThreadInfo);
   * if(sceKernelReferThreadStatus(thid, &status) == 0)
   * { Do something... }
   * @endcode 

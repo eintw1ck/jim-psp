@@ -56,7 +56,7 @@ int sceRtcGetCurrentTick(u64 *tick);
 /**
  * Get current tick count, adjusted for local time zone
  *
- * @param tick - pointer to pspTime struct to receive time
+ * @param time - pointer to pspTime struct to receive time
  * @param tz - time zone to adjust to (minutes from UTC)
  * @return 0 on success, < 0 on error
  */
@@ -185,7 +185,7 @@ int sceRtcTickAddSeconds(u64* destTick, const u64* srcTick, u64 numSecs);
  *
  * @param destTick - pointer to tick to hold result
  * @param srcTick - pointer to source tick
- * @param numSecs - number of minutes to add
+ * @param numMins - number of minutes to add
  * @return 0 on success, <0 on error
  */
 int sceRtcTickAddMinutes(u64* destTick, const u64* srcTick, u64 numMins);
@@ -195,7 +195,7 @@ int sceRtcTickAddMinutes(u64* destTick, const u64* srcTick, u64 numMins);
  *
  * @param destTick - pointer to tick to hold result
  * @param srcTick - pointer to source tick
- * @param numSecs - number of hours to add
+ * @param numHours - number of hours to add
  * @return 0 on success, <0 on error
  */
 int sceRtcTickAddHours(u64* destTick, const u64* srcTick, int numHours);
@@ -205,7 +205,7 @@ int sceRtcTickAddHours(u64* destTick, const u64* srcTick, int numHours);
  *
  * @param destTick - pointer to tick to hold result
  * @param srcTick - pointer to source tick
- * @param numSecs - number of days to add
+ * @param numDays - number of days to add
  * @return 0 on success, <0 on error
  */
 int sceRtcTickAddDays(u64* destTick, const u64* srcTick, int numDays);
@@ -215,7 +215,7 @@ int sceRtcTickAddDays(u64* destTick, const u64* srcTick, int numDays);
  *
  * @param destTick - pointer to tick to hold result
  * @param srcTick - pointer to source tick
- * @param numSecs - number of weeks to add
+ * @param numWeeks - number of weeks to add
  * @return 0 on success, <0 on error
  */
 int sceRtcTickAddWeeks(u64* destTick, const u64* srcTick, int numWeeks);
@@ -226,7 +226,7 @@ int sceRtcTickAddWeeks(u64* destTick, const u64* srcTick, int numWeeks);
  *
  * @param destTick - pointer to tick to hold result
  * @param srcTick - pointer to source tick
- * @param numSecs - number of months to add
+ * @param numMonths - number of months to add
  * @return 0 on success, <0 on error
  */
 int sceRtcTickAddMonths(u64* destTick, const u64* srcTick, int numMonths);
@@ -236,7 +236,7 @@ int sceRtcTickAddMonths(u64* destTick, const u64* srcTick, int numMonths);
  *
  * @param destTick - pointer to tick to hold result
  * @param srcTick - pointer to source tick
- * @param numSecs - number of years to add
+ * @param numYears - number of years to add
  * @return 0 on success, <0 on error
  */
 int sceRtcTickAddYears(u64* destTick, const u64* srcTick, int numYears);
