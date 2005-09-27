@@ -27,16 +27,7 @@
 extern "C" {
 #endif
 
-const char* PspInterruptNames[67] = {//67 interrupts
-	0, 0, 0, 0, "GPIO", "ATA_ATAPI", "UmdMan", "MScm0",
-	"Wlan", 0, "Audio", 0, "I2C", 0, "SIRCS_IrDA",
-	"Systimer0", "Systimer1", "Systimer2", "Systimer3",
-	"Thread0", "NAND", "DMACPLUS", "DMA0", "DMA1",
-	"Memlmd", "GE", 0, 0, 0, 0, "Display", "MeCodec", 0,
-	0, 0, 0, "HP_Remote", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "MScm1", "MScm2",
-	0, 0, 0, "Thread1", "Interrupt"
-};
+extern const char* PspInterruptNames[67];
 
 enum PspInterrupts
 {
@@ -147,4 +138,4 @@ int QueryIntrHandlerInfo(SceUID intr_code, SceUID sub_intr_code, PspIntrHandlerO
 
 /*@}*/
 
-#endif /* PSPSYSMEM_H */
+#endif /* PSPINTMANAGER_H */

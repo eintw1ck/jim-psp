@@ -61,7 +61,8 @@ libpspuser_a_SOURCES =	\
 	SysMemUserForUser.S	\
 	ThreadManForUser.S	\
 	UtilsForUser.S		\
-	sceSuspendForUser.S	
+	sceSuspendForUser.S	\
+	pspintmanager.c
 
 libpspuser_a_LIBADD = \
 $(IO_OBJS) \
@@ -95,7 +96,7 @@ $(SYSMEM_OBJS): SysMemUserForUser.S
 
 $(THREADMAN_OBJS): ThreadManForUser.S
 	$(COMPILE) -DF_$* $< -c -o $@
-	
+
 $(UTILS_OBJS): UtilsForUser.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
