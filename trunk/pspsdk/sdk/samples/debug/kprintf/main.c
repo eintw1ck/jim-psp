@@ -56,8 +56,6 @@ int SetupCallbacks(void)
 	return thid;
 }
 
-void Kprintf(char *, ...);
-
 int main(void)
 {
 	pspDebugScreenInit();
