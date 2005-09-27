@@ -330,6 +330,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	this->hidden->frame_offset = 0;
 
 	if (IS_HWSURFACE(flags) && (flags & SDL_DOUBLEBUF)) {
+		current->flags |= SDL_DOUBLEBUF;
 		this->hidden->frame_offset = pitch * height;
 		/* Set the draw buffer to the second frame. */
 		this->hidden->frame = 1;
