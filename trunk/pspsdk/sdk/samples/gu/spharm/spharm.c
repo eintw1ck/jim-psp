@@ -460,7 +460,7 @@ unsigned char *convertimage(unsigned char *inptr,int size)
   unsigned char *output,*outptr;
   int tsize = size*size;
   if (vramaddr == 0)
-    vramaddr = (0x40000000 | sceGeEdramGetAddr()) + VRAM_OFFSET;
+    vramaddr = (0x40000000 | (u32) sceGeEdramGetAddr()) + VRAM_OFFSET;
   outptr = output = (unsigned char *)vramaddr;
   for (x=0;x<tsize;x++) {
     *(outptr++) = *(input++)/2;
