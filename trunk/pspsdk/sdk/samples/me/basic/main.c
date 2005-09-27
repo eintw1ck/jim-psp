@@ -8,7 +8,7 @@
  *
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
  *
- * $Id: main.c 627 2005-07-12 21:24:44Z tyranid $
+ * $Id$
  */
 #include <pspkernel.h>
 #include <pspdebug.h>

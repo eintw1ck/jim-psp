@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  *
- * $Id: main.c 540 2005-07-08 19:35:10Z warren $
+ * $Id$
  */
 #include <pspkernel.h>
 #include <pspdebug.h>

@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
  *
- * $Id: kprintf.c 664 2005-07-16 08:23:18Z tyranid $
+ * $Id$
  */
 
 #include <pspkernel.h>
