@@ -343,7 +343,7 @@
    mkdir build-gdb; cd build-gdb
 
    ## Configure the source.
-   ../configure --prefix=$PSPDEV --target=psp || { echo "ERROR CONFIGURING GDB"; exit; }
+   ../configure --prefix=$PSPDEV --target=psp --disable-nls || { echo "ERROR CONFIGURING GDB"; exit; }
 
    ## Build the source.
    $MAKE clean; $MAKE || { echo "ERROR BUILDING GDB"; exit; }
