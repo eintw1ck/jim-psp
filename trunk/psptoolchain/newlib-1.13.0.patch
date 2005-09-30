@@ -3568,8 +3568,8 @@
 +
 +void _start() { }
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/libcglue.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-09-29 22:51:32.000000000 -0400
-@@ -0,0 +1,599 @@
++++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-09-30 01:54:43.000000000 -0400
+@@ -0,0 +1,605 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -3649,7 +3649,7 @@
 +	}
 +
 +	/* sceIoChdir doesn't give an indication of whether it worked,
-+	   so test for existance by attempting to open the dir */
++	   so test for existence by attempting to open the dir */
 +	uid = sceIoDopen(dest);
 +	if(uid < 0) {
 +		errno = ENOTDIR;
@@ -3844,17 +3844,23 @@
 +#ifdef F_opendir
 +DIR *opendir(const char *filename)
 +{
++	char dest[MAXPATHLEN + 1];
 +	DIR *dirp;
 +	SceUID uid;
 +
 +	/* Make sure the CWD has been set. */
-+	if (!__psp_cwd_initialized) {
++	if(!__psp_cwd_initialized)
 +		__psp_init_cwd();
++
++	/* Normalize pathname so that opendir(".") works */
++	if(__psp_path_absolute(filename, dest, MAXPATHLEN) < 0) {
++		errno = ENOENT;
++		return NULL;
 +	}
 +
 +	dirp = (DIR *)malloc(sizeof(DIR));
 +
-+	uid = sceIoDopen(filename);
++	uid = sceIoDopen(dest);
 +
 +	if (uid < 0)
 +	{

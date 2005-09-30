@@ -77,7 +77,7 @@ int chdir(const char *path)
 	}
 
 	/* sceIoChdir doesn't give an indication of whether it worked,
-	   so test for existance by attempting to open the dir */
+	   so test for existence by attempting to open the dir */
 	uid = sceIoDopen(dest);
 	if(uid < 0) {
 		errno = ENOTDIR;
@@ -272,17 +272,23 @@ int _link(const char *name1, const char *name2)
 #ifdef F_opendir
 DIR *opendir(const char *filename)
 {
+	char dest[MAXPATHLEN + 1];
 	DIR *dirp;
 	SceUID uid;
 
 	/* Make sure the CWD has been set. */
-	if (!__psp_cwd_initialized) {
+	if(!__psp_cwd_initialized)
 		__psp_init_cwd();
+
+	/* Normalize pathname so that opendir(".") works */
+	if(__psp_path_absolute(filename, dest, MAXPATHLEN) < 0) {
+		errno = ENOENT;
+		return NULL;
 	}
 
 	dirp = (DIR *)malloc(sizeof(DIR));
 
-	uid = sceIoDopen(filename);
+	uid = sceIoDopen(dest);
 
 	if (uid < 0)
 	{
