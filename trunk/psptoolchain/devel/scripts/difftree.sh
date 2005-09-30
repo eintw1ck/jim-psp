@@ -18,7 +18,7 @@ ODIR=`$CPWD`
 cd $1 || exit 1
 LDIR=`$CPWD`
 echo -n "Building file list ... "
-LIST=`find * \( -type d -name CVS -o -name .svn -prune \) -o -type f -print`
+LIST=`find * \( -type d -name CVS -o -name .svn -prune \) -o -type f -print | sort`
 echo -e "done."
 cd ${ODIR}
 

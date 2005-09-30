@@ -21,6 +21,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/unistd.h>
+#include <sys/dirent.h>
 
 #include <psptypes.h>
 #include <pspiofilemgr.h>
@@ -268,8 +269,8 @@ int _link(const char *name1, const char *name2)
 }
 #endif
 
-#ifdef F__opendir
-DIR *_opendir(const char *filename)
+#ifdef F_opendir
+DIR *opendir(const char *filename)
 {
 	DIR *dirp;
 	SceUID uid;
@@ -295,8 +296,8 @@ DIR *_opendir(const char *filename)
 }
 #endif
 
-#ifdef F__readdir
-struct SceIoDirent *_readdir(DIR *dirp)
+#ifdef F_readdir
+struct dirent *readdir(DIR *dirp)
 {
 	SceIoDirent *de;
 
@@ -308,12 +309,12 @@ struct SceIoDirent *_readdir(DIR *dirp)
 		return NULL;
 	}
 
-	return de;
+	return (struct dirent *)de;
 }
 #endif
 
-#ifdef F__closedir
-int _closedir(DIR *dirp)
+#ifdef F_closedir
+int closedir(DIR *dirp)
 {
 	if (dirp != NULL)
 	{
@@ -354,6 +355,15 @@ clock_t clock(void)
 time_t time(time_t *t)
 {
 	return sceKernelLibcTime(t);
+}
+#endif
+
+#if defined(F_sleep)
+unsigned int sleep(unsigned int secs) {
+	while(secs--) {	
+		sceKernelDelayThreadCB(1000000);
+	}
+	return 0;
 }
 #endif
 
