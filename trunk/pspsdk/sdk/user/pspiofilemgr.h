@@ -357,7 +357,7 @@ int sceIoChstat(const char *file, SceIoStat *stat, int bits);
 /**
   * Perform an ioctl on a device.
   *
-  * @param dev - String for the device to send the devctl to (e.g. "ms0:")
+  * @param fd - Opened file descriptor to ioctl to
   * @param cmd - The command to send to the device
   * @param indata - A data block to send to the device, if NULL sends no data
   * @param inlen - Length of indata, if 0 sends no data
@@ -365,12 +365,12 @@ int sceIoChstat(const char *file, SceIoStat *stat, int bits);
   * @param outlen - Length of outdata, if 0 receives no data
   * @return 0 on success, < 0 on error
   */
-int sceIoIoctl(const char *dev, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
+int sceIoIoctl(SceUID fd, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
 
 /**
   * Perform an ioctl on a device. (asynchronous)
   *
-  * @param dev - String for the device to send the devctl to (e.g. "ms0:")
+  * @param fd - Opened file descriptor to ioctl to
   * @param cmd - The command to send to the device
   * @param indata - A data block to send to the device, if NULL sends no data
   * @param inlen - Length of indata, if 0 sends no data
@@ -378,7 +378,7 @@ int sceIoIoctl(const char *dev, unsigned int cmd, void *indata, int inlen, void 
   * @param outlen - Length of outdata, if 0 receives no data
   * @return 0 on success, < 0 on error
   */
-int sceIoIoctlAsync(const char *dev, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
+int sceIoIoctlAsync(SceUID fd, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
 
 /**
   * Synchronise the file data on the device.
