@@ -85,7 +85,7 @@
  #define __SMALL_BITFIELDS
  #undef INT_MAX
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/Makefile.am	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2005-09-29 22:53:04.000000000 -0400
++++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2005-10-02 20:55:44.000000000 -0400
 @@ -0,0 +1,22 @@
 +## Process this file with automake to generate Makefile.in
 +
@@ -110,7 +110,7 @@
 +ACLOCAL_AMFLAGS = -I ../../..
 +CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)/configure.host
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/Makefile.in	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2005-09-29 22:53:46.000000000 -0400
++++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2005-10-02 20:55:42.000000000 -0400
 @@ -0,0 +1,344 @@
 +# Makefile.in generated automatically by automake 1.4-p6 from Makefile.am
 +
@@ -3568,8 +3568,8 @@
 +
 +void _start() { }
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/libcglue.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-09-30 01:54:43.000000000 -0400
-@@ -0,0 +1,605 @@
++++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-10-03 22:00:47.000000000 -0400
+@@ -0,0 +1,594 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -3601,24 +3601,20 @@
 +#include <pspsysmem.h>
 +#include <pspthreadman.h>
 +#include <psputils.h>
++#include <psputility.h>
 +
 +/* These functions aren't exposed in any public headers, and they probably don't need to be. */
 +int sceKernelStdin(void);
 +int sceKernelStdout(void);
 +int sceKernelStderr(void);
 +
-+extern char * __psp_argv_0;
-+extern int __psp_cwd_initialized;
 +extern char __psp_cwd[MAXPATHLEN + 1];
-+extern void __psp_init_cwd(void);
++extern void __psp_init_cwd(char *argv_0);
 +extern int __psp_path_absolute(const char *in, char *out, int len);
 +
 +#ifdef F_getcwd
 +char *getcwd(char *buf, size_t size)
 +{
-+	if(!__psp_cwd_initialized)
-+		__psp_init_cwd();
-+
 +	if(!buf) {
 +		errno = EINVAL;
 +		return NULL;
@@ -3639,9 +3635,6 @@
 +{
 +	char dest[MAXPATHLEN + 1];
 +	SceUID uid;
-+
-+	if(!__psp_cwd_initialized)
-+		__psp_init_cwd();
 +
 +	if(__psp_path_absolute(path, dest, MAXPATHLEN) < 0) {
 +		errno = ENAMETOOLONG;
@@ -3666,11 +3659,6 @@
 +#ifdef F_mkdir
 +int mkdir(const char *pathname, mode_t mode)
 +{
-+	/* Make sure the CWD has been set. */
-+	if (!__psp_cwd_initialized) {
-+		__psp_init_cwd();
-+	}
-+
 +	return sceIoMkdir(pathname, mode);
 +}
 +#endif
@@ -3678,11 +3666,6 @@
 +#ifdef F_rmdir
 +int rmdir(const char *pathname)
 +{
-+	/* Make sure the CWD has been set. */
-+	if (!__psp_cwd_initialized) {
-+		__psp_init_cwd();
-+	}
-+	
 +	return sceIoRmdir(pathname);
 +}
 +#endif
@@ -3707,11 +3690,6 @@
 +int _open(const char *name, int flags, int mode)
 +{
 +	int sce_flags;
-+
-+	/* Make sure the CWD has been set. */
-+	if (!__psp_cwd_initialized) {
-+		__psp_init_cwd();
-+	}
 +
 +	/* O_RDONLY starts at 0, where PSP_O_RDONLY starts at 1, so remap the read/write
 +	   flags by adding 1. */
@@ -3826,10 +3804,6 @@
 +#ifdef F__unlink
 +int _unlink(const char *path)
 +{
-+	/* Make sure the CWD has been set. */
-+	if (!__psp_cwd_initialized) {
-+		__psp_init_cwd();
-+	}
 +	return sceIoRemove(path);
 +}
 +#endif
@@ -3847,10 +3821,6 @@
 +	char dest[MAXPATHLEN + 1];
 +	DIR *dirp;
 +	SceUID uid;
-+
-+	/* Make sure the CWD has been set. */
-+	if(!__psp_cwd_initialized)
-+		__psp_init_cwd();
 +
 +	/* Normalize pathname so that opendir(".") works */
 +	if(__psp_path_absolute(filename, dest, MAXPATHLEN) < 0) {
@@ -4055,11 +4025,6 @@
 +	SceIoStat psp_stat;
 +	int ret;
 +	
-+	/* Make sure the CWD has been set. */
-+	if (!__psp_cwd_initialized) {
-+		__psp_init_cwd();
-+	}
-+	
 +	memset(buf, '\0', sizeof(struct stat));
 +	if((ret = sceIoGetstat(filename, &psp_stat)) < 0)
 +		return ret;
@@ -4084,11 +4049,6 @@
 +int truncate(const char *filename, off_t length)
 +{
 +	SceIoStat psp_stat;
-+
-+	/* Make sure the CWD has been set. */
-+	if (!__psp_cwd_initialized) {
-+		__psp_init_cwd();
-+	}
 +
 +	psp_stat.st_size = length;
 +	if(length < 0)
@@ -4160,7 +4120,36 @@
 +
 +	while (1) ;
 +}
-+#endif
++
++/* Note: This function is being linked into _exit.o.  
++
++   Because __psp_libc_init is a weak import in crt0.c, the linker
++   chooses to ignore an object file in libc.a that contains just this
++   function, since it's not necessary for successful compilation.
++
++   By putting it instead in _exit.o, which is already used by crt0.c,
++   the linker sees __psp_libc_init and resolves the symbol properly.
++*/
++void __psp_libc_init(int argc, char *argv[])
++{
++	(void)argc;
++
++	/* Initialize cwd from this program's path */
++	__psp_init_cwd(argv[0]);
++	
++	/* Initialize timezone from PSP configuration */
++	int tzOffset = 0;
++	sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_TIMEZONE, &tzOffset);
++	int tzOffsetAbs = tzOffset < 0 ? -tzOffset : tzOffset;
++	int hours = tzOffsetAbs / 60;
++	int minutes = tzOffsetAbs - hours * 60;
++ 	static char tz[10];
++	sprintf(tz, "GMT%s%02i:%02i", tzOffset < 0 ? "+" : "-", hours, minutes);
++	setenv("TZ", tz, 1);
++	tzset(); 
++}
++
++#endif /* F__exit */
 +
 +/* newlib's errno.h wants a function that returns a pointer to errno. */
 +#ifdef F_glue___errno
@@ -4176,8 +4165,8 @@
 +}
 +#endif
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/pspcwd.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/pspcwd.c	2005-07-28 15:42:00.000000000 -0400
-@@ -0,0 +1,170 @@
++++ newlib-psp/newlib/libc/sys/psp/pspcwd.c	2005-10-02 14:42:32.000000000 -0400
+@@ -0,0 +1,166 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -4198,20 +4187,16 @@
 +#include <psptypes.h>
 +#include <pspiofilemgr.h>
 +
-+extern char * __psp_argv_0;
-+int __psp_cwd_initialized = 0;
 +char __psp_cwd[MAXPATHLEN + 1] = { 0 };
 +
 +/* Set the current working directory (CWD) to the path where the module was launched. */
-+void __psp_init_cwd(void)
++void __psp_init_cwd(char *argv_0)
 +{
-+	if (!__psp_cwd_initialized && (__psp_argv_0 != NULL)) {
++	if (argv_0 != NULL) {
 +		char base_path[MAXPATHLEN + 1];
 +		char *end;
 +
-+		__psp_cwd_initialized = 1;
-+
-+		strncpy(base_path, __psp_argv_0, sizeof(base_path) - 1);
++		strncpy(base_path, argv_0, sizeof(base_path) - 1);
 +		base_path[sizeof(base_path) - 1] = '\0';
 +		end = strrchr(base_path, '/');
 +		if (end != NULL) {

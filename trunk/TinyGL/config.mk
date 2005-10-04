@@ -78,7 +78,7 @@ UI_INCLUDES=
 
 PSPSDK_LIBC_LIB = -lm -lc
 PSPSDK_LIBS = -lpsphprm -lpspdebug -lpspdisplay -lpspge -lpspaudio -lpspctrl -lpspsdk
-UI_LIBS += $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpspuser -lpspkernel
+UI_LIBS += $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpspuser -lpsputility -lpspkernel
 UI_INCLUDES += -I`psp-config --pspsdk-path`/include -I`psp-config --psp-prefix`/include
 
 UI_OBJS=sdl.o

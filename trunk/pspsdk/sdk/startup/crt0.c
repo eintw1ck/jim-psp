@@ -36,14 +36,13 @@ extern unsigned int sce_newlib_stack_kb_size __attribute__((weak));
    toolchain. */
 extern SceModuleInfo module_info __attribute__((weak));
 
+/* Allow newlib/psplibc to provide an init hook to be called before main */
+extern void __psp_libc_init(int argc, char *argv[]) __attribute__((weak));
+
 extern void _init(void);
 extern void _fini(void);
 
 extern int main(int argc, char *argv[]);
-
-/* argv[0] contains the full path to the module.  Save it here so that other
-   code can use it. */
-char * __psp_argv_0 = NULL;
 
 /**
  * Main program thread
@@ -66,7 +65,10 @@ void _main(SceSize args, void *argp)
 		} while ((argc < ARG_MAX) && (((char *) argp - ap) < args));
 	}
 	argv[argc] = NULL;
-	__psp_argv_0 = argv[0];
+
+	/* Call libc initialization hook */
+	if(__psp_libc_init != NULL)
+		__psp_libc_init(argc, argv);
 
 	/* Make sure _fini() is called when the program ends. */
 	atexit((void *) _fini);

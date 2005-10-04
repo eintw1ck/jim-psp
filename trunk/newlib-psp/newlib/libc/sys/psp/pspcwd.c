@@ -18,20 +18,16 @@
 #include <psptypes.h>
 #include <pspiofilemgr.h>
 
-extern char * __psp_argv_0;
-int __psp_cwd_initialized = 0;
 char __psp_cwd[MAXPATHLEN + 1] = { 0 };
 
 /* Set the current working directory (CWD) to the path where the module was launched. */
-void __psp_init_cwd(void)
+void __psp_init_cwd(char *argv_0)
 {
-	if (!__psp_cwd_initialized && (__psp_argv_0 != NULL)) {
+	if (argv_0 != NULL) {
 		char base_path[MAXPATHLEN + 1];
 		char *end;
 
-		__psp_cwd_initialized = 1;
-
-		strncpy(base_path, __psp_argv_0, sizeof(base_path) - 1);
+		strncpy(base_path, argv_0, sizeof(base_path) - 1);
 		base_path[sizeof(base_path) - 1] = '\0';
 		end = strrchr(base_path, '/');
 		if (end != NULL) {

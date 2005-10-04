@@ -29,24 +29,20 @@
 #include <pspsysmem.h>
 #include <pspthreadman.h>
 #include <psputils.h>
+#include <psputility.h>
 
 /* These functions aren't exposed in any public headers, and they probably don't need to be. */
 int sceKernelStdin(void);
 int sceKernelStdout(void);
 int sceKernelStderr(void);
 
-extern char * __psp_argv_0;
-extern int __psp_cwd_initialized;
 extern char __psp_cwd[MAXPATHLEN + 1];
-extern void __psp_init_cwd(void);
+extern void __psp_init_cwd(char *argv_0);
 extern int __psp_path_absolute(const char *in, char *out, int len);
 
 #ifdef F_getcwd
 char *getcwd(char *buf, size_t size)
 {
-	if(!__psp_cwd_initialized)
-		__psp_init_cwd();
-
 	if(!buf) {
 		errno = EINVAL;
 		return NULL;
@@ -67,9 +63,6 @@ int chdir(const char *path)
 {
 	char dest[MAXPATHLEN + 1];
 	SceUID uid;
-
-	if(!__psp_cwd_initialized)
-		__psp_init_cwd();
 
 	if(__psp_path_absolute(path, dest, MAXPATHLEN) < 0) {
 		errno = ENAMETOOLONG;
@@ -94,11 +87,6 @@ int chdir(const char *path)
 #ifdef F_mkdir
 int mkdir(const char *pathname, mode_t mode)
 {
-	/* Make sure the CWD has been set. */
-	if (!__psp_cwd_initialized) {
-		__psp_init_cwd();
-	}
-
 	return sceIoMkdir(pathname, mode);
 }
 #endif
@@ -106,11 +94,6 @@ int mkdir(const char *pathname, mode_t mode)
 #ifdef F_rmdir
 int rmdir(const char *pathname)
 {
-	/* Make sure the CWD has been set. */
-	if (!__psp_cwd_initialized) {
-		__psp_init_cwd();
-	}
-	
 	return sceIoRmdir(pathname);
 }
 #endif
@@ -135,11 +118,6 @@ char *realpath(const char *path, char *resolved_path)
 int _open(const char *name, int flags, int mode)
 {
 	int sce_flags;
-
-	/* Make sure the CWD has been set. */
-	if (!__psp_cwd_initialized) {
-		__psp_init_cwd();
-	}
 
 	/* O_RDONLY starts at 0, where PSP_O_RDONLY starts at 1, so remap the read/write
 	   flags by adding 1. */
@@ -254,10 +232,6 @@ off_t _lseek(int fd, off_t offset, int whence)
 #ifdef F__unlink
 int _unlink(const char *path)
 {
-	/* Make sure the CWD has been set. */
-	if (!__psp_cwd_initialized) {
-		__psp_init_cwd();
-	}
 	return sceIoRemove(path);
 }
 #endif
@@ -275,10 +249,6 @@ DIR *opendir(const char *filename)
 	char dest[MAXPATHLEN + 1];
 	DIR *dirp;
 	SceUID uid;
-
-	/* Make sure the CWD has been set. */
-	if(!__psp_cwd_initialized)
-		__psp_init_cwd();
 
 	/* Normalize pathname so that opendir(".") works */
 	if(__psp_path_absolute(filename, dest, MAXPATHLEN) < 0) {
@@ -483,11 +453,6 @@ int _stat(const char *filename, struct stat *buf)
 	SceIoStat psp_stat;
 	int ret;
 	
-	/* Make sure the CWD has been set. */
-	if (!__psp_cwd_initialized) {
-		__psp_init_cwd();
-	}
-	
 	memset(buf, '\0', sizeof(struct stat));
 	if((ret = sceIoGetstat(filename, &psp_stat)) < 0)
 		return ret;
@@ -512,11 +477,6 @@ int _stat(const char *filename, struct stat *buf)
 int truncate(const char *filename, off_t length)
 {
 	SceIoStat psp_stat;
-
-	/* Make sure the CWD has been set. */
-	if (!__psp_cwd_initialized) {
-		__psp_init_cwd();
-	}
 
 	psp_stat.st_size = length;
 	if(length < 0)
@@ -588,7 +548,36 @@ void _exit(int status)
 
 	while (1) ;
 }
-#endif
+
+/* Note: This function is being linked into _exit.o.  
+
+   Because __psp_libc_init is a weak import in crt0.c, the linker
+   chooses to ignore an object file in libc.a that contains just this
+   function, since it's not necessary for successful compilation.
+
+   By putting it instead in _exit.o, which is already used by crt0.c,
+   the linker sees __psp_libc_init and resolves the symbol properly.
+*/
+void __psp_libc_init(int argc, char *argv[])
+{
+	(void)argc;
+
+	/* Initialize cwd from this program's path */
+	__psp_init_cwd(argv[0]);
+	
+	/* Initialize timezone from PSP configuration */
+	int tzOffset = 0;
+	sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_TIMEZONE, &tzOffset);
+	int tzOffsetAbs = tzOffset < 0 ? -tzOffset : tzOffset;
+	int hours = tzOffsetAbs / 60;
+	int minutes = tzOffsetAbs - hours * 60;
+ 	static char tz[10];
+	sprintf(tz, "GMT%s%02i:%02i", tzOffset < 0 ? "+" : "-", hours, minutes);
+	setenv("TZ", tz, 1);
+	tzset(); 
+}
+
+#endif /* F__exit */
 
 /* newlib's errno.h wants a function that returns a pointer to errno. */
 #ifdef F_glue___errno

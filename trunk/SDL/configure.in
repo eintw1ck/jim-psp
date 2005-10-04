@@ -1884,7 +1884,7 @@ CheckPSPSDK()
     CFLAGS="$CFLAGS -G0 -I\"${pspsdk_path}/include\""
     SYSTEM_LIBS="$SYSTEM_LIBS -L${pspsdk_path}/lib -lpspdebug -lpspgu -lpspctrl"
     SYSTEM_LIBS="$SYSTEM_LIBS -lpspge -lpspdisplay -lpsphprm -lpspsdk"
-    SYSTEM_LIBS="$SYSTEM_LIBS -lpspaudio -lc -lpspuser -lpspkernel"
+    SYSTEM_LIBS="$SYSTEM_LIBS -lpspaudio -lc -lpspuser -lpsputility -lpspkernel"
 }
 
 case "$target" in
