@@ -5687,7 +5687,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x60577DBD</NID>
-						<NAME>sceMSAudio_driver_60577DBD</NAME>
+						<NAME>sceMSAudioGetICVInfo</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -8144,7 +8144,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x759937C5</NID>
-						<NAME>sceRtc_driver_759937C5</NAME>
+						<NAME>sceRtcSetConf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC41C2853</NID>
@@ -9260,7 +9260,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAD09C397</NID>
-						<NAME>SysMemForKernel_AD09C397</NAME>
+						<NAME>sceKernelCreateUIDtypeInherit</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFEFC8666</NID>
@@ -9300,7 +9300,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x41FFC7F9</NID>
-						<NAME>SysMemForKernel_41FFC7F9</NAME>
+						<NAME>sceKernelGetUIDcontrolBlockWithType</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82D3CEE3</NID>
@@ -12933,7 +12933,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0FA48729</NID>
-						<NAME>sceVshBridge_0FA48729</NAME>
+						<NAME>vshRtcSetConf</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x16415246</NID>
@@ -13029,7 +13029,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6396ACBD</NID>
-						<NAME>sceVshBridge_6396ACBD</NAME>
+						<NAME>vshMSAudioGetICVInfo</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x274BB6AE</NID>
