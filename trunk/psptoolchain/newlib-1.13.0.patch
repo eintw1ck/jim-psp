@@ -3568,8 +3568,8 @@
 +
 +void _start() { }
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/libcglue.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-10-05 04:23:52.000000000 -0400
-@@ -0,0 +1,605 @@
++++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-10-05 11:16:12.000000000 -0400
+@@ -0,0 +1,649 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -3659,14 +3659,28 @@
 +#ifdef F_mkdir
 +int mkdir(const char *pathname, mode_t mode)
 +{
-+	return sceIoMkdir(pathname, mode);
++	char dest[MAXPATHLEN + 1];
++
++	if(__psp_path_absolute(pathname, dest, MAXPATHLEN) < 0) {
++		errno = ENAMETOOLONG;
++		return -1;
++	}
++
++	return sceIoMkdir(dest, mode);
 +}
 +#endif
 +
 +#ifdef F_rmdir
 +int rmdir(const char *pathname)
 +{
-+	return sceIoRmdir(pathname);
++	char dest[MAXPATHLEN + 1];
++
++	if(__psp_path_absolute(pathname, dest, MAXPATHLEN) < 0) {
++		errno = ENAMETOOLONG;
++		return -1;
++	}
++
++	return sceIoRmdir(dest);
 +}
 +#endif
 +
@@ -3676,9 +3690,13 @@
 +	if(!path || !resolved_path) {
 +		errno = EINVAL;
 +		return NULL;
-+	}		
++	}
 +	if(__psp_path_absolute(path, resolved_path, MAXPATHLEN) < 0) {
 +		errno = ENAMETOOLONG;
++		return NULL;
++	}
++	if(access(resolved_path, F_OK) < 0) {
++		errno = ENOENT;
 +		return NULL;
 +	}
 +	return resolved_path;
@@ -3690,6 +3708,12 @@
 +int _open(const char *name, int flags, int mode)
 +{
 +	int sce_flags;
++	char dest[MAXPATHLEN + 1];
++
++	if(__psp_path_absolute(name, dest, MAXPATHLEN) < 0) {
++		errno = ENAMETOOLONG;
++		return -1;
++	}
 +
 +	/* O_RDONLY starts at 0, where PSP_O_RDONLY starts at 1, so remap the read/write
 +	   flags by adding 1. */
@@ -3712,7 +3736,7 @@
 +		sce_flags |= PSP_O_NBLOCK;
 +	}
 +
-+	return sceIoOpen(name, sce_flags, mode);
++	return sceIoOpen(dest, sce_flags, mode);
 +}
 +#endif
 +
@@ -3804,14 +3828,21 @@
 +#ifdef F__unlink
 +int _unlink(const char *path)
 +{
-+	return sceIoRemove(path);
++	char dest[MAXPATHLEN + 1];
++
++	if(__psp_path_absolute(path, dest, MAXPATHLEN) < 0) {
++		errno = ENAMETOOLONG;
++		return -1;
++	}
++
++	return sceIoRemove(dest);
 +}
 +#endif
 +
 +#ifdef F__link
 +int _link(const char *name1, const char *name2)
 +{
-+	return -1;
++	return -1; /* not supported */
 +}
 +#endif
 +
@@ -3994,6 +4025,7 @@
 +#ifdef F__fstat
 +int _fstat(int fd, struct stat *sbuf)
 +{
++        /* This is all Sony's newlib does, but should be improved */
 +	sbuf->st_mode = S_IFCHR;
 +	return 0;
 +}
@@ -4024,9 +4056,15 @@
 +{
 +	SceIoStat psp_stat;
 +	int ret;
-+	
++	char dest[MAXPATHLEN + 1];
++
++	if(__psp_path_absolute(filename, dest, MAXPATHLEN) < 0) {
++		errno = ENAMETOOLONG;
++		return -1;
++	}
++
 +	memset(buf, '\0', sizeof(struct stat));
-+	if((ret = sceIoGetstat(filename, &psp_stat)) < 0)
++	if((ret = sceIoGetstat(dest, &psp_stat)) < 0)
 +		return ret;
 +	
 +	buf->st_ctime = psp_to_epoch_time(psp_stat.st_ctime);
@@ -4049,6 +4087,12 @@
 +int truncate(const char *filename, off_t length)
 +{
 +	SceIoStat psp_stat;
++	char dest[MAXPATHLEN + 1];
++
++	if(__psp_path_absolute(filename, dest, MAXPATHLEN) < 0) {
++		errno = ENAMETOOLONG;
++		return -1;
++	}
 +
 +	psp_stat.st_size = length;
 +	if(length < 0)
@@ -4056,7 +4100,7 @@
 +		errno = EINVAL;
 +		return -1;
 +	}
-+	return sceIoChstat(filename, &psp_stat, FIO_CST_SIZE);
++	return sceIoChstat(dest, &psp_stat, FIO_CST_SIZE);
 +}
 +#endif
 +

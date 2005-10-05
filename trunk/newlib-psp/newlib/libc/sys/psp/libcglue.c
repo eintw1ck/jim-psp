@@ -87,14 +87,28 @@ int chdir(const char *path)
 #ifdef F_mkdir
 int mkdir(const char *pathname, mode_t mode)
 {
-	return sceIoMkdir(pathname, mode);
+	char dest[MAXPATHLEN + 1];
+
+	if(__psp_path_absolute(pathname, dest, MAXPATHLEN) < 0) {
+		errno = ENAMETOOLONG;
+		return -1;
+	}
+
+	return sceIoMkdir(dest, mode);
 }
 #endif
 
 #ifdef F_rmdir
 int rmdir(const char *pathname)
 {
-	return sceIoRmdir(pathname);
+	char dest[MAXPATHLEN + 1];
+
+	if(__psp_path_absolute(pathname, dest, MAXPATHLEN) < 0) {
+		errno = ENAMETOOLONG;
+		return -1;
+	}
+
+	return sceIoRmdir(dest);
 }
 #endif
 
@@ -104,9 +118,13 @@ char *realpath(const char *path, char *resolved_path)
 	if(!path || !resolved_path) {
 		errno = EINVAL;
 		return NULL;
-	}		
+	}
 	if(__psp_path_absolute(path, resolved_path, MAXPATHLEN) < 0) {
 		errno = ENAMETOOLONG;
+		return NULL;
+	}
+	if(access(resolved_path, F_OK) < 0) {
+		errno = ENOENT;
 		return NULL;
 	}
 	return resolved_path;
@@ -118,6 +136,12 @@ char *realpath(const char *path, char *resolved_path)
 int _open(const char *name, int flags, int mode)
 {
 	int sce_flags;
+	char dest[MAXPATHLEN + 1];
+
+	if(__psp_path_absolute(name, dest, MAXPATHLEN) < 0) {
+		errno = ENAMETOOLONG;
+		return -1;
+	}
 
 	/* O_RDONLY starts at 0, where PSP_O_RDONLY starts at 1, so remap the read/write
 	   flags by adding 1. */
@@ -140,7 +164,7 @@ int _open(const char *name, int flags, int mode)
 		sce_flags |= PSP_O_NBLOCK;
 	}
 
-	return sceIoOpen(name, sce_flags, mode);
+	return sceIoOpen(dest, sce_flags, mode);
 }
 #endif
 
@@ -232,14 +256,21 @@ off_t _lseek(int fd, off_t offset, int whence)
 #ifdef F__unlink
 int _unlink(const char *path)
 {
-	return sceIoRemove(path);
+	char dest[MAXPATHLEN + 1];
+
+	if(__psp_path_absolute(path, dest, MAXPATHLEN) < 0) {
+		errno = ENAMETOOLONG;
+		return -1;
+	}
+
+	return sceIoRemove(dest);
 }
 #endif
 
 #ifdef F__link
 int _link(const char *name1, const char *name2)
 {
-	return -1;
+	return -1; /* not supported */
 }
 #endif
 
@@ -422,6 +453,7 @@ int __psp_free_heap(void)
 #ifdef F__fstat
 int _fstat(int fd, struct stat *sbuf)
 {
+        /* This is all Sony's newlib does, but should be improved */
 	sbuf->st_mode = S_IFCHR;
 	return 0;
 }
@@ -452,9 +484,15 @@ int _stat(const char *filename, struct stat *buf)
 {
 	SceIoStat psp_stat;
 	int ret;
-	
+	char dest[MAXPATHLEN + 1];
+
+	if(__psp_path_absolute(filename, dest, MAXPATHLEN) < 0) {
+		errno = ENAMETOOLONG;
+		return -1;
+	}
+
 	memset(buf, '\0', sizeof(struct stat));
-	if((ret = sceIoGetstat(filename, &psp_stat)) < 0)
+	if((ret = sceIoGetstat(dest, &psp_stat)) < 0)
 		return ret;
 	
 	buf->st_ctime = psp_to_epoch_time(psp_stat.st_ctime);
@@ -477,6 +515,12 @@ int _stat(const char *filename, struct stat *buf)
 int truncate(const char *filename, off_t length)
 {
 	SceIoStat psp_stat;
+	char dest[MAXPATHLEN + 1];
+
+	if(__psp_path_absolute(filename, dest, MAXPATHLEN) < 0) {
+		errno = ENAMETOOLONG;
+		return -1;
+	}
 
 	psp_stat.st_size = length;
 	if(length < 0)
@@ -484,7 +528,7 @@ int truncate(const char *filename, off_t length)
 		errno = EINVAL;
 		return -1;
 	}
-	return sceIoChstat(filename, &psp_stat, FIO_CST_SIZE);
+	return sceIoChstat(dest, &psp_stat, FIO_CST_SIZE);
 }
 #endif
 
