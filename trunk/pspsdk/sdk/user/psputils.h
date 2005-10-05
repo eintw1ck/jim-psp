@@ -57,6 +57,21 @@ void sceKernelDcacheWritebackAll(void);
   */
 void sceKernelDcacheWritebackInvalidateAll(void);
 
+/**
+  * Write back a range of addresses from data cache to memory
+  */
+void sceKernelDcacheWritebackRange(const void *p, unsigned int size);
+
+/**
+  * Write back and invalidate a range of addresses in data cache
+  */
+void sceKernelDcacheWritebackInvalidateRange(const void *p, unsigned int size);
+
+/**
+  * Invalidate a range of addresses in data cache
+  */
+void sceKernelDcacheInvalidateRange(const void *p, unsigned int size);
+
 /** Structure for holding a mersenne twister context */
 typedef struct _SceKernelUtilsMt19937Context {
 	unsigned int 	count;
