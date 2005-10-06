@@ -40,6 +40,9 @@ extern char __psp_cwd[MAXPATHLEN + 1];
 extern void __psp_init_cwd(char *argv_0);
 extern int __psp_path_absolute(const char *in, char *out, int len);
 
+#define __PSP_FILENO_MAX 1024
+extern char * __psp_filename_map[__PSP_FILENO_MAX];
+
 #ifdef F_getcwd
 char *getcwd(char *buf, size_t size)
 {
@@ -135,6 +138,7 @@ char *realpath(const char *path, char *resolved_path)
 #ifdef F__open
 int _open(const char *name, int flags, int mode)
 {
+       int fd;
 	int sce_flags;
 	char dest[MAXPATHLEN + 1];
 
@@ -164,92 +168,63 @@ int _open(const char *name, int flags, int mode)
 		sce_flags |= PSP_O_NBLOCK;
 	}
 
-	return sceIoOpen(dest, sce_flags, mode);
+       fd = sceIoOpen(dest, sce_flags, mode);
+       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+               __psp_filename_map[fd] = strdup(dest);
+       }
+       return fd;
 }
 #endif
 
 #ifdef F__close
 int _close(int fd)
 {
-	int sce_fd = fd;
-
-	if (fd == STDIN_FILENO) {
-		sce_fd = sceKernelStdin();
-	} else if (fd == STDOUT_FILENO) {
-		sce_fd = sceKernelStdout();
-	} else if (fd == STDERR_FILENO) {
-		sce_fd == sceKernelStderr();
-	}
-
-	if (sce_fd < 0) {
+       if (fd < 0) {
 		return -EBADF;
 	}
 
-	return sceIoClose(sce_fd);
+       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+               if (__psp_filename_map[fd] != NULL) {
+                       free(__psp_filename_map[fd]);
+                       __psp_filename_map[fd] = NULL;
+               }
+       }
+
+       return sceIoClose(fd);
 }
 #endif
 
 #ifdef F__read
 int _read(int fd, void *buf, size_t size)
 {
-	int sce_fd = fd;
-
-	if (fd == STDIN_FILENO) {
-		sce_fd = sceKernelStdin();
-	} else if (fd == STDOUT_FILENO) {
-		sce_fd = sceKernelStdout();
-	} else if (fd == STDERR_FILENO) {
-		sce_fd = sceKernelStderr();
-	}
-
-	if (sce_fd < 0) {
+       if (fd < 0) {
 		return -EBADF;
 	}
 
-	return sceIoRead(sce_fd, buf, size);
+       return sceIoRead(fd, buf, size);
 }
 #endif
 
 #ifdef F__write
 int _write(int fd, const void *buf, size_t size)
 {
-	int sce_fd = fd;
-
-	if (fd == STDIN_FILENO) {
-		sce_fd = sceKernelStdin();
-	} else if (fd == STDOUT_FILENO) {
-		sce_fd = sceKernelStdout();
-	} else if (fd == STDERR_FILENO) {
-		sce_fd = sceKernelStderr();
-	}
-
-	if (sce_fd < 0) {
+       if (fd < 0) {
 		return -EBADF;
 	}
 
-	return sceIoWrite(sce_fd, buf, size);
+       return sceIoWrite(fd, buf, size);
 }
 #endif
 
 #ifdef F__lseek
 off_t _lseek(int fd, off_t offset, int whence)
 {
-	int sce_fd = fd;
-
-	if (fd == STDIN_FILENO) {
-		sce_fd = sceKernelStdin();
-	} else if (fd == STDOUT_FILENO) {
-		sce_fd = sceKernelStdout();
-	} else if (fd == STDERR_FILENO) {
-		sce_fd = sceKernelStderr();
-	}
-
-	if (sce_fd < 0) {
+       if (fd < 0) {
 		return -EBADF;
 	}
 
 	/* We don't have to do anything with the whence argument because SEEK_* == PSP_SEEK_*. */
-	return (off_t) sceIoLseek(sce_fd, offset, whence);
+       return (off_t) sceIoLseek(fd, offset, whence);
 }
 #endif
 
@@ -453,16 +428,34 @@ int __psp_free_heap(void)
 #ifdef F__fstat
 int _fstat(int fd, struct stat *sbuf)
 {
-        /* This is all Sony's newlib does, but should be improved */
-	sbuf->st_mode = S_IFCHR;
-	return 0;
+       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+               if (__psp_filename_map[fd] != NULL) {
+                       if (strcmp(__psp_filename_map[fd], "  __PSP_STDIO") == 0) {
+                               memset(sbuf, '\0', sizeof(struct stat));
+                               sbuf->st_mode = S_IFCHR;
+                               return 0;
+                       } else {
+                               return stat(__psp_filename_map[fd], sbuf);
+                       }
+               }
+       }
+       return -1;
 }
 #endif
 
 #ifdef F_isatty
 int isatty(int fd)
 {
-	return 1;
+       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+               if (__psp_filename_map[fd] != NULL) {
+                       if (strcmp(__psp_filename_map[fd], "  __PSP_STDIO") == 0) {
+                               return 1;
+                       } else {
+                               return 0;
+                       }
+               }
+       }
+       return 0;
 }
 #endif
 
@@ -615,10 +608,26 @@ void _exit(int status)
 */
 void __psp_libc_init(int argc, char *argv[])
 {
-	(void)argc;
+       int fd;
+       (void) argc;
 
 	/* Initialize cwd from this program's path */
 	__psp_init_cwd(argv[0]);
+
+       /* Initialize filenamap */
+       memset(__psp_filename_map, '\0', sizeof(char *) * __PSP_FILENO_MAX);
+       fd = sceKernelStdin();
+       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+               __psp_filename_map[fd] = strdup("  __PSP_STDIO");
+       }
+       fd = sceKernelStdout();
+       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+               __psp_filename_map[fd] = strdup("  __PSP_STDIO");
+       }
+       fd = sceKernelStderr();
+       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+               __psp_filename_map[fd] = strdup("  __PSP_STDIO");
+       }
 	
 	/* Initialize timezone from PSP configuration */
 	int tzOffset = 0;
