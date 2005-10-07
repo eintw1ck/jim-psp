@@ -476,7 +476,6 @@ static time_t psp_to_epoch_time(ScePspDateTime psp_time)
 int _stat(const char *filename, struct stat *buf)
 {
 	SceIoStat psp_stat;
-	int ret;
 	char dest[MAXPATHLEN + 1];
 
 	if(__psp_path_absolute(filename, dest, MAXPATHLEN) < 0) {
@@ -485,8 +484,8 @@ int _stat(const char *filename, struct stat *buf)
 	}
 
 	memset(buf, '\0', sizeof(struct stat));
-	if((ret = sceIoGetstat(dest, &psp_stat)) < 0)
-		return ret;
+	if(sceIoGetstat(dest, &psp_stat) < 0)
+		return -1;
 	
 	buf->st_ctime = psp_to_epoch_time(psp_stat.st_ctime);
 	buf->st_atime = psp_to_epoch_time(psp_stat.st_atime);
