@@ -39,7 +39,7 @@ void sceKernelRegisterDebugPutchar(PspDebugPutChar func);
  * Kernel printf function.
  *
  * @param format - The format string.
- * @param ... - Arguements for the format string.
+ * @param ... - Arguments for the format string.
  */
 void Kprintf(const char *format, ...);
 
