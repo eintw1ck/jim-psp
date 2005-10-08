@@ -33,7 +33,8 @@
    BUILD_GCC=1
    BUILD_NEWLIB=1
    BUILD_PSPSDK=1
-   BUILD_GDB=1
+   # By default dont build GDB
+   BUILD_GDB=0
 
   ## Else...
   else
@@ -112,6 +113,15 @@
   else
    echo "ERROR: Please make sure you have 'subversion (svn)' installed."
    exit
+  fi
+
+  if test $BUILD_GDB ; then
+     if test "`flex --version 2> /dev/null`" ; then
+	    FLEX="flex"
+     else
+        echo "ERROR: To build GDB you need to have 'flex' installed."
+		exit
+	 fi
   fi
 
  ################################
