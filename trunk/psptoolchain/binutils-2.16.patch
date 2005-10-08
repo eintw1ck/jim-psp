@@ -1,26 +1,6 @@
---- binutils-2.16.orig/bfd/Makefile.am	2005-05-02 12:45:42.000000000 -0700
-+++ binutils-psp/bfd/Makefile.am	2005-07-22 22:17:36.000000000 -0700
-@@ -3,7 +3,7 @@
- AUTOMAKE_OPTIONS = 1.9 cygnus
- 
- # Uncomment the following line when doing a release.
--RELEASE=y
-+#RELEASE=y
- 
- INCDIR = $(srcdir)/../include
- CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
---- binutils-2.16.orig/bfd/bfd-in2.h	2005-03-02 13:23:20.000000000 -0800
-+++ binutils-psp/bfd/bfd-in2.h	2005-06-19 18:09:32.000000000 -0700
-@@ -1600,6 +1600,7 @@
- #define bfd_mach_mips16                16
- #define bfd_mach_mips5                 5
- #define bfd_mach_mips_sb1              12310201 /* octal 'SB', 01 */
-+#define bfd_mach_mips_allegrex         10111431 /* octal 'AL', 31 */
- #define bfd_mach_mipsisa32             32
- #define bfd_mach_mipsisa32r2           33
- #define bfd_mach_mipsisa64             64
---- binutils-2.16.orig/bfd/archures.c	2005-01-17 06:08:03.000000000 -0800
-+++ binutils-psp/bfd/archures.c	2005-06-19 18:09:32.000000000 -0700
+diff -burN binutils-2.16/bfd/archures.c binutils-psp/bfd/archures.c
+--- binutils-2.16/bfd/archures.c	2005-01-17 14:08:03.000000000 +0000
++++ binutils-psp/bfd/archures.c	2005-10-03 18:46:57.000000000 +0100
 @@ -155,6 +155,7 @@
  .#define bfd_mach_mips16		16
  .#define bfd_mach_mips5                 5
@@ -29,8 +9,41 @@
  .#define bfd_mach_mipsisa32             32
  .#define bfd_mach_mipsisa32r2           33
  .#define bfd_mach_mipsisa64             64
---- binutils-2.16.orig/bfd/elfxx-mips.c	2005-04-19 11:37:04.000000000 -0700
-+++ binutils-psp/bfd/elfxx-mips.c	2005-06-19 18:09:32.000000000 -0700
+diff -burN binutils-2.16/bfd/bfd-in2.h binutils-psp/bfd/bfd-in2.h
+--- binutils-2.16/bfd/bfd-in2.h	2005-03-02 21:23:20.000000000 +0000
++++ binutils-psp/bfd/bfd-in2.h	2005-10-03 18:46:57.000000000 +0100
+@@ -1600,6 +1600,7 @@
+ #define bfd_mach_mips16                16
+ #define bfd_mach_mips5                 5
+ #define bfd_mach_mips_sb1              12310201 /* octal 'SB', 01 */
++#define bfd_mach_mips_allegrex         10111431 /* octal 'AL', 31 */
+ #define bfd_mach_mipsisa32             32
+ #define bfd_mach_mipsisa32r2           33
+ #define bfd_mach_mipsisa64             64
+diff -burN binutils-2.16/bfd/cpu-mips.c binutils-psp/bfd/cpu-mips.c
+--- binutils-2.16/bfd/cpu-mips.c	2005-03-03 11:40:58.000000000 +0000
++++ binutils-psp/bfd/cpu-mips.c	2005-10-03 18:46:57.000000000 +0100
+@@ -86,6 +86,7 @@
+   I_mipsisa64,
+   I_mipsisa64r2,
+   I_sb1,
++  I_allegrex,
+ };
+ 
+ #define NN(index) (&arch_info_struct[(index) + 1])
+@@ -118,7 +119,8 @@
+   N (32, 32, bfd_mach_mipsisa32r2,"mips:isa32r2", FALSE, NN(I_mipsisa32r2)),
+   N (64, 64, bfd_mach_mipsisa64,  "mips:isa64",   FALSE, NN(I_mipsisa64)),
+   N (64, 64, bfd_mach_mipsisa64r2,"mips:isa64r2", FALSE, NN(I_mipsisa64r2)),
+-  N (64, 64, bfd_mach_mips_sb1, "mips:sb1",       FALSE, 0),
++  N (64, 64, bfd_mach_mips_sb1, "mips:sb1",       FALSE, NN(I_sb1)),
++  N (32, 32, bfd_mach_mips_allegrex, "mips:allegrex", FALSE, 0),
+ };
+ 
+ /* The default architecture is mips:3000, but with a machine number of
+diff -burN binutils-2.16/bfd/elfxx-mips.c binutils-psp/bfd/elfxx-mips.c
+--- binutils-2.16/bfd/elfxx-mips.c	2005-04-19 19:37:04.000000000 +0100
++++ binutils-psp/bfd/elfxx-mips.c	2005-10-03 18:46:57.000000000 +0100
 @@ -4669,6 +4669,9 @@
      case E_MIPS_MACH_SB1:
        return bfd_mach_mips_sb1;
@@ -60,28 +73,21 @@
  
    /* MIPS I extensions.  */
    { bfd_mach_mips6000, bfd_mach_mips3000 },
---- binutils-2.16.orig/bfd/cpu-mips.c	2005-03-03 03:40:58.000000000 -0800
-+++ binutils-psp/bfd/cpu-mips.c	2005-06-19 18:09:32.000000000 -0700
-@@ -86,6 +86,7 @@
-   I_mipsisa64,
-   I_mipsisa64r2,
-   I_sb1,
-+  I_allegrex,
- };
+diff -burN binutils-2.16/bfd/Makefile.am binutils-psp/bfd/Makefile.am
+--- binutils-2.16/bfd/Makefile.am	2005-05-02 20:45:42.000000000 +0100
++++ binutils-psp/bfd/Makefile.am	2005-10-03 18:46:57.000000000 +0100
+@@ -3,7 +3,7 @@
+ AUTOMAKE_OPTIONS = 1.9 cygnus
  
- #define NN(index) (&arch_info_struct[(index) + 1])
-@@ -118,7 +119,8 @@
-   N (32, 32, bfd_mach_mipsisa32r2,"mips:isa32r2", FALSE, NN(I_mipsisa32r2)),
-   N (64, 64, bfd_mach_mipsisa64,  "mips:isa64",   FALSE, NN(I_mipsisa64)),
-   N (64, 64, bfd_mach_mipsisa64r2,"mips:isa64r2", FALSE, NN(I_mipsisa64r2)),
--  N (64, 64, bfd_mach_mips_sb1, "mips:sb1",       FALSE, 0),
-+  N (64, 64, bfd_mach_mips_sb1, "mips:sb1",       FALSE, NN(I_sb1)),
-+  N (32, 32, bfd_mach_mips_allegrex, "mips:allegrex", FALSE, 0),
- };
+ # Uncomment the following line when doing a release.
+-RELEASE=y
++#RELEASE=y
  
- /* The default architecture is mips:3000, but with a machine number of
---- binutils-2.16.orig/bfd/Makefile.in	2005-05-02 12:45:46.000000000 -0700
-+++ binutils-psp/bfd/Makefile.in	2005-07-22 22:17:46.000000000 -0700
+ INCDIR = $(srcdir)/../include
+ CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
+diff -burN binutils-2.16/bfd/Makefile.in binutils-psp/bfd/Makefile.in
+--- binutils-2.16/bfd/Makefile.in	2005-05-02 20:45:46.000000000 +0100
++++ binutils-psp/bfd/Makefile.in	2005-10-03 18:46:57.000000000 +0100
 @@ -250,7 +250,7 @@
  AUTOMAKE_OPTIONS = 1.9 cygnus
  
@@ -91,15 +97,17 @@
  INCDIR = $(srcdir)/../include
  CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
  MKDEP = gcc -MM
---- binutils-2.16.orig/bfd/version.h	2005-05-02 12:43:09.000000000 -0700
-+++ binutils-psp/bfd/version.h	2005-08-22 09:29:10.064026312 -0700
+diff -burN binutils-2.16/bfd/version.h binutils-psp/bfd/version.h
+--- binutils-2.16/bfd/version.h	2005-05-02 20:43:09.000000000 +0100
++++ binutils-psp/bfd/version.h	2005-10-03 18:46:57.000000000 +0100
 @@ -1,3 +1,3 @@
 -#define BFD_VERSION_DATE 20050502
 +#define BFD_VERSION_DATE (PSPDEV 20050822)
  #define BFD_VERSION @bfd_version@
  #define BFD_VERSION_STRING @bfd_version_string@
---- binutils-2.16.orig/binutils/readelf.c	2005-04-20 11:43:36.000000000 -0700
-+++ binutils-psp/binutils/readelf.c	2005-06-19 18:09:27.000000000 -0700
+diff -burN binutils-2.16/binutils/readelf.c binutils-psp/binutils/readelf.c
+--- binutils-2.16/binutils/readelf.c	2005-04-20 19:43:36.000000000 +0100
++++ binutils-psp/binutils/readelf.c	2005-10-03 18:46:57.000000000 +0100
 @@ -2043,6 +2043,7 @@
  	    case E_MIPS_MACH_5500: strcat (buf, ", 5500"); break;
  	    case E_MIPS_MACH_SB1:  strcat (buf, ", sb1");  break;
@@ -108,8 +116,9 @@
  	    case 0:
  	    /* We simply ignore the field in this case to avoid confusion:
  	       MIPS ELF does not specify EF_MIPS_MACH, it is a GNU
---- binutils-2.16.orig/config.sub	2005-01-18 16:34:56.000000000 -0800
-+++ binutils-psp/config.sub	2005-06-24 17:01:46.000000000 -0700
+diff -burN binutils-2.16/config.sub binutils-psp/config.sub
+--- binutils-2.16/config.sub	2005-01-19 00:34:56.000000000 +0000
++++ binutils-psp/config.sub	2005-10-03 18:46:57.000000000 +0100
 @@ -253,6 +253,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
@@ -137,8 +146,9 @@
  	mips3*-*)
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
---- binutils-2.16.orig/gas/config/tc-mips.c	2005-04-20 11:41:36.000000000 -0700
-+++ binutils-psp/gas/config/tc-mips.c	2005-06-19 18:09:30.000000000 -0700
+diff -burN binutils-2.16/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.c
+--- binutils-2.16/gas/config/tc-mips.c	2005-04-20 19:41:36.000000000 +0100
++++ binutils-psp/gas/config/tc-mips.c	2005-10-03 18:46:57.000000000 +0100
 @@ -365,11 +365,15 @@
  #define CPU_HAS_MDMX(cpu)	(FALSE                 \
  				 )
@@ -204,8 +214,9 @@
  
    /* MIPS III */
    { "r4000",          0,      ISA_MIPS3,      CPU_R4000 },
---- binutils-2.16.orig/gas/configure	2005-02-28 16:43:51.000000000 -0800
-+++ binutils-psp/gas/configure	2005-06-19 18:09:30.000000000 -0700
+diff -burN binutils-2.16/gas/configure binutils-psp/gas/configure
+--- binutils-2.16/gas/configure	2005-03-01 00:43:51.000000000 +0000
++++ binutils-psp/gas/configure	2005-10-03 18:46:57.000000000 +0100
 @@ -4537,6 +4537,9 @@
  	  mips64vr | mips64vrel)
  	    mips_cpu=vr4100
@@ -216,8 +227,9 @@
  	  mipsisa32r2* | mipsisa64r2*)
  	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
  	    ;;
---- binutils-2.16.orig/gas/configure.in	2005-02-28 16:43:57.000000000 -0800
-+++ binutils-psp/gas/configure.in	2005-06-19 18:09:30.000000000 -0700
+diff -burN binutils-2.16/gas/configure.in binutils-psp/gas/configure.in
+--- binutils-2.16/gas/configure.in	2005-03-01 00:43:57.000000000 +0000
++++ binutils-psp/gas/configure.in	2005-10-03 18:46:57.000000000 +0100
 @@ -222,6 +222,9 @@
  	  mips64vr | mips64vrel)
  	    mips_cpu=vr4100
@@ -228,8 +240,17 @@
  	  mipsisa32r2* | mipsisa64r2*)
  changequote(,)dnl
  	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
---- binutils-2.16.orig/include/elf/common.h	2004-10-08 06:55:08.000000000 -0700
-+++ binutils-psp/include/elf/common.h	2005-06-19 18:09:25.000000000 -0700
+diff -burN binutils-2.16/include/bin-bugs.h binutils-psp/include/bin-bugs.h
+--- binutils-2.16/include/bin-bugs.h	2004-07-23 16:40:19.000000000 +0100
++++ binutils-psp/include/bin-bugs.h	2005-10-03 18:46:57.000000000 +0100
+@@ -1,3 +1,3 @@
+ #ifndef REPORT_BUGS_TO
+-#define REPORT_BUGS_TO	"<URL:http://www.sourceware.org/bugzilla/>"
++#define REPORT_BUGS_TO	"<URL:http://wiki.pspdev.org/psp:toolchain#bugs>"
+ #endif
+diff -burN binutils-2.16/include/elf/common.h binutils-psp/include/elf/common.h
+--- binutils-2.16/include/elf/common.h	2004-10-08 14:55:08.000000000 +0100
++++ binutils-psp/include/elf/common.h	2005-10-03 18:46:57.000000000 +0100
 @@ -93,6 +93,7 @@
  #define ET_HIOS		0xFEFF	/* Operating system-specific */
  #define ET_LOPROC	0xFF00	/* Processor-specific */
@@ -238,8 +259,9 @@
  
  /* Values for e_machine, which identifies the architecture.  These numbers
     are officially assigned by registry@caldera.com.  See below for a list of
---- binutils-2.16.orig/include/elf/mips.h	2005-03-03 03:58:06.000000000 -0800
-+++ binutils-psp/include/elf/mips.h	2005-06-19 18:09:25.000000000 -0700
+diff -burN binutils-2.16/include/elf/mips.h binutils-psp/include/elf/mips.h
+--- binutils-2.16/include/elf/mips.h	2005-03-03 11:58:06.000000000 +0000
++++ binutils-psp/include/elf/mips.h	2005-10-03 18:46:57.000000000 +0100
 @@ -212,6 +212,7 @@
  #define E_MIPS_MACH_5400	0x00910000
  #define E_MIPS_MACH_5500	0x00980000
@@ -248,8 +270,9 @@
  
  /* Processor specific section indices.  These sections do not actually
     exist.  Symbols with a st_shndx field corresponding to one of these
---- binutils-2.16.orig/include/opcode/mips.h	2005-03-03 03:58:10.000000000 -0800
-+++ binutils-psp/include/opcode/mips.h	2005-08-22 09:14:58.043553112 -0700
+diff -burN binutils-2.16/include/opcode/mips.h binutils-psp/include/opcode/mips.h
+--- binutils-2.16/include/opcode/mips.h	2005-03-03 11:58:10.000000000 +0000
++++ binutils-psp/include/opcode/mips.h	2005-10-03 18:46:57.000000000 +0100
 @@ -171,6 +171,83 @@
  #define MDMX_FMTSEL_VEC_QH	0x15
  #define MDMX_FMTSEL_VEC_OB	0x16
@@ -442,55 +465,9 @@
    M_XOR_I,
    M_COP0,
    M_COP1,
---- binutils-2.16.orig/include/bin-bugs.h	2004-07-23 08:40:19.000000000 -0700
-+++ binutils-psp/include/bin-bugs.h	2005-07-22 22:38:52.000000000 -0700
-@@ -1,3 +1,3 @@
- #ifndef REPORT_BUGS_TO
--#define REPORT_BUGS_TO	"<URL:http://www.sourceware.org/bugzilla/>"
-+#define REPORT_BUGS_TO	"<URL:http://wiki.pspdev.org/psp:toolchain#bugs>"
- #endif
---- binutils-2.16.orig/ld/Makefile.am	2005-01-20 11:37:49.000000000 -0800
-+++ binutils-psp/ld/Makefile.am	2005-06-25 02:44:52.000000000 -0700
-@@ -190,6 +190,7 @@
- 	eelf_i386_chaos.o \
- 	eelf_i386_fbsd.o \
- 	eelf_i386_ldso.o \
-+	eelf_mipsallegrexel_psp.o \
- 	eelf_s390.o \
- 	egld960.o \
- 	egld960coff.o \
-@@ -864,6 +865,9 @@
- eelf_i386_ldso.c: $(srcdir)/emulparams/elf_i386_ldso.sh \
-   $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
- 	${GENSCRIPTS} elf_i386_ldso "$(tdir_elf_i386_ldso)"
-+eelf_mipsallegrexel_psp.c: $(srcdir)/emulparams/elf_mipsallegrexel_psp.sh \
-+  $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf_psp.sc ${GEN_DEPENDS}
-+	${GENSCRIPTS} elf_mipsallegrexel_psp "$(tdir_elf_mipsallegrexel_psp)"
- eelf_s390.c: $(srcdir)/emulparams/elf_s390.sh \
-   $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
- 	${GENSCRIPTS} elf_s390 "$(tdir_elf_s390)"
---- binutils-2.16.orig/ld/Makefile.in	2005-01-22 21:36:37.000000000 -0800
-+++ binutils-psp/ld/Makefile.in	2005-06-25 02:47:12.000000000 -0700
-@@ -315,6 +315,7 @@
- 	eelf_i386_chaos.o \
- 	eelf_i386_fbsd.o \
- 	eelf_i386_ldso.o \
-+	eelf_mipsallegrexel_psp.o \
- 	eelf_s390.o \
- 	egld960.o \
- 	egld960coff.o \
-@@ -1601,6 +1602,9 @@
- eelf_i386_ldso.c: $(srcdir)/emulparams/elf_i386_ldso.sh \
-   $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
- 	${GENSCRIPTS} elf_i386_ldso "$(tdir_elf_i386_ldso)"
-+eelf_mipsallegrexel_psp.c: $(srcdir)/emulparams/elf_mipsallegrexel_psp.sh \
-+  $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf_psp.sc ${GEN_DEPENDS}
-+	${GENSCRIPTS} elf_mipsallegrexel_psp "$(tdir_elf_mipsallegrexel_psp)"
- eelf_s390.c: $(srcdir)/emulparams/elf_s390.sh \
-   $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
- 	${GENSCRIPTS} elf_s390 "$(tdir_elf_s390)"
---- binutils-2.16.orig/ld/configure.tgt	2005-02-08 11:54:27.000000000 -0800
-+++ binutils-psp/ld/configure.tgt	2005-06-25 03:20:06.000000000 -0700
+diff -burN binutils-2.16/ld/configure.tgt binutils-psp/ld/configure.tgt
+--- binutils-2.16/ld/configure.tgt	2005-02-08 19:54:27.000000000 +0000
++++ binutils-psp/ld/configure.tgt	2005-10-03 18:46:57.000000000 +0100
 @@ -428,6 +428,8 @@
  mips*vr4100-*-elf*)	targ_emul=elf32b4300 ;;
  mips*vr5000el-*-elf*)	targ_emul=elf32l4300 ;;
@@ -500,8 +477,9 @@
  mips*el-*-elf*)		targ_emul=elf32elmip ;;
  mips*-*-elf*)		targ_emul=elf32ebmip ;;
  mips*el-*-rtems*)	targ_emul=elf32elmip ;;
---- binutils-2.16.orig/ld/emulparams/elf_mipsallegrexel_psp.sh	1969-12-31 16:00:00.000000000 -0800
-+++ binutils-psp/ld/emulparams/elf_mipsallegrexel_psp.sh	2005-07-12 03:44:26.000000000 -0700
+diff -burN binutils-2.16/ld/emulparams/elf_mipsallegrexel_psp.sh binutils-psp/ld/emulparams/elf_mipsallegrexel_psp.sh
+--- binutils-2.16/ld/emulparams/elf_mipsallegrexel_psp.sh	1970-01-01 01:00:00.000000000 +0100
++++ binutils-psp/ld/emulparams/elf_mipsallegrexel_psp.sh	2005-10-03 18:46:57.000000000 +0100
 @@ -0,0 +1,22 @@
 +# Based off of the default elf32 MIPS target.  However, we use a seperate
 +# script template because the PSP architecture defines sections that normally
@@ -525,8 +503,51 @@
 +
 +# Discard the .comment and .pdr sections.
 +OTHER_SECTIONS="/DISCARD/ : { *(.comment) *(.pdr) }"
---- binutils-2.16.orig/ld/scripttempl/elf_psp.sc	1969-12-31 16:00:00.000000000 -0800
-+++ binutils-psp/ld/scripttempl/elf_psp.sc	2005-06-25 03:12:02.000000000 -0700
+diff -burN binutils-2.16/ld/Makefile.am binutils-psp/ld/Makefile.am
+--- binutils-2.16/ld/Makefile.am	2005-01-20 19:37:49.000000000 +0000
++++ binutils-psp/ld/Makefile.am	2005-10-03 18:46:57.000000000 +0100
+@@ -190,6 +190,7 @@
+ 	eelf_i386_chaos.o \
+ 	eelf_i386_fbsd.o \
+ 	eelf_i386_ldso.o \
++	eelf_mipsallegrexel_psp.o \
+ 	eelf_s390.o \
+ 	egld960.o \
+ 	egld960coff.o \
+@@ -864,6 +865,9 @@
+ eelf_i386_ldso.c: $(srcdir)/emulparams/elf_i386_ldso.sh \
+   $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} elf_i386_ldso "$(tdir_elf_i386_ldso)"
++eelf_mipsallegrexel_psp.c: $(srcdir)/emulparams/elf_mipsallegrexel_psp.sh \
++  $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf_psp.sc ${GEN_DEPENDS}
++	${GENSCRIPTS} elf_mipsallegrexel_psp "$(tdir_elf_mipsallegrexel_psp)"
+ eelf_s390.c: $(srcdir)/emulparams/elf_s390.sh \
+   $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} elf_s390 "$(tdir_elf_s390)"
+diff -burN binutils-2.16/ld/Makefile.in binutils-psp/ld/Makefile.in
+--- binutils-2.16/ld/Makefile.in	2005-01-23 05:36:37.000000000 +0000
++++ binutils-psp/ld/Makefile.in	2005-10-03 18:46:57.000000000 +0100
+@@ -315,6 +315,7 @@
+ 	eelf_i386_chaos.o \
+ 	eelf_i386_fbsd.o \
+ 	eelf_i386_ldso.o \
++	eelf_mipsallegrexel_psp.o \
+ 	eelf_s390.o \
+ 	egld960.o \
+ 	egld960coff.o \
+@@ -1601,6 +1602,9 @@
+ eelf_i386_ldso.c: $(srcdir)/emulparams/elf_i386_ldso.sh \
+   $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} elf_i386_ldso "$(tdir_elf_i386_ldso)"
++eelf_mipsallegrexel_psp.c: $(srcdir)/emulparams/elf_mipsallegrexel_psp.sh \
++  $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf_psp.sc ${GEN_DEPENDS}
++	${GENSCRIPTS} elf_mipsallegrexel_psp "$(tdir_elf_mipsallegrexel_psp)"
+ eelf_s390.c: $(srcdir)/emulparams/elf_s390.sh \
+   $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 	${GENSCRIPTS} elf_s390 "$(tdir_elf_s390)"
+diff -burN binutils-2.16/ld/scripttempl/elf_psp.sc binutils-psp/ld/scripttempl/elf_psp.sc
+--- binutils-2.16/ld/scripttempl/elf_psp.sc	1970-01-01 01:00:00.000000000 +0100
++++ binutils-psp/ld/scripttempl/elf_psp.sc	2005-10-03 18:46:57.000000000 +0100
 @@ -0,0 +1,496 @@
 +#
 +# Unusual variables checked by this code:
@@ -1024,8 +1045,9 @@
 +  ${RELOCATING+${STACKNOTE}}
 +}
 +EOF
---- binutils-2.16.orig/opcodes/mips-dis.c	2005-03-03 03:49:50.000000000 -0800
-+++ binutils-psp/opcodes/mips-dis.c	2005-08-22 09:10:31.102134376 -0700
+diff -burN binutils-2.16/opcodes/mips-dis.c binutils-psp/opcodes/mips-dis.c
+--- binutils-2.16/opcodes/mips-dis.c	2005-03-03 11:49:50.000000000 +0000
++++ binutils-psp/opcodes/mips-dis.c	2005-10-03 18:46:57.000000000 +0100
 @@ -140,6 +140,139 @@
    "c0_taglo",     "c0_taghi",     "c0_errorepc",  "c0_desave",
  };
@@ -1580,8 +1602,9 @@
  	default:
  	  /* xgettext:c-format */
  	  (*info->fprintf_func) (info->stream,
---- binutils-2.16.orig/opcodes/mips-opc.c	2005-03-03 03:49:50.000000000 -0800
-+++ binutils-psp/opcodes/mips-opc.c	2005-08-22 09:01:05.972047208 -0700
+diff -burN binutils-2.16/opcodes/mips-opc.c binutils-psp/opcodes/mips-opc.c
+--- binutils-2.16/opcodes/mips-opc.c	2005-03-03 11:49:50.000000000 +0000
++++ binutils-psp/opcodes/mips-opc.c	2005-10-03 18:53:20.000000000 +0100
 @@ -109,6 +109,7 @@
  #define N5	(INSN_5400 | INSN_5500)
  #define N54	INSN_5400
@@ -1617,7 +1640,7 @@
  {"ctc0",    "t,G",	0x40c00000, 0xffe007ff,	COD|RD_t|WR_CC,		0,		I1	},
  {"ctc1",    "t,G",	0x44c00000, 0xffe007ff,	COD|RD_t|WR_CC|FP_S,	0,		I1	},
  {"ctc1",    "t,S",	0x44c00000, 0xffe007ff,	COD|RD_t|WR_CC|FP_S,	0,		I1	},
-@@ -465,10 +469,12 @@
+@@ -465,13 +469,15 @@
  {"cvt.ps.s","D,V,T",	0x46000026, 0xffe0003f,	WR_D|RD_S|RD_T|FP_D,	0,		I5	},
  {"cvt.pw.ps", "D,S",	0x46c00024, 0xffff003f,	WR_D|RD_S|FP_S|FP_D,	0,		M3D	},
  {"dabs",    "d,v",	0,    (int) M_DABS,	INSN_MACRO,		0,		I3	},
@@ -1629,7 +1652,20 @@
 +{"min",     "d,v,t",    0x0000002d, 0xfc0007ff, WR_d|RD_s|RD_t,         0,              AL	},
  {"daddu",   "d,v,t",	0x0000002d, 0xfc0007ff, WR_d|RD_s|RD_t,		0,		I3	},
  {"daddu",   "t,r,I",	0,    (int) M_DADDU_I,	INSN_MACRO,		0,		I3	},
- {"dbreak",  "",		0x7000003f, 0xffffffff,	0,			0,		N5	},
+-{"dbreak",  "",		0x7000003f, 0xffffffff,	0,			0,		N5	},
++{"dbreak",  "",		0x7000003f, 0xffffffff,	0,			0,		N5|AL	},
+ {"dclo",    "U,s",      0x70000025, 0xfc0007ff, RD_s|WR_d|WR_t, 	0,		I64|N55 },
+ {"dclz",    "U,s",      0x70000024, 0xfc0007ff, RD_s|WR_d|WR_t, 	0,		I64|N55 },
+ /* dctr and dctw are used on the r5000.  */
+@@ -558,7 +564,7 @@
+ {"dremu",   "z,s,t",    0x0000001f, 0xfc00ffff, RD_s|RD_t|WR_HILO,      0,		I3      },
+ {"dremu",   "d,v,t",	3,    (int) M_DREMU_3,	INSN_MACRO,		0,		I3	},
+ {"dremu",   "d,v,I",	3,    (int) M_DREMU_3I,	INSN_MACRO,		0,		I3	},
+-{"dret",    "",		0x7000003e, 0xffffffff,	0,			0,		N5	},
++{"dret",    "",		0x7000003e, 0xffffffff,	0,			0,		N5|AL	},
+ {"drol",    "d,v,t",	0,    (int) M_DROL,	INSN_MACRO,		0,		I3	},
+ {"drol",    "d,v,I",	0,    (int) M_DROL_I,	INSN_MACRO,		0,		I3	},
+ {"dror",    "d,v,t",	0,    (int) M_DROR,	INSN_MACRO,		0,		I3	},
 @@ -595,8 +601,8 @@
  {"dsubu",   "d,v,I",	0,    (int) M_DSUBU_I,	INSN_MACRO,		0,		I3	},
  {"ei",      "",		0x41606020, 0xffffffff,	WR_t|WR_C0,		0,		I33	},
@@ -1696,7 +1732,23 @@
  {"maddu",   "s,t",      0x70000001, 0xfc00ffff, RD_s|RD_t|MOD_HILO,          0,		I32|N55},
  {"maddu",   "s,t",      0x70000001, 0xfc00ffff, RD_s|RD_t|WR_HILO|IS_M,      0,		G1	},
  {"maddu",   "d,s,t",    0x70000001, 0xfc0007ff, RD_s|RD_t|WR_HILO|WR_d|IS_M, 0,		G1	},
-@@ -756,7 +755,7 @@
+@@ -733,13 +732,14 @@
+ {"mfc0",    "t,G,H",    0x40000000, 0xffe007f8, LCD|WR_t|RD_C0, 	0,		I32     },
+ {"mfc1",    "t,S",	0x44000000, 0xffe007ff,	LCD|WR_t|RD_S|FP_S,	0,		I1	},
+ {"mfc1",    "t,G",	0x44000000, 0xffe007ff,	LCD|WR_t|RD_S|FP_S,	0,		I1	},
++{"mfic",    "t,G", 0x70000024, 0xffe007ff, LCD|WR_t|RD_C3, 	0,		AL     },
+ {"mfhc1",   "t,S",	0x44600000, 0xffe007ff,	LCD|WR_t|RD_S|FP_S,	0,		I33	},
+ {"mfhc1",   "t,G",	0x44600000, 0xffe007ff,	LCD|WR_t|RD_S|FP_S,	0,		I33	},
+ /* mfc2 is at the bottom of the table.  */
+ /* mfhc2 is at the bottom of the table.  */
+ {"mfc3",    "t,G",	0x4c000000, 0xffe007ff,	LCD|WR_t|RD_C3,		0,		I1	},
+ {"mfc3",    "t,G,H",    0x4c000000, 0xffe007f8, LCD|WR_t|RD_C3, 	0,		I32     },
+-{"mfdr",    "t,G",	0x7000003d, 0xffe007ff,	LCD|WR_t|RD_C0,		0,		N5      },
++{"mfdr",    "t,G",	0x7000003d, 0xffe007ff,	LCD|WR_t|RD_C0,		0,		N5|AL      },
+ {"mfhi",    "d",	0x00000010, 0xffff07ff,	WR_d|RD_HI,		0,		I1	},
+ {"mflo",    "d",	0x00000012, 0xffff07ff,	WR_d|RD_LO,		0,		I1	},
+ {"min.ob",  "X,Y,Q",	0x78000006, 0xfc20003f,	WR_D|RD_S|RD_T|FP_D,	0,		MX|SB1	},
+@@ -756,7 +756,7 @@
  {"movf.l",  "X,Y,N",	0x46a00011, 0xffe3003f, WR_D|RD_S|RD_CC|FP_D,	0,		MX|SB1	},
  {"movf.s",  "D,S,N",    0x46000011, 0xffe3003f, WR_D|RD_S|RD_CC|FP_S,   0,		I4|I32	},
  {"movf.ps", "D,S,N",	0x46c00011, 0xffe3003f, WR_D|RD_S|RD_CC|FP_D,	0,		I5	},
@@ -1705,7 +1757,7 @@
  {"ffc",     "d,v",	0x0000000b, 0xfc1f07ff,	WR_d|RD_s,		0,		L1	},
  {"movn.d",  "D,S,t",    0x46200013, 0xffe0003f, WR_D|RD_S|RD_t|FP_D,    0,		I4|I32	},
  {"movn.l",  "D,S,t",    0x46a00013, 0xffe0003f, WR_D|RD_S|RD_t|FP_D,    0,		MX|SB1	},
-@@ -769,7 +768,7 @@
+@@ -769,7 +769,7 @@
  {"movt.l",  "X,Y,N",    0x46a10011, 0xffe3003f, WR_D|RD_S|RD_CC|FP_D,   0,		MX|SB1	},
  {"movt.s",  "D,S,N",    0x46010011, 0xffe3003f, WR_D|RD_S|RD_CC|FP_S,   0,		I4|I32	},
  {"movt.ps", "D,S,N",	0x46c10011, 0xffe3003f, WR_D|RD_S|RD_CC|FP_D,	0,		I5	},
@@ -1714,7 +1766,7 @@
  {"ffs",     "d,v",	0x0000000a, 0xfc1f07ff,	WR_d|RD_s,		0,		L1	},
  {"movz.d",  "D,S,t",    0x46200012, 0xffe0003f, WR_D|RD_S|RD_t|FP_D,    0,		I4|I32	},
  {"movz.l",  "D,S,t",    0x46a00012, 0xffe0003f, WR_D|RD_S|RD_t|FP_D,    0,		MX|SB1	},
-@@ -786,8 +785,10 @@
+@@ -786,8 +786,10 @@
  {"msub.s",  "D,R,S,T",	0x4c000028, 0xfc00003f, RD_R|RD_S|RD_T|WR_D|FP_S, 0,		I4	},
  {"msub.ps", "D,R,S,T",	0x4c00002e, 0xfc00003f, RD_R|RD_S|RD_T|WR_D|FP_D, 0,		I5	},
  {"msub",    "s,t",      0x0000001e, 0xfc00ffff, RD_s|RD_t|WR_HILO,	0,		L1    	},
@@ -1725,7 +1777,23 @@
  {"msubu",   "s,t",      0x70000005, 0xfc00ffff, RD_s|RD_t|MOD_HILO,     0,		I32|N55	},
  {"mtpc",    "t,P",	0x4080c801, 0xffe0ffc1,	COD|RD_t|WR_C0,		0,		M1|N5	},
  {"mtps",    "t,P",	0x4080c800, 0xffe0ffc1,	COD|RD_t|WR_C0,		0,		M1|N5	},
-@@ -936,13 +937,13 @@
+@@ -796,13 +798,14 @@
+ {"mtc0",    "t,G,H",    0x40800000, 0xffe007f8, COD|RD_t|WR_C0|WR_CC,   0,		I32     },
+ {"mtc1",    "t,S",	0x44800000, 0xffe007ff,	COD|RD_t|WR_S|FP_S,	0,		I1	},
+ {"mtc1",    "t,G",	0x44800000, 0xffe007ff,	COD|RD_t|WR_S|FP_S,	0,		I1	},
++{"mtic",    "t,G", 0x70000026, 0xffe007ff, COD|RD_t|WR_C3,   0,		AL     },
+ {"mthc1",   "t,S",	0x44e00000, 0xffe007ff,	COD|RD_t|WR_S|FP_S,	0,		I33	},
+ {"mthc1",   "t,G",	0x44e00000, 0xffe007ff,	COD|RD_t|WR_S|FP_S,	0,		I33	},
+ /* mtc2 is at the bottom of the table.  */
+ /* mthc2 is at the bottom of the table.  */
+ {"mtc3",    "t,G",	0x4c800000, 0xffe007ff,	COD|RD_t|WR_C3|WR_CC,	0,		I1	},
+ {"mtc3",    "t,G,H",    0x4c800000, 0xffe007f8, COD|RD_t|WR_C3|WR_CC,   0,		I32     },
+-{"mtdr",    "t,G",	0x7080003d, 0xffe007ff,	COD|RD_t|WR_C0,		0,		N5	},
++{"mtdr",    "t,G",	0x7080003d, 0xffe007ff,	COD|RD_t|WR_C0,		0,		N5|AL	},
+ {"mthi",    "s",	0x00000011, 0xfc1fffff,	RD_s|WR_HI,		0,		I1	},
+ {"mtlo",    "s",	0x00000013, 0xfc1fffff,	RD_s|WR_LO,		0,		I1	},
+ {"mul.d",   "D,V,T",	0x46200002, 0xffe0003f,	WR_D|RD_S|RD_T|FP_D,	0,		I1	},
+@@ -936,13 +939,13 @@
  {"rol",     "d,v,I",	0,    (int) M_ROL_I,	INSN_MACRO,		0,		I1	},
  {"ror",     "d,v,t",	0,    (int) M_ROR,	INSN_MACRO,		0,		I1	},
  {"ror",     "d,v,I",	0,    (int) M_ROR_I,	INSN_MACRO,		0,		I1	},
@@ -1746,7 +1814,7 @@
  {"round.l.d", "D,S",	0x46200008, 0xffff003f, WR_D|RD_S|FP_D,		0,		I3	},
  {"round.l.s", "D,S",	0x46000008, 0xffff003f, WR_D|RD_S|FP_S,		0,		I3	},
  {"round.w.d", "D,S",	0x4620000c, 0xffff003f, WR_D|RD_S|FP_D,		0,		I2	},
-@@ -974,24 +975,17 @@
+@@ -974,24 +977,17 @@
  {"sdbbp",   "c,q",	0x0000000e, 0xfc00003f,	TRAP,			0,		G2	},
  {"sdbbp",   "",         0x7000003f, 0xffffffff, TRAP,           	0,		I32     },
  {"sdbbp",   "B",        0x7000003f, 0xfc00003f, TRAP,           	0,		I32     },
@@ -1778,7 +1846,7 @@
  {"selsl",   "d,v,t",	0x00000005, 0xfc0007ff,	WR_d|RD_s|RD_t,		0,		L1	},
  {"selsr",   "d,v,t",	0x00000001, 0xfc0007ff,	WR_d|RD_s|RD_t,		0,		L1	},
  {"seq",     "d,v,t",	0,    (int) M_SEQ,	INSN_MACRO,		0,		I1	},
-@@ -1083,8 +1077,7 @@
+@@ -1083,8 +1079,7 @@
  {"swc1",    "E,A(b)",	0,    (int) M_SWC1_AB,	INSN_MACRO,		0,		I1	},
  {"s.s",     "T,o(b)",	0xe4000000, 0xfc000000,	SM|RD_T|RD_b|FP_S,	0,		I1	}, /* swc1 */
  {"s.s",     "T,A(b)",	0,    (int) M_SWC1_AB,	INSN_MACRO,		0,		I1	},
@@ -1788,7 +1856,7 @@
  {"swc3",    "E,o(b)",	0xec000000, 0xfc000000,	SM|RD_C3|RD_b,		0,		I1	},
  {"swc3",    "E,A(b)",	0,    (int) M_SWC3_AB,	INSN_MACRO,		0,		I1	},
  {"swl",     "t,o(b)",	0xa8000000, 0xfc000000,	SM|RD_t|RD_b,		0,		I1	},
-@@ -1169,7 +1162,8 @@
+@@ -1169,7 +1164,8 @@
  {"waiti",   "",		0x42000020, 0xffffffff,	TRAP,			0,		L1	},
  {"wb", 	    "o(b)",	0xbc040000, 0xfc1f0000, SM|RD_b,		0,		L1	},
  {"wrpgpr",  "d,w",	0x41c00000, 0xffe007ff, RD_t,			0,		I33	},
@@ -1798,7 +1866,7 @@
  {"xor",     "d,v,t",	0x00000026, 0xfc0007ff,	WR_d|RD_s|RD_t,		0,		I1	},
  {"xor",     "t,r,I",	0,    (int) M_XOR_I,	INSN_MACRO,		0,		I1	},
  {"xor.ob",  "X,Y,Q",	0x7800000d, 0xfc20003f,	WR_D|RD_S|RD_T|FP_D,	0,		MX|SB1	},
-@@ -1179,6 +1173,317 @@
+@@ -1179,6 +1175,317 @@
  {"xor.qh",  "X,Y,Q",	0x7820000d, 0xfc20003f,	WR_D|RD_S|RD_T|FP_D,	0,		MX	},
  {"xori",    "t,r,i",	0x38000000, 0xfc000000,	WR_t|RD_s,		0,		I1	},
  
@@ -2116,7 +2184,7 @@
  /* Coprocessor 2 move/branch operations overlap with VR5400 .ob format
     instructions so they are here for the latters to take precedence.  */
  {"bc2f",    "p",	0x49000000, 0xffff0000,	CBD|RD_CC,		0,		I1	},
-@@ -1198,6 +1503,36 @@
+@@ -1198,6 +1505,36 @@
  {"mtc2",    "t,G,H",	0x48800000, 0xffe007f8,	COD|RD_t|WR_C2|WR_CC,	0,		I32	},
  {"mthc2",   "t,i",	0x48e00000, 0xffe00000,	COD|RD_t|WR_C2|WR_CC,	0,		I33	},
  
