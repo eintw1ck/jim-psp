@@ -550,7 +550,7 @@ int sceKernelCreateEventFlag(const char *name, int unk1, int bits, int unk3);
 int sceKernelSetEventFlag(int evid, u32 bits);
 
 /** 
-  * Poll an event flag for a giveb bit pattern.
+  * Poll an event flag for a given bit pattern.
   *
   * @param evid - The event id returned by sceKernelCreateEventFlag.
   * @param bits - The bit pattern to poll for.
@@ -559,6 +559,18 @@ int sceKernelSetEventFlag(int evid, u32 bits);
   * @return < 0 On error
   */
 int sceKernelPollEventFlag(int evid, u32 bits, u32 wait, u32 *outBits);
+
+/** 
+  * Wait for an event flag for a given bit pattern.
+  *
+  * @param evid - The event id returned by sceKernelCreateEventFlag.
+  * @param bits - The bit pattern to poll for.
+  * @param wait - 0 to return immediately, 1 to wait until the pattern is matched
+  * @param outBits - The bit pattern that was matched.
+  * @param arg     - Unknown (possibly timeout)
+  * @return < 0 On error
+  */
+int sceKernelWaitEventFlag(int evid, u32 bits, u32 wait, u32 *outBits, void *arg);
 
 /** 
   * Delete an event flag

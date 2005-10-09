@@ -41,8 +41,14 @@ endif
 
 # Link with following default libraries.  Other libraries should be specified in the $(LIBS) variable.
 # TODO: This library list needs to be generated at configure time.
+
+ifeq ($(USE_KERNEL_LIBS),1)
+PSPSDK_LIBS = -lpspdebug -lpspsdk
+LIBS     := $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpspkernel
+else
 PSPSDK_LIBS = -lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk
 LIBS     := $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpsputility -lpspuser -lpspkernel
+endif
 
 FINAL_TARGET = $(TARGET).prx
 

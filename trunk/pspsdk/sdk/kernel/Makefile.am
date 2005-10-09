@@ -28,6 +28,8 @@ SYSCON_OBJS = sceSyscon_driver_0000.o sceSyscon_driver_0001.o sceSyscon_driver_0
 
 INTR_OBJS = InterruptManagerForKernel_0000.o InterruptManagerForKernel_0001.o InterruptManagerForKernel_0002.o InterruptManagerForKernel_0003.o InterruptManagerForKernel_0004.o InterruptManagerForKernel_0005.o InterruptManagerForKernel_0006.o InterruptManagerForKernel_0007.o InterruptManagerForKernel_0008.o InterruptManagerForKernel_0009.o InterruptManagerForKernel_0010.o InterruptManagerForKernel_0011.o InterruptManagerForKernel_0012.o InterruptManagerForKernel_0013.o InterruptManagerForKernel_0014.o InterruptManagerForKernel_0015.o InterruptManagerForKernel_0016.o InterruptManagerForKernel_0017.o InterruptManagerForKernel_0018.o InterruptManagerForKernel_0019.o InterruptManagerForKernel_0020.o InterruptManagerForKernel_0021.o InterruptManagerForKernel_0022.o InterruptManagerForKernel_0023.o InterruptManagerForKernel_0024.o InterruptManagerForKernel_0025.o InterruptManagerForKernel_0026.o InterruptManagerForKernel_0027.o InterruptManagerForKernel_0028.o InterruptManagerForKernel_0029.o InterruptManagerForKernel_0030.o InterruptManagerForKernel_0031.o InterruptManagerForKernel_0032.o InterruptManagerForKernel_0033.o InterruptManagerForKernel_0034.o InterruptManagerForKernel_0035.o InterruptManagerForKernel_0036.o InterruptManagerForKernel_0037.o InterruptManagerForKernel_0038.o InterruptManagerForKernel_0039.o InterruptManagerForKernel_0040.o InterruptManagerForKernel_0041.o InterruptManagerForKernel_0042.o InterruptManagerForKernel_0043.o InterruptManagerForKernel_0044.o 
 
+THREAD_OBJS = ThreadManForKernel_0000.o ThreadManForKernel_0001.o ThreadManForKernel_0002.o ThreadManForKernel_0003.o ThreadManForKernel_0004.o ThreadManForKernel_0005.o ThreadManForKernel_0006.o ThreadManForKernel_0007.o ThreadManForKernel_0008.o ThreadManForKernel_0009.o ThreadManForKernel_0010.o ThreadManForKernel_0011.o ThreadManForKernel_0012.o ThreadManForKernel_0013.o ThreadManForKernel_0014.o ThreadManForKernel_0015.o ThreadManForKernel_0016.o ThreadManForKernel_0017.o ThreadManForKernel_0018.o ThreadManForKernel_0019.o ThreadManForKernel_0020.o ThreadManForKernel_0021.o ThreadManForKernel_0022.o ThreadManForKernel_0023.o ThreadManForKernel_0024.o ThreadManForKernel_0025.o ThreadManForKernel_0026.o ThreadManForKernel_0027.o ThreadManForKernel_0028.o ThreadManForKernel_0029.o ThreadManForKernel_0030.o ThreadManForKernel_0031.o ThreadManForKernel_0032.o ThreadManForKernel_0033.o ThreadManForKernel_0034.o ThreadManForKernel_0035.o ThreadManForKernel_0036.o ThreadManForKernel_0037.o ThreadManForKernel_0038.o ThreadManForKernel_0039.o ThreadManForKernel_0040.o ThreadManForKernel_0041.o ThreadManForKernel_0042.o ThreadManForKernel_0043.o ThreadManForKernel_0044.o ThreadManForKernel_0045.o ThreadManForKernel_0046.o ThreadManForKernel_0047.o ThreadManForKernel_0048.o ThreadManForKernel_0049.o ThreadManForKernel_0050.o ThreadManForKernel_0051.o ThreadManForKernel_0052.o ThreadManForKernel_0053.o ThreadManForKernel_0054.o ThreadManForKernel_0055.o ThreadManForKernel_0056.o ThreadManForKernel_0057.o ThreadManForKernel_0058.o ThreadManForKernel_0059.o ThreadManForKernel_0060.o ThreadManForKernel_0061.o ThreadManForKernel_0062.o ThreadManForKernel_0063.o ThreadManForKernel_0064.o ThreadManForKernel_0065.o ThreadManForKernel_0066.o ThreadManForKernel_0067.o ThreadManForKernel_0068.o ThreadManForKernel_0069.o ThreadManForKernel_0070.o ThreadManForKernel_0071.o ThreadManForKernel_0072.o ThreadManForKernel_0073.o ThreadManForKernel_0074.o ThreadManForKernel_0075.o ThreadManForKernel_0076.o ThreadManForKernel_0077.o ThreadManForKernel_0078.o ThreadManForKernel_0079.o ThreadManForKernel_0080.o ThreadManForKernel_0081.o ThreadManForKernel_0082.o ThreadManForKernel_0083.o ThreadManForKernel_0084.o ThreadManForKernel_0085.o ThreadManForKernel_0086.o ThreadManForKernel_0087.o ThreadManForKernel_0088.o ThreadManForKernel_0089.o ThreadManForKernel_0090.o ThreadManForKernel_0091.o ThreadManForKernel_0092.o ThreadManForKernel_0093.o ThreadManForKernel_0094.o ThreadManForKernel_0095.o ThreadManForKernel_0096.o ThreadManForKernel_0097.o ThreadManForKernel_0098.o ThreadManForKernel_0099.o ThreadManForKernel_0100.o ThreadManForKernel_0101.o ThreadManForKernel_0102.o ThreadManForKernel_0103.o ThreadManForKernel_0104.o ThreadManForKernel_0105.o ThreadManForKernel_0106.o ThreadManForKernel_0107.o ThreadManForKernel_0108.o ThreadManForKernel_0109.o ThreadManForKernel_0110.o ThreadManForKernel_0111.o ThreadManForKernel_0112.o ThreadManForKernel_0113.o ThreadManForKernel_0114.o ThreadManForKernel_0115.o ThreadManForKernel_0116.o ThreadManForKernel_0117.o ThreadManForKernel_0118.o ThreadManForKernel_0119.o ThreadManForKernel_0120.o ThreadManForKernel_0121.o ThreadManForKernel_0122.o ThreadManForKernel_0123.o ThreadManForKernel_0124.o ThreadManForKernel_0125.o ThreadManForKernel_0126.o ThreadManForKernel_0127.o ThreadManForKernel_0128.o ThreadManForKernel_0129.o ThreadManForKernel_0130.o ThreadManForKernel_0131.o ThreadManForKernel_0132.o ThreadManForKernel_0133.o ThreadManForKernel_0134.o ThreadManForKernel_0135.o 
+
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
@@ -51,9 +53,12 @@ libpspkernel_a_SOURCES =	\
 	sceSyscon_driver.S	\
 	sceSysreg_driver.S	\
 	UtilsForKernel.S	\
-	InterruptManagerForKernel.S 
+	InterruptManagerForKernel.S  \
+	ThreadManForKernel.S 
+
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
-						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS)
+						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS) \
+						$(THREAD_OBJS)
 
 $(EXCEPTION_OBJS): ExceptionManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -80,4 +85,7 @@ $(SYSCON_OBJS): sceSyscon_driver.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(INTR_OBJS): InterruptManagerForKernel.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(THREAD_OBJS): ThreadManForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
