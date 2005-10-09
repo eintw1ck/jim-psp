@@ -143,6 +143,10 @@ void PyThread_init_thread(void)
 #include "thread_atheos.h"
 #endif
 
+#ifdef PSP
+#include "thread_psp.h"
+#endif
+
 /*
 #ifdef FOOBAR_THREADS
 #include "thread_foobar.h"

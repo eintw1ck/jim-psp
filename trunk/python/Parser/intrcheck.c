@@ -91,6 +91,34 @@ PyOS_InterruptOccurred(void)
 
 #endif /* MSDOS && !QUICKWIN */
 
+#ifdef PSP
+
+extern volatile int pspInterruptOccurred; /* in main.c */
+
+void
+PyOS_InitInterrupts(void)
+{
+}
+
+void
+PyOS_FiniInterrupts(void)
+{
+}
+
+int
+PyOS_InterruptOccurred(void)
+{
+    return pspInterruptOccurred;
+}
+
+void PyErr_SetInterrupt(void)
+{
+    pspInterruptOccurred = 1;
+}
+
+#define OK
+
+#endif
 
 #ifndef OK
 

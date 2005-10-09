@@ -5,7 +5,6 @@
 
 #include <ctype.h>
 
-
 int PyArg_Parse(PyObject *, char *, ...);
 int PyArg_ParseTuple(PyObject *, char *, ...);
 int PyArg_VaParse(PyObject *, char *, va_list);
@@ -49,7 +48,6 @@ PyArg_ParseTuple(PyObject *args, char *format, ...)
 {
 	int retval;
 	va_list va;
-	
 	va_start(va, format);
 	retval = vgetargs1(args, format, &va, 0);
 	va_end(va);

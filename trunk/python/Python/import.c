@@ -686,6 +686,10 @@ make_compiled_pathname(char *pathname, char *buf, size_t buflen)
 static FILE *
 check_compiled_module(char *pathname, long mtime, char *cpathname)
 {
+#ifdef PSP
+    // FIXME: this is temporary, until I find out why the .pyc files are corrupted on PSP
+    return NULL;
+#else
 	FILE *fp;
 	long magic;
 	long pyc_mtime;
@@ -710,6 +714,7 @@ check_compiled_module(char *pathname, long mtime, char *cpathname)
 	if (Py_VerboseFlag)
 		PySys_WriteStderr("# %s matches %s\n", cpathname, pathname);
 	return fp;
+#endif
 }
 
 

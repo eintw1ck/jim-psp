@@ -126,6 +126,16 @@ elif 'riscos' in _names:
     __all__.extend(_get_exports_list(riscos))
     del riscos
 
+elif 'pspos' in _names:
+    name = 'psp'
+    linesep = '\n' # Really ?
+    from pspos import *
+    import psppath as path
+
+    import pspos
+    __all__.extend(_get_exports_list(pspos))
+    del pspos
+
 else:
     raise ImportError, 'no os specific module found'
 

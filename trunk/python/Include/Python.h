@@ -168,4 +168,13 @@ PyAPI_FUNC(int) _Py_Mangle(char *p, char *name, \
 #define PyDoc_STR(str) ""
 #endif
 
+#ifdef PSP
+
+#include <pspdebug.h>
+
+#define PySys_WriteStdout(fmt, args...) pspDebugScreenPrintf(fmt, ##args)
+#define PySys_WriteStderr(fmt, args...) pspDebugScreenPrintf(fmt, ##args)
+
+#endif /* PSP */
+
 #endif /* !Py_PYTHON_H */

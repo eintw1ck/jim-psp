@@ -29,6 +29,10 @@ extern "C" {
 #define DELIM ','
 #endif
 
+#ifdef PSP
+#define SEP '/'
+#define DELIM ';'
+#endif
 
 /* Filename separator */
 #ifndef SEP

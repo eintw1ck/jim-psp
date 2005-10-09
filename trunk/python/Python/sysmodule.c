@@ -1320,6 +1320,8 @@ mywrite(char *name, FILE *fp, const char *format, va_list va)
 	PyErr_Restore(error_type, error_value, error_traceback);
 }
 
+#ifndef PSP
+
 void
 PySys_WriteStdout(const char *format, ...)
 {
@@ -1339,3 +1341,5 @@ PySys_WriteStderr(const char *format, ...)
 	mywrite("stderr", stderr, format, va);
 	va_end(va);
 }
+
+#endif
