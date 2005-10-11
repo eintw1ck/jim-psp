@@ -21,6 +21,7 @@ SAMPLES = \
 	gu/sprite \
 	gu/blend \
 	gu/envmap \
+	gu/shadowprojection \
 	gu/spharm \
 	gu/rendertarget \
 	gu/reflection \
