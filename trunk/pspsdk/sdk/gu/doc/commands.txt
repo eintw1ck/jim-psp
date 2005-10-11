@@ -322,7 +322,10 @@ Dec Hex Name        Description
 93  5D  ALA         Amibient Light Alpha
                         0-7: Alpha Component
 
-94  5E  LMODE       Light Mode (???)
+94  5E  LMODE       Light Model
+                        0: Lighting model
+                             0: Single color
+                             1: Separate specular color   
 
 95  5F  LT0         Light Type 0
                         0-1: Light Components
@@ -472,21 +475,29 @@ Dec Hex Name        Description
 134 86  LQA3        Light Quadratic Attenuation 3
                         0-23: Attenuation Factor (GE Float)
 
-135 87  ???         Spot light related
+135 87  ???         Spot light 0 exponent
+                        0-23: Spotlight exponent
 
-136 88  ???         Spot light related
+136 88  ???         Spot light 1 exponent
+                        0-23: Spotlight exponent
 
-137 89  ???         Spot light related
+137 89  ???         Spot light 2 exponent
+                        0-23: Spotlight exponent
 
-139 8A  ???         Spot light related
+139 8A  ???         Spot light 3 exponent
+                        0-23: Spotlight exponent
 
-139 8B  ???         Spot light related
+139 8B  ???         Spot light 0 cutoff
+                        0-23: Spotlight cutoff angle (radians)
 
-140 8C  ???         Spot light related
+140 8C  ???         Spot light 1 cutoff
+                        0-23: Spotlight cutoff angle (radians)
 
-141 8D  ???         Spot light related
+141 8D  ???         Spot light 2 cutoff
+                        0-23: Spotlight cutoff angle (radians)
 
-142 8E  ???         Spot light related
+142 8E  ???         Spot light 3 cutoff
+                        0-23: Spotlight cutoff angle (radians)
 
 143 8F  ALC0        Ambient Light Color 0
                         0-7: Red Component
@@ -719,7 +730,7 @@ Dec Hex Name        Description
                             10: 16-bit ABGR 4444
                             11: 32-bit ABGR 8888
                         2-7: ???
-                        8-15: ??? (write ff)
+                        8-15: mask
                         16-23: ???
 
 198 C6  TFLT        Texture Filter
@@ -762,8 +773,10 @@ Dec Hex Name        Description
                         16-23: Blue Component
 
 203 CB  TFLUSH      Texture Flush
+                        Invalidate texture cache on texture change
 
 204 CC  TSYNC       Texture Sync
+                        Sync with texture transfer (see TRXKICK)
 
 205 CD  FFAR        Fog Far (???)
 
@@ -940,7 +953,8 @@ Dec Hex Name        Description
                             1110: Negated And
                             1111: Set
 
-231 E7  ZMSK        Depth Mask Enable
+231 E7  ZMSK        Depth Mask
+                        0-15: Depth Write Mask
 
 232 E8  PMSKC       Pixel Mask Color
                         0-7: Red Write Mask
