@@ -22,7 +22,7 @@ extern "C" {
 #define PSP_NUM_AUDIO_SAMPLES 1024
 #define PSP_VOLUME_MAX 0x8000
 
-typedef void (* pspAudioCallback_t)(short *buf, unsigned long reqn, void *pdata);
+typedef void (* pspAudioCallback_t)(void *buf, unsigned int reqn, void *pdata);
 
 typedef struct {
   int threadhandle;
