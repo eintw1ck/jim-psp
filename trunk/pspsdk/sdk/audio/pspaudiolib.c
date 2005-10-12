@@ -33,14 +33,17 @@ void pspAudioSetVolume(int channel, int left, int right)
 
 void pspAudioChannelThreadCallback(int channel, void *buf, unsigned int reqn)
 {
-	void (*callback)(void *buf, unsigned int reqn);
+	pspAudioCallback_t callback;
 	callback=AudioStatus[channel].callback;
 }
 
 
-void pspAudioSetChannelCallback(int channel, void *callback)
+void pspAudioSetChannelCallback(int channel, pspAudioCallback_t callback, void *pdata)
 {
-	AudioStatus[channel].callback=callback;
+	volatile psp_audio_channelinfo *pci = &AudioStatus[channel];
+	pci->callback=0;
+	pci->pdata=pdata;
+	pci->callback=callback;
 }
 
 int pspAudioOutBlocking(unsigned int channel, unsigned int vol1, unsigned int vol2, void *buf)
@@ -59,10 +62,10 @@ static int AudioChannelThread(int args, void *argp)
 	
 	while (audio_terminate==0) {
 		void *bufptr=&audio_sndbuf[channel][bufidx];
-		void (*callback)(void *buf, unsigned int reqn);
+		pspAudioCallback_t callback;
 		callback=AudioStatus[channel].callback;
 		if (callback) {
-			callback(bufptr, PSP_NUM_AUDIO_SAMPLES);
+			callback(bufptr, PSP_NUM_AUDIO_SAMPLES, AudioStatus[channel].pdata);
 		} else {
 			unsigned int *ptr=bufptr;
 			int i;
@@ -96,6 +99,7 @@ int pspAudioInit()
     AudioStatus[i].volumeright = PSP_VOLUME_MAX;
     AudioStatus[i].volumeleft  = PSP_VOLUME_MAX;
     AudioStatus[i].callback = 0;
+    AudioStatus[i].pdata = 0;
 	}
 	for (i=0; i<PSP_NUM_AUDIO_CHANNELS; i++) {
 		if ((AudioStatus[i].handle = sceAudioChReserve(-1,PSP_NUM_AUDIO_SAMPLES,0))<0) 
