@@ -69,6 +69,33 @@ int pspDebugSioPutData(const char *data, int len)
 	return len;
 }
 
+/* Put data to SIO converting any line feeds as necessary */
+int pspDebugSioPutText(const char *data, int len)
+{
+	int i;
+
+	for(i = 0; i < len; i++)
+	{
+		/* If just line feed add a carriage return */
+		if(data[i] == '\n')
+		{
+			if(((i > 0) && (data[i-1] != '\r')) || (i == 0))
+			{
+				pspDebugSioPutchar('\r');
+			}
+		}
+
+		pspDebugSioPutchar(data[i]);
+
+		if((i < (len - 1)) && (data[i] == '\r') && (data[i+1] != '\n'))
+		{
+			pspDebugSioPutchar('\n');
+		}
+	}
+
+	return len;
+}
+
 void pspDebugSioSetBaud(int baud)
 {
 	int div1, div2;

@@ -22,6 +22,7 @@
 #include <pspsysreg.h>
 #include <pspkdebug.h>
 #include <pspintmanager_kernel.h>
+#include <pspmodulemgr_kernel.h>
 
 #ifdef __cplusplus
 extern "C" {

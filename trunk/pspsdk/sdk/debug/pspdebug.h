@@ -311,6 +311,17 @@ void pspDebugSioPuts(const char *str);
 int pspDebugSioPutData(const char *data, int len);
 
 /**
+ * Write a set of data to the sio port converting single
+ * line feeds to CRLF and single CR to CRLF
+ *
+ * @param data - Pointer to the data to send.
+ * @param len - Length of the data.
+ *
+ * @return Number of characters written.
+ */
+int pspDebugSioPutText(const char *data, int len);
+
+/**
  * Initialise the remote SIO port (defaults to 4800 8N1).
  * @note will delay 2 seconds to wait for the power to come up.
  */

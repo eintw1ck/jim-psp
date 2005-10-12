@@ -15,7 +15,7 @@ GE_OBJS = sceGe_user_0000.o sceGe_user_0001.o sceGe_user_0002.o sceGe_user_0003.
 libpspgeincludedir = @PSPSDK_INCLUDEDIR@
 libpspgeinclude_HEADERS = pspge.h
 
-lib_LIBRARIES = libpspge.a
+lib_LIBRARIES = libpspge.a 
 libpspge_a_SOURCES = sceGe_user.S
 libpspge_a_LIBADD = $(GE_OBJS)
 

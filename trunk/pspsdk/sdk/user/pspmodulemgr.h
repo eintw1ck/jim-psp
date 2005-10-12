@@ -197,6 +197,18 @@ typedef struct SceKernelModuleInfo {
   */
 int sceKernelQueryModuleInfo(SceUID modid, SceKernelModuleInfo *info);
 
+/**
+  * Get a list of module IDs. NOTE: This is only available on 1.5 firmware
+  * and above. For V1 use ::pspSdkGetModuleIdList.
+  *
+  * @param readbuf - Buffer to store the module list.
+  * @param readbufsize - Number of elements in the readbuffer.
+  * @param idcount - Returns the number of module ids
+  *
+  * @return >= 0 on success
+  */
+int sceKernelGetModuleIdList(SceUID *readbuf, int readbufsize, int *idcount);
+
 /*@}*/
 
 #ifdef __cplusplus

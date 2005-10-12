@@ -33,17 +33,27 @@ LDFLAGS  := $(addprefix -L,$(LIBDIR)) -Wl,-q,-T$(PSPSDK)/lib/linkfile.prx -mno-c
 
 # Library selection.  By default we link with Newlib's libc.  Allow the
 # user to link with PSPSDK's libc if USE_PSPSDK_LIBC is set to 1.
-PSPSDK_LIBC_LIB = -lc
+
+ifeq ($(USE_KERNEL_LIBC),1)
+# Use the PSP's kernel libc
+PSPSDL_LIBC_LIB = 
+CFLAGS := -I$(PSPSDK)/include/libc $(CFLAGS)
+else
 ifeq ($(USE_PSPSDK_LIBC),1)
+# Use the pspsdk libc
 PSPSDK_LIBC_LIB = -lpsplibc
 CFLAGS := -I$(PSPSDK)/include/libc $(CFLAGS)
+else
+# Use newlib (urgh)
+PSPSDK_LIBC_LIB = -lc
+endif
 endif
 
 # Link with following default libraries.  Other libraries should be specified in the $(LIBS) variable.
 # TODO: This library list needs to be generated at configure time.
 
 ifeq ($(USE_KERNEL_LIBS),1)
-PSPSDK_LIBS = -lpspdebug -lpspsdk
+PSPSDK_LIBS = -lpspdebug -lpspdisplay_driver -lpspge_driver -lpspctrl_driver -lpspsdk
 LIBS     := $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpspkernel
 else
 PSPSDK_LIBS = -lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk

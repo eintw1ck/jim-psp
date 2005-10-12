@@ -40,6 +40,18 @@ extern "C" {
   */
 int pspSdkQueryModuleInfoV1(SceUID uid, SceKernelModuleInfo *modinfo);
 
+/**
+  * Get the list of module IDs.
+  * @note This is a replacement function for the missing v1.5 sceKernelGetModuleIdList
+  * on v1.0 firmware. DO NOT use on anything above that version.
+  *
+  * @param readbuf - Buffer to store the module list.
+  * @param readbufsize - Number of elements in the readbuffer.
+  * @param idcount - Returns the number of module ids
+  *
+  * @return >= 0 on success
+  */
+int pspSdkGetModuleIdList(SceUID *readbuf, int readbufsize, int *idcount);
 
 /**
  * Patch the sceModuleManager module to nullify LoadDeviceCheck() calls.

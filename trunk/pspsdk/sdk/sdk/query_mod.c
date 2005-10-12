@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * query_mod.c - Replacement for sceKernelQueryModuleInfo for v1.0 units.
+ * query_mod.c - Replacement for some missing modulemgr functions for v1.0 units.
  *
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
@@ -15,8 +15,17 @@
 #include <pspkerneltypes.h>
 #include <psploadcore.h>
 #include <pspmodulemgr.h>
+#include <pspmodulemgr_kernel.h>
 #include <pspsdk.h>
 #include <string.h>
+
+int pspSdkGetModuleIdList(SceUID *readbuf, int readbufsize, int *idcount)
+{
+	sceKernelGetModuleList(readbufsize / sizeof(SceUID), readbuf);
+	*idcount = sceKernelModuleCount();
+
+	return *idcount;
+}
 
 int pspSdkQueryModuleInfoV1(SceUID uid, SceKernelModuleInfo *modinfo)
 {

@@ -30,6 +30,14 @@ INTR_OBJS = InterruptManagerForKernel_0000.o InterruptManagerForKernel_0001.o In
 
 THREAD_OBJS = ThreadManForKernel_0000.o ThreadManForKernel_0001.o ThreadManForKernel_0002.o ThreadManForKernel_0003.o ThreadManForKernel_0004.o ThreadManForKernel_0005.o ThreadManForKernel_0006.o ThreadManForKernel_0007.o ThreadManForKernel_0008.o ThreadManForKernel_0009.o ThreadManForKernel_0010.o ThreadManForKernel_0011.o ThreadManForKernel_0012.o ThreadManForKernel_0013.o ThreadManForKernel_0014.o ThreadManForKernel_0015.o ThreadManForKernel_0016.o ThreadManForKernel_0017.o ThreadManForKernel_0018.o ThreadManForKernel_0019.o ThreadManForKernel_0020.o ThreadManForKernel_0021.o ThreadManForKernel_0022.o ThreadManForKernel_0023.o ThreadManForKernel_0024.o ThreadManForKernel_0025.o ThreadManForKernel_0026.o ThreadManForKernel_0027.o ThreadManForKernel_0028.o ThreadManForKernel_0029.o ThreadManForKernel_0030.o ThreadManForKernel_0031.o ThreadManForKernel_0032.o ThreadManForKernel_0033.o ThreadManForKernel_0034.o ThreadManForKernel_0035.o ThreadManForKernel_0036.o ThreadManForKernel_0037.o ThreadManForKernel_0038.o ThreadManForKernel_0039.o ThreadManForKernel_0040.o ThreadManForKernel_0041.o ThreadManForKernel_0042.o ThreadManForKernel_0043.o ThreadManForKernel_0044.o ThreadManForKernel_0045.o ThreadManForKernel_0046.o ThreadManForKernel_0047.o ThreadManForKernel_0048.o ThreadManForKernel_0049.o ThreadManForKernel_0050.o ThreadManForKernel_0051.o ThreadManForKernel_0052.o ThreadManForKernel_0053.o ThreadManForKernel_0054.o ThreadManForKernel_0055.o ThreadManForKernel_0056.o ThreadManForKernel_0057.o ThreadManForKernel_0058.o ThreadManForKernel_0059.o ThreadManForKernel_0060.o ThreadManForKernel_0061.o ThreadManForKernel_0062.o ThreadManForKernel_0063.o ThreadManForKernel_0064.o ThreadManForKernel_0065.o ThreadManForKernel_0066.o ThreadManForKernel_0067.o ThreadManForKernel_0068.o ThreadManForKernel_0069.o ThreadManForKernel_0070.o ThreadManForKernel_0071.o ThreadManForKernel_0072.o ThreadManForKernel_0073.o ThreadManForKernel_0074.o ThreadManForKernel_0075.o ThreadManForKernel_0076.o ThreadManForKernel_0077.o ThreadManForKernel_0078.o ThreadManForKernel_0079.o ThreadManForKernel_0080.o ThreadManForKernel_0081.o ThreadManForKernel_0082.o ThreadManForKernel_0083.o ThreadManForKernel_0084.o ThreadManForKernel_0085.o ThreadManForKernel_0086.o ThreadManForKernel_0087.o ThreadManForKernel_0088.o ThreadManForKernel_0089.o ThreadManForKernel_0090.o ThreadManForKernel_0091.o ThreadManForKernel_0092.o ThreadManForKernel_0093.o ThreadManForKernel_0094.o ThreadManForKernel_0095.o ThreadManForKernel_0096.o ThreadManForKernel_0097.o ThreadManForKernel_0098.o ThreadManForKernel_0099.o ThreadManForKernel_0100.o ThreadManForKernel_0101.o ThreadManForKernel_0102.o ThreadManForKernel_0103.o ThreadManForKernel_0104.o ThreadManForKernel_0105.o ThreadManForKernel_0106.o ThreadManForKernel_0107.o ThreadManForKernel_0108.o ThreadManForKernel_0109.o ThreadManForKernel_0110.o ThreadManForKernel_0111.o ThreadManForKernel_0112.o ThreadManForKernel_0113.o ThreadManForKernel_0114.o ThreadManForKernel_0115.o ThreadManForKernel_0116.o ThreadManForKernel_0117.o ThreadManForKernel_0118.o ThreadManForKernel_0119.o ThreadManForKernel_0120.o ThreadManForKernel_0121.o ThreadManForKernel_0122.o ThreadManForKernel_0123.o ThreadManForKernel_0124.o ThreadManForKernel_0125.o ThreadManForKernel_0126.o ThreadManForKernel_0127.o ThreadManForKernel_0128.o ThreadManForKernel_0129.o ThreadManForKernel_0130.o ThreadManForKernel_0131.o ThreadManForKernel_0132.o ThreadManForKernel_0133.o ThreadManForKernel_0134.o ThreadManForKernel_0135.o 
 
+SYSCLIB_OBJS = SysclibForKernel_0000.o SysclibForKernel_0001.o SysclibForKernel_0002.o SysclibForKernel_0003.o SysclibForKernel_0004.o SysclibForKernel_0005.o SysclibForKernel_0006.o SysclibForKernel_0007.o SysclibForKernel_0008.o SysclibForKernel_0009.o SysclibForKernel_0010.o SysclibForKernel_0011.o SysclibForKernel_0012.o SysclibForKernel_0013.o SysclibForKernel_0014.o SysclibForKernel_0015.o SysclibForKernel_0016.o SysclibForKernel_0017.o SysclibForKernel_0018.o SysclibForKernel_0019.o SysclibForKernel_0020.o SysclibForKernel_0021.o SysclibForKernel_0022.o SysclibForKernel_0023.o SysclibForKernel_0024.o SysclibForKernel_0025.o SysclibForKernel_0026.o SysclibForKernel_0027.o SysclibForKernel_0028.o SysclibForKernel_0029.o SysclibForKernel_0030.o SysclibForKernel_0031.o SysclibForKernel_0032.o SysclibForKernel_0033.o SysclibForKernel_0034.o SysclibForKernel_0035.o SysclibForKernel_0036.o SysclibForKernel_0037.o SysclibForKernel_0038.o SysclibForKernel_0039.o SysclibForKernel_0040.o SysclibForKernel_0041.o SysclibForKernel_0042.o 
+
+LOADEXEC_OBJS = LoadExecForKernel_0000.o LoadExecForKernel_0001.o LoadExecForKernel_0002.o LoadExecForKernel_0003.o LoadExecForKernel_0004.o LoadExecForKernel_0005.o LoadExecForKernel_0006.o LoadExecForKernel_0007.o LoadExecForKernel_0008.o LoadExecForKernel_0009.o LoadExecForKernel_0010.o LoadExecForKernel_0011.o LoadExecForKernel_0012.o LoadExecForKernel_0013.o LoadExecForKernel_0014.o LoadExecForKernel_0015.o LoadExecForKernel_0016.o LoadExecForKernel_0017.o LoadExecForKernel_0018.o LoadExecForKernel_0019.o LoadExecForKernel_0020.o LoadExecForKernel_0021.o 
+
+SYSMEM_OBJS = SysMemForKernel_0000.o SysMemForKernel_0001.o SysMemForKernel_0002.o SysMemForKernel_0003.o SysMemForKernel_0004.o SysMemForKernel_0005.o SysMemForKernel_0006.o SysMemForKernel_0007.o SysMemForKernel_0008.o SysMemForKernel_0009.o SysMemForKernel_0010.o SysMemForKernel_0011.o SysMemForKernel_0012.o SysMemForKernel_0013.o SysMemForKernel_0014.o SysMemForKernel_0015.o SysMemForKernel_0016.o SysMemForKernel_0017.o SysMemForKernel_0018.o SysMemForKernel_0019.o SysMemForKernel_0020.o SysMemForKernel_0021.o SysMemForKernel_0022.o SysMemForKernel_0023.o SysMemForKernel_0024.o SysMemForKernel_0025.o SysMemForKernel_0026.o SysMemForKernel_0027.o SysMemForKernel_0028.o SysMemForKernel_0029.o SysMemForKernel_0030.o SysMemForKernel_0031.o SysMemForKernel_0032.o SysMemForKernel_0033.o SysMemForKernel_0034.o SysMemForKernel_0035.o SysMemForKernel_0036.o SysMemForKernel_0037.o SysMemForKernel_0038.o SysMemForKernel_0039.o SysMemForKernel_0040.o SysMemForKernel_0041.o SysMemForKernel_0042.o SysMemForKernel_0043.o SysMemForKernel_0044.o SysMemForKernel_0045.o SysMemForKernel_0046.o SysMemForKernel_0047.o SysMemForKernel_0048.o SysMemForKernel_0049.o SysMemForKernel_0050.o SysMemForKernel_0051.o SysMemForKernel_0052.o SysMemForKernel_0053.o SysMemForKernel_0054.o SysMemForKernel_0055.o SysMemForKernel_0056.o SysMemForKernel_0057.o SysMemForKernel_0058.o 
+
+MODULE_OBJS = ModuleMgrForKernel_0000.o ModuleMgrForKernel_0001.o ModuleMgrForKernel_0002.o ModuleMgrForKernel_0003.o ModuleMgrForKernel_0004.o ModuleMgrForKernel_0005.o ModuleMgrForKernel_0006.o ModuleMgrForKernel_0007.o ModuleMgrForKernel_0008.o ModuleMgrForKernel_0009.o ModuleMgrForKernel_0010.o ModuleMgrForKernel_0011.o ModuleMgrForKernel_0012.o ModuleMgrForKernel_0013.o ModuleMgrForKernel_0014.o ModuleMgrForKernel_0015.o ModuleMgrForKernel_0016.o ModuleMgrForKernel_0017.o ModuleMgrForKernel_0018.o ModuleMgrForKernel_0019.o ModuleMgrForKernel_0020.o ModuleMgrForKernel_0021.o ModuleMgrForKernel_0022.o 
+
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
@@ -40,7 +48,8 @@ libpspkernelinclude_HEADERS =	\
 	pspsysreg.h		\
 	psputilsforkernel.h \
 	pspkdebug.h			\
-	pspintmanager_kernel.h 
+	pspintmanager_kernel.h  \
+	pspmodulemgr_kernel.h
 	
 lib_LIBRARIES = libpspkernel.a
 
@@ -54,11 +63,15 @@ libpspkernel_a_SOURCES =	\
 	sceSysreg_driver.S	\
 	UtilsForKernel.S	\
 	InterruptManagerForKernel.S  \
-	ThreadManForKernel.S 
+	ThreadManForKernel.S         \
+	SysclibForKernel.S			\
+	LoadExecForKernel.S		\
+	SysMemForKernel.S 		\
+	ModuleMgrForKernel.S	
 
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
 						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS) \
-						$(THREAD_OBJS)
+						$(THREAD_OBJS) $(SYSCLIB_OBJS) $(LOADEXEC_OBJS) $(SYSMEM_OBJS) $(MODULE_OBJS)
 
 $(EXCEPTION_OBJS): ExceptionManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -88,4 +101,16 @@ $(INTR_OBJS): InterruptManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(THREAD_OBJS): ThreadManForKernel.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(SYSCLIB_OBJS): SysclibForKernel.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(LOADEXEC_OBJS): LoadExecForKernel.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(SYSMEM_OBJS): SysMemForKernel.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(MODULE_OBJS): ModuleMgrForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
