@@ -86,6 +86,22 @@ void print_help(void)
 	fprintf(stderr, "-P, --psp-prefix        : Print the prefix of PSP-hosted software\n");
 }
 
+void normalize_path (char *out)
+{
+       int i;
+       int j;
+
+       /* Convert "//" to "/" */
+       for (i = 0; out[i + 1]; i++) {
+               if (out[i] == '/' && out[i + 1] == '/') {
+                       for (j = i + 1; out[j]; j++) {
+                               out[j] = out[j + 1];
+                       }
+                       i--;
+               }
+       }
+}
+
 /* Find the path to the pspdev dir (e.g. /usr/local/pspdev) */
 char *find_pspdev_path(char *name)
 {
@@ -166,6 +182,8 @@ char *find_pspdev_path(char *name)
 			}
 		}
 	}
+
+	normalize_path(path);
 
 	if(found)
 	{
