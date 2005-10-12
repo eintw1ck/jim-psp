@@ -423,8 +423,8 @@ void audioOutCallback(int channel, unsigned short* buf, unsigned int reqn)
 	}
 }
 
-void audioOutCallback0(unsigned short* buf, unsigned int reqn) { audioOutCallback(0, buf, reqn); }
-void audioOutCallback1(unsigned short* buf, unsigned int reqn) { audioOutCallback(1, buf, reqn); }
+void audioOutCallback0(void *buf, unsigned int reqn, void *userdata) { audioOutCallback(0, buf, reqn); }
+void audioOutCallback1(void *buf, unsigned int reqn, void *userdata) { audioOutCallback(1, buf, reqn); }
 
 void createPitches(float base, float* target)
 {
@@ -466,8 +466,8 @@ int main(void)
 	pspAudioInit();
 	pspAudioSetVolume(0, 0x4000, 0x4000);
 	pspAudioSetVolume(1, 0x4000, 0x4000);
-	pspAudioSetChannelCallback(0, audioOutCallback0);
-	pspAudioSetChannelCallback(1, audioOutCallback1);
+	pspAudioSetChannelCallback(0, audioOutCallback0, NULL);
+	pspAudioSetChannelCallback(1, audioOutCallback1, NULL);
 	sceKernelSleepThread();
 
 	return 0;

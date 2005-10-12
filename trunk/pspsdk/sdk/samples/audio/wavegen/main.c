@@ -99,7 +99,7 @@ float currentFunction(const float time) {
 /* This function gets called by pspaudiolib every time the
    audio buffer needs to be filled. The sample format is
    16-bit, stereo. */
-void audioCallback(void* buf, unsigned int length) {
+void audioCallback(void* buf, unsigned int length, void *userdata) {
         const float sampleLength = 1.0f / sampleRate;
 	const float scaleFactor = SHRT_MAX - 1.0f;
         static float freq0 = 440.0f;
@@ -172,7 +172,7 @@ int main(void) {
 	setupCallbacks();
 
 	pspAudioInit();
-	pspAudioSetChannelCallback(0, audioCallback);
+	pspAudioSetChannelCallback(0, audioCallback, NULL);
 
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
