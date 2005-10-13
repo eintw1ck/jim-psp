@@ -273,7 +273,7 @@ _pspDebugExceptionResume:
 #	lw		$0, REG_GPR_0($v0)
 	lw		$1, REG_GPR_1($v0)
 # Don't do 2 yet
-	lw		$1, REG_GPR_3($v0)
+	lw		$3, REG_GPR_3($v0)
 	lw		$4, REG_GPR_4($v0)
 	lw		$5, REG_GPR_5($v0)
 	lw		$6, REG_GPR_6($v0)
