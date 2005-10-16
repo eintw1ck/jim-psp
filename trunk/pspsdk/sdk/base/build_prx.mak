@@ -53,7 +53,7 @@ endif
 # TODO: This library list needs to be generated at configure time.
 
 ifeq ($(USE_KERNEL_LIBS),1)
-PSPSDK_LIBS = -lpspdebug -lpspdisplay_driver -lpspge_driver -lpspctrl_driver -lpspsdk
+PSPSDK_LIBS = -lpspdebug -lpspdisplay_driver -lpspctrl_driver -lpspsdk
 LIBS     := $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpspkernel
 else
 PSPSDK_LIBS = -lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk
