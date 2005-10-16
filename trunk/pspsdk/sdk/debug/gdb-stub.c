@@ -34,7 +34,8 @@ void putDebugChar(char ch);
 char getDebugChar(void);
 int _gdbSupportLibWriteByte(char val, unsigned char *dest);
 int _gdbSupportLibReadByte(unsigned char *address, unsigned char *dest);
-void _pspDebugExceptionResume(void);
+//void _pspDebugExceptionResume(void);
+void pspDebugResumeFromException(void);
 void _gdbSupportLibFlushCaches(void);
 extern u32 _pspDebugResumePatch;
 
@@ -274,11 +275,10 @@ static void _GdbTrapEntry(PspDebugRegBlock *regs)
 	_GdbExceptRegs = regs;
 	handle_exception(regs);
 
-	/* Patch 0x08000000 | (addr >> 2) */
-	_pspDebugResumePatch = 0x08000000 | (regs->epc >> 2);
 	/* Flush caches */
 	_gdbSupportLibFlushCaches();
-	_pspDebugExceptionResume();
+
+	pspDebugResumeFromException();
 }
 
 int _gdbSupportLibInit(void);

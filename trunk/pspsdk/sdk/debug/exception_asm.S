@@ -104,11 +104,24 @@
 	.extern _pspDebugExceptRegs
 	.extern _pspDebugTrapEntry
 
+	.global pspDebugResumeFromException
+	.ent    pspDebugResumeFromException
+pspDebugResumeFromException:
+
+	break
+
+	.end    pspDebugResumeFromException
+
 	.global _pspDebugExceptionHandler
 	.ent    _pspDebugExceptionHandler
 _pspDebugExceptionHandler:
 	nop
 	nop
+	la		$v1, pspDebugResumeFromException
+	mfc0    $v0, EPC
+	beq     $v0, $v1, _pspDebugExceptionResume
+	nop
+
 	la		$v0, _pspDebugExceptRegs
 	sw		$0, REG_GPR_0($v0)
 	sw		$1, REG_GPR_1($v0)
@@ -217,7 +230,6 @@ _pspDebugExceptionHandler:
 
 	.end _pspDebugExceptionHandler
 
-	.global _pspDebugExceptionResume
 	.ent	_pspDebugExceptionResume
 
 _pspDebugExceptionResume:
@@ -271,7 +283,7 @@ _pspDebugExceptionResume:
 1:
 
 #	lw		$0, REG_GPR_0($v0)
-	lw		$1, REG_GPR_1($v0)
+#	lw		$1, REG_GPR_1($v0)
 # Don't do 2 yet
 	lw		$3, REG_GPR_3($v0)
 	lw		$4, REG_GPR_4($v0)
@@ -303,17 +315,15 @@ _pspDebugExceptionResume:
 	lw		$30, REG_GPR_30($v0)
 	lw		$31, REG_GPR_31($v0)
 
-# Restore 2 now
+	lw		$1,  REG_EPC($v0)
+	mtc0    $1,  EPC
+
+# Restore 1 + 2 now
+	lw		$1, REG_GPR_1($v0)
 	lw		$2, REG_GPR_2($v0)
 
-	.end	_pspDebugExceptionResume
-
-	.global _pspDebugResumePatch
-	.ent    _pspDebugResumePatch
-_pspDebugResumePatch:
-# This instruction needs to be patch to do a jump to the return address
-1:
-	j		1b
 	nop
+	nop
+	eret
 
-	.end    _pspDebugResumePatch
+	.end	_pspDebugExceptionResume
