@@ -20,6 +20,9 @@
 extern "C" {
 #endif
 
+/* PI, float-sized */
+#define GU_PI			(3.141593f)
+
 #define GU_FALSE		(0)
 #define GU_TRUE			(1)
 
