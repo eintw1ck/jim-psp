@@ -8,10 +8,10 @@
 
 #include "guInternal.h"
 
-void sceGuModelColor(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3)
+void sceGuModelColor(unsigned int emissive, unsigned int ambient, unsigned int diffuse, unsigned int specular)
 {
-	sendCommandi(84,a0 & 0xffffff);
-	sendCommandi(86,a2 & 0xffffff);
-	sendCommandi(85,a1 & 0xffffff);
-	sendCommandi(87,a3 & 0xffffff);
+	sendCommandi(84, emissive & 0xffffff);
+	sendCommandi(86, diffuse & 0xffffff);
+	sendCommandi(85, ambient & 0xffffff);
+	sendCommandi(87, specular & 0xffffff);
 }

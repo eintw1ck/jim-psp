@@ -665,6 +665,7 @@ void sceGuLightSpot(int index, const ScePspFVector3* direction, float f12, float
   *
   * Available clear-flags are (OR them together to get final clear-mode):
   *   - GU_COLOR_BUFFER_BIT - Clears the color-buffer
+  *   - GU_STENCIL_BUFFER_BIT - Clears the stencil-buffer
   *   - GU_DEPTH_BUFFER_BIT - Clears the depth-buffer
   *
   * @param flags - Which part of the buffer to clear
@@ -801,7 +802,11 @@ void sceGuAmbientColor(unsigned int color);
 void sceGuBlendFunc(int op, int src, int dest, unsigned int srcfix, unsigned int destfix);
 
 void sceGuMaterial(int mode, int color);
-void sceGuModelColor(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3);
+
+/**
+  *
+**/
+void sceGuModelColor(unsigned int emissive, unsigned int ambient, unsigned int diffuse, unsigned int specular);
 
 /**
   * Set stencil function and reference value for stencil testing
@@ -832,6 +837,9 @@ void sceGuStencilFunc(int func, int ref, int mask);
   *   - GU_INCR - Increments the current stencil buffer value
   *   - GU_DECR - Decrease the current stencil buffer value
   *   - GU_INVERT - Bitwise invert the current stencil buffer value
+  *
+  * As stencil buffer shares memory with framebuffer alpha, resolution of the buffer
+  * is directly in relation.
   *
   * @param fail - The action to take when the stencil test fails
   * @param zfail - The action to take when stencil test passes, but the depth test fails
