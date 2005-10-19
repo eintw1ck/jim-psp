@@ -52,10 +52,8 @@ void sceGuInit(void)
 	callback.signal_arg = &gu_settings;
 	callback.finish_func = callbackFin;
 	callback.finish_arg = &gu_settings;
-	gu_settings.ge_callback_id = 0;
-/*
 	gu_settings.ge_callback_id = sceGeSetCallback(&gu_callback);
-*/
+
 	ge_edram_address = sceGeEdramGetAddr();
 
 	// initialize graphics hardware

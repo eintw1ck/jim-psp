@@ -10,7 +10,7 @@
 
 void callbackFin(int id, void* arg)
 {
-	GuSettings* settings = (GuSettings*)settings;
+	GuSettings* settings = (GuSettings*)arg;
 	if (settings->fin)
 		settings->fin(id & 0xffff);
 }
