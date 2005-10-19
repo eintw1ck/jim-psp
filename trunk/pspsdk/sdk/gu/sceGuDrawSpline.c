@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuDrawSpline(int vertex_type, int ucount, int vcount, int uedge, int vedge, void* indices, void* vertices)
+void sceGuDrawSpline(int vertex_type, int ucount, int vcount, int uedge, int vedge, const void* indices, const void* vertices)
 {
   if (vertex_type)
     sendCommandi(18,vertex_type);

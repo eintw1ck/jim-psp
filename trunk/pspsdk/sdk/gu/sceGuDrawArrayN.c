@@ -8,7 +8,7 @@
 
 #include "guInternal.h"
 
-void sceGuDrawArrayN(int primitive_type, int vertex_type, int count, int a3, void* indices, void* vertices)
+void sceGuDrawArrayN(int primitive_type, int vertex_type, int count, int a3, const void* indices, const void* vertices)
 {
 	if (vertex_type)
 		sendCommandi(18,vertex_type);

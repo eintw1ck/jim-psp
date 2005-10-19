@@ -1161,7 +1161,7 @@ void sceGuDrawBezier(int vtype, int ucount, int vcount, const void* indices, con
 void sceGuPatchDivide(unsigned int a0, unsigned int a1);
 void sceGuPatchFrontFace(unsigned int a0);
 void sceGuPatchPrim(unsigned int a0);
-void sceGuDrawSpline(int vtype, int ucount, int vcount, int uedge, int vedge, void* indices, void* vertices);
+void sceGuDrawSpline(int vtype, int ucount, int vcount, int uedge, int vedge, const void* indices, const void* vertices);
 
 /**
   * Set transform matrices
@@ -1209,7 +1209,7 @@ void sceGuMorphWeight(int index, float weight);
 
 void sceGuSpriteMode(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3);
 
-void sceGuDrawArrayN(int primitive_type, int vertex_type, int count, int a3, void* indices, void* vertices);
+void sceGuDrawArrayN(int primitive_type, int vertex_type, int count, int a3, const void* indices, const void* vertices);
 
 /*@}*/
 
