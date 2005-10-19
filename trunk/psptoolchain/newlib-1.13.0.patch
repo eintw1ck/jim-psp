@@ -3568,8 +3568,8 @@
 +
 +void _start() { }
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/libcglue.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-10-07 11:43:26.000000000 -0400
-@@ -0,0 +1,657 @@
++++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-10-17 17:53:39.000000000 -0400
+@@ -0,0 +1,667 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -4000,18 +4000,28 @@
 +#ifdef F__fstat
 +int _fstat(int fd, struct stat *sbuf)
 +{
-+       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-+               if (__psp_filename_map[fd] != NULL) {
-+                       if (strcmp(__psp_filename_map[fd], "  __PSP_STDIO") == 0) {
-+                               memset(sbuf, '\0', sizeof(struct stat));
-+                               sbuf->st_mode = S_IFCHR;
-+                               return 0;
-+                       } else {
-+                               return stat(__psp_filename_map[fd], sbuf);
-+                       }
-+               }
-+       }
-+       return -1;
++	int ret;
++	SceOff oldpos;
++	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
++		if (__psp_filename_map[fd] != NULL) {
++			if (strcmp(__psp_filename_map[fd], "  __PSP_STDIO") == 0) {
++				memset(sbuf, '\0', sizeof(struct stat));
++				sbuf->st_mode = S_IFCHR;
++				return 0;
++			} else {
++			        ret = stat(__psp_filename_map[fd], sbuf);
++				/* Find true size of open file */
++				oldpos = sceIoLseek(fd, 0, SEEK_CUR);
++				if (oldpos != (off_t) -1) {
++					sbuf->st_size = (off_t) sceIoLseek(fd, 0, SEEK_END);
++					sceIoLseek(fd, oldpos, SEEK_SET);
++				}
++				return ret;
++			}
++		}
++	}
++	errno = EBADF;
++	return -1;
 +}
 +#endif
 +

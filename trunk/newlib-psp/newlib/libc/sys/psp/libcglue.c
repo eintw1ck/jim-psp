@@ -428,18 +428,30 @@ int __psp_free_heap(void)
 #ifdef F__fstat
 int _fstat(int fd, struct stat *sbuf)
 {
-       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-               if (__psp_filename_map[fd] != NULL) {
-                       if (strcmp(__psp_filename_map[fd], "  __PSP_STDIO") == 0) {
-                               memset(sbuf, '\0', sizeof(struct stat));
-                               sbuf->st_mode = S_IFCHR;
-                               return 0;
-                       } else {
-                               return stat(__psp_filename_map[fd], sbuf);
-                       }
-               }
-       }
-       return -1;
+	int ret;
+	SceOff oldpos;
+	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+		if (__psp_filename_map[fd] != NULL) {
+			if (strcmp(__psp_filename_map[fd], "  __PSP_STDIO") == 0) {
+				memset(sbuf, '\0', sizeof(struct stat));
+				sbuf->st_mode = S_IFCHR;
+				return 0;
+			} else {
+			        ret = stat(__psp_filename_map[fd], sbuf);
+
+				/* Find true size of the open file */
+				oldpos = sceIoLseek(fd, 0, SEEK_CUR);
+				if (oldpos != (off_t) -1) {
+					sbuf->st_size = (off_t) sceIoLseek(fd, 0, SEEK_END);
+					sceIoLseek(fd, oldpos, SEEK_SET);
+				}
+
+				return ret;
+			}
+		}
+	}
+	errno = EBADF;
+	return -1;
 }
 #endif
 
