@@ -19,7 +19,7 @@
   * This module contains routines to manage interrupts.
   */
 
-/** @addtogroup IntManKern Interrupt Manager */
+/** @addtogroup IntManKern Interrupt Manager Kernel */
 /*@{*/
 
 #ifdef __cplusplus
@@ -37,7 +37,7 @@ extern "C" {
   *
   * @return 0 on success.
   */
-int sceKernelRegisterIntrHandler(int intno, int no, void *handler, void *arg, void *arg2);
+int sceKernelRegisterIntrHandler(int intno, int no, void *handler, void *arg1, void *arg2);
 
 /**
   * Enable an interrupt.
