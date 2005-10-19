@@ -55,21 +55,30 @@ Dec Hex Name        Description
                             110: Sprites (2D Rectangles)
 
 5   05  BEZIER      Bezier Patch Kick
-                        0-7: ???
-                        8-15: ???
+                        0-7: U Count
+                        8-15: V Count
 
 6   06  SPLINE      Spline Surface Kick
-                        0-7: ???
-                        8-15: ???
-                        16-17: ???
-                        18-19: ???
+                        0-7: U Count
+                        8-15: V Count
+                        16-17: U Edges
+                            00: Close/Close
+                            01: Open/Close
+                            10: Close/Open
+                            11: Open/Open
+                        18-19: V Edges
+                            00: Close/Close
+                            01: Open/Close
+                            10: Close/Open
+                            11: Open/Open
 
-7   07  ???         ???
+7   07  BBOX        Bounding Box
+                        0-23: Value (???)
 
 8   08  JUMP        Jump To New Address (BASE)
                         0-23: 24 least significant bits of pointer
 
-9   09  ???         ??? (BASE)
+9   09  BJUMP       Conditional Jump (BASE)
 
 10  0A  CALL        Call Address (BASE)
                         0-23: 24 least significant bits of pointer
@@ -126,9 +135,9 @@ Dec Hex Name        Description
                             0: Transformed Coordinates
                             1: Raw Coordinates
 
-19  13  ???         ???
+19  13  ???         Offset Address (BASE)
 
-20  14  ???         ???
+20  14  ???         Origin Address (BASE)
 
 21  15  REGION1     Draw Region Start
                         0-9: X Start
@@ -166,11 +175,11 @@ Dec Hex Name        Description
 
 36  24  STE         Stencil Test Enable
 
-37  25  ???         ??? (State related)
+37  25  AAE         Anti Aliasing Enable
 
-38  26  ???         ???
+38  26  PCE         Patch Cull Enable
 
-39  27  ???         ???
+39  27  CTE         Color Test Enable
 
 40  28  LOE         Logical Operation Enable
 
@@ -207,33 +216,39 @@ Dec Hex Name        Description
                         0-23: Morph Value (GE Float)
 
 54  36  PSUB        Patch Subdivision
-                        0-7: ???
-                        8-15: ???
+                        0-7: S Subdivision
+                        8-15: T Subdivision
 
-55  37  PATCH       Patch Primitive
-                        0-1: ???
+55  37  PPRIM       Patch Primitive
+                        0-1:
+                            00: Triangles
+                            01: Lines
+                            10: Points
 
 56  38  PFACE       Patch Front Face
+                        0:
+                            0: Clockwise
+                            1: Counter-Clockwise
 
-58  3A  WSTROBE     World Matrix Strobe (???)
+58  3A  WMS         World Matrix Select
 
 59  3B  WORLD       World Matrix Upload
                         0-23: Matrix Value (GE Float)
                            Write 3*4 values for complete matrix
 
-60  3C  VSTROBE     View Matrix Strobe (???)
+60  3C  VMS         View Matrix Select
 
 61  3D  VIEW        View Matrix Upload
                         0-23: Matrix Value (GE Float)
                             Write 3*4 values for complete matrix
 
-62  3E  PSTROBE     Projection Matrix Strobe (???)
+62  3E  PMS         Projection Matrix Select
 
 63  3F  PROJ        Projection Matrix Upload
                         0-23: Matrix Value (GE Float)
                             Write 4*4 values for complete matrix
 
-64  40  TSTROBE     Texture Matrix Strobe (???)
+64  40  TMS         Texture Matrix Select
 
 65  41  TMATRIX     Texture Matrix Upload
                         0-23: Matrix Value
