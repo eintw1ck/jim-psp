@@ -24,8 +24,10 @@ static BOOL PSP_IsThere(void)
 	return 1;
 }
 
-static void sound_callback(void *buf, unsigned int reqn)
+static void sound_callback(void *buf, unsigned int reqn, void *pdata)
 {
+	(void)pdata;
+
 	if (playing)
 	{
 		VC_WriteBytes(buf, reqn*4);
@@ -42,7 +44,7 @@ static BOOL PSP_Init(void)
 		return 1;
 
 	pspAudioInit();
-	pspAudioSetChannelCallback(0, (void *)sound_callback); 
+	pspAudioSetChannelCallback(0, (void *)sound_callback, NULL); 
 
 	return 0;
 }
