@@ -20,5 +20,7 @@ noinst_HEADERS = gumInternal.h
 libpspgum_a_SOURCES = gumInternal.c sceGumLoadIdentity.c sceGumLoadMatrix.c sceGumMatrixMode.c \
                       sceGumMultMatrix.c sceGumOrtho.c sceGumPerspective.c sceGumPopMatrix.c \
                       sceGumPushMatrix.c sceGumScale.c sceGumTranslate.c sceGumUpdateMatrix.c \
-                      sceGumStoreMatrix.c sceGumLookAt.c sceGumDrawArray.c sceGumRotateX.c \
-                      sceGumRotateY.c sceGumRotateZ.c sceGumRotateXYZ.c sceGumRotateZYX.c
+                      sceGumStoreMatrix.c sceGumLookAt.c sceGumDrawArray.c sceGumDrawArrayN.c \
+                      sceGumDrawBezier.c sceGumDrawSpline.c sceGumRotateX.c sceGumRotateY.c \
+                      sceGumRotateZ.c sceGumRotateXYZ.c sceGumRotateZYX.c \
+                      gumMultMatrix.c gumMakeIdentity.c
