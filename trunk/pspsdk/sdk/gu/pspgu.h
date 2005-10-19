@@ -1157,10 +1157,11 @@ void sceGuScissor(int x, int y, int w, int h);
 void sceGuViewport(int cx, int cy, int width, int height);
 
 /* patches */
-void sceGuDrawBezier(int vertex_type, int a1, int a2, const void* indices, const void* vertices);
+void sceGuDrawBezier(int vtype, int ucount, int vcount, const void* indices, const void* vertices);
 void sceGuPatchDivide(unsigned int a0, unsigned int a1);
 void sceGuPatchFrontFace(unsigned int a0);
 void sceGuPatchPrim(unsigned int a0);
+void sceGuDrawSpline(int vtype, int ucount, int vcount, int uedge, int vedge, void* indices, void* vertices);
 
 /**
   * Set transform matrices
@@ -1207,6 +1208,8 @@ void sceGuBoneMatrix(unsigned int index, const ScePspFMatrix4* matrix);
 void sceGuMorphWeight(int index, float weight);
 
 void sceGuSpriteMode(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3);
+
+void sceGuDrawArrayN(int primitive_type, int vertex_type, int count, int a3, void* indices, void* vertices);
 
 /*@}*/
 
