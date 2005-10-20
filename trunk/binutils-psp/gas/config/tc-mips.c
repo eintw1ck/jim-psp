@@ -8670,6 +8670,28 @@ do_msbd:
 		  }
 		  continue;
 
+	        case 'w':	/* Rotation code. */
+		  {
+		    int bad_code = 0;
+		    int opsize;
+
+		    if (*s != '[')
+		      {
+			my_getExpression (&imm_expr, s);
+			check_absolute_expr (ip, &imm_expr);
+			if ((unsigned long) imm_expr.X_add_number > 31)
+			  as_bad (_("Improper rotation code (%lu)"),
+				    (unsigned long) imm_expr.X_add_number);
+			INSERT_OPERAND (VFPU_ROT, *ip, imm_expr.X_add_number);
+			imm_expr.X_op = O_absent;
+			s = expr_end;
+			continue;
+		      }
+
+
+		  }
+		  continue;
+
 	        case 'y':
 		  /* Save the current immediate and offset expressions for
 		     the lvi macro.  */

@@ -477,7 +477,7 @@ const struct mips_opcode mips_builtin_opcodes[] =
 {"min",     "d,v,t",    0x0000002d, 0xfc0007ff, WR_d|RD_s|RD_t,         0,              AL	},
 {"daddu",   "d,v,t",	0x0000002d, 0xfc0007ff, WR_d|RD_s|RD_t,		0,		I3	},
 {"daddu",   "t,r,I",	0,    (int) M_DADDU_I,	INSN_MACRO,		0,		I3	},
-{"dbreak",  "",		0x7000003f, 0xffffffff,	0,			0,		N5	},
+{"dbreak",  "",		0x7000003f, 0xffffffff,	0,			0,		N5|AL	},
 {"dclo",    "U,s",      0x70000025, 0xfc0007ff, RD_s|WR_d|WR_t, 	0,		I64|N55 },
 {"dclz",    "U,s",      0x70000024, 0xfc0007ff, RD_s|WR_d|WR_t, 	0,		I64|N55 },
 /* dctr and dctw are used on the r5000.  */
@@ -564,7 +564,7 @@ const struct mips_opcode mips_builtin_opcodes[] =
 {"dremu",   "z,s,t",    0x0000001f, 0xfc00ffff, RD_s|RD_t|WR_HILO,      0,		I3      },
 {"dremu",   "d,v,t",	3,    (int) M_DREMU_3,	INSN_MACRO,		0,		I3	},
 {"dremu",   "d,v,I",	3,    (int) M_DREMU_3I,	INSN_MACRO,		0,		I3	},
-{"dret",    "",		0x7000003e, 0xffffffff,	0,			0,		N5	},
+{"dret",    "",		0x7000003e, 0xffffffff,	0,			0,		N5|AL	},
 {"drol",    "d,v,t",	0,    (int) M_DROL,	INSN_MACRO,		0,		I3	},
 {"drol",    "d,v,I",	0,    (int) M_DROL_I,	INSN_MACRO,		0,		I3	},
 {"dror",    "d,v,t",	0,    (int) M_DROR,	INSN_MACRO,		0,		I3	},
@@ -738,7 +738,7 @@ const struct mips_opcode mips_builtin_opcodes[] =
 /* mfhc2 is at the bottom of the table.  */
 {"mfc3",    "t,G",	0x4c000000, 0xffe007ff,	LCD|WR_t|RD_C3,		0,		I1	},
 {"mfc3",    "t,G,H",    0x4c000000, 0xffe007f8, LCD|WR_t|RD_C3, 	0,		I32     },
-{"mfdr",    "t,G",	0x7000003d, 0xffe007ff,	LCD|WR_t|RD_C0,		0,		N5      },
+{"mfdr",    "t,G",	0x7000003d, 0xffe007ff,	LCD|WR_t|RD_C0,		0,		N5|AL   },
 {"mfhi",    "d",	0x00000010, 0xffff07ff,	WR_d|RD_HI,		0,		I1	},
 {"mflo",    "d",	0x00000012, 0xffff07ff,	WR_d|RD_LO,		0,		I1	},
 {"min.ob",  "X,Y,Q",	0x78000006, 0xfc20003f,	WR_D|RD_S|RD_T|FP_D,	0,		MX|SB1	},
@@ -803,7 +803,7 @@ const struct mips_opcode mips_builtin_opcodes[] =
 /* mthc2 is at the bottom of the table.  */
 {"mtc3",    "t,G",	0x4c800000, 0xffe007ff,	COD|RD_t|WR_C3|WR_CC,	0,		I1	},
 {"mtc3",    "t,G,H",    0x4c800000, 0xffe007f8, COD|RD_t|WR_C3|WR_CC,   0,		I32     },
-{"mtdr",    "t,G",	0x7080003d, 0xffe007ff,	COD|RD_t|WR_C0,		0,		N5	},
+{"mtdr",    "t,G",	0x7080003d, 0xffe007ff,	COD|RD_t|WR_C0,		0,		N5|AL	},
 {"mthi",    "s",	0x00000011, 0xfc1fffff,	RD_s|WR_HI,		0,		I1	},
 {"mtlo",    "s",	0x00000013, 0xfc1fffff,	RD_s|WR_LO,		0,		I1	},
 {"mul.d",   "D,V,T",	0x46200002, 0xffe0003f,	WR_D|RD_S|RD_T|FP_D,	0,		I1	},
@@ -1175,6 +1175,8 @@ const struct mips_opcode mips_builtin_opcodes[] =
 
 /* Sony Allegrex CPU core.  */
 {"bitrev",  "d,t",      0x7c000520, 0xffe007ff, WR_d|RD_t,              0,              AL	},
+{"mfic",    "t,G",	0x70000024, 0xffe007ff, LCD|WR_t|RD_C0,		0,		AL	},
+{"mtic",    "t,G",	0x70000026, 0xffe007ff, COD|RD_t|WR_C0,		0,		AL	},
 
 /* Sony Allegrex VFPU instructions.  */
 {"bvf",     "?c,p",		0x49000000, 0xffe30000, CBD|RD_CC,	0,		AL	},
