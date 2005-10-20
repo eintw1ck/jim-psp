@@ -8,12 +8,10 @@
 
 #include "gumInternal.h"
 
-void sceGumTranslate(const ScePspFVector3* v)
+void gumMakeTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
 {
-	ScePspFMatrix4 m;
-
-	gumMakeIdentity(&m);
-	m.w.x = v->x;
-	m.w.y = v->y;
-	m.w.z = v->z;
+	gumMakeIdentity(m);
+	m->w.x = v->x;
+	m->w.y = v->y;
+	m->w.z = v->z;
 }
