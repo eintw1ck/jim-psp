@@ -23,4 +23,5 @@ libpspgum_a_SOURCES = gumInternal.c sceGumLoadIdentity.c sceGumLoadMatrix.c sceG
                       sceGumStoreMatrix.c sceGumLookAt.c sceGumDrawArray.c sceGumDrawArrayN.c \
                       sceGumDrawBezier.c sceGumDrawSpline.c sceGumRotateX.c sceGumRotateY.c \
                       sceGumRotateZ.c sceGumRotateXYZ.c sceGumRotateZYX.c \
-                      gumMultMatrix.c gumMakeIdentity.c gumCrossProduct.c gumNormalize.c
+                      gumMultMatrix.c gumMakeIdentity.c gumCrossProduct.c gumNormalize.c \
+                      gumMakeTranslate.c
