@@ -62,8 +62,6 @@ struct timeval base_time;
 
 int main(int argc, char* argv[])
 {
-	unsigned int i,j;
-
 	pspDebugScreenInit();
 
 	SetupCallbacks();
@@ -108,14 +106,14 @@ int main(int argc, char* argv[])
 		sceGuColor(0xffffffff);
 
 		vertices = (struct Vertex*)sceGuGetMemory(3*sizeof(struct Vertex));
-		vertices[0].x = (SCR_WIDTH/2) + cosf(val * (M_PI/180)) * (SCR_HEIGHT/2);
-		vertices[0].y = (SCR_HEIGHT/2) + sinf(val * (M_PI/180)) * (SCR_HEIGHT/2);
+		vertices[0].x = (SCR_WIDTH/2) + cosf(val * (GU_PI/180)) * (SCR_HEIGHT/2);
+		vertices[0].y = (SCR_HEIGHT/2) + sinf(val * (GU_PI/180)) * (SCR_HEIGHT/2);
 		vertices[0].z = 0;
-		vertices[1].x = (SCR_WIDTH/2) + cosf((val+120) * (M_PI/180)) * (SCR_HEIGHT/2);
-		vertices[1].y = (SCR_HEIGHT/2) + sinf((val+120) * (M_PI/180)) * (SCR_HEIGHT/2);
+		vertices[1].x = (SCR_WIDTH/2) + cosf((val+120) * (GU_PI/180)) * (SCR_HEIGHT/2);
+		vertices[1].y = (SCR_HEIGHT/2) + sinf((val+120) * (GU_PI/180)) * (SCR_HEIGHT/2);
 		vertices[1].z = 0;
-		vertices[2].x = (SCR_WIDTH/2) + cosf((val+240) * (M_PI/180)) * (SCR_HEIGHT/2);
-		vertices[2].y = (SCR_HEIGHT/2) + sinf((val+240) * (M_PI/180)) * (SCR_HEIGHT/2);
+		vertices[2].x = (SCR_WIDTH/2) + cosf((val+240) * (GU_PI/180)) * (SCR_HEIGHT/2);
+		vertices[2].y = (SCR_HEIGHT/2) + sinf((val+240) * (GU_PI/180)) * (SCR_HEIGHT/2);
 		vertices[2].z = 0;
 		sceGuDrawArray(GU_TRIANGLES,GU_VERTEX_32BITF|GU_TRANSFORM_2D,3,0,vertices);
 
@@ -127,14 +125,14 @@ int main(int argc, char* argv[])
 		sceGuColor(0xffff00ff);
 
 		vertices = (struct Vertex*)sceGuGetMemory(3*sizeof(struct Vertex));
-		vertices[0].x = (SCR_WIDTH/2) + cosf((val*1.1f) * (M_PI/180)) * (SCR_HEIGHT/2);
-		vertices[0].y = (SCR_HEIGHT/2) + sinf((val*1.1f) * (M_PI/180)) * (SCR_HEIGHT/2);
+		vertices[0].x = (SCR_WIDTH/2) + cosf((val*1.1f) * (GU_PI/180)) * (SCR_HEIGHT/2);
+		vertices[0].y = (SCR_HEIGHT/2) + sinf((val*1.1f) * (GU_PI/180)) * (SCR_HEIGHT/2);
 		vertices[0].z = 0;
-		vertices[1].x = (SCR_WIDTH/2) + cosf((val*1.1f+120) * (M_PI/180)) * (SCR_HEIGHT/2);
-		vertices[1].y = (SCR_HEIGHT/2) + sinf((val*1.1f+120) * (M_PI/180)) * (SCR_HEIGHT/2);
+		vertices[1].x = (SCR_WIDTH/2) + cosf((val*1.1f+120) * (GU_PI/180)) * (SCR_HEIGHT/2);
+		vertices[1].y = (SCR_HEIGHT/2) + sinf((val*1.1f+120) * (GU_PI/180)) * (SCR_HEIGHT/2);
 		vertices[1].z = 0;
-		vertices[2].x = (SCR_WIDTH/2) + cosf((val*1.1f+240) * (M_PI/180)) * (SCR_HEIGHT/2);
-		vertices[2].y = (SCR_HEIGHT/2) + sinf((val*1.1f+240) * (M_PI/180)) * (SCR_HEIGHT/2);
+		vertices[2].x = (SCR_WIDTH/2) + cosf((val*1.1f+240) * (GU_PI/180)) * (SCR_HEIGHT/2);
+		vertices[2].y = (SCR_HEIGHT/2) + sinf((val*1.1f+240) * (GU_PI/180)) * (SCR_HEIGHT/2);
 		vertices[2].z = 0;
 		sceGuDrawArray(GU_TRIANGLES,GU_VERTEX_32BITF|GU_TRANSFORM_2D,3,0,vertices);
 
@@ -165,7 +163,7 @@ int main(int argc, char* argv[])
 }
 
 /* Exit callback */
-int exit_callback(void)
+int exit_callback(int arg1, int arg2, void *common)
 {
 	sceKernelExitGame();
 	return 0;
@@ -196,66 +194,4 @@ int SetupCallbacks(void)
 	}
 
 	return thid;
-}
-
-#define SIN_ITERATOR 20
-
-float sinf(float v)
-{
-	float res,w;
-	int t;
-	float fac;
-	int i=(int)((v)/(2.0f*M_PI));
-	v-=i*2.0f*M_PI;
-
-	fac=1.0f;
-	res=0.0f;
-	w=v;
-	for(t=1;t<SIN_ITERATOR;)
-	{
-		res+=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-
-		res-=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-	}
-	return res;
-}
-
-float cosf(float v)
-{
-	float res,w;
-	int t;
-	float fac;
-	int i=(int)((v)/(2.0f*M_PI));
-	v-=i*2.0f*M_PI;
-
-	fac=1.0f;
-	res=0.0f;
-	w=1.0f;
-	for(t=0;t<SIN_ITERATOR;)
-	{
-		res+=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-
-		res-=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-	}
-	return res;
 }
