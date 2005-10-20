@@ -10,5 +10,6 @@
 
 void sceGumMultMatrix(const ScePspFMatrix4* m)
 {
-  gumMultMatrix(gum_current_matrix,gum_current_matrix,m);  
+	gumMultMatrix(gum_current_matrix,gum_current_matrix,m);  
+	gum_matrix_update[gum_current_mode] = 1;
 }

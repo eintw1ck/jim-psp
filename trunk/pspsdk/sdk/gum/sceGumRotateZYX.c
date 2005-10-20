@@ -8,9 +8,10 @@
 
 #include "gumInternal.h"
 
-void sceGumRotateXYZ(const ScePspFVector3* v)
+void sceGumRotateZYX(const ScePspFVector3* v)
 {
-	sceGumRotateX(v->z);
-	sceGumRotateY(v->y);
-	sceGumRotateZ(v->x);
+	gumRotateX(gum_current_matrix,v->x);
+	gumRotateY(gum_current_matrix,v->y);
+	gumRotateZ(gum_current_matrix,v->z);
+	gum_matrix_update[gum_current_mode] = 1;
 }

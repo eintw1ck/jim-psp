@@ -11,20 +11,22 @@
 
 void gumMultMatrix(ScePspFMatrix4* result, const ScePspFMatrix4* a, const ScePspFMatrix4* b)
 {
-  ScePspFMatrix4 t;
-  unsigned int i,j;
-  const float* ma = (const float*)a;
-  const float* mb = (const float*)b;
-  float* mr = (float*)&t;
+	ScePspFMatrix4 t;
+	unsigned int i,j,k;
+	const float* ma = (const float*)a;
+	const float* mb = (const float*)b;
+	float* mr = (float*)&t;
 
-  for (i = 0; i < 4; ++i)
-  {
-    for (j = 0; j < 4; ++j)
-    {
-      *(mr++) = ma[(i<<2)+0]*mb[(0<<2)+j] + ma[(i<<2)+1]*mb[(1<<2)+j] +
-                ma[(i<<2)+2]*mb[(2<<2)+j] + ma[(i<<2)+3]*mb[(3<<2)+j];
-    }
-  }  
+	for (i = 0; i < 4; ++i)
+	{
+		for (j = 0; j < 4; ++j)
+		{
+			float v = 0.0f;
+			for (k = 0; k < 4; ++k)
+				v += ma[(k << 2)+j] * mb[(i << 2)+k];
+			mr[(i << 2)+j] = v;
+                }
+        }
 
-  memcpy(result,&t,sizeof(ScePspFMatrix4));
+	memcpy(result,&t,sizeof(ScePspFMatrix4));
 }

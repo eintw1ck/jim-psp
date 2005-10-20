@@ -8,8 +8,14 @@
 
 #include "gumInternal.h"
 
-void sceGumScale(const ScePspFVector3* v)
+void gumTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
 {
-	gumScale(gum_current_matrix,v);
-	gum_matrix_update[gum_current_mode] = 1;
+	ScePspFMatrix4 t;
+
+	gumLoadIdentity(&t);
+	t.w.x = v->x;
+	t.w.y = v->y;
+	t.w.z = v->z;
+
+	gumMultMatrix(m,m,&t);
 }

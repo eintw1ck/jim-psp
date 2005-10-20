@@ -7,9 +7,14 @@
  */
 
 #include "gumInternal.h"
+#include <string.h>
 
-void sceGumScale(const ScePspFVector3* v)
+void gumLoadIdentity(ScePspFMatrix4* m)
 {
-	gumScale(gum_current_matrix,v);
-	gum_matrix_update[gum_current_mode] = 1;
+  unsigned int i;
+
+  memset(m,0,sizeof(ScePspFMatrix4));
+
+  for (i = 0; i < 4; ++i)
+    ((float*)m)[(i << 2)+i] = 1.0f;
 }

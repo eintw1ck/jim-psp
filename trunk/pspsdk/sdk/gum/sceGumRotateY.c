@@ -12,17 +12,6 @@
 
 void sceGumRotateY(float angle)
 {
-	ScePspFMatrix4 t;
-
-	float c = cosf(angle);
-	float s = sinf(angle);
-
-	gumMakeIdentity(&t);
-
-	t.x.x = c;
-	t.x.z = -s;
-	t.z.x = s;
-	t.z.z = c;
-
-	sceGumMultMatrix(&t);
+	gumRotateY(gum_current_matrix,angle);
+	gum_matrix_update[gum_current_mode] = 1;
 }

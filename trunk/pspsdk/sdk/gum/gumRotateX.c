@@ -8,8 +8,21 @@
 
 #include "gumInternal.h"
 
-void sceGumScale(const ScePspFVector3* v)
+#include <math.h>
+
+void gumRotateX(ScePspFMatrix4* m, float angle)
 {
-	gumScale(gum_current_matrix,v);
-	gum_matrix_update[gum_current_mode] = 1;
+	ScePspFMatrix4 t;
+
+	float c = cosf(angle);
+	float s = sinf(angle);
+
+	gumLoadIdentity(&t);
+
+	t.y.y = c;
+	t.y.z = s;
+	t.z.y = -s;
+	t.z.z = c;
+
+	gumMultMatrix(m,m,&t);
 }

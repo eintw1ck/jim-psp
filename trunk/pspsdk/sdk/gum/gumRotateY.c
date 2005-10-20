@@ -8,10 +8,21 @@
 
 #include "gumInternal.h"
 
-void gumMakeTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
+#include <math.h>
+
+void gumRotateY(ScePspFMatrix4* m, float angle)
 {
-	gumMakeIdentity(m);
-	m->w.x = v->x;
-	m->w.y = v->y;
-	m->w.z = v->z;
+	ScePspFMatrix4 t;
+
+	float c = cosf(angle);
+	float s = sinf(angle);
+
+	gumLoadIdentity(&t);
+
+	t.x.x = c;
+	t.x.z = -s;
+	t.z.x = s;
+	t.z.z = c;
+
+	gumMultMatrix(m,m,&t);
 }
