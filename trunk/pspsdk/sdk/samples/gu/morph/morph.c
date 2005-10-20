@@ -15,6 +15,7 @@
 #include <string.h>
 
 #include <pspgu.h>
+#include <pspgum.h>
 
 PSP_MODULE_INFO("Morph Sample", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
@@ -41,16 +42,6 @@ struct MorphVertex
 
 int SetupCallbacks();
 
-void matrix_identity(float* matrix);
-void matrix_rotate(float* matrix, float x, float y, float z);
-void matrix_projection(float* matrix, float fovy, float aspect, float near, float far);
-void matrix_multiply(float* result, float* a, float* b);
-void matrix_setrotatex(float* matrix, float angle);
-void matrix_setrotatey(float* matrix, float angle);
-void matrix_setrotatez(float* matrix, float angle);
-void matrix_rotate(float* matrix, float x, float y, float z);
-void matrix_translate(float* matrix, float x, float y, float z);
-
 #define BUF_WIDTH (512)
 #define SCR_WIDTH (480)
 #define SCR_HEIGHT (272)
@@ -64,15 +55,6 @@ void matrix_translate(float* matrix, float x, float y, float z);
 unsigned short __attribute__((aligned(16))) indices[(ROWS+1)*(COLS+1)*6];
 struct MorphVertex __attribute__((aligned(16))) vertices[ROWS*COLS];
 
-float vector_normalize(ScePspFVector3* v)
-{
-	float length = sqrtf(v->x*v->x + v->y*v->y + v->z*v->z);
-	if (length > 0.001f)
-		length = 1.0f / length;
-	v->x = length * v->x; v->y = length * v->y; v->z = length * v->z;
-	return length;
-}
-
 int main(int argc, char* argv[])
 {
 	unsigned int i,j;
@@ -83,7 +65,7 @@ int main(int argc, char* argv[])
 	for (i = 0; i < ROWS; ++i)
 	{
 		float di = (((float)i)/ROWS);
-		float s = di * M_PI * 2;
+		float s = di * GU_PI * 2;
 		ScePspFVector3 v = { cosf(s), cosf(s), sinf(s) };
 
 		for(j = 0; j < COLS; ++j)
@@ -91,7 +73,7 @@ int main(int argc, char* argv[])
 			unsigned short* curr = &indices[(j+(i*COLS))*6];
 			unsigned int i1 = (i+1)%ROWS, j1 = (j+1)%COLS;
 
-			float t = (((float)j)/COLS) * M_PI * 2;
+			float t = (((float)j)/COLS) * GU_PI * 2;
 
 			ScePspFVector3 v2 = { v.x * cosf(t), v.y * sinf(t), v.z };
 			ScePspFVector3 v3;
@@ -107,7 +89,7 @@ int main(int argc, char* argv[])
 
 			vertices[j+i*COLS].v1.color = vertices[j+i*COLS].v0.color;
 			vertices[j+i*COLS].v1.normal = v3;
-			vector_normalize(&vertices[j+i*COLS].v1.normal);
+			gumNormalize(&vertices[j+i*COLS].v1.normal);
 			vertices[j+i*COLS].v1.pos = v3;
 
 			// indices
@@ -149,11 +131,19 @@ int main(int argc, char* argv[])
 	sceDisplayWaitVblankStart();
 	sceGuDisplay(GU_TRUE);
 
-	// run sample
+	sceGumMatrixMode(GU_PROJECTION);
+	sceGumLoadIdentity();
+	sceGumPerspective(75.0f,16.0f/9.0f,0.5f,1000.0f);
 
-	ScePspFMatrix4 projection;
-	ScePspFMatrix4 view;
-	ScePspFMatrix4 world;
+	sceGumMatrixMode(GU_VIEW);
+	{
+		ScePspFVector3 pos = {0.0f,0.0f,-2.5f};
+
+		sceGumLoadIdentity();
+		sceGumTranslate(&pos);
+	}
+
+	// run sample
 
 	int val = 0;
 
@@ -172,27 +162,23 @@ int main(int argc, char* argv[])
 		sceGuSpecular(12.0f);
                                                                         
 
-		// setup matrices for cube
+		// rotate morphing mesh
 
-		matrix_identity((float*)&projection);
-		matrix_projection((float*)&projection,75.0f,16.0/9.0f,0.5f,1000.0f);
-		sceGuSetMatrix(GU_PROJECTION,&projection);
+		sceGumMatrixMode(GU_MODEL);
+		{
+			ScePspFVector3 rot = {val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f)};
 
-		matrix_identity((float*)&view);
-		sceGuSetMatrix(GU_VIEW,&view);
-
-		matrix_identity((float*)&world);
-		matrix_translate((float*)&world,0,0,-2.5f);
-		matrix_rotate((float*)&world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
-		sceGuSetMatrix(GU_MODEL,&world);
+			sceGumLoadIdentity();
+			sceGumRotateXYZ(&rot);
+		}
 
 		sceGuAmbientColor(0xffffffff);
 
 		// draw cube
 
-		sceGuMorphWeight(0,0.5f * sinf(val * (M_PI/180.0f)) + 0.5f);
-		sceGuMorphWeight(1,-0.5f * sinf(val * (M_PI/180.0f)) + 0.5f);
-		sceGuDrawArray(GU_TRIANGLES,GU_COLOR_8888|GU_NORMAL_32BITF|GU_VERTEX_32BITF|GU_VERTICES(2)|GU_INDEX_16BIT|GU_TRANSFORM_3D,sizeof(indices)/sizeof(unsigned short),indices,vertices);
+		sceGuMorphWeight(0,0.5f * sinf(val * (GU_PI/180.0f)) + 0.5f);
+		sceGuMorphWeight(1,-0.5f * sinf(val * (GU_PI/180.0f)) + 0.5f);
+		sceGumDrawArray(GU_TRIANGLES,GU_COLOR_8888|GU_NORMAL_32BITF|GU_VERTEX_32BITF|GU_VERTICES(2)|GU_INDEX_16BIT|GU_TRANSFORM_3D,sizeof(indices)/sizeof(unsigned short),indices,vertices);
 
 		sceGuFinish();
 		sceGuSync(0,0);
@@ -242,188 +228,3 @@ int SetupCallbacks(void)
 
 	return thid;
 }
-
-
-/* small matrix library */
-
-void matrix_identity(float* matrix)
-{
-	matrix[(0<<2)+0] = 1.0f;
-	matrix[(0<<2)+1] = 0.0f;
-	matrix[(0<<2)+2] = 0.0f;
-	matrix[(0<<2)+3] = 0.0f;
-
-	matrix[(1<<2)+0] = 0.0f;
-	matrix[(1<<2)+1] = 1.0f;
-	matrix[(1<<2)+2] = 0.0f;
-	matrix[(1<<2)+3] = 0.0f;
-
-	matrix[(2<<2)+0] = 0.0f;
-	matrix[(2<<2)+1] = 0.0f;
-	matrix[(2<<2)+2] = 1.0f;
-	matrix[(2<<2)+3] = 0.0f;
-
-	matrix[(3<<2)+0] = 0.0f;
-	matrix[(3<<2)+1] = 0.0f;
-	matrix[(3<<2)+2] = 0.0f;
-	matrix[(3<<2)+3] = 1.0f;
-}
-
-void matrix_projection(float* matrix, float fovy, float aspect, float near, float far)
-{
-	matrix_identity(matrix);
-
-	float angle = (fovy / 2.0f) * (M_PI/180.0f);
-	float cotangent = cosf(angle) / sinf(angle);
-
-	matrix[(0<<2)+0] = cotangent / aspect;
-	matrix[(1<<2)+1] = cotangent;
-	matrix[(2<<2)+2] = (far + near) / (near - far);
-	matrix[(3<<2)+2] = 2.0f * (far * near) / (near - far);
-	matrix[(2<<2)+3] = -1;
-	matrix[(3<<2)+3] = 0.0f;
-}
-
-void matrix_multiply(float* result, float* a, float* b)
-{
-	unsigned int i,j,k;
-	float temp[16];
-
-	for (i = 0; i < 4; ++i)
-	{
-		for (j = 0; j < 4; ++j)
-		{
-			float t = 0.0f;
-			for (k = 0; k < 4; ++k)
-				t += a[(k << 2)+j] * b[(i << 2)+k];
-			temp[(i << 2)+j] = t;
-		}
-	}
-
-	memcpy(result,temp,sizeof(float)*16);
-}
-
-void matrix_translate(float* matrix, float x, float y, float z)
-{
-	float temp[16];
-
-	matrix_identity(temp);
-	temp[(3 << 2)+0] = x;
-	temp[(3 << 2)+1] = y;
-	temp[(3 << 2)+2] = z;
-
-	matrix_multiply(matrix,matrix,temp);
-}
-
-void matrix_setrotatex(float* matrix, float angle)
-{
-	float cs = cosf(angle);
-	float sn = sinf(angle);
-
-	matrix_identity(matrix);
-	matrix[(1<<2)+1] = cs;
-	matrix[(1<<2)+2] = sn;
-	matrix[(2<<2)+1] = -sn;
-	matrix[(2<<2)+2] = cs;
-}
-
-void matrix_setrotatey(float* matrix, float angle)
-{
-	float cs = cosf(angle);
-	float sn = sinf(angle);
-
-	matrix_identity(matrix);
-	matrix[(0<<2)+0] = cs;
-	matrix[(0<<2)+2] = -sn;
-	matrix[(2<<2)+0] = sn;
-	matrix[(2<<2)+2] = cs;
-}
-
-void matrix_setrotatez(float* matrix, float angle)
-{
-	float cs = cosf(angle);
-	float sn = sinf(angle);
-
-	matrix_identity(matrix);
-	matrix[(0<<2)+0] = cs;
-	matrix[(0<<2)+1] = sn;
-	matrix[(1<<2)+0] = -sn;
-	matrix[(1<<2)+1] = cs;
-}
-
-void matrix_rotate(float* matrix, float x, float y, float z)
-{
-	float temp[16];
-
-	matrix_setrotatex(temp,x);
-	matrix_multiply(matrix,matrix,temp);
-
-	matrix_setrotatey(temp,y);
-	matrix_multiply(matrix,matrix,temp);
-
-	matrix_setrotatez(temp,z);
-	matrix_multiply(matrix,matrix,temp);
-}
-
-#define SIN_ITERATOR 20
-/*
-float sinf(float v)
-{
-	float res,w;
-	int t;
-	float fac;
-	int i=(int)((v)/(2.0f*M_PI));
-	v-=i*2.0f*M_PI;
-
-	fac=1.0f;
-	res=0.0f;
-	w=v;
-	for(t=1;t<SIN_ITERATOR;)
-	{
-		res+=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-
-		res-=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-	}
-	return res;
-}
-
-float cosf(float v)
-{
-	float res,w;
-	int t;
-	float fac;
-	int i=(int)((v)/(2.0f*M_PI));
-	v-=i*2.0f*M_PI;
-
-	fac=1.0f;
-	res=0.0f;
-	w=1.0f;
-	for(t=0;t<SIN_ITERATOR;)
-	{
-		res+=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-
-		res-=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-	}
-	return res;
-}
-*/
