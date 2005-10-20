@@ -8,7 +8,6 @@
 extern "C" {
 #endif
 	
-/* Defines DIR */
 #include <pspiofilemgr_dirent.h> 
 	
 #define MAXNAMLEN 255
@@ -23,6 +22,11 @@ struct dirent {
 	void * 		d_private;
 	int 		dummy;
 };
+
+typedef struct {
+	SceUID		uid;
+	struct dirent	de;
+} DIR;
 
 DIR *opendir (const char *);
 struct dirent *readdir (DIR *);

@@ -32,8 +32,4 @@ typedef struct SceIoDirent {
 	int 		dummy;
 } SceIoDirent;
 
-typedef struct {
-        SceUID          uid;
-} DIR;
-
 #endif /* PSPIOFILEMGR_DIRENT_H */

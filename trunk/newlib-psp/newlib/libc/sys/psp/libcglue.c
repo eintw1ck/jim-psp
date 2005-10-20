@@ -281,17 +281,15 @@ DIR *opendir(const char *filename)
 #ifdef F_readdir
 struct dirent *readdir(DIR *dirp)
 {
-	SceIoDirent *de;
+	/* Zero the dirent, to avoid possible problems with sceIoDread */
+	memset(&dirp->de, 0, sizeof(struct dirent));
 
-	de = (SceIoDirent *)malloc(sizeof(SceIoDirent));
-
-	if (sceIoDread(dirp->uid, de) <= 0)
+	if (sceIoDread(dirp->uid, &dirp->de) <= 0)
 	{
-		free(de);
 		return NULL;
 	}
 
-	return (struct dirent *)de;
+	return &dirp->de;
 }
 #endif
 
