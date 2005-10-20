@@ -20,6 +20,9 @@
   NEWLIB="newlib-1.13.0"
   GDB="gdb-6.3"
 
+  ## PSPSDK subversion repository, or path to local working copy
+  PSPSDK_SVN="svn://svn.pspdev.org/psp/trunk/pspsdk"
+
  #########################
  ## PARSE THE ARGUMENTS ##
  #########################
@@ -60,6 +63,9 @@
      -e)
       BUILD_GDB=1
       shift;;
+     -P)
+      PSPSDK_SVN="$2"
+      shift 2;;
     esac
    done
 
@@ -194,7 +200,7 @@
   ## Grab the latest PSPSDK from Subversion.
   if test $BUILD_PSPSDK ; then
    rm -Rf pspsdk
-   $SVN checkout svn://svn.pspdev.org/psp/trunk/pspsdk
+   $SVN export "$PSPSDK_SVN" pspsdk
   fi
 
  ################################
@@ -389,7 +395,11 @@
    $MAKE install || { echo "ERROR INSTALLING PSPSDK"; exit; }
 
    ## Install the pspsdk documentation.
-   $MAKE doxygen-doc || { echo "NON-FATAL ERROR INSTALLING PSPSDK DOCUMENTATION, CONTINUING..."; }
+   if $MAKE doxygen-doc ; then
+       cp -rf doc $PSPDEV/psp/sdk/
+   else
+       echo "NON-FATAL ERROR INSTALLING PSPSDK DOCUMENTATION, CONTINUING...";
+   fi
 
    ## Clean up the result.
    $MAKE clean
