@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
 
 		for( q = 0; q < HIERARCHY_SIZE; ++q )
 		{
-			ScePspFVector3 rot = {0,0,cosf( val * 1.0f * (M_PI/180.0f))};
+			ScePspFVector3 rot = {0,0,cosf( val * 1.0f * (GU_PI/180.0f))};
 			gumLoadIdentity(&bones[q]);
 			gumRotateXYZ(&bones[q],&rot);
 			if( q > 0 )
@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
 
 		sceGumMatrixMode(GU_MODEL);
 		{
-			ScePspFVector3 rot = { M_PI/7.0f, M_PI/9.0f, 0 };
+			ScePspFVector3 rot = { GU_PI/7.0f, GU_PI/9.0f, 0 };
 
 			sceGumLoadIdentity();
 			sceGumRotateXYZ(&rot);
@@ -183,13 +183,13 @@ int main(int argc, char* argv[])
 
 		for( q = 0 ; q < 4; ++q )
 		{
-			ScePspFVector3 rot = {0,0,M_PI/2.0f};
+			ScePspFVector3 rot = {0,0,GU_PI/2.0f};
 			sceGumRotateXYZ(&rot);
 
 			// set weights for morphing 
 
-			sceGuMorphWeight(0, 0.5f * sinf(val * (M_PI/180.0f)) + 0.5f);
-			sceGuMorphWeight(1, -0.5f * sinf(val * (M_PI/180.0f)) + 0.5f);
+			sceGuMorphWeight(0, 0.5f * sinf(val * (GU_PI/180.0f)) + 0.5f);
+			sceGuMorphWeight(1, -0.5f * sinf(val * (GU_PI/180.0f)) + 0.5f);
 
 			// submit geometry to GPU, where each vertex is
 			// a) first morphed (interpolated) between keyframe targets 
@@ -271,10 +271,10 @@ void genSkinnedMonsterCylinder( unsigned slices, unsigned rows, float length, fl
 			float cs,ct,ss,st;
 			float d0, d1, combinedDeform;
 
-			cs = cosf(s * (2*M_PI)/slices);
-			ct = cosf(t * (2*M_PI)/rows);
-			ss = sinf(s * (2*M_PI)/slices);
-			st = sinf(t * (2*M_PI)/rows);
+			cs = cosf(s * (2*GU_PI)/slices);
+			ct = cosf(t * (2*GU_PI)/rows);
+			ss = sinf(s * (2*GU_PI)/slices);
+			st = sinf(t * (2*GU_PI)/rows);
 
 			curr->v[0].nx = 0;
 			curr->v[0].ny = ct;
@@ -291,7 +291,7 @@ void genSkinnedMonsterCylinder( unsigned slices, unsigned rows, float length, fl
 			curr->v[0].z = radius * st;
 
 			d0 = 0.5f * cosf( s ) * cosf( t );
-			d1 = sinf( 0.5*M_PI * ((float)i / (float)rows) );
+			d1 = sinf( 0.5f*GU_PI * ((float)i / (float)rows) );
 			combinedDeform = d0 + d1 * d1;
 
 			curr->v[1].x = lengthStep * (float) + combinedDeform * curr->v[1].nx;
