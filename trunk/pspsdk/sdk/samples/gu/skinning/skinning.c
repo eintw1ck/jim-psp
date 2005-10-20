@@ -19,7 +19,7 @@
 
 #include <pspge.h>
 #include <pspgu.h>
-
+#include <pspgum.h>
 
 PSP_MODULE_INFO("Matrix Skinning Sample", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
@@ -43,7 +43,7 @@ typedef struct Vertex
 #define CYLINDER_RADIUS 0.35f
 #define CYLINDER_LENGTH 1.25f
 
-Vertex __attribute__((aligned(16))) cylinder_vertices[CYLINDER_SLICES*(CYLINDER_ROWS-1)];
+Vertex __attribute__((aligned(16))) cylinder_vertices[CYLINDER_SLICES*CYLINDER_ROWS];
 unsigned short __attribute__((aligned(16))) cylinder_indices[CYLINDER_SLICES*(CYLINDER_ROWS-1)*6];
 
 #define min( a, b ) ( ((a)<(b))?(a):(b) )
@@ -53,18 +53,6 @@ int SetupCallbacks();
 
 void genSkinnedCylinder( unsigned slices, unsigned rows, float length, float radius, unsigned bones,
 	Vertex* dstVertices, unsigned short* dstIndices );
-
-void matrix_identity(float* matrix);
-float matrix_determinant( float* matrix );
-void matrix_inverse(float* matrix, float* a);
-void matrix_rotate(float* matrix, float x, float y, float z);
-void matrix_projection(float* matrix, float fovy, float aspect, float near, float far);
-void matrix_multiply(float* result, float* a, float* b);
-void matrix_setrotatex(float* matrix, float angle);
-void matrix_setrotatey(float* matrix, float angle);
-void matrix_setrotatez(float* matrix, float angle);
-void matrix_rotate(float* matrix, float x, float y, float z);
-void matrix_translate(float* matrix, float x, float y, float z);
 
 #define BUF_WIDTH (512)
 #define SCR_WIDTH (480)
@@ -122,20 +110,19 @@ int main(int argc, char* argv[])
 	sceDisplayWaitVblankStart();
 	sceGuDisplay(GU_TRUE);
 
-
 	// setup matrices
 
-	ScePspFMatrix4 identity;
-	ScePspFMatrix4 projection;
-	ScePspFMatrix4 view;
+	sceGumMatrixMode(GU_PROJECTION);
+	sceGumLoadIdentity();
+	sceGumPerspective(75.0f,16.0f/9.0f,0.5f,1000.0f);
 
-	matrix_identity((float*)&identity);
+	sceGumMatrixMode(GU_VIEW);
+	{
+		ScePspFVector3 pos = {0,0,-5.0f};
 
-	matrix_identity((float*)&projection);
-	matrix_projection((float*)&projection,75.0f,16.0f/9.0f,0.5f,1000.0f);
-
-	matrix_identity((float*)&view);
-	matrix_translate((float*)&view,0,0,-5.0f);
+		sceGumLoadIdentity();
+		sceGumTranslate(&pos);
+	}
 
 	// setup bones hierarchy
 
@@ -157,23 +144,21 @@ int main(int argc, char* argv[])
 		sceGuClearDepth(0);
 		sceGuClear(GU_COLOR_BUFFER_BIT|GU_DEPTH_BUFFER_BIT);
 
-		// setup view/projection from camera
-
-		sceGuSetMatrix(GU_PROJECTION,&projection);
-		sceGuSetMatrix(GU_VIEW,&view);
-		sceGuSetMatrix(GU_MODEL,&identity);
-
-
 		// update matrices
 
 		for( q = 0; q < HIERARCHY_SIZE; ++q )
 		{
-			matrix_identity((float*)&bones[q]);
-			matrix_rotate((float*)&bones[q],0,0,cosf( val * 1.0f * (M_PI/180.0f)));
+			ScePspFVector3 rot = {0,0,cosf( val * 1.0f * (GU_PI/180.0f))};
+
+			gumLoadIdentity(&bones[q]);
+			gumRotateXYZ(&bones[q],&rot);
+
 			if( q > 0 )
 			{
-				matrix_translate((float*)&bones[q], boneLength, 0, 0 );
-				matrix_multiply( (float*)&bones[q], (float*)&bones[q-1], (float*)&bones[q] );
+				ScePspFVector3 pos = {boneLength, 0, 0};
+
+				gumTranslate(&bones[q], &pos);
+				gumMultMatrix(&bones[q], &bones[q-1], &bones[q]);
 			}
 
 			// set matrices for skinning
@@ -182,14 +167,20 @@ int main(int argc, char* argv[])
 			sceGuMorphWeight( q, 1.0f );
 		}
 
-		ScePspFMatrix4 world;
-		matrix_identity((float*)&world);
-		matrix_rotate((float*)&world, M_PI/7.0f, M_PI/9.0f, 0 );
+		sceGumMatrixMode(GU_MODEL);
+		{
+			ScePspFVector3 rot = {GU_PI/7.0f, GU_PI/9.0f, 0};
+
+			sceGumLoadIdentity();
+			sceGumRotateXYZ(&rot);
+		}
+
 		for( q = 0 ; q < 4; ++q )
 		{
-			matrix_rotate((float*)&world,0,0,M_PI/2.0f);
-			sceGuSetMatrix(GU_MODEL,&world);
-			sceGuDrawArray(GU_TRIANGLES,
+			ScePspFVector3 rot = {0,0,GU_PI/2.0f};
+			sceGumRotateXYZ(&rot);
+
+			sceGumDrawArray(GU_TRIANGLES,
 				GU_WEIGHTS( WEIGHTS_PER_VERTEX )|GU_NORMAL_32BITF|GU_TEXTURE_32BITF|GU_COLOR_8888|GU_VERTEX_32BITF|GU_WEIGHT_32BITF|GU_INDEX_16BIT|GU_TRANSFORM_3D,
 				sizeof(cylinder_indices)/sizeof(unsigned short),cylinder_indices,cylinder_vertices);
 		}
@@ -262,10 +253,10 @@ void genSkinnedCylinder( unsigned slices, unsigned rows, float length, float rad
 			float t = j;
 			float cs,ct,ss,st;
 
-			cs = cosf(s * (2*M_PI)/slices);
-			ct = cosf(t * (2*M_PI)/rows);
-			ss = sinf(s * (2*M_PI)/slices);
-			st = sinf(t * (2*M_PI)/rows);
+			cs = cosf(s * (2*GU_PI)/slices);
+			ct = cosf(t * (2*GU_PI)/rows);
+			ss = sinf(s * (2*GU_PI)/slices);
+			st = sinf(t * (2*GU_PI)/rows);
 
 			curr->nx = 0;
 			curr->ny = ct;
@@ -315,236 +306,4 @@ void genSkinnedCylinder( unsigned slices, unsigned rows, float length, float rad
 			*curr++ = i + ((j+1)%slices) * rows;
 		}
 	}
-}
-
-/* small matrix library */
-
-void matrix_identity(float* matrix)
-{
-	matrix[(0<<2)+0] = 1.0f;
-	matrix[(0<<2)+1] = 0.0f;
-	matrix[(0<<2)+2] = 0.0f;
-	matrix[(0<<2)+3] = 0.0f;
-
-	matrix[(1<<2)+0] = 0.0f;
-	matrix[(1<<2)+1] = 1.0f;
-	matrix[(1<<2)+2] = 0.0f;
-	matrix[(1<<2)+3] = 0.0f;
-
-	matrix[(2<<2)+0] = 0.0f;
-	matrix[(2<<2)+1] = 0.0f;
-	matrix[(2<<2)+2] = 1.0f;
-	matrix[(2<<2)+3] = 0.0f;
-
-	matrix[(3<<2)+0] = 0.0f;
-	matrix[(3<<2)+1] = 0.0f;
-	matrix[(3<<2)+2] = 0.0f;
-	matrix[(3<<2)+3] = 1.0f;
-}
-
-float matrix_determinant( float* matrix )
-{
-	return ((matrix[(0<<2)+0] * ((matrix[(1<<2)+1] * matrix[(2<<2)+2]) - (matrix[(1<<2)+2] * matrix[(2<<2)+1]))) -
-            (matrix[(0<<2)+1] * ((matrix[(1<<2)+0] * matrix[(2<<2)+2]) - (matrix[(1<<2)+2] * matrix[(2<<2)+0]))) +
-            (matrix[(0<<2)+2] * ((matrix[(1<<2)+0] * matrix[(2<<2)+1]) - (matrix[(1<<2)+1] * matrix[(2<<2)+0]))));
-}
-
-void matrix_inverse(float* result, float* a)
-{
-	float d = matrix_determinant( a );
-
-	if (fabs(d) < 1e-6 )
-	{
-		matrix_identity( result );
-		return;
-	}
-
-	d = 1.f / d;
-
-	float temp[16];
-	temp[(0<<2)+0] = ( d * ((a[(1<<2)+1] * a[(2<<2)+2]) - (a[(1<<2)+2] * a[(2<<2)+1])));
-	temp[(0<<2)+1] = (-d * ((a[(0<<2)+1] * a[(2<<2)+2]) - (a[(0<<2)+2] * a[(2<<2)+1])));
-	temp[(0<<2)+2] = ( d * ((a[(0<<2)+1] * a[(1<<2)+2]) - (a[(0<<2)+2] * a[(1<<2)+1])));
-	temp[(0<<2)+3] = 0.0f;
-
-	temp[(1<<2)+0] = (-d * ((a[(1<<2)+0] * a[(2<<2)+2]) - (a[(1<<2)+2] * a[(2<<2)+0])));
-	temp[(1<<2)+1] = ( d * ((a[(0<<2)+0] * a[(2<<2)+2]) - (a[(0<<2)+2] * a[(2<<2)+0])));
-	temp[(1<<2)+2] = (-d * ((a[(0<<2)+0] * a[(1<<2)+2]) - (a[(0<<2)+2] * a[(1<<2)+0])));
-	temp[(1<<2)+3] = 0.0f;
-
-	temp[(2<<2)+0] = ( d * ((a[(1<<2)+0] * a[(2<<2)+1]) - (a[(1<<2)+1] * a[(2<<2)+0])));
-	temp[(2<<2)+1] = (-d * ((a[(0<<2)+0] * a[(2<<2)+1]) - (a[(0<<2)+1] * a[(2<<2)+0])));
-	temp[(2<<2)+2] = ( d * ((a[(0<<2)+0] * a[(1<<2)+1]) - (a[(0<<2)+1] * a[(1<<2)+0])));
-	temp[(2<<2)+3] = 0.0f;
-
-	temp[(3<<2)+0] = -((a[(3<<2)+0] * temp[(0<<2)+0]) +
-					   (a[(3<<2)+1] * temp[(1<<2)+0]) +
-					   (a[(3<<2)+2] * temp[(2<<2)+0]));
-	temp[(3<<2)+1] = -((a[(3<<2)+0] * temp[(0<<2)+1]) + 
-					   (a[(3<<2)+1] * temp[(1<<2)+1]) +
-					   (a[(3<<2)+2] * temp[(2<<2)+1]));
-	temp[(3<<2)+2] = -((a[(3<<2)+0] * temp[(0<<2)+2]) +
-					   (a[(3<<2)+1] * temp[(1<<2)+2]) +
-					   (a[(3<<2)+2] * temp[(2<<2)+2]));
-	temp[(3<<2)+3] = 1.0f;
-
-	memcpy(result,temp,sizeof(float)*16);
-}
-
-void matrix_projection(float* matrix, float fovy, float aspect, float near, float far)
-{
-	matrix_identity(matrix);
-
-	float angle = (fovy / 2.0f) * (M_PI/180.0f);
-	float cotangent = cosf(angle) / sinf(angle);
-
-	matrix[(0<<2)+0] = cotangent / aspect;
-	matrix[(1<<2)+1] = cotangent;
-	matrix[(2<<2)+2] = (far + near) / (near - far);
-	matrix[(3<<2)+2] = 2.0f * (far * near) / (near - far);
-	matrix[(2<<2)+3] = -1;
-	matrix[(3<<2)+3] = 0.0f;
-}
-
-void matrix_multiply(float* result, float* a, float* b)
-{
-	unsigned int i,j,k;
-	float temp[16];
-
-	for (i = 0; i < 4; ++i)
-	{
-		for (j = 0; j < 4; ++j)
-		{
-			float t = 0.0f;
-			for (k = 0; k < 4; ++k)
-				t += a[(k << 2)+j] * b[(i << 2)+k];
-			temp[(i << 2)+j] = t;
-		}
-	}
-
-	memcpy(result,temp,sizeof(float)*16);
-}
-
-void matrix_translate(float* matrix, float x, float y, float z)
-{
-	float temp[16];
-
-	matrix_identity(temp);
-	temp[(3 << 2)+0] = x;
-	temp[(3 << 2)+1] = y;
-	temp[(3 << 2)+2] = z;
-
-	matrix_multiply(matrix,matrix,temp);
-}
-
-void matrix_setrotatex(float* matrix, float angle)
-{
-	float cs = cosf(angle);
-	float sn = sinf(angle);
-
-	matrix_identity(matrix);
-	matrix[(1<<2)+1] = cs;
-	matrix[(1<<2)+2] = sn;
-	matrix[(2<<2)+1] = -sn;
-	matrix[(2<<2)+2] = cs;
-}
-
-void matrix_setrotatey(float* matrix, float angle)
-{
-	float cs = cosf(angle);
-	float sn = sinf(angle);
-
-	matrix_identity(matrix);
-	matrix[(0<<2)+0] = cs;
-	matrix[(0<<2)+2] = -sn;
-	matrix[(2<<2)+0] = sn;
-	matrix[(2<<2)+2] = cs;
-}
-
-void matrix_setrotatez(float* matrix, float angle)
-{
-	float cs = cosf(angle);
-	float sn = sinf(angle);
-
-	matrix_identity(matrix);
-	matrix[(0<<2)+0] = cs;
-	matrix[(0<<2)+1] = sn;
-	matrix[(1<<2)+0] = -sn;
-	matrix[(1<<2)+1] = cs;
-}
-
-void matrix_rotate(float* matrix, float x, float y, float z)
-{
-	float temp[16];
-
-	matrix_setrotatex(temp,x);
-	matrix_multiply(matrix,matrix,temp);
-
-	matrix_setrotatey(temp,y);
-	matrix_multiply(matrix,matrix,temp);
-
-	matrix_setrotatez(temp,z);
-	matrix_multiply(matrix,matrix,temp);
-}
-
-#define SIN_ITERATOR 20
-
-float sinf(float v)
-{
-	float res,w;
-	int t;
-	float fac;
-	int i=(int)((v)/(2.0f*M_PI));
-	v-=i*2.0f*M_PI;
-
-	fac=1.0f;
-	res=0.0f;
-	w=v;
-	for(t=1;t<SIN_ITERATOR;)
-	{
-		res+=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-
-		res-=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-	}
-	return res;
-}
-
-float cosf(float v)
-{
-	float res,w;
-	int t;
-	float fac;
-	int i=(int)((v)/(2.0f*M_PI));
-	v-=i*2.0f*M_PI;
-
-	fac=1.0f;
-	res=0.0f;
-	w=1.0f;
-	for(t=0;t<SIN_ITERATOR;)
-	{
-		res+=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-
-		res-=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-	}
-	return res;
 }
