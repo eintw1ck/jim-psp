@@ -49,6 +49,8 @@ void sceGumUpdateMatrix(void);
 
 void gumMultMatrix(ScePspFMatrix4* result, const ScePspFMatrix4* a, const ScePspFMatrix4* b);
 void gumMakeIdentity(ScePspFMatrix4* m);
+void gumCrossProduct(ScePspFVector3* result, const ScePspFVector3* a, const ScePspFVector3* b);
+void gumNormalize(ScePspFVector3* v);
 
 #if defined(__cplusplus)
 }
