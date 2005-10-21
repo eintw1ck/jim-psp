@@ -141,13 +141,13 @@ int main(int argc, char* argv[])
 
 	for(;;)
 	{
-		float move = sinf(((float)val / 180.0f) * M_PI);
+		float move = sinf(((float)val / 180.0f) * GU_PI);
 		if(move < 0) {
 			move *= -1;
 		}
 		move += 1;
 		
-		float rot = ((float)val / 180) * M_PI;
+		float rot = ((float)val / 180.0f) * GU_PI;
 	
 		sceGuStart(GU_DIRECT,list);
 
@@ -167,7 +167,7 @@ int main(int argc, char* argv[])
 		sceGumMatrixMode(GU_VIEW);
 		{
 			ScePspFVector3 pos = {0,-0.5f,-5.5f};
-			ScePspFVector3 rot = {(30.0f * M_PI) / 180.0f, (val * 0.2 * M_PI) / 180.0f, 0.0f};
+			ScePspFVector3 rot = {(30.0f * GU_PI) / 180.0f, (val * 0.2f * GU_PI) / 180.0f, 0.0f};
 
 			sceGumLoadIdentity();
 			sceGumTranslate(&pos);

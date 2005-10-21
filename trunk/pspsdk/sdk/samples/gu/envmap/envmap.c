@@ -154,7 +154,7 @@ int main(int argc, char* argv[])
 
 		// envmap matrix is transposed
 		// since it is passed to GU as columns
-		float angle = -2.0f * valEnvMap * (M_PI/180.0f);
+		float angle = -2.0f * valEnvMap * (GU_PI/180.0f);
 		float cs = cosf(angle);
 		float sn = sinf(angle);
 		ScePspFVector3 envmapMatrixColumns[2] = {
@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
 		sceGumMatrixMode(GU_MODEL);
 		{
 			ScePspFVector3 pos = {0,0,-2.5f};
-			ScePspFVector3 rot = {valTorus * 0.79f * (M_PI/180.0f), valTorus * 0.98f * (M_PI/180.0f), valTorus * 1.32f * (M_PI/180.0f)};
+			ScePspFVector3 rot = {valTorus * 0.79f * (GU_PI/180.0f), valTorus * 0.98f * (GU_PI/180.0f), valTorus * 1.32f * (GU_PI/180.0f)};
 			sceGumLoadIdentity();
 			sceGumTranslate(&pos);
 			sceGumRotateXYZ(&rot);
@@ -265,10 +265,10 @@ void genTorus( unsigned slices, unsigned rows, float radius, float thickness, Ve
 			float t = j;
 			float cs,ct,ss,st;
 
-			cs = cosf(s * (2*M_PI)/slices);
-			ct = cosf(t * (2*M_PI)/rows);
-			ss = sinf(s * (2*M_PI)/slices);
-			st = sinf(t * (2*M_PI)/rows);
+			cs = cosf(s * (2*GU_PI)/slices);
+			ct = cosf(t * (2*GU_PI)/rows);
+			ss = sinf(s * (2*GU_PI)/slices);
+			st = sinf(t * (2*GU_PI)/rows);
 
 			curr->nx = cs * ct;
 			curr->ny = cs * st;
