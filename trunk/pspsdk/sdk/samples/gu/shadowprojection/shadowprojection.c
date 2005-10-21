@@ -20,6 +20,7 @@
 
 #include <pspge.h>
 #include <pspgu.h>
+#include <pspgum.h>
 
 
 PSP_MODULE_INFO("Shadow Projection Sample", 0, 1, 1);
@@ -71,18 +72,6 @@ void genGrid( unsigned rows, unsigned columns, float size,
 void genTorus( unsigned slices, unsigned rows, float radius, float thickness,
 	Vertex_Normal* dstVertices, unsigned short* dstIndices );
 
-void matrix_identity(float* matrix);
-float matrix_determinant( float* matrix );
-void matrix_inverse(float* matrix, float* a);
-void matrix_rotate(float* matrix, float x, float y, float z);
-void matrix_projection(float* matrix, float fovy, float aspect, float near, float far);
-void matrix_multiply(float* result, float* a, float* b);
-void matrix_setrotatex(float* matrix, float angle);
-void matrix_setrotatey(float* matrix, float angle);
-void matrix_setrotatez(float* matrix, float angle);
-void matrix_rotate(float* matrix, float x, float y, float z);
-void matrix_translate(float* matrix, float x, float y, float z);
-
 #define BUF_WIDTH (512)
 #define SCR_WIDTH (480)
 #define SCR_HEIGHT (272)
@@ -122,7 +111,7 @@ void drawShadowReceiver( Geometry* geom, ScePspFMatrix4 shadowProjMatrix )
 	// multiply shadowmap projection texture by geometry world matrix
 	// since geometry coords are in object space
 
-	matrix_multiply((float*)&shadowProjMatrix, (float*)&shadowProjMatrix, (float*)&geom->world );
+	gumMultMatrix(&shadowProjMatrix, &shadowProjMatrix, &geom->world );
 	sceGuSetMatrix(GU_TEXTURE,&shadowProjMatrix);
 
 	sceGuColor(geom->color);
@@ -182,16 +171,20 @@ int main(int argc, char* argv[])
 	ScePspFMatrix4 projection;
 	ScePspFMatrix4 view;
 
-	matrix_identity((float*)&identity);
+	gumLoadIdentity(&identity);
 
-	matrix_identity((float*)&projection);
-	matrix_projection((float*)&projection,75.0f,16.0f/9.0f,0.5f,1000.0f);
+	gumLoadIdentity(&projection);
+	gumPerspective(&projection,75.0f,16.0f/9.0f,0.5f,1000.0f);
 
-	matrix_identity((float*)&view);
-	matrix_translate((float*)&view,0,0,-5.0f);
+	{
+		ScePspFVector3 pos = {0,0,-5.0f};
+
+		gumLoadIdentity(&view);
+		gumTranslate(&view,&pos);
+	}
 
 	ScePspFMatrix4 textureProjScaleTrans;
-	matrix_identity((float*)&textureProjScaleTrans);
+	gumLoadIdentity(&textureProjScaleTrans);
 	textureProjScaleTrans.x.x = 0.5;
 	textureProjScaleTrans.y.y = -0.5;
 	textureProjScaleTrans.w.x = 0.5;
@@ -202,11 +195,13 @@ int main(int argc, char* argv[])
 	ScePspFMatrix4 lightView;
 	ScePspFMatrix4 lightMatrix;
 
-	matrix_projection((float*)&lightProjection,75.0f,1.0f,0.1f,1000.0f);
-	matrix_projection((float*)&lightProjectionInf,75.0f,1.0f,0.0f,1000.0f);
+	gumLoadIdentity(&lightProjection);
+	gumPerspective(&lightProjection,75.0f,1.0f,0.1f,1000.0f);
+	gumLoadIdentity(&lightProjectionInf);
+	gumPerspective(&lightProjectionInf,75.0f,1.0f,0.0f,1000.0f);
 
-	matrix_identity((float*)&lightView);
-	matrix_identity((float*)&lightMatrix);
+	gumLoadIdentity(&lightView);
+	gumLoadIdentity(&lightMatrix);
 
 	// define shadowmap
 
@@ -242,23 +237,38 @@ int main(int argc, char* argv[])
 		// update matrices
 
 		// grid
-		matrix_identity((float*)&grid.world);
-		matrix_translate((float*)&grid.world,0,-1.5,0);
+		{
+			ScePspFVector3 pos = {0,-1.5f,0};
+
+			gumLoadIdentity(&grid.world);
+			gumTranslate(&grid.world,&pos);
+		}
 
 		// torus
-		matrix_identity((float*)&torus.world);
-		matrix_translate((float*)&torus.world,0,0.5,0);
-		matrix_rotate((float*)&torus.world,val * 0.79f * (M_PI/180.0f), val * 0.98f * (M_PI/180.0f), val * 1.32f * (M_PI/180.0f));
+		{
+			ScePspFVector3 pos = {0,0.5f,0.0f};
+			ScePspFVector3 rot = {val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f)};
+
+			gumLoadIdentity(&torus.world);
+			gumTranslate(&torus.world,&pos);
+			gumRotateXYZ(&torus.world,&rot);
+		}
 
 		// orbiting light
-		ScePspFVector3 lightLookAt = { torus.world.w.x, torus.world.w.y, torus.world.w.z };
-		matrix_identity((float*)&lightMatrix);
-		matrix_translate((float*)&lightMatrix,lightLookAt.x,lightLookAt.y,lightLookAt.z);
-		matrix_rotate((float*)&lightMatrix,0,val * 0.79f * (M_PI/180.0f),0);
-		matrix_rotate((float*)&lightMatrix,-(M_PI/180.0f)*60.0f,0,0);
-		matrix_translate((float*)&lightMatrix,0,0,LIGHT_DISTANCE);
+		{
+			ScePspFVector3 lightLookAt = { torus.world.w.x, torus.world.w.y, torus.world.w.z };
+			ScePspFVector3 rot1 = {0,val * 0.79f * (GU_PI/180.0f),0};
+			ScePspFVector3 rot2 = {-(GU_PI/180.0f)*60.0f,0,0};
+			ScePspFVector3 pos = {0,0,LIGHT_DISTANCE};
 
-		matrix_inverse((float*)&lightView,(float*)&lightMatrix);
+			gumLoadIdentity(&lightMatrix);
+			gumTranslate(&lightMatrix,&lightLookAt);
+			gumRotateXYZ(&lightMatrix,&rot1);
+			gumRotateXYZ(&lightMatrix,&rot2);
+			gumTranslate(&lightMatrix,&pos);
+		}
+
+		gumFullInverse(&lightView,&lightMatrix);
 
 		// render to shadow map
 
@@ -358,8 +368,8 @@ int main(int argc, char* argv[])
 			// calculate texture projection matrix for shadowmap
  
 			ScePspFMatrix4 shadowProj;
-			matrix_multiply((float*)&shadowProj, (float*)&lightProjectionInf, (float*)&lightView );
-			matrix_multiply((float*)&shadowProj, (float*)&textureProjScaleTrans, (float*)&shadowProj );
+			gumMultMatrix(&shadowProj, &lightProjectionInf, &lightView);
+			gumMultMatrix(&shadowProj, &textureProjScaleTrans, &shadowProj);
 
 			// draw grid receiving shadow
 
@@ -468,10 +478,10 @@ void genTorus( unsigned slices, unsigned rows, float radius, float thickness, Ve
 			float t = j;
 			float cs,ct,ss,st;
 
-			cs = cosf(s * (2*M_PI)/slices);
-			ct = cosf(t * (2*M_PI)/rows);
-			ss = sinf(s * (2*M_PI)/slices);
-			st = sinf(t * (2*M_PI)/rows);
+			cs = cosf(s * (2*GU_PI)/slices);
+			ct = cosf(t * (2*GU_PI)/rows);
+			ss = sinf(s * (2*GU_PI)/slices);
+			st = sinf(t * (2*GU_PI)/rows);
 
 			curr->nx = cs * ct;
 			curr->ny = cs * st;
@@ -499,236 +509,4 @@ void genTorus( unsigned slices, unsigned rows, float radius, float thickness, Ve
 			*curr++ = i + j1 * rows;
 		}
 	}
-}
-
-/* small matrix library */
-
-void matrix_identity(float* matrix)
-{
-	matrix[(0<<2)+0] = 1.0f;
-	matrix[(0<<2)+1] = 0.0f;
-	matrix[(0<<2)+2] = 0.0f;
-	matrix[(0<<2)+3] = 0.0f;
-
-	matrix[(1<<2)+0] = 0.0f;
-	matrix[(1<<2)+1] = 1.0f;
-	matrix[(1<<2)+2] = 0.0f;
-	matrix[(1<<2)+3] = 0.0f;
-
-	matrix[(2<<2)+0] = 0.0f;
-	matrix[(2<<2)+1] = 0.0f;
-	matrix[(2<<2)+2] = 1.0f;
-	matrix[(2<<2)+3] = 0.0f;
-
-	matrix[(3<<2)+0] = 0.0f;
-	matrix[(3<<2)+1] = 0.0f;
-	matrix[(3<<2)+2] = 0.0f;
-	matrix[(3<<2)+3] = 1.0f;
-}
-
-float matrix_determinant( float* matrix )
-{
-	return ((matrix[(0<<2)+0] * ((matrix[(1<<2)+1] * matrix[(2<<2)+2]) - (matrix[(1<<2)+2] * matrix[(2<<2)+1]))) -
-            (matrix[(0<<2)+1] * ((matrix[(1<<2)+0] * matrix[(2<<2)+2]) - (matrix[(1<<2)+2] * matrix[(2<<2)+0]))) +
-            (matrix[(0<<2)+2] * ((matrix[(1<<2)+0] * matrix[(2<<2)+1]) - (matrix[(1<<2)+1] * matrix[(2<<2)+0]))));
-}
-
-void matrix_inverse(float* result, float* a)
-{
-	float d = matrix_determinant( a );
-
-	if (fabs(d) < 1e-6 )
-	{
-		matrix_identity( result );
-		return;
-	}
-
-	d = 1.f / d;
-
-	float temp[16];
-	temp[(0<<2)+0] = ( d * ((a[(1<<2)+1] * a[(2<<2)+2]) - (a[(1<<2)+2] * a[(2<<2)+1])));
-	temp[(0<<2)+1] = (-d * ((a[(0<<2)+1] * a[(2<<2)+2]) - (a[(0<<2)+2] * a[(2<<2)+1])));
-	temp[(0<<2)+2] = ( d * ((a[(0<<2)+1] * a[(1<<2)+2]) - (a[(0<<2)+2] * a[(1<<2)+1])));
-	temp[(0<<2)+3] = 0.0f;
-
-	temp[(1<<2)+0] = (-d * ((a[(1<<2)+0] * a[(2<<2)+2]) - (a[(1<<2)+2] * a[(2<<2)+0])));
-	temp[(1<<2)+1] = ( d * ((a[(0<<2)+0] * a[(2<<2)+2]) - (a[(0<<2)+2] * a[(2<<2)+0])));
-	temp[(1<<2)+2] = (-d * ((a[(0<<2)+0] * a[(1<<2)+2]) - (a[(0<<2)+2] * a[(1<<2)+0])));
-	temp[(1<<2)+3] = 0.0f;
-
-	temp[(2<<2)+0] = ( d * ((a[(1<<2)+0] * a[(2<<2)+1]) - (a[(1<<2)+1] * a[(2<<2)+0])));
-	temp[(2<<2)+1] = (-d * ((a[(0<<2)+0] * a[(2<<2)+1]) - (a[(0<<2)+1] * a[(2<<2)+0])));
-	temp[(2<<2)+2] = ( d * ((a[(0<<2)+0] * a[(1<<2)+1]) - (a[(0<<2)+1] * a[(1<<2)+0])));
-	temp[(2<<2)+3] = 0.0f;
-
-	temp[(3<<2)+0] = -((a[(3<<2)+0] * temp[(0<<2)+0]) +
-					   (a[(3<<2)+1] * temp[(1<<2)+0]) +
-					   (a[(3<<2)+2] * temp[(2<<2)+0]));
-	temp[(3<<2)+1] = -((a[(3<<2)+0] * temp[(0<<2)+1]) + 
-					   (a[(3<<2)+1] * temp[(1<<2)+1]) +
-					   (a[(3<<2)+2] * temp[(2<<2)+1]));
-	temp[(3<<2)+2] = -((a[(3<<2)+0] * temp[(0<<2)+2]) +
-					   (a[(3<<2)+1] * temp[(1<<2)+2]) +
-					   (a[(3<<2)+2] * temp[(2<<2)+2]));
-	temp[(3<<2)+3] = 1.0f;
-
-	memcpy(result,temp,sizeof(float)*16);
-}
-
-void matrix_projection(float* matrix, float fovy, float aspect, float near, float far)
-{
-	matrix_identity(matrix);
-
-	float angle = (fovy / 2.0f) * (M_PI/180.0f);
-	float cotangent = cosf(angle) / sinf(angle);
-
-	matrix[(0<<2)+0] = cotangent / aspect;
-	matrix[(1<<2)+1] = cotangent;
-	matrix[(2<<2)+2] = (far + near) / (near - far);
-	matrix[(3<<2)+2] = 2.0f * (far * near) / (near - far);
-	matrix[(2<<2)+3] = -1;
-	matrix[(3<<2)+3] = 0.0f;
-}
-
-void matrix_multiply(float* result, float* a, float* b)
-{
-	unsigned int i,j,k;
-	float temp[16];
-
-	for (i = 0; i < 4; ++i)
-	{
-		for (j = 0; j < 4; ++j)
-		{
-			float t = 0.0f;
-			for (k = 0; k < 4; ++k)
-				t += a[(k << 2)+j] * b[(i << 2)+k];
-			temp[(i << 2)+j] = t;
-		}
-	}
-
-	memcpy(result,temp,sizeof(float)*16);
-}
-
-void matrix_translate(float* matrix, float x, float y, float z)
-{
-	float temp[16];
-
-	matrix_identity(temp);
-	temp[(3 << 2)+0] = x;
-	temp[(3 << 2)+1] = y;
-	temp[(3 << 2)+2] = z;
-
-	matrix_multiply(matrix,matrix,temp);
-}
-
-void matrix_setrotatex(float* matrix, float angle)
-{
-	float cs = cosf(angle);
-	float sn = sinf(angle);
-
-	matrix_identity(matrix);
-	matrix[(1<<2)+1] = cs;
-	matrix[(1<<2)+2] = sn;
-	matrix[(2<<2)+1] = -sn;
-	matrix[(2<<2)+2] = cs;
-}
-
-void matrix_setrotatey(float* matrix, float angle)
-{
-	float cs = cosf(angle);
-	float sn = sinf(angle);
-
-	matrix_identity(matrix);
-	matrix[(0<<2)+0] = cs;
-	matrix[(0<<2)+2] = -sn;
-	matrix[(2<<2)+0] = sn;
-	matrix[(2<<2)+2] = cs;
-}
-
-void matrix_setrotatez(float* matrix, float angle)
-{
-	float cs = cosf(angle);
-	float sn = sinf(angle);
-
-	matrix_identity(matrix);
-	matrix[(0<<2)+0] = cs;
-	matrix[(0<<2)+1] = sn;
-	matrix[(1<<2)+0] = -sn;
-	matrix[(1<<2)+1] = cs;
-}
-
-void matrix_rotate(float* matrix, float x, float y, float z)
-{
-	float temp[16];
-
-	matrix_setrotatex(temp,x);
-	matrix_multiply(matrix,matrix,temp);
-
-	matrix_setrotatey(temp,y);
-	matrix_multiply(matrix,matrix,temp);
-
-	matrix_setrotatez(temp,z);
-	matrix_multiply(matrix,matrix,temp);
-}
-
-#define SIN_ITERATOR 20
-
-float sinf(float v)
-{
-	float res,w;
-	int t;
-	float fac;
-	int i=(int)((v)/(2.0f*M_PI));
-	v-=i*2.0f*M_PI;
-
-	fac=1.0f;
-	res=0.0f;
-	w=v;
-	for(t=1;t<SIN_ITERATOR;)
-	{
-		res+=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-
-		res-=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-	}
-	return res;
-}
-
-float cosf(float v)
-{
-	float res,w;
-	int t;
-	float fac;
-	int i=(int)((v)/(2.0f*M_PI));
-	v-=i*2.0f*M_PI;
-
-	fac=1.0f;
-	res=0.0f;
-	w=1.0f;
-	for(t=0;t<SIN_ITERATOR;)
-	{
-		res+=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-
-		res-=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-	}
-	return res;
 }
