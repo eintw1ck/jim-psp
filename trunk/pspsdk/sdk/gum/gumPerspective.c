@@ -13,7 +13,7 @@
 void gumPerspective(ScePspFMatrix4* m, float fovy, float aspect, float near, float far)
 {
 	ScePspFMatrix4 t;
-	float angle = (fovy / 2) * (M_PI/180.0f);
+	float angle = (fovy / 2) * (GU_PI/180.0f);
 	float cotangent = cosf(angle) / sinf(angle);
 	float delta_z = near-far;
 
@@ -22,9 +22,9 @@ void gumPerspective(ScePspFMatrix4* m, float fovy, float aspect, float near, flo
 	t.x.x = cotangent / aspect;
 	t.y.y = cotangent;
 	t.z.z = (far + near) / delta_z; // -(far + near) / delta_z
-	t.w.z = 2 * (far * near) / delta_z; // -2 * (far * near) / delta_z
-	t.z.w = -1;
-	t.w.w = 0;
+	t.w.z = 2.0f * (far * near) / delta_z; // -2 * (far * near) / delta_z
+	t.z.w = -1.0f;
+	t.w.w = 0.0f;
 
 	gumMultMatrix(m,m,&t);
 }

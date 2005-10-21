@@ -22,8 +22,9 @@ libpspgum_a_SOURCES = gumInternal.c sceGumLoadIdentity.c sceGumLoadMatrix.c sceG
                       sceGumPushMatrix.c sceGumScale.c sceGumTranslate.c sceGumUpdateMatrix.c \
                       sceGumStoreMatrix.c sceGumLookAt.c sceGumDrawArray.c sceGumDrawArrayN.c \
                       sceGumDrawBezier.c sceGumDrawSpline.c sceGumRotateX.c sceGumRotateY.c \
-                      sceGumRotateZ.c sceGumRotateXYZ.c sceGumRotateZYX.c \
+                      sceGumRotateZ.c sceGumRotateXYZ.c sceGumRotateZYX.c sceGumFullInverse.c \
+                      sceGumFastInverse.c \
                       gumLoadIdentity.c gumLoadMatrix.c gumMultMatrix.c gumOrtho.c gumPerspective.c \
                       gumScale.c gumTranslate.c gumLookAt.c gumRotateX.c gumRotateY.c \
-                      gumRotateZ.c gumRotateXYZ.c gumRotateZYX.c \
-                      gumCrossProduct.c gumNormalize.c
+                      gumRotateZ.c gumRotateXYZ.c gumRotateZYX.c gumFullInverse.c gumFastInverse.c \
+                      gumCrossProduct.c gumDotProduct.c gumNormalize.c
