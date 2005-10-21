@@ -10,7 +10,7 @@
 
 void gumRotateZYX(ScePspFMatrix4* m, const ScePspFVector3* v)
 {
-	gumRotateX(m,v->z);
+	gumRotateZ(m,v->z);
 	gumRotateY(m,v->y);
-	gumRotateZ(m,v->x);
+	gumRotateX(m,v->x);
 }
