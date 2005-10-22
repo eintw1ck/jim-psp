@@ -18,8 +18,6 @@
 #include <pspgu.h>
 #include <pspgum.h>
 
-#include <math.h>
-
 #include "mt19937.h"
 
 /*
@@ -33,6 +31,61 @@
 
 float shift23=(float)(1<<23);
 float OOshift23=1.0f/(float)(1<<23);
+static inline float floorf(float i)
+{ // return largest integer that is less than or equal to i
+  float k = (float)((int) i);
+  if (k <= i) 
+    return k;
+  else  // if k greater than i
+    return k-1.0f;
+}
+static inline float myLog2(float i)
+{
+	float LogBodge=0.346607f;
+	float x;
+	float y;
+	x=*(int *)&i;
+	x*= OOshift23; //1/pow(2,23);
+	x=x-127;
+
+	y=x-floorf(x);
+	y=(y-y*y)*LogBodge;
+	return x+y;
+}
+static inline float myPow2(float i)
+{
+	float PowBodge=0.33971f;
+	float x;
+	float y=i-floorf(i);
+	y=(y-y*y)*PowBodge;
+
+	x=i+127-y;
+	x*= shift23; //pow(2,23);
+	*(int*)&x=(int)x;
+	return x;
+}
+
+static inline float mypowf(float a, float b)
+{
+	return myPow2(b*myLog2(a));
+}
+
+static inline float invsqrtf (float x)
+{
+    float xhalf = 0.5f*x;
+    int i = *(int*)&x;
+    i = 0x5f3759df - (i >> 1);
+    x = *(float*)&i;
+    x = x*(1.5f - xhalf*x*x);
+    return x;
+}
+
+static inline float mysqrtf(float val)
+{
+  float val2 = invsqrtf(val);
+  if (val2 == 0.0f) return 0.0f; // check for div by 0
+  return (1.0f / val2);
+}
 
 static int mi[8];
 static float mf[8];
@@ -82,11 +135,10 @@ static inline void FVecNormalize(FVec *v0, const FVec *v1)
 {
   float dist;
   dist = (v1->x * v1->x) + (v1->y * v1->y) + (v1->z * v1->z);
-  if (dist > 1e-6f)
-    dist = 1.0f / sqrtf(dist);
-  v0->x = v1->x * dist;
-  v0->y = v1->y * dist;
-  v0->z = v1->z * dist;
+  dist = mysqrtf(dist);
+  v0->x = v1->x / dist;
+  v0->y = v1->y / dist;
+  v0->z = v1->z / dist;
 }
 
 
@@ -99,21 +151,6 @@ static inline void objgen_spharm_calcnormal(FVec *point1,FVec *point2,FVec *poin
   FVecCrossProduct(&temp3,&temp1,&temp2);
   FVecNormalize(output,&temp3);
 }
-
-#define fabsf
-static inline void eval(float theta, float phi, FVec* result)
-{
-	float r = 0;
-	r += powf(fabsf(sinf(mf[0]*phi)),mf[1]);
-	r += powf(fabsf(cosf(mf[2]*phi)),mf[3]);
-	r += powf(fabsf(sinf(mf[4]*theta)),mf[5]);
-	r += powf(fabsf(cosf(mf[6]*theta)),mf[7]);
-
-	result->x = r * sinf(phi) * cosf(theta);
-	result->y = r * cosf(phi);
-	result->z = r * sinf(phi) * sinf(theta);
-}
-
 static inline void objgen_spharm_Evaln(float theta, float phi, FVec *output,float dx,float dy, FVec *normal)
 {
    float r,rp,rt,rtemp;
@@ -129,27 +166,26 @@ static inline void objgen_spharm_Evaln(float theta, float phi, FVec *output,floa
    costheta = cosf(theta);
 
    // eval posy,posx
-   rt = powf((sinf(((int)mf[4])*theta)),((int)mf[5]));
-   rt += powf((cosf(((int)mf[6])*theta)),((int)mf[7]));
-   rp = powf((sinf(((int)mf[0])*phi)),((int)mf[1]));
-   rp += powf((cosf(((int)mf[2])*phi)),((int)mf[3]));
+   rt = mypowf(sinf(mf[4]*theta),mf[5]);
+   rt += mypowf(cosf(mf[6]*theta),mf[7]);
+   rp = mypowf(sinf(mf[0]*phi),mf[1]);
+   rp += mypowf(cosf(mf[2]*phi),mf[3]);
    r = rt + rp;
    output->x = r * sinphi * costheta;
    output->y = r * cosphi;
    output->z = r * sinphi * sintheta;
-   eval(theta,phi,output);
-
+   
    // eval posy+dy,posx
-   rtemp = powf((sinf(((int)mf[4])*thex)),((int)mf[5]));
-   rtemp += powf((cosf(((int)mf[6])*thex)),((int)mf[7]));
+   rtemp = mypowf(sinf(mf[4]*thex),mf[5]);
+   rtemp += mypowf(cosf(mf[6]*thex),mf[7]);
    r = rtemp + rp;
    t1.x = r * sinphi * cosf(thex);
    t1.y = r * cosphi;
    t1.z = r * sinphi * sinf(thex);
 
    // eval posy,posx+dx
-   rtemp = powf((sinf(((int)mf[0])*phix)),((int)mf[1]));
-   rtemp += powf((cosf(((int)mf[2])*phix)),((int)mf[3]));
+   rtemp = mypowf(sinf(mf[0]*phix),mf[1]);
+   rtemp += mypowf(cosf(mf[2]*phix),mf[3]);
    r = rt + rtemp;
    sinphi = sinf(phix);
    t2.x = r * sinphi * costheta;
@@ -249,10 +285,9 @@ void SparmGenList(struct Vertex *vertptr,int xpoints,int ypoints,int color)
   struct Vertex *verts;
   struct Vertex *prevptr;
   float ypoints2 = ypoints-2;
-  float theata, phi;
 
-  dx = PI / ((float)xpoints-1);
-  dy = TWOPI / ((float)ypoints-1);
+  dx = PI / (float)(xpoints - 1);
+  dy = TWOPI / (float)ypoints2;
 
   dx10 = dx / 50.0f;
   dy10 = dy / 50.0f;
