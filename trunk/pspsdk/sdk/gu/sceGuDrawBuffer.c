@@ -22,7 +22,7 @@ void sceGuDrawBuffer(int psm, void* fbp, int frame_width)
 
 	sendCommandi(210,psm);
 	sendCommandi(156,((unsigned int)gu_draw_buffer.frame_buffer) & 0xffffff);
-	sendCommandi(157,((((unsigned int)gu_draw_buffer.frame_buffer) & 0xff000000) >> 8)||gu_draw_buffer.frame_width);
+	sendCommandi(157,((((unsigned int)gu_draw_buffer.frame_buffer) & 0xff000000) >> 8)|gu_draw_buffer.frame_width);
 	sendCommandi(158,((unsigned int)gu_draw_buffer.depth_buffer) & 0xffffff);
-	sendCommandi(159,((((unsigned int)gu_draw_buffer.depth_buffer) & 0xff000000) >> 8)||gu_draw_buffer.depth_width);
+	sendCommandi(159,((((unsigned int)gu_draw_buffer.depth_buffer) & 0xff000000) >> 8)|gu_draw_buffer.depth_width);
 }
