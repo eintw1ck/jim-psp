@@ -1,4 +1,4 @@
---- binutils-2.16.orig/bfd/Makefile.am	2005-05-02 12:45:42.000000000 -0700
+--- binutils-2.16.1.orig/bfd/Makefile.am	2005-05-02 12:45:42.000000000 -0700
 +++ binutils-psp/bfd/Makefile.am	2005-07-22 22:17:36.000000000 -0700
 @@ -3,7 +3,7 @@
  AUTOMAKE_OPTIONS = 1.9 cygnus
@@ -9,7 +9,7 @@
  
  INCDIR = $(srcdir)/../include
  CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
---- binutils-2.16.orig/bfd/Makefile.in	2005-05-02 12:45:46.000000000 -0700
+--- binutils-2.16.1.orig/bfd/Makefile.in	2005-05-02 12:45:46.000000000 -0700
 +++ binutils-psp/bfd/Makefile.in	2005-07-22 22:17:46.000000000 -0700
 @@ -250,7 +250,7 @@
  AUTOMAKE_OPTIONS = 1.9 cygnus
@@ -20,7 +20,7 @@
  INCDIR = $(srcdir)/../include
  CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
  MKDEP = gcc -MM
---- binutils-2.16.orig/bfd/archures.c	2005-01-17 06:08:03.000000000 -0800
+--- binutils-2.16.1.orig/bfd/archures.c	2005-01-17 06:08:03.000000000 -0800
 +++ binutils-psp/bfd/archures.c	2005-06-19 18:09:32.000000000 -0700
 @@ -155,6 +155,7 @@
  .#define bfd_mach_mips16		16
@@ -30,7 +30,7 @@
  .#define bfd_mach_mipsisa32             32
  .#define bfd_mach_mipsisa32r2           33
  .#define bfd_mach_mipsisa64             64
---- binutils-2.16.orig/bfd/bfd-in2.h	2005-03-02 13:23:20.000000000 -0800
+--- binutils-2.16.1.orig/bfd/bfd-in2.h	2005-03-02 13:23:20.000000000 -0800
 +++ binutils-psp/bfd/bfd-in2.h	2005-06-19 18:09:32.000000000 -0700
 @@ -1600,6 +1600,7 @@
  #define bfd_mach_mips16                16
@@ -40,7 +40,7 @@
  #define bfd_mach_mipsisa32             32
  #define bfd_mach_mipsisa32r2           33
  #define bfd_mach_mipsisa64             64
---- binutils-2.16.orig/bfd/cpu-mips.c	2005-03-03 03:40:58.000000000 -0800
+--- binutils-2.16.1.orig/bfd/cpu-mips.c	2005-03-03 03:40:58.000000000 -0800
 +++ binutils-psp/bfd/cpu-mips.c	2005-06-19 18:09:32.000000000 -0700
 @@ -86,6 +86,7 @@
    I_mipsisa64,
@@ -60,8 +60,8 @@
  };
  
  /* The default architecture is mips:3000, but with a machine number of
---- binutils-2.16.orig/bfd/elfxx-mips.c	2005-04-19 11:37:04.000000000 -0700
-+++ binutils-psp/bfd/elfxx-mips.c	2005-06-19 18:09:32.000000000 -0700
+--- binutils-2.16.1.orig/bfd/elfxx-mips.c	2005-10-22 15:36:24.000000000 -0700
++++ binutils-psp/bfd/elfxx-mips.c	2005-10-22 15:38:52.000000000 -0700
 @@ -4669,6 +4669,9 @@
      case E_MIPS_MACH_SB1:
        return bfd_mach_mips_sb1;
@@ -72,7 +72,7 @@
      default:
        switch (flags & EF_MIPS_ARCH)
  	{
-@@ -7882,6 +7885,10 @@
+@@ -7941,6 +7944,10 @@
        val = E_MIPS_ARCH_64 | E_MIPS_MACH_SB1;
        break;
  
@@ -83,7 +83,7 @@
      case bfd_mach_mipsisa32:
        val = E_MIPS_ARCH_32;
        break;
-@@ -9582,6 +9589,7 @@
+@@ -9641,6 +9648,7 @@
    /* MIPS II extensions.  */
    { bfd_mach_mips4000, bfd_mach_mips6000 },
    { bfd_mach_mipsisa32, bfd_mach_mips6000 },
@@ -91,14 +91,14 @@
  
    /* MIPS I extensions.  */
    { bfd_mach_mips6000, bfd_mach_mips3000 },
---- binutils-2.16.orig/bfd/version.h	2005-05-02 12:43:09.000000000 -0700
-+++ binutils-psp/bfd/version.h	2005-08-22 09:29:10.000000000 -0700
+--- binutils-2.16.1.orig/bfd/version.h	2005-10-22 15:36:25.000000000 -0700
++++ binutils-psp/bfd/version.h	2005-10-22 15:42:13.000000000 -0700
 @@ -1,3 +1,3 @@
--#define BFD_VERSION_DATE 20050502
-+#define BFD_VERSION_DATE (PSPDEV 20050822)
+-#define BFD_VERSION_DATE 20050612
++#define BFD_VERSION_DATE (PSPDEV 20051022)
  #define BFD_VERSION @bfd_version@
  #define BFD_VERSION_STRING @bfd_version_string@
---- binutils-2.16.orig/binutils/readelf.c	2005-04-20 11:43:36.000000000 -0700
+--- binutils-2.16.1.orig/binutils/readelf.c	2005-04-20 11:43:36.000000000 -0700
 +++ binutils-psp/binutils/readelf.c	2005-06-19 18:09:27.000000000 -0700
 @@ -2043,6 +2043,7 @@
  	    case E_MIPS_MACH_5500: strcat (buf, ", 5500"); break;
@@ -108,7 +108,7 @@
  	    case 0:
  	    /* We simply ignore the field in this case to avoid confusion:
  	       MIPS ELF does not specify EF_MIPS_MACH, it is a GNU
---- binutils-2.16.orig/config.sub	2005-01-18 16:34:56.000000000 -0800
+--- binutils-2.16.1.orig/config.sub	2005-01-18 16:34:56.000000000 -0800
 +++ binutils-psp/config.sub	2005-06-24 17:01:46.000000000 -0700
 @@ -253,6 +253,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
@@ -137,8 +137,8 @@
  	mips3*-*)
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
---- binutils-2.16.orig/gas/config/tc-mips.c	2005-04-20 11:41:36.000000000 -0700
-+++ binutils-psp/gas/config/tc-mips.c	2005-09-05 21:55:07.000000000 -0700
+--- binutils-2.16.1.orig/gas/config/tc-mips.c	2005-10-22 15:36:25.000000000 -0700
++++ binutils-psp/gas/config/tc-mips.c	2005-10-22 15:38:52.000000000 -0700
 @@ -365,11 +365,15 @@
  #define CPU_HAS_MDMX(cpu)	(FALSE                 \
  				 )
@@ -810,7 +810,7 @@
  
    /* MIPS III */
    { "r4000",          0,      ISA_MIPS3,      CPU_R4000 },
---- binutils-2.16.orig/gas/configure	2005-02-28 16:43:51.000000000 -0800
+--- binutils-2.16.1.orig/gas/configure	2005-02-28 16:43:51.000000000 -0800
 +++ binutils-psp/gas/configure	2005-06-19 18:09:30.000000000 -0700
 @@ -4537,6 +4537,9 @@
  	  mips64vr | mips64vrel)
@@ -822,7 +822,7 @@
  	  mipsisa32r2* | mipsisa64r2*)
  	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
  	    ;;
---- binutils-2.16.orig/gas/configure.in	2005-02-28 16:43:57.000000000 -0800
+--- binutils-2.16.1.orig/gas/configure.in	2005-02-28 16:43:57.000000000 -0800
 +++ binutils-psp/gas/configure.in	2005-06-19 18:09:30.000000000 -0700
 @@ -222,6 +222,9 @@
  	  mips64vr | mips64vrel)
@@ -834,7 +834,7 @@
  	  mipsisa32r2* | mipsisa64r2*)
  changequote(,)dnl
  	    mips_cpu=`echo $target_cpu | sed -e 's/[a-z]*..r2//' -e 's/el$//'`
---- binutils-2.16.orig/gas/testsuite/gas/mips/mips.exp	2005-04-19 10:09:45.000000000 -0700
+--- binutils-2.16.1.orig/gas/testsuite/gas/mips/mips.exp	2005-04-19 10:09:45.000000000 -0700
 +++ binutils-psp/gas/testsuite/gas/mips/mips.exp	2005-08-29 11:45:56.000000000 -0700
 @@ -382,6 +382,9 @@
  mips_arch_create sb1 	64	mips64	{ mips3d } \
@@ -846,14 +846,14 @@
  
  
  #
---- binutils-2.16.orig/include/bin-bugs.h	2004-07-23 08:40:19.000000000 -0700
+--- binutils-2.16.1.orig/include/bin-bugs.h	2004-07-23 08:40:19.000000000 -0700
 +++ binutils-psp/include/bin-bugs.h	2005-07-22 22:38:52.000000000 -0700
 @@ -1,3 +1,3 @@
  #ifndef REPORT_BUGS_TO
 -#define REPORT_BUGS_TO	"<URL:http://www.sourceware.org/bugzilla/>"
 +#define REPORT_BUGS_TO	"<URL:http://wiki.pspdev.org/psp:toolchain#bugs>"
  #endif
---- binutils-2.16.orig/include/elf/common.h	2004-10-08 06:55:08.000000000 -0700
+--- binutils-2.16.1.orig/include/elf/common.h	2004-10-08 06:55:08.000000000 -0700
 +++ binutils-psp/include/elf/common.h	2005-06-19 18:09:25.000000000 -0700
 @@ -93,6 +93,7 @@
  #define ET_HIOS		0xFEFF	/* Operating system-specific */
@@ -863,7 +863,7 @@
  
  /* Values for e_machine, which identifies the architecture.  These numbers
     are officially assigned by registry@caldera.com.  See below for a list of
---- binutils-2.16.orig/include/elf/mips.h	2005-03-03 03:58:06.000000000 -0800
+--- binutils-2.16.1.orig/include/elf/mips.h	2005-03-03 03:58:06.000000000 -0800
 +++ binutils-psp/include/elf/mips.h	2005-06-19 18:09:25.000000000 -0700
 @@ -212,6 +212,7 @@
  #define E_MIPS_MACH_5400	0x00910000
@@ -873,7 +873,7 @@
  
  /* Processor specific section indices.  These sections do not actually
     exist.  Symbols with a st_shndx field corresponding to one of these
---- binutils-2.16.orig/include/opcode/mips.h	2005-03-03 03:58:10.000000000 -0800
+--- binutils-2.16.1.orig/include/opcode/mips.h	2005-03-03 03:58:10.000000000 -0800
 +++ binutils-psp/include/opcode/mips.h	2005-08-28 23:39:00.000000000 -0700
 @@ -171,6 +171,97 @@
  #define MDMX_FMTSEL_VEC_QH	0x15
@@ -1081,7 +1081,7 @@
    M_XOR_I,
    M_COP0,
    M_COP1,
---- binutils-2.16.orig/ld/Makefile.am	2005-01-20 11:37:49.000000000 -0800
+--- binutils-2.16.1.orig/ld/Makefile.am	2005-01-20 11:37:49.000000000 -0800
 +++ binutils-psp/ld/Makefile.am	2005-06-25 02:44:52.000000000 -0700
 @@ -190,6 +190,7 @@
  	eelf_i386_chaos.o \
@@ -1101,7 +1101,7 @@
  eelf_s390.c: $(srcdir)/emulparams/elf_s390.sh \
    $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
  	${GENSCRIPTS} elf_s390 "$(tdir_elf_s390)"
---- binutils-2.16.orig/ld/Makefile.in	2005-01-22 21:36:37.000000000 -0800
+--- binutils-2.16.1.orig/ld/Makefile.in	2005-01-22 21:36:37.000000000 -0800
 +++ binutils-psp/ld/Makefile.in	2005-06-25 02:47:12.000000000 -0700
 @@ -315,6 +315,7 @@
  	eelf_i386_chaos.o \
@@ -1121,7 +1121,7 @@
  eelf_s390.c: $(srcdir)/emulparams/elf_s390.sh \
    $(srcdir)/emultempl/elf32.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
  	${GENSCRIPTS} elf_s390 "$(tdir_elf_s390)"
---- binutils-2.16.orig/ld/configure.tgt	2005-02-08 11:54:27.000000000 -0800
+--- binutils-2.16.1.orig/ld/configure.tgt	2005-02-08 11:54:27.000000000 -0800
 +++ binutils-psp/ld/configure.tgt	2005-06-25 03:20:06.000000000 -0700
 @@ -428,6 +428,8 @@
  mips*vr4100-*-elf*)	targ_emul=elf32b4300 ;;
@@ -1132,7 +1132,7 @@
  mips*el-*-elf*)		targ_emul=elf32elmip ;;
  mips*-*-elf*)		targ_emul=elf32ebmip ;;
  mips*el-*-rtems*)	targ_emul=elf32elmip ;;
---- binutils-2.16.orig/ld/emulparams/elf_mipsallegrexel_psp.sh	1969-12-31 16:00:00.000000000 -0800
+--- binutils-2.16.1.orig/ld/emulparams/elf_mipsallegrexel_psp.sh	1969-12-31 16:00:00.000000000 -0800
 +++ binutils-psp/ld/emulparams/elf_mipsallegrexel_psp.sh	2005-07-12 03:44:26.000000000 -0700
 @@ -0,0 +1,22 @@
 +# Based off of the default elf32 MIPS target.  However, we use a seperate
@@ -1157,7 +1157,7 @@
 +
 +# Discard the .comment and .pdr sections.
 +OTHER_SECTIONS="/DISCARD/ : { *(.comment) *(.pdr) }"
---- binutils-2.16.orig/ld/scripttempl/elf_psp.sc	1969-12-31 16:00:00.000000000 -0800
+--- binutils-2.16.1.orig/ld/scripttempl/elf_psp.sc	1969-12-31 16:00:00.000000000 -0800
 +++ binutils-psp/ld/scripttempl/elf_psp.sc	2005-06-25 03:12:02.000000000 -0700
 @@ -0,0 +1,496 @@
 +#
@@ -1656,7 +1656,7 @@
 +  ${RELOCATING+${STACKNOTE}}
 +}
 +EOF
---- binutils-2.16.orig/opcodes/mips-dis.c	2005-03-03 03:49:50.000000000 -0800
+--- binutils-2.16.1.orig/opcodes/mips-dis.c	2005-03-03 03:49:50.000000000 -0800
 +++ binutils-psp/opcodes/mips-dis.c	2005-08-28 16:25:27.000000000 -0700
 @@ -140,6 +140,139 @@
    "c0_taglo",     "c0_taghi",     "c0_errorepc",  "c0_desave",
@@ -2212,8 +2212,8 @@
  	default:
  	  /* xgettext:c-format */
  	  (*info->fprintf_func) (info->stream,
---- binutils-2.16.orig/opcodes/mips-opc.c	2005-03-03 03:49:50.000000000 -0800
-+++ binutils-psp/opcodes/mips-opc.c	2005-10-20 08:13:56.154315336 -0700
+--- binutils-2.16.1.orig/opcodes/mips-opc.c	2005-03-03 03:49:50.000000000 -0800
++++ binutils-psp/opcodes/mips-opc.c	2005-10-20 08:13:56.000000000 -0700
 @@ -109,6 +109,7 @@
  #define N5	(INSN_5400 | INSN_5500)
  #define N54	INSN_5400
