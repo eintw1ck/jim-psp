@@ -226,7 +226,7 @@ int main(int argc, char* argv[])
     // now for the spherical harmonics
 	sceGumMatrixMode(GU_MODEL);
 	{
-		ScePspFVector3 pos = {0,0,-130.0f};
+		ScePspFVector3 pos = {0,0,-150.0f};
 		ScePspFVector3 rot = {val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f)};
 
 		sceGumLoadIdentity();
