@@ -8,7 +8,7 @@ ASFLAGS = $(CFLAGS)
 
 LIBDIR =
 LDFLAGS =
-LIBS= -lpspgu
+LIBS= -lpspgum -lpspgu -lm
 
 EXTRA_TARGETS = convlogo EBOOT.PBP
 PSP_EBOOT_TITLE = adresd - spharm v1.0

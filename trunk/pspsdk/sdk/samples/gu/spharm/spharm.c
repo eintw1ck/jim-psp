@@ -16,6 +16,7 @@
 #include <stdio.h>
 
 #include <pspgu.h>
+#include <pspgum.h>
 
 #include "mt19937.h"
 
@@ -85,68 +86,6 @@ static inline float mysqrtf(float val)
   if (val2 == 0.0f) return 0.0f; // check for div by 0
   return (1.0f / val2);
 }
-
-#define SIN_ITERATOR 20
-static inline float mysinf(float v)
-{
-	float res,w;
-	int t;
-	float fac;
-	int i=(int)((v)/(2.0f*PI));
-	v-=(float)i*2.0f*PI;
-
-	fac=1.0f;
-	res=0.0f;
-	w=v;
-	for(t=1;t<SIN_ITERATOR;)
-	{
-		res+=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-
-		res-=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-	}
-	return res;
-}
-
-static inline float mycosf(float v)
-{
-	float res,w;
-	int t;
-	float fac;
-	int i=(int)((v)/(2.0f*PI));
-	v-=(float)i*2.0f*PI;
-
-	fac=1.0f;
-	res=0.0f;
-	w=1.0f;
-	for(t=0;t<SIN_ITERATOR;)
-	{
-		res+=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-
-		res-=fac*w;
-		w*=v*v;
-		t++;
-		fac/=t;
-		t++;
-		fac/=t;
-	}
-	return res;
-}
-
 
 static int mi[8];
 static float mf[8];
@@ -221,36 +160,36 @@ static inline void objgen_spharm_Evaln(float theta, float phi, FVec *output,floa
    phix = phi + dx;
    thex = theta + dy;
 
-   sinphi = mysinf(phi);
-   cosphi = mycosf(phi);
-   sintheta = mysinf(theta);
-   costheta = mycosf(theta);
+   sinphi = sinf(phi);
+   cosphi = cosf(phi);
+   sintheta = sinf(theta);
+   costheta = cosf(theta);
 
    // eval posy,posx
-   rt = mypowf(mysinf(mf[4]*theta),mf[5]);
-   rt += mypowf(mycosf(mf[6]*theta),mf[7]);
-   rp = mypowf(mysinf(mf[0]*phi),mf[1]);
-   rp += mypowf(mycosf(mf[2]*phi),mf[3]);
+   rt = mypowf(sinf(mf[4]*theta),mf[5]);
+   rt += mypowf(cosf(mf[6]*theta),mf[7]);
+   rp = mypowf(sinf(mf[0]*phi),mf[1]);
+   rp += mypowf(cosf(mf[2]*phi),mf[3]);
    r = rt + rp;
    output->x = r * sinphi * costheta;
    output->y = r * cosphi;
    output->z = r * sinphi * sintheta;
    
    // eval posy+dy,posx
-   rtemp = mypowf(mysinf(mf[4]*thex),mf[5]);
-   rtemp += mypowf(mycosf(mf[6]*thex),mf[7]);
+   rtemp = mypowf(sinf(mf[4]*thex),mf[5]);
+   rtemp += mypowf(cosf(mf[6]*thex),mf[7]);
    r = rtemp + rp;
-   t1.x = r * sinphi * mycosf(thex);
+   t1.x = r * sinphi * cosf(thex);
    t1.y = r * cosphi;
-   t1.z = r * sinphi * mysinf(thex);
+   t1.z = r * sinphi * sinf(thex);
 
    // eval posy,posx+dx
-   rtemp = mypowf(mysinf(mf[0]*phix),mf[1]);
-   rtemp += mypowf(mycosf(mf[2]*phix),mf[3]);
+   rtemp = mypowf(sinf(mf[0]*phix),mf[1]);
+   rtemp += mypowf(cosf(mf[2]*phix),mf[3]);
    r = rt + rtemp;
-   sinphi = mysinf(phix);
+   sinphi = sinf(phix);
    t2.x = r * sinphi * costheta;
-   t2.y = r * mycosf(phix);
+   t2.y = r * cosf(phix);
    t2.z = r * sinphi * sintheta;
    // Calculate normal
    objgen_spharm_calcnormal(output,&t1,&t2,normal);
@@ -634,10 +573,10 @@ void SpharmGenTest(int rendermode)
     int index2 = index;
     if (odd) {
       for (y=1;y<resy;y++) 
-        sceGuDrawArray(primtype,PSP_GEVERT_SET(3,7,3,3,0,0),index2,0,&vertices[y * index]);
+        sceGumDrawArray(primtype,PSP_GEVERT_SET(3,7,3,3,0,0),index2,0,&vertices[y * index]);
     } else {
        for (y=1;y<resy;y++) 
-        sceGuDrawArray(primtype,PSP_GEVERT_SET(3,7,3,3,0,0),index2,0,&vertices2[y * index]);
+        sceGumDrawArray(primtype,PSP_GEVERT_SET(3,7,3,3,0,0),index2,0,&vertices2[y * index]);
     }
   }
   sceKernelDcacheWritebackAll();
