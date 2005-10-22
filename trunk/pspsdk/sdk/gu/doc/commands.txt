@@ -503,16 +503,16 @@ Dec Hex Name        Description
                         0-23: Spotlight exponent
 
 139 8B  ???         Spot light 0 cutoff
-                        0-23: Spotlight cutoff angle (radians)
+                        0-23: Spotlight cutoff angle (cosine of angle)
 
 140 8C  ???         Spot light 1 cutoff
-                        0-23: Spotlight cutoff angle (radians)
+                        0-23: Spotlight cutoff angle (cosine of angle)
 
 141 8D  ???         Spot light 2 cutoff
-                        0-23: Spotlight cutoff angle (radians)
+                        0-23: Spotlight cutoff angle (cosine of angle)
 
 142 8E  ???         Spot light 3 cutoff
-                        0-23: Spotlight cutoff angle (radians)
+                        0-23: Spotlight cutoff angle (cosine of angle)
 
 143 8F  ALC0        Ambient Light Color 0
                         0-7: Red Component
