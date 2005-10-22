@@ -268,7 +268,7 @@ int main(int argc, char* argv[])
 			gumTranslate(&lightMatrix,&pos);
 		}
 
-		gumFullInverse(&lightView,&lightMatrix);
+		gumFastInverse(&lightView,&lightMatrix);
 
 		// render to shadow map
 
