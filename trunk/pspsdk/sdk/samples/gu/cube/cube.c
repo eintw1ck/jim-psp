@@ -150,8 +150,8 @@ int main(int argc, char* argv[])
 		{
 			ScePspFVector3 pos = { 0, 0, -2.5f };
 			ScePspFVector3 rot = { val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f) };
-			sceGumRotateXYZ(&rot);
 			sceGumTranslate(&pos);
+			sceGumRotateXYZ(&rot);
 		}
 
 		// setup texture
