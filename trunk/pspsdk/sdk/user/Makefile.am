@@ -46,7 +46,7 @@ libpspuserinclude_HEADERS =	\
 	pspstdio.h		\
 	pspuser.h		\
 	psputils.h		\
-	pspintmanager.h \
+	pspintrman.h		\
 	pspmoduleexport.h
 
 lib_LIBRARIES = libpspuser.a
@@ -62,7 +62,7 @@ libpspuser_a_SOURCES =	\
 	ThreadManForUser.S	\
 	UtilsForUser.S		\
 	sceSuspendForUser.S	\
-	pspintmanager.c
+	pspintrman.c
 
 libpspuser_a_LIBADD = \
 $(IO_OBJS) \

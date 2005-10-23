@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * pspintmanager.h - Interface to the system interupt manager.
+ * pspintrman.h - Interface to the system interrupt manager.
  *
  * Copyright (c) 2005 James F. (tyranid@gmail.com)
  * Copyright (c) 2005 Florin Sasu (...)
@@ -11,16 +11,16 @@
  * $Id$
  */
 
-#ifndef PSPINTMANAGER_H
-#define PSPINTMANAGER_H
+#ifndef PSPINTRMAN_H
+#define PSPINTRMAN_H
 
 #include <pspkerneltypes.h>
 
-/** @defgroup IntMan Interrupt Manager
+/** @defgroup IntrMan Interrupt Manager
   * This module contains routines to manage interrupts.
   */
 
-/** @addtogroup IntMan Interrupt Manager */
+/** @addtogroup IntrMan Interrupt Manager */
 /*@{*/
 
 #ifdef __cplusplus
@@ -138,4 +138,4 @@ int QueryIntrHandlerInfo(SceUID intr_code, SceUID sub_intr_code, PspIntrHandlerO
 
 /*@}*/
 
-#endif /* PSPINTMANAGER_H */
+#endif /* PSPINTRMAN_H */

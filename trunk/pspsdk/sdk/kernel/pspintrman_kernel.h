@@ -3,23 +3,23 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * pspintmanager.h - Interface to the system interupt manager.
+ * pspintrman_kernel.h - Interface to the system interrupt manager.
  *
  * Copyright (c) 2005 James F. (tyranid@gmail.com)
  *
  * $Id$
  */
 
-#ifndef PSPINTMANAGERKERNEL_H
-#define PSPINTMANAGERKERNEL_H
+#ifndef PSPINTRMAN_KERNEL_H
+#define PSPINTRMAN_KERNEL_H
 
 #include <pspkerneltypes.h>
 
-/** @defgroup IntManKern Interrupt Manager Kernel
+/** @defgroup IntrManKern Interrupt Manager Kernel
   * This module contains routines to manage interrupts.
   */
 
-/** @addtogroup IntManKern Interrupt Manager Kernel */
+/** @addtogroup IntrManKern Interrupt Manager Kernel */
 /*@{*/
 
 #ifdef __cplusplus
@@ -63,4 +63,4 @@ int sceKernelDisableIntr(int intno);
 
 /*@}*/
 
-#endif /* PSPINTMANAGER_H */
+#endif /* PSPINTRMAN_KERNEL_H */

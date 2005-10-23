@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * pspintmanager.h - Interface to the system interupt manager.
+ * pspintrman.c - Interface to the system interupt manager.
  *
  * Copyright (c) 2005 James F. (tyranid@gmail.com)
  * Copyright (c) 2005 Florin Sasu (...)
@@ -11,7 +11,7 @@
  * $Id$
  */
 
-#include <pspintmanager.h>
+#include <pspintrman.h>
 
 const char* PspInterruptNames[67] = {//67 interrupts
 	0, 0, 0, 0, "GPIO", "ATA_ATAPI", "UmdMan", "MScm0",
