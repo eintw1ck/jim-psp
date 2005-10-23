@@ -7,7 +7,7 @@
 ##########################
 Compiler          = psp-gcc
 Librarian         = psp-ar
-Compiler_Options  = -O2 -I. -I../mikmod -I../include -g
+Compiler_Options  = -G0 -O2 -I. -I../mikmod -I../include -g
 CC = $(Compiler)
 
 Lib_file          = ../lib/libmmio.a

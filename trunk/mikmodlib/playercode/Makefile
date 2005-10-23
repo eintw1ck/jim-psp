@@ -8,7 +8,7 @@
 
 # Use the C or C++ compiler
 CC                = psp-gcc 
-CFLAGS  = -O2 -I. -I../include -I/usr/local/pspdev/psp/sdk/include -g -DPSP
+CFLAGS  = -G0 -O2 -I. -I../include -I/usr/local/pspdev/psp/sdk/include -g -DPSP
 
 Lib_file          = ../lib/libmikmod.a
 
