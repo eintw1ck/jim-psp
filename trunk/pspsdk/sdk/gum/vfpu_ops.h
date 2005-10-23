@@ -369,8 +369,8 @@
 #define lv_s(vfpu_rd,offset,base,cache_policy)              \
         (0xc8000000 |                            \
     ((base) << 21) |               \
-    (((vfpu_rd) & 0x1f) << 16) | ((vfpu_rd) >> 4) |   \
-    ((offset) << 2) |               \
+    (((vfpu_rd) & 0x1f) << 16) | ((vfpu_rd) >> 5) |   \
+    (((offset) & ~3) << 2) |               \
     ((cache_policy) << 1))
 
 
@@ -396,8 +396,8 @@
 #define sv_q(vfpu_rt,offset,base,cache_policy)         \
    (0xf8000000 |                  \
     ((base) << 21) |               \
-    (((vfpu_rt) & 0x1f) << 16) | ((vfpu_rt) >> 4) |   \
-    ((offset) << 2) |               \
+    (((vfpu_rt) & 0x1f) << 16) | ((vfpu_rt) >> 5) |   \
+    (((offset) & ~3) << 2) |               \
     ((cache_policy) << 1))
 
 
