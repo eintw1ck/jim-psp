@@ -64,6 +64,9 @@ enum PspThreadAttributes
 #define THREAD_ATTR_VFPU PSP_THREAD_ATTR_VFPU
 #define THREAD_ATTR_USER PSP_THREAD_ATTR_USER
 
+
+/* Threads. */
+
 typedef int (*SceKernelThreadEntry)(SceSize args, void *argp);
 
 /** Additional options used when creating threads. */
@@ -381,6 +384,8 @@ int sceKernelReferThreadStatus(SceUID thid, SceKernelThreadInfo *info);
 int sceKernelReferThreadRunStatus(SceUID thid, SceKernelThreadRunStatus *status);
 
 
+/* Semaphores. */
+
 /** Additional options used when creating semaphores. */
 typedef struct SceKernelSemaOptParam {
 	/** Size of the ::SceKernelSemaOptParam structure. */
@@ -501,8 +506,29 @@ int sceKernelPollSema(SceUID semaid, int signal);
  */
 int sceKernelReferSemaStatus(SceUID semaid, SceKernelSemaInfo *info);
 
+
+/* Callbacks. */
+
 /** Callback function prototype */
 typedef int (*SceKernelCallbackFunction)(int arg1, int arg2, void *arg);
+
+/** Structure to hold the status information for a callback */
+typedef struct SceKernelCallbackInfo {
+	/** Size of the structure (i.e. sizeof(PspCallbackStatus)) */
+	SceSize 	size;
+	/** The name given to the callback */
+	char 	name[32];
+	/** The thread id associated with the callback */
+	SceUID 	threadId;
+	/** Pointer to the callback function */
+	SceKernelCallbackFunction 	callback;
+	/** User supplied argument for the callback */
+	void * 	common;
+	/** Unknown */
+	int 	notifyCount;
+	/** Unknown */
+	int 	notifyArg;
+} SceKernelCallbackInfo;
 
 /**
  * Create callback
@@ -521,6 +547,29 @@ typedef int (*SceKernelCallbackFunction)(int arg1, int arg2, void *arg);
  */
 int sceKernelCreateCallback(const char *name, SceKernelCallbackFunction func, void *arg);
 
+/**
+  * Gets the status of a specified callback.
+  *
+  * @param cb - The UID of the callback to refer.
+  * @param status - Pointer to a status structure. The size parameter should be
+  * initialised before calling.
+  *
+  * @return < 0 on error.
+  */
+int sceKernelReferCallbackStatus(SceUID cb, SceKernelCallbackInfo *status);
+
+
+/* Event flags. */
+
+/** Structure to hold the event flag information */
+typedef struct SceKernelEventFlagInfo {
+	SceSize 	size;
+	char 		name[32];
+	SceUInt 	attr;
+	SceUInt 	initPattern;
+	SceUInt 	currentPattern;
+	int 		numWaitThreads;
+} SceKernelEventFlagInfo;
 
 /** 
   * Create an event flag.
@@ -581,109 +630,6 @@ int sceKernelWaitEventFlag(int evid, u32 bits, u32 wait, u32 *outBits, void *arg
   */
 int sceKernelDeleteEventFlag(int evid);
 
-/** Threadman types for ::sceKernelGetThreadmanIdList */
-enum SceKernelIdListType
-{
-	SCE_KERNEL_TMID_Thread = 1,
-	SCE_KERNEL_TMID_Semaphore = 2,
-	SCE_KERNEL_TMID_EventFlag = 3,
-	SCE_KERNEL_TMID_Mbox = 4,
-	SCE_KERNEL_TMID_Vpl = 5,
-	SCE_KERNEL_TMID_Fpl = 6,
-	SCE_KERNEL_TMID_Mpipe = 7,
-	SCE_KERNEL_TMID_Callback = 8,
-	SCE_KERNEL_TMID_ThreadEventHandler = 9,
-	SCE_KERNEL_TMID_Alarm = 10,
-	SCE_KERNEL_TMID_VTimer = 11,
-	SCE_KERNEL_TMID_SleepThread = 64,
-	SCE_KERNEL_TMID_DelayThread = 65,
-	SCE_KERNEL_TMID_SuspendThread = 66,
-	SCE_KERNEL_TMID_DormantThread = 67,
-};
-
-/**
-  * Get a list of UIDs from threadman. Allows you to enumerate 
-  * resources such as threads or semaphores.
-  *
-  * @param type - The type of resource to list, one of ::SceKernelIdListType.
-  * @param readbuf - A pointer to a buffer to store the list.
-  * @param readbufsize - The size of the buffer in SceUID units.
-  * @param idcount - Pointer to an integer in which to return the number of ids in the list.
-  *
-  * @return < 0 on error. Either 0 or the same as idcount on success.
-  */
-int sceKernelGetThreadmanIdList(enum SceKernelIdListType type, SceUID *readbuf, int readbufsize, int *idcount);
-
-/** Structure to hold the status information for a callback */
-struct _SceKernelCallbackInfo {
-	/** Size of the structure (i.e. sizeof(PspCallbackStatus)) */
-	SceSize 	size;
-	/** The name given to the callback */
-	char 	name[32];
-	/** The thread id associated with the callback */
-	SceUID 	threadId;
-	/** Pointer to the callback function */
-	SceKernelCallbackFunction 	callback;
-	/** User supplied argument for the callback */
-	void * 	common;
-	/** Unknown */
-	int 	notifyCount;
-	/** Unknown */
-	int 	notifyArg;
-};
-
-typedef struct _SceKernelCallbackInfo SceKernelCallbackInfo;
-
-/**
-  * Gets the status of a specified callback.
-  *
-  * @param cb - The UID of the callback to refer.
-  * @param status - Pointer to a status structure. The size parameter should be
-  * initialised before calling.
-  *
-  * @return < 0 on error.
-  */
-int sceKernelReferCallbackStatus(SceUID cb, SceKernelCallbackInfo *status);
-
-/** Structure to contain the system status returned by ::sceKernelReferSystemStatus */
-struct _SceKernelSystemStatus {
-	/** Size of the structure (should be set prior to the call) */
-	SceSize 	size;
-	/** The status ? */
-	SceUInt 	status;
-	/** The number of cpu clocks in the idle thread */
-	SceKernelSysClock 	idleClocks;
-	/** Number of times we resumed from idle */
-	SceUInt 	comesOutOfIdleCount;
-	/** Number of thread context switches */
-	SceUInt 	threadSwitchCount;
-	/** Number of vfpu switches ? */
-	SceUInt 	vfpuSwitchCount;
-};
-
-typedef struct _SceKernelSystemStatus SceKernelSystemStatus;
-
-/**
-  * Get the current system status.
-  *
-  * @param status - Pointer to a ::SceKernelSystemStatus structure.
-  *
-  * @return < 0 on error.
-  */
-int sceKernelReferSystemStatus(SceKernelSystemStatus *status);
-
-/** Structure to hold the event flag information */
-struct _SceKernelEventFlagInfo {
-	SceSize 	size;
-	char 	name[32];
-	SceUInt 	attr;
-	SceUInt 	initPattern;
-	SceUInt 	currentPattern;
-	int 	numWaitThreads;
-};
-
-typedef struct _SceKernelEventFlagInfo SceKernelEventFlagInfo;
-
 /** 
   * Get the status of an event flag.
   * 
@@ -694,6 +640,8 @@ typedef struct _SceKernelEventFlagInfo SceKernelEventFlagInfo;
   */
 int sceKernelReferEventFlagStatus(SceUID event, SceKernelEventFlagInfo *status);
 
+
+/* Message boxes. */
 
 /** Additional options used when creating messageboxes. */
 typedef struct SceKernelMbxOptParam {
@@ -842,6 +790,66 @@ int sceKernelCancelReceiveMbx(SceUID mbxid, int *pnum);
  */
 int sceKernelReferMbxStatus(SceUID mbxid, SceKernelMbxInfo *info);
 
+
+/* Misc. */
+
+/** Threadman types for ::sceKernelGetThreadmanIdList */
+enum SceKernelIdListType
+{
+	SCE_KERNEL_TMID_Thread = 1,
+	SCE_KERNEL_TMID_Semaphore = 2,
+	SCE_KERNEL_TMID_EventFlag = 3,
+	SCE_KERNEL_TMID_Mbox = 4,
+	SCE_KERNEL_TMID_Vpl = 5,
+	SCE_KERNEL_TMID_Fpl = 6,
+	SCE_KERNEL_TMID_Mpipe = 7,
+	SCE_KERNEL_TMID_Callback = 8,
+	SCE_KERNEL_TMID_ThreadEventHandler = 9,
+	SCE_KERNEL_TMID_Alarm = 10,
+	SCE_KERNEL_TMID_VTimer = 11,
+	SCE_KERNEL_TMID_SleepThread = 64,
+	SCE_KERNEL_TMID_DelayThread = 65,
+	SCE_KERNEL_TMID_SuspendThread = 66,
+	SCE_KERNEL_TMID_DormantThread = 67,
+};
+
+/**
+  * Get a list of UIDs from threadman. Allows you to enumerate 
+  * resources such as threads or semaphores.
+  *
+  * @param type - The type of resource to list, one of ::SceKernelIdListType.
+  * @param readbuf - A pointer to a buffer to store the list.
+  * @param readbufsize - The size of the buffer in SceUID units.
+  * @param idcount - Pointer to an integer in which to return the number of ids in the list.
+  *
+  * @return < 0 on error. Either 0 or the same as idcount on success.
+  */
+int sceKernelGetThreadmanIdList(enum SceKernelIdListType type, SceUID *readbuf, int readbufsize, int *idcount);
+
+/** Structure to contain the system status returned by ::sceKernelReferSystemStatus */
+typedef struct SceKernelSystemStatus {
+	/** Size of the structure (should be set prior to the call) */
+	SceSize 	size;
+	/** The status ? */
+	SceUInt 	status;
+	/** The number of cpu clocks in the idle thread */
+	SceKernelSysClock 	idleClocks;
+	/** Number of times we resumed from idle */
+	SceUInt 	comesOutOfIdleCount;
+	/** Number of thread context switches */
+	SceUInt 	threadSwitchCount;
+	/** Number of vfpu switches ? */
+	SceUInt 	vfpuSwitchCount;
+} SceKernelSystemStatus;
+
+/**
+  * Get the current system status.
+  *
+  * @param status - Pointer to a ::SceKernelSystemStatus structure.
+  *
+  * @return < 0 on error.
+  */
+int sceKernelReferSystemStatus(SceKernelSystemStatus *status);
 
 /*@}*/
 
