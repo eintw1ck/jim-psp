@@ -10,8 +10,7 @@
 
 void sceGumRotateZYX(const ScePspFVector3* v)
 {
-	gumRotateZ(gum_current_matrix,v->z);
-	gumRotateY(gum_current_matrix,v->y);
-	gumRotateX(gum_current_matrix,v->x);
-	gum_matrix_update[gum_current_mode] = 1;
+	sceGumRotateZ(v->z);
+	sceGumRotateY(v->y);
+	sceGumRotateX(v->x);
 }

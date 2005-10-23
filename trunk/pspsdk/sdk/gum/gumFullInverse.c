@@ -7,6 +7,7 @@
  */
 
 #include "gumInternal.h"
+#include <math.h>
 
 void gumFullInverse(ScePspFMatrix4* m, const ScePspFMatrix4* a)
 {
@@ -20,7 +21,7 @@ void gumFullInverse(ScePspFMatrix4* m, const ScePspFMatrix4* a)
 	d3 = a->y.x*a->z.y*a->w.z + a->y.y*a->z.z*a->w.x + a->y.z*a->z.x*a->w.y - a->w.x*a->z.y*a->y.z - a->w.y*a->z.z*a->y.x - a->w.z*a->z.x*a->y.y;
 	d = a->x.x*d0 - a->x.y * d1 + a->x.z * d2 - a->x.w * d3;
 
-	if (fabs(d) < GUM_EPSILON)
+	if (fabsf(d) < GUM_EPSILON)
 	{
 		gumLoadIdentity(m);
 		return;
