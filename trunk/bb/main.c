@@ -35,7 +35,7 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
 
 #ifdef HAVE_LIBMIKMOD
-#include <libmikmod.h>
+#include <mikmod.h>
 MODULE *module;
 int bbsound;
 void stop();
