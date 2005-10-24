@@ -10,6 +10,7 @@ SUBDIRS = \
 	hprm \
 	kernel \
 	libc \
+	nand \
 	power \
 	rtc \
 	sircs \
