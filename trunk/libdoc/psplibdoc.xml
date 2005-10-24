@@ -8696,7 +8696,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5EE92F3C</NID>
-						<NAME>sceSyscon_driver_5EE92F3C</NAME>
+						<NAME>sceSysconSetDebugHandlers</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5FF1D610</NID>
@@ -8704,11 +8704,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAD555CE5</NID>
-						<NAME>sceSyscon_driver_AD555CE5</NAME>
+						<NAME>sceSysconSetLowBatteryCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF281805D</NID>
-						<NAME>sceSyscon_driver_F281805D</NAME>
+						<NAME>sceSysconSetPowerSwitchCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA068B3D0</NID>
@@ -8720,7 +8720,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBBFB70C0</NID>
-						<NAME>sceSyscon_driver_BBFB70C0</NAME>
+						<NAME>sceSysconSetHPConnectCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x805180D1</NID>
@@ -8728,19 +8728,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x53072985</NID>
-						<NAME>sceSyscon_driver_53072985</NAME>
+						<NAME>sceSysconSetWlanSwitchCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF9193EC3</NID>
-						<NAME>sceSyscon_driver_F9193EC3</NAME>
+						<NAME>sceSysconSetWlanPowerCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7479DB05</NID>
-						<NAME>sceSyscon_driver_7479DB05</NAME>
+						<NAME>sceSysconSetHoldSwitchCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6848D817</NID>
-						<NAME>sceSyscon_driver_6848D817</NAME>
+						<NAME>sceSysconSetUmdSwitchCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5B9ACC97</NID>
@@ -8772,7 +8772,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEA5B9823</NID>
-						<NAME>sceSyscon_driver_EA5B9823</NAME>
+						<NAME>sceSysconIsAlarmed</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE20D08FE</NID>
@@ -8836,7 +8836,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCC04A978</NID>
-						<NAME>sceSyscon_driver_CC04A978</NAME>
+						<NAME>sceSysconGetWlanLedCtrl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE6B74CB9</NID>
@@ -8856,7 +8856,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFC32141A</NID>
-						<NAME>sceSyscon_driver_FC32141A</NAME>
+						<NAME>sceSysconGetPowerSupplyStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF775BC34</NID>
@@ -8936,7 +8936,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x01677F91</NID>
-						<NAME>sceSyscon_driver_01677F91</NAME>
+						<NAME>sceSysconCtrlVoltage</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBE27FE66</NID>
@@ -9028,7 +9028,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x82861DE2</NID>
-						<NAME>sceSyscon_driver_82861DE2</NAME>
+						<NAME>sceSysconBatteryGetRCap</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x876CA580</NID>
@@ -9036,11 +9036,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71135D7D</NID>
-						<NAME>sceSyscon_driver_71135D7D</NAME>
+						<NAME>sceSysconBatteryGetFullCap</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7CBD4522</NID>
-						<NAME>sceSyscon_driver_7CBD4522</NAME>
+						<NAME>sceSysconBatteryGetIFC</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x284FE366</NID>
@@ -9064,19 +9064,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB71B98A8</NID>
-						<NAME>sceSyscon_driver_B71B98A8</NAME>
+						<NAME>sceSysconBatteryGetTempAD</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x87671B18</NID>
-						<NAME>sceSyscon_driver_87671B18</NAME>
+						<NAME>sceSysconBatteryGetVoltAD</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x75D22BF8</NID>
-						<NAME>sceSyscon_driver_75D22BF8</NAME>
+						<NAME>sceSysconBatteryGetElecAD</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C539345</NID>
-						<NAME>sceSyscon_driver_4C539345</NAME>
+						<NAME>sceSysconBatteryGetTotalElec</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C0EE2FA</NID>
@@ -9811,11 +9811,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7CC6CBFD</NID>
-						<NAME>sceSysreg_driver_7CC6CBFD</NAME>
+						<NAME>sceSysregEmcddrBusClockEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEE6B9411</NID>
-						<NAME>sceSysreg_driver_EE6B9411</NAME>
+						<NAME>sceSysregEmcddrBusClockDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF97D9D73</NID>
