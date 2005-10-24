@@ -1,0 +1,20 @@
+ASCII ART LIBRARY 1.2
+----------------------
+
+to compile : 
+
+make
+make install
+
+test directory contain aafire, a simple aalib test
+
+actually aalib use scr_printf function but it work on gu use with font choise
+
+tmator@gmail.com
+
+froggies team => http://www.psxdev.org
+
+thanks :
+--------
+
+shazz, evilo, pixel, dingofr, gawd, froggies / ps2dev / pspdev teams.
