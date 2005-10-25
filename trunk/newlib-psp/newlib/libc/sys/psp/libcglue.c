@@ -147,7 +147,7 @@ char *realpath(const char *path, char *resolved_path)
 #ifdef F__open
 int _open(const char *name, int flags, int mode)
 {
-       int fd;
+	int fd;
 	int sce_flags;
 	char dest[MAXPATHLEN + 1];
 
@@ -176,11 +176,11 @@ int _open(const char *name, int flags, int mode)
 	if (flags & O_NONBLOCK) {
 		sce_flags |= PSP_O_NBLOCK;
 	}
-
-       fd = sceIoOpen(dest, sce_flags, mode);
-       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-               __psp_filename_map[fd] = strdup(dest);
-       }
+	
+	fd = sceIoOpen(dest, sce_flags, mode);
+	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+		__psp_filename_map[fd] = strdup(dest);
+	}
 	return __psp_set_errno(fd);
 }
 #endif
@@ -188,17 +188,17 @@ int _open(const char *name, int flags, int mode)
 #ifdef F__close
 int _close(int fd)
 {
-       if (fd < 0) {
+	if (fd < 0) {
 		errno = EBADF;
 		return -1;
 	}
 
-       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-               if (__psp_filename_map[fd] != NULL) {
-                       free(__psp_filename_map[fd]);
-                       __psp_filename_map[fd] = NULL;
-               }
-       }
+	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+		if (__psp_filename_map[fd] != NULL) {
+			free(__psp_filename_map[fd]);
+			__psp_filename_map[fd] = NULL;
+		}
+	}
 
 	return __psp_set_errno(sceIoClose(fd));
 }
@@ -207,7 +207,7 @@ int _close(int fd)
 #ifdef F__read
 int _read(int fd, void *buf, size_t size)
 {
-       if (fd < 0) {
+	if (fd < 0) {
 		errno = EBADF;
 		return -1;
 	}
@@ -219,7 +219,7 @@ int _read(int fd, void *buf, size_t size)
 #ifdef F__write
 int _write(int fd, const void *buf, size_t size)
 {
-       if (fd < 0) {
+	if (fd < 0) {
 		errno = EBADF;
 		return -1;
 	}
@@ -231,7 +231,7 @@ int _write(int fd, const void *buf, size_t size)
 #ifdef F__lseek
 off_t _lseek(int fd, off_t offset, int whence)
 {
-       if (fd < 0) {
+	if (fd < 0) {
 		errno = EBADF;
 		return -1;
 	}
@@ -304,7 +304,7 @@ struct dirent *readdir(DIR *dirp)
 	ret = sceIoDread(dirp->uid, (SceIoDirent *)&dirp->de);
 	if (ret == 0) {
 		/* EOF */
-		errno = 0; 		
+		errno = 0;
 		return NULL;
 	}
 	if (ret < 0) {
@@ -451,8 +451,8 @@ int _fstat(int fd, struct stat *sbuf)
 				sbuf->st_mode = S_IFCHR;
 				return 0;
 			} else {
-			        ret = stat(__psp_filename_map[fd], sbuf);
-
+				ret = stat(__psp_filename_map[fd], sbuf);
+				
 				/* Find true size of the open file */
 				oldpos = sceIoLseek(fd, 0, SEEK_CUR);
 				if (oldpos != (off_t) -1) {
@@ -472,16 +472,16 @@ int _fstat(int fd, struct stat *sbuf)
 #ifdef F_isatty
 int isatty(int fd)
 {
-       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-               if (__psp_filename_map[fd] != NULL) {
-                       if (strcmp(__psp_filename_map[fd], "  __PSP_STDIO") == 0) {
-                               return 1;
-                       } else {
-                               return 0;
-                       }
-               }
-       }
-       return 0;
+	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+		if (__psp_filename_map[fd] != NULL) {
+			if (strcmp(__psp_filename_map[fd], "  __PSP_STDIO") == 0) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	}
+	return 0;
 }
 #endif
 
@@ -641,26 +641,26 @@ void _exit(int status)
 */
 void __psp_libc_init(int argc, char *argv[])
 {
-       int fd;
-       (void) argc;
+	int fd;
+	(void) argc;
 
 	/* Initialize cwd from this program's path */
 	__psp_init_cwd(argv[0]);
 
-       /* Initialize filenamap */
-       memset(__psp_filename_map, '\0', sizeof(char *) * __PSP_FILENO_MAX);
-       fd = sceKernelStdin();
-       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-               __psp_filename_map[fd] = strdup("  __PSP_STDIO");
-       }
-       fd = sceKernelStdout();
-       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-               __psp_filename_map[fd] = strdup("  __PSP_STDIO");
-       }
-       fd = sceKernelStderr();
-       if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-               __psp_filename_map[fd] = strdup("  __PSP_STDIO");
-       }
+	/* Initialize filenamap */
+	memset(__psp_filename_map, '\0', sizeof(char *) * __PSP_FILENO_MAX);
+	fd = sceKernelStdin();
+	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+		 __psp_filename_map[fd] = strdup("  __PSP_STDIO");
+	}
+	fd = sceKernelStdout();
+	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+		 __psp_filename_map[fd] = strdup("  __PSP_STDIO");
+	}
+	fd = sceKernelStderr();
+	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
+		 __psp_filename_map[fd] = strdup("  __PSP_STDIO");
+	}
 	
 	/* Initialize timezone from PSP configuration */
 	int tzOffset = 0;
@@ -668,7 +668,7 @@ void __psp_libc_init(int argc, char *argv[])
 	int tzOffsetAbs = tzOffset < 0 ? -tzOffset : tzOffset;
 	int hours = tzOffsetAbs / 60;
 	int minutes = tzOffsetAbs - hours * 60;
- 	static char tz[10];
+	static char tz[10];
 	sprintf(tz, "GMT%s%02i:%02i", tzOffset < 0 ? "+" : "-", hours, minutes);
 	setenv("TZ", tz, 1);
 	tzset(); 
