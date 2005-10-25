@@ -3581,8 +3581,8 @@
 +
 +void _start() { }
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/libcglue.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-10-20 01:44:22.000000000 -0400
-@@ -0,0 +1,667 @@
++++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-10-25 01:37:49.000000000 -0400
+@@ -0,0 +1,650 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -3615,11 +3615,7 @@
 +#include <pspthreadman.h>
 +#include <psputils.h>
 +#include <psputility.h>
-+
-+/* These functions aren't exposed in any public headers, and they probably don't need to be. */
-+int sceKernelStdin(void);
-+int sceKernelStdout(void);
-+int sceKernelStderr(void);
++#include <pspstdio.h>
 +
 +extern char __psp_cwd[MAXPATHLEN + 1];
 +extern void __psp_init_cwd(char *argv_0);
@@ -3869,7 +3865,7 @@
 +	/* Zero the dirent, to avoid possible problems with sceIoDread */
 +	memset(&dirp->de, 0, sizeof(struct dirent));
 +
-+	if (sceIoDread(dirp->uid, &dirp->de) <= 0)
++	if (sceIoDread(dirp->uid, (SceIoDirent *)&dirp->de) <= 0)
 +	{
 +		return NULL;
 +	}
@@ -4237,19 +4233,6 @@
 +
 +#endif /* F__exit */
 +
-+/* newlib's errno.h wants a function that returns a pointer to errno. */
-+#ifdef F_glue___errno
-+#undef errno
-+
-+int errno;
-+
-+/* TODO: Should this be made reentrant (wrapping interrupt disable/enable
-+   around it should do it)? */
-+int * __errno(void)
-+{
-+	return &errno;
-+}
-+#endif
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/pspcwd.c	1969-12-31 19:00:00.000000000 -0500
 +++ newlib-psp/newlib/libc/sys/psp/pspcwd.c	2005-10-06 05:24:40.000000000 -0400
 @@ -0,0 +1,167 @@

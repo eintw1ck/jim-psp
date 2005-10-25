@@ -30,11 +30,7 @@
 #include <pspthreadman.h>
 #include <psputils.h>
 #include <psputility.h>
-
-/* These functions aren't exposed in any public headers, and they probably don't need to be. */
-int sceKernelStdin(void);
-int sceKernelStdout(void);
-int sceKernelStderr(void);
+#include <pspstdio.h>
 
 extern char __psp_cwd[MAXPATHLEN + 1];
 extern void __psp_init_cwd(char *argv_0);
@@ -284,7 +280,7 @@ struct dirent *readdir(DIR *dirp)
 	/* Zero the dirent, to avoid possible problems with sceIoDread */
 	memset(&dirp->de, 0, sizeof(struct dirent));
 
-	if (sceIoDread(dirp->uid, &dirp->de) <= 0)
+	if (sceIoDread(dirp->uid, (SceIoDirent *)&dirp->de) <= 0)
 	{
 		return NULL;
 	}
@@ -652,16 +648,3 @@ void __psp_libc_init(int argc, char *argv[])
 
 #endif /* F__exit */
 
-/* newlib's errno.h wants a function that returns a pointer to errno. */
-#ifdef F_glue___errno
-#undef errno
-
-int errno;
-
-/* TODO: Should this be made reentrant (wrapping interrupt disable/enable
-   around it should do it)? */
-int * __errno(void)
-{
-	return &errno;
-}
-#endif
