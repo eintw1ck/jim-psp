@@ -39,6 +39,19 @@ extern int __psp_path_absolute(const char *in, char *out, int len);
 #define __PSP_FILENO_MAX 1024
 extern char * __psp_filename_map[__PSP_FILENO_MAX];
 
+int __psp_set_errno(int code);
+
+#ifdef F___psp_set_errno
+int __psp_set_errno(int code)
+{
+	if ((code & 0x80010000) == 0x80010000) {
+		errno = code & 0xFFFF;
+		return -1;
+	}
+	return code;
+}
+#endif
+
 #ifdef F_getcwd
 char *getcwd(char *buf, size_t size)
 {
@@ -93,7 +106,7 @@ int mkdir(const char *pathname, mode_t mode)
 		return -1;
 	}
 
-	return sceIoMkdir(dest, mode);
+	return __psp_set_errno(sceIoMkdir(dest, mode));
 }
 #endif
 
@@ -107,7 +120,7 @@ int rmdir(const char *pathname)
 		return -1;
 	}
 
-	return sceIoRmdir(dest);
+	return __psp_set_errno(sceIoRmdir(dest));
 }
 #endif
 
@@ -168,7 +181,7 @@ int _open(const char *name, int flags, int mode)
        if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
                __psp_filename_map[fd] = strdup(dest);
        }
-       return fd;
+	return __psp_set_errno(fd);
 }
 #endif
 
@@ -176,7 +189,8 @@ int _open(const char *name, int flags, int mode)
 int _close(int fd)
 {
        if (fd < 0) {
-		return -EBADF;
+		errno = EBADF;
+		return -1;
 	}
 
        if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
@@ -186,7 +200,7 @@ int _close(int fd)
                }
        }
 
-       return sceIoClose(fd);
+	return __psp_set_errno(sceIoClose(fd));
 }
 #endif
 
@@ -194,10 +208,11 @@ int _close(int fd)
 int _read(int fd, void *buf, size_t size)
 {
        if (fd < 0) {
-		return -EBADF;
+		errno = EBADF;
+		return -1;
 	}
 
-       return sceIoRead(fd, buf, size);
+	return __psp_set_errno(sceIoRead(fd, buf, size));
 }
 #endif
 
@@ -205,10 +220,11 @@ int _read(int fd, void *buf, size_t size)
 int _write(int fd, const void *buf, size_t size)
 {
        if (fd < 0) {
-		return -EBADF;
+		errno = EBADF;
+		return -1;
 	}
 
-       return sceIoWrite(fd, buf, size);
+	return __psp_set_errno(sceIoWrite(fd, buf, size));
 }
 #endif
 
@@ -216,11 +232,12 @@ int _write(int fd, const void *buf, size_t size)
 off_t _lseek(int fd, off_t offset, int whence)
 {
        if (fd < 0) {
-		return -EBADF;
+		errno = EBADF;
+		return -1;
 	}
 
 	/* We don't have to do anything with the whence argument because SEEK_* == PSP_SEEK_*. */
-       return (off_t) sceIoLseek(fd, offset, whence);
+	return (off_t) __psp_set_errno(sceIoLseek(fd, offset, whence));
 }
 #endif
 
@@ -234,13 +251,14 @@ int _unlink(const char *path)
 		return -1;
 	}
 
-	return sceIoRemove(dest);
+	return __psp_set_errno(sceIoRemove(dest));
 }
 #endif
 
 #ifdef F__link
 int _link(const char *name1, const char *name2)
 {
+	errno = ENOSYS;
 	return -1; /* not supported */
 }
 #endif
@@ -265,6 +283,7 @@ DIR *opendir(const char *filename)
 	if (uid < 0)
 	{
 		free(dirp);
+		(void) __psp_set_errno(uid);
 		return NULL;
 	}
 
@@ -277,11 +296,19 @@ DIR *opendir(const char *filename)
 #ifdef F_readdir
 struct dirent *readdir(DIR *dirp)
 {
+	int ret;
+
 	/* Zero the dirent, to avoid possible problems with sceIoDread */
 	memset(&dirp->de, 0, sizeof(struct dirent));
 
-	if (sceIoDread(dirp->uid, (SceIoDirent *)&dirp->de) <= 0)
-	{
+	ret = sceIoDread(dirp->uid, (SceIoDirent *)&dirp->de);
+	if (ret == 0) {
+		/* EOF */
+		errno = 0; 		
+		return NULL;
+	}
+	if (ret < 0) {
+		(void) __psp_set_errno(ret);
 		return NULL;
 	}
 
@@ -297,8 +324,9 @@ int closedir(DIR *dirp)
 		int uid;
 		uid = dirp->uid;
 		free (dirp);
-		return sceIoDclose(uid); 
+		return __psp_set_errno(sceIoDclose(uid));
 	}
+	errno = EBADF;
 	return -1; 
 }
 #endif
@@ -307,30 +335,22 @@ int closedir(DIR *dirp)
 #ifdef F__gettimeofday
 int _gettimeofday(struct timeval *tp, struct timezone *tzp)
 {
-	return sceKernelLibcGettimeofday(tp, tzp);
+	return __psp_set_errno(sceKernelLibcGettimeofday(tp, tzp));
 }
 
 #endif
 
-/* If we're being built for PSPSDK's libc this function isn't defined. */
-#ifdef F_glue_gettimeofday
-int gettimeofday(struct timeval *tp, struct timezone *tzp)
-{
-	return sceKernelLibcGettimeofday(tp, tzp);
-}
-#endif
-
-#if defined(F_clock) || defined(F_glue_clock)
+#if defined(F_clock)
 clock_t clock(void)
 {
-	return sceKernelLibcClock();
+	return __psp_set_errno(sceKernelLibcClock());
 }
 #endif
 
-#if defined(F_time) || defined(F_glue_time)
+#if defined(F_time)
 time_t time(time_t *t)
 {
-	return sceKernelLibcTime(t);
+	return __psp_set_errno(sceKernelLibcTime(t));
 }
 #endif
 
@@ -483,6 +503,7 @@ int _stat(const char *filename, struct stat *buf)
 {
 	SceIoStat psp_stat;
 	char dest[MAXPATHLEN + 1];
+	int ret;
 
 	if(__psp_path_absolute(filename, dest, MAXPATHLEN) < 0) {
 		errno = ENAMETOOLONG;
@@ -490,8 +511,10 @@ int _stat(const char *filename, struct stat *buf)
 	}
 
 	memset(buf, '\0', sizeof(struct stat));
-	if(sceIoGetstat(dest, &psp_stat) < 0)
-		return -1;
+	ret = sceIoGetstat(dest, &psp_stat);
+	if (ret < 0) {
+		return __psp_set_errno(ret);
+	}
 	
 	buf->st_ctime = psp_to_epoch_time(psp_stat.st_ctime);
 	buf->st_atime = psp_to_epoch_time(psp_stat.st_atime);
@@ -526,7 +549,7 @@ int truncate(const char *filename, off_t length)
 		errno = EINVAL;
 		return -1;
 	}
-	return sceIoChstat(dest, &psp_stat, FIO_CST_SIZE);
+	return __psp_set_errno(sceIoChstat(dest, &psp_stat, FIO_CST_SIZE));
 }
 #endif
 
@@ -534,6 +557,7 @@ int truncate(const char *filename, off_t length)
 #ifdef F__fork
 pid_t fork(void)
 {
+	errno = ENOSYS;
 	return (pid_t) -1;
 }
 #endif
@@ -541,6 +565,7 @@ pid_t fork(void)
 #ifdef F__getpid
 pid_t _getpid(void)
 {
+	errno = ENOSYS;
 	return (pid_t) -1;
 }
 #endif
@@ -548,6 +573,7 @@ pid_t _getpid(void)
 #ifdef F__kill
 int _kill(int unused, int unused2)
 {
+	errno = ENOSYS;
 	return -1;
 }
 #endif
@@ -555,6 +581,7 @@ int _kill(int unused, int unused2)
 #ifdef F__wait
 pid_t _wait(int *unused)
 {
+	errno = ENOSYS;
 	return (pid_t) -1;
 }
 #endif
@@ -571,6 +598,7 @@ int access(const char *fn, int flags)
 	{
 		if (s.st_mode & S_IWRITE)
 			return 0;
+		errno = EACCES;
 		return -1;
 	}
 	return 0;
