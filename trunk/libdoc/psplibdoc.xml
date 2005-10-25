@@ -8724,7 +8724,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x805180D1</NID>
-						<NAME>sceSyscon_driver_805180D1</NAME>
+						<NAME>sceSysconSetHRPowerCallback</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x53072985</NID>
@@ -8796,7 +8796,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x71AE1BCE</NID>
-						<NAME>sceSyscon_driver_71AE1BCE</NAME>
+						<NAME>sceSysconGetHRPowerStatus</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7016161C</NID>
@@ -8812,7 +8812,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3C739F57</NID>
-						<NAME>sceSyscon_driver_3C739F57</NAME>
+						<NAME>sceSysconGetHRPowerCtrl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xEC37C549</NID>
@@ -8832,7 +8832,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5F19C00F</NID>
-						<NAME>sceSyscon_driver_5F19C00F</NAME>
+						<NAME>sceSysconGetLcdPowerCtrl</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCC04A978</NID>
@@ -8916,7 +8916,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x44439604</NID>
-						<NAME>sceSyscon_driver_44439604</NAME>
+						<NAME>sceSysconCtrlHRPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC8439C57</NID>
@@ -8988,7 +8988,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9478F399</NID>
-						<NAME>sceSyscon_driver_9478F399</NAME>
+						<NAME>sceSysconCtrlLcdPower</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x806D4D6C</NID>
@@ -9044,7 +9044,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x284FE366</NID>
-						<NAME>sceSyscon_driver_284FE366</NAME>
+						<NAME>sceSysconBatteryGetLimitTime</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x75025299</NID>
@@ -9755,11 +9755,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAF904657</NID>
-						<NAME>sceSysreg_driver_AF904657</NAME>
+						<NAME>sceSysregAwEdramBusClockEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x438AECE9</NID>
-						<NAME>sceSysreg_driver_438AECE9</NAME>
+						<NAME>sceSysregAwEdramBusClockDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x678AD3ED</NID>
@@ -9843,43 +9843,43 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6B01D71B</NID>
-						<NAME>sceSysreg_driver_6B01D71B</NAME>
+						<NAME>sceSysregAtaClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFC186A83</NID>
-						<NAME>sceSysreg_driver_FC186A83</NAME>
+						<NAME>sceSysregAtaClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7234EA80</NID>
-						<NAME>sceSysreg_driver_7234EA80</NAME>
+						<NAME>sceSysregUsbClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x38EC3281</NID>
-						<NAME>sceSysreg_driver_38EC3281</NAME>
+						<NAME>sceSysregUsbClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x31154490</NID>
-						<NAME>sceSysreg_driver_31154490</NAME>
+						<NAME>sceSysregMsifClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8E2D835D</NID>
-						<NAME>sceSysreg_driver_8E2D835D</NAME>
+						<NAME>sceSysregMsifClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8835D1E1</NID>
-						<NAME>sceSysreg_driver_8835D1E1</NAME>
+						<NAME>sceSysregSpiClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x8B90B8B5</NID>
-						<NAME>sceSysreg_driver_8B90B8B5</NAME>
+						<NAME>sceSysregSpiClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7725CA08</NID>
-						<NAME>sceSysreg_driver_7725CA08</NAME>
+						<NAME>sceSysregUartClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA3E4154C</NID>
-						<NAME>sceSysreg_driver_A3E4154C</NAME>
+						<NAME>sceSysregUartClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE8533DCA</NID>
@@ -9891,59 +9891,59 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA9CD1C1F</NID>
-						<NAME>sceSysreg_driver_A9CD1C1F</NAME>
+						<NAME>sceSysregAudioClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2F216F38</NID>
-						<NAME>sceSysreg_driver_2F216F38</NAME>
+						<NAME>sceSysregAudioClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA24C242A</NID>
-						<NAME>sceSysreg_driver_A24C242A</NAME>
+						<NAME>sceSysregLcdcClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE89243BE</NID>
-						<NAME>sceSysreg_driver_E89243BE</NAME>
+						<NAME>sceSysregLcdcClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7DCA8302</NID>
-						<NAME>sceSysreg_driver_7DCA8302</NAME>
+						<NAME>sceSysregPwmClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x45225F8F</NID>
-						<NAME>sceSysreg_driver_45225F8F</NAME>
+						<NAME>sceSysregPwmClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD74D3AB6</NID>
-						<NAME>sceSysreg_driver_D74D3AB6</NAME>
+						<NAME>sceSysregKeyClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAD7C4ACB</NID>
-						<NAME>sceSysreg_driver_AD7C4ACB</NAME>
+						<NAME>sceSysregKeyClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDC68A93F</NID>
-						<NAME>sceSysreg_driver_DC68A93F</NAME>
+						<NAME>sceSysregIicClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x94B0323C</NID>
-						<NAME>sceSysreg_driver_94B0323C</NAME>
+						<NAME>sceSysregIicClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6417CDD6</NID>
-						<NAME>sceSysreg_driver_6417CDD6</NAME>
+						<NAME>sceSysregSircsClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x20388C9E</NID>
-						<NAME>sceSysreg_driver_20388C9E</NAME>
+						<NAME>sceSysregSircsClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE3AECFFA</NID>
-						<NAME>sceSysreg_driver_E3AECFFA</NAME>
+						<NAME>sceSysregGpioClkEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3BBD0C0C</NID>
-						<NAME>sceSysreg_driver_3BBD0C0C</NAME>
+						<NAME>sceSysregGpioClkDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC1DA05D2</NID>
@@ -9955,15 +9955,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1969E840</NID>
-						<NAME>sceSysreg_driver_1969E840</NAME>
+						<NAME>sceSysregMsifClkSelect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1D382514</NID>
-						<NAME>sceSysreg_driver_1D382514</NAME>
+						<NAME>sceSysregMsifDelaySelect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x833E6FB1</NID>
-						<NAME>sceSysreg_driver_833E6FB1</NAME>
+						<NAME>sceSysregAtaClkSelect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x03340297</NID>
@@ -9971,7 +9971,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9100B4E5</NID>
-						<NAME>sceSysreg_driver_9100B4E5</NAME>
+						<NAME>sceSysregAudioClkSelect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0A83FC7B</NID>
@@ -9979,11 +9979,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD6628A48</NID>
-						<NAME>sceSysreg_driver_D6628A48</NAME>
+						<NAME>sceSysregSpiClkSelect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1E18EA43</NID>
-						<NAME>sceSysreg_driver_1E18EA43</NAME>
+						<NAME>sceSysregLcdcClkSelect</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x9DD1F821</NID>
