@@ -41,12 +41,14 @@ static char rcsid =
 #include "SDL_pspaudio.h"
 
 #include <pspaudio.h>
+#include <pspthreadman.h>
 
 /* The tag name used by PSP audio */
 #define PSPAUD_DRIVER_NAME         "psp"
 
 /* Audio driver functions */
 static int PSPAUD_OpenAudio(_THIS, SDL_AudioSpec *spec);
+static void PSPAUD_ThreadInit(_THIS);
 static void PSPAUD_WaitAudio(_THIS);
 static void PSPAUD_PlayAudio(_THIS);
 static Uint8 *PSPAUD_GetAudioBuf(_THIS);
@@ -86,6 +88,7 @@ static SDL_AudioDevice *PSPAUD_CreateDevice(int devindex)
 
 	/* Set the function pointers */
 	this->OpenAudio = PSPAUD_OpenAudio;
+	this->ThreadInit = PSPAUD_ThreadInit;
 	this->WaitAudio = PSPAUD_WaitAudio;
 	this->PlayAudio = PSPAUD_PlayAudio;
 	this->GetAudioBuf = PSPAUD_GetAudioBuf;
@@ -135,6 +138,19 @@ static void PSPAUD_CloseAudio(_THIS)
 	if (this->hidden->rawbuf != NULL) {
 		free(this->hidden->rawbuf);
 		this->hidden->rawbuf = NULL;
+	}
+}
+
+static void PSPAUD_ThreadInit(_THIS)
+{
+	/* Increase the priority of this audio thread by 1 to put it
+	   ahead of other SDL threads. */
+	SceUID thid;
+	SceKernelThreadInfo status;
+	thid = sceKernelGetThreadId();
+	status.size = sizeof(SceKernelThreadInfo);
+	if (sceKernelReferThreadStatus(thid, &status) == 0) {
+		sceKernelChangeThreadPriority(thid, status.currentPriority - 1);
 	}
 }
 
