@@ -47,7 +47,17 @@ static int ThreadEntry(SceSize args, void *argp)
 
 int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 {
-	thread->handle = sceKernelCreateThread("SDL thread", ThreadEntry, 0x13, 0x8000, 0, NULL);
+	SceKernelThreadInfo status;
+	int priority = 32;
+
+	/* Set priority of new thread to the same as the current thread */
+	status.size = sizeof(SceKernelThreadInfo);
+	if (sceKernelReferThreadStatus(sceKernelGetThreadId(), &status) == 0) {
+		priority = status.currentPriority;
+	}
+
+	thread->handle = sceKernelCreateThread("SDL thread", ThreadEntry, 
+					       priority, 0x8000, 0, NULL);
 	if (thread->handle < 0) {
 		SDL_SetError("sceKernelCreateThread() failed");
 		return -1;
