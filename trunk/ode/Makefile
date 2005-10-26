@@ -128,8 +128,8 @@ ODE_TEST_SRC_C = \
 DRAWSTUFF_TEST_SRC_CPP = \
 	drawstuff/dstest/dstest.cpp
 
-CONFIGURATOR_SRC=configurator.c
-CONFIG_H=include/ode/config.h
+#CONFIGURATOR_SRC=configurator.c
+#CONFIG_H=include/ode/config.h
 
 ##############################################################################
 # OPCODE build rules

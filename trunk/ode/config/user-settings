@@ -11,18 +11,18 @@
 #			variable in makefile.unix-generic
 #	osx		Mac OS-X, with the gnu compiler.
 
-PLATFORM=unix-gcc
+PLATFORM=psp
 
 # (2) the floating point precision to use (either "SINGLE" or "DOUBLE")
 
-#PRECISION=SINGLE
-PRECISION=DOUBLE
+PRECISION=SINGLE
+#PRECISION=DOUBLE
 
 # (3) the library type to build (either "debug" if you are doing development,
 #     or "release" for the optimized library)
 
-#BUILD=debug
-BUILD=release
+BUILD=debug
+#BUILD=release
 
 # (4) if you are using an old version of MS-Windows that has command line
 #     length limitations then you will need to set this to "1". otherwise,
@@ -41,4 +41,4 @@ WINDOWS16=0
 #     compiled on windows, but it has been ported so that it should compile
 #     under unix/gcc too. Your mileage may vary.
 
-#OPCODE_DIRECTORY=OPCODE
+OPCODE_DIRECTORY=OPCODE
