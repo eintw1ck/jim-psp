@@ -53,7 +53,8 @@ manage openGL state changes better
 #ifdef WIN32
 #define DEFAULT_PATH_TO_TEXTURES "..\\textures\\"
 #else
-#define DEFAULT_PATH_TO_TEXTURES "../textures/"
+//#define DEFAULT_PATH_TO_TEXTURES "../textures/"
+#define DEFAULT_PATH_TO_TEXTURES "ms0:/textures"
 #endif
 
 #ifndef M_PI
@@ -483,6 +484,7 @@ static void drawSphere()
     {9, 2, 5},	  {7, 2, 11},
   };
 
+#if 0
   static GLuint listnum = 0;
   if (listnum==0) {
     listnum = glGenLists (1);
@@ -496,6 +498,14 @@ static void drawSphere()
     glEndList();
   }
   glCallList (listnum);
+#else
+  glBegin (GL_TRIANGLES);
+  for (int i=0; i<20; i++) {
+    drawPatch (&idata[index[i][2]][0],&idata[index[i][1]][0],
+	       &idata[index[i][0]][0],sphere_quality);
+  }
+  glEnd();
+#endif
 }
 
 
@@ -804,7 +814,7 @@ static int current_state = 0;
 
 // textures and shadows
 static int use_textures=1;		// 1 if textures to be drawn
-static int use_shadows=1;		// 1 if shadows to be drawn
+static int use_shadows=0;		// 1 if shadows to be drawn
 static Texture *sky_texture = 0;
 static Texture *ground_texture = 0;
 static Texture *wood_texture = 0;
@@ -815,7 +825,7 @@ static Texture *wood_texture = 0;
 void dsStartGraphics (int width, int height, dsFunctions *fn)
 {
   char *prefix = DEFAULT_PATH_TO_TEXTURES;
-  if (fn->version >= 2 && fn->path_to_textures) prefix = fn->path_to_textures;
+//  if (fn->version >= 2 && fn->path_to_textures) prefix = fn->path_to_textures;
   char *s = (char*) alloca (strlen(prefix) + 20);
 
   strcpy (s,prefix);
@@ -890,7 +900,7 @@ static void drawSky (float view_xyz[3])
   float x = ssize*sky_scale;
   float z = view_xyz[2] + sky_height;
 
-  glBegin (GL_QUADS);
+  glBegin (GL_TRIANGLE_FAN);
   glNormal3f (0,0,-1);
   glTexCoord2f (-x+offset,-x+offset);
   glVertex3f (-ssize+view_xyz[0],-ssize+view_xyz[1],z);
@@ -942,7 +952,7 @@ static void drawGround()
   const float gsize = 100.0f;
   const float offset = 0; // -0.001f; ... polygon offsetting doesn't work well
 
-  glBegin (GL_QUADS);
+  glBegin (GL_TRIANGLE_FAN);
   glNormal3f (0,0,1);
   glTexCoord2f (-gsize*ground_scale + ground_ofsx,
 		-gsize*ground_scale + ground_ofsy);

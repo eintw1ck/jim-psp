@@ -93,7 +93,11 @@ ifeq ($(WINDOWS),1)
 DRAWSTUFF_SRC = drawstuff/src/drawstuff.cpp drawstuff/src/windows.cpp
 RESOURCE_FILE=lib/resources.RES
 else
+ifneq ($(PSPSDK),)
+DRAWSTUFF_SRC = drawstuff/src/drawstuff.cpp drawstuff/src/psp.cpp
+else
 DRAWSTUFF_SRC = drawstuff/src/drawstuff.cpp drawstuff/src/x11.cpp
+endif
 endif
 
 ODE_LIB_NAME=ode
