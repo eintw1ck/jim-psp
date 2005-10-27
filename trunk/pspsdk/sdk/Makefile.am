@@ -11,6 +11,7 @@ SUBDIRS = \
 	kernel \
 	libc \
 	nand \
+	net \
 	power \
 	rtc \
 	sircs \
