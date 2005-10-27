@@ -1606,7 +1606,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD897C343</NID>
-						<NAME>sceNand_driver_D897C343</NAME>
+						<NAME>sceNandDetectChip</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCE9843E6</NID>
