@@ -51,7 +51,7 @@ static char rcsid =
 
 #define PSPVID_DRIVER_NAME "psp"
 
-#define PSP_SLICE_SIZE	(32)
+#define PSP_SLICE_SIZE	(16)
 #define PSP_LINE_SIZE (512)
 #define SCREEN_WIDTH (480)
 #define SCREEN_HEIGHT (272)
@@ -59,7 +59,7 @@ static char rcsid =
 #define IS_SWSURFACE(flags) ((flags & SDL_HWSURFACE) == SDL_SWSURFACE) 
 #define IS_HWSURFACE(flags) ((flags & SDL_HWSURFACE) == SDL_HWSURFACE) 
 
-static unsigned int __attribute__((aligned(16))) list[1024];
+static unsigned int __attribute__((aligned(16))) list[4096];
 
 struct Vertex
 {
@@ -67,15 +67,6 @@ struct Vertex
         unsigned short color;
         short x, y, z;
 };
-
-typedef struct Texture
-{
-        int format;
-        int mipmap;
-        int width, height, stride;
-        const void* data;
-} Texture;
-
 
 /* Initialization/Query functions */
 static int PSP_VideoInit(_THIS, SDL_PixelFormat *vformat);
@@ -93,8 +84,13 @@ static void PSP_UnlockHWSurface(_THIS, SDL_Surface *surface);
 static void PSP_FreeHWSurface(_THIS, SDL_Surface *surface);
 static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface);
 static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects);
+static void PSP_GuInit(_THIS);
+static int PSP_CheckHWBlit(_THIS, SDL_Surface *src, SDL_Surface *dst);
+static int HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
+                       SDL_Surface *dst, SDL_Rect *dstrect);
+static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstrect);
 
-/* etc. */
+/* Software surface function */
 static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects);
 
 /* PSP driver bootstrap functions */
@@ -139,7 +135,7 @@ static SDL_VideoDevice *PSP_CreateDevice(int devindex)
 	device->UpdateRects = PSP_UpdateRects;
 	device->VideoQuit = PSP_VideoQuit;
 	device->AllocHWSurface = PSP_AllocHWSurface;
-	device->CheckHWBlit = NULL;
+	device->CheckHWBlit = PSP_CheckHWBlit;
 	device->FillHWRect = NULL;
 	device->SetHWColorKey = NULL;
 	device->SetHWAlpha = NULL;
@@ -200,17 +196,18 @@ SDL_Rect **PSP_ListModes(_THIS, SDL_PixelFormat *format, Uint32 flags)
 	}
 }
 
+static void PSP_GuInit(_THIS) {
+	void *dispbuffer = (void*) 0;
+	void *drawbuffer = (void*) this->hidden->frame_offset;
 
-static void init_gu(int gu_format) {
-	/* gu is used for SWSURFACE */
 	sceGuInit();
 	sceGuStart(GU_DIRECT, list); 
-	sceGuDispBuffer(SCREEN_WIDTH, SCREEN_HEIGHT, (void*)0, PSP_LINE_SIZE);
-	if (gu_format == GU_PSM_T8) {
-		sceGuDrawBuffer(GU_PSM_8888, (void*)0, PSP_LINE_SIZE);
+	sceGuDispBuffer(SCREEN_WIDTH, SCREEN_HEIGHT, dispbuffer, PSP_LINE_SIZE);
+	if (this->hidden->gu_format == GU_PSM_T8) {
+		sceGuDrawBuffer(GU_PSM_8888, drawbuffer, PSP_LINE_SIZE);
 		sceGuClutMode(GU_PSM_8888, 0, 255, 0);
 	} else {
-		sceGuDrawBuffer(gu_format, (void*)0, PSP_LINE_SIZE);
+		sceGuDrawBuffer(this->hidden->gu_format, drawbuffer, PSP_LINE_SIZE);
 	}
 	sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
 	sceGuDepthBuffer((void*) 0x110000, PSP_LINE_SIZE);
@@ -295,6 +292,15 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	current->w = width;
 	current->h = height;
 
+	this->hidden->gu_format = gu_format;
+	this->hidden->pixel_format = pixel_format;
+	this->hidden->frame = 0;
+	this->hidden->frame_offset = 0;
+	if (width > 512)
+		this->hidden->stride = width;
+	else
+		this->hidden->stride = 512;
+
 	sceDisplaySetMode(0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	sceDisplaySetFrameBuf(this->hidden->vram_base, 512, pixel_format, 
 		PSP_DISPLAY_SETBUF_NEXTFRAME);
@@ -305,19 +311,20 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 		current->pitch = pitch;
 		current->flags |= SDL_PREALLOC; /* so SDL doesn't free ->pixels */
 
+		if (flags & SDL_DOUBLEBUF) {
+			this->hidden->frame_offset = pitch * height;
+
+			/* Set the draw buffer to the second frame. */
+			this->hidden->frame = 1;
+			current->pixels =
+				(void *) ((Uint32) this->hidden->vram_base + this->hidden->frame_offset);
+		}
+
     } else if (IS_SWSURFACE(flags)) {
 
-		init_gu(gu_format);
-
-		if (width > 512)
-			this->hidden->stride = width;
-		else
-			this->hidden->stride = 512;
-
 		current->pitch = this->hidden->stride * (bpp/8);
-        current->pixels = malloc(current->pitch * 512); 
+		current->pixels = malloc(current->pitch * 512); 
 
-		this->hidden->gu_format = gu_format;
 		this->UpdateRects = PSP_GuUpdateRects;
 
 		if (bpp == 8 && this->hidden->gu_palette == NULL) {
@@ -325,18 +332,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 		}
     }
 
-	this->hidden->pixel_format = pixel_format;
-	this->hidden->frame = 0;
-	this->hidden->frame_offset = 0;
-
-	if (IS_HWSURFACE(flags) && (flags & SDL_DOUBLEBUF)) {
-		current->flags |= SDL_DOUBLEBUF;
-		this->hidden->frame_offset = pitch * height;
-		/* Set the draw buffer to the second frame. */
-		this->hidden->frame = 1;
-		current->pixels =
-			(void *) ((Uint32) this->hidden->vram_base + this->hidden->frame_offset);
-	}
+	PSP_GuInit(this);
 
 	/* We're done */
 	return(current);
@@ -370,92 +366,110 @@ static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface)
 {
 	void *new_pixels;
 
-	if (surface->flags & SDL_DOUBLEBUF) {
-		/* Show the draw buffer as the display buffer, and setup the next draw buffer. */
-		sceKernelDcacheWritebackAll();
-		sceDisplaySetFrameBuf(surface->pixels, 512,
-				this->hidden->pixel_format, PSP_DISPLAY_SETBUF_IMMEDIATE);
-		this->hidden->frame ^= 1;
-		new_pixels = (void *) ((Uint32) this->hidden->vram_base +
-				(this->hidden->frame_offset * this->hidden->frame));
-		surface->pixels = new_pixels;
-	}
+	/* Show the draw buffer as the display buffer, and setup the next draw buffer. */
+	sceKernelDcacheWritebackAll();
+	sceGuSwapBuffers();
+	this->hidden->frame ^= 1;
+	new_pixels = (void *) ((Uint32) this->hidden->vram_base +
+			(this->hidden->frame_offset * this->hidden->frame));
+	surface->pixels = new_pixels;
 
 	return 0;
 }
 
 static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 {
-	/* do nothing */
+	/* hwsurface - do nothing */
 }
 
-/**
- * Update the screen using Gu textures and sprites.  
- * Useful for scaling dimensions when using SWSURFACE.
+static int PSP_CheckHWBlit(_THIS, SDL_Surface *src, SDL_Surface *dst)
+{
+	src->flags |= SDL_HWACCEL;
+	src->map->hw_blit = HWAccelBlit;
+	return 1;
+}
+
+static int HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
+                       SDL_Surface *dst, SDL_Rect *dstrect)
+{
+	// do a gu copy when dimensions are equal 
+	if ((srcrect->w == dstrect->w) && (srcrect->h == dstrect->h)) {
+		sceGuCopyImage(current_video->hidden->gu_format,
+			srcrect->x, srcrect->y, srcrect->w, srcrect->h, 
+			src->pitch / src->format->BytesPerPixel, src->pixels,
+			dstrect->x, dstrect->y, dst->pitch / dst->format->BytesPerPixel, 
+			dst->pixels);
+		return 0;
+	}
+
+	// use gu textures to scale (only to screen)
+	if (dst == current_video->screen)
+	{
+		return PSP_GuStretchBlit (src, srcrect, dstrect);
+	}
+
+	// else resort to a software blit 
+	return src->map->sw_blit(src, srcrect, dst, dstrect);
+}
+
+static inline int roundUpToPowerOfTwo (int x)
+{
+  int i = 1;
+  while (i <= x) i <<= 1;
+  return i;
+}
+
+/** 
+ * update screen from src
  */
-static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects)
+static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstrect)
 {
 	unsigned int slice;
 	unsigned short old_slice = 0; /* set when we load 2nd tex */
 	struct Vertex *vertices;
-	SDL_Surface *screen = SDL_PublicSurface;
 	void *pixels;
 
-	if (!screen) 
-		return;
-
-	pixels = screen->pixels;
-
-	sceKernelDcacheWritebackAll();
+	pixels = src->pixels;
 
 	sceGuStart(GU_DIRECT,list);
 	sceGuEnable(GU_TEXTURE_2D);
-	sceGuTexMode(this->hidden->gu_format,0,0,0);
+	sceGuTexMode(current_video->hidden->gu_format,0,0,0);
 	sceGuTexFunc(GU_TFX_REPLACE, GU_TCC_RGB);
 	sceGuTexFilter(GU_LINEAR, GU_LINEAR);
-	sceGuTexImage(0, 512, 512, this->hidden->stride, pixels);
+	sceGuTexImage(0, 512, 512, current_video->hidden->stride, pixels);
 	sceGuTexSync();
 
-	for (slice = 0; slice < (SCREEN_WIDTH / PSP_SLICE_SIZE); slice++) {
+	for (slice = 0; slice < (srcrect->w / PSP_SLICE_SIZE); slice++) {
 
 		vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
 
-		vertices[0].x = slice * PSP_SLICE_SIZE;
-		vertices[1].x = vertices[0].x + PSP_SLICE_SIZE;
-
-		if ((slice * PSP_SLICE_SIZE * screen->w / SCREEN_WIDTH) >= 512) {
-
-			/* time for the second texture (?x512) */
-
+		if ((slice * PSP_SLICE_SIZE) < 512) {
+			vertices[0].u = srcrect->x + slice * PSP_SLICE_SIZE;
+		} else {
 			if (!old_slice) {
-
-				/* load it */
-				pixels += 512 * (screen->format->BitsPerPixel / 8);
-				sceGuTexImage(0, this->hidden->stride - 512, 512, this->hidden->stride, pixels);
+				/* load another texture */
+				pixels += 512 * src->format->BytesPerPixel;
+				sceGuTexImage(0, current_video->hidden->stride - 512, 512, 
+					current_video->hidden->stride, pixels);
 				sceGuTexSync();
 				old_slice = slice;
-
 			}
+			vertices[0].u = srcrect->x + (slice - old_slice) * PSP_SLICE_SIZE;
+		} 
+		vertices[1].u = vertices[0].u + PSP_SLICE_SIZE;
 
-			vertices[0].u = (slice - old_slice) * PSP_SLICE_SIZE * screen->w / SCREEN_WIDTH;
-			vertices[1].u = (slice - old_slice + 1) * PSP_SLICE_SIZE * screen->w / SCREEN_WIDTH;
+		vertices[0].v = srcrect->y;
+		vertices[1].v = vertices[0].v + srcrect->h;
 
-		} else {
+		vertices[0].x = (dstrect->x + slice * PSP_SLICE_SIZE) * dstrect->w / srcrect->w;
+		vertices[1].x = vertices[0].x + PSP_SLICE_SIZE * dstrect->w / srcrect->w;
 
-			/* first 512x512 texture */
-			vertices[0].u = slice * PSP_SLICE_SIZE * screen->w / SCREEN_WIDTH;
-			vertices[1].u = (slice + 1) * PSP_SLICE_SIZE * screen->w / SCREEN_WIDTH;
+		vertices[0].y = dstrect->y;
+		vertices[1].y = vertices[0].y + dstrect->h; 
 
-		}
-
-		vertices[0].v = 0;
 		vertices[0].color = 0;
-		vertices[0].y = 0;
 		vertices[0].z = 0;
-
-		vertices[1].v = screen->h;
 		vertices[1].color = 0;
-		vertices[1].y = SCREEN_HEIGHT; 
 		vertices[1].z = 0;
 
 		sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_COLOR_4444|GU_VERTEX_16BIT|
@@ -465,7 +479,30 @@ static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects)
 	sceGuFinish();
 	sceGuSync(0,0);
 
-	sceGuSwapBuffers();
+	return 0;
+}
+
+/**
+ * Update the screen from SDL_SWSURFACE (and scale).
+ */
+static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects)
+{
+	SDL_Rect dstrect;
+	SDL_Surface *src = SDL_PublicSurface;
+
+	if (!src) 
+		return;
+
+	sceKernelDcacheWritebackAll();
+
+	while(numrects--) {
+		dstrect.x = rects->x * 480 / src->w;
+		dstrect.w = rects->w * 480 / src->w;
+		dstrect.y = rects->y * 272 / src->h;
+		dstrect.h = rects->h * 272 / src->h;
+		PSP_GuStretchBlit(src, rects, &dstrect);
+		rects++;
+	}
 }
 
 int PSP_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
@@ -493,16 +530,12 @@ int PSP_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 */
 void PSP_VideoQuit(_THIS)
 {
-	SDL_Surface *screen = SDL_PublicSurface;
-
-	if (screen && IS_SWSURFACE(screen->flags)) {
-		if (this->hidden->gu_palette != NULL) {
-			free(this->hidden->gu_palette);
-			this->hidden->gu_palette = NULL;
-		}
-
-		sceGuTerm();
+	if (this->hidden->gu_palette != NULL) {
+		free(this->hidden->gu_palette);
+		this->hidden->gu_palette = NULL;
 	}
+
+	sceGuTerm();
 
 	PSP_EventQuit(this);
 
