@@ -68,7 +68,7 @@ static PyObject* PyPSP_debugScreenSetBackColor(PyObject *self,
     if (PyErr_CheckSignals())
        return NULL;
 
-    color = (r << 24) | (g << 16) | (b << 8) | a; // FIXME
+    color = (a << 24) | (b << 16) | (g << 8) | r;
 
     pspDebugScreenSetBackColor(color);
 
@@ -88,7 +88,7 @@ static PyObject* PyPSP_debugScreenSetTextColor(PyObject *self,
     if (PyErr_CheckSignals())
        return NULL;
 
-    color = (r << 24) | (g << 16) | (b << 8) | a; // FIXME
+    color = (a << 24) | (b << 16) | (g << 8) | r;
 
     pspDebugScreenSetTextColor(color);
 
@@ -108,7 +108,7 @@ static PyObject* PyPSP_debugScreenPutChar(PyObject *self,
     if (PyErr_CheckSignals())
        return NULL;
 
-    color = (r << 24) | (g << 16) | (b << 8) | a; // FIXME
+    color = (a << 24) | (b << 16) | (g << 8) | r;
 
     pspDebugScreenPutChar(x, y, color, (u8)c);
 
