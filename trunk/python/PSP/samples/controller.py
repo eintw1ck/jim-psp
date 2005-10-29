@@ -12,16 +12,16 @@ try:
         psp.debugScreenSetXY(0, 2)
         stamp, buttons, analog_x, analog_y = psp.ctrlReadBufferPositive()
 
-        psp.debug('Analog X: %d Analog Y: %d\n' % (analog_x, analog_y))
+        psp.debugScreenPrint('Analog X: %d Analog Y: %d\n' % (analog_x, analog_y))
 
         for button in ('SQUARE', 'TRIANGLE', 'CROSS', 'CIRCLE', 'UP', 'DOWN',
                        'LEFT', 'RIGHT', 'START', 'SELECT', 'LTRIGGER',
                        'RTRIGGER'):
             mask = getattr(psp, 'CTRL_' + button)
             if buttons & mask != 0:
-                psp.debug('%s button pressed.\n' % button)
+                psp.debugScreenPrint('%s button pressed.\n' % button)
 except Exception, e:
     import time
 
-    psp.debug('Exception: %s - %s' % (e.__class__.__name__, str(e)))
+    psp.debugScreenPrint('Exception: %s - %s' % (e.__class__.__name__, str(e)))
     time.sleep(5)

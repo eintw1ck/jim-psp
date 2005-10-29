@@ -9,7 +9,7 @@ class PSPOutput:
         self.fd = file('output.txt', 'w')
 
     def write(self, bf):
-        psp.debug(bf)
+        psp.debugScreenPrint(bf)
         self.fd.write(bf)
 
     def close(self):

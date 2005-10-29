@@ -39,12 +39,12 @@ static PyObject* PyPSP_debugScreenInit(PyObject *self,
     return Py_None;
 }
 
-static PyObject* PyPSP_debug(PyObject *self,
-                             PyObject *args)
+static PyObject* PyPSP_debugScreenPrint(PyObject *self,
+                                        PyObject *args)
 {
     char *s;
 
-    if (!PyArg_ParseTuple(args, "s:debug", &s))
+    if (!PyArg_ParseTuple(args, "s:debugScreenPrint", &s))
        return NULL;
 
     if (PyErr_CheckSignals())
@@ -56,13 +56,13 @@ static PyObject* PyPSP_debug(PyObject *self,
     return Py_None;
 }
 
-static PyObject* PyPSP_setBackColor(PyObject *self,
-                                    PyObject *args)
+static PyObject* PyPSP_debugScreenSetBackColor(PyObject *self,
+                                               PyObject *args)
 {
     int r, g, b, a = 0;
     u32 color;
 
-    if (!PyArg_ParseTuple(args, "iii|i:setBackColor", &r, &g, &b, &a))
+    if (!PyArg_ParseTuple(args, "iii|i:debugScreenSetBackColor", &r, &g, &b, &a))
        return NULL;
 
     if (PyErr_CheckSignals())
@@ -76,13 +76,13 @@ static PyObject* PyPSP_setBackColor(PyObject *self,
     return Py_None;
 }
 
-static PyObject* PyPSP_setTextColor(PyObject *self,
-                                    PyObject *args)
+static PyObject* PyPSP_debugScreenSetTextColor(PyObject *self,
+                                               PyObject *args)
 {
     int r, g, b, a = 0;
     u32 color;
 
-    if (!PyArg_ParseTuple(args, "iii|i:setTextColor", &r, &g, &b, &a))
+    if (!PyArg_ParseTuple(args, "iii|i:debugScreenSetTextColor", &r, &g, &b, &a))
        return NULL;
 
     if (PyErr_CheckSignals())
@@ -96,13 +96,13 @@ static PyObject* PyPSP_setTextColor(PyObject *self,
     return Py_None;
 }
 
-static PyObject* PyPSP_putChar(PyObject *self,
-                               PyObject *args)
+static PyObject* PyPSP_debugScreenPutChar(PyObject *self,
+                                          PyObject *args)
 {
     int x, y, c, r, g, b, a = 0;
     u32 color;
 
-    if (!PyArg_ParseTuple(args, "iiiiii|i:putChar", &x, &y, &c, &r, &g, &b, &a))
+    if (!PyArg_ParseTuple(args, "iiiiii|i:debugScreenPutChar", &x, &y, &c, &r, &g, &b, &a))
        return NULL;
 
     if (PyErr_CheckSignals())
@@ -398,31 +398,43 @@ static PyObject* PyPSP_displayWaitVblankStart(PyObject *self,
 static PyMethodDef psp_functions[] = {
    { "debugScreenInit", PyPSP_debugScreenInit, METH_VARARGS,
      "Initializes the debug screen" },
-   { "debug", PyPSP_debug, METH_VARARGS,
+
+   { "debugScreenPrint", PyPSP_debugScreenPrint, METH_VARARGS,
      "Outputs a string to debug screen" },
-   { "setBackColor", PyPSP_setBackColor, METH_VARARGS,
+
+   { "debugScreenSetBackColor", PyPSP_debugScreenSetBackColor, METH_VARARGS,
      "Sets the background color of the debug screen" },
-   { "setTextColor", PyPSP_setTextColor, METH_VARARGS,
+
+   { "debugScreenSetTextColor", PyPSP_debugScreenSetTextColor, METH_VARARGS,
      "Sets the text color of the debug screen" },
-   { "putChar", PyPSP_putChar, METH_VARARGS,
+
+   { "debugScreenPutChar", PyPSP_debugScreenPutChar, METH_VARARGS,
      "Draws a char on the debug screen" },
+
    { "debugScreenSetXY", PyPSP_debugScreenSetXY, METH_VARARGS,
      "Sets the debug screen's cursor position" },
+
    { "debugScreenGetX", PyPSP_debugScreenGetX, METH_VARARGS,
      "Gets the cursor X position" },
+
    { "debugScreenGetY", PyPSP_debugScreenGetY, METH_VARARGS,
      "Gets the cursor Y position" },
+
    { "debugScreenClear", PyPSP_debugScreenClear, METH_VARARGS,
      "Clears the debug screen" },
 
+
    { "ctrlSetSamplingCycle", PyPSP_ctrlSetSamplingCycle, METH_VARARGS,
      "Sets the controller sampling cycle" },
+
    { "ctrlSetSamplingMode", PyPSP_ctrlSetSamplingMode, METH_VARARGS,
      "Sets the controller sampling mode" },
+
    { "ctrlReadBufferPositive", PyPSP_ctrlReadBufferPositive, METH_VARARGS,
      "Reads the controller buffer. Returns a 4-tuple (timestamp, buttons, "
      "analog_x, analog_y). See the PSP_CTRL_* constants for the bits that "
      "make up the buttons." },
+
 
    /*
    { "audioInit", PyPSP_audioInit, METH_VARARGS,
@@ -431,8 +443,11 @@ static PyMethodDef psp_functions[] = {
      "Sets a channel audio callback" },
    */
 
+
    { "kernelDcacheWritebackAll", PyPSP_kernelDcacheWritebackAll, METH_VARARGS, "" },
+
    { "displayWaitVblankStart", PyPSP_displayWaitVblankStart, METH_VARARGS, "" },
+
 
    { NULL }
 };

@@ -11,7 +11,7 @@ class NumberedThread(threading.Thread):
 
     def run(self):
         for i in xrange(10):
-            psp.debug('Hello, thread %d here\n' % self.n)
+            psp.debugScreenPrint('Hello, thread %d here\n' % self.n)
             time.sleep(1)
 
 def main():
@@ -29,7 +29,7 @@ def main():
     thr1.join()
     thr2.join()
 
-    psp.debug('==== FINISHED\n')
+    psp.debugScreenPrint('==== FINISHED\n')
     time.sleep(2)
 
 if __name__ == '__main__':
