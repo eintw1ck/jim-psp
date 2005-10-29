@@ -54,7 +54,6 @@ OBJECTS_PYTHON = \
 	../Python/future.o \
 	../Python/dynload_stub.o \
 	../Python/pystrtod.o \
-	../Python/getmtime.o \
 	../Python/thread.o
 
 OBJECTS_OBJECTS = \
@@ -108,10 +107,16 @@ OBJECTS_PARSER = \
 	../Parser/bitset.o \
 	../Parser/acceler.o
 
-OBJS = main.o psperror.o support.o Modules/matrix.o $(MODULES_STATIC) $(OBJECTS_PYTHON) $(OBJECTS_OBJECTS) $(OBJECTS_PARSER)
+OBJS = main.o psperror.o support.o getmtime.o Modules/matrix.o \
+	$(MODULES_STATIC) $(OBJECTS_PYTHON) $(OBJECTS_OBJECTS) $(OBJECTS_PARSER)
+
+# Debug macros:
+
+# DEBUG_THREAD
+# DEBUG_IMPORT
 
 CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include
-#CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DDEBUG -DCHECKTYPE
+#CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DDEBUG_IMPORT -DCHECKTYPE
 LIBS = -lpspgu -lc -lm
 
 CFLAGS = -O2 -G0 -Wall -Wno-strict-aliasing
