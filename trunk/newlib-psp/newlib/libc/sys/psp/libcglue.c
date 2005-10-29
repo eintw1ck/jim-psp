@@ -15,6 +15,7 @@
 #include <malloc.h>
 #include <reent.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <sys/fcntl.h>
@@ -615,15 +616,20 @@ void tzset(void)
 	{
 		initialized = 1;
 
-		/* Initialize timezone from PSP configuration */
-		int tzOffset = 0;
-		sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_TIMEZONE, &tzOffset);
-		int tzOffsetAbs = tzOffset < 0 ? -tzOffset : tzOffset;
-		int hours = tzOffsetAbs / 60;
-		int minutes = tzOffsetAbs - hours * 60;
-		static char tz[10];
-		sprintf(tz, "GMT%s%02i:%02i", tzOffset < 0 ? "+" : "-", hours, minutes);
-		setenv("TZ", tz, 1);
+		/* Don't init if TZ has already been set once, this probably means the user
+		   wanted to override what we would set below. */
+		if (getenv("TZ") == NULL)
+		{
+			/* Initialize timezone from PSP configuration */
+			int tzOffset = 0;
+			sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_TIMEZONE, &tzOffset);
+			int tzOffsetAbs = tzOffset < 0 ? -tzOffset : tzOffset;
+			int hours = tzOffsetAbs / 60;
+			int minutes = tzOffsetAbs - hours * 60;
+			static char tz[10];
+			sprintf(tz, "GMT%s%02i:%02i", tzOffset < 0 ? "+" : "-", hours, minutes);
+			setenv("TZ", tz, 1);
+		}
 	}
 
 	_tzset_r(_REENT);
