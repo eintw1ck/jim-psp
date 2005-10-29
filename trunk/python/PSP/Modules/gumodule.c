@@ -10,8 +10,6 @@
 **********************************************************************/
 // $Id$
 
-#ifdef WITH_GU
-
 #include "Python.h"
 #include "matrix.h"
 
@@ -1021,8 +1019,6 @@ PyMODINIT_FUNC initgu(void)
 
     PyModule_AddIntConstant(mdl, "PSM_8888", GU_PSM_8888);
 }
-
-#endif
 
 #ifdef _GNUC
 static const char* _rcsid_gumodule __attribute__((unused)) = "$Id$";

@@ -22,12 +22,6 @@
 /**************************************************************************/
 // Debugging
 
-// XXX FIXME: when  building WITH_GU the PSP hangs  if these functions
-// are defined,  even if they're not  used. Bug in  PSP-toolchain ? In
-// KXploit ? Size problem ? don't know yet.
-
-#ifndef WITH_GU
-
 static PyObject* PyPSP_debugScreenInit(PyObject *self,
                                        PyObject *args)
 {
@@ -78,8 +72,6 @@ static PyObject* PyPSP_debug(PyObject *self,
     Py_INCREF(Py_None);
     return Py_None;
 }
-
-#endif
 
 
 /**************************************************************************/
@@ -299,14 +291,12 @@ static PyObject* PyPSP_displayWaitVblankStart(PyObject *self,
 }
 
 static PyMethodDef psp_functions[] = {
-#ifndef WITH_GU
    { "debugScreenInit", PyPSP_debugScreenInit, METH_VARARGS,
      "Initializes the debug screen" },
    { "debugScreenSetXY", PyPSP_debugScreenSetXY, METH_VARARGS,
      "Sets the debug screen's cursor position" },
    { "debug", PyPSP_debug, METH_VARARGS,
      "Outputs a string to debug screen" },
-#endif
 
    { "ctrlSetSamplingCycle", PyPSP_ctrlSetSamplingCycle, METH_VARARGS,
      "Sets the controller sampling cycle" },

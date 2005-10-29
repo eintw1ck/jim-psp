@@ -1,7 +1,5 @@
 TARGET = python
 
-BUILD_GU = 0
-
 MODULES_STATIC = \
 	Modules/config.o \
 	Modules/pspmodule.o \
@@ -112,15 +110,9 @@ OBJECTS_PARSER = \
 
 OBJS = main.o support.o Modules/matrix.o $(MODULES_STATIC) $(OBJECTS_PYTHON) $(OBJECTS_OBJECTS) $(OBJECTS_PARSER)
 
-ifeq ($(BUILD_GU),1)
-CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DWITH_GU
-#CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DWITH_GU -DDEBUG
-LIBS = -lpspgu -lc -lm
-else
 CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include
 #CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DDEBUG
-LIBS = -lc -lm
-endif
+LIBS = -lpspgu -lc -lm
 
 CFLAGS = -O2 -G0 -Wall
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti

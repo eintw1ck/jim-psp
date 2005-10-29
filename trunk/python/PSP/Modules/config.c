@@ -58,9 +58,7 @@ struct _inittab _PyImport_Inittab[] = {
         {"psp", initpsp},
         {"pspos", initpspos},
 
-#ifdef WITH_GU
         {"gu", initgu},
-#endif
 
 	{0, 0}
 };
