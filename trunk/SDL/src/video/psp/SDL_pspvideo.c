@@ -399,6 +399,8 @@ static int PSP_CheckHWBlit(_THIS, SDL_Surface *src, SDL_Surface *dst)
 static int HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
                        SDL_Surface *dst, SDL_Rect *dstrect)
 {
+	sceKernelDcacheWritebackAll();
+
 	// do a gu copy when dimensions are equal 
 	if ((srcrect->w == dstrect->w) && (srcrect->h == dstrect->h)) {
 
