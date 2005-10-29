@@ -13,6 +13,7 @@
  */
 #include <errno.h>
 #include <malloc.h>
+#include <reent.h>
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
@@ -605,6 +606,30 @@ int access(const char *fn, int flags)
 }
 #endif
 
+#ifdef F_tzset
+void tzset(void)
+{
+	static int initialized = 0;
+
+	if (!initialized)
+	{
+		initialized = 1;
+
+		/* Initialize timezone from PSP configuration */
+		int tzOffset = 0;
+		sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_TIMEZONE, &tzOffset);
+		int tzOffsetAbs = tzOffset < 0 ? -tzOffset : tzOffset;
+		int hours = tzOffsetAbs / 60;
+		int minutes = tzOffsetAbs - hours * 60;
+		static char tz[10];
+		sprintf(tz, "GMT%s%02i:%02i", tzOffset < 0 ? "+" : "-", hours, minutes);
+		setenv("TZ", tz, 1);
+	}
+
+	_tzset_r(_REENT);
+}
+#endif
+
 /* Exit. */
 #if defined(F__exit) || defined(F_glue__exit)
 extern int sce_newlib_nocreate_thread_in_start __attribute__((weak));
@@ -661,17 +686,6 @@ void __psp_libc_init(int argc, char *argv[])
 	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
 		 __psp_filename_map[fd] = strdup("  __PSP_STDIO");
 	}
-	
-	/* Initialize timezone from PSP configuration */
-	int tzOffset = 0;
-	sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_TIMEZONE, &tzOffset);
-	int tzOffsetAbs = tzOffset < 0 ? -tzOffset : tzOffset;
-	int hours = tzOffsetAbs / 60;
-	int minutes = tzOffsetAbs - hours * 60;
-	static char tz[10];
-	sprintf(tz, "GMT%s%02i:%02i", tzOffset < 0 ? "+" : "-", hours, minutes);
-	setenv("TZ", tz, 1);
-	tzset(); 
 }
 
 #endif /* F__exit */
