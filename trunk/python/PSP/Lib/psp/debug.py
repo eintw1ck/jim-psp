@@ -32,17 +32,17 @@ class DebugScreen:
         Ending LF is not included."""
         _psp.debugScreenPrint(fmt % args)
 
-    def setBackColor(r, g, b, a = 0):
+    def setBackColor(self, r, g, b, a = 0):
         """setBackColor(r, g, b, a = 0)
         Sets the background color."""
         _psp.debugScreenSetBackColor(r, g, b, a)
 
-    def setTextColor(r, g, b, a = 0):
+    def setTextColor(self, r, g, b, a = 0):
         """setTextColor(r, g, b, a = 0)
         Sets the text color."""
         _psp.debugScreenSetTextColor(r, g, b, a)
 
-    def putChar(x, y, char, r, g, b, a = 0):
+    def putChar(self, x, y, char, r, g, b, a = 0):
         """putChar(x, y, char, r, g, b, a = 0)
         Puts the specified character at the specified position,
         using the (r, g, b, a) color."""
