@@ -165,7 +165,9 @@ static void audioCallback0(void *buffer, unsigned int length)
 
        if (ret)
        {
+#ifdef CHECKTYPE
           if (PyString_Check(ret))
+#endif
           {
              char *bf;
              int sz;
@@ -196,7 +198,9 @@ static void audioCallback1(void *buffer, unsigned int length)
 
        if (ret)
        {
+#ifdef CHECKTYPE
           if (PyString_Check(ret))
+#endif
           {
              char *bf;
              int sz;
@@ -226,6 +230,7 @@ static PyObject* PyPSP_audioSetChannelCallback(PyObject *self,
     if (PyErr_CheckSignals())
        return NULL;
 
+#ifdef CHECKTYPE
     if (!PyCallable_Check(cb))
     {
        PyErr_SetString(PyExc_TypeError, "Argument must be callable");
@@ -237,6 +242,7 @@ static PyObject* PyPSP_audioSetChannelCallback(PyObject *self,
        PyErr_SetString(PyExc_ValueError, "Channel must be 0 or 1");
        return NULL;
     }
+#endif
 
     Py_INCREF(cb);
     Py_XDECREF(currentAudioCallbacks[channel]);

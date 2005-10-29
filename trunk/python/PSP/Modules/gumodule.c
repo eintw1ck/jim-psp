@@ -92,11 +92,13 @@ static PyObject* Py_matrix_multiply(matrixObject *self,
     if (PyErr_CheckSignals())
        return NULL;
 
+#ifdef CHECKTYPE
     if (other->ob_type != pMatrixType)
     {
        PyErr_SetString(PyExc_TypeError, "Argument must be a Matrix");
        return NULL;
     }
+#endif
 
     matrix_multiply(self->data, self->data, other->data);
 
@@ -387,11 +389,13 @@ static PyObject* Pygu_start(PyObject *self,
     if (PyErr_CheckSignals())
        return NULL;
 
+#ifdef CHECKTYPE
     if (context->ob_type != &contextType)
     {
        PyErr_SetString(PyExc_TypeError, "Argument must be a Context");
        return NULL;
     }
+#endif
 
     sceGuStart(kind, context->list);
 
