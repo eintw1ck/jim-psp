@@ -20,6 +20,8 @@
 
 #include "structseq.h"
 
+extern char* formatPSPError(int); // in ../psperror.c
+
 static PyObject* PyPSP_open(PyObject *self,
                             PyObject *args)
 {
@@ -33,7 +35,7 @@ static PyObject* PyPSP_open(PyObject *self,
     fd = open(path, flags,mode);
     if (fd < 0)
     {
-       PyErr_Format(PyExc_OSError, "FIXME: %ld", (long)fd);
+       PyErr_SetString(PyExc_OSError, formatPSPError(fd));
        return NULL;
     }
 
@@ -188,14 +190,15 @@ static PyObject* PyPSP_mkdir(PyObject *self,
                              PyObject *args)
 {
     char *path;
-    int mode = 0;
+    int mode = 0, err;
 
     if (!PyArg_ParseTuple(args, "s|i:mkdir", &path, &mode))
        return NULL;
 
-    if (sceIoMkdir(path, mode))
+    err = sceIoMkdir(path, mode);
+    if (err)
     {
-       PyErr_SetString(PyExc_OSError, "FIXME");
+       PyErr_SetString(PyExc_OSError, formatPSPError(err));
        return NULL;
     }
 
@@ -231,7 +234,7 @@ static PyObject* PyPSP_listdir(PyObject *self,
 
           if (r < 0)
           {
-             PyErr_SetString(PyExc_OSError, "FIXME: error code");
+             PyErr_SetString(PyExc_OSError, formatPSPError(r));
              Py_DECREF(ret);
              sceIoDclose(fd);
              return NULL;
@@ -248,7 +251,7 @@ static PyObject* PyPSP_listdir(PyObject *self,
     }
     else
     {
-       PyErr_SetString(PyExc_OSError, "FIXME: error code");
+       PyErr_SetString(PyExc_OSError, formatPSPError(fd));
        return NULL;
     }
 }
@@ -292,14 +295,16 @@ static PyObject* PyPSP_stat(PyObject *self,
     PyObject *ret;
     //SceIoStat st;
     struct stat st;
+    int err;
 
     if (!PyArg_ParseTuple(args, "s:stat", &path))
        return NULL;
 
     //sceIoGetstat(path, &st);
-    if (stat(path, &st))
+    err = stat(path, &st);
+    if (err)
     {
-       PyErr_SetString(PyExc_OSError, "FIXME");
+       PyErr_SetString(PyExc_OSError, formatPSPError(err));
        return NULL;
     }
 

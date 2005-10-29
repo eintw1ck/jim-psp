@@ -108,7 +108,7 @@ OBJECTS_PARSER = \
 	../Parser/bitset.o \
 	../Parser/acceler.o
 
-OBJS = main.o support.o Modules/matrix.o $(MODULES_STATIC) $(OBJECTS_PYTHON) $(OBJECTS_OBJECTS) $(OBJECTS_PARSER)
+OBJS = main.o psperror.o support.o Modules/matrix.o $(MODULES_STATIC) $(OBJECTS_PYTHON) $(OBJECTS_OBJECTS) $(OBJECTS_PARSER)
 
 CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include
 #CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DDEBUG -DCHECKTYPE
@@ -126,3 +126,6 @@ PSP_EBOOT_TITLE = Python for PSP
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
+
+psperror.c:
+	python generr.py
