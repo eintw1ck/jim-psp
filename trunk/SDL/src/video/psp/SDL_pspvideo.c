@@ -436,12 +436,13 @@ static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstr
 	struct Vertex *vertices;
 	void *pixels;
 
-	pixels = src->pixels;
-	width = roundUpToPowerOfTwo(src->w);
-	height = roundUpToPowerOfTwo(src->h);
+	width = roundUpToPowerOfTwo(srcrect->w);
+	height = roundUpToPowerOfTwo(srcrect->h);
 	tbw = src->pitch / src->format->BytesPerPixel;
 	slice_size = width < PSP_SLICE_SIZE ? width : PSP_SLICE_SIZE;
 	num_slices = width / slice_size;
+	pixels = src->pixels + srcrect->x * src->format->BytesPerPixel + 
+		src->pitch * srcrect->y;
 
 	// Gu doesn't appreciate textures wider than 512
 	if (width > 512)
@@ -460,21 +461,21 @@ static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstr
 		vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
 
 		if ((slice * slice_size) < width) {
-			vertices[0].u = srcrect->x + slice * slice_size;
+			vertices[0].u = slice * slice_size;
 		} else {
 			if (!old_slice) {
 				/* load another texture (src width > 512) */
 				pixels += width * src->format->BytesPerPixel;
-				sceGuTexImage(0, roundUpToPowerOfTwo(src->w - width), 
+				sceGuTexImage(0, roundUpToPowerOfTwo(srcrect->w - width), 
 					height, tbw, pixels);
 				sceGuTexSync();
 				old_slice = slice;
 			}
-			vertices[0].u = srcrect->x + (slice - old_slice) * slice_size;
+			vertices[0].u = (slice - old_slice) * slice_size;
 		} 
 		vertices[1].u = vertices[0].u + slice_size;
 
-		vertices[0].v = srcrect->y;
+		vertices[0].v = 0;
 		vertices[1].v = vertices[0].v + srcrect->h;
 
 		vertices[0].x = dstrect->x + slice * slice_size * dstrect->w / srcrect->w;
