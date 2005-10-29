@@ -396,45 +396,19 @@ static PyObject* PyPSP_displayWaitVblankStart(PyObject *self,
 }
 
 static PyMethodDef psp_functions[] = {
-   { "debugScreenInit", PyPSP_debugScreenInit, METH_VARARGS,
-     "Initializes the debug screen" },
+   { "debugScreenInit", PyPSP_debugScreenInit, METH_VARARGS, "" },
+   { "debugScreenPrint", PyPSP_debugScreenPrint, METH_VARARGS, "" },
+   { "debugScreenSetBackColor", PyPSP_debugScreenSetBackColor, METH_VARARGS, "" },
+   { "debugScreenSetTextColor", PyPSP_debugScreenSetTextColor, METH_VARARGS, "" },
+   { "debugScreenPutChar", PyPSP_debugScreenPutChar, METH_VARARGS, "" },
+   { "debugScreenSetXY", PyPSP_debugScreenSetXY, METH_VARARGS, "" },
+   { "debugScreenGetX", PyPSP_debugScreenGetX, METH_VARARGS, "" },
+   { "debugScreenGetY", PyPSP_debugScreenGetY, METH_VARARGS, "" },
+   { "debugScreenClear", PyPSP_debugScreenClear, METH_VARARGS, "" },
 
-   { "debugScreenPrint", PyPSP_debugScreenPrint, METH_VARARGS,
-     "Outputs a string to debug screen" },
-
-   { "debugScreenSetBackColor", PyPSP_debugScreenSetBackColor, METH_VARARGS,
-     "Sets the background color of the debug screen" },
-
-   { "debugScreenSetTextColor", PyPSP_debugScreenSetTextColor, METH_VARARGS,
-     "Sets the text color of the debug screen" },
-
-   { "debugScreenPutChar", PyPSP_debugScreenPutChar, METH_VARARGS,
-     "Draws a char on the debug screen" },
-
-   { "debugScreenSetXY", PyPSP_debugScreenSetXY, METH_VARARGS,
-     "Sets the debug screen's cursor position" },
-
-   { "debugScreenGetX", PyPSP_debugScreenGetX, METH_VARARGS,
-     "Gets the cursor X position" },
-
-   { "debugScreenGetY", PyPSP_debugScreenGetY, METH_VARARGS,
-     "Gets the cursor Y position" },
-
-   { "debugScreenClear", PyPSP_debugScreenClear, METH_VARARGS,
-     "Clears the debug screen" },
-
-
-   { "ctrlSetSamplingCycle", PyPSP_ctrlSetSamplingCycle, METH_VARARGS,
-     "Sets the controller sampling cycle" },
-
-   { "ctrlSetSamplingMode", PyPSP_ctrlSetSamplingMode, METH_VARARGS,
-     "Sets the controller sampling mode" },
-
-   { "ctrlReadBufferPositive", PyPSP_ctrlReadBufferPositive, METH_VARARGS,
-     "Reads the controller buffer. Returns a 4-tuple (timestamp, buttons, "
-     "analog_x, analog_y). See the PSP_CTRL_* constants for the bits that "
-     "make up the buttons." },
-
+   { "ctrlSetSamplingCycle", PyPSP_ctrlSetSamplingCycle, METH_VARARGS, "" },
+   { "ctrlSetSamplingMode", PyPSP_ctrlSetSamplingMode, METH_VARARGS, "" },
+   { "ctrlReadBufferPositive", PyPSP_ctrlReadBufferPositive, METH_VARARGS, "" },
 
    /*
    { "audioInit", PyPSP_audioInit, METH_VARARGS,
