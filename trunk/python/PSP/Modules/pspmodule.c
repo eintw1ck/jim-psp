@@ -39,6 +39,83 @@ static PyObject* PyPSP_debugScreenInit(PyObject *self,
     return Py_None;
 }
 
+static PyObject* PyPSP_debug(PyObject *self,
+                             PyObject *args)
+{
+    char *s;
+
+    if (!PyArg_ParseTuple(args, "s:debug", &s))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    pspDebugScreenPrintf("%s", s);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* PyPSP_setBackColor(PyObject *self,
+                                    PyObject *args)
+{
+    int r, g, b, a = 0;
+    u32 color;
+
+    if (!PyArg_ParseTuple(args, "iii|i:setBackColor", &r, &g, &b, &a))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    color = (r << 24) | (g << 16) | (b << 8) | a; // FIXME
+
+    pspDebugScreenSetBackColor(color);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* PyPSP_setTextColor(PyObject *self,
+                                    PyObject *args)
+{
+    int r, g, b, a = 0;
+    u32 color;
+
+    if (!PyArg_ParseTuple(args, "iii|i:setTextColor", &r, &g, &b, &a))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    color = (r << 24) | (g << 16) | (b << 8) | a; // FIXME
+
+    pspDebugScreenSetTextColor(color);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* PyPSP_putChar(PyObject *self,
+                               PyObject *args)
+{
+    int x, y, c, r, g, b, a = 0;
+    u32 color;
+
+    if (!PyArg_ParseTuple(args, "iiiiii|i:putChar", &x, &y, &c, &r, &g, &b, &a))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    color = (r << 24) | (g << 16) | (b << 8) | a; // FIXME
+
+    pspDebugScreenPutChar(x, y, color, (u8)c);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyObject* PyPSP_debugScreenSetXY(PyObject *self,
                                         PyObject *args)
 {
@@ -56,18 +133,40 @@ static PyObject* PyPSP_debugScreenSetXY(PyObject *self,
     return Py_None;
 }
 
-static PyObject* PyPSP_debug(PyObject *self,
-                             PyObject *args)
+static PyObject* PyPSP_debugScreenGetX(PyObject *self,
+                                       PyObject *args)
 {
-    char *s;
-
-    if (!PyArg_ParseTuple(args, "s:debug", &s))
+    if (!PyArg_ParseTuple(args, ":debugScreenGetX"))
        return NULL;
 
     if (PyErr_CheckSignals())
        return NULL;
 
-    pspDebugScreenPrintf("%s", s);
+    return Py_BuildValue("i", pspDebugScreenGetX());
+}
+
+static PyObject* PyPSP_debugScreenGetY(PyObject *self,
+                                       PyObject *args)
+{
+    if (!PyArg_ParseTuple(args, ":debugScreenGetY"))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    return Py_BuildValue("i", pspDebugScreenGetY());
+}
+
+static PyObject* PyPSP_debugScreenClear(PyObject *self,
+                                        PyObject *args)
+{
+    if (!PyArg_ParseTuple(args, ":debugScreenClear"))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    pspDebugScreenClear();
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -299,10 +398,22 @@ static PyObject* PyPSP_displayWaitVblankStart(PyObject *self,
 static PyMethodDef psp_functions[] = {
    { "debugScreenInit", PyPSP_debugScreenInit, METH_VARARGS,
      "Initializes the debug screen" },
-   { "debugScreenSetXY", PyPSP_debugScreenSetXY, METH_VARARGS,
-     "Sets the debug screen's cursor position" },
    { "debug", PyPSP_debug, METH_VARARGS,
      "Outputs a string to debug screen" },
+   { "setBackColor", PyPSP_setBackColor, METH_VARARGS,
+     "Sets the background color of the debug screen" },
+   { "setTextColor", PyPSP_setTextColor, METH_VARARGS,
+     "Sets the text color of the debug screen" },
+   { "putChar", PyPSP_putChar, METH_VARARGS,
+     "Draws a char on the debug screen" },
+   { "debugScreenSetXY", PyPSP_debugScreenSetXY, METH_VARARGS,
+     "Sets the debug screen's cursor position" },
+   { "debugScreenGetX", PyPSP_debugScreenGetX, METH_VARARGS,
+     "Gets the cursor X position" },
+   { "debugScreenGetY", PyPSP_debugScreenGetY, METH_VARARGS,
+     "Gets the cursor Y position" },
+   { "debugScreenClear", PyPSP_debugScreenClear, METH_VARARGS,
+     "Clears the debug screen" },
 
    { "ctrlSetSamplingCycle", PyPSP_ctrlSetSamplingCycle, METH_VARARGS,
      "Sets the controller sampling cycle" },
