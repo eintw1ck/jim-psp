@@ -14,5 +14,8 @@ __rcsid__ = '$Id$'
 import _psp
 
 class Kernel:
+    """Interface with the kernel."""
     def DcacheWritebackAll(self):
+        """DcacheWritebackAll()
+        Write the data cache to memory"""
         _psp.kernelDcacheWritebackAll()

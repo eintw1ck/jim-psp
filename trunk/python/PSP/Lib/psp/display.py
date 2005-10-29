@@ -14,5 +14,8 @@ __rcsid__ = '$Id$'
 import _psp
 
 class Display:
+    """Display interface"""
     def waitVblankStart(self):
+        """waitVblankStart()
+        Waits for the vertical scan start"""
         _psp.displayWaitVblankStart()

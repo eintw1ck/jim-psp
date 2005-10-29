@@ -9,6 +9,12 @@
 #    29 Oct 2005
 #***
 
+"""
+
+This package encapsulates the lower-level _psp module in a hierarchy.
+
+"""
+
 __rcsid__ = '$Id$'
 
 __all__ = ['debug', 'ctrl', 'kernel', 'display']
