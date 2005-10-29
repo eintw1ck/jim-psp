@@ -15,7 +15,7 @@ libpspguminclude_HEADERS = pspgum.h
 
 lib_LIBRARIES = libpspgum.a
 
-noinst_HEADERS = gumInternal.h
+noinst_HEADERS = gumInternal.h vfpu_ops.h
 
 libpspgum_a_SOURCES = gumInternal.c sceGumLoadIdentity.c sceGumLoadMatrix.c sceGumMatrixMode.c \
                       sceGumMultMatrix.c sceGumOrtho.c sceGumPerspective.c sceGumPopMatrix.c \
