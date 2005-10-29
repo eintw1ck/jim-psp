@@ -114,7 +114,7 @@ CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include
 #CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DDEBUG -DCHECKTYPE
 LIBS = -lpspgu -lc -lm
 
-CFLAGS = -O2 -G0 -Wall
+CFLAGS = -O2 -G0 -Wall -Wno-strict-aliasing
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
 
