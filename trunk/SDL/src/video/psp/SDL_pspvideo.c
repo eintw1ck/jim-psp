@@ -225,6 +225,13 @@ static void PSP_GuInit(_THIS) {
 	sceGuDisplay(1);
 }
 
+static inline int roundUpToPowerOfTwo (int x)
+{
+  int i = 1;
+  while (i <= x) i <<= 1;
+  return i;
+}
+
 SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 				int width, int height, int bpp, Uint32 flags)
 {
@@ -323,7 +330,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
     } else if (IS_SWSURFACE(flags)) {
 
 		current->pitch = this->hidden->stride * (bpp/8);
-		current->pixels = malloc(current->pitch * 512); 
+		current->pixels = malloc(current->pitch * roundUpToPowerOfTwo(height)); 
 
 		this->UpdateRects = PSP_GuUpdateRects;
 
@@ -394,11 +401,18 @@ static int HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
 {
 	// do a gu copy when dimensions are equal 
 	if ((srcrect->w == dstrect->w) && (srcrect->h == dstrect->h)) {
+
+		sceGuStart(GU_DIRECT,list);
+
 		sceGuCopyImage(current_video->hidden->gu_format,
 			srcrect->x, srcrect->y, srcrect->w, srcrect->h, 
 			src->pitch / src->format->BytesPerPixel, src->pixels,
 			dstrect->x, dstrect->y, dst->pitch / dst->format->BytesPerPixel, 
 			dst->pixels);
+
+		sceGuFinish();
+		sceGuSync(0,0);
+
 		return 0;
 	}
 
@@ -412,57 +426,59 @@ static int HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
 	return src->map->sw_blit(src, srcrect, dst, dstrect);
 }
 
-static inline int roundUpToPowerOfTwo (int x)
-{
-  int i = 1;
-  while (i <= x) i <<= 1;
-  return i;
-}
-
 /** 
  * update screen from src
  */
 static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstrect)
 {
-	unsigned int slice;
 	unsigned short old_slice = 0; /* set when we load 2nd tex */
+	unsigned int slice, num_slices, slice_size, width, height, tbw;
 	struct Vertex *vertices;
 	void *pixels;
 
 	pixels = src->pixels;
+	width = roundUpToPowerOfTwo(src->w);
+	height = roundUpToPowerOfTwo(src->h);
+	tbw = src->pitch / src->format->BytesPerPixel;
+	slice_size = width < PSP_SLICE_SIZE ? width : PSP_SLICE_SIZE;
+	num_slices = width / slice_size;
+
+	// Gu doesn't appreciate textures wider than 512
+	if (width > 512)
+		width = 512; 
 
 	sceGuStart(GU_DIRECT,list);
 	sceGuEnable(GU_TEXTURE_2D);
 	sceGuTexMode(current_video->hidden->gu_format,0,0,0);
 	sceGuTexFunc(GU_TFX_REPLACE, GU_TCC_RGB);
 	sceGuTexFilter(GU_LINEAR, GU_LINEAR);
-	sceGuTexImage(0, 512, 512, current_video->hidden->stride, pixels);
+	sceGuTexImage(0, width, height, tbw, pixels);
 	sceGuTexSync();
 
-	for (slice = 0; slice < (srcrect->w / PSP_SLICE_SIZE); slice++) {
+	for (slice = 0; slice < num_slices; slice++) {
 
 		vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
 
-		if ((slice * PSP_SLICE_SIZE) < 512) {
-			vertices[0].u = srcrect->x + slice * PSP_SLICE_SIZE;
+		if ((slice * slice_size) < width) {
+			vertices[0].u = srcrect->x + slice * slice_size;
 		} else {
 			if (!old_slice) {
-				/* load another texture */
-				pixels += 512 * src->format->BytesPerPixel;
-				sceGuTexImage(0, current_video->hidden->stride - 512, 512, 
-					current_video->hidden->stride, pixels);
+				/* load another texture (src width > 512) */
+				pixels += width * src->format->BytesPerPixel;
+				sceGuTexImage(0, roundUpToPowerOfTwo(src->w - width), 
+					height, tbw, pixels);
 				sceGuTexSync();
 				old_slice = slice;
 			}
-			vertices[0].u = srcrect->x + (slice - old_slice) * PSP_SLICE_SIZE;
+			vertices[0].u = srcrect->x + (slice - old_slice) * slice_size;
 		} 
-		vertices[1].u = vertices[0].u + PSP_SLICE_SIZE;
+		vertices[1].u = vertices[0].u + slice_size;
 
 		vertices[0].v = srcrect->y;
 		vertices[1].v = vertices[0].v + srcrect->h;
 
-		vertices[0].x = (dstrect->x + slice * PSP_SLICE_SIZE) * dstrect->w / srcrect->w;
-		vertices[1].x = vertices[0].x + PSP_SLICE_SIZE * dstrect->w / srcrect->w;
+		vertices[0].x = dstrect->x + slice * slice_size * dstrect->w / srcrect->w;
+		vertices[1].x = vertices[0].x + slice_size * dstrect->w / srcrect->w;
 
 		vertices[0].y = dstrect->y;
 		vertices[1].y = vertices[0].y + dstrect->h; 
