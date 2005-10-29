@@ -228,7 +228,7 @@ static void PSP_GuInit(_THIS) {
 static inline int roundUpToPowerOfTwo (int x)
 {
   int i = 1;
-  while (i <= x) i <<= 1;
+  while (i < x) i <<= 1;
   return i;
 }
 
