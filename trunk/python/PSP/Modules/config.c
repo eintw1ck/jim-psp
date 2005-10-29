@@ -28,7 +28,7 @@ extern void initerrno(void);
 extern void initthread(void);
 extern void initcollections(void);
 
-extern void initpsp(void);
+extern void init_psp(void);
 extern void initpspos(void);
 extern void initgu(void);
 
@@ -55,7 +55,7 @@ struct _inittab _PyImport_Inittab[] = {
         {"thread", initthread},
         {"collections", initcollections},
 
-        {"psp", initpsp},
+        {"_psp", init_psp},
         {"pspos", initpspos},
 
         {"gu", initgu},

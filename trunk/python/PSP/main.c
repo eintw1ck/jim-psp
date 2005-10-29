@@ -13,6 +13,10 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 
 volatile int pspInterruptOccurred = 0;
 
+#if defined(DEBUG_THREAD) || defined(DEBUG_IMPORT)
+#define DEBUG
+#endif
+
 /* Exit callback */
 int exit_callback(int arg1, int arg2, void *common)
 {
@@ -76,6 +80,10 @@ int main(int argc, char *argv[])
 
        pspDebugScreenPrintf("Error - could not open script.py\n");
     }
+
+#ifdef DEBUG
+    sceKernelDelayThreadCB(1e7);
+#endif
 
     Py_Finalize();
 

@@ -12,7 +12,7 @@
 
 #include "Python.h"
 
-//#include <pspdebug.h>
+#include <pspdebug.h>
 #include <pspctrl.h>
 #include <pspaudiolib.h>
 #include <pspkernel.h>
@@ -456,11 +456,11 @@ static PyMethodDef psp_functions[] = {
 #define PyMODINIT_FUNC void
 #endif
 
-PyMODINIT_FUNC initpsp(void)
+PyMODINIT_FUNC init_psp(void)
 {
     PyObject *mdl;
 
-    mdl = Py_InitModule3("psp", psp_functions, "Wrapper for the PSP native APIs");
+    mdl = Py_InitModule3("_psp", psp_functions, "Wrapper for the PSP native APIs");
 
     if (!mdl)
        return;

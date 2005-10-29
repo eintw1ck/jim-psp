@@ -3,13 +3,13 @@
 
 #include <pspkernel.h>
 
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
 #include <pspdebug.h>
 #endif
 
 static void PyThread__init_thread(void)
 {
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Screen initialized (threading debug).\n");
 #endif
 }
@@ -33,7 +33,7 @@ long PyThread_start_new_thread(void (*func)(void*), void *arg)
     int thid;
     PSP_THREAD_ST tprm;
 
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Starting new thread\n");
 #endif
 
@@ -43,13 +43,13 @@ long PyThread_start_new_thread(void (*func)(void*), void *arg)
     thid = sceKernelCreateThread("Python thread", my_thread_cb, 0x18, 0x10000, 0, 0);
     if (thid < 0)
     {
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
        pspDebugScreenPrintf("Thread creation failed\n");
 #endif
        return -1;
     }
 
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Thread created.\n");
 #endif
 
@@ -59,7 +59,7 @@ long PyThread_start_new_thread(void (*func)(void*), void *arg)
 
     if (sceKernelStartThread(thid, sizeof(tprm), &tprm) < 0)
     {
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
        pspDebugScreenPrintf("Could not start thread\n");
 #endif
 
@@ -67,7 +67,7 @@ long PyThread_start_new_thread(void (*func)(void*), void *arg)
        return -1;
     }
 
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Thread started.\n");
 #endif
 
@@ -96,13 +96,13 @@ PyThread_type_lock PyThread_allocate_lock(void)
 {
     int id;
 
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Creating semaphore.\n");
 #endif
 
     id = sceKernelCreateSema("Python lock", 0, 1, 1, 0);
 
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Semaphore created: %d.\n", id);
 #endif
 
@@ -111,7 +111,7 @@ PyThread_type_lock PyThread_allocate_lock(void)
 
 void PyThread_free_lock(PyThread_type_lock id)
 {
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Destroying semaphore %d.\n", (int)id);
 #endif
 
@@ -132,21 +132,21 @@ int PyThread_acquire_lock(PyThread_type_lock id, int waitflag)
        ptimeout = NULL;
     }
 
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Acquiring semaphore %d from thread %ld (%d).\n", (int)id, PyThread_get_thread_ident(), waitflag);
 #endif
 
     if (sceKernelWaitSemaCB((int)id, 1, ptimeout) < 0)
     {
 
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Error acquiring semaphore %d.\n", (int)id);
 #endif
 
        return 0;
     }
 
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Semaphore %d acquired.\n", (int)id);
 #endif
 
@@ -155,13 +155,13 @@ int PyThread_acquire_lock(PyThread_type_lock id, int waitflag)
 
 void PyThread_release_lock(PyThread_type_lock id)
 {
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Releasing semaphore %d in thread %ld.\n", (int)id, PyThread_get_thread_ident());
 #endif
 
     sceKernelSignalSema((int)id, 1);
 
-#ifdef DEBUG
+#ifdef DEBUG_THREAD
     pspDebugScreenPrintf("Semaphore %d released.\n", (int)id);
 #endif
 }

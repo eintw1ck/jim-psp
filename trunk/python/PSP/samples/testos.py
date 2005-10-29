@@ -4,12 +4,14 @@ import psp
 import sys
 import time
 
-class PSPOutput:
+class PSPOutput(psp.debug.DebugScreen):
     def __init__(self):
         self.fd = file('output.txt', 'w')
 
+        psp.debug.DebugScreen.__init__(self)
+
     def write(self, bf):
-        psp.debugScreenPrint(bf)
+        self.printf(bf)
         self.fd.write(bf)
 
     def close(self):
@@ -17,8 +19,6 @@ class PSPOutput:
 
     def flush(self):
         pass
-
-psp.debugScreenInit()
 
 sys.stdout = sys.stderr = PSPOutput()
 

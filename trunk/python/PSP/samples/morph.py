@@ -77,7 +77,10 @@ def main():
     SCR_WIDTH = 480
     SCR_HEIGHT = 272
 
-    psp.kernelDcacheWritebackAll()
+    kernel = psp.kernel.Kernel()
+    display = psp.display.Display()
+
+    kernel.DcacheWritebackAll()
 
     gu.init()
     ctx = gu.Context()
@@ -100,7 +103,7 @@ def main():
     gu.finish()
     gu.sync()
 
-    psp.displayWaitVblankStart()
+    display.waitVblankStart()
     gu.display(1)
 
     projection = gu.Matrix()
@@ -145,7 +148,7 @@ def main():
         gu.finish()
         gu.sync()
 
-        psp.displayWaitVblankStart()
+        display.waitVblankStart()
         gu.swapBuffers()
 
         val += 1
