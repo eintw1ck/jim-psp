@@ -193,6 +193,19 @@ static PyObject* PyPSP_ctrlSetSamplingCycle(PyObject *self,
     return Py_None;
 }
 
+static PyObject* PyPSP_ctrlGetSamplingCycle(PyObject *self,
+                                            PyObject *args)
+{
+    int sc;
+
+    if (!PyArg_ParseTuple(args, ""))
+       return NULL;
+
+    sceCtrlGetSamplingCycle(&sc);
+
+    return Py_BuildValue("i", sc);
+}
+
 static PyObject* PyPSP_ctrlSetSamplingMode(PyObject *self,
                                            PyObject *args)
 {
@@ -208,6 +221,55 @@ static PyObject* PyPSP_ctrlSetSamplingMode(PyObject *self,
 
     Py_INCREF(Py_None);
     return Py_None;
+}
+
+static PyObject* PyPSP_ctrlGetSamplingMode(PyObject *self,
+                                           PyObject *args)
+{
+    int sm;
+
+    if (!PyArg_ParseTuple(args, ""))
+       return NULL;
+
+    sceCtrlGetSamplingMode(&sm);
+
+    return Py_BuildValue("i", sm);
+}
+
+static PyObject* PyPSP_ctrlPeekBufferPositive(PyObject *self,
+                                              PyObject *args)
+{
+    SceCtrlData *pdata;
+    PyObject *ret;
+    int n, k, err;
+
+    if (!PyArg_ParseTuple(args, "i", &n))
+       return NULL;
+
+    pdata = (SceCtrlData*)malloc(sizeof(SceCtrlData) * n);
+
+    err = sceCtrlPeekBufferPositive(pdata, n);
+    if (err < 0)
+    {
+       free(pdata);
+       PyErr_SetString(PyExc_RuntimeError, "FIXME"); // FIXME
+       return NULL;
+    }
+
+    ret = PyList_New(n);
+    for (k = 0; k < n; ++k)
+    {
+       // FIXME: does PyList_Append steal a reference ?
+
+       PyList_Append(ret, Py_BuildValue("iiii",
+                                        (int)pdata[k].TimeStamp,
+                                        (int)pdata[k].Buttons,
+                                        (int)pdata[k].Lx,
+                                        (int)pdata[k].Ly));
+    }
+
+    free(pdata);
+    return ret;
 }
 
 static PyObject* PyPSP_ctrlReadBufferPositive(PyObject *self,
@@ -363,21 +425,50 @@ static PyObject* PyPSP_audioSetChannelCallback(PyObject *self,
 */
 
 /**************************************************************************/
-// Others
+// Display
 
-static PyObject* PyPSP_kernelDcacheWritebackAll(PyObject *self,
-                                                PyObject *args)
+static PyObject* PyPSP_displaySetMode(PyObject *self,
+                                      PyObject *args)
 {
-    if (!PyArg_ParseTuple(args, ":kernelDcacheWritebackAll"))
+    int mode, w, h;
+
+    if (!PyArg_ParseTuple(args, "iii", &mode, &w, &h))
        return NULL;
 
-    if (PyErr_CheckSignals())
+    if (sceDisplaySetMode(mode, w, h))
+    {
+       PyErr_SetString(PyExc_RuntimeError, "FIXME");
        return NULL;
-
-    sceKernelDcacheWritebackAll();
+    }
 
     Py_INCREF(Py_None);
     return Py_None;
+}
+
+static PyObject* PyPSP_displayGetMode(PyObject *self,
+                                      PyObject *args)
+{
+    int mode, w, h;
+
+    if (!PyArg_ParseTuple(args, ""))
+       return NULL;
+
+    if (sceDisplayGetMode(&mode, &w, &h))
+    {
+       PyErr_SetString(PyExc_RuntimeError, "FIXME");
+       return NULL;
+    }
+
+    return Py_BuildValue("iii", mode, w, h);
+}
+
+static PyObject* PyPSP_displayGetVcount(PyObject *self,
+                                        PyObject *args)
+{
+    if (!PyArg_ParseTuple(args, ""))
+       return NULL;
+
+    return Py_BuildValue("i", sceDisplayGetVcount());
 }
 
 static PyObject* PyPSP_displayWaitVblankStart(PyObject *self,
@@ -395,6 +486,24 @@ static PyObject* PyPSP_displayWaitVblankStart(PyObject *self,
     return Py_None;
 }
 
+/**************************************************************************/
+// Kernel
+
+static PyObject* PyPSP_kernelDcacheWritebackAll(PyObject *self,
+                                                PyObject *args)
+{
+    if (!PyArg_ParseTuple(args, ":kernelDcacheWritebackAll"))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceKernelDcacheWritebackAll();
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyMethodDef psp_functions[] = {
    { "debugScreenInit", PyPSP_debugScreenInit, METH_VARARGS, "" },
    { "debugScreenPrint", PyPSP_debugScreenPrint, METH_VARARGS, "" },
@@ -407,7 +516,10 @@ static PyMethodDef psp_functions[] = {
    { "debugScreenClear", PyPSP_debugScreenClear, METH_VARARGS, "" },
 
    { "ctrlSetSamplingCycle", PyPSP_ctrlSetSamplingCycle, METH_VARARGS, "" },
+   { "ctrlGetSamplingCycle", PyPSP_ctrlGetSamplingCycle, METH_VARARGS, "" },
    { "ctrlSetSamplingMode", PyPSP_ctrlSetSamplingMode, METH_VARARGS, "" },
+   { "ctrlGetSamplingMode", PyPSP_ctrlGetSamplingMode, METH_VARARGS, "" },
+   { "ctrlPeekBufferPositive", PyPSP_ctrlPeekBufferPositive, METH_VARARGS, "" },
    { "ctrlReadBufferPositive", PyPSP_ctrlReadBufferPositive, METH_VARARGS, "" },
 
    /*
@@ -420,6 +532,11 @@ static PyMethodDef psp_functions[] = {
 
    { "kernelDcacheWritebackAll", PyPSP_kernelDcacheWritebackAll, METH_VARARGS, "" },
 
+   { "displaySetMode", PyPSP_displaySetMode, METH_VARARGS, "" },
+   { "displayGetMode", PyPSP_displayGetMode, METH_VARARGS, "" },
+   //{ "displaySetFrameBuf", PyPSP_displaySetFrameBuf, METH_VARARGS, "" },
+   //{ "displayGetFrameBuf", PyPSP_displayGetFrameBuf, METH_VARARGS, "" },
+   { "displayGetVcount", PyPSP_displayGetVcount, METH_VARARGS, "" },
    { "displayWaitVblankStart", PyPSP_displayWaitVblankStart, METH_VARARGS, "" },
 
 
@@ -455,6 +572,14 @@ PyMODINIT_FUNC init_psp(void)
     PyModule_AddIntConstant(mdl, "CTRL_HOME", PSP_CTRL_HOME);
     PyModule_AddIntConstant(mdl, "CTRL_HOLD", PSP_CTRL_HOLD);
     PyModule_AddIntConstant(mdl, "CTRL_NOTE", PSP_CTRL_NOTE);
+
+    PyModule_AddIntConstant(mdl, "DISPLAY_PIXEL_FORMAT_565", PSP_DISPLAY_PIXEL_FORMAT_565);
+    PyModule_AddIntConstant(mdl, "DISPLAY_PIXEL_FORMAT_5551", PSP_DISPLAY_PIXEL_FORMAT_5551);
+    PyModule_AddIntConstant(mdl, "DISPLAY_PIXEL_FORMAT_4444", PSP_DISPLAY_PIXEL_FORMAT_4444);
+    PyModule_AddIntConstant(mdl, "DISPLAY_PIXEL_FORMAT_8888", PSP_DISPLAY_PIXEL_FORMAT_8888);
+
+    PyModule_AddIntConstant(mdl, "DISPLAY_SETBUF_IMMEDIATE", PSP_DISPLAY_SETBUF_IMMEDIATE);
+    PyModule_AddIntConstant(mdl, "DISPLAY_SETBUF_NEXTFRAME", PSP_DISPLAY_SETBUF_NEXTFRAME);
 }
 
 #ifdef _GNUC

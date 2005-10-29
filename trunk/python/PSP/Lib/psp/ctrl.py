@@ -20,11 +20,28 @@ class Controller:
         Sets the controller sample rate. sc should be 0."""
         _psp.ctrlSetSamplingCycle(sc)
 
+    def getSamplingCycle(self):
+        """sc = getSamplingCycle()
+        Returns the controller sample rate."""
+        return _psp.ctrlGetSamplingCycle()
+
     def setSamplingMode(self, sm):
         """setSamplingMode(sm)
         Sets the controller sampling mode. sm must be != 0 to
         enable analog mode."""
         _psp.ctrlSetSamplingMode(sm)
+
+    def getSamplingMode(self):
+        """sm = getSamplingMode()
+        Returns the controller sampling mode."""
+        return _psp.ctrlGetSamplingMode()
+
+    def peekBufferPositive(self, n):
+        """ls = peekBufferPositive(n)
+        Peeks the controller queue for the n next states to
+        be returned by readBufferPositive, and return them
+        as a list of 4-tuples (stamp, buttons,  lx, ly)."""
+        return _psp.ctrlPeekBufferPositive(n)
 
     def readBufferPositive(self):
         """stamp, buttons, lx, ly = readBufferPositive()
