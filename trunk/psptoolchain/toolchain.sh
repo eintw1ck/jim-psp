@@ -130,6 +130,18 @@
 	 fi
   fi
 
+  ## Check for autoconf and automake
+  if test $BUILD_PSPSDK ; then
+      if ! test "`automake --version 2> /dev/null`" ; then
+	  echo "ERROR: Please make sure you have 'automake' installed."
+	  exit
+      fi
+      if ! test "`autoconf --version 2> /dev/null`" ; then
+	  echo "ERROR: Please make sure you have 'autoconf' installed."
+	  exit
+      fi
+  fi
+
  ################################
  ## DOWNLOAD, UNPACK AND PATCH ##
  ################################
