@@ -25,6 +25,8 @@ extern void init_random(void);
 extern void init_sre(void);
 extern void initcStringIO(void);
 extern void initerrno(void);
+extern void initthread(void);
+extern void initcollections(void);
 
 extern void initpsp(void);
 extern void initpspos(void);
@@ -50,6 +52,8 @@ struct _inittab _PyImport_Inittab[] = {
         {"_sre", init_sre},
         {"cStringIO", initcStringIO},
         {"errno", initerrno},
+        {"thread", initthread},
+        {"collections", initcollections},
 
         {"psp", initpsp},
         {"pspos", initpspos},

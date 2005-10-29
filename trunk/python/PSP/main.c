@@ -53,6 +53,10 @@ int main(int argc, char *argv[])
 
     SetupCallbacks();
 
+#ifdef DEBUG
+    pspDebugScreenInit();
+#endif
+
     Py_Initialize();
 
     PySys_SetPath("ms0:/python");
@@ -66,7 +70,10 @@ int main(int argc, char *argv[])
     }
     else
     {
+#ifndef DEBUG
        pspDebugScreenInit();
+#endif
+
        pspDebugScreenPrintf("Error - could not open script.py\n");
     }
 

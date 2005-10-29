@@ -798,7 +798,7 @@
 #define WITH_PYMALLOC 1
 
 /* Define if you want to compile in rudimentary thread support */
-/* #define WITH_THREAD 1 */
+#define WITH_THREAD 1
 
 /* Define to profile with the Pentium timestamp counter */
 /* #undef WITH_TSC */

@@ -18,8 +18,9 @@ MODULES_STATIC = \
 	../Modules/_randommodule.o \
 	../Modules/_sre.o \
 	../Modules/cStringIO.o \
-	../Modules/errnomodule.o
-#	../Modules/threadmodule.o
+	../Modules/errnomodule.o \
+	../Modules/threadmodule.o \
+	../Modules/collectionsmodule.o
 
 OBJECTS_PYTHON = \
 	../Python/traceback.o \
@@ -55,8 +56,8 @@ OBJECTS_PYTHON = \
 	../Python/future.o \
 	../Python/dynload_stub.o \
 	../Python/pystrtod.o \
-	../Python/getmtime.o
-#	../Python/thread.o
+	../Python/getmtime.o \
+	../Python/thread.o
 
 OBJECTS_OBJECTS = \
 	../Objects/typeobject.o \
@@ -113,9 +114,11 @@ OBJS = main.o support.o Modules/matrix.o $(MODULES_STATIC) $(OBJECTS_PYTHON) $(O
 
 ifeq ($(BUILD_GU),1)
 CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DWITH_GU
+#CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DWITH_GU -DDEBUG
 LIBS = -lpspgu -lc -lm
 else
 CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include
+#CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DDEBUG
 LIBS = -lc -lm
 endif
 
