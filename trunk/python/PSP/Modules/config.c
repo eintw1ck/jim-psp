@@ -28,9 +28,19 @@ extern void initerrno(void);
 extern void initthread(void);
 extern void initcollections(void);
 
-extern void init_psp(void);
 extern void initpspos(void);
+
+#ifdef WITH_PSP
+extern void init_psp(void);
+#endif
+
+#ifdef WITH_GU
 extern void initgu(void);
+#endif
+
+#ifdef WITH_PSP2D
+extern void initpsp2d(void);
+#endif
 
 struct _inittab _PyImport_Inittab[] = {
 	{"marshal", PyMarshal_Init},
@@ -55,10 +65,19 @@ struct _inittab _PyImport_Inittab[] = {
         {"thread", initthread},
         {"collections", initcollections},
 
-        {"_psp", init_psp},
         {"pspos", initpspos},
 
+#ifdef WITH_PSP
+        {"_psp", init_psp},
+#endif
+
+#ifdef WITH_GU
         {"gu", initgu},
+#endif
+
+#ifdef WITH_PSP2D
+        {"psp2d", initpsp2d},
+#endif
 
 	{0, 0}
 };

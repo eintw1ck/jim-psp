@@ -1,10 +1,12 @@
 TARGET = python
 
+BUILD_GU = 0
+BUILD_PSP = 0
+BUILD_PSP2D = 1
+
 MODULES_STATIC = \
 	Modules/config.o \
-	Modules/pspmodule.o \
 	Modules/pspos.o \
-	Modules/gumodule.o \
 	../Modules/main.o \
 	../Modules/getbuildinfo.o \
 	../Modules/gcmodule.o \
@@ -110,14 +112,33 @@ OBJECTS_PARSER = \
 OBJS = main.o psperror.o support.o getmtime.o Modules/matrix.o \
 	$(MODULES_STATIC) $(OBJECTS_PYTHON) $(OBJECTS_OBJECTS) $(OBJECTS_PARSER)
 
-# Debug macros:
+CPPFLAGS=
+LIBS=
 
-# DEBUG_THREAD
-# DEBUG_IMPORT
+ifeq ($(BUILD_GU),1)
+CPPFLAGS += -DWITH_GU
+OBJS += Modules/gumodule.o
+LIBS += -lpspgu
+endif
 
-CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include
-#CPPFLAGS = -DHAVE_CONFIG_H -DPSP -I../Include -DDEBUG_IMPORT -DCHECKTYPE
-LIBS = -lpspgu -lc -lm
+ifeq ($(BUILD_PSP),1)
+CPPFLAGS += -DWITH_PSP
+OBJS += Modules/pspmodule.o
+endif
+
+ifeq ($(BUILD_PSP2D),1)
+CPPFLAGS += -DWITH_PSP2D
+OBJS += psp2d/psp2d.o \
+	psp2d/color.o \
+	psp2d/image.o \
+	psp2d/controller.o \
+	psp2d/music.o \
+	psp2d/sound.o
+LIBS += -lmikmod -lmmio -lpspaudiolib -lpspaudio
+endif
+
+CPPFLAGS += -DHAVE_CONFIG_H -DPSP -I../Include -DCHECKTYPE
+LIBS += -lc -lm
 
 CFLAGS = -O2 -G0 -Wall -Wno-strict-aliasing
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
