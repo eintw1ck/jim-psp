@@ -12,6 +12,7 @@
 
 #include "screen.h"
 #include "image.h"
+#include "color.h"
 
 #include <pspdisplay.h>
 #include <pspkernel.h>
@@ -196,6 +197,57 @@ static PyObject* screen_blit(PyScreen *self,
     return Py_None;
 }
 
+static PyObject* screen_clear(PyScreen *self,
+                              PyObject *args,
+                              PyObject *kwargs)
+{
+    if (!PyArg_ParseTuple(args, ":clear"))
+       return NULL;
+
+    sceGuStart(GU_DIRECT, self->list);
+    sceGuClearDepth(0);
+    sceGuClear(GU_COLOR_BUFFER_BIT|GU_DEPTH_BUFFER_BIT);
+    sceGuFinish();
+    sceGuSync(0, 0);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* screen_fillRect(PyScreen *self,
+                                 PyObject *args,
+                                 PyObject *kwargs)
+{
+    PyColor *color;
+    int x, y, w, h;
+    u32 *dst;
+    int i, j;
+
+    if (!PyArg_ParseTuple(args, "iiiiO:fillRect", &x, &y,
+                          &w, &h, &color))
+       return NULL;
+
+#ifdef CHECKTYPE
+    if (((PyObject*)color)->ob_type != PPyColorType)
+    {
+       PyErr_SetString(PyExc_TypeError, "Fifth argument must be a Color.");
+       return NULL;
+    }
+#endif
+
+    dst = getDrawBase(self) + y * PSP_LINE_SIZE + x;
+    for (j = 0; j < h; ++j)
+    {
+       for (i = 0; i < w; ++i)
+       {
+          *(dst + j * PSP_LINE_SIZE + i) = color->color;
+       }
+    }
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyObject* screen_swap(PyScreen *self,
                              PyObject *args,
                              PyObject *kwargs)
@@ -217,6 +269,14 @@ static PyMethodDef screen_methods[] = {
      "blit(sx, sy, w, h, img, dx, dy, blend = False)\n"
      "Copies the (sx, sy, w, h) rectangle from img to (dx, dy).\n"
      "If blend is True, perform blending." },
+
+   { "clear", (PyCFunction)screen_clear, METH_VARARGS,
+     "clear()\n"
+     "Clears the screen." },
+
+   { "fillRect", (PyCFunction)screen_fillRect, METH_VARARGS,
+     "fillRect(x, y, w, h, color)\n"
+     "Fills a rectangle." },
 
    { "swap", (PyCFunction)screen_swap, METH_VARARGS,
      "swap()\n"

@@ -306,9 +306,10 @@ static PyObject* image_blit(PyImage *self,
              g2 = (dstcol >> 8) & 0xFF;
              r2 = dstcol & 0xFF;
 
-             *(dstdec + j * self->twidth + i) = ((a1*a1+a2*a2)/510 << 24) |
-                ((a1*b1+a2*b2)/510 << 16) | ((a1*g1+a2*g2)/510 << 8) |
-                ((a1*r1+a2*r2)/512); // FIXME
+             *(dstdec + j * self->twidth + i) = ((a1 + (255 - a1) * a2 / 255) << 24) |
+                ((b1 + (255 - a1) * b2 / 255) << 16) |
+                ((g1 + (255 - a1) * g2 / 255) << 8) |
+                (r1 + (255 - a1) * r2 / 255);
           }
        }
        else
