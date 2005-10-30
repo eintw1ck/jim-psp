@@ -15,6 +15,37 @@
 
 #include <pspgu.h>
 
+// TODO:
+
+// sceGuBreak
+// sceGuContinue
+// sceGuSetCallback
+// sceGuSignal
+// sceGuGetMemory
+// sceGuSendList
+// sceGuBeginObject
+// sceGuEndObject
+// sceGuLightMode
+// sceGuLightSpot
+// sceGuAmbient
+// sceGuAmbientColor
+// sceGuMaterial
+// sceGuModelColor
+// sceGuSetDither
+// sceGuCopyImage
+// sceGuTexImage
+// sceGuTexLevelMode
+// sceGuTexScale
+// sceGuTexClose
+// sceGuTexSync
+// sceGuClutLoad
+// sceGuClutMode
+// sceGuDrawBezier
+// sceGuPatchDivide
+// sceGuPatchFrontFace
+// sceGuPatchPrim
+// sceGuSpriteMode
+
 
 /**************************************************************************/
 // Matrix wrappers
@@ -403,6 +434,57 @@ static PyObject* Pygu_start(PyObject *self,
     return Py_None;
 }
 
+static PyObject* Pygu_callList(PyObject *self,
+                               PyObject *args)
+{
+    contextObject *context;
+
+    if (!PyArg_ParseTuple(args, "O:callList", &context))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+#ifdef CHECKTYPE
+    if (context->ob_type != &contextType)
+    {
+       PyErr_SetString(PyExc_TypeError, "Argument must be a Context");
+       return NULL;
+    }
+#endif
+
+    sceGuCallList(context->list);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_checkList(PyObject *self,
+                                PyObject *args)
+{
+    if (!PyArg_ParseTuple(args, ":checkList"))
+       return NULL;
+
+    return Py_BuildValue("i", sceGuCheckList());
+}
+
+static PyObject* Pygu_callMode(PyObject *self,
+                               PyObject *args)
+{
+    int mode;
+
+    if (!PyArg_ParseTuple(args, "i:callMode", &mode))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuCallMode(mode);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyObject* Pygu_drawBuffer(PyObject *self,
                                  PyObject *args)
 {
@@ -415,6 +497,23 @@ static PyObject* Pygu_drawBuffer(PyObject *self,
        return NULL;
 
     sceGuDrawBuffer(psm, (void*)fbp, fbw);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_drawBufferList(PyObject *self,
+                                     PyObject *args)
+{
+    int psm, fbp, fbw;
+
+    if (!PyArg_ParseTuple(args, "iii:drawBufferList", &psm, &fbp, &fbw))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuDrawBufferList(psm, (void*)fbp, fbw);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -505,6 +604,26 @@ static PyObject* Pygu_depthRange(PyObject *self,
     return Py_None;
 }
 
+static PyObject* Pygu_fog(PyObject *self,
+                          PyObject *args)
+{
+    int near, far, r, g, b, a = 0;
+    u32 color;
+
+    if (!PyArg_ParseTuple(args, "iiiii|i:fog", &near, &far, &r, &g, &b, &a))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    color = (a << 24) | (b << 16) | (g << 8) | r;
+
+    sceGuFog(near, far, color);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyObject* Pygu_scissor(PyObject *self,
                               PyObject *args)
 {
@@ -539,6 +658,23 @@ static PyObject* Pygu_enable(PyObject *self,
     return Py_None;
 }
 
+static PyObject* Pygu_disable(PyObject *self,
+                              PyObject *args)
+{
+    int state;
+
+    if (!PyArg_ParseTuple(args, "i:disable", &state))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuDisable(state);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyObject* Pygu_depthFunc(PyObject *self,
                                 PyObject *args)
 {
@@ -551,6 +687,40 @@ static PyObject* Pygu_depthFunc(PyObject *self,
        return NULL;
 
     sceGuDepthFunc(func);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_depthMask(PyObject *self,
+                                PyObject *args)
+{
+    int mask;
+
+    if (!PyArg_ParseTuple(args, "i:depthMask", &mask))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuDepthMask(mask);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_depthOffset(PyObject *self,
+                                  PyObject *args)
+{
+    int offset;
+
+    if (!PyArg_ParseTuple(args, "i:depthOffset", &offset))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuDepthOffset(offset);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -631,24 +801,24 @@ static PyObject* Pygu_display(PyObject *self,
     if (PyErr_CheckSignals())
        return NULL;
 
-    sceGuDisplay(state);
-
-    Py_INCREF(Py_None);
-    return Py_None;
+    return Py_BuildValue("i", sceGuDisplay(state ? GU_TRUE : GU_FALSE));
 }
 
 static PyObject* Pygu_clearColor(PyObject *self,
                                  PyObject *args)
 {
-    unsigned long color;
+    int r, g, b, a = 0;
+    u32 color;
 
-    if (!PyArg_ParseTuple(args, "k:clearColor", &color))
+    if (!PyArg_ParseTuple(args, "iii|i:clearColor", &r, &g, &b, &a))
        return NULL;
 
     if (PyErr_CheckSignals())
        return NULL;
 
-    sceGuClearColor((unsigned int)(color & 0xFFFFFFFF));
+    color = (a << 24) | (b << 16) | (g << 8) | r;
+
+    sceGuClearColor(color);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -666,6 +836,23 @@ static PyObject* Pygu_clearDepth(PyObject *self,
        return NULL;
 
     sceGuClearDepth(depth);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_clearStencil(PyObject *self,
+                                   PyObject *args)
+{
+    int stencil;
+
+    if (!PyArg_ParseTuple(args, "i:clearStencil", &stencil))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuClearStencil(stencil);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -690,19 +877,40 @@ static PyObject* Pygu_light(PyObject *self,
     return Py_None;
 }
 
-static PyObject* Pygu_lightColor(PyObject *self,
-                                 PyObject *args)
+static PyObject* Pygu_lightAtt(PyObject *self,
+                               PyObject *args)
 {
-    int light, component;
-    unsigned long color;
+    int light;
+    float atten0, atten1, atten2;
 
-    if (!PyArg_ParseTuple(args, "iik:lightColor", &light, &component, &color))
+    if (!PyArg_ParseTuple(args, "ifff:lightAtt", &light, &atten0,
+                          &atten1, &atten2))
        return NULL;
 
     if (PyErr_CheckSignals())
        return NULL;
 
-    sceGuLightColor(light, component, (unsigned int)(color & 0xFFFFFFFF));
+    sceGuLightAtt(light, atten0, atten1, atten2);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_lightColor(PyObject *self,
+                                 PyObject *args)
+{
+    int light, component, r, g, b, a = 0;
+    u32 color;
+
+    if (!PyArg_ParseTuple(args, "iiiii|i:lightColor", &light, &component, &r, &g, &b, &a))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    color = (a << 24) | (b << 16) | (g << 8) | r;
+
+    sceGuLightColor(light, component, color);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -754,13 +962,41 @@ static PyObject* Pygu_setMatrix(PyObject *self,
     if (PyErr_CheckSignals())
        return NULL;
 
+#ifdef CHECKTYPE
     if (matrix->ob_type != &matrixType)
     {
        PyErr_SetString(PyExc_TypeError, "Argument 2 must be a Matrix");
        return NULL;
     }
+#endif
 
     sceGuSetMatrix(type, (ScePspFMatrix4*)matrix->data);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_boneMatrix(PyObject *self,
+                                 PyObject *args)
+{
+    matrixObject *matrix;
+    int index;
+
+    if (!PyArg_ParseTuple(args, "iO:boneMatrix", &index, &matrix))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+#ifdef CHECKTYPE
+    if (matrix->ob_type != &matrixType)
+    {
+       PyErr_SetString(PyExc_TypeError, "Argument 2 must be a Matrix");
+       return NULL;
+    }
+#endif
+
+    sceGuBoneMatrix(index, (ScePspFMatrix4*)matrix->data);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -769,15 +1005,18 @@ static PyObject* Pygu_setMatrix(PyObject *self,
 static PyObject* Pygu_ambientColor(PyObject *self,
                                    PyObject *args)
 {
-    unsigned long color;
+    int r, g, b, a = 0;
+    u32 color;
 
-    if (!PyArg_ParseTuple(args, "k:ambientColor", &color))
+    if (!PyArg_ParseTuple(args, "iii|i:ambientColor", &r, &g, &b, &a))
        return NULL;
 
     if (PyErr_CheckSignals())
        return NULL;
 
-    sceGuAmbientColor((unsigned int)(color & 0xFFFFFFFF));
+    color = (a << 24) | (b << 16) | (g << 8) | r;
+
+    sceGuAmbientColor(color);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -837,6 +1076,416 @@ static PyObject* Pygu_swapBuffers(PyObject *self,
     return Py_None;
 }
 
+static PyObject* Pygu_sendCommandf(PyObject *self,
+                                   PyObject *args)
+{
+    int cmd;
+    float arg;
+
+    if (!PyArg_ParseTuple(args, "if:sendCommandf", &cmd, &arg))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuSendCommandf(cmd, arg);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_sendCommandi(PyObject *self,
+                                   PyObject *args)
+{
+    int cmd, arg;
+
+    if (!PyArg_ParseTuple(args, "ii:sendCommandi", &cmd, &arg))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuSendCommandi(cmd, arg);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_setStatus(PyObject *self,
+                                PyObject *args)
+{
+    int state, status;
+
+    if (!PyArg_ParseTuple(args, "ii:setStatus", &state, &status))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuSetStatus(state, status);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_getStatus(PyObject *self,
+                                PyObject *args)
+{
+    int state;
+
+    if (!PyArg_ParseTuple(args, "i:getStatus", &state))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    return Py_BuildValue("i", sceGuGetStatus(state));
+}
+
+static PyObject* Pygu_setAllStatus(PyObject *self,
+                                   PyObject *args)
+{
+    int status;
+
+    if (!PyArg_ParseTuple(args, "i:setAllStatus", &status))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuSetAllStatus(status);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_getAllStatus(PyObject *self,
+                                   PyObject *args)
+{
+    if (!PyArg_ParseTuple(args, ":getAllStatus"))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    return Py_BuildValue("i", sceGuGetAllStatus());
+}
+
+static PyObject* Pygu_pixelMask(PyObject *self,
+                                PyObject *args)
+{
+    unsigned int mask;
+
+    if (!PyArg_ParseTuple(args, "i:pixelMask", &mask))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuPixelMask(mask);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_color(PyObject *self,
+                            PyObject *args)
+{
+    int r, g, b, a = 0;
+    u32 color;
+
+    if (!PyArg_ParseTuple(args, "iii|i:color", &r, &g, &b, &a))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    color = (a << 24) | (b << 16) | (g << 8) | r;
+
+    sceGuColor(color);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_colorFunc(PyObject *self,
+                                PyObject *args)
+{
+    int r, g, b, a = 0;
+    int func;
+    u32 mask, color;
+
+    if (!PyArg_ParseTuple(args, "iiiii|i:colorFunc", &func, &mask, &r, &g, &b, &a))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    color = (a << 24) | (b << 16) | (g << 8) | r;
+
+    sceGuColorFunc(func, color, mask);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_colorMaterial(PyObject *self,
+                                    PyObject *args)
+{
+    int comp;
+
+    if (!PyArg_ParseTuple(args, "i:colorMaterial", &comp))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuColorMaterial(comp);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_alphaFunc(PyObject *self,
+                                PyObject *args)
+{
+    int func, value, mask;
+
+    if (!PyArg_ParseTuple(args, "iii:alphaFunc", &func, &value, &mask))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuAlphaFunc(func, value, mask);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_blendFunc(PyObject *self,
+                                PyObject *args)
+{
+    int op, src, dest;
+    u32 srcfix, destfix;
+
+    if (!PyArg_ParseTuple(args, "iiiii:blendFunc", &op, &src, &dest, &srcfix, &destfix))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuBlendFunc(op, src, dest, srcfix, destfix);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_stencilFunc(PyObject *self,
+                                  PyObject *args)
+{
+    int func, ref, mask;
+
+    if (!PyArg_ParseTuple(args, "iii:stencilFunc", &func, &ref, &mask))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuStencilFunc(func, ref, mask);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_stencilOp(PyObject *self,
+                                PyObject *args)
+{
+    int fail, zfail, zpass;
+
+    if (!PyArg_ParseTuple(args, "iii:stencilOp", &fail, &zfail, &zpass))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuStencilOp(fail, zfail, zpass);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_logicalOp(PyObject *self,
+                                PyObject *args)
+{
+    int op;
+
+    if (!PyArg_ParseTuple(args, "i:logicalOp", &op))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuLogicalOp(op);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_texEnvColor(PyObject *self,
+                                  PyObject *args)
+{
+    int r, g, b, a = 0;
+    u32 color;
+
+    if (!PyArg_ParseTuple(args, "iii|i:texEnvColor", &r, &g, &b, &a))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    color = (a << 24) | (b << 16) | (g << 8) | r;
+
+    sceGuTexEnvColor(color);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_texFilter(PyObject *self,
+                                PyObject *args)
+{
+    int min, mag;
+
+    if (!PyArg_ParseTuple(args, "ii:texFilter", &min, &mag))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuTexFilter(min, mag);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_texFlush(PyObject *self,
+                               PyObject *args)
+{
+    if (!PyArg_ParseTuple(args, ":texFlush"))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuTexFlush();
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_texFunc(PyObject *self,
+                              PyObject *args)
+{
+    int tfx, tcc;
+
+    if (!PyArg_ParseTuple(args, "ii:texFunc", &tfx, &tcc))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuTexFunc(tfx, tcc);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_texMapMode(PyObject *self,
+                                 PyObject *args)
+{
+    int mode;
+
+    if (!PyArg_ParseTuple(args, "i:texMapMode", &mode))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuTexMapMode(mode, 0, 0);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_texMode(PyObject *self,
+                              PyObject *args)
+{
+    int tpsm, maxmips, swizzle;
+
+    if (!PyArg_ParseTuple(args, "iii:texMode", &tpsm, &maxmips, &swizzle))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuTexMode(tpsm, maxmips, 0, swizzle);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_texOffset(PyObject *self,
+                                PyObject *args)
+{
+    float u, v;
+
+    if (!PyArg_ParseTuple(args, "ff:texOffset", &u, &v))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuTexOffset(u, v);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_texProjMapMode(PyObject *self,
+                                     PyObject *args)
+{
+    int mode;
+
+    if (!PyArg_ParseTuple(args, "i:texProjMapMode", &mode))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuTexProjMapMode(mode);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* Pygu_texWrap(PyObject *self,
+                              PyObject *args)
+{
+    float u, v;
+
+    if (!PyArg_ParseTuple(args, "ff:texWrap", &u, &v))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    sceGuTexWrap(u, v);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyObject* Pygu_WEIGHTS(PyObject *self,
                               PyObject *args)
 {
@@ -865,21 +1514,106 @@ static PyObject* Pygu_VERTICES(PyObject *self,
     return Py_BuildValue("i", GU_VERTICES(p));
 }
 
+static PyObject* Pygu_TEXTURE_SHIFT(PyObject *self,
+                                    PyObject *args)
+{
+    int n;
+
+    if (!PyArg_ParseTuple(args, "i", &n))
+       return NULL;
+
+    return Py_BuildValue("i", GU_TEXTURE_SHIFT(n));
+}
+
+static PyObject* Pygu_COLOR_SHIFT(PyObject *self,
+                                  PyObject *args)
+{
+    int n;
+
+    if (!PyArg_ParseTuple(args, "i", &n))
+       return NULL;
+
+    return Py_BuildValue("i", GU_COLOR_SHIFT(n));
+}
+
+static PyObject* Pygu_NORMAL_SHIFT(PyObject *self,
+                                   PyObject *args)
+{
+    int n;
+
+    if (!PyArg_ParseTuple(args, "i", &n))
+       return NULL;
+
+    return Py_BuildValue("i", GU_NORMAL_SHIFT(n));
+}
+
+static PyObject* Pygu_VERTEX_SHIFT(PyObject *self,
+                                   PyObject *args)
+{
+    int n;
+
+    if (!PyArg_ParseTuple(args, "i", &n))
+       return NULL;
+
+    return Py_BuildValue("i", GU_VERTEX_SHIFT(n));
+}
+
+static PyObject* Pygu_WEIGHT_SHIFT(PyObject *self,
+                                   PyObject *args)
+{
+    int n;
+
+    if (!PyArg_ParseTuple(args, "i", &n))
+       return NULL;
+
+    return Py_BuildValue("i", GU_WEIGHT_SHIFT(n));
+}
+
+static PyObject* Pygu_INDEX_SHIFT(PyObject *self,
+                                  PyObject *args)
+{
+    int n;
+
+    if (!PyArg_ParseTuple(args, "i", &n))
+       return NULL;
+
+    return Py_BuildValue("i", GU_INDEX_SHIFT(n));
+}
+
+static PyObject* Pygu_TRANSFORM_SHIFT(PyObject *self,
+                                      PyObject *args)
+{
+    int n;
+
+    if (!PyArg_ParseTuple(args, "i", &n))
+       return NULL;
+
+    return Py_BuildValue("i", GU_TRANSFORM_SHIFT(n));
+}
+
 /**************************************************************************/
 
 static PyMethodDef gu_functions[] = {
    { "init", Pygu_init, METH_VARARGS, "" },
    { "term", Pygu_term, METH_VARARGS, "" },
    { "start", Pygu_start, METH_VARARGS, "" },
+   { "callList", Pygu_callList, METH_VARARGS, "" },
+   { "checkList", Pygu_checkList, METH_VARARGS, "" },
+   { "callMode", Pygu_callMode, METH_VARARGS, "" },
    { "drawBuffer", Pygu_drawBuffer, METH_VARARGS, "" },
+   { "drawBufferList", Pygu_drawBufferList, METH_VARARGS, "" },
    { "dispBuffer", Pygu_dispBuffer, METH_VARARGS, "" },
    { "depthBuffer", Pygu_depthBuffer, METH_VARARGS, "" },
    { "offset", Pygu_offset, METH_VARARGS, "" },
    { "viewport", Pygu_viewport, METH_VARARGS, "" },
-   { "depthRange", Pygu_depthRange, METH_VARARGS, "" },
    { "scissor", Pygu_scissor, METH_VARARGS, "" },
    { "enable", Pygu_enable, METH_VARARGS, "" },
+   { "disable", Pygu_disable, METH_VARARGS, "" },
    { "depthFunc", Pygu_depthFunc, METH_VARARGS, "" },
+   { "depthMask", Pygu_depthMask, METH_VARARGS, "" },
+   { "depthOffset", Pygu_depthOffset, METH_VARARGS, "" },
+   { "depthRange", Pygu_depthRange, METH_VARARGS, "" },
+   { "fog", Pygu_fog, METH_VARARGS, "" },
    { "frontFace", Pygu_frontFace, METH_VARARGS, "" },
    { "shadeModel", Pygu_shadeModel, METH_VARARGS, "" },
    { "finish", Pygu_finish, METH_VARARGS, "" },
@@ -887,18 +1621,52 @@ static PyMethodDef gu_functions[] = {
    { "display", Pygu_display, METH_VARARGS, "" },
    { "clearColor", Pygu_clearColor, METH_VARARGS, "" },
    { "clearDepth", Pygu_clearDepth, METH_VARARGS, "" },
+   { "clearStencill", Pygu_clearStencil, METH_VARARGS, "" },
    { "light", Pygu_light, METH_VARARGS, "" },
+   { "lightAtt", Pygu_lightAtt, METH_VARARGS, "" },
    { "lightColor", Pygu_lightColor, METH_VARARGS, "" },
    { "clear", Pygu_clear, METH_VARARGS, "" },
-   { "specular", Pygu_specular, METH_VARARGS, "" },
    { "setMatrix", Pygu_setMatrix, METH_VARARGS, "" },
+   { "boneMatrix", Pygu_boneMatrix, METH_VARARGS, "" },
    { "ambientColor", Pygu_ambientColor, METH_VARARGS, "" },
    { "morphWeight", Pygu_morphWeight, METH_VARARGS, "" },
    { "drawArray", Pygu_drawArray, METH_VARARGS, "" },
    { "swapBuffers", Pygu_swapBuffers, METH_VARARGS, "" },
+   { "sendCommandf", Pygu_sendCommandf, METH_VARARGS, "" },
+   { "sendCommandi", Pygu_sendCommandi, METH_VARARGS, "" },
+   { "setStatus", Pygu_setStatus, METH_VARARGS, "" },
+   { "getStatus", Pygu_getStatus, METH_VARARGS, "" },
+   { "setAllStatus", Pygu_setAllStatus, METH_VARARGS, "" },
+   { "getAllStatus", Pygu_getAllStatus, METH_VARARGS, "" },
+   { "pixelMask", Pygu_pixelMask, METH_VARARGS, "" },
+   { "color", Pygu_color, METH_VARARGS, "" },
+   { "colorFunc", Pygu_colorFunc, METH_VARARGS, "" },
+   { "colorMaterial", Pygu_colorMaterial, METH_VARARGS, "" },
+   { "alphaFunc", Pygu_alphaFunc, METH_VARARGS, "" },
+   { "blendFunc", Pygu_blendFunc, METH_VARARGS, "" },
+   { "stencilFunc", Pygu_stencilFunc, METH_VARARGS, "" },
+   { "stencilOp", Pygu_stencilOp, METH_VARARGS, "" },
+   { "logicalOp", Pygu_logicalOp, METH_VARARGS, "" },
+   { "specular", Pygu_specular, METH_VARARGS, "" },
+   { "texEnvColor", Pygu_texEnvColor, METH_VARARGS, "" },
+   { "texFilter", Pygu_texFilter, METH_VARARGS, "" },
+   { "texFlush", Pygu_texFlush, METH_VARARGS, "" },
+   { "texFunc", Pygu_texFunc, METH_VARARGS, "" },
+   { "texMapMode", Pygu_texMapMode, METH_VARARGS, "" },
+   { "texMode", Pygu_texMode, METH_VARARGS, "" },
+   { "texOffset", Pygu_texOffset, METH_VARARGS, "" },
+   { "texProjMapMode", Pygu_texProjMapMode, METH_VARARGS, "" },
+   { "texWrap", Pygu_texWrap, METH_VARARGS, "" },
 
    { "WEIGHTS", Pygu_WEIGHTS, METH_VARARGS, "" },
    { "VERTICES", Pygu_VERTICES, METH_VARARGS, "" },
+   { "TEXTURE_SHIFT", Pygu_TEXTURE_SHIFT, METH_VARARGS, "" },
+   { "COLOR_SHIFT", Pygu_COLOR_SHIFT, METH_VARARGS, "" },
+   { "NORMAL_SHIFT", Pygu_NORMAL_SHIFT, METH_VARARGS, "" },
+   { "VERTEX_SHIFT", Pygu_VERTEX_SHIFT, METH_VARARGS, "" },
+   { "WEIGHT_SHIFT", Pygu_WEIGHT_SHIFT, METH_VARARGS, "" },
+   { "INDEX_SHIFT", Pygu_INDEX_SHIFT, METH_VARARGS, "" },
+   { "TRANSFORM_SHIFT", Pygu_TRANSFORM_SHIFT, METH_VARARGS, "" },
 
    { NULL }
 };
@@ -940,6 +1708,7 @@ PyMODINIT_FUNC initgu(void)
     PyModule_AddIntConstant(mdl, "BLEND", GU_BLEND);
     PyModule_AddIntConstant(mdl, "CULL_FACE", GU_CULL_FACE);
     PyModule_AddIntConstant(mdl, "DITHER", GU_DITHER);
+    PyModule_AddIntConstant(mdl, "FOG", GU_FOG);
     PyModule_AddIntConstant(mdl, "CLIP_PLANES", GU_CLIP_PLANES);
     PyModule_AddIntConstant(mdl, "TEXTURE_2D", GU_TEXTURE_2D);
     PyModule_AddIntConstant(mdl, "LIGHTING", GU_LIGHTING);
@@ -947,7 +1716,11 @@ PyMODINIT_FUNC initgu(void)
     PyModule_AddIntConstant(mdl, "LIGHT1", GU_LIGHT1);
     PyModule_AddIntConstant(mdl, "LIGHT2", GU_LIGHT2);
     PyModule_AddIntConstant(mdl, "LIGHT3", GU_LIGHT3);
+    PyModule_AddIntConstant(mdl, "COLOR_TEST", GU_COLOR_LOGIC_OP);
     PyModule_AddIntConstant(mdl, "COLOR_LOGIC_OP", GU_COLOR_LOGIC_OP);
+    PyModule_AddIntConstant(mdl, "FACE_NORMAL_REVERSE", GU_FACE_NORMAL_REVERSE);
+    PyModule_AddIntConstant(mdl, "PATCH_FACE", GU_PATCH_FACE);
+    PyModule_AddIntConstant(mdl, "FRAGMENT_2X", GU_FRAGMENT_2X);
 
     PyModule_AddIntConstant(mdl, "NEVER", GU_NEVER);
     PyModule_AddIntConstant(mdl, "ALWAYS", GU_ALWAYS);
@@ -976,9 +1749,7 @@ PyMODINIT_FUNC initgu(void)
     PyModule_AddIntConstant(mdl, "UNKNOWN_LIGHT_COMPONENT", GU_UNKNOWN_LIGHT_COMPONENT);
 
     PyModule_AddIntConstant(mdl, "COLOR_BUFFER_BIT", GU_COLOR_BUFFER_BIT);
-    PyModule_AddIntConstant(mdl, "DEPTH_BUFFER_BIT", GU_DEPTH_BUFFER_BIT);
-
-    PyModule_AddIntConstant(mdl, "COLOR_BUFFER_BIT", GU_COLOR_BUFFER_BIT);
+    PyModule_AddIntConstant(mdl, "STENCIL_BUFFER_BIT", GU_STENCIL_BUFFER_BIT);
     PyModule_AddIntConstant(mdl, "DEPTH_BUFFER_BIT", GU_DEPTH_BUFFER_BIT);
 
     PyModule_AddIntConstant(mdl, "PROJECTION", GU_PROJECTION);
@@ -997,31 +1768,123 @@ PyMODINIT_FUNC initgu(void)
     PyModule_AddIntConstant(mdl, "TEXTURE_8BIT", GU_TEXTURE_8BIT);
     PyModule_AddIntConstant(mdl, "TEXTURE_16BIT", GU_TEXTURE_16BIT);
     PyModule_AddIntConstant(mdl, "TEXTURE_32BITF", GU_TEXTURE_32BITF);
+    PyModule_AddIntConstant(mdl, "TEXTURE_BITS", GU_TEXTURE_BITS);
 
+    PyModule_AddIntConstant(mdl, "WEIGHTS_BITS", GU_WEIGHTS_BITS);
+    PyModule_AddIntConstant(mdl, "VERTICES_BITS", GU_VERTICES_BITS);
+
+    PyModule_AddIntConstant(mdl, "COLOR_RES1", GU_COLOR_RES1);
+    PyModule_AddIntConstant(mdl, "COLOR_RES2", GU_COLOR_RES2);
+    PyModule_AddIntConstant(mdl, "COLOR_RES3", GU_COLOR_RES3);
     PyModule_AddIntConstant(mdl, "COLOR_5650", GU_COLOR_5650);
     PyModule_AddIntConstant(mdl, "COLOR_5551", GU_COLOR_5551);
     PyModule_AddIntConstant(mdl, "COLOR_4444", GU_COLOR_4444);
     PyModule_AddIntConstant(mdl, "COLOR_8888", GU_COLOR_8888);
+    PyModule_AddIntConstant(mdl, "COLOR_BITS", GU_COLOR_BITS);
 
     PyModule_AddIntConstant(mdl, "NORMAL_8BIT", GU_NORMAL_8BIT);
     PyModule_AddIntConstant(mdl, "NORMAL_16BIT", GU_NORMAL_16BIT);
     PyModule_AddIntConstant(mdl, "NORMAL_32BITF", GU_NORMAL_32BITF);
+    PyModule_AddIntConstant(mdl, "NORMAL_BITS", GU_NORMAL_BITS);
 
     PyModule_AddIntConstant(mdl, "VERTEX_8BIT", GU_VERTEX_8BIT);
     PyModule_AddIntConstant(mdl, "VERTEX_16BIT", GU_VERTEX_16BIT);
     PyModule_AddIntConstant(mdl, "VERTEX_32BITF", GU_VERTEX_32BITF);
+    PyModule_AddIntConstant(mdl, "VERTEX_BITS", GU_VERTEX_BITS);
 
     PyModule_AddIntConstant(mdl, "WEIGHT_8BIT", GU_WEIGHT_8BIT);
     PyModule_AddIntConstant(mdl, "WEIGHT_16BIT", GU_WEIGHT_16BIT);
     PyModule_AddIntConstant(mdl, "WEIGHT_32BITF", GU_WEIGHT_32BITF);
+    PyModule_AddIntConstant(mdl, "WEIGHT_BITS", GU_WEIGHT_BITS);
 
     PyModule_AddIntConstant(mdl, "INDEX_8BIT", GU_INDEX_8BIT);
     PyModule_AddIntConstant(mdl, "INDEX_16BIT", GU_INDEX_16BIT);
+    PyModule_AddIntConstant(mdl, "INDEX_BITS", GU_INDEX_BITS);
 
     PyModule_AddIntConstant(mdl, "TRANSFORM_2D", GU_TRANSFORM_2D);
     PyModule_AddIntConstant(mdl, "TRANSFORM_3D", GU_TRANSFORM_3D);
+    PyModule_AddIntConstant(mdl, "TRANSFORM_BITS", GU_TRANSFORM_BITS);
 
+    PyModule_AddIntConstant(mdl, "PSM_5650", GU_PSM_5650);
+    PyModule_AddIntConstant(mdl, "PSM_5551", GU_PSM_5551);
+    PyModule_AddIntConstant(mdl, "PSM_4444", GU_PSM_4444);
     PyModule_AddIntConstant(mdl, "PSM_8888", GU_PSM_8888);
+    PyModule_AddIntConstant(mdl, "PSM_T4", GU_PSM_T4);
+    PyModule_AddIntConstant(mdl, "PSM_T8", GU_PSM_T8);
+    PyModule_AddIntConstant(mdl, "PSM_T16", GU_PSM_T16);
+    PyModule_AddIntConstant(mdl, "PSM_T32", GU_PSM_T32);
+
+    PyModule_AddIntConstant(mdl, "CLEAR", GU_CLEAR);
+    PyModule_AddIntConstant(mdl, "AND", GU_AND);
+    PyModule_AddIntConstant(mdl, "AND_REVERSE", GU_AND_REVERSE);
+    PyModule_AddIntConstant(mdl, "COPY", GU_COPY);
+    PyModule_AddIntConstant(mdl, "AND_INVERTED", GU_AND_INVERTED);
+    PyModule_AddIntConstant(mdl, "NOOP", GU_NOOP);
+    PyModule_AddIntConstant(mdl, "XOR", GU_XOR);
+    PyModule_AddIntConstant(mdl, "OR", GU_OR);
+    PyModule_AddIntConstant(mdl, "NOR", GU_NOR);
+    PyModule_AddIntConstant(mdl, "EQUIV", GU_EQUIV);
+    PyModule_AddIntConstant(mdl, "INVERTED", GU_INVERTED);
+    PyModule_AddIntConstant(mdl, "OR_REVERSE", GU_OR_REVERSE);
+    PyModule_AddIntConstant(mdl, "COPY_INVERTED", GU_COPY_INVERTED);
+    PyModule_AddIntConstant(mdl, "OR_INVERTED", GU_OR_INVERTED);
+    PyModule_AddIntConstant(mdl, "NAND", GU_NAND);
+    PyModule_AddIntConstant(mdl, "SET", GU_SET);
+
+    PyModule_AddIntConstant(mdl, "NEAREST", GU_NEAREST);
+    PyModule_AddIntConstant(mdl, "LINEAR", GU_LINEAR);
+    PyModule_AddIntConstant(mdl, "NEAREST_MIPMAP_NEAREST", GU_NEAREST_MIPMAP_NEAREST);
+    PyModule_AddIntConstant(mdl, "LINEAR_MIPMAP_NEAREST", GU_LINEAR_MIPMAP_NEAREST);
+    PyModule_AddIntConstant(mdl, "NEAREST_MIPMAP_LINEAR", GU_NEAREST_MIPMAP_LINEAR);
+    PyModule_AddIntConstant(mdl, "LINEAR_MIPMAP_LINEAR", GU_LINEAR_MIPMAP_LINEAR);
+
+    PyModule_AddIntConstant(mdl, "TEXTURE_COORDS", GU_TEXTURE_COORDS);
+    PyModule_AddIntConstant(mdl, "TEXTURE_MATRIX", GU_TEXTURE_MATRIX);
+    PyModule_AddIntConstant(mdl, "ENVIRONMENT_MAP", GU_ENVIRONMENT_MAP);
+
+    PyModule_AddIntConstant(mdl, "POSITION", GU_POSITION);
+    PyModule_AddIntConstant(mdl, "UV", GU_UV);
+    PyModule_AddIntConstant(mdl, "NORMALIZED_NORMAL", GU_NORMALIZED_NORMAL);
+    PyModule_AddIntConstant(mdl, "NORMAL", GU_NORMAL);
+
+    PyModule_AddIntConstant(mdl, "REPEAT", GU_REPEAT);
+    PyModule_AddIntConstant(mdl, "CLAMP", GU_CLAMP);
+
+    PyModule_AddIntConstant(mdl, "TFX_MODULATE", GU_TFX_MODULATE);
+    PyModule_AddIntConstant(mdl, "TFX_DECAL", GU_TFX_DECAL);
+    PyModule_AddIntConstant(mdl, "TFX_BLEND", GU_TFX_BLEND);
+    PyModule_AddIntConstant(mdl, "TFX_REPLACE", GU_TFX_REPLACE);
+    PyModule_AddIntConstant(mdl, "TFX_ADD", GU_TFX_ADD);
+
+    PyModule_AddIntConstant(mdl, "TCC_RGB", GU_TCC_RGB);
+    PyModule_AddIntConstant(mdl, "TCC_RGBA", GU_TCC_RGBA);
+
+    PyModule_AddIntConstant(mdl, "ADD", GU_ADD);
+    PyModule_AddIntConstant(mdl, "SUBTRACT", GU_SUBTRACT);
+    PyModule_AddIntConstant(mdl, "REVERSE_SUBTRACT", GU_REVERSE_SUBTRACT);
+    PyModule_AddIntConstant(mdl, "MIN", GU_MIN);
+    PyModule_AddIntConstant(mdl, "MAX", GU_MAX);
+    PyModule_AddIntConstant(mdl, "ABS", GU_ABS);
+
+    PyModule_AddIntConstant(mdl, "SRC_COLOR", GU_SRC_COLOR);
+    PyModule_AddIntConstant(mdl, "ONE_MINUS_SRC_COLOR", GU_ONE_MINUS_SRC_COLOR);
+    PyModule_AddIntConstant(mdl, "SRC_ALPHA", GU_SRC_ALPHA);
+    PyModule_AddIntConstant(mdl, "ONE_MINUS_SRC_ALPHA", GU_ONE_MINUS_SRC_ALPHA);
+    PyModule_AddIntConstant(mdl, "DST_COLOR", GU_DST_COLOR);
+    PyModule_AddIntConstant(mdl, "ONE_MINUS_DST_COLOR", GU_ONE_MINUS_DST_COLOR);
+    PyModule_AddIntConstant(mdl, "DST_ALPHA", GU_DST_ALPHA);
+    PyModule_AddIntConstant(mdl, "ONE_MINUS_DST_ALPHA", GU_ONE_MINUS_DST_ALPHA);
+    PyModule_AddIntConstant(mdl, "FIX", GU_FIX);
+
+    PyModule_AddIntConstant(mdl, "KEEP", GU_KEEP);
+    PyModule_AddIntConstant(mdl, "ZERO", GU_ZERO);
+    PyModule_AddIntConstant(mdl, "REPLACE", GU_REPLACE);
+    PyModule_AddIntConstant(mdl, "INVERT", GU_INVERT);
+    PyModule_AddIntConstant(mdl, "INCR", GU_INCR);
+    PyModule_AddIntConstant(mdl, "DECR", GU_DECR);
+
+    PyModule_AddIntConstant(mdl, "TAIL", GU_TAIL);
+    PyModule_AddIntConstant(mdl, "HEAD", GU_HEAD);
 }
 
 #ifdef _GNUC
