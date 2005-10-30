@@ -125,6 +125,9 @@ extern "C" {
 #define GU_PSM_T8		(5) /* Texture */
 #define GU_PSM_T16		(6) /* Texture */
 #define GU_PSM_T32		(7) /* Texture */
+#define GU_PSM_DXT1		(8) /* Texture */
+#define GU_PSM_DXT3		(9) /* Texture */
+#define GU_PSM_DXT5		(10) /* Texture */
 
 /* Shading Model */
 #define GU_FLAT			(0)
