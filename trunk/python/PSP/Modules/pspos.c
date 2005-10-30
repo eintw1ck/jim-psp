@@ -32,6 +32,9 @@ static PyObject* PyPSP_open(PyObject *self,
     if (!PyArg_ParseTuple(args, "sii:open", &path, &flags, &mode))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     fd = open(path, flags,mode);
     if (fd < 0)
     {
@@ -57,6 +60,9 @@ static PyObject* PyPSP_fdopen(PyObject *self,
     if (!PyArg_ParseTuple(args, "i|s:fdopen", &fd, &mode))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     fp = fdopen(fd, mode);
     return PyFile_FromFile(fp, "", mode, closefile); // FIXME: name ?
 }
@@ -67,6 +73,9 @@ static PyObject* PyPSP_unlink(PyObject *self,
     char *path;
 
     if (!PyArg_ParseTuple(args, "s:unlink", &path))
+       return NULL;
+
+    if (PyErr_CheckSignals())
        return NULL;
 
     if (unlink(path))
@@ -87,6 +96,9 @@ static PyObject* PyPSP_rename(PyObject *self,
     if (!PyArg_ParseTuple(args, "ss:rename", &src, &dst))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     if (rename(src, dst))
     {
        PyErr_SetFromErrno(PyExc_OSError);
@@ -105,6 +117,9 @@ static PyObject* PyPSP_system(PyObject *self,
     if (!PyArg_ParseTuple(args, "s:system", &cmd))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     return PyInt_FromLong(system(cmd));
 }
 
@@ -114,6 +129,9 @@ static PyObject* PyPSP_rmdir(PyObject *self,
     char *path;
 
     if (!PyArg_ParseTuple(args, "s:rmdir", &path))
+       return NULL;
+
+    if (PyErr_CheckSignals())
        return NULL;
 
     if (rmdir(path))
@@ -134,6 +152,9 @@ static PyObject* PyPSP_chdir(PyObject *self,
     if (!PyArg_ParseTuple(args, "s:chdir", &path))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     if (chdir(path))
     {
        PyErr_SetFromErrno(PyExc_OSError);
@@ -150,6 +171,9 @@ static PyObject* PyPSP_getcwd(PyObject *self,
     char *cwd = NULL;
     int sz = 128;
     PyObject *ret;
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     for (;;)
     {
@@ -195,6 +219,9 @@ static PyObject* PyPSP_mkdir(PyObject *self,
     if (!PyArg_ParseTuple(args, "s|i:mkdir", &path, &mode))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     err = sceIoMkdir(path, mode);
     if (err)
     {
@@ -213,6 +240,9 @@ static PyObject* PyPSP_listdir(PyObject *self,
     int fd;
 
     if (!PyArg_ParseTuple(args, "s:listdir", &path))
+       return NULL;
+
+    if (PyErr_CheckSignals())
        return NULL;
 
     fd = sceIoDopen(path);
@@ -300,6 +330,9 @@ static PyObject* PyPSP_stat(PyObject *self,
     if (!PyArg_ParseTuple(args, "s:stat", &path))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     //sceIoGetstat(path, &st);
     err = stat(path, &st);
     if (err)
@@ -332,6 +365,9 @@ static PyObject* PyPSP_chmod(PyObject *self,
     if (!PyArg_ParseTuple(args, "si:chmod", &path, &mode))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     // FIXME
 
     /*
@@ -351,6 +387,9 @@ static PyObject* PyPSP_utime(PyObject *self,
 {
     // TODO
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -361,6 +400,9 @@ static PyObject* PyPSP_getenv(PyObject *self,
     char *name;
 
     if (!PyArg_ParseTuple(args, "s:getenv", &name))
+       return NULL;
+
+    if (PyErr_CheckSignals())
        return NULL;
 
     // No such thing here...
@@ -377,6 +419,9 @@ static PyObject* PyPSP_putenv(PyObject *self,
     if (!PyArg_ParseTuple(args, "ss:putenv", &name, &val))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     // No such thing here...
 
     Py_INCREF(Py_None);
@@ -391,6 +436,9 @@ static PyObject* PyPSP_delenv(PyObject *self,
     if (!PyArg_ParseTuple(args, "s:delenv", &name))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     // No such thing here...
 
     Py_INCREF(Py_None);
@@ -400,6 +448,12 @@ static PyObject* PyPSP_delenv(PyObject *self,
 static PyObject* PyPSP_getenvdict(PyObject *self,
                                   PyObject *args)
 {
+    if (!PyArg_ParseTuple(args, ""))
+       return NULL;
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
     return PyDict_New();
 }
 

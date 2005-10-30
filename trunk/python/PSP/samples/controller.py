@@ -10,7 +10,6 @@ try:
     ctl.setSamplingMode(1)
 
     while True:
-        scr.clear()
         scr.setXY(0, 2)
         stamp, buttons, analog_x, analog_y = ctl.readBufferPositive()
 

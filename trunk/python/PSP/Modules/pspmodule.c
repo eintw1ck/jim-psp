@@ -201,6 +201,9 @@ static PyObject* PyPSP_ctrlGetSamplingCycle(PyObject *self,
     if (!PyArg_ParseTuple(args, ""))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     sceCtrlGetSamplingCycle(&sc);
 
     return Py_BuildValue("i", sc);
@@ -231,6 +234,9 @@ static PyObject* PyPSP_ctrlGetSamplingMode(PyObject *self,
     if (!PyArg_ParseTuple(args, ""))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     sceCtrlGetSamplingMode(&sm);
 
     return Py_BuildValue("i", sm);
@@ -244,6 +250,9 @@ static PyObject* PyPSP_ctrlPeekBufferPositive(PyObject *self,
     int n, k, err;
 
     if (!PyArg_ParseTuple(args, "i", &n))
+       return NULL;
+
+    if (PyErr_CheckSignals())
        return NULL;
 
     pdata = (SceCtrlData*)malloc(sizeof(SceCtrlData) * n);
@@ -435,6 +444,9 @@ static PyObject* PyPSP_displaySetMode(PyObject *self,
     if (!PyArg_ParseTuple(args, "iii", &mode, &w, &h))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     if (sceDisplaySetMode(mode, w, h))
     {
        PyErr_SetString(PyExc_RuntimeError, "FIXME");
@@ -453,6 +465,9 @@ static PyObject* PyPSP_displayGetMode(PyObject *self,
     if (!PyArg_ParseTuple(args, ""))
        return NULL;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     if (sceDisplayGetMode(&mode, &w, &h))
     {
        PyErr_SetString(PyExc_RuntimeError, "FIXME");
@@ -466,6 +481,9 @@ static PyObject* PyPSP_displayGetVcount(PyObject *self,
                                         PyObject *args)
 {
     if (!PyArg_ParseTuple(args, ""))
+       return NULL;
+
+    if (PyErr_CheckSignals())
        return NULL;
 
     return Py_BuildValue("i", sceDisplayGetVcount());
