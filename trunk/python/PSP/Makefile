@@ -134,7 +134,7 @@ OBJS += psp2d/psp2d.o \
 	psp2d/controller.o \
 	psp2d/music.o \
 	psp2d/sound.o
-LIBS += -lmikmod -lmmio -lpspaudiolib -lpspaudio
+LIBS += -lmikmod -lmmio -lpspaudiolib -lpspaudio -lpng -lz
 endif
 
 CPPFLAGS += -DHAVE_CONFIG_H -DPSP -I../Include -DCHECKTYPE
