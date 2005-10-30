@@ -17,6 +17,7 @@
 #include "controller.h"
 #include "music.h"
 #include "sound.h"
+#include "screen.h"
 
 #ifndef PyMODINIT_FUNC
 #define PyMODINIT_FUNC void
@@ -66,6 +67,9 @@ PyMODINIT_FUNC initpsp2d(void)
     if (PyType_Ready(PPySoundType) < 0)
        return;
 
+    if (PyType_Ready(PPyScreenType) < 0)
+       return;
+
     mdl = Py_InitModule3("psp2d", psp2d_functions, "2D programming for the PSP");
     if (!mdl)
        return;
@@ -84,6 +88,9 @@ PyMODINIT_FUNC initpsp2d(void)
 
     Py_INCREF(PPySoundType);
     PyModule_AddObject(mdl, "Sound", (PyObject*)PPySoundType);
+
+    Py_INCREF(PPyScreenType);
+    PyModule_AddObject(mdl, "Screen", (PyObject*)PPyScreenType);
 }
 
 #ifdef _GNUC

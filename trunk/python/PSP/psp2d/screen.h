@@ -1,6 +1,6 @@
 
 /**
- * @file image.h
+ * @file screen.h
  */
 
 /**********************************************************************
@@ -10,25 +10,20 @@
 **********************************************************************/
 // $Id$
 
-#ifndef _IMAGE_H
-#define _IMAGE_H
+#ifndef _SCREEN_H
+#define _SCREEN_H
 
 #include <Python.h>
-#include <psptypes.h>
+#include <pspgu.h>
 
 typedef struct
 {
       PyObject_HEAD
 
-      u16 width;
-      u16 height;
+      unsigned int __attribute__((aligned(16))) list[262144];
+      int current;
+} PyScreen;
 
-      u16 twidth;
-      u16 theight;
+extern PyTypeObject* PPyScreenType;
 
-      u32 *data;
-} PyImage;
-
-extern PyTypeObject* PPyImageType;
-
-#endif /* _IMAGE_H */
+#endif /* _SCREEN_H */

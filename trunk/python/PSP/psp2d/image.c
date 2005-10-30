@@ -14,6 +14,24 @@
 #include "color.h"
 
 #include <png.h>
+#include <malloc.h>
+
+static u16 compute_tdim(u16 dim)
+{
+    if (dim == 0)
+    {
+       return 1;
+    }
+    else
+    {
+       u16 pwr = 1;
+
+       while (pwr < dim)
+          pwr *= 2;
+
+       return pwr;
+    }
+}
 
 static void image_dealloc(PyImage *self)
 {
@@ -35,6 +53,8 @@ static PyObject* image_new(PyTypeObject *type,
     {
        self->width = 0;
        self->height = 0;
+       self->twidth = 0;
+       self->theight = 0;
        self->data = NULL;
     }
 
@@ -130,7 +150,10 @@ static int image_init(PyImage *self,
 
        self->width = w;
        self->height = h;
-       self->data = (u32*)malloc(sizeof(u32) * w * h);
+       self->twidth = compute_tdim(w);
+       self->theight = compute_tdim(h);
+
+       self->data = (u32*)memalign(16, sizeof(u32) * self->twidth * self->theight);
        if (!self->data)
        {
           fclose(fp);
@@ -142,7 +165,7 @@ static int image_init(PyImage *self,
 
        for (j = 0; j < h; ++j)
        {
-          png_read_row(pptr, (u8*)(self->data + j * w), png_bytep_NULL);
+          png_read_row(pptr, (u8*)(self->data + j * self->twidth), png_bytep_NULL);
        }
 
        png_read_end(pptr, iptr);
@@ -173,7 +196,12 @@ static int image_init(PyImage *self,
        }
 #endif
 
-       self->data = (u32*)malloc(sizeof(u32) * w * h);
+       self->width = w;
+       self->height = h;
+       self->twidth = compute_tdim(w);
+       self->theight = compute_tdim(h);
+
+       self->data = (u32*)memalign(16, sizeof(u32) * self->twidth * self->theight);
        if (!self->data)
        {
           PyErr_SetString(PyExc_MemoryError, "Memory error");
@@ -229,10 +257,119 @@ static PyObject* image_clear(PyImage *self,
     return Py_None;
 }
 
+static PyObject* image_blit(PyImage *self,
+                            PyObject *args,
+                            PyObject *kwargs)
+{
+    PyImage *src;
+    int sx, sy, w, h, dx, dy;
+    int blend = 0;
+    int j;
+
+    u32 *srcdec;
+    u32 *dstdec;
+
+    if (!PyArg_ParseTuple(args, "iiiiOii|i:blit", &sx, &sy,
+                          &w, &h, &src, &dx, &dy, &blend))
+       return NULL;
+
+#ifdef CHECKTYPE
+    if (((PyObject*)src)->ob_type != PPyImageType)
+    {
+       PyErr_SetString(PyExc_TypeError, "Fifth argument must be an Image");
+       return NULL;
+    }
+#endif
+
+    srcdec = src->data + sy * src->twidth + sx;
+    dstdec = self->data + dy * self->twidth + dx;
+    for (j = 0; j < h; ++j)
+    {
+       if (blend)
+       {
+          int i;
+
+          for (i = 0; i < w; ++i)
+          {
+             u32 a1, a2, r1, r2, g1, g2, b1, b2;
+
+             u32 srccol = *(srcdec + j * src->twidth + i);
+             u32 dstcol = *(dstdec + j * self->twidth + i);
+
+             a1 = srccol >> 24;
+             b1 = (srccol >> 16) & 0xFF;
+             g1 = (srccol >> 8) & 0xFF;
+             r1 = srccol & 0xFF;
+
+             a2 = dstcol >> 24;
+             b2 = (dstcol >> 16) & 0xFF;
+             g2 = (dstcol >> 8) & 0xFF;
+             r2 = dstcol & 0xFF;
+
+             *(dstdec + j * self->twidth + i) = ((a1*a1+a2*a2)/510 << 24) |
+                ((a1*b1+a2*b2)/510 << 16) | ((a1*g1+a2*g2)/510 << 8) |
+                ((a1*r1+a2*r2)/512); // FIXME
+          }
+       }
+       else
+       {
+          memcpy(dstdec + j * self->twidth,
+                 srcdec + j * src->twidth,
+                 w * sizeof(u32));
+       }
+    }
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* image_fillRect(PyImage *self,
+                                PyObject *args,
+                                PyObject *kwargs)
+{
+    int x, y, w, h;
+    PyColor *color;
+    int i, j;
+    u32 *dst;
+
+    if (!PyArg_ParseTuple(args, "iiiiO:fillRect", &x, &y, &w, &h,
+                          &color))
+       return NULL;
+
+#ifdef CHECKTYPE
+    if (((PyObject*)color)->ob_type != PPyColorType)
+    {
+       PyErr_SetString(PyExc_TypeError, "Fifth argument must be a Color.");
+       return NULL;
+    }
+#endif
+
+    dst = self->data + y * self->twidth + x;
+    for (j = 0; j < h; ++j)
+    {
+       for (i = 0; i < w; ++i)
+       {
+          *(dst + j * self->twidth + i) = color->color;
+       }
+    }
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyMethodDef image_methods[] = {
    { "clear", (PyCFunction)image_clear, METH_VARARGS,
      "clear(color)\n"
      "Fills the image with the given color." },
+
+   { "blit", (PyCFunction)image_blit, METH_VARARGS,
+     "blit(sx, sy, w, h, srcimg, dx, dy, blend = False)\n"
+     "Copies the (sx, sy, w, h) rectangle from srcimg to this image, at\n"
+     "(dx, dy) position. If blend is True, perform alpha blending." },
+
+   { "fillRect", (PyCFunction)image_fillRect, METH_VARARGS,
+     "fillRect(x, y, w, h, color)\n"
+     "Fills the (x, y, w, h) rectangle with the specified color." },
 
    { NULL }
 };
