@@ -296,15 +296,17 @@ static PyObject* image_blit(PyImage *self,
              u32 srccol = *(srcdec + j * src->twidth + i);
              u32 dstcol = *(dstdec + j * self->twidth + i);
 
+             // TODO: premultiply
+
              a1 = srccol >> 24;
-             b1 = (srccol >> 16) & 0xFF;
-             g1 = (srccol >> 8) & 0xFF;
-             r1 = srccol & 0xFF;
+             b1 = ((srccol >> 16) & 0xFF) * a1 / 255;
+             g1 = ((srccol >> 8) & 0xFF) * a1 / 255;
+             r1 = (srccol & 0xFF) * a1 / 255;
 
              a2 = dstcol >> 24;
-             b2 = (dstcol >> 16) & 0xFF;
-             g2 = (dstcol >> 8) & 0xFF;
-             r2 = dstcol & 0xFF;
+             b2 = ((dstcol >> 16) & 0xFF) * a2 / 255;
+             g2 = ((dstcol >> 8) & 0xFF) * a2 / 255;
+             r2 = (dstcol & 0xFF) * a2 / 255;
 
              *(dstdec + j * self->twidth + i) = ((a1 + (255 - a1) * a2 / 255) << 24) |
                 ((b1 + (255 - a1) * b2 / 255) << 16) |

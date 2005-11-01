@@ -41,16 +41,6 @@ static u32* getDrawBase(PyScreen *self)
     return ret;
 }
 
-static u32* getDisplayBase(PyScreen *self)
-{
-    u32 * ret = VRAM_BASE;
-
-    if (self->current)
-       ret += FRAMEBUFFER_SIZE / sizeof(u32);
-
-    return ret;
-}
-
 static void screen_dealloc(PyScreen *self)
 {
     self->ob_type->tp_free((PyObject*)self);
@@ -81,8 +71,8 @@ static int screen_init(PyScreen *self,
 
     sceGuStart(GU_DIRECT, self->list);
 
-    sceGuDrawBuffer(GU_PSM_8888, (void*)getDrawBase(self), PSP_LINE_SIZE);
-    sceGuDispBuffer(SCREEN_WIDTH, SCREEN_HEIGHT, (void*)getDisplayBase(self), PSP_LINE_SIZE);
+    sceGuDrawBuffer(GU_PSM_8888, (void*)FRAMEBUFFER_SIZE, PSP_LINE_SIZE);
+    sceGuDispBuffer(SCREEN_WIDTH, SCREEN_HEIGHT, (void*)0, PSP_LINE_SIZE);
 
     sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
     sceGuDepthBuffer((void*) (FRAMEBUFFER_SIZE*2), PSP_LINE_SIZE);
@@ -201,12 +191,23 @@ static PyObject* screen_clear(PyScreen *self,
                               PyObject *args,
                               PyObject *kwargs)
 {
-    if (!PyArg_ParseTuple(args, ":clear"))
+    PyColor *color;
+
+    if (!PyArg_ParseTuple(args, "O:clear", &color))
        return NULL;
 
+#ifdef CHECKTYPE
+    if (((PyObject*)color)->ob_type != PPyColorType)
+    {
+       PyErr_SetString(PyExc_TypeError, "Argument must be a Color.");
+       return NULL;
+    }
+#endif
+
     sceGuStart(GU_DIRECT, self->list);
+    sceGuClearColor(color->color);
     sceGuClearDepth(0);
-    sceGuClear(GU_COLOR_BUFFER_BIT|GU_DEPTH_BUFFER_BIT);
+    sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
     sceGuFinish();
     sceGuSync(0, 0);
 

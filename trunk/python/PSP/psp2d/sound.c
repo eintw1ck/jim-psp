@@ -14,10 +14,8 @@
 
 static void sound_dealloc(PySound *self)
 {
-    /* FIXME!!! How to free ?
     if (self->sf)
-       MikMod_FreeSong(self->sf);
-    */
+       WAV_Free(self->sf);
 
     self->ob_type->tp_free((PyObject*)self);
 }

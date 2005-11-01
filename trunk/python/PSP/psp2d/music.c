@@ -39,12 +39,20 @@ static int music_init(PyMusic *self,
 {
     char *filename;
     int maxchan = 128;
+    int loop = 0;
 
-    if (!PyArg_ParseTuple(args, "s|i", &filename, &maxchan))
+    static char* kwids[] = { "filename", "maxchan", "loop", NULL };
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|ii", kwids,
+                                     &filename, &maxchan, &loop))
        return -1;
 
     self->mf = MikMod_LoadSong(filename, maxchan);
-    if (!self->mf)
+    if (self->mf)
+    {
+       self->mf->loop = loop;
+    }
+    else
     {
        PyErr_SetString(PyExc_IOError, "Could not load song file.");
        return -1;

@@ -18,20 +18,64 @@
 #include "music.h"
 #include "sound.h"
 #include "screen.h"
+#include "mask.h"
 
 #ifndef PyMODINIT_FUNC
 #define PyMODINIT_FUNC void
 #endif
 
+static PyObject* psp2d_setMusicVolume(PyObject *self,
+                                      PyObject *args,
+                                      PyObject *kwargs)
+{
+    int volume;
+
+    if (!PyArg_ParseTuple(args, "i:setMusicVolume", &volume))
+       return NULL;
+
+#ifdef CHECKTYPE
+    if ((volume < 0) || (volume > 255))
+    {
+       PyErr_SetString(PyExc_ValueError, "Bad volume value");
+       return NULL;
+    }
+#endif
+
+    md_musicvolume = (UBYTE)volume;
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* psp2d_setSndFxVolume(PyObject *self,
+                                      PyObject *args,
+                                      PyObject *kwargs)
+{
+    int volume;
+
+    if (!PyArg_ParseTuple(args, "i:setSndFxVolume", &volume))
+       return NULL;
+
+#ifdef CHECKTYPE
+    if ((volume < 0) || (volume > 255))
+    {
+       PyErr_SetString(PyExc_ValueError, "Bad volume value");
+       return NULL;
+    }
+#endif
+
+    md_sndfxvolume = (UBYTE)volume;
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyMethodDef psp2d_functions[] = {
+   { "setMusicVolume", (PyCFunction)psp2d_setMusicVolume, METH_VARARGS, "" },
+   { "setSndFxVolume", (PyCFunction)psp2d_setSndFxVolume, METH_VARARGS, "" },
+
    { NULL }
 };
-
-// MikMod globals
-
-extern UWORD md_mode;
-extern UBYTE md_reverb;
-extern UBYTE md_pansep;
 
 PyMODINIT_FUNC initpsp2d(void)
 {
@@ -39,18 +83,6 @@ PyMODINIT_FUNC initpsp2d(void)
 
     sceCtrlSetSamplingCycle(0);
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
-
-    MikMod_RegisterAllLoaders();
-    MikMod_RegisterAllDrivers();
-    md_mode = DMODE_16BITS|DMODE_STEREO|DMODE_SOFT_SNDFX|DMODE_SOFT_MUSIC;
-    md_reverb = 0;
-    md_pansep = 128;
-    MikMod_Init();
-    MikMod_SetNumVoices(-1, 8);
-
-    MikMod_EnableOutput();
-
-    // TODO: MikMod_Exit => in main() ?
 
     if (PyType_Ready(PPyColorType) < 0)
        return;
@@ -68,6 +100,9 @@ PyMODINIT_FUNC initpsp2d(void)
        return;
 
     if (PyType_Ready(PPyScreenType) < 0)
+       return;
+
+    if (PyType_Ready(PPyMaskType) < 0)
        return;
 
     mdl = Py_InitModule3("psp2d", psp2d_functions, "2D programming for the PSP");
@@ -91,6 +126,9 @@ PyMODINIT_FUNC initpsp2d(void)
 
     Py_INCREF(PPyScreenType);
     PyModule_AddObject(mdl, "Screen", (PyObject*)PPyScreenType);
+
+    Py_INCREF(PPyMaskType);
+    PyModule_AddObject(mdl, "Mask", (PyObject*)PPyMaskType);
 }
 
 #ifdef _GNUC
