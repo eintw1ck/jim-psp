@@ -626,8 +626,10 @@ void tzset(void)
 			int tzOffsetAbs = tzOffset < 0 ? -tzOffset : tzOffset;
 			int hours = tzOffsetAbs / 60;
 			int minutes = tzOffsetAbs - hours * 60;
-			static char tz[10];
-			sprintf(tz, "GMT%s%02i:%02i", tzOffset < 0 ? "+" : "-", hours, minutes);
+			int pspDaylight = 0;
+			sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_DAYLIGHTSAVINGS, &pspDaylight);
+			static char tz[18];
+			sprintf(tz, "GMT%s%02i:%02i%s", tzOffset < 0 ? "+" : "-", hours, minutes, pspDaylight ? "daylight" : "");
 			setenv("TZ", tz, 1);
 		}
 	}
