@@ -3599,7 +3599,7 @@
 +void _start() { }
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/libcglue.c	1969-12-31 16:00:00.000000000 -0800
 +++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-10-29 12:56:30.000000000 -0700
-@@ -0,0 +1,698 @@
+@@ -0,0 +1,700 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -4228,8 +4228,10 @@
 +			int tzOffsetAbs = tzOffset < 0 ? -tzOffset : tzOffset;
 +			int hours = tzOffsetAbs / 60;
 +			int minutes = tzOffsetAbs - hours * 60;
-+			static char tz[10];
-+			sprintf(tz, "GMT%s%02i:%02i", tzOffset < 0 ? "+" : "-", hours, minutes);
++			int pspDaylight = 0;
++			sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_DAYLIGHTSAVINGS, &pspDaylight);
++			static char tz[18];
++			sprintf(tz, "GMT%s%02i:%02i%s", tzOffset < 0 ? "+" : "-", hours, minutes, pspDaylight ? "daylight" : "");
 +			setenv("TZ", tz, 1);
 +		}
 +	}
