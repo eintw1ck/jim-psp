@@ -51,7 +51,7 @@ static char rcsid =
 
 #define PSPVID_DRIVER_NAME "psp"
 
-#define PSP_SLICE_SIZE	(16)
+#define PSP_SLICE_SIZE	(32)
 #define PSP_LINE_SIZE (512)
 #define SCREEN_WIDTH (480)
 #define SCREEN_HEIGHT (272)
@@ -419,7 +419,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
     } else if (IS_SWSURFACE(flags)) {
 
 		current->pitch = this->hidden->stride * (bpp/8);
-		current->pixels = malloc(current->pitch * roundUpToPowerOfTwo(height)); 
+		current->pixels = memalign(16, current->pitch * roundUpToPowerOfTwo(height)); 
 
 		this->UpdateRects = PSP_GuUpdateRects;
 
@@ -646,6 +646,8 @@ int PSP_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 */
 void PSP_VideoQuit(_THIS)
 {
+	sceGuSync(0, 0);
+
 	if (this->hidden->gu_palette != NULL) {
 		free(this->hidden->gu_palette);
 		this->hidden->gu_palette = NULL;
