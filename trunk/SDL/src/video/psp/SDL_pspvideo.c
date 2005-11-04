@@ -59,7 +59,7 @@ static char rcsid =
 #define IS_SWSURFACE(flags) ((flags & SDL_HWSURFACE) == SDL_SWSURFACE) 
 #define IS_HWSURFACE(flags) ((flags & SDL_HWSURFACE) == SDL_HWSURFACE) 
 
-static unsigned int __attribute__((aligned(16))) list[4096];
+static unsigned int list[4096] __attribute__((aligned(16)));
 
 struct Vertex
 {
@@ -248,8 +248,6 @@ void *vidmem_map_insert_new (unsigned long idx, unsigned long adr, unsigned long
 	if (!tmp)
 		return NULL;
 
-//	psp_log("alloc vidmem %lu: adr 0x%08x - size 0x%08x\n", idx, (unsigned int) adr, (unsigned int) size);
-
 	vidmem_map = tmp;
 	memmove(&vidmem_map[idx+1], &vidmem_map[idx], (vidmem_map_len-idx) * sizeof(vidmem_map[0]));
 	vidmem_map_len++;
@@ -290,9 +288,6 @@ void  vidmem_free (void * ptr)
 		if (vidmem_map[i].ptr == ptr) {
 			void *tmp;
 			
-//			psp_log("free vidmem %d: adr 0x%08x - size 0x%08x\n", i,
-//				(unsigned int) ptr, (unsigned int) vidmem_map[i].len);
-			
 			vidmem_map_len--;
 			memmove(&vidmem_map[i], &vidmem_map[i+1], (vidmem_map_len-i) * sizeof(vidmem_map[0]));
 			tmp = realloc(vidmem_map, vidmem_map_len * sizeof(vidmem_map[0]));
@@ -302,17 +297,9 @@ void  vidmem_free (void * ptr)
 	}
 }
 
-/*
-roundUpToPowerOfTwo from 
-Open Dynamics Engine
-Copyright (c) 2001-2004, Russell L. Smith.
-All rights reserved.
- */
 static inline int roundUpToPowerOfTwo (int x)
 {
-  int i = 1;
-  while (i < x) i <<= 1;
-  return i;
+	return 1 << (32 - __builtin_allegrex_clz(x - 1));
 }
 
 SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
@@ -391,7 +378,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	else
 		this->hidden->stride = 512;
 
-	// allocate display buffer
+	/* allocate display buffer */
 	this->hidden->vram_base = vidmem_alloc(pitch * SCREEN_HEIGHT); 
 
 	sceDisplaySetMode(0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -412,7 +399,7 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 			current->pixels =
 				(void *) ((Uint32) this->hidden->vram_base + this->hidden->frame_offset);
 
-			// allocate drawbuffer
+			/* allocate drawbuffer */
 			vidmem_alloc(pitch * height); 
 		}
 
@@ -500,7 +487,7 @@ static int HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
 {
 	sceKernelDcacheWritebackAll();
 
-	// when rendering to the screen use GuStretchBlit without stretching
+	/* when rendering to the screen use GuStretchBlit without stretching */
 	if (dst == current_video->screen)
 		return PSP_GuStretchBlit(src, srcrect, dstrect); 
 
@@ -533,7 +520,7 @@ static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstr
 	num_slices = (srcrect->w + (PSP_SLICE_SIZE - 1)) / PSP_SLICE_SIZE;
 	pixels = src->pixels;
 
-	// Gu doesn't appreciate textures wider than 512
+	/* GE doesn't appreciate textures wider than 512 */
 	if (width > 512)
 		width = 512; 
 
@@ -601,21 +588,19 @@ static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects)
 
 	sceKernelDcacheWritebackAll();
 
-	// if the screen dimensions are unusual, do a single update
+	/* if the screen dimensions are unusual, do a single update */
 	if ((src->w != 480) || (src->h != 272)) {
 		srcrect.x = 0;
 		srcrect.y = 0;
 		srcrect.w = src->w;
 		srcrect.h = src->h;
 		PSP_GuStretchBlit(src, &srcrect, (SDL_Rect *)&RECT_480x272);
-		sceGuSync(0, 0);
-		return;
-	}
-
-	// update the specified rects 
-	while(numrects--) {
-		PSP_GuStretchBlit(src, rects, rects);
-		rects++;
+	} else {
+		/* update the specified rects */
+		while(numrects--) {
+			PSP_GuStretchBlit(src, rects, rects);
+			rects++;
+		} 
 	}
 
 	sceGuSync(0, 0);
