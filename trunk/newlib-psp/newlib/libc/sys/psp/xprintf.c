@@ -740,7 +740,6 @@ int vsprintf(char *buf, const char *fmt, va_list ap){
 #endif
 
 #ifdef F_sprintf
-__attribute__((weak))
 int sprintf (char *str, const char *format, ...)
 {
 	va_list args;
@@ -766,7 +765,6 @@ int sprintf (char *str, const char *format, ...)
 /* This structure is used to store state information about the
 ** write in progress
 */
-__attribute__((weak))
 struct sgMprintf {
   char *zBase;     /* A base allocation */
   char *zText;     /* The string collected so far */
@@ -960,5 +958,27 @@ int printf(const char *format, ...)
 int vprintf(const char *format, va_list args)
 {
 	return vxprintf(__fout, stdout, format, args);
+}
+#endif
+
+#ifdef F__sprintf_r
+/* Idiotic kludge to get around newlib stupidity.  tmpnam() calls this
+   directly, but since sprintf() above replaces newlib's sprintf() (and
+   _sprintf_r()) we have to define this in order to link tmpnam(). */
+int _sprintf_r(struct _reent *unused, char *str, const char *format, ...)
+{
+	va_list args;
+	struct s_strargument arg;
+	int ret;
+
+	(void) unused;
+	arg.next = str;
+	arg.last = NULL;
+ 
+	va_start(args, format);
+	ret = vxprintf(__sout, &arg, format, args);
+	va_end(args);
+
+	return ret;
 }
 #endif

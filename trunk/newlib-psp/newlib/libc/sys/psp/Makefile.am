@@ -14,7 +14,7 @@ LIBCGLUE_MULT_OBJS = _close.o _exit.o _fork.o _fstat.o _getpid.o	\
                      realpath.o _stat.o truncate.o access.o tzset.o	\
                      __psp_set_errno.o	
 
-XPRINTF_MULT_OBJS = vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o
+XPRINTF_MULT_OBJS = vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o _sprintf_r.o
 
 lib_a_SOURCES = libcglue.c pspcwd.c xprintf.c
 lib_a_LIBADD  = $(LIBCGLUE_MULT_OBJS) $(XPRINTF_MULT_OBJS)
