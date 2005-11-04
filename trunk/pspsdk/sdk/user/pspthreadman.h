@@ -140,8 +140,8 @@ typedef struct SceKernelThreadRunStatus {
  *
  * @par Example:
  * @code
- * int thid;
- * this = sceKernelCreateThread("my_thread", threadFunc, 0x18, 0x10000, 0, NULL);
+ * SceUID thid;
+ * thid = sceKernelCreateThread("my_thread", threadFunc, 0x18, 0x10000, 0, NULL);
  * @endcode
  *
  * @param name - An arbitrary thread name.
