@@ -10,7 +10,11 @@
 
 #include "bulletmlcommon.h"
 
+#ifdef PSP
+#include "tinyxml.h"
+#else
 #include "tinyxml/tinyxml.h"
+#endif
 
 class BulletMLNode;
 

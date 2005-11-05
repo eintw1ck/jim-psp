@@ -1,7 +1,7 @@
 CC = psp-g++
 AR = psp-ar
 PSPDIR = $(shell psp-config --psp-prefix)
-INCLUDES = -I.
+INCLUDES = -I. -I tinyxml
 LIBS = tinyxml/tinyxml.o tinyxml/tinyxmlparser.o tinyxml/tinyxmlerror.o
 #CXXFLAGS = -g -W -Wall -ansi -pedantic
 #CXXFLAGS = -pg -g -W -Wall -ansi -pedantic
@@ -32,5 +32,11 @@ distdir:
 
 install:
 	mkdir -p $(PSPDIR)/include/bulletml $(PSPDIR)/lib
-	cp bulletml*.h $(PSPDIR)/include/bulletml
+	mkdir -p $(PSPDIR)/include/boost/config
+	mkdir -p $(PSPDIR)/include/boost/config/stdlib
+	mkdir -p $(PSPDIR)/include/boost/config/compiler
+	mkdir -p $(PSPDIR)/include/boost/config/platform
+	mkdir -p $(PSPDIR)/include/boost/detail
+	cp bulletml*.h formula.h tinyxml/tinyxml.h $(PSPDIR)/include/bulletml
+	find boost -name *.hpp | xargs -i cp -a {} $(PSPDIR)/include/{}
 	cp libbulletml.a $(PSPDIR)/lib
