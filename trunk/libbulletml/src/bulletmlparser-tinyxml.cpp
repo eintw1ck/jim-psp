@@ -58,7 +58,9 @@ void BulletMLParserTinyXML::translateNode(TiXmlNode* node) {
 
 void BulletMLParserTinyXML::parseImpl(TiXmlDocument& doc) {
 	if (doc.Error()) {
+#ifdef __EXCEPTIONS
 		throw BulletMLError(doc.Value() + ": " + doc.ErrorDesc());
+#endif
 	}
 
     TiXmlNode* node;

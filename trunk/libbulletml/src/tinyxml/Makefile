@@ -71,7 +71,7 @@ INCS :=
 #****************************************************************************
 
 CFLAGS   := ${CFLAGS}   ${DEFS}
-CXXFLAGS := ${CXXFLAGS} ${DEFS}
+CXXFLAGS := ${CXXFLAGS} ${DEFS} -fno-exceptions
 
 #****************************************************************************
 # Targets of the build

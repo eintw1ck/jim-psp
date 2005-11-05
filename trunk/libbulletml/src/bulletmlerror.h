@@ -11,6 +11,7 @@ public:
 	DECLSPEC BulletMLError(const std::string& msg)
 		: std::runtime_error(msg) {}
 
+#ifdef __EXCEPTIONS  
 	DECLSPEC static void doAssert(const char* str) {
 		throw BulletMLError(str);
 	}
@@ -23,6 +24,16 @@ public:
 	DECLSPEC static void doAssert(bool t, const std::string& str) {
 		if (!t) throw BulletMLError(str);
 	}
+#else
+	DECLSPEC static void doAssert(const char*) {
+	}
+	DECLSPEC static void doAssert(const std::string&) {
+	}
+	DECLSPEC static void doAssert(bool, const char*) {
+	}
+	DECLSPEC static void doAssert(bool, const std::string&) {
+	}
+#endif // __EXCEPTIONS
 
 };
 

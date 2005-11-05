@@ -28,6 +28,11 @@
 #     define BOOST_NO_OPERATORS_IN_NAMESPACE
 #   endif
 
+#ifndef __EXCEPTIONS
+# define BOOST_NO_EXCEPTIONS
+#endif
+
+
 //
 // Threading support: Turn this on unconditionally here (except for
 // MinGW, where we can know for sure). It will get turned off again
@@ -58,11 +63,13 @@
 #  error "Compiler not configured - please reconfigure"
 #endif
 //
-// last known and checked version is 3.2:
-#if (__GNUC__ > 3) || ((__GNUC__ == 3) && (__GNUC_MINOR__ > 2))
+// last known and checked version is 4.0 (Pre-release):
+#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 0))
 #  if defined(BOOST_ASSERT_CONFIG)
 #     error "Unknown compiler version - please run the configure tests and report the results"
 #  else
-#     warning "Unknown compiler version - please run the configure tests and report the results"
+// we don't emit warnings here anymore since there are no defect macros defined for
+// gcc post 3.4, so any failures are gcc regressions...
+//#     warning "Unknown compiler version - please run the configure tests and report the results"
 #  endif
 #endif
