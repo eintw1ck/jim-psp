@@ -22,6 +22,7 @@
         <li><a href="#klass_Image">Image</a></li>
         <li><a href="#klass_Screen">Screen</a></li>
         <li><a href="#klass_Mask">Mask</a></li>
+        <li><a href="#klass_Font">Font</a></li>
       </ul>
     </ul>
 
@@ -250,6 +251,28 @@
     <span class="method"><a name="method_Screen_swap">swap(self)</a></span>
 
     <p class="doc">This method swaps the draw and display buffer.</p>
+
+    <hr />
+
+    <span class="klass"><a name="klass_Font">Font</a></span>
+
+    <p                         class="doc">A                        <a
+    href="http://www.linux-games.com/sfont/">SFont</a>-like font.</p>
+
+    <h4>Methods</h4>
+
+    <span class="method"><a name="method_Font_init">__init__(self, filename)</a></span>
+
+    <p class="doc">Constructor.  'filename' must be  an SFont-like PNG
+    file.</p>
+
+    <span class="method"><a name="method_Font_textWidth">textWidth(self, text)</a></span>
+
+    <p class="doc">Returns the width in pixels used to render 'text'.</p>
+
+    <span class="method"><a name="method_Font_textHeight">textHeight(self, text)</a></span>
+
+    <p class="doc">Returns the height in pixels used to render 'text'.</p>
 
     <h3>Miscellaneous</h3>
 
