@@ -1,0 +1,286 @@
+<html>
+  <head>
+    <title>psp2d module reference</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+  <body>
+
+    <h1>The psp2d module</h1>
+
+    <p>This module exposes classes for 2D graphics, sound and controller.</p>
+
+    <h2>Contents</h2>
+
+    <ul>
+      <li><a href="#functions">Functions</a></li>
+      <li><a href="#klasses">Classes</a></li>
+      <ul>
+        <li><a href="#klass_Controller">Controller</a></li>
+        <li><a href="#klass_Music">Music</a></li>
+        <li><a href="#klass_Sound">Sound</a></li>
+        <li><a href="#klass_Color">Color</a></li>
+        <li><a href="#klass_Image">Image</a></li>
+        <li><a href="#klass_Screen">Screen</a></li>
+        <li><a href="#klass_Mask">Mask</a></li>
+      </ul>
+    </ul>
+
+    <h2><a name="functions">Functions</a></h2>
+
+    <h3>Sound</h3>
+
+    <span class="function"><a name="function_setMusicVolume">setMusicVolume(volume)</a></span>
+
+    <p  class="doc">Sets  the  music  volume,  as  played  by  the  <a
+    href="#klass_Music">Music</a>  class.  The  volume  is an  integer
+    between 0 and 255 inclusive.</p>
+
+    <span class="function"><a name="function_setSndFxVolume">setSndFxVolume(volume)</a></span>
+
+    <p class="doc">Sets the sound effects  volume, as played by the <a
+    href="#klass_Sound">Sound</a>  class.  The  volume is  an  integer
+    between 0 and 255 inclusive.</p>
+
+    <h2><a name="klasses">Classes</a></h2>
+
+    <h3>Controller</h3>
+
+    <span class="klass"><a name="klass_Controller">Controller</a></span>
+
+    <p class="doc">This class gives access to the state of the pad and
+    buttons. The  state is read  upon instantiation and  is accessible
+    through read-only properties.</p>
+
+    <h4>Methods</h4>
+
+    <span class="method"><a name="method_Controller_init">__init__(self)</a></span>
+
+    <p class="doc">Constructor. No argument.</p>
+
+    <h4>Properties</h4>
+
+    <span class="property"><a name="property_Controller_analogX">analogX</a></span>
+
+    <p class="doc">The  analog pad state  in the X  direction, between
+    -127 and 128.</p>
+
+    <span class="property"><a name="property_Controller_analogY">analogY</a></span>
+
+    <p class="doc">The  analog pad state  in the Y  direction, between
+    -127 and 128.</p>
+
+    <span class="note">Please  note that the  dead zone of  the analog
+    controller is quite large, you should ignore values between -5 and
+    5.</span>
+
+    <p>The following  properties are True if  the corresponding button
+    is pressed and False otherwise.</p>
+
+    <span class="property"><a name="property_Controller_square">square</a></span>
+    <p class="doc"></p>
+
+    <span class="property"><a name="property_Controller_triangle">triangle</a></span>
+    <p class="doc"></p>
+
+    <span class="property"><a name="property_Controller_circle">circle</a></span>
+    <p class="doc"></p>
+
+    <span class="property"><a name="property_Controller_cross">cross</a></span>
+    <p class="doc"></p>
+
+    <span class="property"><a name="property_Controller_up">up</a></span>
+    <p class="doc"></p>
+
+    <span class="property"><a name="property_Controller_down">down</a></span>
+    <p class="doc"></p>
+
+    <span class="property"><a name="property_Controller_left">left</a></span>
+    <p class="doc"></p>
+
+    <span class="property"><a name="property_Controller_right">right</a></span>
+    <p class="doc"></p>
+
+    <span class="property"><a name="property_Controller_start">start</a></span>
+    <p class="doc"></p>
+
+    <span class="property"><a name="property_Controller_select">select</a></span>
+    <p class="doc"></p>
+
+    <span class="property"><a name="property_Controller_l"></a>l</span>
+    <p class="doc">Left trigger.</p>
+
+    <span class="property"><a name="property_Controller_r"></a>r</span>
+    <p class="doc">Right trigger.</p>
+
+    <h3>Sound</h3>
+
+    <span class="klass"><a name="klass_Music">Music</a></span>
+
+    <p  class="doc">This class  allows you  to play  any  sound format
+    recognized by mikmodlib.</p>
+
+    <h4>Methods</h4>
+
+    <span class="method"><a name="method_Music_init">__init__(self, filename, maxchan = 128, loop = False)</a></span>
+
+    <p class="doc">Constructor.</p>
+
+    <span class="method"><a name="method_Music_start">start(self)</a></span>
+
+    <p class="doc">Starts playing the music.</p>
+
+    <span class="method"><a name="method_Music_stop">stop(self)</a></span>
+
+    <p class="doc">Stops the music  being played. Note that this frees
+    all     associated     resources;     you    can't     call     <a
+    href="#method_Music_start">start</a>  after   that,  you  have  to
+    instantiate a new <a href="#klass_Music">Music</a> object.</p>
+
+    <hr />
+
+    <span class="klass"><a name="klass_Sound">Sound</a></span>
+
+    <p  class="doc">This class  is  used to  play  sound effects  (WAV
+    format).</p>
+
+    <h4>Methods</h4>
+
+    <span class="method"><a name="method_Sound_init">__init__(self, filename)</a></span>
+
+    <p class="doc">Constructor.</p>
+
+    <span class="method"><a name="method_Sound_start">start(self)</a></span>
+
+    <p class="doc">Starts playing the sound. May be called several times.</p>
+
+    <h3>Graphics</h3>
+
+    <span class="klass"><a name="klass_Color">Color</a></span>
+
+    <p class="doc">This class encapsulates an RGBA color.</p>
+
+    <h4>Methods</h4>
+
+    <span class="method"><a name="method_Color_init">__init__(self, r, g, b, a = 0)</a></span>
+
+    <p class="doc">Constructor.</p>
+
+    <h4>Properties</h4>
+
+    <p>All these properties are read/write.</p>
+
+    <span class="property"><a name="property_Color_red"></a>red</span>
+    <p class="doc">Red component.</p>
+
+    <span class="property"><a name="property_Color_green"></a>green</span>
+    <p class="doc">Green component.</p>
+
+    <span class="property"><a name="property_Color_blue"></a>blue</span>
+    <p class="doc">Blue component.</p>
+
+    <span class="property"><a name="property_Color_alpha"></a>alpha</span>
+    <p class="doc">Alpha component.</p>
+
+    <hr />
+
+    <span class="klass"><a name="klass_Image">Image</a></span>
+
+    <p class="doc">An in-memory image.</p>
+
+    <h4>Methods</h4>
+
+    <span class="method"><a name="method_Image_init_s">__init__(self, filename)</a></span>
+
+    <p class="doc">Constructor. The file must be a PNG image.</p>
+
+    <span class="method"><a name="method_Image_init_ii">__init__(self, w, h)</a></span>
+
+    <p class="doc">Constructor. The initial content of the image is undefined.</p>
+
+    <span class="method"><a name="method_Image_clear">clear(color)</a></span>
+
+    <p   class="doc">Clears   the  image   using   the  specified   <a
+    href="#klass_Color">Color</a>.</p>
+
+    <span class="method"><a name="method_Image_blit">blit(sx, sy, w, h, source, dx, dy, blend = False)</a></span>
+
+    <p class="doc">Copies the (sx, sy, w, h) rectangle from the source
+    <a  href="#klass_Image">Image</a>  to   the  instance's  image  at
+    coordinates  (dx,  dy).  If  blend  is  True,  alpha  blending  is
+    performed.</p>
+
+    <span class="note">Alpha blending from image to image is currently
+    implemented "by hand", so it  may prove slow. You'd better use the
+    <a  href="#klass_Screen">Screen</a> class  method  which does  use
+    hardware acceleration.</span><p />
+
+    <span class="method"><a name="method_Image_fillRect">fillRect(x, y, w, h, color)</a></span>
+
+    <p class="doc">Fills the (x, y,  w, h) rectangle of the image with
+    the specified <a href="#klass_Color">Color</a>.</p>
+
+    <span class="method"><a name="method_Image_drawText">drawText(font, x, y, text)</a></span>
+
+    <p  class="doc">Draws the  specified  text at  coordinates (x,  y)
+    using the specified <a href="#klass_Font">Font</a>.</p>
+
+    <h4>Properties</h4>
+
+    <p>Read-only.</p>
+
+    <span class="property"><a name="property_Image_width">width</a></span>
+    <p class="doc">Width of the image, in pixels.</p>
+
+    <span class="property"><a name="property_Image_height">height</a></span>
+    <p class="doc">Height of the image, in pixels.</p>
+
+    <hr />
+
+    <span class="klass"><a name="klass_Screen">Screen</a></span>
+
+    <p class="doc">This class represents  the physical screen. It must
+    be  instantiated  <em>only  once</em>  (later, it  will  become  a
+    Singleton  so you  don't have  to ensure  this). It  has  the same
+    methods as the  <a href="#klass_Image">Image</a> class, except for
+    <a href="method_Image_drawText">drawText</a>,  plus an additionnal
+    method.</p>
+
+    <h4>Methods</h4>
+
+    <span class="method"><a name="method_Screen_swap">swap(self)</a></span>
+
+    <p class="doc">This method swaps the draw and display buffer.</p>
+
+    <h3>Miscellaneous</h3>
+
+    <span class="klass"><a name="klass_Mask">Mask</a></span>
+
+    <p class="doc">This is a  2-dimensionnal bit field, intended to be
+    used in collision detection.</p>
+
+    <h4>Methods</h4>
+
+    <span class="method"><a name="method_Mask_init">__init__(self, img, x, y, w, h, threshold)</a></span>
+
+    <p class="doc">Constructor. Creates  a mask from the (x,  y, w, h)
+    rectangle in the img <a href="#klass_Image">Image</a>. Every pixel
+    that  has an  alpha value  greater  than threshold  will have  the
+    associated bit set to 1.</p>
+
+    <span class="method"><a name="method_Mask_collide">collide(self, msk)</a></span>
+
+    <p  class="doc">Returns the  number  of bits  in the  intersection
+    between this mask  and 'msk'. 'msk' must have  the exact same size
+    as this instance.</p>
+
+    <span class="method"><a name="method_Mask_union">union(self, msk)</a></span>
+
+    <p class="doc">Sets all the bits that are set in 'msk'. 'msk' must
+    have the exact same size as this instance.</p>
+
+    <span class="method"><a name="method_Mask_isIn">isIn(self, x, y)</a></span>
+
+    <p class="doc">Returns True if the bit at position (x, y) is set.</p>
+
+  </body>
+</html>
