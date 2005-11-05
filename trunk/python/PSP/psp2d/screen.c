@@ -13,6 +13,7 @@
 #include "screen.h"
 #include "image.h"
 #include "color.h"
+#include "font.h"
 
 #include <pspdisplay.h>
 #include <pspkernel.h>
@@ -110,37 +111,21 @@ static int screen_init(PyScreen *self,
     return 0;
 }
 
-static PyObject* screen_blit(PyScreen *self,
-                             PyObject *args,
-                             PyObject *kwargs)
+static void blit(PyScreen *self,
+                 u32 *src,
+                 int sx, int sy, int w, int h, int dx, int dy,
+                 int sw, int sh,
+                 int blend)
 {
-    int sx, sy, w, h, dx, dy, blend = 0;
-    PyImage *img;
-
-    if (!PyArg_ParseTuple(args, "iiiiOii|i:blit", &sx, &sy, &w, &h,
-                          &img, &dx, &dy, &blend))
-       return NULL;
-
-#ifdef CHECKTYPE
-    if (((PyObject*)img)->ob_type != PPyImageType)
-    {
-       PyErr_SetString(PyExc_TypeError, "Fifth argument must be an Image");
-       return NULL;
-    }
-#endif
-
-    if (PyErr_CheckSignals())
-       return NULL;
-
     if (blend)
     {
        int j = 0;
 
        sceKernelDcacheWritebackInvalidateAll();
        sceGuStart(GU_DIRECT, self->list);
-       sceGuTexImage(0, img->twidth, img->theight, img->twidth, (void*)img->data);
-       sceGuTexScale(1.0f / (float)img->twidth,
-                     1.0f / (float)img->theight);
+       sceGuTexImage(0, sw, sh, sw, (void*)src);
+       sceGuTexScale(1.0f / (float)sw,
+                     1.0f / (float)sh);
 
        while (j < w) {
           Vertex* vertices = (Vertex*) sceGuGetMemory(2 * sizeof(Vertex));
@@ -177,14 +162,42 @@ static PyObject* screen_blit(PyScreen *self,
        sceGuStart(GU_DIRECT, self->list);
        sceGuCopyImage(GU_PSM_8888,
                       sx, sy, w, h,
-                      img->twidth,
-                      img->data,
+                      sw,
+                      src,
                       dx, dy,
                       PSP_LINE_SIZE,
                       vram);
        sceGuFinish();
        sceGuSync(0, 0);
     }
+}
+
+static PyObject* screen_blit(PyScreen *self,
+                             PyObject *args,
+                             PyObject *kwargs)
+{
+    int sx, sy, w, h, dx, dy, blend = 0;
+    PyImage *img;
+
+    if (!PyArg_ParseTuple(args, "iiiiOii|i:blit", &sx, &sy, &w, &h,
+                          &img, &dx, &dy, &blend))
+       return NULL;
+
+#ifdef CHECKTYPE
+    if (((PyObject*)img)->ob_type != PPyImageType)
+    {
+       PyErr_SetString(PyExc_TypeError, "Fifth argument must be an Image");
+       return NULL;
+    }
+#endif
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    blit(self, img->data,
+         sx, sy, w, h, dx, dy,
+         img->twidth, img->theight,
+         blend);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -278,22 +291,10 @@ static PyObject* screen_swap(PyScreen *self,
 }
 
 static PyMethodDef screen_methods[] = {
-   { "blit", (PyCFunction)screen_blit, METH_VARARGS,
-     "blit(sx, sy, w, h, img, dx, dy, blend = False)\n"
-     "Copies the (sx, sy, w, h) rectangle from img to (dx, dy).\n"
-     "If blend is True, perform blending." },
-
-   { "clear", (PyCFunction)screen_clear, METH_VARARGS,
-     "clear()\n"
-     "Clears the screen." },
-
-   { "fillRect", (PyCFunction)screen_fillRect, METH_VARARGS,
-     "fillRect(x, y, w, h, color)\n"
-     "Fills a rectangle." },
-
-   { "swap", (PyCFunction)screen_swap, METH_VARARGS,
-     "swap()\n"
-     "Swaps the draw buffer and the display buffer." },
+   { "blit", (PyCFunction)screen_blit, METH_VARARGS, "" },
+   { "clear", (PyCFunction)screen_clear, METH_VARARGS, "" },
+   { "fillRect", (PyCFunction)screen_fillRect, METH_VARARGS, "" },
+   { "swap", (PyCFunction)screen_swap, METH_VARARGS, "" },
 
    { NULL }
 };

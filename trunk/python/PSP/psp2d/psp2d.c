@@ -19,6 +19,7 @@
 #include "sound.h"
 #include "screen.h"
 #include "mask.h"
+#include "font.h"
 
 #ifndef PyMODINIT_FUNC
 #define PyMODINIT_FUNC void
@@ -111,6 +112,9 @@ PyMODINIT_FUNC initpsp2d(void)
     if (PyType_Ready(PPyMaskType) < 0)
        return;
 
+    if (PyType_Ready(PPyFontType) < 0)
+       return;
+
     mdl = Py_InitModule3("psp2d", psp2d_functions, "2D programming for the PSP");
     if (!mdl)
        return;
@@ -135,6 +139,9 @@ PyMODINIT_FUNC initpsp2d(void)
 
     Py_INCREF(PPyMaskType);
     PyModule_AddObject(mdl, "Mask", (PyObject*)PPyMaskType);
+
+    Py_INCREF(PPyFontType);
+    PyModule_AddObject(mdl, "Font", (PyObject*)PPyFontType);
 }
 
 #ifdef _GNUC

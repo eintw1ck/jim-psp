@@ -10,11 +10,12 @@
 **********************************************************************/
 // $Id$
 
-#include "image.h"
-#include "color.h"
-
 #include <png.h>
 #include <malloc.h>
+
+#include "image.h"
+#include "color.h"
+#include "font.h"
 
 static u16 compute_tdim(u16 dim)
 {
@@ -266,6 +267,57 @@ static PyObject* image_clear(PyImage *self,
     return Py_None;
 }
 
+static void blit(u32 *src,
+                 u32 *dst,
+                 int sx, int sy, int w, int h, int dx, int dy,
+                 int sw, int dw,
+                 int blend)
+{
+    int j;
+
+    u32 *srcdec;
+    u32 *dstdec;
+
+    srcdec = src + sy * sw + sx;
+    dstdec = dst + dy * dw + dx;
+    for (j = 0; j < h; ++j)
+    {
+       if (blend)
+       {
+          int i;
+
+          for (i = 0; i < w; ++i)
+          {
+             u32 a1, a2, r1, r2, g1, g2, b1, b2;
+             
+             u32 srccol = *(srcdec + j * sw + i);
+             u32 dstcol = *(dstdec + j * dw + i);
+
+             a1 = srccol >> 24;
+             b1 = ((srccol >> 16) & 0xFF) * a1 / 255;
+             g1 = ((srccol >> 8) & 0xFF) * a1 / 255;
+             r1 = (srccol & 0xFF) * a1 / 255;
+
+             a2 = dstcol >> 24;
+             b2 = ((dstcol >> 16) & 0xFF) * a2 / 255;
+             g2 = ((dstcol >> 8) & 0xFF) * a2 / 255;
+             r2 = (dstcol & 0xFF) * a2 / 255;
+
+             *(dstdec + j * dw + i) = ((a1 + (255 - a1) * a2 / 255) << 24) |
+                ((b1 + (255 - a1) * b2 / 255) << 16) |
+                ((g1 + (255 - a1) * g2 / 255) << 8) |
+                (r1 + (255 - a1) * r2 / 255);
+          }
+       }
+       else
+       {
+          memcpy(dstdec + j * dw,
+                 srcdec + j * sw,
+                 w * sizeof(u32));
+       }
+    }
+}
+
 static PyObject* image_blit(PyImage *self,
                             PyObject *args,
                             PyObject *kwargs)
@@ -273,10 +325,6 @@ static PyObject* image_blit(PyImage *self,
     PyImage *src;
     int sx, sy, w, h, dx, dy;
     int blend = 0;
-    int j;
-
-    u32 *srcdec;
-    u32 *dstdec;
 
     if (!PyArg_ParseTuple(args, "iiiiOii|i:blit", &sx, &sy,
                           &w, &h, &src, &dx, &dy, &blend))
@@ -293,46 +341,10 @@ static PyObject* image_blit(PyImage *self,
     if (PyErr_CheckSignals())
        return NULL;
 
-    srcdec = src->data + sy * src->twidth + sx;
-    dstdec = self->data + dy * self->twidth + dx;
-    for (j = 0; j < h; ++j)
-    {
-       if (blend)
-       {
-          int i;
-
-          for (i = 0; i < w; ++i)
-          {
-             u32 a1, a2, r1, r2, g1, g2, b1, b2;
-
-             u32 srccol = *(srcdec + j * src->twidth + i);
-             u32 dstcol = *(dstdec + j * self->twidth + i);
-
-             // TODO: premultiply
-
-             a1 = srccol >> 24;
-             b1 = ((srccol >> 16) & 0xFF) * a1 / 255;
-             g1 = ((srccol >> 8) & 0xFF) * a1 / 255;
-             r1 = (srccol & 0xFF) * a1 / 255;
-
-             a2 = dstcol >> 24;
-             b2 = ((dstcol >> 16) & 0xFF) * a2 / 255;
-             g2 = ((dstcol >> 8) & 0xFF) * a2 / 255;
-             r2 = (dstcol & 0xFF) * a2 / 255;
-
-             *(dstdec + j * self->twidth + i) = ((a1 + (255 - a1) * a2 / 255) << 24) |
-                ((b1 + (255 - a1) * b2 / 255) << 16) |
-                ((g1 + (255 - a1) * g2 / 255) << 8) |
-                (r1 + (255 - a1) * r2 / 255);
-          }
-       }
-       else
-       {
-          memcpy(dstdec + j * self->twidth,
-                 srcdec + j * src->twidth,
-                 w * sizeof(u32));
-       }
-    }
+    blit(src->data, self->data,
+         sx, sy, w, h, dx, dy,
+         src->twidth, self->twidth,
+         blend);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -375,19 +387,63 @@ static PyObject* image_fillRect(PyImage *self,
     return Py_None;
 }
 
+static PyObject* image_drawText(PyImage *self,
+                                PyObject *args,
+                                PyObject *kwargs)
+{
+    PyFont *font;
+    char *text;
+    int x, y;
+
+    if (!PyArg_ParseTuple(args, "Oiis:drawText", &font, &x, &y, &text))
+       return NULL;
+
+#ifdef CHECKTYPE
+    if (((PyObject*)font)->ob_type != PPyFontType)
+    {
+       PyErr_SetString(PyExc_TypeError, "First argument must be a Font.");
+       return NULL;
+    }
+#endif
+
+    if (PyErr_CheckSignals())
+       return NULL;
+
+    while (*text != 0)
+    {
+       int offset = (int)(*text - 33) * 2 + 1;
+
+       if ((*text == ' ') || (offset < 0) || (offset > font->maxpos))
+       {
+          x += font->positions[2] - font->positions[1];
+       }
+       else
+       {
+          blit(font->data,
+               self->data,
+               (font->positions[offset] + font->positions[offset - 1])/2, 1,
+               (font->positions[offset + 2] + font->positions[offset + 1])/2 -
+               (font->positions[offset] + font->positions[offset - 1])/2,
+               font->height - 1,
+               x, y,
+               font->twidth,
+               self->twidth, 1);
+
+          x += font->positions[offset + 1] - font->positions[offset];
+       }
+
+       ++text;
+    }
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyMethodDef image_methods[] = {
-   { "clear", (PyCFunction)image_clear, METH_VARARGS,
-     "clear(color)\n"
-     "Fills the image with the given color." },
-
-   { "blit", (PyCFunction)image_blit, METH_VARARGS,
-     "blit(sx, sy, w, h, srcimg, dx, dy, blend = False)\n"
-     "Copies the (sx, sy, w, h) rectangle from srcimg to this image, at\n"
-     "(dx, dy) position. If blend is True, perform alpha blending." },
-
-   { "fillRect", (PyCFunction)image_fillRect, METH_VARARGS,
-     "fillRect(x, y, w, h, color)\n"
-     "Fills the (x, y, w, h) rectangle with the specified color." },
+   { "clear", (PyCFunction)image_clear, METH_VARARGS, "" },
+   { "blit", (PyCFunction)image_blit, METH_VARARGS, "" },
+   { "fillRect", (PyCFunction)image_fillRect, METH_VARARGS, "" },
+   { "drawText", (PyCFunction)image_drawText, METH_VARARGS, "" },
 
    { NULL }
 };
