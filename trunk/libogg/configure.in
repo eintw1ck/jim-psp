@@ -59,6 +59,11 @@ else
 		CFLAGS="-fno-common -O4 -Wall -fsigned-char -ffast-math"
 		PROFILE="-fno-common -O4 -Wall -pg -g -fsigned-char -ffast-math"
 		;;
+	mipsallegrex*-*-*)
+		DEBUG="-g -Wall -fsigned-char"
+		CFLAGS="-O20 -G0 -ffast-math -fsigned-char"
+		PROFILE="-Wall -W -pg -g -O20 -G0 -ffast-math -fsigned-char"
+		;;
         *)
                 DEBUG="-g -Wall -fsigned-char"
                 CFLAGS="-O20 -fsigned-char"
