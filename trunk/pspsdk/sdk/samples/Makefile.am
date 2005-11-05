@@ -27,6 +27,7 @@ SAMPLES = \
 	gu/reflection \
 	gu/morph \
 	gu/skinning \
+	gu/signals \
 	ir/sircs \
 	ir/irda \
 	kernel/kdumper \
