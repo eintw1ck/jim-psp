@@ -71,8 +71,20 @@ static int image_init(PyImage *self,
     if (!PyArg_ParseTuple(args, "O|O", &a, &b))
        return -1;
 
-    // If only 1 argument was given, assume it is a filename.
-    if (!b)
+    if (a->ob_type == PPyImageType)
+    {
+       PyImage *other = (PyImage*)a;
+
+       self->width = other->width;
+       self->height = other->height;
+       self->twidth = other->twidth;
+       self->theight = other->theight;
+
+       self->data = (u32*)memalign(16, sizeof(u32) * self->twidth * self->theight);
+       memcpy(self->data, other->data, sizeof(u32) * self->twidth * self->theight);
+    }
+    // If only 1 argument was given and it is not an Image, assume it is a filename.
+    else if (!b)
     {
        // Code mostly taken from the libpng PSP example.
 
@@ -172,18 +184,6 @@ static int image_init(PyImage *self,
        png_read_end(pptr, iptr);
        png_destroy_read_struct(&pptr, &iptr, png_infopp_NULL);
        fclose(fp);
-    }
-    else if (a->ob_type == PPyImageType)
-    {
-       PyImage *other = (PyImage*)a;
-
-       self->width = other->width;
-       self->height = other->height;
-       self->twidth = other->twidth;
-       self->theight = other->theight;
-
-       self->data = (u32*)memalign(16, sizeof(u32) * self->twidth * self->theight);
-       memcpy(self->data, other->data, sizeof(u32) * self->twidth * self->theight);
     }
     else
     {
