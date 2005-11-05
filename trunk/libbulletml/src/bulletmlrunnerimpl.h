@@ -12,7 +12,7 @@ class BulletMLRunner;
 class BulletMLState;
 class BulletMLParser;
 
-typedef std::vector<double> BulletMLParameter;
+typedef std::vector<float> BulletMLParameter;
 
 template<class C_>
 class Validatable {
@@ -39,7 +39,7 @@ protected:
 };
 
 /// xyの初期値・終値から任意のxに対するyの線形補間を得るクラス
-template <class X_ = double, class Y_ = double>
+template <class X_ = float, class Y_ = float>
 class LinearFunc {
 public:
 	LinearFunc(const X_& firstX, const X_& lastX,
@@ -81,20 +81,20 @@ public:
 
 public:
     /// 弾の方向変更を登録し、自前で各ターン変更する
-	virtual void calcChangeDirection(double direction, int term, bool seq);
+	virtual void calcChangeDirection(float direction, int term, bool seq);
     /// 弾の速度変更を登録し、自前で各ターン変更する
-	virtual void calcChangeSpeed(double speed, int term);
+	virtual void calcChangeSpeed(float speed, int term);
     /// 弾の加速を登録し、自前で各ターン変更する
 	/**
 	 * @todo horizontal, vertical の type は未実装です。
 	 */
-	virtual void calcAccelX(double vertical, int term,
+	virtual void calcAccelX(float vertical, int term,
 							BulletMLNode::Type type);
     /// 弾の加速を登録し、自前で各ターン変更する
 	/**
 	 * @todo horizontal, vertical の type は未実装です。
 	 */
-	virtual void calcAccelY(double horizontal, int term,
+	virtual void calcAccelY(float horizontal, int term,
 							BulletMLNode::Type type);
 
 protected:
@@ -133,20 +133,20 @@ private:
 		dir_.disValidate();
     }
 
-    double getNumberContents(const BulletMLNode* node);
-    std::vector<double>* getParameters();
-    double getSpeed(BulletMLNode* spdNode);
-	double getDirection(BulletMLNode* dirNode, bool prevChange = true);
+    float getNumberContents(const BulletMLNode* node);
+    std::vector<float>* getParameters();
+    float getSpeed(BulletMLNode* spdNode);
+	float getDirection(BulletMLNode* dirNode, bool prevChange = true);
 
 private:
 private:
-    std::auto_ptr<LinearFunc<int, double> > changeDir_;
-    std::auto_ptr<LinearFunc<int, double> > changeSpeed_;
-    std::auto_ptr<LinearFunc<int, double> > accelx_;
-    std::auto_ptr<LinearFunc<int, double> > accely_;
+    std::auto_ptr<LinearFunc<int, float> > changeDir_;
+    std::auto_ptr<LinearFunc<int, float> > changeSpeed_;
+    std::auto_ptr<LinearFunc<int, float> > accelx_;
+    std::auto_ptr<LinearFunc<int, float> > accely_;
 
 protected:
-    Validatable<double> spd_, dir_, prevSpd_, prevDir_;
+    Validatable<float> spd_, dir_, prevSpd_, prevDir_;
 
     typedef BulletMLParameter Parameters;
     boost::shared_ptr<Parameters> parameters_;

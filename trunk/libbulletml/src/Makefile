@@ -5,8 +5,8 @@ INCLUDES = -I. -I tinyxml
 LIBS = tinyxml/tinyxml.o tinyxml/tinyxmlparser.o tinyxml/tinyxmlerror.o
 #CXXFLAGS = -g -W -Wall -ansi -pedantic
 #CXXFLAGS = -pg -g -W -Wall -ansi -pedantic
-CXXFLAGS = -O2 -G0 -W -Wall -ansi -pedantic
-CFLAGS = -O2 -G0
+CXXFLAGS = -O2 -G0 -W -Wall -fsingle-precision-constant
+CFLAGS = -O2 -G0 -fsingle-precision-constant
 OBJS = bulletmlparser-tinyxml.o bulletmlparser.o bulletmltree.o calc.o formula-variables.o bulletmlrunner.o bulletmlrunnerimpl.o
 
 all: libbulletml.a

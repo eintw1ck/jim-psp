@@ -18,7 +18,7 @@
 
 class BulletMLNode : public TreeNode<BulletMLNode> {
 public:
-	typedef Formula<double> Number;
+	typedef Formula<float> Number;
 	typedef enum { none, aim, absolute, relative, sequence, typeSize } Type;
 	typedef enum { bullet, action, fire, changeDirection, changeSpeed, accel,
 				   wait, repeat, bulletRef, actionRef, fireRef, vanish,
@@ -41,7 +41,7 @@ public:
     DECLSPEC Name getName() const { return name_; }
 
     DECLSPEC void setValue(const std::string& val);
-    DECLSPEC double getValue() const { return val_->value(); }
+    DECLSPEC float getValue() const { return val_->value(); }
 
 	DECLSPEC void setType(const std::string& type) { type_ = string2type(type); }
 	DECLSPEC Type getType() const { return type_; }

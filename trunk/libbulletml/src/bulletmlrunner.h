@@ -17,7 +17,7 @@ class BulletMLParser;
 class BulletMLNode;
 class BulletMLRunnerImpl;
 
-typedef std::vector<double> BulletMLParameter;
+typedef std::vector<float> BulletMLParameter;
 
 /// BulletMLRunner が状態伝達に使用するクラス
 class BulletMLState {
@@ -69,23 +69,23 @@ public:
 	/**
 	 * @return 角度を度単位で、上方向 0 で時計周りで返す
 	 */
-	DECLSPEC virtual double getBulletDirection() =0;
+	DECLSPEC virtual float getBulletDirection() =0;
 	/// この弾から自機を狙う角度を求める
 	/**
 	 * @return 角度を度単位で、上方向 0 で時計周りで返す
 	 */
-	DECLSPEC virtual double getAimDirection() =0;
+	DECLSPEC virtual float getAimDirection() =0;
 	/// この弾の速度を求める
-	DECLSPEC virtual double getBulletSpeed() =0;
+	DECLSPEC virtual float getBulletSpeed() =0;
 	/// デフォルトの速度を求める
-	DECLSPEC virtual double getDefaultSpeed() =0;
+	DECLSPEC virtual float getDefaultSpeed() =0;
 	/// ランクを求める
 	/**
 	 * @return 0 から 1 までの実数
 	 */
-	DECLSPEC virtual double getRank() =0;
+	DECLSPEC virtual float getRank() =0;
 	/// action を持たない弾を作る
-	DECLSPEC virtual void createSimpleBullet(double direction, double speed) =0;
+	DECLSPEC virtual void createSimpleBullet(float direction, float speed) =0;
 	/// action を持つ弾を作る
 	/**
 	 * @param state
@@ -93,7 +93,7 @@ public:
 	 * もし渡さないのであれば、delete で解放しなければならない。
 	 */
 	DECLSPEC virtual void createBullet(BulletMLState* state,
-									   double direction, double speed) =0;
+									   float direction, float speed) =0;
 	/// 弾の基準となるターンの値を返す、通常はフレーム数
 	/**
 	 * @return
@@ -110,33 +110,33 @@ public:
 	// ----- 必要があれば実装する関数群の始まり -----
    	//@{
 	/// 弾の方向を指定した方向に変更する
-	DECLSPEC virtual void doChangeDirection(double) {}
+	DECLSPEC virtual void doChangeDirection(float) {}
 	/// 弾の速度を指定した値に変更する
-	DECLSPEC virtual void doChangeSpeed(double) {}
+	DECLSPEC virtual void doChangeSpeed(float) {}
 	/// accel に対するインターフェイス
 	/**
 	 * @todo
 	 * horizontal, vertical の type は未実装です。
 	 * どれも absolute になってしまいます。
 	 */
-	DECLSPEC virtual void doAccelX(double) {}
+	DECLSPEC virtual void doAccelX(float) {}
 	/// accel に対するインターフェイス
 	/**
 	 * @todo
 	 * horizontal, vertical の type は未実装です。
 	 * どれも absolute になってしまいます。
 	 */
-	DECLSPEC virtual void doAccelY(double) {}
+	DECLSPEC virtual void doAccelY(float) {}
 	/// 弾の速さの X 方向成分を返します
 	/**
 	 * accel を使う場合はオーバーライドして下さい
  	 */
-	DECLSPEC virtual double getBulletSpeedX() { return 0; }
+	DECLSPEC virtual float getBulletSpeedX() { return 0; }
 	/// 弾の速さの Y 方向成分を返します
 	/**
 	 * accel を使う場合はオーバーライドして下さい
  	 */
-	DECLSPEC virtual double getBulletSpeedY() { return 0; }
+	DECLSPEC virtual float getBulletSpeedY() { return 0; }
     //@}
 	// ----- 必要があれば実装する関数群の終わり -----
 
@@ -144,7 +144,7 @@ public:
 	/**
 	 * 見てのとおり、デフォルトでは std::rand が用いられます。
 	 */
-	DECLSPEC virtual double getRand() { return (double)rand() / RAND_MAX; }
+	DECLSPEC virtual float getRand() { return (float)rand() / RAND_MAX; }
 
 private:
 	/// BulletMLRunnerImpl をオーバーライドする場合、これもオーバーライドする

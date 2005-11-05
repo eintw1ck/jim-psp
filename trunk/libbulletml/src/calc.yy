@@ -1,9 +1,9 @@
 /* 中間記法電卓 -- calc */
 
 %{
-typedef double NumType;
+typedef float NumType;
 
-#define YYSTYPE double
+#define YYSTYPE float
 #define YYERROR_VERBOSE
 
 #include <cmath>
@@ -32,7 +32,7 @@ namespace {
 	CalcFormula* formula;
 	std::vector<CalcFormula*> formulas;
 
-	CalcFormula* f(double d) { return formulas[(int)d]; }
+	CalcFormula* f(float d) { return formulas[(int)d]; }
 
 	int paramId;
 }
@@ -118,7 +118,7 @@ int yylex ()
 	if (c == '.' || isdigit (c))
     {
 		yyinStr--;
-		sscanf (yyinStr, "%lf", &yylval);
+		sscanf (yyinStr, "%f", &yylval);
 		while ((c = *(++yyinStr)) == '.' || isdigit(c)) {}
 		return NUM;
     }

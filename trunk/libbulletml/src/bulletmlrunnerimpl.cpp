@@ -25,9 +25,9 @@ BulletMLRunnerImpl::commandMap_[BulletMLNode::nameSize] = {
 	&BulletMLRunnerImpl::runVanish
 };
 
-double BulletMLRunnerImpl::getDirection(BulletMLNode* dirNode,
+float BulletMLRunnerImpl::getDirection(BulletMLNode* dirNode,
                                         bool prevChange) {
-    double dir;
+    float dir;
 
     bool isDefault = true;
     dir = getNumberContents(dirNode);
@@ -69,8 +69,8 @@ double BulletMLRunnerImpl::getDirection(BulletMLNode* dirNode,
     return dir;
 }
 
-double BulletMLRunnerImpl::getSpeed(BulletMLNode* spdNode) {
-    double spd;
+float BulletMLRunnerImpl::getSpeed(BulletMLNode* spdNode) {
+    float spd;
 
     spd = getNumberContents(spdNode);
     if (spdNode->getType() != BulletMLNode::none) {
@@ -126,7 +126,7 @@ BulletMLRunnerImpl::~BulletMLRunnerImpl() {
 	}
 }
 
-double BulletMLRunnerImpl::getNumberContents(const BulletMLNode* node) {
+float BulletMLRunnerImpl::getNumberContents(const BulletMLNode* node) {
     assert(node);
 
 	Variables::rank = runner_->getRank();
@@ -403,7 +403,7 @@ void BulletMLRunnerImpl::runChangeDirection() {
 	BulletMLNode* dirNode = act_->getChild(BulletMLNode::direction);
 	BulletMLNode::Type type = dirNode->getType();
 
-	double dir;
+	float dir;
 	if (type != BulletMLNode::sequence) dir = getDirection(dirNode, false);
 	else dir = getNumberContents(dirNode);
 
@@ -418,10 +418,10 @@ void BulletMLRunnerImpl::runChangeSpeed() {
 	BulletMLNode* spdNode = act_->getChild(BulletMLNode::speed);
 	BulletMLNode::Type type = spdNode->getType();
 
-	double spd;
+	float spd;
 	if (type != BulletMLNode::sequence) spd = getSpeed(spdNode);
 	else {
-		spd = getNumberContents(spdNode) * (double)term
+		spd = getNumberContents(spdNode) * (float)term
 			+ runner_->getBulletSpeed();
 	}
 	
@@ -453,50 +453,50 @@ void BulletMLRunnerImpl::runAccel() {
 	act_ = 0;
 }
 
-void BulletMLRunnerImpl::calcChangeDirection(double direction, int term,
+void BulletMLRunnerImpl::calcChangeDirection(float direction, int term,
 											 bool seq)
 {
 	int finalTurn = actTurn_ + term;
 
-	double dirFirst = runner_->getBulletDirection();
+	float dirFirst = runner_->getBulletDirection();
 
 	if (seq) {
-		auto_ptr_copy(changeDir_, new LinearFunc<int, double>
+		auto_ptr_copy(changeDir_, new LinearFunc<int, float>
 					  (actTurn_, finalTurn,
 					   dirFirst, dirFirst + direction * term));
 	}
 	else {
-		double dirSpace;
+		float dirSpace;
 
 		// ‚¿‚á‚ñ‚Æ‹ß‚¢•û‚ð‰ñ‚Á‚Ä‚¢‚­‚Ì‚ÍŒ‹\“ï‚µ‚¢‚Ë
-		double dirSpace1 = direction - dirFirst;
-		double dirSpace2;
+		float dirSpace1 = direction - dirFirst;
+		float dirSpace2;
 		if (dirSpace1 > 0) dirSpace2 = dirSpace1 - 360;
 		else dirSpace2 = dirSpace1 + 360;
-		if (abs(dirSpace1) < abs(dirSpace2)) dirSpace = dirSpace1;
+		if (fabsf(dirSpace1) < fabsf(dirSpace2)) dirSpace = dirSpace1;
 		else dirSpace = dirSpace2;
 
-		auto_ptr_copy(changeDir_, new LinearFunc<int, double>
+		auto_ptr_copy(changeDir_, new LinearFunc<int, float>
 					  (actTurn_, finalTurn, dirFirst, dirFirst + dirSpace));
 	}
 }
 
-void BulletMLRunnerImpl::calcChangeSpeed(double speed, int term) {
+void BulletMLRunnerImpl::calcChangeSpeed(float speed, int term) {
 	int finalTurn = actTurn_ + term;
 
-	double spdFirst = runner_->getBulletSpeed();
+	float spdFirst = runner_->getBulletSpeed();
 
-	auto_ptr_copy(changeSpeed_, new LinearFunc<int, double>
+	auto_ptr_copy(changeSpeed_, new LinearFunc<int, float>
 				  (actTurn_, finalTurn, spdFirst, speed));
 }
 
-void BulletMLRunnerImpl::calcAccelY(double horizontal, int term,
+void BulletMLRunnerImpl::calcAccelY(float horizontal, int term,
 									BulletMLNode::Type type)
 {
 	int finalTurn = actTurn_ + term;
 
-	double firstSpd = runner_->getBulletSpeedY();
-	double finalSpd;
+	float firstSpd = runner_->getBulletSpeedY();
+	float finalSpd;
 
 	if (type == BulletMLNode::sequence) {
 		finalSpd = firstSpd + horizontal * term;
@@ -508,17 +508,17 @@ void BulletMLRunnerImpl::calcAccelY(double horizontal, int term,
 		finalSpd = horizontal;
 	}
 
-	auto_ptr_copy(accely_, new LinearFunc<int, double>
+	auto_ptr_copy(accely_, new LinearFunc<int, float>
 				  (actTurn_, finalTurn, firstSpd, finalSpd));
 }
 
-void BulletMLRunnerImpl::calcAccelX(double vertical, int term,
+void BulletMLRunnerImpl::calcAccelX(float vertical, int term,
 									BulletMLNode::Type type)
 {
 	int finalTurn = actTurn_ + term;
 
-	double firstSpd = runner_->getBulletSpeedX();
-	double finalSpd;
+	float firstSpd = runner_->getBulletSpeedX();
+	float finalSpd;
 
 	if (type == BulletMLNode::sequence) {
 		finalSpd = firstSpd + vertical * term;
@@ -530,7 +530,7 @@ void BulletMLRunnerImpl::calcAccelX(double vertical, int term,
 		finalSpd = vertical;
 	}
 
-	auto_ptr_copy(accelx_ ,new LinearFunc<int, double>
+	auto_ptr_copy(accelx_ ,new LinearFunc<int, float>
 				  (actTurn_, finalTurn, firstSpd, finalSpd));
 }
 

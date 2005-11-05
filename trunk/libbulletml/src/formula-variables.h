@@ -9,8 +9,8 @@
 #include <vector>
 
 namespace Variables {
-	DECLSPEC extern double rank;
-	DECLSPEC extern std::vector<double>* parameters;
+	DECLSPEC extern float rank;
+	DECLSPEC extern std::vector<float>* parameters;
 	DECLSPEC extern BulletMLRunner* runner;
 }
 
