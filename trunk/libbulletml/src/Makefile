@@ -37,6 +37,6 @@ install:
 	mkdir -p $(PSPDIR)/include/boost/config/compiler
 	mkdir -p $(PSPDIR)/include/boost/config/platform
 	mkdir -p $(PSPDIR)/include/boost/detail
-	cp bulletml*.h formula.h tinyxml/tinyxml.h $(PSPDIR)/include/bulletml
+	cp bulletml*.h formula.h tree.h tinyxml/tinyxml.h $(PSPDIR)/include/bulletml
 	find boost -name *.hpp | xargs -i cp -a {} $(PSPDIR)/include/{}
 	cp libbulletml.a $(PSPDIR)/lib
