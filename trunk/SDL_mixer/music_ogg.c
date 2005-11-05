@@ -155,7 +155,11 @@ static void OGG_getsome(OGG_music *music)
 	char data[4096];
 	SDL_AudioCVT *cvt;
 
+#if USE_TREMOR
+	len = ov_read(&music->vf, data, sizeof(data), &section);
+#else
 	len = ov_read(&music->vf, data, sizeof(data), 0, 2, 1, &section);
+#endif
 	if ( len <= 0 ) {
 		if ( len == 0 ) {
 			music->playing = 0;
