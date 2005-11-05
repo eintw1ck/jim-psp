@@ -94,7 +94,7 @@ int JoystickUpdate(void *data)
 {
 	while (running) {
 		SDL_SemWait(pad_sem);
-		sceCtrlReadBufferPositive(&pad, 1); 
+		sceCtrlPeekBufferPositive(&pad, 1); 
 		SDL_SemPost(pad_sem);
 		/* Delay 1/60th of a second */
 		sceKernelDelayThread(1000000 / 60);  
