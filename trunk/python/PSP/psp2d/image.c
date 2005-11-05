@@ -173,6 +173,18 @@ static int image_init(PyImage *self,
        png_destroy_read_struct(&pptr, &iptr, png_infopp_NULL);
        fclose(fp);
     }
+    else if (a->ob_type == PPyImageType)
+    {
+       PyImage *other = (PyImage*)a;
+
+       self->width = other->width;
+       self->height = other->height;
+       self->twidth = other->twidth;
+       self->theight = other->theight;
+
+       self->data = (u32*)memalign(16, sizeof(u32) * self->twidth * self->theight);
+       memcpy(self->data, other->data, sizeof(u32) * self->twidth * self->theight);
+    }
     else
     {
        // Create empty image
@@ -419,15 +431,17 @@ static PyObject* image_drawText(PyImage *self,
        }
        else
        {
+          int cw = (font->positions[offset + 2] + font->positions[offset + 1])/2 -
+             (font->positions[offset] + font->positions[offset - 1])/2;
+
           blit(font->data,
                self->data,
                (font->positions[offset] + font->positions[offset - 1])/2, 1,
-               (font->positions[offset + 2] + font->positions[offset + 1])/2 -
-               (font->positions[offset] + font->positions[offset - 1])/2,
+               cw,
                font->height - 1,
                x, y,
-               font->twidth,
-               self->twidth, 1);
+               font->twidth, self->twidth,
+               1);
 
           x += font->positions[offset + 1] - font->positions[offset];
        }
