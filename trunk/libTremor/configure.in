@@ -57,7 +57,10 @@ else
                 DEBUG="-g -W -D__NO_MATH_INLINES -fsigned-char -D_ARM_ASSEM_"
                 CFLAGS="-O2 -D_ARM_ASSEM_ -fsigned-char"
                 PROFILE="-W -pg -g -O2 -D_ARM_ASSEM_ -fsigned-char -fno-inline-functions";;
-
+        mipsallegrex*-*-*)
+                DEBUG="-g -W -fsigned-char"
+                CFLAGS="-O2 -G0 -fsigned-char -DLITTLE_ENDIAN=1 -DBYTE_ORDER=LITTLE_ENDIAN"
+                PROFILE="-W -pg -g -O2 -G0 -fsigned-char -fno-inline-functions";;
         *)
                 DEBUG="-g -W -D__NO_MATH_INLINES -fsigned-char"
                 CFLAGS="-O2 -fsigned-char"
