@@ -117,6 +117,9 @@ static PyObject* mask_collide(PyMask *self,
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     for (j = 0; j < self->height; ++j)
     {
        for (i = 0; i < self->wcap; ++i)
@@ -160,6 +163,9 @@ static PyObject* mask_union(PyMask *self,
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     for (k = 0; k < self->wcap * self->height; ++k)
        *(self->data + k) |= *(other->data + k);
 
@@ -174,6 +180,9 @@ static PyObject* mask_isIn(PyMask *self,
     int x, y;
 
     if (!PyArg_ParseTuple(args, "ii", &x, &y))
+       return NULL;
+
+    if (PyErr_CheckSignals())
        return NULL;
 
     if (ISSET(self, x, y))

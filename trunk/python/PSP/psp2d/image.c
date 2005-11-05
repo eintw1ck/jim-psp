@@ -214,11 +214,17 @@ static int image_init(PyImage *self,
 
 static PyObject* image_getwidth(PyImage *self, void *closure)
 {
+    if (PyErr_CheckSignals())
+       return NULL;
+
     return Py_BuildValue("i", self->width);
 }
 
 static PyObject* image_getheight(PyImage *self, void *closure)
 {
+    if (PyErr_CheckSignals())
+       return NULL;
+
     return Py_BuildValue("i", self->height);
 }
 
@@ -246,6 +252,9 @@ static PyObject* image_clear(PyImage *self,
        return NULL;
     }
 #endif
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     if (self->data)
     {
@@ -280,6 +289,9 @@ static PyObject* image_blit(PyImage *self,
        return NULL;
     }
 #endif
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     srcdec = src->data + sy * src->twidth + sx;
     dstdec = self->data + dy * self->twidth + dx;
@@ -346,6 +358,9 @@ static PyObject* image_fillRect(PyImage *self,
        return NULL;
     }
 #endif
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     dst = self->data + y * self->twidth + x;
     for (j = 0; j < h; ++j)

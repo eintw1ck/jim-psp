@@ -41,6 +41,9 @@ static PyObject* psp2d_setMusicVolume(PyObject *self,
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     md_musicvolume = (UBYTE)volume;
 
     Py_INCREF(Py_None);
@@ -54,6 +57,9 @@ static PyObject* psp2d_setSndFxVolume(PyObject *self,
     int volume;
 
     if (!PyArg_ParseTuple(args, "i:setSndFxVolume", &volume))
+       return NULL;
+
+    if (PyErr_CheckSignals())
        return NULL;
 
 #ifdef CHECKTYPE

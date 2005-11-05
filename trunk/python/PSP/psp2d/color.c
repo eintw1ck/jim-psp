@@ -46,6 +46,9 @@ static int color_init(PyColor *self,
 
 static PyObject* color_getr(PyColor *self, void *closure)
 {
+    if (PyErr_CheckSignals())
+       return NULL;
+
     return Py_BuildValue("i", self->color & 0xFF);
 }
 
@@ -77,6 +80,9 @@ static int color_setr(PyColor *self, PyObject *value, void *closure)
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return -1;
+
     self->color = (self->color & 0xFFFFFF00U) | (u32)v;
 
     return 0;
@@ -84,6 +90,9 @@ static int color_setr(PyColor *self, PyObject *value, void *closure)
 
 static PyObject* color_getg(PyColor *self, void *closure)
 {
+    if (PyErr_CheckSignals())
+       return NULL;
+
     return Py_BuildValue("i", (self->color >> 8) & 0xFF);
 }
 
@@ -115,6 +124,9 @@ static int color_setg(PyColor *self, PyObject *value, void *closure)
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return -1;
+
     self->color = (self->color & 0xFFFF00FFU) | ((u32)v << 8);
 
     return 0;
@@ -122,6 +134,9 @@ static int color_setg(PyColor *self, PyObject *value, void *closure)
 
 static PyObject* color_getb(PyColor *self, void *closure)
 {
+    if (PyErr_CheckSignals())
+       return NULL;
+
     return Py_BuildValue("i", (self->color >> 16) & 0xFF);
 }
 
@@ -153,6 +168,9 @@ static int color_setb(PyColor *self, PyObject *value, void *closure)
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return -1;
+
     self->color = (self->color & 0xFF00FFFFU) | ((u32)v << 16);
 
     return 0;
@@ -160,6 +178,9 @@ static int color_setb(PyColor *self, PyObject *value, void *closure)
 
 static PyObject* color_geta(PyColor *self, void *closure)
 {
+    if (PyErr_CheckSignals())
+       return NULL;
+
     return Py_BuildValue("i", (self->color >> 24) & 0xFF);
 }
 
@@ -190,6 +211,9 @@ static int color_seta(PyColor *self, PyObject *value, void *closure)
        return -1;
     }
 #endif
+
+    if (PyErr_CheckSignals())
+       return -1;
 
     self->color = (self->color & 0x00FFFFFFU) | ((u32)v << 24);
 

@@ -67,6 +67,9 @@ static PyObject* sound_start(PySound *self,
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     MikMod_PlaySample(self->sf, 0, 0);
 
     Py_INCREF(Py_None);

@@ -129,6 +129,9 @@ static PyObject* screen_blit(PyScreen *self,
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     if (blend)
     {
        int j = 0;
@@ -204,6 +207,9 @@ static PyObject* screen_clear(PyScreen *self,
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     sceGuStart(GU_DIRECT, self->list);
     sceGuClearColor(color->color);
     sceGuClearDepth(0);
@@ -236,6 +242,9 @@ static PyObject* screen_fillRect(PyScreen *self,
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     dst = getDrawBase(self) + y * PSP_LINE_SIZE + x;
     for (j = 0; j < h; ++j)
     {
@@ -254,6 +263,9 @@ static PyObject* screen_swap(PyScreen *self,
                              PyObject *kwargs)
 {
     if (!PyArg_ParseTuple(args, ":swap"))
+       return NULL;
+
+    if (PyErr_CheckSignals())
        return NULL;
 
     sceDisplayWaitVblankStart();

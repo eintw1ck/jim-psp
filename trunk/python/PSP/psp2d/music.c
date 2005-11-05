@@ -76,6 +76,9 @@ static PyObject* music_start(PyMusic *self,
     }
 #endif
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     Player_Start(self->mf);
 
     Py_INCREF(Py_None);
@@ -96,6 +99,9 @@ static PyObject* music_stop(PyMusic *self,
        return NULL;
     }
 #endif
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     Player_Stop();
 

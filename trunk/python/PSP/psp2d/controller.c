@@ -45,17 +45,26 @@ static int controller_init(PyController *self,
 
 static PyObject* controller_getanalogx(PyController *self, void *closure)
 {
+    if (PyErr_CheckSignals())
+       return NULL;
+
     return Py_BuildValue("i", (int)self->data.Lx - 127);
 }
 
 static PyObject* controller_getanalogy(PyController *self, void *closure)
 {
+    if (PyErr_CheckSignals())
+       return NULL;
+
     return Py_BuildValue("i", (int)self->data.Ly - 127);
 }
 
 static PyObject* controller_getsquare(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_SQUARE) ? Py_True : Py_False;
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     Py_INCREF(ret);
     return ret;
@@ -65,6 +74,9 @@ static PyObject* controller_gettriangle(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_TRIANGLE) ? Py_True : Py_False;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     Py_INCREF(ret);
     return ret;
 }
@@ -72,6 +84,9 @@ static PyObject* controller_gettriangle(PyController *self, void *closure)
 static PyObject* controller_getcircle(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_CIRCLE) ? Py_True : Py_False;
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     Py_INCREF(ret);
     return ret;
@@ -81,6 +96,9 @@ static PyObject* controller_getcross(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_CROSS) ? Py_True : Py_False;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     Py_INCREF(ret);
     return ret;
 }
@@ -88,6 +106,9 @@ static PyObject* controller_getcross(PyController *self, void *closure)
 static PyObject* controller_getup(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_UP) ? Py_True : Py_False;
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     Py_INCREF(ret);
     return ret;
@@ -97,6 +118,9 @@ static PyObject* controller_getdown(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_DOWN) ? Py_True : Py_False;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     Py_INCREF(ret);
     return ret;
 }
@@ -104,6 +128,9 @@ static PyObject* controller_getdown(PyController *self, void *closure)
 static PyObject* controller_getleft(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_LEFT) ? Py_True : Py_False;
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     Py_INCREF(ret);
     return ret;
@@ -113,6 +140,9 @@ static PyObject* controller_getright(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_RIGHT) ? Py_True : Py_False;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     Py_INCREF(ret);
     return ret;
 }
@@ -120,6 +150,9 @@ static PyObject* controller_getright(PyController *self, void *closure)
 static PyObject* controller_getstart(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_START) ? Py_True : Py_False;
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     Py_INCREF(ret);
     return ret;
@@ -129,6 +162,9 @@ static PyObject* controller_getselect(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_SELECT) ? Py_True : Py_False;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     Py_INCREF(ret);
     return ret;
 }
@@ -137,6 +173,9 @@ static PyObject* controller_getl(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_LTRIGGER) ? Py_True : Py_False;
 
+    if (PyErr_CheckSignals())
+       return NULL;
+
     Py_INCREF(ret);
     return ret;
 }
@@ -144,6 +183,9 @@ static PyObject* controller_getl(PyController *self, void *closure)
 static PyObject* controller_getr(PyController *self, void *closure)
 {
     PyObject* ret = (self->data.Buttons & PSP_CTRL_RTRIGGER) ? Py_True : Py_False;
+
+    if (PyErr_CheckSignals())
+       return NULL;
 
     Py_INCREF(ret);
     return ret;
