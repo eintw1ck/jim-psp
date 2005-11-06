@@ -12,6 +12,7 @@
 
 #include "transform.h"
 #include "image.h"
+#include "color.h"
 
 static void transform_dealloc(PyTransform *self)
 {
@@ -89,43 +90,85 @@ static PyObject* transform_apply(PyTransform *self,
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_BEGIN_ALLOW_THREADS
-
-    for (y = 0; y < img->height; ++y)
+    if (self->type == TR_USER)
     {
-       for (x = 0; x < img->width; ++x)
+       for (y = 0; y < img->height; ++y)
        {
-          rgba = (u8*)(img->data + y * img->twidth + x);
-          switch (self->type)
+          for (x = 0; x < img->width; ++x)
           {
-             // TODO: TR_USER
+             PyObject *nargs, *ret;
+             PyColor *color;
 
-             case TR_PLUS:
-                for (k = 1; k < 4; ++k)
-                {
-                   int r = (int)rgba[k] + self->param;
+             rgba = (u8*)(img->data + y * img->twidth + x);
+             color = (PyColor*)PyType_GenericNew(PPyColorType, NULL, NULL);
+             ret = PyObject_CallMethod((PyObject*)color, "__init__", "iiii",
+                                       (int)rgba[3], (int)rgba[2],
+                                       (int)rgba[1], (int)rgba[0]);
+             Py_XDECREF(ret);
 
-                   if (r < 0) r = 0;
-                   if (r > 255) r = 255;
-                   rgba[k] = (u8)r;
-                }
-                break;
+             nargs = Py_BuildValue("iiO", x, y, color);
 
-             case TR_MULT:
-                for (k = 1; k < 4; ++k)
-                {
-                   int r = (int)rgba[k] * self->param;
+             ret = PyObject_Call(self->cb, nargs, NULL);
 
-                   if (r < 0) r = 0;
-                   if (r > 255) r = 255;
-                   rgba[k] = (u8)r;
-                }
-                break;
+             Py_DECREF(nargs);
+
+             if (!ret)
+                PyErr_Print();
+
+             if (!PyObject_IsTrue(ret))
+             {
+                Py_DECREF(ret);
+                Py_DECREF(color);
+
+                Py_INCREF(Py_None);
+                return Py_None;
+             }
+
+             Py_DECREF(ret);
+
+             *(img->data + y * img->twidth + x) = color->color;
+             Py_DECREF(color);
           }
        }
     }
+    else
+    {
+       Py_BEGIN_ALLOW_THREADS
 
-    Py_END_ALLOW_THREADS
+       for (y = 0; y < img->height; ++y)
+       {
+          for (x = 0; x < img->width; ++x)
+          {
+             rgba = (u8*)(img->data + y * img->twidth + x);
+             switch (self->type)
+             {
+                case TR_PLUS:
+                   for (k = 1; k < 4; ++k)
+                   {
+                      int r = (int)rgba[k] + self->param;
+
+                      if (r < 0) r = 0;
+                      if (r > 255) r = 255;
+                      rgba[k] = (u8)r;
+                   }
+                   break;
+
+                case TR_MULT:
+                   for (k = 1; k < 4; ++k)
+                   {
+                      int r = (int)rgba[k] * self->param;
+
+                      if (r < 0) r = 0;
+                      if (r > 255) r = 255;
+                      rgba[k] = (u8)r;
+                   }
+                   break;
+             }
+          }
+       }
+
+       Py_END_ALLOW_THREADS
+    }
 
     Py_INCREF(Py_None);
     return Py_None;

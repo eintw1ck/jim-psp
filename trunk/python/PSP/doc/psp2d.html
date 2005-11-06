@@ -329,5 +329,23 @@
       <li>TR_MULT: every component will be multiplied by param</li>
     </ul>
 
+    <span class="method"><a name="method_Transform_init2">__init__(self, cb)</a></span>
+
+    <p  class="doc">Constructor. 'cb'  must be  a callable  object; it
+    will be called  for every pixel and will  receive as arguments (x,
+    y, color) where (x, y)  is the pixel's coordinates and 'color' and
+    instance  of  <a  href="#klass_Color">Color</a>.  You  may  change
+    'color'  in  place and  the  change will  be  echoed  back to  the
+    picture.</p>
+
+    <span class="note">This is REAL SLOW</span>
+
+    <p />
+
+    <span class="method"><a name="method_Transform_apply">apply(self, img)</a></span>
+
+    <p  class="doc">Apply  the  transformation  to  the  specified  <a
+    href="#klass_Image">Image</a>.</p>
+
   </body>
 </html>
