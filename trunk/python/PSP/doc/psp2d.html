@@ -209,12 +209,13 @@
     <p   class="doc">Clears   the  image   using   the  specified   <a
     href="#klass_Color">Color</a>.</p>
 
-    <span class="method"><a name="method_Image_blit">blit(sx, sy, w, h, source, dx, dy, blend = False)</a></span>
+    <span class="method"><a name="method_Image_blit">blit(source, sx = 0, sy = 0, w = -1, h = -1, dx = 0, dy = 0, blend = False)</a></span>
 
     <p class="doc">Copies the (sx, sy, w, h) rectangle from the source
     <a  href="#klass_Image">Image</a>  to   the  instance's  image  at
-    coordinates  (dx,  dy).  If  blend  is  True,  alpha  blending  is
-    performed.</p>
+    coordinates  (dx,  dy).   If  blend  is True,  alpha  blending  is
+    performed.  If w  is not  specified, it  defaults to  the source's
+    width. Same for h.</p>
 
     <span class="note">Alpha blending from image to image is currently
     implemented "by hand", so it  may prove slow. You'd better use the

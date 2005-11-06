@@ -35,7 +35,7 @@ def main(msgs):
                 dx += widths[i][idx]
             dy += font.textHeight('') + 20
 
-        screen.blit(0, 0, img.width, img.height, img, 0, 0, True)
+        screen.blit(img)
         screen.swap()
         angle += 0.2
 
@@ -48,6 +48,6 @@ if __name__ == '__main__':
         main(['NOBODY EXPECTS', 'THE SPANISH INQUISITION!'])
     except KeyboardInterrupt:
         pass
-    except Exception, e:
+    except:
         import traceback
         traceback.print_exc(file = file('trace.txt', 'w'))

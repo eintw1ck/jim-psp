@@ -1,25 +1,40 @@
 #-*- coding: ISO-8859-1 -*-
 
-try:
-    import psp
+import psp2d
 
-    scr = psp.debug.DebugScreen()
-    ctl = psp.ctrl.Controller()
+def main():
+    scr = psp2d.Screen()
 
-    ctl.setSamplingCycle(0)
-    ctl.setSamplingMode(1)
+    fnt = psp2d.Font('font_small.png')
+    dy = fnt.textHeight('') + 5
 
     while True:
-        scr.setXY(0, 2)
-        stamp, buttons, analog_x, analog_y = ctl.readBufferPositive()
+        pad = psp2d.Controller()
 
-        scr.printf('Analog X: %d Analog Y: %d\n', analog_x, analog_y)
+        img = psp2d.Image(480, 272)
+        img.clear(psp2d.Color(0, 0, 0))
 
-        for button in ('SQUARE', 'TRIANGLE', 'CROSS', 'CIRCLE', 'UP', 'DOWN',
-                       'LEFT', 'RIGHT', 'START', 'SELECT', 'LTRIGGER',
-                       'RTRIGGER'):
-            mask = getattr(psp, 'CTRL_' + button)
-            if buttons & mask != 0:
-                scr.printf('%s button pressed.\n', button)
-except Exception, e:
-    file('trace.txt', 'w').write('%s - %s\n' % (e.__class__.__name__, str(e)))
+        img.drawText(fnt, 0, 0, 'Analog X: %d' % pad.analogX)
+        img.drawText(fnt, 0, dy, 'Analog Y: %d' % pad.analogY)
+        img.drawText(fnt, 0, 2 * dy, 'Square: %d' % int(pad.square))
+        img.drawText(fnt, 0, 3 * dy, 'Circle: %d' % int(pad.circle))
+        img.drawText(fnt, 0, 4 * dy, 'Cross: %d' % int(pad.cross))
+        img.drawText(fnt, 0, 5 * dy, 'Triangle: %d' % int(pad.triangle))
+        img.drawText(fnt, 0, 6 * dy, 'Left: %d' % int(pad.left))
+        img.drawText(fnt, 0, 7 * dy, 'Right: %d' % int(pad.right))
+        img.drawText(fnt, 0, 8 * dy, 'Up: %d' % int(pad.up))
+        img.drawText(fnt, 0, 9 * dy, 'Down: %d' % int(pad.down))
+        img.drawText(fnt, 0, 10 * dy, 'Left trigger: %d' % int(pad.l))
+        img.drawText(fnt, 0, 11 * dy, 'Right trigger: %d' % int(pad.r))
+
+        scr.blit(img)
+        scr.swap()
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass
+    except:
+        import traceback
+        traceback.print_exc(file = file('trace.txt', 'w'))

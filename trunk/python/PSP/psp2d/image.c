@@ -17,6 +17,9 @@
 #include "color.h"
 #include "font.h"
 
+#define MAX(a, b) ((a) < (b) ? (b) : (a))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
 static u16 compute_tdim(u16 dim)
 {
     if (dim == 0)
@@ -253,7 +256,7 @@ static PyObject* image_clear(PyImage *self,
                              PyObject *kwargs)
 {
     PyColor *color;
-    u32 k;
+    u32 i, j;
 
     if (!PyArg_ParseTuple(args, "O:clear", &color))
        return NULL;
@@ -271,8 +274,9 @@ static PyObject* image_clear(PyImage *self,
 
     if (self->data)
     {
-       for (k = 0; k < self->width * self->height; ++k)
-          self->data[k] = color->color;
+       for (j = 0; j < self->height; ++j)
+          for (i = 0; i < self->width; ++i)
+             self->data[i + j * self->twidth] = color->color;
     }
 
     Py_INCREF(Py_None);
@@ -335,23 +339,57 @@ static PyObject* image_blit(PyImage *self,
                             PyObject *kwargs)
 {
     PyImage *src;
-    int sx, sy, w, h, dx, dy;
+    int sx = 0, sy = 0, w = -1, h = -1, dx = 0, dy = 0;
     int blend = 0;
 
-    if (!PyArg_ParseTuple(args, "iiiiOii|i:blit", &sx, &sy,
-                          &w, &h, &src, &dx, &dy, &blend))
+    static char* kwids[] = { "src", "sx", "sy", "w", "h", "dx", "dy", "blend", NULL };
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
+                                     "O|iiiiiii", kwids,
+                                     &src,
+                                     &sx, &sy, &w, &h,
+                                     &dx, &dy,
+                                     &blend))
        return NULL;
 
 #ifdef CHECKTYPE
     if (((PyObject*)src)->ob_type != PPyImageType)
     {
-       PyErr_SetString(PyExc_TypeError, "Fifth argument must be an Image");
+       PyErr_SetString(PyExc_TypeError, "First argument must be an Image");
        return NULL;
     }
 #endif
 
     if (PyErr_CheckSignals())
        return NULL;
+
+    if (w == -1)
+       w = src->width;
+
+    if (h == -1)
+       h = src->height;
+
+    // Sanity checks
+
+    if ((dx >= self->width) || (dy >= self->height))
+    {
+       Py_INCREF(Py_None);
+       return Py_None;
+    }
+
+    w = MIN(w, self->width - dx);
+    w = MIN(w, src->width - sx);
+
+    h = MIN(h, self->height - dy);
+    h = MIN(h, src->height - sy);
+
+    if ((w <= 0) || (h <= 0))
+    {
+       Py_INCREF(Py_None);
+       return Py_None;
+    }
+
+    // OK
 
     blit(src->data, self->data,
          sx, sy, w, h, dx, dy,
@@ -455,7 +493,7 @@ static PyObject* image_drawText(PyImage *self,
 
 static PyMethodDef image_methods[] = {
    { "clear", (PyCFunction)image_clear, METH_VARARGS, "" },
-   { "blit", (PyCFunction)image_blit, METH_VARARGS, "" },
+   { "blit", (PyCFunction)image_blit, METH_VARARGS|METH_KEYWORDS, "" },
    { "fillRect", (PyCFunction)image_fillRect, METH_VARARGS, "" },
    { "drawText", (PyCFunction)image_drawText, METH_VARARGS, "" },
 

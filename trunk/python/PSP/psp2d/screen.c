@@ -26,6 +26,9 @@
 
 #define VRAM_BASE ((u32*)(0x40000000 | 0x04000000))
 
+#define MAX(a, b) ((a) < (b) ? (b) : (a))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
 typedef struct
 {
       unsigned short u, v;
@@ -176,11 +179,17 @@ static PyObject* screen_blit(PyScreen *self,
                              PyObject *args,
                              PyObject *kwargs)
 {
-    int sx, sy, w, h, dx, dy, blend = 0;
+    int sx = 0, sy = 0, w = -1, h = -1, dx = 0, dy = 0, blend = 0;
     PyImage *img;
 
-    if (!PyArg_ParseTuple(args, "iiiiOii|i:blit", &sx, &sy, &w, &h,
-                          &img, &dx, &dy, &blend))
+    static char* kwids[] = { "src", "sx", "sy", "w", "h", "dx", "dy", "blend", NULL };
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
+                                     "O|iiiiiii", kwids,
+                                     &img,
+                                     &sx, &sy, &w, &h,
+                                     &dx, &dy,
+                                     &blend))
        return NULL;
 
 #ifdef CHECKTYPE
@@ -193,6 +202,34 @@ static PyObject* screen_blit(PyScreen *self,
 
     if (PyErr_CheckSignals())
        return NULL;
+
+    if (w == -1)
+       w = img->width;
+
+    if (h == -1)
+       h = img->height;
+
+    // Sanity checks
+
+    if ((dx >= SCREEN_WIDTH) || (dy >= SCREEN_HEIGHT))
+    {
+       Py_INCREF(Py_None);
+       return Py_None;
+    }
+
+    w = MIN(w, SCREEN_WIDTH - dx);
+    w = MIN(w, img->width - sx);
+
+    h = MIN(h, SCREEN_HEIGHT - dy);
+    h = MIN(h, img->height - sy);
+
+    if ((w <= 0) || (h <= 0))
+    {
+       Py_INCREF(Py_None);
+       return Py_None;
+    }
+
+    // OK
 
     blit(self, img->data,
          sx, sy, w, h, dx, dy,
@@ -291,7 +328,7 @@ static PyObject* screen_swap(PyScreen *self,
 }
 
 static PyMethodDef screen_methods[] = {
-   { "blit", (PyCFunction)screen_blit, METH_VARARGS, "" },
+   { "blit", (PyCFunction)screen_blit, METH_VARARGS|METH_KEYWORDS, "" },
    { "clear", (PyCFunction)screen_clear, METH_VARARGS, "" },
    { "fillRect", (PyCFunction)screen_fillRect, METH_VARARGS, "" },
    { "swap", (PyCFunction)screen_swap, METH_VARARGS, "" },

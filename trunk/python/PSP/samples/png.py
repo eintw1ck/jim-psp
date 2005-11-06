@@ -2,20 +2,30 @@
 
 __rcsid__ = '$Id$'
 
-try:
-    import psp2d, time
+import psp2d, time
 
+def main():
     scr = psp2d.Screen()
 
-    img = psp2d.Image('test.png')
-    scr.blit(0, 0, img.width, img.height, img, 0, 0)
+    img = psp2d.Image('background.png')
 
-    img = psp2d.Image(200, 200)
-    img.clear(psp2d.Color(255, 0, 0))
-    scr.blit(0, 0, 200, 200, img, 30, 30)
+    img2 = psp2d.Image(200, 200)
+    img2.clear(psp2d.Color(255, 0, 0, 128))
+    img.blit(img2, dx = 30, dy = 30, blend = True)
 
+    scr.blit(img)
     scr.swap()
 
-    time.sleep(10)
-except Exception, e:
-    file('trace.txt', 'w').write('%s - %s\n' % (e.__class__.__name__, str(e)))
+    while True:
+        pad = psp2d.Controller()
+        if pad.circle:
+            break
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass
+    except:
+        import traceback
+        traceback.print_exc(file = file('trace.txt', 'w'))
