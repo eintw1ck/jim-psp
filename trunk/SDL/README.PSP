@@ -8,7 +8,7 @@ Building
 To build for the PSP, make sure psp-config is in the path and run:
 
    ./autogen.sh
-   LDFLAGS="-L`psp-config --pspsdk-path`/lib -lc -lpspuser -lpsputility" \
+   LDFLAGS="-L`psp-config --pspsdk-path`/lib -lc -lpspuser" \
      ./configure --host psp --prefix=`psp-config --psp-prefix`
    make
    make install
@@ -59,7 +59,7 @@ the proper sdl-config.  For example, to build the applications in the
 test/ subdirectory, use:
 
    ./autogen.sh
-   LDFLAGS="-L`psp-config --pspsdk-path`/lib -lc -lpspuser -lpsputility" \
+   LDFLAGS="-L`psp-config --pspsdk-path`/lib -lc -lpspuser" \
      ./configure --host psp --with-sdl-prefix=`psp-config --psp-prefix`
 
 
