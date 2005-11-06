@@ -19,8 +19,6 @@
 #include <pspkernel.h>
 
 #define PSP_LINE_SIZE 512
-#define SCREEN_WIDTH 480
-#define SCREEN_HEIGHT 272
 
 #define FRAMEBUFFER_SIZE (PSP_LINE_SIZE*SCREEN_HEIGHT*4)
 

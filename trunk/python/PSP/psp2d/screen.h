@@ -16,6 +16,9 @@
 #include <Python.h>
 #include <pspgu.h>
 
+#define SCREEN_WIDTH 480
+#define SCREEN_HEIGHT 272
+
 typedef struct
 {
       PyObject_HEAD
