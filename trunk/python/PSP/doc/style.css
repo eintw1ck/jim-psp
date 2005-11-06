@@ -6,6 +6,11 @@ body
 	font-size: 1em;
 }
 
+p
+{
+	text-align: justify;
+}
+
 h1
 {
 	background-color: #eeeeee;

@@ -1,0 +1,252 @@
+<html>
+  <head>
+    <title>Python for PSP tutorial</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+  <body>
+    <h1>Introduction</h1>
+
+    <p>This  tutorial  is  intended  for  people who  have  already  a
+    knowledge of Python.  If you're new  to Python, take a look at the
+    excellent   <a   href="http://docs.python.org/tut/tut.html">Python
+    tutorial</a>.     I    have   found    that    reading   the    <a
+    href="http://docs.python.org/lib/lib.html">Library    reference</a>
+    in full  is an enlightening  experiment (don't try to  remember it
+    all! But  after reading it you'll  find you know  exactly where to
+    look for  when a problem arises). Another  interesting document to
+    read  once you've grasped  the basics  of the  language is  the <a
+    href="http://www.python.org/peps/pep-0008.html">PEP         08</a>,
+    containing useful style guides.</p>
+
+    <p>This tutorial will try to  step through all the classes exposed
+    by  the  psp2d  module,  but  will obviously  not  cover  them  in
+    depth.    For     a    complete    reference,     see    the    <a
+    href="psp2d.html">module reference</a>.</p>
+
+    <h1>Hello world</h1>
+
+    <p>As the  tradition goes, we'll start by  printing 'Hello, world'
+    to   the    screen.    Make    sure   you   have    correctly   <a
+    href="install.html">installed</a> Python on your PSP, and save the
+    following code  to the file  'script.py' in the same  directory as
+    EBOOT.PBP. You  will also need to put  the <a href="font.png">font
+    file</a> in this directory.</p>
+
+<pre>
+#-*- coding: ISO-8859-1 -*-
+
+import psp2d
+
+def main():
+    scr = psp2d.Screen()
+    fnt = psp2d.Font('font.png')
+    img = psp2d.Image(480, 272)
+    img.clear(psp2d.Color(0, 0, 0))
+    img.drawText(fnt, 0, 0, 'Hello, world')
+    scr.blit(img)
+    scr.swap()
+    while True:
+        pad = psp2d.Controller()
+        if pad.circle:
+            break
+
+if __name__ == '__main__':
+    try:
+        main()
+    except:
+        import traceback
+        traceback.print_exc(file = file('trace.txt', 'w'))
+</pre>
+
+    <center><img src="shot01.png" /></center>
+
+    <p>You  can  exit the  program  by  pressing  Circle. Let's  first
+    evacuate the try/except  construct; this is only here  to dump the
+    call  stack if an  exception occurs.  Useful for  debugging. Let's
+    walk through the main function.</p>
+
+<pre>
+    scr = psp2d.Screen()
+</pre>
+
+    <p>The    <a    href="psp2d.html#klass_Screen">Screen</a>    class
+    represents  the physical  screen of  the  PSP, you'll  need it  to
+    display anything.  Note that you  must NOT instantiate  this class
+    more than  once (this will  be automatically enforced in  a future
+    version). With  a few differences,  the Screen class has  the same
+    methods  as the <a  href="psp2d.html#klass_Image">Image</a> class,
+    so you can use it almost like you would use any other image.</p>
+
+<pre>
+    fnt = psp2d.Font('font.png')
+</pre>
+
+    <p>This  instantiates  a <a  href="psp2d.html#klass_Font">Font</a>
+    object, which is  needed whenever you want to  draw text. There is
+    no       built-in      font;       you       need      an       <a
+    href="http://www.linux-games.com/sfont/">SFont</a>-like         PNG
+    file.</p>
+
+<pre>
+    img = psp2d.Image(480, 272)
+</pre>
+
+    <p>Here, we  create an image with  the same dimensions  as the PSP
+    screen. We'll use this image  to draw the text. As stated earlier,
+    the Screen class behaves almost like an Image, but right now it is
+    not possible  to draw text directly  to the screen, so  we have to
+    use an intermediate Image.</p>
+
+<pre>
+    img.clear(psp2d.Color(0, 0, 0))
+</pre>
+
+    <p>We clear the  image using a black color.  Colors are abstracted
+    through  the   <a  href="psp2d.html#klass_Color">Color</a>  class,
+    which is  instantiated with three integer arguments  between 0 and
+    255: red, green and blue  values. There is also a fourd, optionnal
+    argument that specifies the  level of transparency; it defaults to
+    0 (opaque).</p>
+
+<pre>
+    img.drawText(fnt, 0, 0, 'Hello, world')
+</pre>
+
+    <p>Actually draws the text at coordinates (0, 0) in the image.</p>
+
+<pre>
+    scr.blit(img)
+</pre>
+
+    <p>This is the  simplest use of the 'blit'  method. This method is
+    common to Screen and Image  objects; it copies the argument to the
+    instance. The complete signature  is <i>obj1.blit(obj2, sx, sy, w,
+    h,  dx,  dy,  blend)</i>;  All  arguments  except  the  first  are
+    optionnal;  the effect  is to  copy the  rectangle (sx,  sy, sx+w,
+    sy+h)  from obj2  to obj1  at coordinates  (dx, dy).   The 'blend'
+    argument is a Boolean which defaults  to False. If it is True, the
+    transparency  level of  the  source object  (obj2)  is taken  into
+    account when blitting.</p>
+
+<pre>
+    scr.swap()
+</pre>
+
+    <p>Drawing to  the screen uses  double buffering. That  means that
+    instead of  having one buffer  to represent the screen,  there are
+    two,  the  display  buffer  and  the  draw  buffer.   All  drawing
+    operations are directed to the  draw buffer, which is not actually
+    displayed. The 'swap'  method of the Screen object  swaps the draw
+    buffer  and the display  buffer, so  that what  we just  drawed is
+    actually displayed.  This is necessary to avoid  flicker; to learn
+    more      about     double      buffering,     see      the     <a
+    href="http://en.wikipedia.org/wiki/Double_Buffering">article</a>
+    on Wikipedia.</p>
+
+<pre>
+    while True:
+        pad = psp2d.Controller()
+        if pad.circle:
+            break
+</pre>
+
+    <p>This  loops  until  the   Circle  button  is  pressed.  The  <a
+    href="psp2d.html#klass_Controller">Controller</a>  class reads the
+    state of the pad upon instantiation and makes it available through
+    read-only properties.</p>
+
+    <h1>Dancing hello world</h1>
+
+    <p>Now we'll try  to add some animation to  that, and a background
+    image.  Copy  the  following  image  to your  memory  stick  (same
+    directory as font.png):</p>
+
+    <center><img src="background.png" /></center>
+
+    <p>We'll center  the 'hello, world'  message and make  each letter
+    move vertically on a sinusoid. Here, we must take into account the
+    fact that SFonts are variable-width.</p>
+
+<pre>
+#-*- coding: ISO-8859-1 -*-
+
+import psp2d, math
+
+def main(msg):
+    screen = psp2d.Screen()
+    bgimg = psp2d.Image('background.png')
+    font = psp2d.Font('font.png')
+
+    widths = []
+    totalw = 0
+    for c in msg:
+        widths.append(font.textWidth(c))
+        totalw += font.textWidth(c)
+
+    y = (272 - font.textHeight(msg)) / 2
+    x = (480 - totalw) / 2
+
+    angle = 0.0
+
+    while True:
+        img = psp2d.Image(bgimg)
+        dx = 0
+        for idx, c in enumerate(msg):
+            img.drawText(font, x + dx, y + 20 * math.sin(angle + 0.2 * idx), c)
+            dx += widths[idx]
+
+        screen.blit(img)
+        screen.swap()
+        angle += 0.2
+
+        pad = psp2d.Controller()
+        if pad.circle:
+            break
+
+if __name__ == '__main__':
+    try:
+        main('Hello, world!')
+    except KeyboardInterrupt:
+        pass
+    except:
+        import traceback
+        traceback.print_exc(file = file('trace.txt', 'w'))
+</pre>
+
+    <center><img src="shot02.png" /></center>
+
+    <p>I won't  spend time on  the 'algorithmic' side, let's  just see
+    what's new here.</p>
+
+<pre>
+    bgimg = psp2d.Image('background.png')
+</pre>
+
+    <p>Instead of  creating an empty image,  you can of  course load a
+    file. Only  PNG files are  supported. The dimensions of  the image
+    are  accessible  through  the  read-only  properties  'width'  and
+    'height'.</p>
+
+<pre>
+        widths.append(font.textWidth(c))
+</pre>
+
+    <p>As SFonts  are variable-width, you need to  take each character
+    into                account.                 The                <a
+    href="psp2d.html#method_Font_textWidth">Font.textWidth</a>   method
+    returns the  width, in pixels,  necessary to render  the specified
+    text         with        this         font.          The        <a
+    href="psp2d.html#method_Font_textHeight">Font.textHeight</a>
+    method does the  same for the height, but  actually always returns
+    the  same value for  a given  font. you  still need  to pass  it a
+    string though.</p>
+
+<pre>
+        img = psp2d.Image(bgimg)
+</pre>
+
+    <p>This is the third and last  way to create an image; if you pass
+    another image to the constructor, it will copy it.</p>
+
+  </body>
+</html>
