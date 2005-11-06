@@ -23,8 +23,6 @@ typedef struct
       u32* data;
       u16 width;
       u16 height;
-      u16 twidth;
-      u16 theight;
       u16 positions[512];
       u16 maxpos;
 } PyFont;

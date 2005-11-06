@@ -21,8 +21,9 @@
         <li><a href="#klass_Color">Color</a></li>
         <li><a href="#klass_Image">Image</a></li>
         <li><a href="#klass_Screen">Screen</a></li>
-        <li><a href="#klass_Mask">Mask</a></li>
         <li><a href="#klass_Font">Font</a></li>
+        <li><a href="#klass_Mask">Mask</a></li>
+        <li><a href="#klass_Transform">Transform</a></li>
       </ul>
     </ul>
 
@@ -309,6 +310,24 @@
     <span class="method"><a name="method_Mask_isIn">isIn(self, x, y)</a></span>
 
     <p class="doc">Returns True if the bit at position (x, y) is set.</p>
+
+    <hr />
+
+    <span class="klass"><a name="klass_Transform">Transform</a></span>
+
+    <p class="doc">A class used to make pixel-based transformations on
+    images.</p>
+
+    <h4>Methods</h4>
+
+    <span class="method"><a name="method_Transform_init">__init__(self, type, param)</a></span>
+
+    <p class="doc">Constructor. 'param' is a float; 'type' may be one of:</p>
+
+    <ul>
+      <li>TR_PLUS: param will be added to every red, green and blue component</li>
+      <li>TR_MULT: every component will be multiplied by param</li>
+    </ul>
 
   </body>
 </html>

@@ -136,7 +136,8 @@ OBJS += psp2d/psp2d.o \
 	psp2d/sound.o \
 	psp2d/screen.o \
 	psp2d/mask.o \
-	psp2d/font.o
+	psp2d/font.o \
+	psp2d/transform.o
 
 LIBS += -lmikmod -lmmio -lpspaudiolib -lpspaudio -lpng -lz -lpspgu
 endif

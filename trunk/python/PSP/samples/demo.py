@@ -39,6 +39,10 @@ def main(msgs):
         screen.swap()
         angle += 0.2
 
+        pad = psp2d.Controller()
+        if pad.circle:
+            break
+
 if __name__ == '__main__':
     try:
         main(['NOBODY EXPECTS', 'THE SPANISH INQUISITION!'])

@@ -15,23 +15,6 @@
 
 #include "font.h"
 
-static u16 compute_tdim(u16 dim)
-{
-    if (dim == 0)
-    {
-       return 1;
-    }
-    else
-    {
-       u16 pwr = 1;
-
-       while (pwr < dim)
-          pwr *= 2;
-
-       return pwr;
-    }
-}
-
 static void font_dealloc(PyFont *self)
 {
     if (self->data)
@@ -54,8 +37,6 @@ static PyObject* font_new(PyTypeObject *type,
        self->maxpos = 0;
        self->width = 0;
        self->height = 0;
-       self->twidth = 0;
-       self->theight = 0;
        self->data = NULL;
     }
 
@@ -128,10 +109,8 @@ static int font_init(PyFont *self,
 
     self->width = w;
     self->height = h;
-    self->twidth = compute_tdim(w);
-    self->theight = compute_tdim(h);
 
-    self->data = (u32*)memalign(16, sizeof(u32) * self->twidth * self->theight);
+    self->data = (u32*)memalign(16, sizeof(u32) * self->width * self->height);
     if (!self->data)
     {
        fclose(fp);
@@ -143,7 +122,7 @@ static int font_init(PyFont *self,
 
     for (j = 0; j < h; ++j)
     {
-       png_read_row(pptr, (u8*)(self->data + j * self->twidth), png_bytep_NULL);
+       png_read_row(pptr, (u8*)(self->data + j * self->width), png_bytep_NULL);
     }
 
     png_read_end(pptr, iptr);

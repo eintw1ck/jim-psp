@@ -440,7 +440,7 @@ static PyObject* image_drawText(PyImage *self,
                cw,
                font->height - 1,
                x, y,
-               font->twidth, self->twidth,
+               font->width, self->twidth,
                1);
 
           x += font->positions[offset + 1] - font->positions[offset];
