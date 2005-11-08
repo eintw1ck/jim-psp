@@ -63,6 +63,7 @@ int SetupCallbacks(void)
 }
 
 static unsigned short __attribute__((aligned(16))) pixels[512*272];
+static unsigned short __attribute__((aligned(16))) swizzled_pixels[512*272];
 
 struct Vertex
 {
@@ -121,6 +122,48 @@ void advancedBlit(int sx, int sy, int sw, int sh, int dx, int dy)
 	}
 }
 
+void swizzle_fast(u8* out, const u8* in, unsigned int width, unsigned int height)
+{
+   unsigned int blockx, blocky;
+   unsigned int i,j;
+ 
+   unsigned int width_blocks = (width / 16);
+   unsigned int height_blocks = (height / 8);
+ 
+   unsigned int src_pitch = (width-16)/4;
+   unsigned int src_row = width * 8;
+ 
+   const u8* ysrc = in;
+   u32* dst = (u32*)out;
+ 
+   for (blocky = 0; blocky < height_blocks; ++blocky)
+   {
+      const u8* xsrc = ysrc;
+      for (blockx = 0; blockx < width_blocks; ++blockx)
+      {
+         const u32* src = (u32*)xsrc;
+         for (j = 0; j < 8; ++j)
+         {
+            *(dst++) = *(src++);
+            *(dst++) = *(src++);
+            *(dst++) = *(src++);
+            *(dst++) = *(src++);
+            src += src_pitch;
+         }
+         xsrc += 16;
+     }
+     ysrc += src_row;
+   }
+}
+
+const char* modes[] =
+{
+	"normal, linear",
+	"optimized, linear",
+	"normal, swizzled",
+	"optimized, swizzled"
+};
+
 int main(int argc, char* argv[])
 {
 	unsigned int x,y;
@@ -162,6 +205,8 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	swizzle_fast((u8*)swizzled_pixels,(const u8*)pixels,512*2,272); // 512*2 because swizzle operates in bytes, and each pixel in a 16-bit texture is 2 bytes
+
 	sceKernelDcacheWritebackAll();
 
 	float curr_ms = 1.0f;
@@ -195,7 +240,7 @@ int main(int argc, char* argv[])
 		}
 
 		sceGuTexMode(GU_PSM_4444,0,0,swizzle); // 16-bit RGBA
-		sceGuTexImage(0,512,512,512,pixels); // setup texture as a 512x512 texture, even though the buffer is only 512x272 (480 visible)
+		sceGuTexImage(0,512,512,512,swizzle ? swizzled_pixels : pixels); // setup texture as a 512x512 texture, even though the buffer is only 512x272 (480 visible)
 		sceGuTexFunc(GU_TFX_REPLACE,GU_TCC_RGBA); // don't get influenced by any vertex colors
 		sceGuTexFilter(GU_NEAREST,GU_NEAREST); // point-filtered sampling
 
@@ -213,7 +258,7 @@ int main(int argc, char* argv[])
 		sceGuSwapBuffers();
 
 		pspDebugScreenSetXY(0,0);
-		pspDebugScreenPrintf("fps: %d.%03d (%dMB/s) (X = mode, O = swizzle)",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f),(((int)curr_fps * 480 * 272 * 2)/(1024*1024)));
+		pspDebugScreenPrintf("fps: %d.%03d (%dMB/s) (X = mode, O = swizzle) %s",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f),(((int)curr_fps * 480 * 272 * 2)/(1024*1024)),modes[blit_method + swizzle * 2]);
 
 		// simple frame rate counter
 
