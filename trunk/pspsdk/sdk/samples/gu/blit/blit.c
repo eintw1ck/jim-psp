@@ -15,6 +15,7 @@
 #include <string.h>
 #include <time.h>
 
+#include <pspctrl.h>
 #include <pspgu.h>
 
 PSP_MODULE_INFO("Blit Sample", 0, 1, 1);
@@ -70,6 +71,56 @@ struct Vertex
 	short x, y, z;
 };
 
+void simpleBlit(int sx, int sy, int sw, int sh, int dx, int dy)
+{
+	// simple blit, this just copies A->B, with all the cache-misses that apply
+
+	struct Vertex* vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
+
+	vertices[0].u = sx; vertices[0].v = sy;
+	vertices[0].color = 0;
+	vertices[0].x = dx; vertices[0].y = dy; vertices[0].z = 0;
+
+	vertices[1].u = sx+sw; vertices[1].v = sy+sh;
+	vertices[1].color = 0;
+	vertices[1].x = dx+sw; vertices[1].y = dy+sh; vertices[1].z = 0;
+
+	sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_COLOR_4444|GU_VERTEX_16BIT|GU_TRANSFORM_2D,2,0,vertices);
+}
+
+void advancedBlit(int sx, int sy, int sw, int sh, int dx, int dy)
+{
+	int start, end;
+
+	// blit maximizing the use of the texture-cache
+
+	/*
+		the texture cache is 8kB. It is used in the following fashions:
+		4-bit: 128x128
+		8-bit: 128x64
+		16-bit: 64x64
+		32-bit: 64x32
+
+		swizzling your input will give more than 100% increase in speed
+	*/
+
+	for (start = sx, end = sx+sw; start < end; start += SLICE_SIZE, dx += SLICE_SIZE)
+	{
+		struct Vertex* vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
+		int width = (start + SLICE_SIZE) < end ? SLICE_SIZE : end-start;
+
+		vertices[0].u = start; vertices[0].v = sy;
+		vertices[0].color = 0;
+		vertices[0].x = dx; vertices[0].y = dy; vertices[0].z = 0;
+
+		vertices[1].u = start + width; vertices[1].v = sy + sh;
+		vertices[1].color = 0;
+		vertices[1].x = dx + width; vertices[1].y = dy + sh; vertices[1].z = 0;
+
+		sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_COLOR_4444|GU_VERTEX_16BIT|GU_TRANSFORM_2D,2,0,vertices);
+	}
+}
+
 int main(int argc, char* argv[])
 {
 	unsigned int x,y;
@@ -81,7 +132,7 @@ int main(int argc, char* argv[])
 
 	// setup
 	sceGuStart(GU_DIRECT,list);
-	sceGuDrawBuffer(GU_PSM_4444,(void*)0,512);
+	sceGuDrawBuffer(GU_PSM_8888,(void*)0,512);
 	sceGuDispBuffer(480,272,(void*)0x88000,512);
 	sceGuDepthBuffer((void*)0x110000,512);
 	sceGuOffset(2048 - (480/2),2048 - (272/2));
@@ -111,40 +162,47 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	sceKernelDcacheWritebackAll();
+
 	float curr_ms = 1.0f;
 	struct timeval time_slices[16];
+	int blit_method = 0;
+	int swizzle = 0;
+	SceCtrlData oldPad;
+	oldPad.Buttons = 0;
+
+	sceCtrlSetSamplingCycle(0);
+	sceCtrlSetSamplingMode(0);
 
 	while (!done)
 	{
-		unsigned int j;
-		struct Vertex* vertices;
+		SceCtrlData pad;
 
 		sceGuStart(GU_DIRECT,list);
 
-		// setup the source buffer as a 512x512 texture, but only copy 480x272
-		sceGuTexMode(GU_PSM_4444,0,0,0);
-		sceGuTexImage(0,512,512,512,pixels);
-		sceGuTexFunc(GU_TFX_REPLACE,GU_TCC_RGB);
-		sceGuTexFilter(GU_NEAREST,GU_NEAREST);
-		sceGuTexScale(1.0f/512.0f,1.0f/512.0f); // scale UVs to 0..1
-		sceGuTexOffset(0.0f,0.0f);
-		sceGuAmbientColor(0xffffffff);
+		// switch methods if requested
 
-		// do a striped blit (takes the page-cache into account)
-
-		for (j = 0; j < 480; j = j+SLICE_SIZE)
+		if(sceCtrlPeekBufferPositive(&pad, 1))
 		{
-			vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
-
-			vertices[0].u = j; vertices[0].v = 0;
-			vertices[0].color = 0;
-			vertices[0].x = j; vertices[0].y = 0; vertices[0].z = 0;
-			vertices[1].u = j+SLICE_SIZE; vertices[1].v = 272;
-			vertices[1].color = 0;
-			vertices[1].x = j+SLICE_SIZE; vertices[1].y = 272; vertices[1].z = 0;
-
-			sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_COLOR_4444|GU_VERTEX_16BIT|GU_TRANSFORM_2D,2,0,vertices);
+			if (pad.Buttons != oldPad.Buttons)
+			{
+				if(pad.Buttons & PSP_CTRL_CROSS)
+					blit_method ^= 1;
+				if(pad.Buttons & PSP_CTRL_CIRCLE)
+					swizzle ^= 1;
+			}
+			oldPad = pad;
 		}
+
+		sceGuTexMode(GU_PSM_4444,0,0,swizzle); // 16-bit RGBA
+		sceGuTexImage(0,512,512,512,pixels); // setup texture as a 512x512 texture, even though the buffer is only 512x272 (480 visible)
+		sceGuTexFunc(GU_TFX_REPLACE,GU_TCC_RGBA); // don't get influenced by any vertex colors
+		sceGuTexFilter(GU_NEAREST,GU_NEAREST); // point-filtered sampling
+
+		if (blit_method)
+			advancedBlit(0,0,480,272,0,0);
+		else
+			simpleBlit(0,0,480,272,0,0);
 
 		sceGuFinish();
 		sceGuSync(0,0);
@@ -155,7 +213,7 @@ int main(int argc, char* argv[])
 		sceGuSwapBuffers();
 
 		pspDebugScreenSetXY(0,0);
-		pspDebugScreenPrintf("%d.%03d",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f));
+		pspDebugScreenPrintf("fps: %d.%03d (%dMB/s) (X = mode, O = swizzle)",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f),(((int)curr_fps * 480 * 272 * 2)/(1024*1024)));
 
 		// simple frame rate counter
 
