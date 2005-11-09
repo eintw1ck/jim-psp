@@ -302,7 +302,7 @@
    ./bootstrap || { echo "ERROR RUNNING PSPSDK BOOSTRAP"; exit; }
 
    ## Configure the source.
-   ./configure || { echo "ERROR RUNNING PSPSDK CONFIGURE"; exit; }
+   ./configure --with-pspdev=$PSPDEV || { echo "ERROR RUNNING PSPSDK CONFIGURE"; exit; }
 
    ## Install the headers that Newlib requires.
    $MAKE clean; $MAKE install-data || { echo "ERROR BUILDING PSPSDK"; exit; }
@@ -412,7 +412,7 @@
    cd pspsdk
 
    ## Reconfigure the source (to pick up the C++ compiler).
-   ./configure || { echo "ERROR RUNNING PSPSDK CONFIGURE"; exit; }
+   ./configure --with-pspdev=$PSPDEV || { echo "ERROR RUNNING PSPSDK CONFIGURE"; exit; }
 
    ## Build the source.
    $MAKE clean; $MAKE || { echo "ERROR BUILDING PSPSDK"; exit; }
