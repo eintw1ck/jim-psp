@@ -8,7 +8,6 @@
 
   ## Main pspdev settings.
   PSPDEV="/usr/local/pspdev"
-  PATH="$PATH:$PSPDEV/bin"
 
   ## Set the directories.
   SRCDIR="`pwd`"
@@ -63,8 +62,20 @@
      -e)
       BUILD_GDB=1
       shift;;
+     -a | -all | --all)
+      DO_DOWNLOAD=1
+      BUILD_BINUTILS=1
+      BUILD_GCC=1
+      BUILD_NEWLIB=1
+      BUILD_PSPSDK=1
+      # By default dont build GDB
+      BUILD_GDB=0
+      shift;;
      -P)
       PSPSDK_SVN="$2"
+      shift 2;;
+     -prefix | --prefix)
+      PSPDEV="$2"
       shift 2;;
     esac
    done
@@ -76,6 +87,9 @@
   if test $BUILD_NEWLIB ; then
    BUILD_PSPSDK=1
   fi
+
+  ## Set the path based on the prefix.
+  PATH="$PATH:$PSPDEV/bin"
 
  ###########################
  ## SOFTWARE DEPENDENCIES ##
