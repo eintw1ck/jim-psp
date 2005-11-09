@@ -156,8 +156,8 @@ void gumLookAt(ScePspFMatrix4* m, ScePspFVector3* eye, ScePspFVector3* center, S
 	t.z.z = -forward.z;
 
 	ieye.x = -eye->x; ieye.y = -eye->y; ieye.z = -eye->z;
-	gumTranslate(m,&ieye);
 	gumMultMatrix(m,m,&t);
+	gumTranslate(m,&ieye);
 }
 #endif
 
