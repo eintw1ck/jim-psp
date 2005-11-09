@@ -84,7 +84,7 @@
 
   ## Newlib depends on PSPSDK headers, so if it's being
   ## built then make sure that PSPSDK is being built.
-  if test $BUILD_NEWLIB ; then
+  if test "$BUILD_NEWLIB" = "1" ; then
    BUILD_PSPSDK=1
   fi
 
@@ -135,7 +135,7 @@
    exit
   fi
 
-  if test $BUILD_GDB ; then
+  if test "$BUILD_GDB" = "1" ; then
      if test "`flex --version 2> /dev/null`" ; then
 	    FLEX="flex"
      else
@@ -145,7 +145,7 @@
   fi
 
   ## Check for autoconf and automake
-  if test $BUILD_PSPSDK ; then
+  if test "$BUILD_PSPSDK" = "1" ; then
       if ! test "`automake --version 2> /dev/null`" ; then
 	  echo "ERROR: Please make sure you have 'automake' installed."
 	  exit
@@ -161,30 +161,30 @@
  ################################
 
   ## If we've been told to download...
-  if test $DO_DOWNLOAD ; then
+  if test "$DO_DOWNLOAD" = "1" ; then
 
    ## Download the binutils source.
-   if test $BUILD_BINUTILS ; then
+   if test "$BUILD_BINUTILS" = "1" ; then
     if test ! -f "$BINUTILS.tar.gz" ; then
      $WGET ftp://ftp.gnu.org/pub/gnu/binutils/$BINUTILS.tar.gz || { echo "ERROR DOWNLOADING BINUTILS"; exit; }
     fi
    fi
 
    ## Download the gcc source.
-   if test $BUILD_GCC ; then
+   if test "$BUILD_GCC" = "1" ; then
     if test ! -f "$GCC.tar.bz2" ; then
      $WGET ftp://ftp.gnu.org/pub/gnu/gcc/$GCC/$GCC.tar.bz2 || { echo "ERROR DOWNLOADING GCC"; exit; }
     fi
    fi
 
    ## Download the newlib source.
-   if test $BUILD_NEWLIB ; then
+   if test "$BUILD_NEWLIB" = "1" ; then
     if test ! -f "$NEWLIB.tar.gz" ; then
      $WGET ftp://sources.redhat.com/pub/newlib/$NEWLIB.tar.gz || { echo "ERROR DOWNLOADING NEWLIB"; exit; }
     fi
    fi
 
-   if test $BUILD_GDB ; then
+   if test "$BUILD_GDB" = "1" ; then
      if test ! -f "$GDB.tar.gz" ; then
       $WGET ftp://ftp.gnu.org/pub/gnu/gdb/$GDB.tar.gz || { echo "ERROR DOWNLOADING GDB"; exit; }
      fi
@@ -196,35 +196,35 @@
   mkdir -p "$TMPDIR"; cd "$TMPDIR"
 
   ## Unpack and patch the binutils source.
-  if test $BUILD_BINUTILS ; then
+  if test "$BUILD_BINUTILS" = "1" ; then
    rm -Rf $BINUTILS; gzip -cd "$SRCDIR/$BINUTILS.tar.gz" | tar xvf -
    cd $BINUTILS; cat "$SRCDIR/$BINUTILS.patch" | $PATCH || { echo "ERROR PATCHING BINUTILS"; exit; }
    cd ..
   fi
 
   ## Unpack and patch the gcc source.
-  if test $BUILD_GCC ; then
+  if test "$BUILD_GCC" = "1" ; then
    rm -Rf $GCC; bzip2 -cd "$SRCDIR/$GCC.tar.bz2" | tar xvf -
    cd $GCC; cat "$SRCDIR/$GCC.patch" | $PATCH || { echo "ERROR PATCHING GCC"; exit; }
    cd ..
   fi
 
   ## Unpack and patch the newlib source.
-  if test $BUILD_NEWLIB ; then
+  if test "$BUILD_NEWLIB" = "1" ; then
    rm -Rf $NEWLIB; gzip -cd "$SRCDIR/$NEWLIB.tar.gz" | tar xvf -
    cd $NEWLIB; cat "$SRCDIR/$NEWLIB.patch" | $PATCH || { echo "ERROR PATCHING NEWLIB"; exit; }
    cd ..
   fi
 
   ## Unpack and patch the gdb source
-  if test $BUILD_GDB ; then
+  if test "$BUILD_GDB" = "1" ; then
    rm -Rf $GDB; gzip -cd "$SRCDIR/$GDB.tar.gz" | tar xvf -
    cd $GDB; cat "$SRCDIR/$GDB.patch" | $PATCH || { echo "ERROR PATCHING GDB"; exit; }
    cd ..
   fi
 
   ## Grab the latest PSPSDK from Subversion.
-  if test $BUILD_PSPSDK ; then
+  if test "$BUILD_PSPSDK" = "1" ; then
    rm -Rf pspsdk
    $SVN export "$PSPSDK_SVN" pspsdk
   fi
@@ -234,7 +234,7 @@
  ################################
 
   ## If we've been told to build binutils...
-  if test $BUILD_BINUTILS ; then
+  if test "$BUILD_BINUTILS" = "1" ; then
 
    ## Enter the source directory.
    cd $BINUTILS
@@ -264,7 +264,7 @@
  ###########################
 
   ## If we've been told to build gcc...
-  if test $BUILD_GCC ; then
+  if test "$BUILD_GCC" = "1" ; then
 
    ## Enter the source directory.
    cd $GCC
@@ -293,7 +293,7 @@
  ## INSTALL PSPSDK HEADERS ##
  ############################
 
-  if test $BUILD_PSPSDK ; then
+  if test "$BUILD_PSPSDK" = "1" ; then
 
    ## Enter the source directory.
    cd pspsdk
@@ -317,7 +317,7 @@
  ##############################
 
   ## If we've been told to build newlib...
-  if test $BUILD_NEWLIB ; then
+  if test "$BUILD_NEWLIB" = "1" ; then
 
    ## Enter the source directory.
    cd $NEWLIB
@@ -347,7 +347,7 @@
  #################################
 
   ## If we've been told to build gcc...
-  if test $BUILD_GCC ; then
+  if test "$BUILD_GCC" = "1" ; then
 
    ## Enter the source directory.
    cd $GCC
@@ -376,7 +376,7 @@
  ## BUILD AND INSTALL GDB       ##
  #################################
 
-  if test $BUILD_GDB ; then
+  if test "$BUILD_GDB" = "1" ; then
 
    ## Enter the source directory.
    cd $GDB
@@ -406,7 +406,7 @@
  ##############################
 
   ## If we've been told to build pspsdk...
-  if test $BUILD_PSPSDK ; then
+  if test "$BUILD_PSPSDK" = "1" ; then
 
    ## Enter the source directory.
    cd pspsdk
