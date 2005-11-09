@@ -56,15 +56,9 @@ CHAR *_mm_errmsg[] =
     "None of the supported sound-devices were detected",
     "Device number out of range",
     "Software mixer failure - Out of memory",
+    "Could not open sound device",
 
-#ifdef SUN
-#elif defined(SOLARIS)
-#elif defined(__alpha)
     "Cannot find suitable audio port!"
-#elif defined(OSS)
-    #ifdef ULTRA
-    #endif
-#elif defined(__hpux)
     "Unable to open /dev/audio",
     "Unable to set non-blocking mode for /dev/audio",
     "Unable to select 16bit-linear sample format",
@@ -75,19 +69,18 @@ CHAR *_mm_errmsg[] =
     "Unable to get gain values",
     "Unable to set gain values",
     "Could not set transmission buffer size"
-#elif defined(AIX)
     "Could not open AIX audio device",
     "Configuration (init) of AIX audio device failed",
     "Configuration (control) of AIX audio device failed",
     "Configuration (start) of AIX audio device failed",
     "Unable to set non-blocking mode for /dev/audio",
-#elif defined(SGI)
-#elif defined(__OS2__)
-#elif defined(__WIN32__)
-#else
+    "Invalid device handle",
+    "The resource is already allocated",
+    "Invalid device identifier",
+    "Unsupported output format",
+    "Unknown error",
     "The requested soundcard was not found",
     "Could not open a High-DMA channel"
-#endif
 };
 
 

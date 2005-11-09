@@ -315,7 +315,7 @@ extern MDRIVER drv_nos;      /* nosound driver */
 extern MDRIVER drv_raw;      /* raw file output driver [music.raw] */
 extern MDRIVER drv_wav;      /* RIFF WAVE file output driver [music.wav] */
 
-extern MDRIVER drv_w95;      /* win95 driver */
+extern MDRIVER drv_win;      /* winmm driver */
 extern MDRIVER drv_oss;      /* linux voxware driver */
 extern MDRIVER drv_stdout;      /* linux voxware driver */
 extern MDRIVER drv_AF;       /* Dec Alpha AudioFile driver */

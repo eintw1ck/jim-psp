@@ -1,0 +1,52 @@
+INSTALLDIR          = /usr/local
+CC                  = gcc 
+CFLAGS              = -O2 -I./include -g -D__WIN32__
+LIBRARIAN           = ar
+MMIO_LIB_FILE       = ./lib/libmmio.a
+
+MMIO_OBJECT_FILES   = mmio/mmio.o mmio/mmalloc.o mmio/mmerror.o
+
+MIKMOD_LIB_FILE     = ./lib/libmikmod.a
+
+MIKMOD_BASE_OBJS    = playercode/stream.o playercode/virtch.o playercode/munitrk.o
+
+MIKMOD_LOADER_OBJS  = playercode/mloader.o playercode/mlreg.o playercode/npertab.o playercode/sloader.o playercode/mwav.o playercode/load_uni.o \
+    playercode/load_mod.o playercode/load_m15.o playercode/load_mtm.o playercode/load_s3m.o playercode/load_stm.o playercode/load_669.o \
+    playercode/load_far.o playercode/load_dsm.o playercode/load_med.o playercode/load_xm.o playercode/load_ult.o playercode/load_it.o \
+    playercode/load_wav.o playercode/s3m_it.o
+
+MIKMOD_DRIVER_OBJS  = playercode/mdriver.o playercode/mdreg.o playercode/drv_nos.o playercode/drv_raw.o playercode/drv_wav.o \
+	playercode/unix_drv/drv_oss.o playercode/unix_drv/drv_stdout.o playercode/unix_drv/drv_win.o
+
+MIKMOD_PLAYER_OBJS  = playercode/mplayer.o
+
+MIKMOD_OBJECT_FILES = $(MIKMOD_BASE_OBJS) $(MIKMOD_LOADER_OBJS) $(MIKMOD_DRIVER_OBJS) $(MIKMOD_PLAYER_OBJS)
+
+
+####################
+## Makefile rules ##
+####################
+
+all: $(MMIO_LIB_FILE) $(MIKMOD_LIB_FILE)
+
+$(MMIO_LIB_FILE): $(MMIO_OBJECT_FILES)
+	$(LIBRARIAN) cru $(MMIO_LIB_FILE) $(MMIO_OBJECT_FILES)
+
+$(MIKMOD_LIB_FILE): $(MIKMOD_OBJECT_FILES)
+	$(LIBRARIAN) cru $(MIKMOD_LIB_FILE) $(MIKMOD_OBJECT_FILES)
+  
+clean:
+	rm -f mmio/*.o
+	rm -f $(MMIO_LIB_FILE)
+	rm -f playercode/*.o
+	rm -f playercode/unix_drv/*.o
+	rm -f $(MIKMOD_LIB_FILE)
+  
+install: $(MMIO_LIB_FILE) $(MIKMOD_LIB_FILE)
+	@echo "Installing mikmodlib into $(INSTALLDIR)"
+	@mkdir -p $(INSTALLDIR)/include $(INSTALLDIR)/lib
+	@cp include/mmio.h $(INSTALLDIR)/include
+	@cp include/mikmod.h $(INSTALLDIR)/include
+	@cp lib/libmmio.a $(INSTALLDIR)/lib
+	@cp lib/libmikmod.a $(INSTALLDIR)/lib
+	@echo "Done"

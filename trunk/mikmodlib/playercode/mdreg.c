@@ -46,7 +46,7 @@ void MikMod_RegisterAllDrivers(void)
 #elif defined(__OS2__)
     MikMod_RegisterDriver(drv_os2);
 #elif defined(__WIN32__)
-    MikMod_RegisterDriver(drv_w95);
+    MikMod_RegisterDriver(drv_win);
 #else
     MikMod_RegisterDriver(drv_awe);
     MikMod_RegisterDriver(drv_gus);
