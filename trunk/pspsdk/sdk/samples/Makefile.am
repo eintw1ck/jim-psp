@@ -43,6 +43,7 @@ SAMPLES = \
 	usb/storage \
 	utility/netconf \
 	utility/msgdialog \
+	utility/savedata \
 	utility/systemparam \
 	me/basic \
 	wlan

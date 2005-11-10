@@ -12,9 +12,10 @@
 #ifndef __PSPUTILITY_H__
 #define __PSPUTILITY_H__
 
-#include <psputility_sysparam.h>
+#include <psputility_msgdialog.h>
 #include <psputility_netconf.h>
 #include <psputility_netparam.h>
-#include <psputility_msgdialog.h>
+#include <psputility_savedata.h>
+#include <psputility_sysparam.h>
 
 #endif

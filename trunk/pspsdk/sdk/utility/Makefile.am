@@ -14,10 +14,11 @@ UTILITY_OBJS = sceUtility_0000.o sceUtility_0001.o sceUtility_0002.o sceUtility_
 
 libpsputilityincludedir = @PSPSDK_INCLUDEDIR@
 libpsputilityinclude_HEADERS = psputility.h \
-                               psputility_sysparam.h \
+                               psputility_msgdialog.h \
                                psputility_netconf.h \
                                psputility_netparam.h \
-                               psputility_msgdialog.h
+                               psputility_savedata.h \
+                               psputility_sysparam.h
 
 lib_LIBRARIES = libpsputility.a
 libpsputility_a_SOURCES = sceUtility.S
