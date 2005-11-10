@@ -44,22 +44,22 @@
    ## Parse the arguments.
    while test $# -ge 1 ; do
     case "$1" in
-     -d)
+     -d | -download | --download)
       DO_DOWNLOAD=1
       shift;;
-     -b)
+     -b | -binutils | --binutils)
       BUILD_BINUTILS=1
       shift;;
-     -g)
+     -g | -gcc | --gcc)
       BUILD_GCC=1
       shift;;
-     -n)
+     -n | -newlib | --newlib)
       BUILD_NEWLIB=1
       shift;;
-     -p)
+     -p | -pspsdk | --pspsdk)
       BUILD_PSPSDK=1
       shift;;
-     -e)
+     -e | -gdb | --gdb)
       BUILD_GDB=1
       shift;;
      -a | -all | --all)
@@ -71,7 +71,7 @@
       # By default dont build GDB
       BUILD_GDB=0
       shift;;
-     -P)
+     -P | -pspsdk-src | --pspsdk-src)
       PSPSDK_SVN="$2"
       shift 2;;
      -prefix | --prefix)
