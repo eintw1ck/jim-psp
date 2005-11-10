@@ -4,7 +4,7 @@
 #include <pspgu.h>
 #include <pspdebug.h>
 #include <pspdisplay.h>
-#include <Font.c>
+#include <_Font.c>
 
 
 #define BUF_WIDTH (512)
