@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define STDOUT_FILE	"stdout.txt"
 #define STDERR_FILE	"stderr.txt"
 
 /* If application's main() is redefined as SDL_main, and libSDLmain is
@@ -44,11 +45,14 @@
 
 extern int SDL_main(int argc, char *argv[]);
 
+static void cleanup_output(void);
+
 PSP_MODULE_INFO("SDL App", 0x1000, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 
 int sdl_psp_exit_callback(int arg1, int arg2, void *common)
 {
+	cleanup_output();
 	sceKernelExitGame();
 	return 0;
 }
@@ -73,18 +77,6 @@ int sdl_psp_setup_callbacks(void)
 	return thid;
 }
 
-#ifndef NO_STDIO_REDIRECT
-int sdl_psp_stderr_handler(const char *data, int len)
-{
-	FILE *stderr_fp;
-
-	stderr_fp = fopen(STDERR_FILE, "a");
-	fwrite (data, len, 1, stderr_fp);
-	fclose(stderr_fp);
-	return 0;
-}
-#endif
-
 void sdl_psp_exception_handler(PspDebugRegBlock *regs)
 {
 	pspDebugScreenInit();
@@ -107,8 +99,38 @@ void loaderInit()
 	pspKernelSetKernelPC();
 	pspSdkInstallNoDeviceCheckPatch();
 	pspDebugInstallErrorHandler(sdl_psp_exception_handler);
+}
+
+/* Remove the output files if there was no output written */
+static void cleanup_output(void)
+{
 #ifndef NO_STDIO_REDIRECT
-	pspDebugInstallStderrHandler(sdl_psp_stderr_handler);
+	FILE *file;
+	int empty;
+#endif
+
+	/* Flush the output in case anything is queued */
+	fclose(stdout);
+	fclose(stderr);
+
+#ifndef NO_STDIO_REDIRECT
+	/* See if the files have any output in them */
+	file = fopen(STDOUT_FILE, "rb");
+	if ( file ) {
+		empty = (fgetc(file) == EOF) ? 1 : 0;
+		fclose(file);
+		if ( empty ) {
+			remove(STDOUT_FILE);
+		}
+	}
+	file = fopen(STDERR_FILE, "rb");
+	if ( file ) {
+		empty = (fgetc(file) == EOF) ? 1 : 0;
+		fclose(file);
+		if ( empty ) {
+			remove(STDERR_FILE);
+		}
+	}
 #endif
 }
 
@@ -117,8 +139,20 @@ int main(int argc, char *argv[])
 	pspDebugScreenInit();
 	sdl_psp_setup_callbacks();
 
+#ifndef NO_STDIO_REDIRECT
+	/* Redirect standard output and standard error. */
+	/* TODO: Error checking. */
+	freopen(STDOUT_FILE, "w", stdout);
+	freopen(STDERR_FILE, "w", stderr);
+	setvbuf(stdout, NULL, _IOLBF, BUFSIZ);	/* Line buffered */
+	setbuf(stderr, NULL);					/* No buffering */
+#endif /* NO_STDIO_REDIRECT */
+
+	atexit(cleanup_output);
+
 	(void)SDL_main(argc, argv);
 
+	cleanup_output();
 	sceKernelDelayThread(2500000);
 	sceKernelExitGame();
 	return 0;
