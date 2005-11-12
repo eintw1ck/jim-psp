@@ -251,7 +251,66 @@ if __name__ == '__main__':
     <p>This is the third and last  way to create an image; if you pass
     another image to the constructor, it will copy it.</p>
 
+    <h1>Optimizing</h1>
+
+    <p>Since 2005-11-12, a new underlying implementation allows one to
+    draw text  directly to  the screen. Let's  modify the  script (red
+    lines were removed, green lines were added):</p>
+
+<pre>
+#-*- coding: ISO-8859-1 -*-
+
+import psp2d, math
+
+def main(msg):
+    screen = psp2d.Screen()
+    bgimg = psp2d.Image('background.png')
+    font = psp2d.Font('font.png')
+
+    widths = []
+    totalw = 0
+    for c in msg:
+        widths.append(font.textWidth(c))
+        totalw += font.textWidth(c)
+
+    y = (272 - font.textHeight(msg)) / 2
+    x = (480 - totalw) / 2
+
+    angle = 0.0
+
+    while True:
+        <font color="red"># img = psp2d.Image(bgimg)</font>
+	<font color="green">screen.blit(bgimg)</font>
+        dx = 0
+        for idx, c in enumerate(msg):
+            <font color="red"># font.drawText(img, x + dx, y + 20 * math.sin(angle + 0.2 * idx), c)</font>
+            <font color="green">font.drawText(screen, x + dx, y + 20 * math.sin(angle + 0.2 * idx), c)</font>
+            dx += widths[idx]
+
+        <font color="red"># screen.blit(img)</font>
+        screen.swap()
+        angle += 0.2
+
+        pad = psp2d.Controller()
+        if pad.circle:
+            break
+
+if __name__ == '__main__':
+    try:
+        main('Hello, world!')
+    except KeyboardInterrupt:
+        pass
+    except:
+        import traceback
+        traceback.print_exc(file = file('trace.txt', 'w'))
+</pre>
+
+    <p>Try both the  old and the new version, and  you'll see why it's
+    better to blit()  or drawText() directly to the  screen instead of
+    using an intermediate buffer.</p>
+
     <hr />
+
     <h1>Changelog</h1>
 
     <ul>
