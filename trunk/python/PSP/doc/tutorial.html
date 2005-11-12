@@ -42,7 +42,7 @@ def main():
     fnt = psp2d.Font('font.png')
     img = psp2d.Image(480, 272)
     img.clear(psp2d.Color(0, 0, 0))
-    img.drawText(fnt, 0, 0, 'Hello, world')
+    fnt.drawText(img, 0, 0, 'Hello, world')
     scr.blit(img)
     scr.swap()
     while True:
@@ -92,10 +92,11 @@ if __name__ == '__main__':
 </pre>
 
     <p>Here, we  create an image with  the same dimensions  as the PSP
-    screen. We'll use this image  to draw the text. As stated earlier,
-    the Screen class behaves almost like an Image, but right now it is
-    not possible  to draw text directly  to the screen, so  we have to
-    use an intermediate Image.</p>
+    screen.   We'll use  this  image  to draw  the  text.  In  earlier
+    versions, you  could only draw  text to an  image, and not  to the
+    screen.   I kept  the old  version of  the script  for educational
+    purposes;  nowadays  you should  directly  draw  the  text to  the
+    screen. It's <b>way</b> faster.</p>
 
 <pre>
     img.clear(psp2d.Color(0, 0, 0))
@@ -109,10 +110,12 @@ if __name__ == '__main__':
     0 (opaque).</p>
 
 <pre>
-    img.drawText(fnt, 0, 0, 'Hello, world')
+    fnt.drawText(img, 0, 0, 'Hello, world')
 </pre>
 
-    <p>Actually draws the text at coordinates (0, 0) in the image.</p>
+    <p>Actually draws the text at coordinates (0, 0) in the image. You
+    can  pass a <a  href="psp2d.html#klass_Screen">Screen</a> instance
+    as first argument also.</p>
 
 <pre>
     scr.blit(img)
@@ -192,7 +195,7 @@ def main(msg):
         img = psp2d.Image(bgimg)
         dx = 0
         for idx, c in enumerate(msg):
-            img.drawText(font, x + dx, y + 20 * math.sin(angle + 0.2 * idx), c)
+            font.drawText(img, x + dx, y + 20 * math.sin(angle + 0.2 * idx), c)
             dx += widths[idx]
 
         screen.blit(img)
@@ -247,6 +250,17 @@ if __name__ == '__main__':
 
     <p>This is the third and last  way to create an image; if you pass
     another image to the constructor, it will copy it.</p>
+
+    <hr />
+    <h1>Changelog</h1>
+
+    <ul>
+
+      <li>2005-12-11:  you can now  draw text  directly to  the screen
+      (and it's  <b>way</b> faster). drawText  is now a method  of the
+      Font class.</li>
+
+    </ul>
 
   </body>
 </html>

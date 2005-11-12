@@ -7,8 +7,16 @@
     <h1>Building Python for PSP</h1>
 
     <p>I only tested  the build on Linux, always  using the latest PSP
-    SDK and toolchain.  This should only be a  matter of typing "make"
-    in the PSP subdirectory of the python source root.</p>
+    SDK and toolchain. First, build and install:</p>
+
+    <ul>
+      <li>mikmodlib</li>
+      <li>libpng</li>
+    </ul>
+
+    <p>Then, first build libpsp2d: cd to &lt;root&gt;/PSP/libpsp2d and
+    type 'make'.  Then, cd to  &lt;root&gt;/PSP and type  'make'. This
+    should do the trick.</p>
 
     <h1>Running scripts</h1>
 
