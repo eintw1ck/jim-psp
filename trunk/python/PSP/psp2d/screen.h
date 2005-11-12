@@ -14,7 +14,7 @@
 #define _PYSCREEN_H
 
 #include <Python.h>
-#include <lib2d/Screen.h>
+#include <libpsp2d/Screen.h>
 
 typedef struct
 {

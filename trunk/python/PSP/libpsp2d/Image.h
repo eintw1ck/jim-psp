@@ -41,8 +41,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <png.h>
 
-#include <lib2d/Drawable.h>
-#include <lib2d/Exception.h>
+#include <libpsp2d/Drawable.h>
+#include <libpsp2d/Exception.h>
 
 namespace PSP2D
 {
@@ -161,6 +161,6 @@ namespace PSP2D
 };
 
 // Inline methods
-#include <lib2d/Image.il>
+#include <libpsp2d/Image.il>
 
 #endif /* _IMAGE_H */

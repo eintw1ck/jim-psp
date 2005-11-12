@@ -14,7 +14,7 @@
 #define _PYIMAGE_H
 
 #include <Python.h>
-#include <lib2d/Image.h>
+#include <libpsp2d/Image.h>
 
 typedef struct
 {

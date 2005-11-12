@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _SCREEN_H
 #define _SCREEN_H
 
-#include <lib2d/Drawable.h>
+#include <libpsp2d/Drawable.h>
 
 #define PSP_LINE_SIZE 512
 #define SCREEN_WIDTH 480
@@ -117,6 +117,6 @@ namespace PSP2D {
 };
 
 // Inline methods
-#include <lib2d/Screen.il>
+#include <libpsp2d/Screen.il>
 
 #endif /* _SCREEN_H */

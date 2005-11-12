@@ -37,8 +37,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _FONT_H
 #define _FONT_H
 
-#include <lib2d/Image.h>
-#include <lib2d/Drawable.h>
+#include <libpsp2d/Image.h>
+#include <libpsp2d/Drawable.h>
 
 #include <string>
 #include <vector>
@@ -103,6 +103,6 @@ namespace PSP2D
 };
 
 // Inline methods
-#include <lib2d/Font.il>
+#include <libpsp2d/Font.il>
 
 #endif /* _FONT_H */

@@ -153,6 +153,6 @@ namespace PSP2D
 };
 
 // Inline methods
-#include <lib2d/Controller.il>
+#include <libpsp2d/Controller.il>
 
 #endif /* _CONTROLLER_H */

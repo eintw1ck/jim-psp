@@ -14,7 +14,7 @@
 #define _PYFONT_H
 
 #include <Python.h>
-#include <lib2d/Font.h>
+#include <libpsp2d/Font.h>
 
 typedef struct
 {

@@ -37,8 +37,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _BLITTER_H
 #define _BLITTER_H
 
-#include <lib2d/Screen.h>
-#include <lib2d/Image.h>
+#include <libpsp2d/Screen.h>
+#include <libpsp2d/Image.h>
 
 namespace PSP2D
 {

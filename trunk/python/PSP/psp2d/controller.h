@@ -14,7 +14,7 @@
 #define _PYCONTROLLER_H
 
 #include <Python.h>
-#include <lib2d/Controller.h>
+#include <libpsp2d/Controller.h>
 
 typedef struct
 {

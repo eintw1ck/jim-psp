@@ -2,7 +2,7 @@
 PSPSDK=$(shell psp-config --pspsdk-path)
 PSPDIR=$(shell psp-config --psp-prefix)
 
-TARGET_LIB = lib2d.a
+TARGET_LIB = libpsp2d.a
 
 OBJS = framebuffer.o Exception.o Drawable.o Screen.o Image.o Blitter.o Controller.o Font.o
 
@@ -15,7 +15,8 @@ install: $(TARGET_LIB)
 	@echo "Installing lib2d into $(PSPDIR)"
 	@mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
 	@cp *.h $(PSPDIR)/include
-	@cp lib2d.a  $(PSPDIR)/lib
+	@cp *.il $(PSPDIR)/include
+	@cp libpsp2d.a  $(PSPDIR)/lib
 	@echo "Done"
 
 doc:
