@@ -231,11 +231,6 @@
     <p class="doc">Fills the (x, y,  w, h) rectangle of the image with
     the specified <a href="#klass_Color">Color</a>.</p>
 
-    <span class="method"><a name="method_Image_drawText">drawText(font, x, y, text)</a></span>
-
-    <p  class="doc">Draws the  specified  text at  coordinates (x,  y)
-    using the specified <a href="#klass_Font">Font</a>.</p>
-
     <h4>Properties</h4>
 
     <p>Read-only.</p>
@@ -250,12 +245,9 @@
 
     <span class="klass"><a name="klass_Screen">Screen</a></span>
 
-    <p class="doc">This class represents  the physical screen. It must
-    be  instantiated  <em>only  once</em>  (later, it  will  become  a
-    Singleton  so you  don't have  to ensure  this). It  has  the same
-    methods as the  <a href="#klass_Image">Image</a> class, except for
-    <a href="method_Image_drawText">drawText</a>,  plus an additionnal
-    method.</p>
+    <p class="doc">This  class represents the physical  screen. It has
+    the  same methods as  the <a  href="#klass_Image">Image</a> class,
+    plus an additionnal method.</p>
 
     <h4>Methods</h4>
 
@@ -284,6 +276,12 @@
     <span class="method"><a name="method_Font_textHeight">textHeight(self, text)</a></span>
 
     <p class="doc">Returns the height in pixels used to render 'text'.</p>
+
+    <span class="method"><a name="method_Font_drawText">drawText(drw, x, y, text)</a></span>
+
+    <p   class="doc">Draws   a  text   to   a   drawable  (either   <a
+    href="#klass_Image">Image</a>                 or                <a
+    href="#klass_Screen">Screen</a>) at the specified coordinates.</p>
 
     <h3>Miscellaneous</h3>
 

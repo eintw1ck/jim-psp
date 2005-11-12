@@ -891,6 +891,7 @@
 /* Define to empty if the keyword does not work. */
 /* #undef volatile */
 
+#define _GLIBCXX_HAVE_MBSTATE_T 1
 
 /* Define the macros needed if on a UnixWare 7.x system. */
 #if defined(__USLC__) && defined(__SCO_VERSION__)
@@ -898,4 +899,3 @@
 #endif
 
 #endif /*Py_PYCONFIG_H*/
-

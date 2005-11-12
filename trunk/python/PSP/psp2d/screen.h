@@ -10,23 +10,19 @@
 **********************************************************************/
 // $Id$
 
-#ifndef _SCREEN_H
-#define _SCREEN_H
+#ifndef _PYSCREEN_H
+#define _PYSCREEN_H
 
 #include <Python.h>
-#include <pspgu.h>
-
-#define SCREEN_WIDTH 480
-#define SCREEN_HEIGHT 272
+#include <lib2d/Screen.h>
 
 typedef struct
 {
       PyObject_HEAD
 
-      unsigned int __attribute__((aligned(16))) list[262144];
-      int current;
+      PSP2D::Screen *scr;
 } PyScreen;
 
 extern PyTypeObject* PPyScreenType;
 
-#endif /* _SCREEN_H */
+#endif /* _PYSCREEN_H */

@@ -92,14 +92,14 @@ static PyObject* transform_apply(PyTransform *self,
 
     if (self->type == TR_USER)
     {
-       for (y = 0; y < img->height; ++y)
+       for (y = 0; y < img->img->getHeight(); ++y)
        {
-          for (x = 0; x < img->width; ++x)
+          for (x = 0; x < img->img->getWidth(); ++x)
           {
              PyObject *nargs, *ret;
              PyColor *color;
 
-             rgba = (u8*)(img->data + y * img->twidth + x);
+             rgba = (u8*)(img->img->getData() + y * img->img->getTextureWidth() + x);
              color = (PyColor*)PyType_GenericNew(PPyColorType, NULL, NULL);
              ret = PyObject_CallMethod((PyObject*)color, "__init__", "iiii",
                                        (int)rgba[3], (int)rgba[2],
@@ -126,7 +126,7 @@ static PyObject* transform_apply(PyTransform *self,
 
              Py_DECREF(ret);
 
-             *(img->data + y * img->twidth + x) = color->color;
+             *(img->img->getData() + y * img->img->getTextureWidth() + x) = color->color;
              Py_DECREF(color);
           }
        }
@@ -135,17 +135,17 @@ static PyObject* transform_apply(PyTransform *self,
     {
        Py_BEGIN_ALLOW_THREADS
 
-       for (y = 0; y < img->height; ++y)
+       for (y = 0; y < img->img->getHeight(); ++y)
        {
-          for (x = 0; x < img->width; ++x)
+          for (x = 0; x < img->img->getWidth(); ++x)
           {
-             rgba = (u8*)(img->data + y * img->twidth + x);
+             rgba = (u8*)(img->img->getData() + y * img->img->getTextureWidth() + x);
              switch (self->type)
              {
                 case TR_PLUS:
                    for (k = 1; k < 4; ++k)
                    {
-                      int r = (int)rgba[k] + self->param;
+                      int r = (int)rgba[k] + (int)self->param;
 
                       if (r < 0) r = 0;
                       if (r > 255) r = 255;
@@ -156,7 +156,7 @@ static PyObject* transform_apply(PyTransform *self,
                 case TR_MULT:
                    for (k = 1; k < 4; ++k)
                    {
-                      int r = (int)rgba[k] * self->param;
+                      int r = (int)rgba[k] * (int)self->param;
 
                       if (r < 0) r = 0;
                       if (r > 255) r = 255;

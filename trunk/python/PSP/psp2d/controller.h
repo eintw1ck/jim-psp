@@ -10,19 +10,19 @@
 **********************************************************************/
 // $Id$
 
-#ifndef _CONTROLLER_H
-#define _CONTROLLER_H
+#ifndef _PYCONTROLLER_H
+#define _PYCONTROLLER_H
 
 #include <Python.h>
-#include <pspctrl.h>
+#include <lib2d/Controller.h>
 
 typedef struct
 {
       PyObject_HEAD
 
-      SceCtrlData data;
+      PSP2D::Controller *ctrl;
 } PyController;
 
 extern PyTypeObject* PPyControllerType;
 
-#endif /* _CONTROLLER_H */
+#endif /* _PYCONTROLLER_H */

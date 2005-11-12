@@ -26,16 +26,15 @@ def main(msgs):
     angle = 0.0
 
     while True:
-        img = psp2d.Image(bgimg)
+        screen.blit(bgimg)
         dy = 0
         for i, msg in enumerate(msgs):
             dx = 0
             for idx, c in enumerate(msg):
-                img.drawText(font, xs[i] + dx, y + dy + 20 * math.sin(angle + 0.2 * idx), c)
+                font.drawText(screen, xs[i] + dx, y + dy + 20 * math.sin(angle + 0.2 * idx), c)
                 dx += widths[i][idx]
             dy += font.textHeight('') + 20
 
-        screen.blit(img)
         screen.swap()
         angle += 0.2
 

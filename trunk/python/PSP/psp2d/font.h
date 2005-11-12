@@ -10,23 +10,19 @@
 **********************************************************************/
 // $Id$
 
-#ifndef _FONT_H
-#define _FONT_H
+#ifndef _PYFONT_H
+#define _PYFONT_H
 
 #include <Python.h>
-#include <psptypes.h>
+#include <lib2d/Font.h>
 
 typedef struct
 {
       PyObject_HEAD
 
-      u32* data;
-      u16 width;
-      u16 height;
-      u16 positions[512];
-      u16 maxpos;
+      PSP2D::Font *fnt;
 } PyFont;
 
 extern PyTypeObject* PPyFontType;
 
-#endif /* _FONT_H */
+#endif /* _PYFONT_H */

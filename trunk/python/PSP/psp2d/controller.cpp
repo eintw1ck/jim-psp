@@ -12,6 +12,8 @@
 
 #include "controller.h"
 
+using namespace PSP2D;
+
 static void controller_dealloc(PyController *self)
 {
     self->ob_type->tp_free((PyObject*)self);
@@ -26,7 +28,7 @@ static PyObject* controller_new(PyTypeObject *type,
     self = (PyController*)type->tp_alloc(type, 0);
 
     if (self)
-       memset(&self->data, 0, sizeof(self->data));
+       self->ctrl = NULL;
 
     return (PyObject*)self;
 }
@@ -38,7 +40,7 @@ static int controller_init(PyController *self,
     if (!PyArg_ParseTuple(args, ""))
        return -1;
 
-    sceCtrlReadBufferPositive(&self->data, 1);
+    self->ctrl = new Controller();
 
     return 0;
 }
@@ -48,7 +50,7 @@ static PyObject* controller_getanalogx(PyController *self, void *closure)
     if (PyErr_CheckSignals())
        return NULL;
 
-    return Py_BuildValue("i", (int)self->data.Lx - 127);
+    return Py_BuildValue("i", self->ctrl->analogX());
 }
 
 static PyObject* controller_getanalogy(PyController *self, void *closure)
@@ -56,139 +58,103 @@ static PyObject* controller_getanalogy(PyController *self, void *closure)
     if (PyErr_CheckSignals())
        return NULL;
 
-    return Py_BuildValue("i", (int)self->data.Ly - 127);
+    return Py_BuildValue("i", self->ctrl->analogY());
 }
 
 static PyObject* controller_getsquare(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_SQUARE) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->square());
 }
 
 static PyObject* controller_gettriangle(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_TRIANGLE) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->triangle());
 }
 
 static PyObject* controller_getcircle(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_CIRCLE) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->circle());
 }
 
 static PyObject* controller_getcross(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_CROSS) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->cross());
 }
 
 static PyObject* controller_getup(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_UP) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->up());
 }
 
 static PyObject* controller_getdown(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_DOWN) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->down());
 }
 
 static PyObject* controller_getleft(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_LEFT) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->left());
 }
 
 static PyObject* controller_getright(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_RIGHT) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->right());
 }
 
 static PyObject* controller_getstart(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_START) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->start());
 }
 
 static PyObject* controller_getselect(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_SELECT) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->select());
 }
 
 static PyObject* controller_getl(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_LTRIGGER) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->l());
 }
 
 static PyObject* controller_getr(PyController *self, void *closure)
 {
-    PyObject* ret = (self->data.Buttons & PSP_CTRL_RTRIGGER) ? Py_True : Py_False;
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Py_INCREF(ret);
-    return ret;
+    return Py_BuildValue("i", (int)self->ctrl->r());
 }
 
 static PyGetSetDef controller_getset[] = {

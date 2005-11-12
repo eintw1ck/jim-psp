@@ -83,7 +83,7 @@ static int mask_init(PyMask *self,
     {
        for (i = 0; i < self->width; ++i)
        {
-          if (((*(img->data + (j + y) * img->twidth + i + x)) >> 24) >= t)
+          if (((*(img->img->getData() + (j + y) * img->img->getTextureWidth() + i + x)) >> 24) >= (unsigned)t)
              SET(self, i, j);
           else
              CLEAR(self, i, j);

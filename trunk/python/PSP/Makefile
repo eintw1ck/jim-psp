@@ -139,7 +139,7 @@ OBJS += psp2d/psp2d.o \
 	psp2d/font.o \
 	psp2d/transform.o
 
-LIBS += -lmikmod -lmmio -lpspaudiolib -lpspaudio -lpng -lz -lpspgu
+LIBS += -Llib2d -l2d -lmikmod -lmmio -lpspaudiolib -lpspaudio -lpng -lz -lpspgu -lstdc++
 endif
 
 CPPFLAGS += -DHAVE_CONFIG_H -DPSP -I../Include -DCHECKTYPE

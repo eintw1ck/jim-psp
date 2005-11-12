@@ -10,25 +10,19 @@
 **********************************************************************/
 // $Id$
 
-#ifndef _IMAGE_H
-#define _IMAGE_H
+#ifndef _PYIMAGE_H
+#define _PYIMAGE_H
 
 #include <Python.h>
-#include <psptypes.h>
+#include <lib2d/Image.h>
 
 typedef struct
 {
       PyObject_HEAD
 
-      u16 width;
-      u16 height;
-
-      u16 twidth;
-      u16 theight;
-
-      u32 *data;
+      PSP2D::Image *img;
 } PyImage;
 
 extern PyTypeObject* PPyImageType;
 
-#endif /* _IMAGE_H */
+#endif /* _PYIMAGE_H */

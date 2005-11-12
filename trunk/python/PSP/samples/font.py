@@ -4,10 +4,14 @@ import psp2d, time
 
 def main():
     scr = psp2d.Screen()
+
     img = psp2d.Image('background.png')
-    font = psp2d.Font('font.png')
-    img.drawText(font, 20, 20, 'Hello, world!')
     scr.blit(img)
+
+    font = psp2d.Font('font.png')
+    msg = 'Hello, world!'
+    font.drawText(scr, (480 - font.textWidth(msg))/2, 20, msg)
+
     scr.swap()
 
     while True:
