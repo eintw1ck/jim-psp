@@ -10,22 +10,19 @@
 **********************************************************************/
 // $Id$
 
-#ifndef _MASK_H
-#define _MASK_H
+#ifndef _PYMASK_H
+#define _PYMASK_H
 
 #include <Python.h>
-#include <psptypes.h>
+#include <libpsp2d/Mask.h>
 
 typedef struct
 {
       PyObject_HEAD
 
-      u32* data;
-      u16 width;
-      u16 height;
-      u16 wcap;
+      PSP2D::Mask *msk;
 } PyMask;
 
 extern PyTypeObject* PPyMaskType;
 
-#endif /* _MASK_H */
+#endif /* _PYMASK_H */

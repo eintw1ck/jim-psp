@@ -16,14 +16,11 @@
 #include "mask.h"
 #include "image.h"
 
-#define ISSET(o, x, y) (((*((o)->data + (y) * (o)->wcap + ((x) / 32))) & (1U << ((x) & 31))) != 0)
-#define SET(o, x, y) *((o)->data + (y) * (o)->wcap + ((x) / 32)) |= (1U << ((x) & 31))
-#define CLEAR(o, x, y) *((o)->data + (y) * (o)->wcap + ((x) / 32)) &= ~(1U << ((x) & 31))
+using namespace PSP2D;
 
 static void mask_dealloc(PyMask *self)
 {
-    if (self->data)
-       free(self->data);
+    delete self->msk;
 
     self->ob_type->tp_free((PyObject*)self);
 }
@@ -37,12 +34,7 @@ static PyObject* mask_new(PyTypeObject *type,
     self = (PyMask*)type->tp_alloc(type, 0);
 
     if (self)
-    {
-       self->width = 0;
-       self->height = 0;
-       self->wcap = 0;
-       self->data = NULL;
-    }
+       self->msk = 0;
 
     return (PyObject*)self;
 }
@@ -52,7 +44,7 @@ static int mask_init(PyMask *self,
                       PyObject *kwargs)
 {
     PyImage *img;
-    int x, y, w, h, t = 128, i, j;
+    int x, y, w, h, t = 127;
 
     if (!PyArg_ParseTuple(args, "Oiiii|i", &img, &x, &y, &w, &h, &t))
        return -1;
@@ -65,30 +57,7 @@ static int mask_init(PyMask *self,
     }
 #endif
 
-    self->width = w;
-    self->height = h;
-
-    self->wcap = (u16)ceil(1.0 * self->width / 32);
-    self->data = (u32*)memalign(16, self->wcap * sizeof(u32) * self->height);
-
-    if (!self->data)
-    {
-       PyErr_SetString(PyExc_MemoryError, "Memory error");
-       return -1;
-    }
-
-    memset(self->data, 0, self->wcap * sizeof(u32) * self->height);
-
-    for (j = 0; j < self->height; ++j)
-    {
-       for (i = 0; i < self->width; ++i)
-       {
-          if (((*(img->img->getData() + (j + y) * img->img->getTextureWidth() + i + x)) >> 24) >= (unsigned)t)
-             SET(self, i, j);
-          else
-             CLEAR(self, i, j);
-       }
-    }
+    self->msk = new Mask(img->img, x, y, w, h, t);
 
     return 0;
 }
@@ -98,7 +67,6 @@ static PyObject* mask_collide(PyMask *self,
                               PyObject *kwargs)
 {
     PyMask *other;
-    int i, j, k, count = 0;
 
     if (!PyArg_ParseTuple(args, "O", &other))
        return NULL;
@@ -109,34 +77,12 @@ static PyObject* mask_collide(PyMask *self,
        PyErr_SetString(PyExc_TypeError, "Argument must be a Mask.");
        return NULL;
     }
-
-    if ((self->width != other->width) || (self->height != other->height))
-    {
-       PyErr_SetString(PyExc_ValueError, "Masks must have the same size");
-       return NULL;
-    }
 #endif
 
     if (PyErr_CheckSignals())
        return NULL;
 
-    for (j = 0; j < self->height; ++j)
-    {
-       for (i = 0; i < self->wcap; ++i)
-       {
-          u32 m;
-
-          m = (*(self->data + j * self->wcap + i)) & (*(other->data + j * other->wcap + i));
-
-          if (m)
-          {
-             for (k = 0; k<32; ++k)
-                count += ((m >> k) & 1);
-          }
-       }
-    }
-
-    return Py_BuildValue("i", count);
+    return Py_BuildValue("i", self->msk->collide(other->msk));
 }
 
 static PyObject* mask_union(PyMask *self,
@@ -144,7 +90,6 @@ static PyObject* mask_union(PyMask *self,
                             PyObject *kwargs)
 {
     PyMask *other;
-    int k;
 
     if (!PyArg_ParseTuple(args, "O", &other))
        return NULL;
@@ -155,19 +100,12 @@ static PyObject* mask_union(PyMask *self,
        PyErr_SetString(PyExc_TypeError, "Argument must be a Mask.");
        return NULL;
     }
-
-    if ((self->width != other->width) || (self->height != other->height))
-    {
-       PyErr_SetString(PyExc_ValueError, "Masks must have the same size");
-       return NULL;
-    }
 #endif
 
     if (PyErr_CheckSignals())
        return NULL;
 
-    for (k = 0; k < self->wcap * self->height; ++k)
-       *(self->data + k) |= *(other->data + k);
+    self->msk->set(other->msk);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -185,7 +123,7 @@ static PyObject* mask_isIn(PyMask *self,
     if (PyErr_CheckSignals())
        return NULL;
 
-    if (ISSET(self, x, y))
+    if (self->msk->isSet(x, y))
     {
        Py_INCREF(Py_True);
        return Py_True;
