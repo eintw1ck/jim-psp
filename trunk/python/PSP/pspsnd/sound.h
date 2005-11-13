@@ -10,19 +10,19 @@
 **********************************************************************/
 // $Id$
 
-#ifndef _SOUND_H
-#define _SOUND_H
+#ifndef _PYSOUND_H
+#define _PYSOUND_H
 
 #include <Python.h>
-#include <mikmod.h>
+#include <libpspsnd/Sound.h>
 
 typedef struct
 {
       PyObject_HEAD
 
-      SAMPLE *sf;
+      PSPSND::Sound *sound;
 } PySound;
 
 extern PyTypeObject* PPySoundType;
 
-#endif /* _SOUND_H */
+#endif /* _PYSOUND_H */

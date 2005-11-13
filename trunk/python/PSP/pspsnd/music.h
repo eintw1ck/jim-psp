@@ -10,19 +10,19 @@
 **********************************************************************/
 // $Id$
 
-#ifndef _MUSIC_H
-#define _MUSIC_H
+#ifndef _PYMUSIC_H
+#define _PYMUSIC_H
 
 #include <Python.h>
-#include <mikmod.h>
+#include <libpspsnd/Music.h>
 
 typedef struct
 {
       PyObject_HEAD
 
-      UNIMOD *mf;
+      PSPSND::Music *music;
 } PyMusic;
 
 extern PyTypeObject* PPyMusicType;
 
-#endif /* _MUSIC_H */
+#endif /* _PYMUSIC_H */

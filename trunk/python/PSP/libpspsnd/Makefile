@@ -2,9 +2,9 @@
 PSPSDK=$(shell psp-config --pspsdk-path)
 PSPDIR=$(shell psp-config --psp-prefix)
 
-TARGET_LIB = libpsp2d.a
+TARGET_LIB = libpspsnd.a
 
-OBJS = framebuffer.o Exception.o Drawable.o Screen.o Image.o Blitter.o Controller.o Font.o Mask.o
+OBJS = Sound.o Music.o
 
 CXXFLAGS = -O2 -G0 -Wall
 CPPFLAGS = -I..
@@ -12,11 +12,11 @@ CPPFLAGS = -I..
 include $(PSPSDK)/lib/build.mak
 
 install: $(TARGET_LIB)
-	@echo "Installing libpsp2d into $(PSPDIR)"
+	@echo "Installing libpspsnd into $(PSPDIR)"
 	@mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
 	@cp *.h $(PSPDIR)/include
 	@cp *.il $(PSPDIR)/include
-	@cp libpsp2d.a  $(PSPDIR)/lib
+	@cp libpspsnd.a  $(PSPDIR)/lib
 	@echo "Done"
 
 doc:

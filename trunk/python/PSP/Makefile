@@ -132,14 +132,15 @@ OBJS += psp2d/psp2d.o \
 	psp2d/color.o \
 	psp2d/image.o \
 	psp2d/controller.o \
-	psp2d/music.o \
-	psp2d/sound.o \
 	psp2d/screen.o \
 	psp2d/mask.o \
 	psp2d/font.o \
-	psp2d/transform.o
+	psp2d/transform.o \
+	pspsnd/pspsnd.o \
+	pspsnd/sound.o \
+	pspsnd/music.o
 
-LIBS += -Llibpsp2d -lpsp2d -lmikmod -lmmio -lpspaudiolib -lpspaudio -lpng -lz -lpspgu -lstdc++
+LIBS += -Llibpsp2d -lpsp2d -Llibpspsnd -lpspsnd -lmikmod -lmmio -lpspaudiolib -lpspaudio -lpng -lz -lpspgu -lstdc++
 endif
 
 CPPFLAGS += -DHAVE_CONFIG_H -DPSP -I../Include -DCHECKTYPE

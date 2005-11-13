@@ -12,10 +12,11 @@
 
 #include "music.h"
 
+using namespace PSPSND;
+
 static void music_dealloc(PyMusic *self)
 {
-    if (self->mf)
-       MikMod_FreeSong(self->mf);
+    delete self->music;
 
     self->ob_type->tp_free((PyObject*)self);
 }
@@ -28,7 +29,7 @@ static PyObject* music_new(PyTypeObject *type,
 
     self = (PyMusic*)type->tp_alloc(type, 0);
     if (self)
-       self->mf = NULL;
+       self->music = NULL;
 
     return (PyObject*)self;
 }
@@ -47,16 +48,7 @@ static int music_init(PyMusic *self,
                                      &filename, &maxchan, &loop))
        return -1;
 
-    self->mf = MikMod_LoadSong(filename, maxchan);
-    if (self->mf)
-    {
-       self->mf->loop = loop;
-    }
-    else
-    {
-       PyErr_SetString(PyExc_IOError, "Could not load song file.");
-       return -1;
-    }
+    self->music = new Music(filename, loop, maxchan);
 
     return 0;
 }
@@ -68,18 +60,10 @@ static PyObject* music_start(PyMusic *self,
     if (!PyArg_ParseTuple(args, ":start"))
        return NULL;
 
-#ifdef CHECKTYPE
-    if (!self->mf)
-    {
-       PyErr_SetString(PyExc_RuntimeError, "No music was loaded!");
-       return NULL;
-    }
-#endif
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Player_Start(self->mf);
+    self->music->start();
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -92,21 +76,10 @@ static PyObject* music_stop(PyMusic *self,
     if (!PyArg_ParseTuple(args, ":stop"))
        return NULL;
 
-#ifdef CHECKTYPE
-    if (!self->mf)
-    {
-       PyErr_SetString(PyExc_RuntimeError, "No music was loaded!");
-       return NULL;
-    }
-#endif
-
     if (PyErr_CheckSignals())
        return NULL;
 
-    Player_Stop();
-
-    MikMod_FreeSong(self->mf);
-    self->mf = NULL;
+    self->music->stop();
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -126,7 +99,7 @@ static PyMethodDef music_methods[] = {
 static PyTypeObject PyMusicType = {
    PyObject_HEAD_INIT(NULL)
    0,
-   "psp2d.Music",
+   "pspsnd.Music",
    sizeof(PyMusic),
    0,
    (destructor)music_dealloc,
