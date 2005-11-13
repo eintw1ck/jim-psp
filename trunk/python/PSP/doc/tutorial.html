@@ -309,11 +309,35 @@ if __name__ == '__main__':
     better to blit()  or drawText() directly to the  screen instead of
     using an intermediate buffer.</p>
 
+    <h1>Adding music</h1>
+
+    <p>We'll     use     the     music     distributed     with     <a
+    href="http://www.1homebrew.com/psp/snake.shtml">Snake</a>,
+    stranglehold.xm. Change the import line to</p>
+
+<pre>
+import psp2d, pspsnd, math
+</pre>
+
+    <p>And  add  the  following  code  at  the  start  of  the  main()
+    function:</p>
+
+<pre>
+    pspsnd.setMusicVolume(128)
+    music = pspsnd.Music('stranglehold.xm')
+    music.start()
+</pre>
+
+    <p>Don't forget to copy stranglehold.xm  to the PSP. Done! See the
+    pspsnd <a href="pspsnd.html">module reference</a> for details.</p>
+
     <hr />
 
     <h1>Changelog</h1>
 
     <ul>
+
+      <li>2005-12-12: added music</li>
 
       <li>2005-12-11:  you can now  draw text  directly to  the screen
       (and it's  <b>way</b> faster). drawText  is now a method  of the
