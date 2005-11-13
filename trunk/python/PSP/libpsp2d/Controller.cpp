@@ -35,6 +35,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **********************************************************************/
 // $Id$
 
+#include <string.h> // for memcmp
+
 #include "Controller.h"
 
 using namespace PSP2D;

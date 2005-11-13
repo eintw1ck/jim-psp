@@ -145,6 +145,12 @@ namespace PSP2D
 
        bool select();
 
+       /**
+        * Comparison
+        */
+
+       bool operator==(const Controller&);
+
       protected:
        SceCtrlData _data;
 

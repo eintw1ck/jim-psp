@@ -69,3 +69,8 @@ inline bool PSP2D::Controller::start()
 {
     return (_data.Buttons & PSP_CTRL_START) != 0;
 }
+
+inline bool PSP2D::Controller::operator==(const PSP2D::Controller& ctrl)
+{
+    return (_data.Buttons == ctrl._data.Buttons);
+}

@@ -45,6 +45,17 @@ static int controller_init(PyController *self,
     return 0;
 }
 
+static int controller_cmp(PyController *a, PyController *b)
+{
+    if ((a->ob_type != PPyControllerType) || (b->ob_type != PPyControllerType))
+       return 1;
+
+    if (*(a->ctrl) == *(b->ctrl))
+       return 0;
+
+    return 1;
+}
+
 static PyObject* controller_getanalogx(PyController *self, void *closure)
 {
     if (PyErr_CheckSignals())
@@ -190,7 +201,7 @@ static PyTypeObject PyControllerType = {
    0,
    0,
    0,
-   0,
+   (cmpfunc)controller_cmp,
    0,
    0,
    0,
