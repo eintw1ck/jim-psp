@@ -271,10 +271,26 @@ static PyObject* image_fillRect(PyImage *self,
     return Py_None;
 }
 
+static PyObject* image_saveToFile(PyImage *self,
+                                  PyObject *args,
+                                  PyObject *kwargs)
+{
+    char *filename;
+
+    if (!PyArg_ParseTuple(args, "s", &filename))
+       return NULL;
+
+    self->img->saveToFile(filename);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyMethodDef image_methods[] = {
    { "clear", (PyCFunction)image_clear, METH_VARARGS, "" },
    { "blit", (PyCFunction)image_blit, METH_VARARGS|METH_KEYWORDS, "" },
    { "fillRect", (PyCFunction)image_fillRect, METH_VARARGS, "" },
+   { "saveToFile", (PyCFunction)image_saveToFile, METH_VARARGS, "" },
 
    { NULL }
 };

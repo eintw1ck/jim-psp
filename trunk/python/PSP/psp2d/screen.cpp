@@ -182,11 +182,27 @@ static PyObject* screen_swap(PyScreen *self,
     return Py_None;
 }
 
+static PyObject* screen_saveToFile(PyScreen *self,
+                                   PyObject *args,
+                                   PyObject *kwargs)
+{
+    char *filename;
+
+    if (!PyArg_ParseTuple(args, "s", &filename))
+       return NULL;
+
+    self->scr->saveToFile(filename);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyMethodDef screen_methods[] = {
    { "blit", (PyCFunction)screen_blit, METH_VARARGS|METH_KEYWORDS, "" },
    { "clear", (PyCFunction)screen_clear, METH_VARARGS, "" },
    { "fillRect", (PyCFunction)screen_fillRect, METH_VARARGS, "" },
    { "swap", (PyCFunction)screen_swap, METH_VARARGS, "" },
+   { "saveToFile", (PyCFunction)screen_saveToFile, METH_VARARGS, "" },
 
    { NULL }
 };
