@@ -3,10 +3,10 @@
 __rcsid__ = '$Id$'
 
 try:
-    import psp2d
+    import pspsnd
     import time
 
-    m = psp2d.Music('stranglehold.xm')
+    m = pspsnd.Music('stranglehold.xm')
     m.start()
 
     time.sleep(10)

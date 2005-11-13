@@ -3,14 +3,14 @@
 __rcsid__ = '$Id$'
 
 try:
-    import time, os, psp2d
+    import time, os, pspsnd
 
     name = 'explode.wav'
 
     if not os.path.exists(name):
         raise IOError('File does not exist')
 
-    s = psp2d.Sound(name)
+    s = pspsnd.Sound(name)
 
     time.sleep(5)
     s.start()
