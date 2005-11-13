@@ -40,6 +40,7 @@ extern void initgu(void);
 
 #ifdef WITH_PSP2D
 extern void initpsp2d(void);
+extern void initpspsnd(void);
 #endif
 
 struct _inittab _PyImport_Inittab[] = {
@@ -77,6 +78,7 @@ struct _inittab _PyImport_Inittab[] = {
 
 #ifdef WITH_PSP2D
         {"psp2d", initpsp2d},
+        {"pspsnd", initpspsnd},
 #endif
 
 	{0, 0}
