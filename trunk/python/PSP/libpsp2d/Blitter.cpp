@@ -48,7 +48,10 @@ typedef struct
       short x, y, z;
 } Vertex;
 
-ScreenBlitter::ScreenBlitter(Screen *scr, int sx, int sy, int w, int h, int dx, int dy, bool blend)
+ScreenBlitter::ScreenBlitter(Screen *scr,
+                             u16 sx, u16 sy, u16 w, u16 h,
+                             u16 dx, u16 dy,
+                             bool blend)
     : _scr(scr), _sx(sx), _sy(sy), _w(w), _h(h), _dx(dx), _dy(dy), _blend(blend)
 {
 }
@@ -74,7 +77,7 @@ void ScreenBlitter::visitImage(Image *img)
        float v = 1.0f / ((float)img->getTextureHeight());
        sceGuTexScale(u, v);
 
-       int j = 0;
+       u16 j = 0;
        while (j < _w) {
           Vertex* vertices = (Vertex*) sceGuGetMemory(2 * sizeof(Vertex));
           int sliceWidth = 64;
@@ -107,7 +110,11 @@ void ScreenBlitter::visitImage(Image *img)
     sceGuSync(0,0);
 }
 
-ImageBlitter::ImageBlitter(Image *img, int sx, int sy, int w, int h, int dx, int dy, bool blend)
+ImageBlitter::ImageBlitter(Image *img,
+                           u16 sx, u16 sy,
+                           u16 w, u16 h,
+                           u16 dx, u16 dy,
+                           bool blend)
     : _img(img), _sx(sx), _sy(sy), _w(w), _h(h), _dx(dx), _dy(dy), _blend(blend)
 {
 }
@@ -120,8 +127,7 @@ void ImageBlitter::visitScreen(Screen *scr)
 void ImageBlitter::visitImage(Image *img)
 {
     // Image to image
-
-    int j;
+    u16 j;
 
     u32 *srcdec;
     u32 *dstdec;
@@ -133,7 +139,7 @@ void ImageBlitter::visitImage(Image *img)
     {
        if (_blend)
        {
-          int i;
+          u16 i;
 
           for (i = 0; i < _w; ++i)
           {

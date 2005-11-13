@@ -41,7 +41,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using namespace PSP2D;
 
-Mask::Mask(Image *img, int x, int y, int w, int h, unsigned char threshold)
+Mask::Mask(Image *img, u16 x, u16 y, u16 w, u16 h, unsigned char threshold)
     : _width(w), _height(h)
 {
     int i, j;
@@ -75,9 +75,10 @@ void Mask::set(Mask *msk)
           _data[i + j * _wcap] |= msk->_data[i + j * _wcap];
 }
 
-int Mask::collide(Mask *msk)
+u32 Mask::collide(Mask *msk)
 {
-    int i, j, count = 0;
+    int i, j;
+    u32 count = 0;
 
     // TODO: check dimensions
 

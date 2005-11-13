@@ -53,7 +53,7 @@ namespace PSP2D
         * Constructor
         */
 
-       Mask(Image *img, int x, int y, int w, int h, unsigned char threshold = 127);
+       Mask(Image *img, u16 x, u16 y, u16 w, u16 h, unsigned char threshold = 127);
 
        ~Mask();
 
@@ -61,7 +61,7 @@ namespace PSP2D
         * Sets a bit to 1
         */
 
-       void set(int x, int y);
+       void set(u16 x, u16 y);
 
        /**
         * Sets all the bits that are set in another mask
@@ -73,23 +73,23 @@ namespace PSP2D
         * Clears a bit
         */
 
-       void clear(int x, int y);
+       void clear(u16 x, u16 y);
 
        /**
         * Returns true if the bit is set
         */
 
-       bool isSet(int x, int y);
+       bool isSet(u16 x, u16 y);
 
        /**
         * Returns the number of common bits
         */
 
-       int collide(Mask *msk);
+       u32 collide(Mask *msk);
 
       protected:
        u32 *_data;
-       int _width, _height, _wcap;
+       u16 _width, _height, _wcap;
     };
 };
 

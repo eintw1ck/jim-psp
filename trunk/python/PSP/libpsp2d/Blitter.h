@@ -50,6 +50,8 @@ namespace PSP2D
     class DrawableVisitor
     {
       public:
+       virtual ~DrawableVisitor() {};
+
        /**
         * Called by Screen::accept
         */
@@ -85,7 +87,10 @@ namespace PSP2D
         * @param blend: Wether to take the source alpha channel into account
         */
 
-       ScreenBlitter(Screen *scr, int sx, int sy, int w, int h, int dx, int dy, bool blend = false);
+       ScreenBlitter(Screen *scr,
+                     u16 sx, u16 sy, u16 w, u16 h,
+                     u16 dx, u16 dy,
+                     bool blend = false);
 
        /**
         * Called by Screen::accept
@@ -101,7 +106,7 @@ namespace PSP2D
 
       protected:
        Screen *_scr;
-       int _sx, _sy, _w, _h, _dx, _dy;
+       u16 _sx, _sy, _w, _h, _dx, _dy;
        bool _blend;
     };
 
@@ -126,7 +131,10 @@ namespace PSP2D
         * @param blend: Wether to take the source alpha channel into account
         */
 
-       ImageBlitter(Image *img, int sx, int sy, int w, int h, int dx, int dy, bool blend = false);
+       ImageBlitter(Image *img,
+                    u16 sx, u16 sy, u16 w, u16 h,
+                    u16 dx, u16 dy,
+                    bool blend = false);
 
        /**
         * Called by Screen::accept
@@ -142,7 +150,7 @@ namespace PSP2D
 
       protected:
        Image *_img;
-       int _sx, _sy, _w, _h, _dx, _dy;
+       u16 _sx, _sy, _w, _h, _dx, _dy;
        bool _blend;
     };
 };

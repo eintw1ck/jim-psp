@@ -76,14 +76,14 @@ namespace PSP2D
         * Computes a text's width, in pixels.
         */
 
-       unsigned int getTextWidth(const std::string& text);
+       u32 getTextWidth(const std::string& text);
 
        /**
         * Computes a  text's height,  in pixels. This  actually always
         * return the same value.
         */
 
-       unsigned int getTextHeight(const std::string& text);
+       u16 getTextHeight(const std::string& text);
 
        /**
         * Draws some text from this font to a Drawable.
@@ -94,11 +94,11 @@ namespace PSP2D
         * @param y - Y coordinate to draw to
         */
 
-       void drawText(Drawable *drw, const std::string& text, unsigned int x, unsigned int y);
+       void drawText(Drawable *drw, const std::string& text, u16 x, u16 y);
 
       protected:
        std::vector<ST_LETTER*> _letters;
-       unsigned int _height;
+       u16 _height;
     };
 };
 

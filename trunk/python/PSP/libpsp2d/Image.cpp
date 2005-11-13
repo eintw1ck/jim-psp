@@ -45,14 +45,20 @@ using namespace std;
 
 extern u8 msx[];
 
-static int getNextPower2(int width)
+static u16 getNextPower2(u16 width)
 {
-    int b = width;
-    int n;
-    for (n = 0; b != 0; n++) b >>= 1;
-    b = 1 << n;
-    if (b == 2 * width) b >>= 1;
-    return b;
+    int k;
+    u16 r = 1;
+
+    for (k = 0; k < 16; ++k)
+    {
+       if (r >= width)
+          return r;
+
+       r *= 2;
+    }
+
+    return 0;
 }
 
 static void user_warning_fn(png_structp png_ptr, png_const_charp warning_msg)
@@ -65,6 +71,7 @@ Image::Image(const string& filename)
     png_infop info_ptr;
     unsigned int sig_read = 0;
     int bit_depth, color_type, interlace_type, x, y;
+    png_uint_32 pw, ph;
     u32* line;
     FILE *fp;
 
@@ -93,7 +100,10 @@ Image::Image(const string& filename)
     png_init_io(png_ptr, fp);
     png_set_sig_bytes(png_ptr, sig_read);
     png_read_info(png_ptr, info_ptr);
-    png_get_IHDR(png_ptr, info_ptr, &_width, &_height, &bit_depth, &color_type, &interlace_type, int_p_NULL, int_p_NULL);
+    png_get_IHDR(png_ptr, info_ptr, &pw, &ph, &bit_depth, &color_type, &interlace_type, int_p_NULL, int_p_NULL);
+
+    _width = (u16)pw;
+    _height = (u16)ph;
 
     _textureWidth = getNextPower2(_width);
     _textureHeight = getNextPower2(_height);
@@ -147,7 +157,7 @@ Image::Image(const string& filename)
     fclose(fp);
 }
 
-Image::Image(png_uint_32 width, png_uint_32 height)
+Image::Image(u16 width, u16 height)
     : _width(width),
       _height(height),
       _data(NULL)
@@ -184,22 +194,22 @@ Image::~Image()
     free(_data);
 }
 
-png_uint_32 Image::getWidth()
+u16 Image::getWidth()
 {
     return _width;
 }
 
-png_uint_32 Image::getHeight()
+u16 Image::getHeight()
 {
     return _height;
 }
 
-png_uint_32 Image::getTextureWidth()
+u16 Image::getTextureWidth()
 {
     return _textureWidth;
 }
 
-png_uint_32 Image::getTextureHeight()
+u16 Image::getTextureHeight()
 {
     return _textureHeight;
 }
@@ -214,7 +224,7 @@ void Image::accept(DrawableVisitor *v)
     v->visitImage(this);
 }
 
-void Image::blit(Drawable *drw, int sx, int sy, int w, int h, int dx, int dy, bool blend)
+void Image::blit(Drawable *drw, u16 sx, u16 sy, u16 w, u16 h, u16 dx, u16 dy, bool blend)
 {
     ImageBlitter blt(this, sx, sy, w, h, dx, dy, blend);
 
@@ -223,7 +233,7 @@ void Image::blit(Drawable *drw, int sx, int sy, int w, int h, int dx, int dy, bo
 
 void Image::clear(u32 color)
 {
-    int i, j;
+    u16 i, j;
 
     for (j = 0; j < _height; ++j)
     {
@@ -234,7 +244,7 @@ void Image::clear(u32 color)
     }
 }
 
-void Image::drawLine(int x0, int y0, int x1, int y1, u32 color)
+void Image::drawLine(u16 x0, u16 y0, u16 x1, u16 y1, u32 color)
 {
     int dy = y1 - y0;
     int dx = x1 - x0;
@@ -273,9 +283,9 @@ void Image::drawLine(int x0, int y0, int x1, int y1, u32 color)
     }
 }
 
-void Image::fillRect(u32 color, int x, int y, int w, int h)
+void Image::fillRect(u32 color, u16 x, u16 y, u16 w, u16 h)
 {
-    int nx, ny;
+    u16 nx, ny;
     u32 *dst = _data + x + y * _textureWidth;
 
     for (ny = 0; ny < h; ny++, dst += _textureWidth) {
@@ -283,15 +293,17 @@ void Image::fillRect(u32 color, int x, int y, int w, int h)
     }
 }
 
-void Image::printText(int x, int y, const string& text, u32 color)
+void Image::printText(u16 x, u16 y, const string& text, u32 color)
 {
     int c, i, j, l;
     u8 *font;
     u32 *data_ptr;
     u32 *data;
 
-    for (c = 0; c < text.size(); c++) {
-       if (x < 0 || x + 8 > _width || y < 0 || y + 8 > _height) break;
+    for (c = 0; c < (int)text.size(); c++) {
+       if ((x + 8 > _width) || (y + 8 > _height))
+          break;
+
        char ch = text[c];
        data = _data + x + y * _textureWidth;
 

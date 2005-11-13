@@ -55,13 +55,13 @@ namespace PSP2D {
       public:
        // Inherit documentation from Drawable
 
-       void blit(Drawable* drw, int sx, int sy, int w, int h, int dx, int dy, bool blend = false);
+       void blit(Drawable* drw, u16 sx, u16 sy, u16 w, u16 h, u16 dx, u16 dy, bool blend = false);
        void clear(u32 color);
-       void putPixel(u32 color, int x, int y);
-       u32 getPixel(int x, int y);
-       void drawLine(int x0, int y0, int x1, int y1, u32 color);
-       void fillRect(u32 color, int x, int y, int w, int h);
-       void printText(int x, int y, const std::string& text, u32 color);
+       void putPixel(u32 color, u16 x, u16 y);
+       u32 getPixel(u16 x, u16 y);
+       void drawLine(u16 x0, u16 y0, u16 x1, u16 y1, u32 color);
+       void fillRect(u32 color, u16 x, u16 y, u16 w, u16 h);
+       void printText(u16 x, u16 y, const std::string& text, u32 color);
 
        void saveToFile(const std::string& filename);
 

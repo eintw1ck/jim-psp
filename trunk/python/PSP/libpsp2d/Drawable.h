@@ -68,7 +68,10 @@ namespace PSP2D {
         * @param blend - wether to take alpha channel into account
         */
 
-       virtual void blit(Drawable* drw, int sx, int sy, int w, int h, int dx, int dy, bool blend = false) = 0;
+       virtual void blit(Drawable* drw,
+                         u16 sx, u16 sy, u16 w, u16 h,
+                         u16 dx, u16 dy,
+                         bool blend = false) = 0;
 
        /**
         * Fills the drawable with a solid color.
@@ -80,31 +83,31 @@ namespace PSP2D {
         * Sets a pixel to a specified color.
         */
 
-       virtual void putPixel(u32 color, int x, int y) = 0;
+       virtual void putPixel(u32 color, u16 x, u16 y) = 0;
 
        /**
         * Gets the color of a pixel.
         */
 
-       virtual u32 getPixel(int x, int y) = 0;
+       virtual u32 getPixel(u16 x, u16 y) = 0;
 
        /**
         * Draws a line.
         */
 
-       virtual void drawLine(int x0, int y0, int x1, int y1, u32 color) = 0;
+       virtual void drawLine(u16 x0, u16 y0, u16 x1, u16 y1, u32 color) = 0;
 
        /**
         * Fills a rectangle.
         */
 
-       virtual void fillRect(u32 color, int x, int y, int w, int h) = 0;
+       virtual void fillRect(u32 color, u16 x, u16 y, u16 w, u16 h) = 0;
 
        /**
         * Prints some text
         */
 
-       virtual void printText(int x, int y, const std::string& text, u32 color) = 0;
+       virtual void printText(u16 x, u16 y, const std::string& text, u32 color) = 0;
 
        /**
         * Saves this drawable to a PNG file.

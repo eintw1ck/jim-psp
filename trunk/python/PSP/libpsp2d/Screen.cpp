@@ -68,7 +68,7 @@ Screen::~Screen()
 {
 }
 
-void Screen::blit(Drawable* drw, int sx, int sy, int w, int h, int dx, int dy, bool blend)
+void Screen::blit(Drawable* drw, u16 sx, u16 sy, u16 w, u16 h, u16 dx, u16 dy, bool blend)
 {
     ScreenBlitter blt(this, sx, sy, w, h, dx, dy, blend);
 
@@ -85,7 +85,7 @@ void Screen::clear(u32 color)
     sceGuSync(0, 0);
 }
 
-void Screen::fillRect(u32 color, int x0, int y0, int w, int h)
+void Screen::fillRect(u32 color, u16 x0, u16 y0, u16 w, u16 h)
 {
     sceGuStart(GU_DIRECT, getList());
 
@@ -112,7 +112,7 @@ void Screen::fillRect(u32 color, int x0, int y0, int w, int h)
     sceGuSync(0, 0);
 }
 
-void Screen::drawLine(int x0, int y0, int x1, int y1, u32 color)
+void Screen::drawLine(u16 x0, u16 y0, u16 x1, u16 y1, u32 color)
 {
     sceGuStart(GU_DIRECT, getList());
 
@@ -133,15 +133,17 @@ void Screen::drawLine(int x0, int y0, int x1, int y1, u32 color)
     sceGuSync(0, 0);
 }
 
-void Screen::printText(int x, int y, const string& text, u32 color)
+void Screen::printText(u16 x, u16 y, const string& text, u32 color)
 {
     int c, i, j, l;
     u8 *font;
     u32 *vram_ptr;
     u32 *vram;
 
-    for (c = 0; c < text.size(); c++) {
-       if (x < 0 || x + 8 > SCREEN_WIDTH || y < 0 || y + 8 > SCREEN_HEIGHT) break;
+    for (c = 0; c < (int)text.size(); c++) {
+       if ((x + 8 > SCREEN_WIDTH) || (y + 8 > SCREEN_HEIGHT))
+          break;
+
        char ch = text[c];
        vram = getVramDrawBuffer() + x + y * PSP_LINE_SIZE;
 

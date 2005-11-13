@@ -80,15 +80,15 @@ Font::~Font()
        delete *k;
 }
 
-unsigned int Font::getTextWidth(const string& text)
+u32 Font::getTextWidth(const string& text)
 {
-    unsigned int w = 0;
+    u32 w = 0;
 
     for (string::const_iterator k = text.begin(); k != text.end(); ++k)
     {
        int offset = (int)(*k - 33);
 
-       if ((*k == ' ') || (offset < 0) || (offset >= _letters.size()))
+       if ((*k == ' ') || (offset < 0) || (offset >= (int)_letters.size()))
           w += _letters[0]->width;
        else
           w += _letters[offset]->width;
@@ -97,15 +97,15 @@ unsigned int Font::getTextWidth(const string& text)
     return w;
 }
 
-void Font::drawText(Drawable *drw, const string& text, unsigned int x, unsigned int y)
+void Font::drawText(Drawable *drw, const string& text, u16 x, u16 y)
 {
-    unsigned int cx = x;
+    u16 cx = x;
 
     for (string::const_iterator k = text.begin(); k != text.end(); ++k)
     {
        int offset = (int)(*k - 33);
 
-       if ((*k == ' ') || (offset < 0) || (offset >= _letters.size()))
+       if ((*k == ' ') || (offset < 0) || (offset >= (int)_letters.size()))
           cx += _letters[0]->width;
        else
        {
