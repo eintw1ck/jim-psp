@@ -228,13 +228,11 @@ if test x$enable_music_ogg_tremor = xyes; then
     ])
     AC_MSG_RESULT($have_tremor)
     if test x$have_tremor = xyes; then
-	if test x$enable_music_ogg != xyes; then
-	    CFLAGS="$CFLAGS -DOGG_MUSIC"
-	else
+	if test x$enable_music_ogg = xyes; then
 	    # Remove the vorbis libraries if it was detected.
 	    SYSTEM_LIBS=`echo $SYSTEM_LIBS | sed 's/-lvorbisfile -lvorbis -logg//'`
 	fi
-	CFLAGS="$CFLAGS -DUSE_TREMOR"
+	CFLAGS="$CFLAGS -DOGG_MUSIC -DUSE_TREMOR"
 	SYSTEM_LIBS="$SYSTEM_LIBS -lvorbisidec"
     fi
 fi
