@@ -1,0 +1,54 @@
+Tue Feb 8 09:57:17 2005  Google Inc. <opensource@google.com>
+
+	* google-perftools: initial release:
+	  The google-perftools package contains some utilities to improve
+	  and analyze the performance of C++ programs.  This includes an
+	  optimized thread-caching malloc() and cpu and heap profiling
+	  utilities.
+
+Tue May 31 08:14:38 2005  Google Inc. <opensource@google.com>
+
+	* google-perftools: version 0.2 release
+	* Use mmap2() instead of mmap(), to map more memory (menage)
+	* Do correct pthread-local checking in heap-checker! (maxim)
+	* Avoid overflow on 64-bit machines in pprof (sanjay)
+	* Add a few more GetPC() functions, including for AMD (csilvers)
+	* Better method for overriding pthread functions (menage)
+	* (Hacky) fix to avoid overwriting profile files after fork() (csilvers)
+	* Crashing bugfix involving dumping heaps on small-stack threads (tudor)
+	* Allow library versions with letters at the end (csilvers)
+	* Config fixes for systems that don't define PATH_MAX (csilvers)
+	* Confix fixes so we no longer need config.h after install (csilvers)
+	* Fix to pprof to correctly read very big cpu profiles (csilvers)
+	* Fix to pprof to deal with new commandline flags in modern gv's
+	* Better error reporting when we can't access /proc/maps (etune)
+	* Get rid of the libc-preallocate code (which could crash on some
+	  systems); no longer needed with local-threads fix (csilvers)
+
+Fri Jun 24 18:02:26 2005  Google Inc. <opensource@google.com>
+
+	* Add missing errno include for one of the unittests (csilvers)
+	* Reduce tcmalloc startup memory from 5M to 256K (sanjay)
+	* Add support for mallopt() and mallinfo (sanjay)
+	* Improve stacktrace's performance on some 64-bit systems (etune)
+	* Improve the stacktrace unittest (etune)
+
+Wed Oct 26 15:19:16 2005  Google Inc. <opensource@google.com>
+
+	* Decrease fragmentation in tcmalloc (lefevere)
+	* Support for ARM in some of the thread-specific code (markus)
+	* Turn off heap-checker for statically-linked binaries, which
+	  cause error leak reports now (etune)
+	* Many pprof improvements, including a command-line interface (jeff)
+	* CPU profiling now automatically affects all threads in linux 2.6.
+	  (Kernel bugs break CPU profiling and threads in linux 2.4 a bit.)
+	  ProfilerEnable() and ProfilerDisable() are deprecated.  (sanjay)
+	* tcmalloc now correctly intercepts memalign (m3b, maxim)
+	* Syntax fix: added missing va_end()s.  Helps non-gcc compiling (etune)
+	* Fixed a few coredumper bugs: race condition after PTRACE_DETACH,
+	  ignore non-aligned stackframe pointers (markus, menage)
+	* 64-bit cleanup, especially for spinlock code (etune) and mmap (sanjay)
+	* Better support for finding threads in linux (markus)
+	* tcmalloc now tracks those stack traces that allocate memory (sanjay)
+	* Work around a weird setspecific problem (sanjay)
+	* Fix tcmalloc overflow problems when an alloc is close to 2G/4G (sanjay)
