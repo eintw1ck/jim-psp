@@ -61,11 +61,15 @@ static char rcsid =
 
 static unsigned int list[4096] __attribute__((aligned(16)));
 
-struct Vertex
+struct texVertex
 {
-        unsigned short u, v;
-        unsigned short color;
-        short x, y, z;
+	unsigned short u, v;
+	short x, y, z;
+};
+
+struct rectVertex
+{
+	short x, y, z;
 };
 
 /* Initialization/Query functions */
@@ -89,6 +93,7 @@ static int PSP_CheckHWBlit(_THIS, SDL_Surface *src, SDL_Surface *dst);
 static int HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
                        SDL_Surface *dst, SDL_Rect *dstrect);
 static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstrect);
+static int PSP_FillHWRect(_THIS, SDL_Surface *dst, SDL_Rect *rect, Uint32 color);
 
 /* Software surface function */
 static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects);
@@ -136,7 +141,7 @@ static SDL_VideoDevice *PSP_CreateDevice(int devindex)
 	device->VideoQuit = PSP_VideoQuit;
 	device->AllocHWSurface = PSP_AllocHWSurface;
 	device->CheckHWBlit = PSP_CheckHWBlit;
-	device->FillHWRect = NULL;
+	device->FillHWRect = PSP_FillHWRect;
 	device->SetHWColorKey = NULL;
 	device->SetHWAlpha = NULL;
 	device->LockHWSurface = PSP_LockHWSurface;
@@ -175,6 +180,7 @@ int PSP_VideoInit(_THIS, SDL_PixelFormat *vformat)
 
 	this->info.wm_available = 0;
 	this->info.hw_available = 1;
+	this->info.blit_fill = 1;
 	this->info.blit_hw = 1;
 	this->info.blit_hw_CC = 1;
 	this->info.blit_hw_A = 1;
@@ -377,10 +383,6 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	this->hidden->pixel_format = pixel_format;
 	this->hidden->frame = 0;
 	this->hidden->frame_offset = 0;
-	if (width > 512)
-		this->hidden->stride = width;
-	else
-		this->hidden->stride = 512;
 
 	/* allocate display buffer */
 	this->hidden->vram_base = vidmem_alloc(pitch * SCREEN_HEIGHT); 
@@ -408,8 +410,28 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 		}
 
     } else if (IS_SWSURFACE(flags)) {
+		char *aspect_ratio;
 
-		current->pitch = this->hidden->stride * (bpp/8);
+		aspect_ratio = getenv("SDL_ASPECT_RATIO");
+
+		if (aspect_ratio && !strcmp(aspect_ratio, "4:3")) {
+			this->hidden->hw_rect.w = 360;
+			this->hidden->hw_rect.h = 272;
+			this->hidden->hw_rect.x = 60;
+			this->hidden->hw_rect.y = 0;
+		} else {
+			this->hidden->hw_rect.w = 480;
+			this->hidden->hw_rect.h = 272;
+			this->hidden->hw_rect.x = 0;
+			this->hidden->hw_rect.y = 0;
+		}
+
+		this->hidden->sw_rect.x = 0;
+		this->hidden->sw_rect.y = 0;
+		this->hidden->sw_rect.w = width;
+		this->hidden->sw_rect.h = height;
+
+		current->pitch = (width > 512) ? width * (bpp/8) : 512 * (bpp/8);
 		current->pixels = memalign(16, current->pitch * roundUpToPowerOfTwo(height)); 
 
 		this->UpdateRects = PSP_GuUpdateRects;
@@ -521,7 +543,7 @@ static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstr
 {
 	unsigned short old_slice = 0; /* set when we load 2nd tex */
 	unsigned int slice, num_slices, width, height, tbw, off_x, off_bytes;
-	struct Vertex *vertices;
+	struct texVertex *vertices;
 	void *pixels;
 
 	off_bytes = (int)(src->pixels + srcrect->x * src->format->BytesPerPixel) & 0xf;
@@ -530,7 +552,7 @@ static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstr
 	height = roundUpToPowerOfTwo(srcrect->h);
 	tbw = src->pitch / src->format->BytesPerPixel;
 
-	/* Align the texture the texture prior to srcrect->x */
+	/* Align the texture prior to srcrect->x */
 	pixels = src->pixels + (srcrect->x - off_x) * src->format->BytesPerPixel + 
 		src->pitch * srcrect->y;
 	num_slices = (srcrect->w + (PSP_SLICE_SIZE - 1)) / PSP_SLICE_SIZE;
@@ -549,7 +571,7 @@ static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstr
 
 	for (slice = 0; slice < num_slices; slice++) {
 
-		vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
+		vertices = (struct texVertex*)sceGuGetMemory(2 * sizeof(struct texVertex));
 
 		if ((slice * PSP_SLICE_SIZE) < width) {
 			vertices[0].u = slice * PSP_SLICE_SIZE + off_x;
@@ -579,16 +601,59 @@ static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstr
 		vertices[0].y = dstrect->y;
 		vertices[1].y = vertices[0].y + dstrect->h;
 
-		vertices[0].color = 0;
 		vertices[0].z = 0;
-		vertices[1].color = 0;
 		vertices[1].z = 0;
 
-		sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_COLOR_4444|GU_VERTEX_16BIT|
-			GU_TRANSFORM_2D,2,0,vertices);
+		sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_VERTEX_16BIT|GU_TRANSFORM_2D,
+			2,0,vertices);
 	}
 
 	sceGuFinish();
+
+	return 0;
+}
+
+static int PSP_FillHWRect(_THIS, SDL_Surface *dst, SDL_Rect *rect, Uint32 color)
+{
+	struct rectVertex *vertices;
+	int gu_format, col_mask;
+
+	sceGuStart(GU_DIRECT,list);
+
+	vertices = sceGuGetMemory(2 * sizeof(struct rectVertex));
+
+	switch (dst->format->BitsPerPixel) {
+		case 15: 
+			gu_format = GU_PSM_5551; 
+			col_mask = GU_COLOR_5551;
+			break;
+		case 16: 
+			gu_format = GU_PSM_5650; 
+			col_mask = GU_COLOR_5650;
+			break;
+		default: 
+			gu_format = GU_PSM_8888; 
+			col_mask = GU_COLOR_8888;
+			break;
+	}
+
+	vertices[0].x = rect->x;
+	vertices[1].x = rect->x + rect->w;
+	vertices[0].y = rect->y;
+	vertices[1].y = rect->y + rect->h;
+
+	sceGuDrawBuffer(gu_format, (void *)((int)dst->pixels & 0x00ffffff), 
+		dst->pitch / dst->format->BytesPerPixel);
+
+	sceGuColor(color);
+	sceGuDrawArray(GU_SPRITES,GU_VERTEX_16BIT|GU_TRANSFORM_2D,2,0,vertices);
+	
+	sceGuDrawBuffer(this->hidden->gu_format, 
+		(void *)(this->hidden->frame ? this->hidden->frame_offset : 0), 
+		PSP_LINE_SIZE);
+
+	sceGuFinish();
+	sceGuSync(0, 0);
 
 	return 0;
 }
@@ -599,17 +664,12 @@ static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstr
 static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects)
 {
 	SDL_Surface *src = SDL_VideoSurface;
-	SDL_Rect srcrect;
 
 	sceKernelDcacheWritebackAll();
 
 	/* if the screen dimensions are unusual, do a single update */
 	if ((src->w != 480) || (src->h != 272)) {
-		srcrect.x = 0;
-		srcrect.y = 0;
-		srcrect.w = src->w;
-		srcrect.h = src->h;
-		PSP_GuStretchBlit(src, &srcrect, (SDL_Rect *)&RECT_480x272);
+		PSP_GuStretchBlit(src, &this->hidden->sw_rect, &this->hidden->hw_rect);
 	} else {
 		/* update the specified rects */
 		while(numrects--) {
