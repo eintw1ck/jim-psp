@@ -18,4 +18,7 @@
 #include <psputility_savedata.h>
 #include <psputility_sysparam.h>
 
+#define PSP_UTILITY_ACCEPT_CIRCLE 0
+#define PSP_UTILITY_ACCEPT_CROSS  1
+
 #endif
