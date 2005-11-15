@@ -8,7 +8,7 @@
  * Copyright (c) 2005 weltall (weltall@consoleworld.org)
  * Based on work by Shine
  *
- * $Id:$
+ * $Id$
  */
 #include <pspkernel.h>
 #include <pspdisplay.h>
@@ -34,7 +34,7 @@ char *saveName = "P0000";
 char *fileName = "PROFILE.BIN";
 #else
 /* This is for the save under the folder ULJS00015-000 with a DATA.BIN file
-   inside it, the game is tales of eternia (J). */
+   inside it, the game is Tales of Eternia (J). */
 char *gameName = "ULJS00015";
 char *saveName = "-001";
 char *fileName = "DATA.BIN";
@@ -77,7 +77,7 @@ int SetupCallbacks(void)
 
 /* Utility Savedata functions */
 
-/* based Shine's function, args: SceUtilitySavedataParam* savedata pass the save data structure
+/* based on Shine's function, args: SceUtilitySavedataParam* savedata pass the save data structure
                        mode: pass the mode parameter 0 = load 1 = save */
 
 void initSavedata(SceUtilitySavedataParam * savedata, int mode)
@@ -157,8 +157,8 @@ void WorkSaveData(int mode)
 		sceDisplayWaitVblankStart();
 	}
 
-	/* If we were reading save data then write it to a file in the MS root directory. */
-	if (mode == 0)				
+	/* If we are reading save data then write it to a file in the MS root directory. */
+	if (mode == 0)
 	{
 		sceIoWrite(fd_data, savedata.dataBuf, DATABUFFLEN);
 		sceIoWrite(fd_sfo, &savedata.sfoParam.title, sizeof(savedata.sfoParam.title));
