@@ -392,7 +392,7 @@ void sceGuSendCommandi(int cmd, int argument);
 /**
   * Allocate memory on the current display list for temporary storage
   *
-  * @param size - How much memory allocate
+  * @param size - How much memory to allocate
   * @returns Memory-block ready for use
 **/
 void* sceGuGetMemory(int size);
