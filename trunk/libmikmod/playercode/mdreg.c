@@ -81,28 +81,23 @@ void _mm_registeralldrivers(void)
 #ifdef DRV_MAC
 	_mm_registerdriver(&drv_mac);
 #endif
+#ifdef DRV_PSP
+	_mm_registerdriver(&drv_psp);
+#endif
 
-#ifndef DRV_PSP
 	/* Register disk writers */
 	_mm_registerdriver(&drv_raw);
 	_mm_registerdriver(&drv_wav);
-#endif
+
 	/* Register other drivers */
 #ifdef DRV_PIPE
 	_mm_registerdriver(&drv_pipe);
 #endif
 #ifndef macintosh
- #ifndef DRV_PSP
 	_mm_registerdriver(&drv_stdout);
- #endif
 #endif
 
-#ifndef DRV_PSP
 	_mm_registerdriver(&drv_nos);
-#endif
-#ifdef DRV_PSP
-	_mm_registerdriver(&drv_psp);
-#endif
 }
 
 void MikMod_RegisterAllDrivers(void)

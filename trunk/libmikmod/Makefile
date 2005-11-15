@@ -1,9 +1,9 @@
 PSPSDK=$(shell psp-config --pspsdk-path)
 PSPDIR=$(shell psp-config --psp-prefix)
 
-TARGET_LIB = ./lib/libmikmod.a
+TARGET_LIB = ./libmikmod/libmikmod.a
 
-OBJS = 	drivers/drv_psp.o		\
+OBJS = 	drivers/drv_psp_thread.o		\
 	mmio/mmalloc.o			\
 	mmio/mmerror.o			\
 	mmio/mmio.o			\
@@ -50,5 +50,5 @@ include $(PSPSDK)/lib/build.mak
 
 install:
 	@mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
-	@cp include/mikmod.h $(PSPDIR)/include
-	@cp lib/*  $(PSPDIR)/lib
+	@cp include/mikmod_build.h $(PSPDIR)/include/mikmod.h
+	@cp libmikmod/libmikmod.a  $(PSPDIR)/lib

@@ -487,7 +487,7 @@ static BOOL _mm_init(CHAR *cmdline)
 		if(!md_driver) {
 			_mm_errno = MMERR_DETECTING_DEVICE;
 			if(_mm_errorhandler) _mm_errorhandler();
-			//md_driver = &drv_nos;
+			md_driver = &drv_nos;
 			return 1;
 		}
 
@@ -500,7 +500,7 @@ static BOOL _mm_init(CHAR *cmdline)
 		if(!md_driver) {
 			_mm_errno = MMERR_INVALID_DEVICE;
 			if(_mm_errorhandler) _mm_errorhandler();
-			//md_driver = &drv_nos;
+			md_driver = &drv_nos;
 			return 1;
 		}
 
@@ -511,7 +511,7 @@ static BOOL _mm_init(CHAR *cmdline)
 		if(!md_driver->IsPresent()) {
 			_mm_errno = MMERR_DETECTING_DEVICE;
 			if(_mm_errorhandler) _mm_errorhandler();
-			//md_driver = &drv_nos;
+			md_driver = &drv_nos;
 			return 1;
 		}
 	}
@@ -547,7 +547,7 @@ void MikMod_Exit_internal(void)
 	MikMod_DisableOutput_internal();
 	md_driver->Exit();
 	md_numchn = md_sfxchn = md_sngchn = 0;
-	//md_driver = &drv_nos;
+	md_driver = &drv_nos;
 
 	if(sfxinfo) free(sfxinfo);
 	if(md_sample) free(md_sample);

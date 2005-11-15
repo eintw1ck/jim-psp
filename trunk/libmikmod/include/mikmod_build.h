@@ -56,7 +56,7 @@ extern "C" {
 
 #define LIBMIKMOD_VERSION_MAJOR 3L
 #define LIBMIKMOD_VERSION_MINOR 1L
-#define LIBMIKMOD_REVISION      10L
+#define LIBMIKMOD_REVISION      11L
 
 #define LIBMIKMOD_VERSION \
 	((LIBMIKMOD_VERSION_MAJOR<<16)| \
@@ -618,7 +618,7 @@ struct MDRIVER* next;
 	BOOL        (*PlayStart)        (void);
 	void        (*PlayStop)         (void);
 	void        (*Update)           (void);
-	void		(*Pause)			(void);
+	void		    (*Pause)			      (void);
 	void        (*VoiceSetVolume)   (UBYTE,UWORD);
 	UWORD       (*VoiceGetVolume)   (UBYTE);
 	void        (*VoiceSetFrequency)(UBYTE,ULONG);
@@ -653,7 +653,6 @@ MIKMODAPI extern MDRIVER* md_driver;   /* Current driver in use. */
 /* Known drivers list */
 
 MIKMODAPI extern struct MDRIVER drv_nos;    /* no sound */
-MIKMODAPI extern struct MDRIVER drv_psp;    /* no sound */
 MIKMODAPI extern struct MDRIVER drv_pipe;   /* piped output */
 MIKMODAPI extern struct MDRIVER drv_raw;    /* raw file disk writer [music.raw] */
 MIKMODAPI extern struct MDRIVER drv_stdout; /* output to stdout */
@@ -678,6 +677,8 @@ MIKMODAPI extern struct MDRIVER drv_ds;     /* Win32 DirectSound driver */
 MIKMODAPI extern struct MDRIVER drv_win;    /* Win32 multimedia API driver */
 
 MIKMODAPI extern struct MDRIVER drv_mac;    /* Macintosh Sound Manager driver */
+
+MIKMODAPI extern struct MDRIVER drv_psp;    /* PSP Sound driver */
 
 /*========== Virtual channel mixer interface (for user-supplied drivers only) */
 

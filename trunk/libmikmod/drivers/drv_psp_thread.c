@@ -15,7 +15,7 @@ Public Domain
 #include <string.h>
 
 #include "mikmod.h"
-#include "mmio.h"
+//#include "mmio.h"
 
 static int playing = 0;
 
@@ -77,8 +77,40 @@ static void PSP_PlayStop(void)
 	VC_PlayStop();
 }
 
-MDRIVER drv_psp =
+MIKMODAPI MDRIVER drv_psp =
 {
+	NULL,
+	"PSP Audio",
+	"PSP Output Driver v1.0 - by Jim Shaw",
+	0,255,
+	"psp",
+	NULL,	//command line
+	PSP_IsThere,
+	VC_SampleLoad,
+	VC_SampleUnload,
+	VC_SampleSpace,
+	VC_SampleLength,
+	PSP_Init,
+	PSP_Exit,
+	PSP_Reset,
+	VC_SetNumVoices,
+	PSP_PlayStart,
+	PSP_PlayStop,
+	PSP_Update,
+	NULL,	//pause
+	VC_VoiceSetVolume,
+	VC_VoiceGetVolume,
+	VC_VoiceSetFrequency,
+	VC_VoiceGetFrequency,
+	VC_VoiceSetPanning,
+	VC_VoiceGetPanning,
+	VC_VoicePlay,
+	VC_VoiceStop,
+	VC_VoiceStopped,
+	VC_VoiceGetPosition,
+	VC_VoiceRealVolume
+};
+/*
 	NULL,
 	"PSP Audio",
 	"PSP Output Driver v1.0 - by Jim Shaw",
@@ -104,4 +136,4 @@ MDRIVER drv_psp =
 	VC_VoiceReleaseSustain,
 	VC_VoiceGetPosition,
 	VC_VoiceRealVolume
-};
+*/

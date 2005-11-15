@@ -52,7 +52,6 @@
 	you can't have several MREADER objects with different iobase values.
 */
 
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -65,9 +64,6 @@
 #include <string.h>
 
 #include "mikmod_internals.h"
-
-#include <pspdebug.h>
-
 
 #ifdef SUNOS
 extern int fclose(FILE *);
@@ -86,10 +82,8 @@ FILE* _mm_fopen(CHAR* fname,CHAR* attrib)
 {
 	FILE *fp;
 
-	pspDebugScreenPrintf("open func %s attf %s\n",fname,attrib);
-	if(!(fp=fopen(fname,"r"))) {
+	if(!(fp=fopen(fname,attrib))) {
 		_mm_errno = MMERR_OPENING_FILE;
-			pspDebugScreenPrintf("open pas ok %d\n",_mm_errno);
 		if(_mm_errorhandler) _mm_errorhandler();
 	}
 	return fp;

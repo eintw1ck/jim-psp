@@ -34,8 +34,6 @@
 #include <unistd.h>
 #endif
 
-#include <pspdebug.h>
-
 #ifdef HAVE_MEMORY_H
 #include <memory.h>
 #endif
@@ -556,10 +554,7 @@ MIKMODAPI MODULE* Player_Load(CHAR* filename,int maxchan,BOOL curious)
 	FILE *fp;
 	MODULE *mf=NULL;
 
-pspDebugScreenPrintf("ii\n");
-	
 	if((fp=_mm_fopen(filename,"rb"))) {
-			pspDebugScreenPrintf("opened");
 		mf=Player_LoadFP(fp,maxchan,curious);
 		_mm_fclose(fp);
 	}
