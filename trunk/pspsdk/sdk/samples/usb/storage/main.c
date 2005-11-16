@@ -29,7 +29,7 @@
  * 2nd arg must 0x1000 so __init is executed in
  * kernelmode for our loaderInit function
  */
-PSP_MODULE_INFO("USBSample", 0x1000, 0, 1);
+PSP_MODULE_INFO("USBSample", 0x1000, 1, 0);
 
 /**
  * THREAD_ATTR_USER causes the thread that the startup
