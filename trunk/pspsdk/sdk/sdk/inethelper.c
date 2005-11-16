@@ -1,3 +1,14 @@
+/*
+ * PSP Software Development Kit - http://www.pspdev.org
+ * -----------------------------------------------------------------------
+ * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
+ *
+ * inethelper.h - Helper functions for internet related modules
+ *
+ * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ *
+ * $Id$
+ */
 #include <pspkernel.h>
 #include <string.h>
 #include <pspsdk.h>
