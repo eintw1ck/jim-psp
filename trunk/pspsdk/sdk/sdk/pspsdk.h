@@ -17,6 +17,7 @@
 
 #include <pspkerneltypes.h>
 #include <pspmodulemgr.h>
+#include <pspmoduleinfo.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,7 +30,7 @@ extern "C" {
 
 /**
   * Query a modules information from its uid.
-  * @note this is a replacement function for the broken kernel sceKernelQueryModuleInfo.
+  * @note this is a replacement function for the broken kernel sceKernelQueryModuleInfo in v1.0 firmware
   * DO NOT use on a anything above that version. This also needs kernel mode access where
   * the normal one has a user mode stub.
   * 
@@ -71,6 +72,34 @@ int pspSdkInstallNoDeviceCheckPatch(void);
  * @returns 0 on success, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkInstallNoPlainModuleCheckPatch(void);
+
+/**
+ * Manually fixup module import for late binding modules
+ *
+ * @param moduleId - Id of the module to fixup
+ */
+void fixupImports(int moduleId);
+
+/**
+ * Load Inet related modules - REQUIRES KMODE
+ *
+ * @returns - on success, otherwise one of ::PspKernelErrorCodes.
+ */
+int loadInetModules();
+
+/**
+ * Init Inet related modules 
+ *
+ * @returns - on success, otherwise one of ::PspKernelErrorCodes.
+ */
+int initInet();
+
+/**
+ * Terminate Inet related modules 
+ *
+ * @returns - on success, otherwise one of ::PspKernelErrorCodes.
+ */
+void termInet();
 
 /*@}*/
 
