@@ -377,7 +377,7 @@ AC_DEFUN([AC_PROGRAM_INVOCATION_NAME],
     for program_invocation_name,
     ac_cv_have_program_invocation_name,
     AC_TRY_LINK([extern char* program_invocation_name;],
-	        [char c = *program_invocation_name; return 0; ],
+	        [char c = *program_invocation_name; return c; ],
 	        [ac_cv_have_program_invocation_name=yes],
 		[ac_cv_have_program_invocation_name=no])
    )
