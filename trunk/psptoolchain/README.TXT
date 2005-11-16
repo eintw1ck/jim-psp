@@ -19,8 +19,7 @@
    Once finished, you need to add the following to your login settings:
 
     ## PSPDEV SETTINGS
-    export PSPDEV="/usr/local/pspdev"
-    export PATH="$PATH:$PSPDEV/bin"
+    export PATH="/usr/local/pspdev/bin:$PATH"
 
    Then you're done!
 
