@@ -12,10 +12,10 @@
 #include <pspkernel.h>
 #include <string.h>
 #include <pspsdk.h>
-#include <pspNet.h>
-#include <pspNetInet.h>
-#include <pspNetResolver.h>
-#include <pspNetApctl.h>
+#include <pspnet.h>
+#include <pspnet_inet.h>
+#include <pspnet_resolver.h>
+#include <pspnet_apctl.h>
 //#include <pspNetApDialogDummy.h>
 
 int loadModule(const char* filename, int mpid) {
