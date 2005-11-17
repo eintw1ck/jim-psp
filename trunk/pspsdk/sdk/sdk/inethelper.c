@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * inethelper.h - Helper functions for internet related modules
+ * inethelper.c - Helper functions for internet related modules.
  *
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
@@ -11,7 +11,6 @@
  * $Id$
  */
 
-#include <string.h>
 #include <pspkernel.h>
 #include <pspsdk.h>
 #include <pspnet.h>
@@ -20,57 +19,27 @@
 #include <pspnet_apctl.h>
 //#include <pspNetApDialogDummy.h>
 
-int pspSdkLoadModule(const char* filename, int mpid)
-{
-	SceKernelLMOption option;
-	SceUID modid = 0;
-	int retVal = 0, mresult;
-
-	memset(&option, 0, sizeof(option));
-	option.size = sizeof(option);
-	option.mpidtext = mpid;
-	option.mpiddata = mpid;
-	option.position = 0;
-	option.access = 1;
-
-	retVal = sceKernelLoadModule(filename, 0, &option);
-	if(retVal < 0){
-		Kprintf("sceKernelLoadModule failed with 0x%08X\n", retVal);
-		return -1;
-	}
-
-	modid = retVal;
-
-	retVal = sceKernelStartModule(modid, 0, 0, &mresult, NULL);
-	if(retVal < 0){
-		Kprintf("sceKernelStartModule failed with 0x%08X\n", retVal);
-		return -1;
-	}
-
-	return modid;
-}
-
 int pspSdkLoadInetModules()
 {
 	int modID;
 
-	modID = pspSdkLoadModule("flash0:/kd/ifhandle.prx", PSP_MEMORY_PARTITION_KERNEL);
+	modID = pspSdkLoadStartModule("flash0:/kd/ifhandle.prx", PSP_MEMORY_PARTITION_KERNEL);
 	if (modID < 0)
 		return modID;
 
-	modID = pspSdkLoadModule("flash0:/kd/pspnet.prx", PSP_MEMORY_PARTITION_USER); 
-	if (modID < 0)
-		return modID;
-	else
-		pspSdkFixupImports(modID);
-
-	modID = pspSdkLoadModule("flash0:/kd/pspnet_inet.prx", PSP_MEMORY_PARTITION_USER); 
+	modID = pspSdkLoadStartModule("flash0:/kd/pspnet.prx", PSP_MEMORY_PARTITION_USER); 
 	if (modID < 0)
 		return modID;
 	else
 		pspSdkFixupImports(modID);
 
-	modID = pspSdkLoadModule("flash0:/kd/pspnet_apctl.prx", PSP_MEMORY_PARTITION_USER); 
+	modID = pspSdkLoadStartModule("flash0:/kd/pspnet_inet.prx", PSP_MEMORY_PARTITION_USER); 
+	if (modID < 0)
+		return modID;
+	else
+		pspSdkFixupImports(modID);
+
+	modID = pspSdkLoadStartModule("flash0:/kd/pspnet_apctl.prx", PSP_MEMORY_PARTITION_USER); 
 	if (modID < 0)
 		return modID;
 	else
@@ -82,7 +51,7 @@ int pspSdkLoadInetModules()
 	else
 		fixupImports(modID);
 */
-	modID = pspSdkLoadModule("flash0:/kd/pspnet_resolver.prx", PSP_MEMORY_PARTITION_USER); 
+	modID = pspSdkLoadStartModule("flash0:/kd/pspnet_resolver.prx", PSP_MEMORY_PARTITION_USER); 
 	if (modID < 0)
 		return modID;
 	else

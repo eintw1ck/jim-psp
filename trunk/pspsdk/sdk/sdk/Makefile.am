@@ -26,7 +26,7 @@ MODULEMGR_PATCHES_OBJS = \
 MULT_SRCS = modulemgr_patches.c
 MULT_OBJS = $(MODULEMGR_PATCHES_OBJS)
 
-libpspsdk_a_SOURCES = query_mod.c fixup.c inethelper.c $(MULT_SRCS)
+libpspsdk_a_SOURCES = query_mod.c loadmodule.c fixup.c inethelper.c $(MULT_SRCS)
 libpspsdk_a_LIBADD  = $(MULT_OBJS)
 
 $(MODULEMGR_PATCHES_OBJS): modulemgr_patches.c

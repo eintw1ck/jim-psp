@@ -74,6 +74,16 @@ int pspSdkInstallNoDeviceCheckPatch(void);
 int pspSdkInstallNoPlainModuleCheckPatch(void);
 
 /**
+ * Load a module and start it.
+ *
+ * @param filename - Path to the module.
+ * @param mpid - Memory parition ID to use to load the module int.
+ *
+ * @returns - The UID of the module on success, otherwise one of ::PspKernelErrorCodes.
+ */
+SceUID pspSdkLoadStartModule(const char *filename, int mpid);
+
+/**
  * Manually fixup library imports for late binding modules.
  *
  * @param moduleId - Id of the module to fixup
@@ -82,7 +92,7 @@ void pspSdkFixupImports(int moduleId);
 
 /**
  * Load Inet related modules.
- * Note: You must be in kernel mode to execute this function.
+ * @note You must be in kernel mode to execute this function.
  *
  * @returns - 0 on success, otherwise one of ::PspKernelErrorCodes.
  */
