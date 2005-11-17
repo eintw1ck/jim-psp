@@ -88,7 +88,7 @@ static void PSP_UnlockHWSurface(_THIS, SDL_Surface *surface);
 static void PSP_FreeHWSurface(_THIS, SDL_Surface *surface);
 static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface);
 static void PSP_UpdateRects(_THIS, int numrects, SDL_Rect *rects);
-static void PSP_GuInit(_THIS);
+static void PSP_GuInit(_THIS, SDL_Surface *current, int bpp);
 static int PSP_CheckHWBlit(_THIS, SDL_Surface *src, SDL_Surface *dst);
 static int HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
                        SDL_Surface *dst, SDL_Rect *dstrect);
@@ -97,6 +97,15 @@ static int PSP_FillHWRect(_THIS, SDL_Surface *dst, SDL_Rect *rect, Uint32 color)
 
 /* Software surface function */
 static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects);
+
+/* return a suitable psm value for a particular bpp */
+static inline int psm_value(int bpp) {
+	if (bpp == 15)
+		return GU_PSM_5551;
+	if (bpp == 16)
+		return GU_PSM_5650;
+	return GU_PSM_8888;
+}
 
 /* PSP driver bootstrap functions */
 
@@ -180,10 +189,10 @@ int PSP_VideoInit(_THIS, SDL_PixelFormat *vformat)
 
 	this->info.wm_available = 0;
 	this->info.hw_available = 1;
-	this->info.blit_fill = 1;
+	this->info.blit_fill = 0; /* todo: fixme */
 	this->info.blit_hw = 1;
 	this->info.blit_hw_CC = 1;
-	this->info.blit_hw_A = 1;
+	this->info.blit_hw_A = 0; /* todo: implement me */
 
 	PSP_EventInit(this);
 	
@@ -197,6 +206,7 @@ SDL_Rect **PSP_ListModes(_THIS, SDL_PixelFormat *format, Uint32 flags)
 		return (SDL_Rect **)-1;
 
 	switch(format->BitsPerPixel) {
+	case 8: /* proxied by a shadow surface */
 	case 15:
 	case 16:
 	case 32:
@@ -206,18 +216,18 @@ SDL_Rect **PSP_ListModes(_THIS, SDL_PixelFormat *format, Uint32 flags)
 	}
 }
 
-static void PSP_GuInit(_THIS) {
+static void PSP_GuInit(_THIS, SDL_Surface *current, int bpp) {
 	void *dispbuffer = (void*) 0;
 	void *drawbuffer = (void*) this->hidden->frame_offset;
 
 	sceGuInit();
 	sceGuStart(GU_DIRECT, list); 
 	sceGuDispBuffer(SCREEN_WIDTH, SCREEN_HEIGHT, dispbuffer, PSP_LINE_SIZE);
-	if (this->hidden->gu_format == GU_PSM_T8) {
-		sceGuDrawBuffer(GU_PSM_8888, drawbuffer, PSP_LINE_SIZE);
+	if (IS_SWSURFACE(current->flags) || (current->flags & SDL_HWPALETTE)) {
 		sceGuClutMode(GU_PSM_8888, 0, 255, 0);
+		sceGuDrawBuffer(GU_PSM_8888, drawbuffer, PSP_LINE_SIZE);
 	} else {
-		sceGuDrawBuffer(this->hidden->gu_format, drawbuffer, PSP_LINE_SIZE);
+		sceGuDrawBuffer(psm_value(bpp), drawbuffer, PSP_LINE_SIZE);
 	}
 	sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
 	sceGuOffset(2048 - (SCREEN_WIDTH / 2), 2048 - (SCREEN_HEIGHT / 2));
@@ -315,7 +325,7 @@ static inline int roundUpToPowerOfTwo (int x)
 SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 				int width, int height, int bpp, Uint32 flags)
 {
-	int pitch = 512, pixel_format, gu_format;
+	int disp_pitch = 512, draw_pitch = 512, pixel_format;
 	Uint32 Amask, Rmask, Gmask, Bmask;
 
 	if (IS_HWSURFACE(flags) &&
@@ -326,44 +336,40 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	}
 
 	switch(bpp) {
-	case 8:
-		if (IS_HWSURFACE(flags)) {
-			SDL_SetError("8-bit surfaces are only supported on software surfaces.");
-			return NULL;
-		}
+	case 8: /* indexed, uses a shadow buffer for hwsurfaces */
+		disp_pitch *= 4;
 		Amask = 0;
 		Rmask = 0;
 		Gmask = 0;
 		Bmask = 0;
 		pixel_format = PSP_DISPLAY_PIXEL_FORMAT_8888; 
-		gu_format = GU_PSM_T8;
 		break;
 	case 15: /* 5-5-5-1 */
-		pitch *= 2;
+		disp_pitch *= 2;
+		draw_pitch *= 2;
 		Amask = 0x00008000;
 		Rmask = 0x0000001f;
 		Gmask = 0x000003e0;
 		Bmask = 0x00007c00;
 		pixel_format = PSP_DISPLAY_PIXEL_FORMAT_5551;
-		gu_format = GU_PSM_5551;
 		break;
 	case 16: /* 5-6-5 */
-		pitch *= 2;
+		disp_pitch *= 2;
+		draw_pitch *= 2;
 		Amask = 0;
 		Rmask = 0x0000001f;
 		Gmask = 0x000007e0;
 		Bmask = 0x0000f800;
 		pixel_format = PSP_DISPLAY_PIXEL_FORMAT_565;
-		gu_format = GU_PSM_5650;
 		break;
 	case 32: /* 8-8-8-8 */
-		pitch *= 4;
+		disp_pitch *= 4;
+		draw_pitch *= 4;
 		Amask = 0xff000000;
 		Rmask = 0x000000ff;
 		Gmask = 0x0000ff00;
 		Bmask = 0x00ff0000;
 		pixel_format = PSP_DISPLAY_PIXEL_FORMAT_8888;
-		gu_format = GU_PSM_8888;
 		break;
 	default:
 		SDL_SetError("Couldn't find requested mode");
@@ -379,13 +385,14 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	current->w = width;
 	current->h = height;
 
-	this->hidden->gu_format = gu_format;
+	this->hidden->psm = psm_value(bpp);
+	this->hidden->tpsm = this->hidden->psm; 
 	this->hidden->pixel_format = pixel_format;
 	this->hidden->frame = 0;
 	this->hidden->frame_offset = 0;
 
 	/* allocate display buffer */
-	this->hidden->vram_base = vidmem_alloc(pitch * SCREEN_HEIGHT); 
+	this->hidden->vram_base = vidmem_alloc(disp_pitch * SCREEN_HEIGHT); 
 
 	sceDisplaySetMode(0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	sceDisplaySetFrameBuf(this->hidden->vram_base, 512, pixel_format, 
@@ -393,20 +400,29 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 
 	if (IS_HWSURFACE(flags)) {
 
-	    current->pixels = this->hidden->vram_base;
-		current->pitch = pitch;
-		current->flags |= SDL_PREALLOC; /* so SDL doesn't free ->pixels */
+		current->pitch = draw_pitch;
 
 		if (flags & SDL_DOUBLEBUF) {
-			this->hidden->frame_offset = pitch * height;
+			this->hidden->frame_offset = disp_pitch * height;
 
 			/* Set the draw buffer to the second frame. */
 			this->hidden->frame = 1;
-			current->pixels =
-				(void *) ((Uint32) this->hidden->vram_base + this->hidden->frame_offset);
 
 			/* allocate drawbuffer */
-			vidmem_alloc(pitch * height); 
+			vidmem_alloc(disp_pitch * height); 
+		}
+
+		if (bpp == 8) {
+			/* create a shadow surface */
+			current->pixels = memalign(16, current->pitch * height); 
+
+			/* can't hwaccel 8bpp hwsurface */
+			this->info.blit_fill = 0;
+			this->info.blit_hw = 0;
+		} else {
+	    	current->pixels = (void *) ((Uint32) this->hidden->vram_base + 
+				this->hidden->frame_offset);
+			current->flags |= SDL_PREALLOC; /* so SDL doesn't free ->pixels */
 		}
 
     } else if (IS_SWSURFACE(flags)) {
@@ -432,16 +448,12 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 		this->hidden->sw_rect.h = height;
 
 		current->pitch = (width > 512) ? width * (bpp/8) : 512 * (bpp/8);
-		current->pixels = memalign(16, current->pitch * roundUpToPowerOfTwo(height)); 
+		current->pixels = memalign(16, current->pitch * height); 
 
 		this->UpdateRects = PSP_GuUpdateRects;
-
-		if (bpp == 8 && this->hidden->gu_palette == NULL) {
-			this->hidden->gu_palette = memalign(16, 4 * 256);
-		}
     }
 
-	PSP_GuInit(this);
+	PSP_GuInit(this, current, bpp);
 
 	/* We're done */
 	return(current);
@@ -460,9 +472,7 @@ static int PSP_AllocHWSurface(_THIS, SDL_Surface *surface)
 }
 static void PSP_FreeHWSurface(_THIS, SDL_Surface *surface)
 {
-	vidmem_free(this->hidden->vram_base);
-	if (this->screen->flags & SDL_DOUBLEBUF)
-		vidmem_free(this->hidden->vram_base + this->hidden->frame_offset);
+	vidmem_free(surface->pixels);
 	return;
 }
 
@@ -480,17 +490,23 @@ static void PSP_UnlockHWSurface(_THIS, SDL_Surface *surface)
 	return;
 }
 
+/* Show the draw buffer as the display buffer, and setup the next draw buffer. */
 static int PSP_FlipHWSurface(_THIS, SDL_Surface *surface)
 {
 	void *new_pixels;
 
-	/* Show the draw buffer as the display buffer, and setup the next draw buffer. */
 	sceKernelDcacheWritebackAll();
+	if (surface->format->BitsPerPixel == 8) {
+		/* blit the shadow surface */
+		PSP_GuStretchBlit(surface, (SDL_Rect *)&RECT_480x272, (SDL_Rect *)&RECT_480x272);
+		sceGuSync(0, 0);
+	} else { 
+		this->hidden->frame ^= 1;
+		new_pixels = (void *) ((Uint32) this->hidden->vram_base +
+				(this->hidden->frame_offset * this->hidden->frame));
+		surface->pixels = new_pixels;
+	}
 	sceGuSwapBuffers();
-	this->hidden->frame ^= 1;
-	new_pixels = (void *) ((Uint32) this->hidden->vram_base +
-			(this->hidden->frame_offset * this->hidden->frame));
-	surface->pixels = new_pixels;
 
 	return 0;
 }
@@ -521,7 +537,7 @@ static int HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
 
 		sceGuStart(GU_DIRECT,list);
 
-		sceGuCopyImage(current_video->hidden->gu_format,
+		sceGuCopyImage(current_video->hidden->psm,
 			srcrect->x, srcrect->y, srcrect->w, srcrect->h, 
 			src->pitch / src->format->BytesPerPixel, src->pixels,
 			dstrect->x, dstrect->y, dst->pitch / dst->format->BytesPerPixel, 
@@ -563,7 +579,7 @@ static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstr
 
 	sceGuStart(GU_DIRECT,list);
 	sceGuEnable(GU_TEXTURE_2D);
-	sceGuTexMode(current_video->hidden->gu_format,0,0,0);
+	sceGuTexMode(current_video->hidden->tpsm,0,0,0);
 	sceGuTexFunc(GU_TFX_REPLACE, GU_TCC_RGB);
 	sceGuTexFilter(GU_LINEAR, GU_LINEAR);
 	sceGuTexImage(0, width, height, tbw, pixels);
@@ -616,41 +632,27 @@ static int PSP_GuStretchBlit(SDL_Surface *src, SDL_Rect *srcrect, SDL_Rect *dstr
 static int PSP_FillHWRect(_THIS, SDL_Surface *dst, SDL_Rect *rect, Uint32 color)
 {
 	struct rectVertex *vertices;
-	int gu_format, col_mask;
+	void *gu_offset;
+
+	gu_offset = (void *)((int)current_video->screen->pixels & 0x00ffffff);
 
 	sceGuStart(GU_DIRECT,list);
 
 	vertices = sceGuGetMemory(2 * sizeof(struct rectVertex));
-
-	switch (dst->format->BitsPerPixel) {
-		case 15: 
-			gu_format = GU_PSM_5551; 
-			col_mask = GU_COLOR_5551;
-			break;
-		case 16: 
-			gu_format = GU_PSM_5650; 
-			col_mask = GU_COLOR_5650;
-			break;
-		default: 
-			gu_format = GU_PSM_8888; 
-			col_mask = GU_COLOR_8888;
-			break;
-	}
 
 	vertices[0].x = rect->x;
 	vertices[1].x = rect->x + rect->w;
 	vertices[0].y = rect->y;
 	vertices[1].y = rect->y + rect->h;
 
-	sceGuDrawBuffer(gu_format, (void *)((int)dst->pixels & 0x00ffffff), 
+	sceGuDrawBuffer(psm_value(dst->format->BitsPerPixel),
+		(void *)((int)dst->pixels & 0x00ffffff), 
 		dst->pitch / dst->format->BytesPerPixel);
 
 	sceGuColor(color);
 	sceGuDrawArray(GU_SPRITES,GU_VERTEX_16BIT|GU_TRANSFORM_2D,2,0,vertices);
 	
-	sceGuDrawBuffer(this->hidden->gu_format, 
-		(void *)(this->hidden->frame ? this->hidden->frame_offset : 0), 
-		PSP_LINE_SIZE);
+	sceGuDrawBuffer(this->hidden->psm, gu_offset, PSP_LINE_SIZE);
 
 	sceGuFinish();
 	sceGuSync(0, 0);
@@ -669,7 +671,9 @@ static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects)
 
 	/* if the screen dimensions are unusual, do a single update */
 	if ((src->w != 480) || (src->h != 272)) {
+
 		PSP_GuStretchBlit(src, &this->hidden->sw_rect, &this->hidden->hw_rect);
+
 	} else {
 		/* update the specified rects */
 		while(numrects--) {
@@ -683,11 +687,20 @@ static void PSP_GuUpdateRects(_THIS, int numrects, SDL_Rect *rects)
 
 int PSP_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 {
-	int i, j;
-	unsigned int *palette = this->hidden->gu_palette;
+	int i, j, ret = 1;
+	unsigned int *palette;
 
-	if (this->hidden->gu_format != GU_PSM_T8 || palette == NULL)
-		return 0;
+	if (ncolors > 256) {
+		ncolors = 256;
+		ret = 0;
+	}
+
+	if (this->hidden->gu_palette == NULL) {
+		this->hidden->gu_palette = memalign(16, 4 * 256);
+		this->hidden->tpsm = GU_PSM_T8;
+	}
+
+	palette = this->hidden->gu_palette;
 
 	for (i=firstcolor, j=0; j < ncolors; i++, j++) {
 		palette[i] = (colors[j].b << 16) | (colors[j].g << 8) | (colors[j].r);
@@ -697,8 +710,9 @@ int PSP_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 	sceGuStart(GU_DIRECT, list);
 	sceGuClutLoad(32, this->hidden->gu_palette);
 	sceGuFinish();
+	sceGuSync(0,0);
 
-	return 1;
+	return ret;
 }
 
 /* Note:  If we are terminated, this could be called in the middle of
@@ -714,6 +728,11 @@ void PSP_VideoQuit(_THIS)
 	sceGuTerm();
 
 	PSP_EventQuit(this);
+
+	vidmem_free(this->hidden->vram_base);
+
+	if (this->screen->flags & SDL_DOUBLEBUF)
+		vidmem_free(this->hidden->vram_base + this->hidden->frame_offset);
 
 	return;
 }

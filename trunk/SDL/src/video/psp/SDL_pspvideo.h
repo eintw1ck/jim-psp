@@ -59,9 +59,11 @@ struct SDL_PrivateVideoData {
 	int frame;
 	/* Byte offset of the start of the second frame. */
 	unsigned int frame_offset;
-	/* Texture format and stride used for hw acceleration */
-	int gu_format;
-	/* Pointer to the CLUT used in 8-bit modes. */
+	/* Screen format */
+	int psm;
+	/* Texture format */
+	int tpsm;
+	/* Pointer to the CLUT. */
 	void *gu_palette;
 	/* Dimensions for stretched blit */
 	SDL_Rect hw_rect;
