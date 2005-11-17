@@ -6,9 +6,11 @@
  * fixup.c - Code to manually fixup late binding modules
  *
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  *
  * $Id$
  */
+
 #include <pspkernel.h>
 #include <string.h>
 
@@ -32,6 +34,8 @@ struct PspModuleExport
 	u16 f_count;
 	u32 *exports;
 } __attribute__((packed));
+
+extern SceModuleInfo module_info;
 
 static void *pspSdkFindExport(SceModule *modInfo, const char *exportName, u32 nid) {
 	void *pRet = NULL;
@@ -64,8 +68,8 @@ static void *pspSdkFindExport(SceModule *modInfo, const char *exportName, u32 ni
 	return pRet;
 }
 
-void fixupImports(int modId) {
-	extern SceModuleInfo module_info;
+void pspSdkFixupImports(int modId)
+{
 	struct SceLibStubEntry* stubEntry = module_info.stub_top;
 	int i;
 	u32 *nid, *stub;

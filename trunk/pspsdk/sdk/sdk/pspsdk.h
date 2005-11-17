@@ -74,32 +74,31 @@ int pspSdkInstallNoDeviceCheckPatch(void);
 int pspSdkInstallNoPlainModuleCheckPatch(void);
 
 /**
- * Manually fixup module import for late binding modules
+ * Manually fixup library imports for late binding modules.
  *
  * @param moduleId - Id of the module to fixup
  */
-void fixupImports(int moduleId);
+void pspSdkFixupImports(int moduleId);
 
 /**
- * Load Inet related modules - REQUIRES KMODE
+ * Load Inet related modules.
+ * Note: You must be in kernel mode to execute this function.
  *
- * @returns - on success, otherwise one of ::PspKernelErrorCodes.
+ * @returns - 0 on success, otherwise one of ::PspKernelErrorCodes.
  */
-int loadInetModules();
+int pspSdkLoadInetModules();
 
 /**
- * Init Inet related modules 
+ * Initialize Inet related modules.
  *
- * @returns - on success, otherwise one of ::PspKernelErrorCodes.
+ * @returns - 0 on success, otherwise one of ::PspKernelErrorCodes.
  */
-int initInet();
+int pspSdkInetInit();
 
 /**
- * Terminate Inet related modules 
- *
- * @returns - on success, otherwise one of ::PspKernelErrorCodes.
+ * Terminate Inet related modules.
  */
-void termInet();
+void pspSdkInetTerm();
 
 /*@}*/
 
