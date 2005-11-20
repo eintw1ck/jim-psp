@@ -70,10 +70,12 @@ Image::Image(const string& filename)
     png_structp png_ptr;
     png_infop info_ptr;
     unsigned int sig_read = 0;
-    int bit_depth, color_type, interlace_type, x, y;
+    int bit_depth, color_type, interlace_type, y;
     png_uint_32 pw, ph;
-    u32* line;
+    //u32* line;
     FILE *fp;
+    int passes;
+    u8** rows;
 
     if ((fp = fopen(filename.c_str(), "rb")) == NULL)
        throw ImageIOException("Could not open file");
@@ -120,6 +122,16 @@ Image::Image(const string& filename)
     if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
        png_set_tRNS_to_alpha(png_ptr);
 
+    if (interlace_type == PNG_INTERLACE_ADAM7)
+    {
+       passes = png_set_interlace_handling(png_ptr);
+       png_read_update_info(png_ptr, info_ptr);
+    }
+    else
+    {
+       passes = 1;
+    }
+
     png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
     _data = (u32*) memalign(16, _textureWidth * _textureHeight * sizeof(u32));
 
@@ -131,6 +143,18 @@ Image::Image(const string& filename)
        throw ImageException("Memory error");
     }
 
+    rows = (u8**)malloc(sizeof(u8*) * _height);
+    for (y = 0;  y < _height; ++y)
+    {
+       rows[y] = (u8*)(_data + y * _textureWidth);
+    }
+
+    for (y = 0; y < passes; ++y)
+    {
+       png_read_rows(png_ptr, rows, NULL, _height);
+    }
+
+    /*
     line = (u32*)malloc(_width * 4);
     if (!line)
     {
@@ -152,6 +176,10 @@ Image::Image(const string& filename)
     }
 
     free(line);
+    */
+
+    free(rows);
+
     png_read_end(png_ptr, info_ptr);
     png_destroy_read_struct(&png_ptr, &info_ptr, png_infopp_NULL);
     fclose(fp);
