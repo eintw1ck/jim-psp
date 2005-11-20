@@ -39,7 +39,7 @@ static int color_init(PyColor *self,
     if (!PyArg_ParseTuple(args, "iii|i", &r, &g, &b, &a))
        return -1;
 
-    self->color = (a << 24) | (b << 16) | (g << 8) | r;
+    self->color = ((u32)a << 24) | ((u32)b << 16) | ((u32)g << 8) | (u32)r;
 
     return 0;
 }

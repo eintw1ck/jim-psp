@@ -55,7 +55,7 @@ static int transform_init(PyTransform *self,
     }
     else if (PyCallable_Check(p))
     {
-       self->type = 0;
+       self->type = TR_USER;
        self->cb = p;
        Py_INCREF(p);
     }
@@ -101,10 +101,7 @@ static PyObject* transform_apply(PyTransform *self,
 
              rgba = (u8*)(img->img->getData() + y * img->img->getTextureWidth() + x);
              color = (PyColor*)PyType_GenericNew(PPyColorType, NULL, NULL);
-             ret = PyObject_CallMethod((PyObject*)color, "__init__", "iiii",
-                                       (int)rgba[3], (int)rgba[2],
-                                       (int)rgba[1], (int)rgba[0]);
-             Py_XDECREF(ret);
+             color->color = *((u32*)rgba);
 
              nargs = Py_BuildValue("iiO", x, y, color);
 
