@@ -15,7 +15,7 @@
 
 using namespace PSP2D;
 
-class PyListener : public TimerListener
+class PyListener : public PSP2D::TimerListener
 {
    public:
       PyListener(PyTimer*);
@@ -23,13 +23,19 @@ class PyListener : public TimerListener
 
       bool fire(void);
 
+      void saveState(void);
+      void restoreState(void);
+
    protected:
       PyTimer* _self;
       PyObject* _args;
+
+      PyThreadState* _state;
 };
 
 PyListener::PyListener(PyTimer *self)
-    : _self(self)
+    : _self(self),
+      _state(NULL)
 {
     Py_INCREF(_self);
 
@@ -44,6 +50,8 @@ PyListener::~PyListener()
 
 bool PyListener::fire()
 {
+    restoreState();
+
     PyObject *cb = PyObject_GetAttrString((PyObject*)_self, "fire");
 
 #ifdef CHECKTYPE
@@ -51,6 +59,8 @@ bool PyListener::fire()
     {
        PyErr_SetString(PyExc_TypeError, "fire must be callable");
        PyErr_Print();
+
+       saveState();
 
        return false;
     }
@@ -63,6 +73,9 @@ bool PyListener::fire()
     {
        PyErr_Print();
        Py_DECREF(cb);
+
+       saveState();
+
        return false;
     }
 
@@ -70,17 +83,34 @@ bool PyListener::fire()
     {
        Py_DECREF(cb);
        Py_DECREF(ret);
+
+       saveState();
+
        return true;
     }
 
     Py_DECREF(cb);
     Py_DECREF(ret);
 
+    saveState();
+
     return false;
+}
+
+void PyListener::saveState()
+{
+    _state = PyEval_SaveThread();
+}
+
+void PyListener::restoreState()
+{
+    PyEval_RestoreThread(_state);
 }
 
 static void timer_dealloc(PyTimer *self)
 {
+    // 'lst' is owned by the Timer
+
     delete self->tmr;
 
     self->ob_type->tp_free((PyObject*)self);
@@ -95,7 +125,10 @@ static PyObject* timer_new(PyTypeObject *type,
     self = (PyTimer*)type->tp_alloc(type, 0);
 
     if (self)
+    {
        self->tmr = NULL;
+       self->lst = NULL;
+    }
 
     return (PyObject*)self;
 }
@@ -109,7 +142,8 @@ static int timer_init(PyTimer *self,
     if (!PyArg_ParseTuple(args, "i", &tmo))
        return -1;
 
-    self->tmr = new Timer((u32)tmo, new PyListener(self));
+    self->lst = new PyListener(self);
+    self->tmr = new Timer((u32)tmo, self->lst);
 
     return 0;
 }
@@ -132,7 +166,9 @@ static PyObject* timer_run(PyTimer *self,
     if (!PyArg_ParseTuple(args, ""))
        return NULL;
 
+    self->lst->saveState();
     self->tmr->run();
+    self->lst->restoreState();
 
     Py_INCREF(Py_None);
     return Py_None;
