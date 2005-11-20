@@ -136,6 +136,7 @@ OBJS += psp2d/psp2d.o \
 	psp2d/mask.o \
 	psp2d/font.o \
 	psp2d/transform.o \
+	psp2d/blitbatch.o \
 	pspsnd/pspsnd.o \
 	pspsnd/sound.o \
 	pspsnd/music.o

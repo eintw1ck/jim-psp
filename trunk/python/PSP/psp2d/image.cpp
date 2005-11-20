@@ -286,11 +286,60 @@ static PyObject* image_saveToFile(PyImage *self,
     return Py_None;
 }
 
+static PyObject* image_putPixel(PyImage *self,
+                                PyObject *args,
+                                PyObject *kwargs)
+{
+    int x, y;
+    PyColor *color;
+
+    if (!PyArg_ParseTuple(args, "iiO", &x, &y, &color))
+       return NULL;
+
+#ifdef CHECKTYPE
+    if (((PyObject*)color)->ob_type != PPyColorType)
+    {
+       PyErr_SetString(PyExc_TypeError, "Third argument must be a Color.");
+       return NULL;
+    }
+#endif
+
+    self->img->putPixel(color->color, x, y);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* image_getPixel(PyImage *self,
+                                PyObject *args,
+                                PyObject *kwargs)
+{
+    int x, y;
+    PyColor *color;
+    PyObject *nargs;
+    u32 c;
+
+    if (!PyArg_ParseTuple(args, "ii", &x, &y))
+       return NULL;
+
+    c = self->img->getPixel(x, y);
+    nargs = Py_BuildValue("iii", (int)(c & 0xFF), (int)((c >> 8) & 0xFF),
+                          (int)((c >> 16) & 0xFF), (int)((c >> 24) & 0xFF));
+
+    color = (PyColor*)PyType_GenericNew(PPyColorType, nargs, NULL);
+    Py_DECREF(nargs);
+
+    color->color = c;
+    return (PyObject*)color;
+}
+
 static PyMethodDef image_methods[] = {
    { "clear", (PyCFunction)image_clear, METH_VARARGS, "" },
    { "blit", (PyCFunction)image_blit, METH_VARARGS|METH_KEYWORDS, "" },
    { "fillRect", (PyCFunction)image_fillRect, METH_VARARGS, "" },
    { "saveToFile", (PyCFunction)image_saveToFile, METH_VARARGS, "" },
+   { "putPixel", (PyCFunction)image_putPixel, METH_VARARGS, "" },
+   { "getPixel", (PyCFunction)image_getPixel, METH_VARARGS, "" },
 
    { NULL }
 };

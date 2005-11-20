@@ -4,7 +4,7 @@ PSPDIR=$(shell psp-config --psp-prefix)
 
 TARGET_LIB = libpsp2d.a
 
-OBJS = framebuffer.o Exception.o Drawable.o Screen.o Image.o Blitter.o Controller.o Font.o Mask.o
+OBJS = framebuffer.o Exception.o Drawable.o Screen.o Image.o Blitter.o Controller.o Font.o Mask.o BlitBatch.o
 
 CXXFLAGS = -O2 -G0 -Wall
 CPPFLAGS = -I..

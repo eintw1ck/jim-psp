@@ -20,6 +20,7 @@
 #include "mask.h"
 #include "font.h"
 #include "transform.h"
+#include "blitbatch.h"
 
 #ifndef PyMODINIT_FUNC
 #define PyMODINIT_FUNC void
@@ -57,6 +58,9 @@ PyMODINIT_FUNC initpsp2d(void)
     if (PyType_Ready(PPyTransformType) < 0)
        return;
 
+    if (PyType_Ready(PPyBlitBatchType) < 0)
+       return;
+
     mdl = Py_InitModule3("psp2d", psp2d_functions, "2D programming for the PSP");
     if (!mdl)
        return;
@@ -81,6 +85,9 @@ PyMODINIT_FUNC initpsp2d(void)
 
     Py_INCREF(PPyTransformType);
     PyModule_AddObject(mdl, "Transform", (PyObject*)PPyTransformType);
+
+    Py_INCREF(PPyBlitBatchType);
+    PyModule_AddObject(mdl, "BlitBatch", (PyObject*)PPyBlitBatchType);
 
     PyModule_AddIntConstant(mdl, "TR_PLUS", TR_PLUS);
     PyModule_AddIntConstant(mdl, "TR_MULT", TR_MULT);

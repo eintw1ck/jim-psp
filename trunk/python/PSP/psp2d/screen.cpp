@@ -197,12 +197,61 @@ static PyObject* screen_saveToFile(PyScreen *self,
     return Py_None;
 }
 
+static PyObject* screen_putPixel(PyScreen *self,
+                                 PyObject *args,
+                                 PyObject *kwargs)
+{
+    int x, y;
+    PyColor *color;
+
+    if (!PyArg_ParseTuple(args, "iiO", &x, &y, &color))
+       return NULL;
+
+#ifdef CHECKTYPE
+    if (((PyObject*)color)->ob_type != PPyColorType)
+    {
+       PyErr_SetString(PyExc_TypeError, "Third argument must be a Color.");
+       return NULL;
+    }
+#endif
+
+    self->scr->putPixel(color->color, x, y);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject* screen_getPixel(PyScreen *self,
+                                 PyObject *args,
+                                 PyObject *kwargs)
+{
+    int x, y;
+    PyColor *color;
+    PyObject *nargs;
+    u32 c;
+
+    if (!PyArg_ParseTuple(args, "ii", &x, &y))
+       return NULL;
+
+    c = self->scr->getPixel(x, y);
+    nargs = Py_BuildValue("iii", (int)(c & 0xFF), (int)((c >> 8) & 0xFF),
+                          (int)((c >> 16) & 0xFF), (int)((c >> 24) & 0xFF));
+
+    color = (PyColor*)PyType_GenericNew(PPyColorType, nargs, NULL);
+    Py_DECREF(nargs);
+
+    color->color = c;
+    return (PyObject*)color;
+}
+
 static PyMethodDef screen_methods[] = {
    { "blit", (PyCFunction)screen_blit, METH_VARARGS|METH_KEYWORDS, "" },
    { "clear", (PyCFunction)screen_clear, METH_VARARGS, "" },
    { "fillRect", (PyCFunction)screen_fillRect, METH_VARARGS, "" },
    { "swap", (PyCFunction)screen_swap, METH_VARARGS, "" },
    { "saveToFile", (PyCFunction)screen_saveToFile, METH_VARARGS, "" },
+   { "putPixel", (PyCFunction)screen_putPixel, METH_VARARGS, "" },
+   { "getPixel", (PyCFunction)screen_getPixel, METH_VARARGS, "" },
 
    { NULL }
 };
