@@ -109,21 +109,26 @@ static PyObject* transform_apply(PyTransform *self,
 
              Py_DECREF(nargs);
 
-             if (!ret)
-                PyErr_Print();
-
-             if (!PyObject_IsTrue(ret))
+             if (ret)
              {
-                Py_DECREF(ret);
-                Py_DECREF(color);
+                if (!PyObject_IsTrue(ret))
+                {
+                   Py_DECREF(ret);
+                   Py_DECREF(color);
 
-                Py_INCREF(Py_None);
-                return Py_None;
+                   Py_INCREF(Py_None);
+                   return Py_None;
+                }
+
+                Py_DECREF(ret);
+
+                *(img->img->getData() + y * img->img->getTextureWidth() + x) = color->color;
+             }
+             else
+             {
+                PyErr_Print();
              }
 
-             Py_DECREF(ret);
-
-             *(img->img->getData() + y * img->img->getTextureWidth() + x) = color->color;
              Py_DECREF(color);
           }
        }
