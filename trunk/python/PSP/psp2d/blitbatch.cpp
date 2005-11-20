@@ -134,6 +134,8 @@ static PyObject* blitbatch_blit(PyBlitBatch *self,
     if (!PyArg_ParseTuple(args, ""))
        return NULL;
 
+    // TODO: release the GIL
+
     self->batch->blit();
 
     Py_INCREF(Py_None);
