@@ -12,6 +12,8 @@
 #ifndef __HPRM_H__
 #define __HPRM_H__
 
+#include <psptypes.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
