@@ -337,7 +337,7 @@ int closedir(DIR *dirp)
 #ifdef F__gettimeofday
 int _gettimeofday(struct timeval *tp, struct timezone *tzp)
 {
-	return __psp_set_errno(sceKernelLibcGettimeofday(tp, tzp));
+	return sceKernelLibcGettimeofday(tp, tzp);
 }
 
 #endif
@@ -345,14 +345,14 @@ int _gettimeofday(struct timeval *tp, struct timezone *tzp)
 #if defined(F_clock)
 clock_t clock(void)
 {
-	return __psp_set_errno(sceKernelLibcClock());
+	return sceKernelLibcClock();
 }
 #endif
 
 #if defined(F_time)
 time_t time(time_t *t)
 {
-	return __psp_set_errno(sceKernelLibcTime(t));
+	return sceKernelLibcTime(t);
 }
 #endif
 
