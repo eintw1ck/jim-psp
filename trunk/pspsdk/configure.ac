@@ -77,31 +77,31 @@ if test x$ac_compiler_gnu = xyes; then
 fi
 
 AC_CONFIG_FILES([Makefile
-                 sdk/Makefile
-                 sdk/audio/Makefile
-                 sdk/base/Makefile
-                 sdk/ctrl/Makefile
-                 sdk/debug/Makefile
-                 sdk/display/Makefile
-                 sdk/ge/Makefile
-                 sdk/gu/Makefile
-                 sdk/gum/Makefile
-                 sdk/hprm/Makefile
-                 sdk/kernel/Makefile
-                 sdk/libc/Makefile
-		 sdk/nand/Makefile
-		 sdk/net/Makefile
-                 sdk/power/Makefile
-                 sdk/rtc/Makefile
-                 sdk/sircs/Makefile
-                 sdk/sdk/Makefile
-                 sdk/startup/Makefile
-		 sdk/user/Makefile
-                 sdk/umd/Makefile
-                 sdk/usb/Makefile
-                 sdk/usbstor/Makefile
-                 sdk/utility/Makefile
-                 sdk/wlan/Makefile
-                 sdk/samples/Makefile
+                 src/Makefile
+                 src/audio/Makefile
+                 src/base/Makefile
+                 src/ctrl/Makefile
+                 src/debug/Makefile
+                 src/display/Makefile
+                 src/ge/Makefile
+                 src/gu/Makefile
+                 src/gum/Makefile
+                 src/hprm/Makefile
+                 src/kernel/Makefile
+                 src/libc/Makefile
+		 src/nand/Makefile
+		 src/net/Makefile
+                 src/power/Makefile
+                 src/rtc/Makefile
+                 src/sircs/Makefile
+                 src/sdk/Makefile
+                 src/startup/Makefile
+		 src/user/Makefile
+                 src/umd/Makefile
+                 src/usb/Makefile
+                 src/usbstor/Makefile
+                 src/utility/Makefile
+                 src/wlan/Makefile
+                 src/samples/Makefile
                  tools/Makefile])
 AC_OUTPUT
