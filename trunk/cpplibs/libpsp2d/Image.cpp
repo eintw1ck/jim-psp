@@ -439,7 +439,20 @@ void Image::printText(u16 x, u16 y, const string& text, u32 color)
     }
 }
 
-void Image::saveToFile(const string& filename)
+void Image::saveToFile(const string& filename, ImageType type)
+{
+    switch (type)
+    {
+       case IMG_PNG:
+          _saveToPNG(filename);
+          break;
+       case IMG_JPEG:
+          _saveToJPEG(filename);
+          break;
+    }
+}
+
+void Image::_saveToPNG(const string& filename)
 {
     png_structp png_ptr;
     png_infop info_ptr;
@@ -479,6 +492,56 @@ void Image::saveToFile(const string& filename)
     png_write_end(png_ptr, info_ptr);
     png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
     fclose(fp);
+}
+
+void Image::_saveToJPEG(const string& filename)
+{
+    FILE* outFile = fopen(filename.c_str(), "wb");
+
+    if (!outFile)
+    {
+       throw ImageIOException("Could not open file");
+    }
+
+    struct jpeg_error_mgr jerr;
+    struct jpeg_compress_struct cinfo;
+
+    cinfo.err = jpeg_std_error(&jerr);
+    jpeg_create_compress(&cinfo);
+    jpeg_stdio_dest(&cinfo, outFile);
+
+    cinfo.image_width = _width;
+    cinfo.image_height = _height;
+    cinfo.input_components = 3;
+    cinfo.in_color_space = JCS_RGB;
+    jpeg_set_defaults(&cinfo);
+    jpeg_set_quality(&cinfo, 100, TRUE);
+    jpeg_start_compress(&cinfo, TRUE);
+
+    u8* row = (u8*) malloc(_width * 3);
+    if (!row)
+    {
+       throw ImageException("Memory error");
+    }
+
+    for (int y = 0; y < _height; y++)
+    {
+       u8* rowPointer = row;
+       for (int x = 0; x < _width; x++)
+       {
+          u32 c = _data[x + cinfo.next_scanline * _textureWidth];
+          *(rowPointer++) = c & 0xff;
+          *(rowPointer++) = (c >> 8) & 0xff;
+          *(rowPointer++) = (c >> 16) & 0xff;
+       }
+
+       jpeg_write_scanlines(&cinfo, &row, 1);
+    }
+
+    jpeg_finish_compress(&cinfo);
+    jpeg_destroy_compress(&cinfo);
+    fclose(outFile);
+    free(row);
 }
 
 static const char* _rcsid_Image __attribute__((unused)) = "$Id$";

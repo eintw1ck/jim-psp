@@ -23,6 +23,8 @@
 #include "blitbatch.h"
 #include "timer.h"
 
+#include <libpsp2d/Drawable.h>
+
 #ifndef PyMODINIT_FUNC
 #define PyMODINIT_FUNC void
 #endif
@@ -98,6 +100,9 @@ PyMODINIT_FUNC initpsp2d(void)
 
     PyModule_AddIntConstant(mdl, "TR_PLUS", TR_PLUS);
     PyModule_AddIntConstant(mdl, "TR_MULT", TR_MULT);
+
+    PyModule_AddIntConstant(mdl, "IMG_PNG", (int)PSP2D::IMG_PNG);
+    PyModule_AddIntConstant(mdl, "IMG_JPEG", (int)PSP2D::IMG_JPEG);
 }
 
 #ifdef _GNUC

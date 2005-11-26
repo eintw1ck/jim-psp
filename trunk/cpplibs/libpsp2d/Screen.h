@@ -63,7 +63,7 @@ namespace PSP2D {
        void fillRect(u32 color, u16 x, u16 y, u16 w, u16 h);
        void printText(u16 x, u16 y, const std::string& text, u32 color);
 
-       void saveToFile(const std::string& filename);
+       void saveToFile(const std::string& filename, ImageType type = IMG_PNG);
 
        /**
         * Swaps the back and front buffers.
@@ -107,6 +107,9 @@ namespace PSP2D {
       protected:
        static int _current;
        static bool _initialized;
+
+       void _saveToPNG(const std::string&);
+       void _saveToJPEG(const std::string&);
 
       private:
        Screen();

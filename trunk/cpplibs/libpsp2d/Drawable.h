@@ -45,6 +45,16 @@ namespace PSP2D {
     class DrawableVisitor;
 
     /**
+     * Image types
+     */
+
+    typedef enum
+    {
+       IMG_PNG,
+       IMG_JPEG
+    } ImageType;
+
+    /**
      * Abstract base  class for stuff  you can draw to  (actually only
      * Screen and Image).
      */
@@ -110,10 +120,10 @@ namespace PSP2D {
        virtual void printText(u16 x, u16 y, const std::string& text, u32 color) = 0;
 
        /**
-        * Saves this drawable to a PNG file.
+        * Saves this drawable to a PNG or JPEG file.
         */
 
-       virtual void saveToFile(const std::string& filename) = 0;
+       virtual void saveToFile(const std::string& filename, ImageType type = IMG_PNG) = 0;
 
        /**
         * Part of the Visitor pattern. See DrawableVisitor.

@@ -45,17 +45,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace PSP2D
 {
     /**
-     * Image types
-     */
-
-    typedef enum
-    {
-       IMG_UNKNOWN,
-       IMG_PNG,
-       IMG_JPG
-    } ImageType;
-
-    /**
      * Generic exception that can be throwed by the Image class.
      */
 
@@ -171,7 +160,7 @@ namespace PSP2D
        void fillRect(u32 color, u16 x, u16 y, u16 w, u16 h);
        void printText(u16 x, u16 y, const std::string& text, u32 color);
 
-       void saveToFile(const std::string& filename);
+       void saveToFile(const std::string& filename, ImageType type = IMG_PNG);
 
       protected:
        u16 _width, _height, _textureWidth, _textureHeight;
@@ -179,6 +168,9 @@ namespace PSP2D
 
        void _loadFromPNG(const std::string&);
        void _loadFromJPEG(const std::string&);
+
+       void _saveToPNG(const std::string&);
+       void _saveToJPEG(const std::string&);
     };
 };
 

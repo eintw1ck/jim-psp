@@ -187,11 +187,23 @@ static PyObject* screen_saveToFile(PyScreen *self,
                                    PyObject *kwargs)
 {
     char *filename;
+    int type = (int)IMG_PNG;
+    ImageType etype = IMG_PNG;
 
-    if (!PyArg_ParseTuple(args, "s", &filename))
+    if (!PyArg_ParseTuple(args, "s|i", &filename, &type))
        return NULL;
 
-    self->scr->saveToFile(filename);
+    switch (type)
+    {
+       case (int)IMG_PNG:
+          etype = IMG_PNG;
+          break;
+       case (int)IMG_JPEG:
+          etype = IMG_JPEG;
+          break;
+    }
+
+    self->scr->saveToFile(filename, etype);
 
     Py_INCREF(Py_None);
     return Py_None;

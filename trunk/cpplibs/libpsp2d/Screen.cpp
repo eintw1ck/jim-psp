@@ -242,7 +242,20 @@ u32* Screen::getVramDrawBuffer()
     return vram;
 }
 
-void Screen::saveToFile(const string& filename)
+void Screen::saveToFile(const string& filename, ImageType type)
+{
+    switch (type)
+    {
+       case IMG_PNG:
+          _saveToPNG(filename);
+          break;
+       case IMG_JPEG:
+          _saveToJPEG(filename);
+          break;
+    }
+}
+
+void Screen::_saveToPNG(const string& filename)
 {
     u32* vram32;
     u16* vram16;
@@ -324,6 +337,11 @@ void Screen::saveToFile(const string& filename)
     png_write_end(png_ptr, info_ptr);
     png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
     fclose(fp);
+}
+
+void Screen::_saveToJPEG(const string& filename)
+{
+    // TODO
 }
 
 static const char* _rcsid_Screen __attribute__((unused)) = "$Id$";
