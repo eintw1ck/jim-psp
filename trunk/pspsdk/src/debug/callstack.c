@@ -13,6 +13,8 @@
  * $Id$
  */
 
+#include "pspdebug.h"
+
 /* 
  * $Xorg: getretmips.c,v 1.4 2001/02/09 02:06:19 xorgcvs Exp$
  *
@@ -107,14 +109,14 @@ in this Software without prior written authorization from The Open Group.
 
 #define HASH_SIZE   256
 
-typedef struct _returnCache 
+typedef struct _returnCache
 {
-    unsigned int   *returnAddress;
-    int	    raOffset;
-    int	    spAdjust;
+	unsigned int *returnAddress;
+	int raOffset;
+	int spAdjust;
 } ReturnCacheRec, *ReturnCachePtr;
 
-static ReturnCacheRec	returnCache[HASH_SIZE];
+static ReturnCacheRec returnCache[HASH_SIZE];
 
 #define HASH(ra)    ((((int) (ra)) >> 2) & (HASH_SIZE - 1))
 
@@ -127,124 +129,124 @@ typedef int Bool;
 #define FALSE 0
 #endif
 
-extern unsigned int* pspGetReturnAddress();
-extern unsigned int* pspGetStackPointer();
-extern int  main();
+extern unsigned int *pspGetReturnAddress();
+extern unsigned int *pspGetStackPointer();
+extern int main();
 
-void pspDebugGetStackTrace(unsigned int* results,int max)
+void pspDebugGetStackTrace(unsigned int *results, int max)
 {
-  unsigned int*   ra;
-  unsigned int*   ra_limit;
-  unsigned int*   sp;
-  unsigned int    inst;
-  unsigned int    mainCall;
-  unsigned short  const_upper;
-  unsigned short  const_lower;
-  int ra_offset;
-  int sp_adjust;
-  Bool found_ra_offset, found_sp_adjust;
-  Bool found_const_upper, found_const_lower;
-  ReturnCachePtr  rc;
-  
-  ra = pspGetReturnAddress();
-  sp = pspGetStackPointer();
-  mainCall = CALL(main);
-  
-  while (ra && max) 
-  {
-    rc = &returnCache[HASH(ra)];
-    if (rc->returnAddress != ra)
-    {
-      found_ra_offset = FALSE;
-      found_sp_adjust = FALSE;
-      found_const_upper = FALSE;
-      found_const_lower = FALSE;
-      const_upper = 0;
-      const_lower = 0;
-      rc->returnAddress = ra;
-      ra_limit = (unsigned int *) 0x200000;
-      ra_offset = 0;
-      sp_adjust = -1;
-      
-      while ((!found_ra_offset || !found_sp_adjust) && ra < ra_limit)
-      {
-        inst = *ra;
-        /* look for the offset of the PC in the stack frame */
-        if ((inst & RESTORE_RETURNVAL_MASK) == RESTORE_RETURNVAL)
-        {
-          ra_offset = inst & ~RESTORE_RETURNVAL_MASK;
-          found_ra_offset = TRUE;
-        }
-        else if ((inst & RESTORE_RETURNVAL_MASK) == RESTORE_RETURNVAL2)
-        {
-            ra_offset = inst & ~RESTORE_RETURNVAL_MASK;
-            found_ra_offset = TRUE;
-        }
-        else if ((inst & RESTORE_RETURNVAL_MASK) == RESTORE_RETURNVAL3)
-        {
-            ra_offset = inst & ~RESTORE_RETURNVAL_MASK;
-            found_ra_offset = TRUE;
-        }
-        else if ((inst & ADJUST_STACKP_C_MASK) == ADJUST_STACKP_C)
-        {
-          sp_adjust = inst & ~ADJUST_STACKP_C_MASK;
-          found_sp_adjust = TRUE;
-        }
-        else if ((inst & ADJUST_STACKP_V_MASK) == ADJUST_STACKP_V)
-        {
-          sp_adjust = 0;
-          found_sp_adjust = TRUE;
-        }
-        else if ((inst & SET_UPPER_C_MASK) == SET_UPPER_C)
-        {
-          const_upper = inst & ~SET_UPPER_C_MASK;
-          const_lower = 0;
-          found_const_upper = TRUE;
-        }
-        else if ((inst & OR_LOWER_C_MASK) == OR_LOWER_C)
-        {
-          const_lower = inst & ~OR_LOWER_C_MASK;
-          found_const_lower = TRUE;
-        }
-        else if ((inst & SET_LOWER_C_MASK) == SET_LOWER_C)
-        {
-          const_lower = inst & ~SET_LOWER_C_MASK;
-          const_upper = 0;
-          found_const_lower = TRUE;
-        }
-        else if (inst == RETURN)
-          ra_limit = ra + 2;
-          ra++;
-      }
-      
-      if (sp_adjust == 0 && (found_const_upper || found_const_lower))
-        sp_adjust = (const_upper << 16) | const_lower;
-        rc->raOffset = ra_offset;
-        rc->spAdjust = sp_adjust;
-      }
-      /* if something went wrong, punt */
-      if (rc->spAdjust <= 0) 
-      {
-        *results++ = 0;
-        break;
-      }
-            
-      ra = (unsigned int *) sp[rc->raOffset>>2];
-      sp += rc->spAdjust >> 2;
-      
-      if (ra == 0)
-      {
-        *results++ = 0;
-        break;
-      }
+	unsigned int *ra;
+	unsigned int *ra_limit;
+	unsigned int *sp;
+	unsigned int inst;
+	unsigned int mainCall;
+	unsigned short const_upper;
+	unsigned short const_lower;
+	int ra_offset;
+	int sp_adjust;
+	Bool found_ra_offset, found_sp_adjust;
+	Bool found_const_upper, found_const_lower;
+	ReturnCachePtr rc;
 
-      *results++ = ((unsigned int) ra) - 8;
-      if (ra[-2] == mainCall)
-      {
-        *results++ = 0;
-        break;
-      }
-    max--;
-  }
+	ra = pspGetReturnAddress();
+	sp = pspGetStackPointer();
+	mainCall = CALL(main);
+
+	while (ra && max)
+	{
+		rc = &returnCache[HASH(ra)];
+		if (rc->returnAddress != ra)
+		{
+			found_ra_offset = FALSE;
+			found_sp_adjust = FALSE;
+			found_const_upper = FALSE;
+			found_const_lower = FALSE;
+			const_upper = 0;
+			const_lower = 0;
+			rc->returnAddress = ra;
+			ra_limit = (unsigned int *) 0x200000;
+			ra_offset = 0;
+			sp_adjust = -1;
+
+			while ((!found_ra_offset || !found_sp_adjust) && ra < ra_limit)
+			{
+				inst = *ra;
+				/* look for the offset of the PC in the stack frame */
+				if ((inst & RESTORE_RETURNVAL_MASK) == RESTORE_RETURNVAL)
+				{
+					ra_offset = inst & ~RESTORE_RETURNVAL_MASK;
+					found_ra_offset = TRUE;
+				}
+				else if ((inst & RESTORE_RETURNVAL_MASK) == RESTORE_RETURNVAL2)
+				{
+					ra_offset = inst & ~RESTORE_RETURNVAL_MASK;
+					found_ra_offset = TRUE;
+				}
+				else if ((inst & RESTORE_RETURNVAL_MASK) == RESTORE_RETURNVAL3)
+				{
+					ra_offset = inst & ~RESTORE_RETURNVAL_MASK;
+					found_ra_offset = TRUE;
+				}
+				else if ((inst & ADJUST_STACKP_C_MASK) == ADJUST_STACKP_C)
+				{
+					sp_adjust = inst & ~ADJUST_STACKP_C_MASK;
+					found_sp_adjust = TRUE;
+				}
+				else if ((inst & ADJUST_STACKP_V_MASK) == ADJUST_STACKP_V)
+				{
+					sp_adjust = 0;
+					found_sp_adjust = TRUE;
+				}
+				else if ((inst & SET_UPPER_C_MASK) == SET_UPPER_C)
+				{
+					const_upper = inst & ~SET_UPPER_C_MASK;
+					const_lower = 0;
+					found_const_upper = TRUE;
+				}
+				else if ((inst & OR_LOWER_C_MASK) == OR_LOWER_C)
+				{
+					const_lower = inst & ~OR_LOWER_C_MASK;
+					found_const_lower = TRUE;
+				}
+				else if ((inst & SET_LOWER_C_MASK) == SET_LOWER_C)
+				{
+					const_lower = inst & ~SET_LOWER_C_MASK;
+					const_upper = 0;
+					found_const_lower = TRUE;
+				}
+				else if (inst == RETURN)
+					ra_limit = ra + 2;
+
+				ra++;
+			}
+
+			if (sp_adjust == 0 && (found_const_upper || found_const_lower))
+				sp_adjust = (const_upper << 16) | const_lower;
+			rc->raOffset = ra_offset;
+			rc->spAdjust = sp_adjust;
+		}
+		/* if something went wrong, punt */
+		if (rc->spAdjust <= 0)
+		{
+			*results++ = 0;
+			break;
+		}
+
+		ra = (unsigned int *) sp[rc->raOffset >> 2];
+		sp += rc->spAdjust >> 2;
+
+		if (ra == 0)
+		{
+			*results++ = 0;
+			break;
+		}
+
+		*results++ = ((unsigned int) ra) - 8;
+		if (ra[-2] == mainCall)
+		{
+			*results++ = 0;
+			break;
+		}
+		max--;
+	}
 }
-
