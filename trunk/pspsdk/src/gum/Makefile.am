@@ -37,12 +37,10 @@ PSPGUM_VFPU_OBJS =    sceGumLoadIdentity_vfpu.o sceGumLoadMatrix_vfpu.o sceGumMa
                       sceGumLookAt_vfpu.o sceGumRotateX_vfpu.o sceGumRotateY_vfpu.o \
                       sceGumRotateZ_vfpu.o sceGumFullInverse_vfpu.o sceGumFastInverse_vfpu.o
 
-libpspgum_a_SOURCES = gumInternal.c
-libpspgum_a_DEPENDENCIES = pspgum.c $(PSPGUM_FPU_OBJS) $(PSPGUM_SHARED_OBJS)
+libpspgum_a_SOURCES = gumInternal.c pspgum.c
 libpspgum_a_LIBADD = $(PSPGUM_FPU_OBJS) $(PSPGUM_SHARED_OBJS)
 
-libpspgum_vfpu_a_SOURCES = gumInternal.c
-libpspgum_vfpu_a_DEPENDENCIES = pspgum.c pspgum_vfpu.c $(PSPGUM_VFPU_OBJS) $(PSPGUM_SHARED_OBJS)
+libpspgum_vfpu_a_SOURCES = gumInternal.c pspgum.c pspgum_vfpu.c
 libpspgum_vfpu_a_LIBADD = $(PSPGUM_VFPU_OBJS) $(PSPGUM_SHARED_OBJS)
 
 $(PSPGUM_SHARED_OBJS): pspgum.c
