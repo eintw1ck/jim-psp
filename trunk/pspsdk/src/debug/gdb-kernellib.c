@@ -43,8 +43,6 @@ void _gdbSupportLibFlushCaches(void)
 	pspKernelSetKernelPC();
 	sceKernelDcacheWBinvAll();
 	sceKernelIcacheClearAll();
-
-	return 0;
 }
 
 int _gdbSupportLibReadByte(unsigned char *address, unsigned char *dest)

@@ -133,7 +133,7 @@ extern unsigned int *pspGetReturnAddress();
 extern unsigned int *pspGetStackPointer();
 extern int main();
 
-void pspDebugGetStackTrace(unsigned int *results, int max)
+int pspDebugGetStackTrace(unsigned int *results, int max)
 {
 	unsigned int *ra;
 	unsigned int *ra_limit;
@@ -147,6 +147,7 @@ void pspDebugGetStackTrace(unsigned int *results, int max)
 	Bool found_ra_offset, found_sp_adjust;
 	Bool found_const_upper, found_const_lower;
 	ReturnCachePtr rc;
+	int total = max;
 
 	ra = pspGetReturnAddress();
 	sp = pspGetStackPointer();
@@ -242,11 +243,14 @@ void pspDebugGetStackTrace(unsigned int *results, int max)
 		}
 
 		*results++ = ((unsigned int) ra) - 8;
+		max--;
+
 		if (ra[-2] == mainCall)
 		{
 			*results++ = 0;
 			break;
 		}
-		max--;
 	}
+
+	return total - max;
 }

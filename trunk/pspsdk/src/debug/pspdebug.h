@@ -103,8 +103,10 @@ int pspDebugScreenPrintData(const char *buff, int size);
   *
   * @param results - List of points to store the results of the trace, (up to max)
   * @param max - Maximum number of back traces
+  *
+  * @returns The number of frames stored in results.
 */
-void pspDebugGetStackTrace(unsigned int* results,int max);
+int pspDebugGetStackTrace(unsigned int* results, int max);
 
 /** Structure to hold the register data associated with an exception */
 typedef struct _PspDebugRegBlock
