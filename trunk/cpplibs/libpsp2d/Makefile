@@ -23,9 +23,9 @@ include $(PSPSDK)/lib/build.mak
 
 install: $(TARGET_LIB)
 	@echo "Installing libpsp2d into $(PSPDIR)"
-	@mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
-	@cp *.h $(PSPDIR)/include
-	@cp *.il $(PSPDIR)/include
+	@mkdir -p $(PSPDIR)/include/libpsp2d $(PSPDIR)/lib
+	@cp *.h $(PSPDIR)/include/libpsp2d
+	@cp *.il $(PSPDIR)/include/libpsp2d
 	@cp libpsp2d.a  $(PSPDIR)/lib
 	@echo "Done"
 

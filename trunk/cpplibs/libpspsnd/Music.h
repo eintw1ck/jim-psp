@@ -81,6 +81,18 @@ namespace PSPSND
 
        static void setVolume(unsigned char);
 
+       /**
+        * MikMod initialization. Call this before instantiating Music or Sound.
+        */
+
+       static void init(void);
+
+       /**
+        * Mikmod finalization.
+        */
+
+       static void uninit(void);
+
       protected:
        UNIMOD *_mf;
     };

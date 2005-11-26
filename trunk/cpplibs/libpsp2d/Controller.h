@@ -151,6 +151,12 @@ namespace PSP2D
 
        bool operator==(const Controller&);
 
+       /**
+        * Affectation
+        */
+
+       Controller& operator=(const Controller&);
+
       protected:
        SceCtrlData _data;
 

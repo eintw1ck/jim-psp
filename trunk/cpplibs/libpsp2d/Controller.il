@@ -74,3 +74,9 @@ inline bool PSP2D::Controller::operator==(const PSP2D::Controller& ctrl)
 {
     return (_data.Buttons == ctrl._data.Buttons);
 }
+
+inline PSP2D::Controller& PSP2D::Controller::operator=(const PSP2D::Controller& ctrl)
+{
+    memcpy(&_data, &ctrl._data, sizeof(_data));
+    return *this;
+}

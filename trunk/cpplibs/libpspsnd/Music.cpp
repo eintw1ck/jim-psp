@@ -40,6 +40,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace PSPSND;
 using namespace std;
 
+// MikMod globals
+
+extern UWORD md_mode;
+extern UBYTE md_musicvolume;
+extern UBYTE md_sndfxvolume;
+extern UBYTE md_reverb;
+extern UBYTE md_pansep;
+
 Music::Music(const string& filename, bool loop, unsigned char maxchan)
 {
     _mf = MikMod_LoadSong((char*)filename.c_str(), maxchan);
@@ -73,6 +81,26 @@ void Music::stop()
 void Music::setVolume(unsigned char volume)
 {
     md_musicvolume = volume;
+}
+
+void Music::init()
+{
+    MikMod_RegisterAllLoaders();
+    MikMod_RegisterAllDrivers();
+    md_mode = DMODE_16BITS|DMODE_STEREO|DMODE_SOFT_SNDFX|DMODE_SOFT_MUSIC;
+    md_musicvolume = 128;
+    md_sndfxvolume = 128;
+    md_reverb = 0;
+    md_pansep = 128;
+    MikMod_Init();
+    MikMod_SetNumVoices(128, 32);
+
+    MikMod_EnableOutput();
+}
+
+void Music::uninit()
+{
+    MikMod_Exit();
 }
 
 static const char* _rcsid_Music __attribute__((unused)) = "$Id$";

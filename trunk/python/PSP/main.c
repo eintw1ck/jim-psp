@@ -7,7 +7,6 @@
 #include <stdio.h>
 
 #ifdef WITH_PSP2D
-#include <mikmod.h>
 #include <pspgu.h>
 #endif
 
@@ -20,18 +19,6 @@ volatile int pspInterruptOccurred = 0;
 
 #if defined(DEBUG_THREAD) || defined(DEBUG_IMPORT)
 #define DEBUG
-#endif
-
-#ifdef WITH_PSP2D
-
-// MikMod globals
-
-extern UWORD md_mode;
-extern UBYTE md_musicvolume;
-extern UBYTE md_sndfxvolume;
-extern UBYTE md_reverb;
-extern UBYTE md_pansep;
-
 #endif
 
 /* Exit callback */
@@ -79,18 +66,6 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef WITH_PSP2D
-    MikMod_RegisterAllLoaders();
-    MikMod_RegisterAllDrivers();
-    md_mode = DMODE_16BITS|DMODE_STEREO|DMODE_SOFT_SNDFX|DMODE_SOFT_MUSIC;
-    md_musicvolume = 128;
-    md_sndfxvolume = 128;
-    md_reverb = 0;
-    md_pansep = 128;
-    MikMod_Init();
-    MikMod_SetNumVoices(128, 32);
-
-    MikMod_EnableOutput();
-
     sceGuInit();
 #endif
 
@@ -122,8 +97,6 @@ int main(int argc, char *argv[])
 
 #ifdef WITH_PSP2D
     sceGuTerm();
-
-    MikMod_Exit();
 #endif
 
     sceKernelExitGame();

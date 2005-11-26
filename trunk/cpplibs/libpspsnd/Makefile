@@ -13,9 +13,8 @@ include $(PSPSDK)/lib/build.mak
 
 install: $(TARGET_LIB)
 	@echo "Installing libpspsnd into $(PSPDIR)"
-	@mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
-	@cp *.h $(PSPDIR)/include
-	@cp *.il $(PSPDIR)/include
+	@mkdir -p $(PSPDIR)/include/libpspsnd $(PSPDIR)/lib
+	@cp *.h $(PSPDIR)/include/libpspsnd
 	@cp libpspsnd.a  $(PSPDIR)/lib
 	@echo "Done"
 

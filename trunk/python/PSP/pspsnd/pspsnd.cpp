@@ -36,6 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // $Id$
 
 #include <Python.h>
+#include <libpspsnd/Music.h>
 
 #include "sound.h"
 #include "music.h"
@@ -106,6 +107,8 @@ static PyMethodDef pspsnd_functions[] = {
 PyMODINIT_FUNC initpspsnd(void)
 {
     PyObject *mdl;
+
+    PSPSND::Music::init();
 
     if (PyType_Ready(PPyMusicType) < 0)
        return;
