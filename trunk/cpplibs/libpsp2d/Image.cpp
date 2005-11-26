@@ -37,6 +37,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <malloc.h>
 
+#include <algorithm>
+
+#include <png.h>
+
+extern "C"
+{
+#include <jpeglib.h>
+#include <jerror.h>
+}
+
 #include "Image.h"
 #include "Blitter.h"
 
@@ -66,6 +76,31 @@ static void user_warning_fn(png_structp png_ptr, png_const_charp warning_msg)
 }
 
 Image::Image(const string& filename)
+{
+    string png(".png"), jpg(".jpg"), jpeg(".jpeg");
+
+    if (search(filename.begin(), filename.end(),
+               png.begin(), png.end()) != filename.end())
+    {
+       _loadFromPNG(filename);
+    }
+    else if (search(filename.begin(), filename.end(),
+                    jpg.begin(), jpg.end()) != filename.end())
+    {
+       _loadFromJPEG(filename);
+    }
+    else if (search(filename.begin(), filename.end(),
+                    jpeg.begin(), jpeg.end()) != filename.end())
+    {
+       _loadFromJPEG(filename);
+    }
+    else
+    {
+       throw ImageException("Unknown file type");
+    }
+}
+
+void Image::_loadFromPNG(const string& filename)
 {
     png_structp png_ptr;
     png_infop info_ptr;
@@ -154,35 +189,91 @@ Image::Image(const string& filename)
        png_read_rows(png_ptr, rows, NULL, _height);
     }
 
-    /*
-    line = (u32*)malloc(_width * 4);
-    if (!line)
-    {
-       free(_data);
-       fclose(fp);
-       png_destroy_read_struct(&png_ptr, png_infopp_NULL, png_infopp_NULL);
-
-       throw ImageException("Memory error");
-    }
-
-    for (y = 0; y < _height; y++)
-    {
-       png_read_row(png_ptr, (u8*) line, png_bytep_NULL);
-       for (x = 0; x < _width; x++)
-       {
-          u32 color = line[x];
-          _data[x + y * _textureWidth] =  color;
-       }
-    }
-
-    free(line);
-    */
-
     free(rows);
 
     png_read_end(png_ptr, info_ptr);
     png_destroy_read_struct(&png_ptr, &info_ptr, png_infopp_NULL);
     fclose(fp);
+}
+
+void Image::_loadFromJPEG(const string& filename)
+{
+    struct jpeg_decompress_struct dinfo;
+    struct jpeg_error_mgr jerr;
+
+    dinfo.err = jpeg_std_error(&jerr);
+    jpeg_create_decompress(&dinfo);
+
+    FILE* inFile = fopen(filename.c_str(), "rb");
+    if (!inFile)
+    {
+       jpeg_destroy_decompress(&dinfo);
+
+       throw ImageIOException("Could not open file");
+    }
+
+    jpeg_stdio_src(&dinfo, inFile);
+    jpeg_read_header(&dinfo, TRUE);
+
+    int width = dinfo.image_width;
+    int height = dinfo.image_height;
+
+    jpeg_start_decompress(&dinfo);
+
+    _width = width;
+    _height = height;
+    _textureWidth = getNextPower2(width);
+    _textureHeight = getNextPower2(height);
+
+    _data = (u32*) memalign(16, _textureWidth * _textureHeight * sizeof(u32));
+    if (!_data) {
+       jpeg_destroy_decompress(&dinfo);
+
+       throw ImageException("Memory error");
+    }
+
+    u8* line = (u8*) malloc(width * 3);
+    if (!line) {
+       jpeg_destroy_decompress(&dinfo);
+
+       free(_data);
+       throw ImageException("Memory error");
+    }
+
+    if (dinfo.jpeg_color_space == JCS_GRAYSCALE)
+    {
+       while (dinfo.output_scanline < dinfo.output_height)
+       {
+          int y = dinfo.output_scanline;
+          jpeg_read_scanlines(&dinfo, &line, 1);
+
+          for (int x = 0; x < width; x++) {
+             u32 c = line[x];
+             _data[x + _textureWidth * y] = c | (c << 8) | (c << 16) | 0xff000000;;
+          }
+       }
+    }
+    else
+    {
+       while (dinfo.output_scanline < dinfo.output_height)
+       {
+          int y = dinfo.output_scanline;
+          jpeg_read_scanlines(&dinfo, &line, 1);
+          u8* linePointer = line;
+
+          for (int x = 0; x < width; x++)
+          {
+             u32 c = *(linePointer++);
+             c |= (*(linePointer++)) << 8;
+             c |= (*(linePointer++)) << 16;
+             _data[x + _textureWidth * y] = c | 0xff000000;
+          }
+       }
+    }
+
+    jpeg_finish_decompress(&dinfo);
+    jpeg_destroy_decompress(&dinfo);
+    free(line);
 }
 
 Image::Image(u16 width, u16 height)

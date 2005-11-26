@@ -38,6 +38,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <pspgu.h>
 #include <pspdisplay.h>
 
+#include <png.h>
+
 #include "framebuffer.h"
 
 #include "Screen.h"

@@ -39,13 +39,22 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
-#include <png.h>
-
 #include <libpsp2d/Drawable.h>
 #include <libpsp2d/Exception.h>
 
 namespace PSP2D
 {
+    /**
+     * Image types
+     */
+
+    typedef enum
+    {
+       IMG_UNKNOWN,
+       IMG_PNG,
+       IMG_JPG
+    } ImageType;
+
     /**
      * Generic exception that can be throwed by the Image class.
      */
@@ -77,6 +86,16 @@ namespace PSP2D
     };
 
     /**
+     * Error from libjpeg
+     */
+
+    class ImageJPEGException : public ImageException
+    {
+      public:
+       ImageJPEGException(const std::string& msg) : ImageException(msg) {};
+    };
+
+    /**
      * Image class. This represents an in-memory image.
      */
 
@@ -84,7 +103,7 @@ namespace PSP2D
     {
       public:
        /**
-        * Constructor. Loads the image from a PNG file.
+        * Constructor. Loads the image from a PNG or JPEG file.
         */
 
        Image(const std::string& filename);
@@ -157,6 +176,9 @@ namespace PSP2D
       protected:
        u16 _width, _height, _textureWidth, _textureHeight;
        u32 *_data;
+
+       void _loadFromPNG(const std::string&);
+       void _loadFromJPEG(const std::string&);
     };
 };
 
