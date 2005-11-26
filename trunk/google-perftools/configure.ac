@@ -69,6 +69,33 @@ AC_PROGRAM_INVOCATION_NAME
 # Make the install prefix available, to figure out where to look for pprof
 AC_INSTALL_PREFIX
 
+# Check for a valid PSPSDK installation
+CheckPSPSDK()
+{
+    AC_CHECK_PROG(psp_config, psp-config, psp-config, no)
+    if test x$psp_config = xno; then
+        AC_MSG_ERROR(Couldn't locate psp-config.)
+    fi
+
+    AC_MSG_CHECKING(for PSPSDK)
+    pspsdk_path=`$psp_config --pspsdk-path`
+    if test ! -d $pspsdk_path -o -z $pspsdk_path; then
+        AC_MSG_RESULT(not found)
+        AC_MSG_ERROR(Couldn't locate PSPSDK.)
+    fi
+    AC_MSG_RESULT($pspsdk_path)
+
+    # Compile with -G0 to disable the $gp register.
+    CFLAGS="$CFLAGS -G0 -I\"${pspsdk_path}/include\""
+    CXXFLAGS="$CXXFLAGS -G0 -I\"${pspsdk_path}/include\""
+}
+
+case "$host" in
+    *-psp-*)
+        CheckPSPSDK
+	;;
+esac
+
 # Write generated configuration file
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

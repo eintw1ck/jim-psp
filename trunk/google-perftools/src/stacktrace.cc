@@ -146,6 +146,37 @@ bool GetStackExtent(void* sp,  void** stack_top, void** stack_bottom) {
 
 #endif
 
+// PSP implementation (uses the debug API from PSPSDK)
+#if defined(PSP)
+#define IMPLEMENTED_STACK_TRACE
+
+#include <pspdebug.h>
+
+int GetStackTrace(void** result, int max_depth, int skip_count) {
+  static const int kStackLength = 64;
+  unsigned int stack[kStackLength];
+  int size;
+
+  size = pspDebugGetStackTrace(stack, kStackLength);
+  skip_count++;  // we want to skip the current frame as well
+  int result_count = size - skip_count;
+  if ( result_count < 0 )
+    result_count = 0;
+  else if ( result_count > max_depth )
+    result_count = max_depth;
+
+  for (int i = 0; i < result_count; i++)
+    result[i] = (void *) stack[i + skip_count];
+
+  return result_count;
+}
+
+bool GetStackExtent(void* sp,  void** stack_bottom, void** stack_top) {
+  return false;  // can't climb up
+}
+
+#endif
+
 // Portable implementation - just use glibc
 // 
 // Note:  The glibc implementation may cause a call to malloc.
