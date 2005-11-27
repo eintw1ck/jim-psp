@@ -40,7 +40,9 @@
 #endif
 #include <unistd.h>
 #include <fcntl.h>
+#ifdef HAVE_MMAP
 #include <sys/mman.h>
+#endif
 #include "system-alloc.h"
 #include "internal_spinlock.h"
 #include "internal_logging.h"
@@ -168,8 +170,6 @@ static void* TryMmap(size_t size, size_t alignment) {
   return reinterpret_cast<void*>(ptr);
 }
 
-#endif /* HAVE_MMAP */
-
 static void* TryDevMem(size_t size, size_t alignment) {
   static bool initialized = false;
   static off_t physmem_base;  // next physical memory address to allocate
@@ -247,6 +247,8 @@ static void* TryDevMem(size_t size, size_t alignment) {
   return reinterpret_cast<void*>(ptr);
 }
 
+#endif /* HAVE_MMAP */
+
 void* TCMalloc_SystemAlloc(size_t size, size_t alignment) {
   // Discard requests that overflow
   if (size + alignment < size) return NULL;
@@ -263,10 +265,12 @@ void* TCMalloc_SystemAlloc(size_t size, size_t alignment) {
   // Try twice, once avoiding allocators that failed before, and once
   // more trying all allocators even if they failed before.
   for (int i = 0; i < 2; i++) {
+#ifdef HAVE_MMAP
     if (use_devmem && !devmem_failure) {
       void* result = TryDevMem(size, alignment);
       if (result != NULL) return result;
     }
+#endif
     
 #ifdef HAVE_SBRK
     if (use_sbrk && !sbrk_failure) {
