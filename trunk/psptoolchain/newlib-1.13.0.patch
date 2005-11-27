@@ -69,6 +69,299 @@
  	;;
    mmix-*)
  	syscall_dir=syscalls
+--- newlib-1.13.0.orig/newlib/libc/include/inttypes.h	1969-12-31 18:00:00.000000000 -0600
++++ newlib-psp/newlib/libc/include/inttypes.h	2005-11-27 10:28:18.000000000 -0600
+@@ -0,0 +1,290 @@
++/*
++ * Copyright (c) 2004, 2005 by
++ * Ralf Corsepius, Ulm/Germany. All rights reserved.
++ *
++ * Permission to use, copy, modify, and distribute this software
++ * is freely granted, provided that this notice is preserved.
++ */
++
++/**
++ *  @file  inttypes.h
++ */
++
++#ifndef _INTTYPES_H
++#define _INTTYPES_H
++
++#include <stdint.h>
++#define __need_wchar_t
++#include <stddef.h>
++
++#define __STRINGIFY(a) #a
++
++/* 8-bit types */
++#define __PRI8(x) __STRINGIFY(x)
++#define __SCN8(x) __STRINGIFY(hh##x)
++
++
++#define PRId8		__PRI8(d)
++#define PRIi8		__PRI8(i)
++#define PRIo8		__PRI8(o)
++#define PRIu8		__PRI8(u)
++#define PRIx8		__PRI8(x)
++#define PRIX8		__PRI8(X)
++
++#define SCNd8		__SCN8(d)
++#define SCNi8		__SCN8(i)
++#define SCNo8		__SCN8(o)
++#define SCNu8		__SCN8(u)
++#define SCNx8		__SCN8(x)
++
++
++#define PRIdLEAST8	__PRI8(d)
++#define PRIiLEAST8	__PRI8(i)
++#define PRIoLEAST8	__PRI8(o)
++#define PRIuLEAST8	__PRI8(u)
++#define PRIxLEAST8	__PRI8(x)
++#define PRIXLEAST8	__PRI8(X)
++
++#define SCNdLEAST8	__SCN8(d)
++#define SCNiLEAST8	__SCN8(i)
++#define SCNoLEAST8	__SCN8(o)
++#define SCNuLEAST8	__SCN8(u)
++#define SCNxLEAST8	__SCN8(x)
++
++
++#define PRIdFAST8	__PRI8(d)
++#define PRIiFAST8	__PRI8(i)
++#define PRIoFAST8	__PRI8(o)
++#define PRIuFAST8	__PRI8(u)
++#define PRIxFAST8	__PRI8(x)
++#define PRIXFAST8	__PRI8(X)
++
++#define SCNdFAST8	__SCN8(d)
++#define SCNiFAST8	__SCN8(i)
++#define SCNoFAST8	__SCN8(o)
++#define SCNuFAST8	__SCN8(u)
++#define SCNxFAST8	__SCN8(x)
++
++/* 16-bit types */
++#define __PRI16(x) __STRINGIFY(x)
++#define __SCN16(x) __STRINGIFY(h##x)
++
++
++#define PRId16		__PRI16(d)
++#define PRIi16		__PRI16(i)
++#define PRIo16		__PRI16(o)
++#define PRIu16		__PRI16(u)
++#define PRIx16		__PRI16(x)
++#define PRIX16		__PRI16(X)
++
++#define SCNd16		__SCN16(d)
++#define SCNi16		__SCN16(i)
++#define SCNo16		__SCN16(o)
++#define SCNu16		__SCN16(u)
++#define SCNx16		__SCN16(x)
++
++
++#define PRIdLEAST16	__PRI16(d)
++#define PRIiLEAST16	__PRI16(i)
++#define PRIoLEAST16	__PRI16(o)
++#define PRIuLEAST16	__PRI16(u)
++#define PRIxLEAST16	__PRI16(x)
++#define PRIXLEAST16	__PRI16(X)
++
++#define SCNdLEAST16	__SCN16(d)
++#define SCNiLEAST16	__SCN16(i)
++#define SCNoLEAST16	__SCN16(o)
++#define SCNuLEAST16	__SCN16(u)
++#define SCNxLEAST16	__SCN16(x)
++
++
++#define PRIdFAST16	__PRI16(d)
++#define PRIiFAST16	__PRI16(i)
++#define PRIoFAST16	__PRI16(o)
++#define PRIuFAST16	__PRI16(u)
++#define PRIxFAST16	__PRI16(x)
++#define PRIXFAST16	__PRI16(X)
++
++#define SCNdFAST16	__SCN16(d)
++#define SCNiFAST16	__SCN16(i)
++#define SCNoFAST16	__SCN16(o)
++#define SCNuFAST16	__SCN16(u)
++#define SCNxFAST16	__SCN16(x)
++
++/* 32-bit types */
++#if defined(__have_long32)
++#define __PRI32(x) __STRINGIFY(l##x)
++#define __SCN32(x) __STRINGIFY(l##x)
++#else
++#define __PRI32(x) __STRINGIFY(x)
++#define __SCN32(x) __STRINGIFY(x)
++#endif
++
++#define PRId32		__PRI32(d)
++#define PRIi32		__PRI32(i)
++#define PRIo32		__PRI32(o)
++#define PRIu32		__PRI32(u)
++#define PRIx32		__PRI32(x)
++#define PRIX32		__PRI32(X)
++
++#define SCNd32		__SCN32(d)
++#define SCNi32		__SCN32(i)
++#define SCNo32		__SCN32(o)
++#define SCNu32		__SCN32(u)
++#define SCNx32		__SCN32(x)
++
++
++#define PRIdLEAST32	__PRI32(d)
++#define PRIiLEAST32	__PRI32(i)
++#define PRIoLEAST32	__PRI32(o)
++#define PRIuLEAST32	__PRI32(u)
++#define PRIxLEAST32	__PRI32(x)
++#define PRIXLEAST32	__PRI32(X)
++
++#define SCNdLEAST32	__SCN32(d)
++#define SCNiLEAST32	__SCN32(i)
++#define SCNoLEAST32	__SCN32(o)
++#define SCNuLEAST32	__SCN32(u)
++#define SCNxLEAST32	__SCN32(x)
++
++
++#define PRIdFAST32	__PRI32(d)
++#define PRIiFAST32	__PRI32(i)
++#define PRIoFAST32	__PRI32(o)
++#define PRIuFAST32	__PRI32(u)
++#define PRIxFAST32	__PRI32(x)
++#define PRIXFAST32	__PRI32(X)
++
++#define SCNdFAST32	__SCN32(d)
++#define SCNiFAST32	__SCN32(i)
++#define SCNoFAST32	__SCN32(o)
++#define SCNuFAST32	__SCN32(u)
++#define SCNxFAST32	__SCN32(x)
++
++
++/* 64-bit types */
++#if defined(__have_longlong64)
++#define __PRI64(x) __STRINGIFY(ll##x)
++#define __SCN64(x) __STRINGIFY(ll##x)
++#elif defined(__have_long64)
++#define __PRI64(x) __STRINGIFY(l##x)
++#define __SCN64(x) __STRINGIFY(l##x)
++#else
++#define __PRI64(x) __STRINGIFY(x)
++#define __SCN64(x) __STRINGIFY(x)
++#endif
++
++#define PRId64		__PRI64(d)
++#define PRIi64		__PRI64(i)
++#define PRIo64		__PRI64(o)
++#define PRIu64		__PRI64(u)
++#define PRIx64		__PRI64(x)
++#define PRIX64		__PRI64(X)
++
++#define SCNd64		__SCN64(d)
++#define SCNi64		__SCN64(i)
++#define SCNo64		__SCN64(o)
++#define SCNu64		__SCN64(u)
++#define SCNx64		__SCN64(x)
++
++#if __int64_t_defined
++#define PRIdLEAST64	__PRI64(d)
++#define PRIiLEAST64	__PRI64(i)
++#define PRIoLEAST64	__PRI64(o)
++#define PRIuLEAST64	__PRI64(u)
++#define PRIxLEAST64	__PRI64(x)
++#define PRIXLEAST64	__PRI64(X)
++
++#define SCNdLEAST64	__SCN64(d)
++#define SCNiLEAST64	__SCN64(i)
++#define SCNoLEAST64	__SCN64(o)
++#define SCNuLEAST64	__SCN64(u)
++#define SCNxLEAST64	__SCN64(x)
++
++
++#define PRIdFAST64	__PRI64(d)
++#define PRIiFAST64	__PRI64(i)
++#define PRIoFAST64	__PRI64(o)
++#define PRIuFAST64	__PRI64(u)
++#define PRIxFAST64	__PRI64(x)
++#define PRIXFAST64	__PRI64(X)
++
++#define SCNdFAST64	__SCN64(d)
++#define SCNiFAST64	__SCN64(i)
++#define SCNoFAST64	__SCN64(o)
++#define SCNuFAST64	__SCN64(u)
++#define SCNxFAST64	__SCN64(x)
++#endif
++
++/* max-bit types */
++#if defined(__have_longlong64)
++#define __PRIMAX(x) __STRINGIFY(ll##x)
++#define __SCNMAX(x) __STRINGIFY(ll##x)
++#elif defined(__have_long64)
++#define __PRIMAX(x) __STRINGIFY(l##x)
++#define __SCNMAX(x) __STRINGIFY(l##x)
++#else
++#define __PRIMAX(x) __STRINGIFY(x)
++#define __SCNMAX(x) __STRINGIFY(x)
++#endif
++
++#define PRIdMAX		__PRIMAX(d)
++#define PRIiMAX		__PRIMAX(i)
++#define PRIoMAX		__PRIMAX(o)
++#define PRIuMAX		__PRIMAX(u)
++#define PRIxMAX		__PRIMAX(x)
++#define PRIXMAX		__PRIMAX(X)
++
++#define SCNdMAX		__SCNMAX(d)
++#define SCNiMAX		__SCNMAX(i)
++#define SCNoMAX		__SCNMAX(o)
++#define SCNuMAX		__SCNMAX(u)
++#define SCNxMAX		__SCNMAX(x)
++
++/* ptr types */
++#if defined(__have_longlong64)
++#define __PRIPTR(x) __STRINGIFY(ll##x)
++#define __SCNPTR(x) __STRINGIFY(ll##x)
++#elif defined(__have_long64)
++#define __PRIPTR(x) __STRINGIFY(l##x)
++#define __SCNPTR(x) __STRINGIFY(l##x)
++#else
++#define __PRIPTR(x) __STRINGIFY(x)
++#define __SCNPTR(x) __STRINGIFY(x)
++#endif
++
++#define PRIdPTR		__PRIPTR(d)
++#define PRIiPTR		__PRIPTR(i)
++#define PRIoPTR		__PRIPTR(o)
++#define PRIuPTR		__PRIPTR(u)
++#define PRIxPTR		__PRIPTR(x)
++#define PRIXPTR		__PRIPTR(X)
++
++#define SCNdPTR		__SCNPTR(d)
++#define SCNiPTR		__SCNPTR(i)
++#define SCNoPTR		__SCNPTR(o)
++#define SCNuPTR		__SCNPTR(u)
++#define SCNxPTR		__SCNPTR(x)
++
++
++typedef struct {
++  intmax_t	quot;
++  intmax_t	rem;
++} imaxdiv_t;
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++extern intmax_t  imaxabs(intmax_t j);
++extern imaxdiv_t imaxdiv(intmax_t numer, intmax_t denomer);
++extern intmax_t  strtoimax(const char *__restrict, char **__restrict, int);
++extern uintmax_t strtoumax(const char *__restrict, char **__restrict, int);
++extern intmax_t  wcstoimax(const wchar_t *__restrict, wchar_t **__restrict, int);
++extern uintmax_t wcstoumax(const wchar_t *__restrict, wchar_t **__restrict, int);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif
 --- newlib-1.13.0.orig/newlib/libc/include/machine/time.h	2000-12-04 13:06:37.000000000 -0600
 +++ newlib-psp/newlib/libc/include/machine/time.h	2005-10-24 19:37:47.000000000 -0500
 @@ -9,6 +9,10 @@
@@ -82,6 +375,410 @@
  #endif	/* _MACHTIME_H_ */
  
  
+--- newlib-1.13.0.orig/newlib/libc/include/stdint.h	1969-12-31 18:00:00.000000000 -0600
++++ newlib-psp/newlib/libc/include/stdint.h	2005-11-27 10:28:09.000000000 -0600
+@@ -0,0 +1,401 @@
++/*
++ * Copyright (c) 2004, 2005 by
++ * Ralf Corsepius, Ulm/Germany. All rights reserved.
++ *
++ * Permission to use, copy, modify, and distribute this software
++ * is freely granted, provided that this notice is preserved.
++ */
++
++/*
++ * @todo - Add support for wint_t types.
++ */
++
++#ifndef _STDINT_H
++#define _STDINT_H
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++#if defined(__GNUC__) && \
++  ( (__GNUC__ >= 4) || \
++    ( (__GNUC__ >= 3) && defined(__GNUC_MINOR__) && (__GNUC_MINOR__ > 2) ) )
++/* gcc > 3.2 implicitly defines the values we are interested */
++#define __STDINT_EXP(x) __##x##__
++#else
++#define __STDINT_EXP(x) x
++#include <limits.h>
++#endif
++
++/* Check if "long long" is 64bit wide */
++/* Modern GCCs provide __LONG_LONG_MAX__, SUSv3 wants LLONG_MAX */
++#if ( defined(__LONG_LONG_MAX__) && (__LONG_LONG_MAX__ > 0x7fffffff) ) \
++  || ( defined(LLONG_MAX) && (LLONG_MAX > 0x7fffffff) )
++#define __have_longlong64 1
++#endif
++
++/* Check if "long" is 64bit or 32bit wide */
++#if __STDINT_EXP(LONG_MAX) > 0x7fffffff
++#define __have_long64 1
++#elif __STDINT_EXP(LONG_MAX) == 0x7fffffff
++#define __have_long32 1
++#endif
++
++#if __STDINT_EXP(SCHAR_MAX) == 0x7f
++typedef signed char int8_t ;
++typedef unsigned char uint8_t ;
++#define __int8_t_defined 1
++#endif
++
++#if __int8_t_defined
++typedef signed char int_least8_t;
++typedef unsigned char uint_least8_t;
++#define __int_least8_t_defined 1
++#endif
++
++#if __STDINT_EXP(SHRT_MAX) == 0x7fff
++typedef signed short int16_t;
++typedef unsigned short uint16_t;
++#define __int16_t_defined 1
++#elif __STDINT_EXP(INT_MAX) == 0x7fff
++typedef signed int int16_t;
++typedef unsigned int uint16_t;
++#define __int16_t_defined 1
++#elif __STDINT_EXP(SCHAR_MAX) == 0x7fff
++typedef signed char int16_t;
++typedef unsigned char uint16_t;
++#define __int16_t_defined 1
++#endif
++
++#if __int16_t_defined
++typedef int16_t   	int_least16_t;
++typedef uint16_t 	uint_least16_t;
++#define __int_least16_t_defined 1
++
++#if !__int_least8_t_defined
++typedef int16_t	   	int_least8_t;
++typedef uint16_t  	uint_least8_t;
++#define __int_least8_t_defined 1
++#endif
++#endif
++
++#if __STDINT_EXP(INT_MAX) == 0x7fffffffL
++typedef signed int int32_t;
++typedef unsigned int uint32_t;
++#define __int32_t_defined 1
++#elif __STDINT_EXP(LONG_MAX) == 0x7fffffffL
++typedef signed long int32_t;
++typedef unsigned long uint32_t;
++#define __int32_t_defined 1
++#elif __STDINT_EXP(SHRT_MAX) == 0x7fffffffL
++typedef signed short int32_t;
++typedef unsigned short uint32_t;
++#define __int32_t_defined 1
++#elif __STDINT_EXP(SCHAR_MAX) == 0x7fffffffL
++typedef signed char int32_t;
++typedef unsigned char uint32_t;
++#define __int32_t_defined 1
++#endif
++
++#if __int32_t_defined
++typedef int32_t   	int_least32_t;
++typedef uint32_t 	uint_least32_t;
++#define __int_least32_t_defined 1
++
++#if !__int_least8_t_defined
++typedef int32_t	   	int_least8_t;
++typedef uint32_t  	uint_least8_t;
++#define __int_least8_t_defined 1
++#endif
++
++#if !__int_least16_t_defined
++typedef int32_t	   	int_least16_t;
++typedef uint32_t  	uint_least16_t;
++#define __int_least16_t_defined 1
++#endif
++#endif
++
++#if __have_long64
++typedef signed long int64_t;
++typedef unsigned long uint64_t;
++#define __int64_t_defined 1
++#elif __have_longlong64
++typedef signed long long int64_t;
++typedef unsigned long long uint64_t;
++#define __int64_t_defined 1
++#elif  __STDINT_EXP(INT_MAX) > 0x7fffffff
++typedef signed int int64_t;
++typedef unsigned int uint64_t;
++#define __int64_t_defined 1
++#endif
++
++#if __int64_t_defined
++typedef int64_t   	int_least64_t;
++typedef uint64_t 	uint_least64_t;
++#define __int_least64_t_defined 1
++
++#if !__int_least8_t_defined
++typedef int64_t	   	int_least8_t;
++typedef uint64_t  	uint_least8_t;
++#define __int_least8_t_defined 1
++#endif
++
++#if !__int_least16_t_defined
++typedef int64_t	   	int_least16_t;
++typedef uint64_t  	uint_least16_t;
++#define __int_least16_t_defined 1
++#endif
++
++#if !__int_least32_t_defined
++typedef int64_t	   	int_least32_t;
++typedef uint64_t  	uint_least32_t;
++#define __int_least32_t_defined 1
++#endif
++#endif
++
++/*
++ * Fastest minimum-width integer types
++ *
++ * Assume int to be the fastest type for all types with a width 
++ * less than __INT_MAX__ rsp. INT_MAX
++ */
++#if __STDINT_EXP(INT_MAX) >= 0x7f
++  typedef signed int int_fast8_t;
++  typedef unsigned int uint_fast8_t;
++#define __int_fast8_t_defined 1
++#endif
++
++#if __STDINT_EXP(INT_MAX) >= 0x7fff
++  typedef signed int int_fast16_t;
++  typedef unsigned int uint_fast16_t;
++#define __int_fast16_t_defined 1
++#endif
++
++#if __STDINT_EXP(INT_MAX) >= 0x7fffffff
++  typedef signed int int_fast32_t;
++  typedef unsigned int uint_fast32_t;
++#define __int_fast32_t_defined 1
++#endif
++
++#if __STDINT_EXP(INT_MAX) > 0x7fffffff
++  typedef signed int int_fast64_t;
++  typedef unsigned int uint_fast64_t;
++#define __int_fast64_t_defined 1
++#endif
++
++/*
++ * Fall back to [u]int_least<N>_t for [u]int_fast<N>_t types
++ * not having been defined, yet.
++ * Leave undefined, if [u]int_least<N>_t should not be available.
++ */
++#if !__int_fast8_t_defined
++#if __int_least8_t_defined
++  typedef int_least8_t int_fast8_t;
++  typedef uint_least8_t uint_fast8_t;
++#define __int_fast8_t_defined 1
++#endif
++#endif
++
++#if !__int_fast16_t_defined
++#if __int_least16_t_defined
++  typedef int_least16_t int_fast16_t;
++  typedef uint_least16_t uint_fast16_t;
++#define __int_fast16_t_defined 1
++#endif
++#endif
++
++#if !__int_fast32_t_defined
++#if __int_least32_t_defined
++  typedef int_least32_t int_fast32_t;
++  typedef uint_least32_t uint_fast32_t;
++#define __int_fast32_t_defined 1
++#endif
++#endif
++
++#if !__int_fast64_t_defined
++#if __int_least64_t_defined
++  typedef int_least64_t int_fast64_t;
++  typedef uint_least64_t uint_fast64_t;
++#define __int_fast64_t_defined 1
++#endif
++#endif
++
++/* Greatest-width integer types */
++/* Modern GCCs provide __INTMAX_TYPE__ */
++#if defined(__INTMAX_TYPE__)
++  typedef __INTMAX_TYPE__ intmax_t;
++#elif __have_longlong64
++  typedef signed long long intmax_t;
++#else
++  typedef signed long intmax_t;
++#endif
++
++/* Modern GCCs provide __UINTMAX_TYPE__ */
++#if defined(__UINTMAX_TYPE__)
++  typedef __UINTMAX_TYPE__ uintmax_t;
++#elif __have_longlong64
++  typedef unsigned long long uintmax_t;
++#else
++  typedef unsigned long uintmax_t;
++#endif
++
++/*
++ * GCC doesn't provide an appropriate macro for [u]intptr_t
++ * For now, use __PTRDIFF_TYPE__
++ */
++#if defined(__PTRDIFF_TYPE__)
++typedef signed __PTRDIFF_TYPE__ intptr_t;
++typedef unsigned __PTRDIFF_TYPE__ uintptr_t;
++#else
++/*
++ * Fallback to hardcoded values, 
++ * should be valid on cpu's with 32bit int/32bit void*
++ */
++typedef signed long intptr_t;
++typedef unsigned long uintptr_t;
++#endif
++
++/* Limits of Specified-Width Integer Types */
++
++#if __int8_t_defined
++#define INT8_MIN 	-128
++#define INT8_MAX 	 127
++#define UINT8_MAX 	 255
++#endif
++
++#if __int_least8_t_defined
++#define INT_LEAST8_MIN 	-128
++#define INT_LEAST8_MAX 	 127
++#define UINT_LEAST8_MAX	 255
++#else
++#error required type int_least8_t missing
++#endif
++
++#if __int16_t_defined
++#define INT16_MIN 	-32768
++#define INT16_MAX 	 32767
++#define UINT16_MAX 	 65535
++#endif
++
++#if __int_least16_t_defined
++#define INT_LEAST16_MIN	-32768
++#define INT_LEAST16_MAX	 32767
++#define UINT_LEAST16_MAX 65535
++#else
++#error required type int_least16_t missing
++#endif
++
++#if __int32_t_defined
++#define INT32_MIN 	 (-2147483647-1)
++#define INT32_MAX 	 2147483647
++#define UINT32_MAX       4294967295U
++#endif
++
++#if __int_least32_t_defined
++#define INT_LEAST32_MIN  (-2147483647-1)
++#define INT_LEAST32_MAX  2147483647
++#define UINT_LEAST32_MAX 4294967295U
++#else
++#error required type int_least32_t missing
++#endif
++
++#if __int64_t_defined
++#if __have_long64
++#define INT64_MIN 	(-9223372036854775807L-1L)
++#define INT64_MAX 	 9223372036854775807L
++#define UINT64_MAX 	18446744073709551615U
++#elif __have_longlong64
++#define INT64_MIN 	(-9223372036854775807LL-1LL)
++#define INT64_MAX 	 9223372036854775807LL
++#define UINT64_MAX 	18446744073709551615ULL
++#endif
++#endif
++
++#if __int_least64_t_defined
++#if __have_long64
++#define INT_LEAST64_MIN  (-9223372036854775807L-1L)
++#define INT_LEAST64_MAX  9223372036854775807L
++#define UINT_LEAST64_MAX 18446744073709551615U
++#elif __have_longlong64
++#define INT_LEAST64_MIN  (-9223372036854775807LL-1LL)
++#define INT_LEAST64_MAX  9223372036854775807LL
++#define UINT_LEAST64_MAX 18446744073709551615ULL
++#endif
++#endif
++
++#if __int_fast8_t_defined
++#define INT_FAST8_MIN	INT8_MIN
++#define INT_FAST8_MAX	INT8_MAX
++#define UINT_FAST8_MAX	UINT8_MAX
++#endif
++
++#if __int_fast16_t_defined
++#define INT_FAST16_MIN	INT16_MIN
++#define INT_FAST16_MAX	INT16_MAX
++#define UINT_FAST16_MAX	UINT16_MAX
++#endif
++
++#if __int_fast32_t_defined
++#define INT_FAST32_MIN	INT32_MIN
++#define INT_FAST32_MAX	INT32_MAX
++#define UINT_FAST32_MAX	UINT32_MAX
++#endif
++
++#if __int_fast64_t_defined
++#define INT_FAST64_MIN	INT64_MIN
++#define INT_FAST64_MAX	INT64_MAX
++#define UINT_FAST64_MAX	UINT64_MAX
++#endif
++
++/* This must match size_t in stddef.h, currently long unsigned int */
++#define SIZE_MIN (-__STDINT_EXP(LONG_MAX) - 1L)
++#define SIZE_MAX __STDINT_EXP(LONG_MAX)
++
++/* This must match sig_atomic_t in <signal.h> (currently int) */
++#define SIG_ATOMIC_MIN (-__STDINT_EXP(INT_MAX) - 1)
++#define SIG_ATOMIC_MAX __STDINT_EXP(INT_MAX)
++
++/* This must match ptrdiff_t  in <stddef.h> (currently long int) */
++#define PTRDIFF_MIN (-__STDINT_EXP(LONG_MAX) - 1L)
++#define PTRDIFF_MAX __STDINT_EXP(LONG_MAX)
++
++/** Macros for minimum-width integer constant expressions */
++#define INT8_C(x)	x
++#define UINT8_C(x)	x##U
++
++#define INT16_C(x)	x
++#define UINT16_C(x)	x##U
++
++#if __have_long32
++#define INT32_C(x)	x##L
++#define UINT32_C(x)	x##UL
++#else
++#define INT32_C(x)	x
++#define UINT32_C(x)	x##U
++#endif
++
++#if __int64_t_defined
++#if __have_longlong64
++#define INT64_C(x)	x##LL
++#define UINT64_C(x)	x##ULL
++#else
++#define INT64_C(x)	x##L
++#define UINT64_C(x)	x##UL
++#endif
++#endif
++
++/** Macros for greatest-width integer constant expression */
++#if __have_longlong64
++#define INTMAX_C(x)	x##LL
++#define UINTMAX_C(x)	x##ULL
++#else
++#define INTMAX_C(x)	x##L
++#define UINTMAX_C(x)	x##UL
++#endif
++
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* _STDINT_H */
 --- newlib-1.13.0.orig/newlib/libc/include/sys/config.h	2004-06-22 16:54:51.000000000 -0500
 +++ newlib-psp/newlib/libc/include/sys/config.h	2005-08-15 16:11:50.000000000 -0500
 @@ -94,6 +94,12 @@
