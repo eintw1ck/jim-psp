@@ -34,8 +34,6 @@
 #define TCMALLOC_INTERNAL_SPINLOCK_H__
 
 #include "config.h"
-#include <time.h>       /* For nanosleep() */
-#include <sched.h>      /* For sched_yield() */
 #if defined HAVE_STDINT_H
 #include <stdint.h>
 #elif defined HAVE_INTTYPES_H
@@ -46,6 +44,9 @@
 #include <stdlib.h>	/* for abort() */
 
 #if (defined __i386__ || defined __x86_64__) && defined __GNUC__
+
+#include <time.h>       /* For nanosleep() */
+#include <sched.h>      /* For sched_yield() */
 
 static void TCMalloc_SlowLock(volatile unsigned int* lockword);
 
@@ -106,6 +107,68 @@ static void TCMalloc_SlowLock(volatile unsigned int* lockword) {
     nanosleep(&tm, NULL);
   }
 }
+
+#elif defined(PSP)
+
+#include <pspthreadman.h>
+
+// Returns true if the lock was acquired successfully.
+static inline bool TCMalloc_TryLock(volatile unsigned int* lockword) {
+  int r, val;
+
+  // Set the lock, but keep track of whether the lock was already set
+  // elsewhere.  If it wasn't set, r is 0 which means we were able to
+  // acquire it.
+  __asm__ __volatile__
+    (".set noreorder\n"
+     "1:\n"
+     "ll %0, %3\n"
+     "ori %2, %0, 1\n"
+     "sc %2, %1\n"
+     "beqz %2, 1b\n"
+     "andi %2, %0, 1\n"
+     "sync\n"
+     ".set reorder\n"
+     : "=r" (val), "=m" (*lockword), "=r" (r)
+     : "m"  (*lockword)
+     : "memory");
+
+  return r == 0;
+}
+
+// The following is a struct so that it can be initialized at compile time
+struct TCMalloc_SpinLock {
+  volatile unsigned int private_lockword_;
+
+  inline void Init() { private_lockword_ = 0; }
+  inline void Finalize() { }
+
+  inline void Lock() {
+    if (!TCMalloc_TryLock(&private_lockword_)) {
+      // Attempt to yield immediately
+      sceKernelDelayThreadCB(500);
+      while (true) {
+        if (TCMalloc_TryLock(&private_lockword_))
+          return;
+
+        sceKernelDelayThreadCB(2000);
+      } 
+    }
+  }
+
+  inline void Unlock() {
+    __asm__ __volatile__
+      (".set noreorder\n"
+       "sync\n"
+       "sw $0, %0\n"
+       ".set reorder\n"
+       : "=m" (private_lockword_)
+       : "m"  (private_lockword_)
+       : "memory");
+  }
+};
+
+#define SPINLOCK_INITIALIZER { 0 }
 
 #else
 
