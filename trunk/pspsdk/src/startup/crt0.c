@@ -54,16 +54,23 @@ extern int main(int argc, char *argv[]);
  */
 void _main(SceSize args, void *argp)
 {
-	char *argv[ARG_MAX + 1], *ap = (char *) argp;
+	char *argv[ARG_MAX + 1];
 	int argc = 0;
+	int loc = 0;
+	char *ptr = argp;
 
 	/* Turn our thread arguments into main()'s argc and argv[]. */
-	if (args > 0) {
-		do {
-			argv[argc++] = ap;
-			ap += strlen(ap) + 1;
-		} while ((argc < ARG_MAX) && (((char *) argp - ap) < args));
+	while(loc < args)
+	{
+		argv[argc] = &ptr[loc];
+		loc += strlen(&ptr[loc]) + 1;
+		argc++;
+		if(argc == ARG_MAX)
+		{
+			break;
+		}
 	}
+
 	argv[argc] = NULL;
 
 	/* Call libc initialization hook */
