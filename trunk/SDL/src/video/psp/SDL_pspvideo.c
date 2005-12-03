@@ -47,6 +47,7 @@ static char rcsid =
 
 #include "SDL_pspvideo.h"
 #include "SDL_pspevents_c.h"
+#include "SDL_pspgl_c.h"
 #include "SDL_pspmouse_c.h"
 
 #define PSPVID_DRIVER_NAME "psp"
@@ -116,8 +117,17 @@ static int PSP_Available(void)
 
 static void PSP_DeleteDevice(SDL_VideoDevice *device)
 {
-	free(device->hidden);
-	free(device);
+	if (device) {
+		if (device->hidden) {
+			free(device->hidden);
+		}
+#ifdef HAVE_OPENGL
+		if (device->gl_data) {
+			free(device->gl_data);
+		}
+#endif
+		free(device);
+	}
 }
 
 static SDL_VideoDevice *PSP_CreateDevice(int devindex)
@@ -130,8 +140,16 @@ static SDL_VideoDevice *PSP_CreateDevice(int devindex)
 		memset(device, 0, (sizeof *device));
 		device->hidden = (struct SDL_PrivateVideoData *)
 				malloc((sizeof *device->hidden));
+#ifdef HAVE_OPENGL
+		device->gl_data = (struct SDL_PrivateGLData *)
+				malloc((sizeof *device->gl_data));
+#endif
 	}
-	if ( (device == NULL) || (device->hidden == NULL) ) {
+	if ( (device == NULL) || (device->hidden == NULL) 
+#ifdef HAVE_OPENGL
+			|| (device->gl_data == NULL)
+#endif
+			) {
 		SDL_OutOfMemory();
 		if ( device ) {
 			free(device);
@@ -139,6 +157,9 @@ static SDL_VideoDevice *PSP_CreateDevice(int devindex)
 		return(0);
 	}
 	memset(device->hidden, 0, (sizeof *device->hidden));
+#ifdef HAVE_OPENGL
+	memset(device->gl_data, 0, (sizeof *device->gl_data));
+#endif
 
 	/* Set the function pointers */
 	device->VideoInit = PSP_VideoInit;
@@ -157,6 +178,12 @@ static SDL_VideoDevice *PSP_CreateDevice(int devindex)
 	device->UnlockHWSurface = PSP_UnlockHWSurface;
 	device->FlipHWSurface = PSP_FlipHWSurface;
 	device->FreeHWSurface = PSP_FreeHWSurface;
+#ifdef HAVE_OPENGL
+	device->GL_GetProcAddress = PSP_GL_GetProcAddress;
+	device->GL_GetAttribute = PSP_GL_GetAttribute;
+	device->GL_MakeCurrent = PSP_GL_MakeCurrent;
+	device->GL_SwapBuffers = PSP_GL_SwapBuffers;
+#endif
 	device->SetCaption = NULL;
 	device->SetIcon = NULL;
 	device->IconifyWindow = NULL;
@@ -384,6 +411,23 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 	current->flags = flags | SDL_FULLSCREEN;
 	current->w = width;
 	current->h = height;
+
+#ifdef HAVE_OPENGL
+	if (flags & SDL_OPENGL)
+	{
+		this->gl_config.driver_loaded = 1;
+		current->flags = SDL_FULLSCREEN | SDL_OPENGL;
+		/* HACK: What does this need to be? */
+		current->pixels = memalign(16, draw_pitch * height);
+
+		if (!PSP_GL_Init(this))
+		{
+			/* Don't set an error here as PSP_GL_Init() will set one. */
+			return NULL;
+		}
+		return current;
+	}
+#endif
 
 	this->hidden->psm = psm_value(bpp);
 	this->hidden->tpsm = this->hidden->psm; 

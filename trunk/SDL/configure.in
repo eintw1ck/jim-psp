@@ -1168,6 +1168,26 @@ CheckAtariOSMesa()
     fi
 }
 
+dnl Check for pspgl
+CheckPSPGL()
+{
+    if test x$enable_video = xyes -a x$enable_video_opengl = xyes; then
+        AC_MSG_CHECKING(for OpenGL (pspgl) support)
+        video_opengl=no
+        AC_TRY_COMPILE([
+         #include <GL/gl.h>
+        ],[
+        ],[
+        video_opengl=yes
+        ])
+        AC_MSG_RESULT($video_opengl)
+        if test x$video_opengl = xyes; then
+            CFLAGS="$CFLAGS -DHAVE_OPENGL"
+            SYSTEM_LIBS="$SYSTEM_LIBS -lGL"
+        fi
+    fi
+}
+
 dnl See if we can use the new unified event interface in Linux 2.4
 CheckInputEvents()
 {
@@ -1883,7 +1903,7 @@ CheckPSPSDK()
     # Compile SDL with -G0 to disable the $gp register.
     CFLAGS="$CFLAGS -G0 -I\"${pspsdk_path}/include\""
     SYSTEM_LIBS="$SYSTEM_LIBS -L${pspsdk_path}/lib -lpspdebug -lpspgu -lpspctrl"
-    SYSTEM_LIBS="$SYSTEM_LIBS -lpspge -lpspdisplay -lpsphprm -lpspsdk"
+    SYSTEM_LIBS="$SYSTEM_LIBS -lpspge -lpspdisplay -lpsphprm -lpspsdk -lpsprtc"
     SYSTEM_LIBS="$SYSTEM_LIBS -lpspaudio -lc -lpspuser -lpsputility -lpspkernel"
 }
 
@@ -2729,6 +2749,7 @@ case "$target" in
         ;;
     *-psp-*)
         ARCH=psp
+        CheckPSPGL
         CheckPSPSDK
         # Set up files for the video library
         if test x$enable_video = xyes; then
