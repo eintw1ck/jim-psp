@@ -23,6 +23,7 @@
 #define DEFAULT_THREAD_PRIORITY 32
 #define DEFAULT_THREAD_ATTRIBUTE PSP_THREAD_ATTR_USER
 #define DEFAULT_THREAD_STACK_KB_SIZE 256
+#define DEFAULT_MAIN_THREAD_NAME "user_main"
 
 /* If these variables are defined by the program, then they override the
    defaults given above. */
@@ -30,6 +31,7 @@ extern int sce_newlib_nocreate_thread_in_start __attribute__((weak));
 extern unsigned int sce_newlib_priority __attribute__((weak));
 extern unsigned int sce_newlib_attribute __attribute__((weak));
 extern unsigned int sce_newlib_stack_kb_size __attribute__((weak));
+extern const char*  sce_newlib_main_thread_name __attribute__((weak));
 
 /* This is declared weak in case someone compiles an empty program.  That
    program won't work on the PSP, but it could be useful for testing the
@@ -122,6 +124,7 @@ int _start(SceSize args, void *argp)
 	int priority = DEFAULT_THREAD_PRIORITY;
 	unsigned int attribute = DEFAULT_THREAD_ATTRIBUTE;
 	unsigned int stackSize = DEFAULT_THREAD_STACK_KB_SIZE * 1024;
+	const char *threadName = DEFAULT_MAIN_THREAD_NAME;
 
 	if (&sce_newlib_priority != NULL) {
 		priority = sce_newlib_priority;
@@ -132,6 +135,9 @@ int _start(SceSize args, void *argp)
 	if (&sce_newlib_stack_kb_size != NULL) {
 		stackSize = sce_newlib_stack_kb_size * 1024;
 	}
+	if (&sce_newlib_main_thread_name != NULL) {
+		threadName = sce_newlib_main_thread_name;
+	}
 
 	/* Does the _main() thread belong to the User, VSH, or USB/WLAN APIs? */
 	if (attribute & (PSP_THREAD_ATTR_USER | PSP_THREAD_ATTR_USBWLAN | PSP_THREAD_ATTR_VSH)) {
@@ -140,7 +146,7 @@ int _start(SceSize args, void *argp)
 	}
 
 	SceUID thid;
-	thid = sceKernelCreateThread("user_main", (void *) _main_func, priority, stackSize, attribute, 0);
+	thid = sceKernelCreateThread(threadName, (void *) _main_func, priority, stackSize, attribute, 0);
 	sceKernelStartThread(thid, args, argp);
 
 	return 0;
