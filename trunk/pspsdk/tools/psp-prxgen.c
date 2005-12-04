@@ -355,6 +355,158 @@ int load_sections(unsigned char *data)
 	return ret;
 }
 
+int remove_weak_relocs(struct ElfSection *pReloc, struct ElfSection *pSymbol, struct ElfSection *pString)
+{
+	int iCount;
+	int iMaxSymbol;
+	void *pNewRel = NULL;
+	Elf32_Rel *pInRel;
+	Elf32_Rel *pOutRel;
+	Elf32_Sym *pSymData = (Elf32_Sym *) pSymbol->pData;
+	char *pStrData = NULL;
+	int iOutput;
+	int i;
+
+	if(pString != NULL)
+	{
+		pStrData = (char *) pString->pData;
+	}
+
+	iMaxSymbol = pSymbol->iSize / sizeof(Elf32_Sym);
+	iCount = pReloc->iSize / sizeof(Elf32_Rel);
+
+	pNewRel = malloc(pReloc->iSize);
+	if(pNewRel == NULL)
+	{
+		return 0;
+	}
+	pOutRel = (Elf32_Rel *) pNewRel;
+	pInRel = (Elf32_Rel *) pReloc->pData;
+	iOutput = 0;
+
+	if(g_verbose)
+	{
+		fprintf(stderr, "[%s] Processing %d relocations, %d symbols\n", pReloc->szName, iCount, iMaxSymbol);
+	}
+
+	for(i = 0; i < iCount; i++)
+	{
+		int iSymbol;
+
+		iSymbol = ELF32_R_SYM(LW(pInRel->r_info));
+		if(g_verbose)
+		{
+			fprintf(stderr, "Relocation %d - Symbol %x\n", iOutput, iSymbol);
+		}
+
+		if(iSymbol >= iMaxSymbol)
+		{
+			fprintf(stderr, "Warning: Ignoring relocation as cannot find matching symbol\n");
+		}
+		else
+		{
+			if(g_verbose)
+			{
+				if(pStrData != NULL)
+				{
+					fprintf(stderr, "Symbol %d - Name %s info %x ndx %x\n", iSymbol, &pStrData[pSymData[iSymbol].st_name], 
+							pSymData[iSymbol].st_info, pSymData[iSymbol].st_shndx);
+				}
+				else
+				{
+					fprintf(stderr, "Symbol %d - Name %d info %x ndx %x\n", iSymbol, pSymData[iSymbol].st_name, 
+							pSymData[iSymbol].st_info, pSymData[iSymbol].st_shndx);
+				}
+			}
+
+			if(LH(pSymData[iSymbol].st_shndx) == 0)
+			{
+				if(g_verbose)
+				{
+					fprintf(stderr, "Deleting relocation\n");
+				}
+			}
+			else
+			{
+				/* We are keeping this relocation, copy it across */
+				*pOutRel = *pInRel;
+				pOutRel++;
+				iOutput++;
+			}
+		}
+
+		pInRel++;
+	}
+
+	/* If we deleted some relocations */
+	if(iOutput < iCount)
+	{
+		int iSize;
+
+		iSize = iOutput * sizeof(Elf32_Rel);
+		if(g_verbose)
+		{
+			fprintf(stderr, "Old relocation size %d, new %d\n", pReloc->iSize, iSize);
+		}
+		pReloc->iSize = iSize;
+		/* If size is zero then delete this section */
+		if(iSize == 0)
+		{
+			pReloc->blOutput = 0;
+		}
+		else
+		{
+			/* Copy across the new relocation data */
+			memcpy(pReloc->pData, pNewRel, pReloc->iSize);
+		}
+	}
+
+	free(pNewRel);
+
+	return 1;
+}
+
+/* Let's remove the weak relocations from the list */
+int process_relocs(void)
+{
+	int i;
+
+	for(i = 0; i < g_elfhead.iShnum; i++)
+	{
+		if((g_elfsections[i].blOutput) && (g_elfsections[i].iType == SHT_REL))
+		{
+			struct ElfSection *pReloc;
+
+			pReloc = &g_elfsections[i];
+			if((pReloc->iLink < g_elfhead.iShnum) && (g_elfsections[pReloc->iLink].iType == SHT_SYMTAB))
+			{
+				struct ElfSection *pStrings = NULL;
+				struct ElfSection *pSymbols;
+
+				pSymbols = &g_elfsections[pReloc->iLink];
+				if((pSymbols->iLink < g_elfhead.iShnum) && (g_elfsections[pSymbols->iLink].iType == SHT_STRTAB))
+				{
+					pStrings = &g_elfsections[pSymbols->iLink];
+				}
+
+				if(!remove_weak_relocs(pReloc, pSymbols, pStrings))
+				{
+					return 0;
+				}
+			}
+			else
+			{
+				if(g_verbose)
+				{
+					fprintf(stderr, "Ignoring relocation section %d, invalid link number\n", i);
+				}
+			}
+		}
+	}
+
+	return 1;
+}
+
 /* Reindex the sections we are keeping */
 void reindex_sections(void)
 {
@@ -389,6 +541,11 @@ int load_elf(const char *elf)
 		}
 
 		if(!load_sections(g_elfdata))
+		{
+			break;
+		}
+
+		if(!process_relocs())
 		{
 			break;
 		}
