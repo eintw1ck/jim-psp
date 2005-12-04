@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 	}
 
 	g_defaultSfo[SIZE_POS] = (unsigned char) (strlen(argv[1]) & 0xFF);
-	strncpy(&g_defaultSfo[TITLE_POS], argv[1], TITLE_SIZE);
+	strncpy((char *) &g_defaultSfo[TITLE_POS], argv[1], TITLE_SIZE);
 	/* Don't know if the name needs null termination or not */
 	g_defaultSfo[TITLE_SIZE-1] = 0;
 

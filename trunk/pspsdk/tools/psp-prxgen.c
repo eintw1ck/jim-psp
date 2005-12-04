@@ -294,7 +294,7 @@ int load_sections(unsigned char *data)
 			/* Okay so we have loaded all the sections, lets fix up the names */
 			for(i = 0; i < g_elfhead.iShnum; i++)
 			{
-				strcpy(g_elfsections[i].szName, g_elfsections[g_elfhead.iShstrndx].pData + g_elfsections[i].iName);
+				strcpy(g_elfsections[i].szName, (char *) (g_elfsections[g_elfhead.iShstrndx].pData + g_elfsections[i].iName));
 				if(strcmp(g_elfsections[i].szName, PSP_MODULE_INFO_NAME) == 0)
 				{
 					g_modinfo = &g_elfsections[i];
@@ -686,7 +686,7 @@ void output_shstrtab(unsigned char *data)
 
 	/* For the NULL section, memory should be zeroed anyway */
 	memset(data, 0, g_str_size);
-	pData = data + 1;
+	pData = (char *) (data + 1);
 
 	for(i = 1; i < g_elfhead.iShnum; i++)
 	{

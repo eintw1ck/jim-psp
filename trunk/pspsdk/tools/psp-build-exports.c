@@ -672,7 +672,7 @@ int psp_export_func_hash(char **params)
 		return 0;
 	}
 
-	sha1(hash, params[0], strlen(params[0]));
+	sha1(hash, (unsigned char *) params[0], strlen(params[0]));
 	nid = hash[0] | (hash[1] << 8) | (hash[2] << 16) | (hash[3] << 24);
 
 	if(g_currlib->funcCount < MAX_LIB_FUNCS)
@@ -733,7 +733,7 @@ int psp_export_var_hash(char **params)
 		return 0;
 	}
 
-	sha1(hash, params[0], strlen(params[0]));
+	sha1(hash, (unsigned char *) params[0], strlen(params[0]));
 	nid = hash[0] | (hash[1] << 8) | (hash[2] << 16) | (hash[3] << 24);
 
 	if(g_currlib->varCount < MAX_LIB_VARS)

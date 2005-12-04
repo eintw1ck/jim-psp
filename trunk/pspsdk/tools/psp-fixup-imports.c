@@ -282,7 +282,7 @@ int load_sections(unsigned char *data)
 			/* Okay so we have loaded all the sections, lets fix up the names */
 			for(i = 0; i < g_elfhead.iShnum; i++)
 			{
-				strcpy(g_elfsections[i].szName, g_elfsections[g_elfhead.iShstrndx].pData + g_elfsections[i].iName);
+				strcpy(g_elfsections[i].szName, (char *) (g_elfsections[g_elfhead.iShstrndx].pData + g_elfsections[i].iName));
 				if(strcmp(g_elfsections[i].szName, PSP_MODULE_INFO_NAME) == 0)
 				{
 					g_modinfo = &g_elfsections[i];
