@@ -1,5 +1,10 @@
 TARGET = mymodule
-OBJS = main.o exports.o
+OBJS = main.o
+
+# Define to build this as a prx (instead of a static elf)
+BUILD_PRX=1
+# Define the name of our custom exports (minus the .exp extension)
+PRX_EXPORTS=exports.exp
 
 USE_PSPSDK_LIBC = 1
 
@@ -11,5 +16,4 @@ ASFLAGS = $(CFLAGS)
 LIBDIR =
 
 PSPSDK=$(shell psp-config --pspsdk-path)
-include $(PSPSDK)/lib/build_prx.mak
-
+include $(PSPSDK)/lib/build.mak

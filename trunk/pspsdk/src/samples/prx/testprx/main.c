@@ -16,25 +16,19 @@ PSP_MODULE_INFO("TESTPRX", 0x1000, 1, 1);
 
 #define WELCOME_MESSAGE "Hello from the PRX\n"
 
-/* Simple thread */
-int thread_func(SceSize args, void *argp)
+int main(int argc, char **argv)
 {
+	int i;
+	SceUID thid;
+	
 	printf(WELCOME_MESSAGE);
-	sceKernelSleepThread();
 
-	return 0;
-}
-
-/* Entry point */
-int module_start(SceSize args, void *argp)
-{
-	int thid;
-
-	thid = sceKernelCreateThread("TestThread", thread_func, 0x19, 0x10000, 0, NULL);
-	if(thid >= 0)
+	for(i = 0; i < argc; i++)
 	{
-		sceKernelStartThread(thid, args, argp);
+		printf("Arg %d: %s\n", i, argv[i]);
 	}
+
+	sceKernelSleepThread();
 
 	return 0;
 }
@@ -44,4 +38,3 @@ void* getModuleInfo(void)
 {
 	return (void *) &module_info;
 }
-

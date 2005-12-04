@@ -32,6 +32,7 @@ extern unsigned int sce_newlib_priority __attribute__((weak));
 extern unsigned int sce_newlib_attribute __attribute__((weak));
 extern unsigned int sce_newlib_stack_kb_size __attribute__((weak));
 extern const char*  sce_newlib_main_thread_name __attribute__((weak));
+extern int __pspsdk_is_prx __attribute__((weak));
 
 /* This is declared weak in case someone compiles an empty program.  That
    program won't work on the PSP, but it could be useful for testing the
@@ -89,6 +90,8 @@ void _main(SceSize args, void *argp)
 	exit(res);
 }
 
+int module_start(SceSize args, void *argp) __attribute__((alias("_start")));
+
 /**
  * Startup thread
  *
@@ -102,7 +105,7 @@ int _start(SceSize args, void *argp)
 	void (*_main_func)(SceSize args, void *argp) = _main;
 	void (*_init_func)(void) = _init;
 
-	if ((&module_info != NULL) && (module_info.modattribute & 0x1000)) {
+	if ((&module_info != NULL) && (module_info.modattribute & 0x1000) && (&__pspsdk_is_prx == NULL)) {
 		/* If we're running in kernel mode, the addresses of our _main() thread
 		   and _init() function must also reside in kernel mode. */
 		_main_func = (void *) ((u32) _main_func | 0x80000000);
@@ -126,6 +129,12 @@ int _start(SceSize args, void *argp)
 	unsigned int stackSize = DEFAULT_THREAD_STACK_KB_SIZE * 1024;
 	const char *threadName = DEFAULT_MAIN_THREAD_NAME;
 
+	if((&module_info != NULL) && (module_info.modattribute & 0x1000) && (&__pspsdk_is_prx != NULL))
+	{
+		/* Set default thread attribute to 0, only for kernel prxes */
+		attribute = 0;
+	}
+
 	if (&sce_newlib_priority != NULL) {
 		priority = sce_newlib_priority;
 	}
@@ -140,7 +149,8 @@ int _start(SceSize args, void *argp)
 	}
 
 	/* Does the _main() thread belong to the User, VSH, or USB/WLAN APIs? */
-	if (attribute & (PSP_THREAD_ATTR_USER | PSP_THREAD_ATTR_USBWLAN | PSP_THREAD_ATTR_VSH)) {
+	if ((attribute & (PSP_THREAD_ATTR_USER | PSP_THREAD_ATTR_USBWLAN | PSP_THREAD_ATTR_VSH)) 
+			&& (&__pspsdk_is_prx == NULL)) {
 		/* Remove the kernel mode addressing from the pointer to _main(). */
 		_main_func = (void *) ((u32) _main_func & 0x7fffffff);
 	}
@@ -151,23 +161,3 @@ int _start(SceSize args, void *argp)
 
 	return 0;
 }
-
-/* The entry table provides pointers to the executable's _start() and
-   module_info structure. */
-static const unsigned int __entrytable[4] __attribute__((section(".rodata.sceResident"))) = {
-	0xD632ACDB, 0xF01D73A7, (unsigned int) &_start, (unsigned int) &module_info
-};
-
-/* Create the empty library entry used to describe the program's _start() and
-   module_info. */
-static const struct _library_entry {
-	const char *	name;
-	unsigned short	version;
-	unsigned short	attribute;
-	unsigned char	entLen;
-	unsigned char	varCount;
-	unsigned short	funcCount;
-	void *			entrytable;
-} _library_entry __attribute__((section(".lib.ent"), used)) = {
-	NULL, 0, 0x8000, 4, 1, 1, &__entrytable
-};
