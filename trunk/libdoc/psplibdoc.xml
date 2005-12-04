@@ -5257,6 +5257,10 @@
 						<NID>0x748CBED9</NID>
 						<NAME>sceKernelQueryModuleInfo</NAME>
 					</FUNCTION>
+					<FUNCTION>
+					    <NID>0x644395E2</NID>
+						<NAME>sceKernelGetModuleIdList</NAME>
+					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
 			<LIBRARY>
@@ -5346,6 +5350,10 @@
 					<FUNCTION>
 						<NID>0xB49FFB9E</NID>
 						<NAME>sceKernelRebootBeforeForKernel</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0x644395E2</NID>
+						<NAME>sceKernelGetModuleIdList</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
