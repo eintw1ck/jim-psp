@@ -384,6 +384,7 @@ unsigned int sleep(unsigned int secs) {
 
 /* If defined it specifies the desired size of the heap, in KB. */
 extern unsigned int sce_newlib_heap_kb_size __attribute__((weak));
+extern int __pspsdk_is_prx __attribute__((weak));
 
 /* UID of the memory block that represents the heap. */
 static SceUID __psp_heap_blockid;
@@ -402,9 +403,7 @@ void * _sbrk(ptrdiff_t incr)
 		if (&sce_newlib_heap_kb_size != NULL) {
 			heap_size = sce_newlib_heap_kb_size * 1024;
 		} else {
-			/* TODO: Here we should distinguish between a PRX and a normal
-			   executable.  Right now we assume it's an executable. */
-			if (0 /* is a prx */) {
+			if (&__pspsdk_is_prx != NULL) {
 				heap_size = DEFAULT_PRX_HEAP_SIZE_KB * 1024;
 			} else {
 				heap_size = sceKernelMaxFreeMemSize();
