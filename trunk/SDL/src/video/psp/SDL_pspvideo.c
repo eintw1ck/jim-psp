@@ -420,6 +420,9 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 		/* HACK: What does this need to be? */
 		current->pixels = memalign(16, draw_pitch * height);
 
+		/* HACK: This has to be called for PSPGL to work properly on 1.0 PSPs. */
+		sceGuInit();
+
 		if (!PSP_GL_Init(this))
 		{
 			/* Don't set an error here as PSP_GL_Init() will set one. */
