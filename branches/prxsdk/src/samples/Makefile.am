@@ -1,0 +1,87 @@
+
+samplesdir = @PSPSDK@/samples
+
+SAMPLES = \
+	audio/polyphonic \
+	audio/wavegen \
+	controller/basic \
+	debug/exception \
+	debug/kprintf \
+	debug/prxdecrypt \
+	debug/profiler \
+	debug/sio \
+	debug/gdb \
+	gu/blit \
+	gu/clut \
+	gu/copy \
+	gu/cube \
+	gu/lights \
+	gu/lines \
+	gu/logic \
+	gu/sprite \
+	gu/blend \
+	gu/envmap \
+	gu/shadowprojection \
+	gu/spharm \
+	gu/rendertarget \
+	gu/reflection \
+	gu/morph \
+	gu/skinning \
+	gu/signals \
+	ir/sircs \
+	ir/irda \
+	kernel/kdumper \
+	kernel/loadmodule \
+	kernel/threadstatus \
+	kernel/cwd \
+	kernel/fileio \
+	kernel/messagebox \
+	nand/dumpipl \
+	power \
+	prx/prx_loader \
+	prx/testprx \
+	usb/storage \
+	utility/netconf \
+	utility/msgdialog \
+	utility/savedata \
+	utility/systemparam \
+	me/basic \
+	wlan
+
+all:
+
+dist-hook:
+	rm -rf `find $(distdir) -name .svn -o -name CVS`
+
+# Install all of the samples.  Rename any files that end in a .sample extension.
+SAMPLES_INSTALL = $(INSTALL_DATA)
+install-data-hook:
+	$(mkinstalldirs) $(DESTDIR)$(samplesdir)
+	@list='$(SAMPLES)'; for s in $$list; do \
+	  $(mkinstalldirs) $(DESTDIR)$(samplesdir)/$$s; \
+	  for p in $(srcdir)/$$s/*; do \
+	    if test -f $$p; then \
+	      f="`echo $$p | sed -e 's|^.*/||'`"; \
+	      echo " $(SAMPLES_INSTALL) $$p $(DESTDIR)$(samplesdir)/$$s/$$f"; \
+	      $(SAMPLES_INSTALL) $$p $(DESTDIR)$(samplesdir)/$$s/$$f; \
+	    else :; fi; \
+	  done; \
+	done
+	@for p in `find $(DESTDIR)$(samplesdir) -name *.sample -print `; do \
+	  f="`echo $$p | sed -e 's/\.sample$$//'`"; \
+	  echo " mv $$p $$f"; \
+	  mv $$p $$f;  \
+	done
+
+uninstall-hook:
+	@list='$(SAMPLES)'; for s in $$list; do \
+	  for p in $(DESTDIR)$(samplesdir)/$$s/*; do \
+	    if test -f $$p; then \
+	      p="`echo $$p | sed -e 's|^.*/||'`"; \
+	      echo " rm -f $(DESTDIR)$(samplesdir)/$$s/$$p"; \
+	      rm -f $(DESTDIR)$(samplesdir)/$$s/$$p; \
+	    else :; fi; \
+	  done; \
+	done
+
+EXTRA_DIST = $(SAMPLES)
