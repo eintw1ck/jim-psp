@@ -34,13 +34,11 @@ CFLAGS   := $(addprefix -I,$(INCDIR)) $(CFLAGS)
 CXXFLAGS := $(CFLAGS) $(CXXFLAGS)
 ASFLAGS  := $(CFLAGS) $(ASFLAGS)
 
-ifeq ($(BUILD_PRX),1)
+ifeq ($(BUILD_ELF),1)
+LDFLAGS  := $(addprefix -L,$(LIBDIR)) $(LDFLAGS)
+else
 LDFLAGS  := $(addprefix -L,$(LIBDIR)) -Wl,-q,-T$(PSPSDK)/lib/linkfile.prx $(LDFLAGS)
 EXTRA_CLEAN += $(TARGET).elf
-ENABLE_PRX_OBJ = $(PSPSDK)/lib/prxenable.o
-else
-LDFLAGS  := $(addprefix -L,$(LIBDIR)) $(LDFLAGS)
-ENABLE_PRX_OBJ = 
 endif
 
 # Library selection.  By default we link with Newlib's libc.  Allow the
@@ -77,7 +75,7 @@ PSPSDK_LIBS = -lpspdebug -lpspdisplay_driver -lpspctrl_driver -lpspsdk
 LIBS     := $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpspkernel
 else
 PSPSDK_LIBS = -lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk
-LIBS     := $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpsputility -lpspuser -lpspkernel
+LIBS     := $(LIBS) $(PSPSDK_LIBS) $(PSPSDK_LIBC_LIB) -lpsputility -lpspuser
 endif
 
 # Define the overridable parameters for EBOOT.PBP
@@ -117,17 +115,17 @@ ifndef PSP_EBOOT
 PSP_EBOOT = EBOOT.PBP
 endif
 
-ifeq ($(BUILD_PRX),1)
-ifneq ($(TARGET_LIB),)
-$(error TARGET_LIB should not be defined when building a prx)
-else
-FINAL_TARGET = $(TARGET).prx
-endif
-else
+ifeq ($(BUILD_ELF),1)
 ifneq ($(TARGET_LIB),)
 FINAL_TARGET = $(TARGET_LIB)
 else
 FINAL_TARGET = $(TARGET).elf
+endif
+else
+ifneq ($(TARGET_LIB),)
+$(error TARGET_LIB should not be defined when building a prx)
+else
+FINAL_TARGET = $(TARGET).prx
 endif
 endif
 
@@ -142,7 +140,7 @@ kxploit: $(TARGET).elf $(PSP_EBOOT_SFO)
 		$(PSP_EBOOT_SND0) NULL $(PSP_EBOOT_PSAR)
 
 $(TARGET).elf: $(OBJS) $(EXPORT_OBJ)
-	$(LINK.c) $^ $(ENABLE_PRX_OBJ) $(LIBS) -o $@
+	$(LINK.c) $^ $(LIBS) -o $@
 	$(FIXUP) $@
 
 $(TARGET_LIB): $(OBJS)

@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * crt0.c - Startup code.
+ * crt0_prx.c - Pure PRX startup code.
  *
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  *
@@ -21,9 +21,12 @@
 
 /* Default thread parameters for the main program thread. */
 #define DEFAULT_THREAD_PRIORITY 32
-#define DEFAULT_THREAD_ATTRIBUTE PSP_THREAD_ATTR_USER
+#define DEFAULT_THREAD_ATTRIBUTE 0
 #define DEFAULT_THREAD_STACK_KB_SIZE 256
 #define DEFAULT_MAIN_THREAD_NAME "user_main"
+
+/* Define us as a prx */
+int __pspsdk_is_prx = 1;
 
 /* If these variables are defined by the program, then they override the
    defaults given above. */
@@ -32,7 +35,6 @@ extern unsigned int sce_newlib_priority __attribute__((weak));
 extern unsigned int sce_newlib_attribute __attribute__((weak));
 extern unsigned int sce_newlib_stack_kb_size __attribute__((weak));
 extern const char*  sce_newlib_main_thread_name __attribute__((weak));
-extern int __pspsdk_is_prx __attribute__((weak));
 
 /* This is declared weak in case someone compiles an empty program.  That
    program won't work on the PSP, but it could be useful for testing the
@@ -61,6 +63,8 @@ void _main(SceSize args, void *argp)
 	int argc = 0;
 	int loc = 0;
 	char *ptr = argp;
+
+	_init();
 
 	/* Turn our thread arguments into main()'s argc and argv[]. */
 	while(loc < args)
@@ -102,25 +106,9 @@ int module_start(SceSize args, void *argp) __attribute__((alias("_start")));
  */
 int _start(SceSize args, void *argp)
 {
-	void (*_main_func)(SceSize args, void *argp) = _main;
-	void (*_init_func)(void) = _init;
-
-	if ((&module_info != NULL) && (module_info.modattribute & 0x1000) && (&__pspsdk_is_prx == NULL)) {
-		/* If we're running in kernel mode, the addresses of our _main() thread
-		   and _init() function must also reside in kernel mode. */
-		_main_func = (void *) ((u32) _main_func | 0x80000000);
-		_init_func = (void *) ((u32) _init_func | 0x80000000);
-	}
-
-	/* Call _init() here, because an app may have code that needs to run in
-	   kernel mode, but want their main() thread to run in user mode.  If they
-	   define "constructors" they can do any kernel mode initialization here
-	   before their app is switched. */
-	_init_func();
-
 	if (&sce_newlib_nocreate_thread_in_start != NULL) {
 		/* The program does not want main() to be run in a seperate thread. */
-		_main_func(args, argp);
+		_main(args, argp);
 		return 1;
 	}
 
@@ -128,12 +116,6 @@ int _start(SceSize args, void *argp)
 	unsigned int attribute = DEFAULT_THREAD_ATTRIBUTE;
 	unsigned int stackSize = DEFAULT_THREAD_STACK_KB_SIZE * 1024;
 	const char *threadName = DEFAULT_MAIN_THREAD_NAME;
-
-	if((&module_info != NULL) && (module_info.modattribute & 0x1000) && (&__pspsdk_is_prx != NULL))
-	{
-		/* Set default thread attribute to 0, only for kernel prxes */
-		attribute = 0;
-	}
 
 	if (&sce_newlib_priority != NULL) {
 		priority = sce_newlib_priority;
@@ -148,15 +130,8 @@ int _start(SceSize args, void *argp)
 		threadName = sce_newlib_main_thread_name;
 	}
 
-	/* Does the _main() thread belong to the User, VSH, or USB/WLAN APIs? */
-	if ((attribute & (PSP_THREAD_ATTR_USER | PSP_THREAD_ATTR_USBWLAN | PSP_THREAD_ATTR_VSH)) 
-			&& (&__pspsdk_is_prx == NULL)) {
-		/* Remove the kernel mode addressing from the pointer to _main(). */
-		_main_func = (void *) ((u32) _main_func & 0x7fffffff);
-	}
-
 	SceUID thid;
-	thid = sceKernelCreateThread(threadName, (void *) _main_func, priority, stackSize, attribute, 0);
+	thid = sceKernelCreateThread(threadName, (void *) _main, priority, stackSize, attribute, 0);
 	sceKernelStartThread(thid, args, argp);
 
 	return 0;

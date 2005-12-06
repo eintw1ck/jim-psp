@@ -12,7 +12,7 @@ CCASFLAGS = $(CFLAGS) $(INCLUDES)
 noinst_LIBRARIES = lib.a
 lib_a_SOURCES = dummy.c
 
-all: crt0.o pspexports.o prxenable.o
+all: crt0.o pspexports.o 
 
 startupdir = @PSPDEV_LIBDIR@
 pspsdkdir     = @PSPSDK_LIBDIR@
@@ -22,15 +22,13 @@ install-exec-hook:
 	$(mkinstalldirs) $(DESTDIR)$(startupdir)
 	$(INSTALL_DATA) crt0.o $(DESTDIR)$(startupdir)/crt0.o
 	$(INSTALL_DATA) pspexports.o $(DESTDIR)$(pspsdkdir)/pspexports.o
-	$(INSTALL_DATA) prxenable.o $(DESTDIR)$(pspsdkdir)/prxenable.o
 
 
 uninstall-hook:
 	rm -f $(DESTDIR)$(startupdir)/crt0.o
 	rm -f $(DESTDIR)$(pspsdkdir)/pspexports.o
-	rm -f $(DESTDIR)$(pspsdkdir)/prxenable.o
 
-CLEANFILES = crt0.o pspexports.o prxenable.o
+CLEANFILES = crt0.o pspexports.o
 
 ## How else do I add a dependency for this?
-EXTRA_DIST = crt0.c pspexports.c prxenable.c
+EXTRA_DIST = crt0.c pspexports.c
