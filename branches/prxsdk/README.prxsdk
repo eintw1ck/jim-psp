@@ -1,0 +1,12 @@
+Quite explainatory note for the branch.
+
+The point of this branch is for me to explore other ways of doing
+things without being tied to maintaining backwards compatibilty
+for all users of pspsdk. It is really a playground for me.
+
+The main aim of this is to fashion the sdk to target more towards
+the creation of prx files instead of elfs, elfs will still be 
+supported but limited in scope to what you can do in the normal
+sdk.
+
+Don't rely on any of this code to work all the time :P
