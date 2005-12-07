@@ -15,6 +15,8 @@
 #ifndef PSPNET_INET_H
 #define PSPNET_INET_H
 
+#include <netinet/in.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -22,6 +24,21 @@ extern "C" {
 int sceNetInetInit(void);
 
 int sceNetInetTerm(void);
+
+int	sceNetInetAccept(int s, struct sockaddr *addr, socklen_t *addrlen);
+int	sceNetInetBind(int s, const struct sockaddr *my_addr, socklen_t addrlen);
+int	sceNetInetConnect(int s, const struct sockaddr *serv_addr, socklen_t addrlen);
+int	sceNetInetGetsockopt(int s, int level, int optname, void *optval, socklen_t *optlen);
+int	sceNetInetListen(int s, int backlog);
+ssize_t	sceNetInetRecv(int s, void *buf, size_t len, int flags);
+ssize_t	sceNetInetRecvfrom(int s, void *buf, size_t flags, int, struct sockaddr *from, socklen_t *fromlen);
+ssize_t	sceNetInetSend(int s, const void *buf, size_t len, int flags);
+ssize_t	sceNetInetSendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen);
+int	sceNetInetSetsockopt(int s, int level, int optname, const void *optval, socklen_t optlen);
+int	sceNetInetShutdown(int s, int how);
+int	sceNetInetSocket(int domain, int type, int protocol);
+int sceNetInetClose(int s);
+int sceNetInetGetErrno(void);
 
 #ifdef __cplusplus
 }
