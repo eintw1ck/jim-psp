@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2005 James F. <tyranid@gmail.com>
  *
- * $Id$
- * $HeadURL$
+ * $Id: pspexports.c 1521 2005-12-04 20:32:16Z tyranid $
+ * $HeadURL: svn://tyranid@svn.pspdev.org/psp/trunk/pspsdk/src/startup/pspexports.c $
  */
 #include <pspmoduleexport.h>
 #define NULL ((void *) 0)

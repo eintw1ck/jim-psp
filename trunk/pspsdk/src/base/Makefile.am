@@ -9,9 +9,9 @@ pspsdkinclude_HEADERS =		\
 
 ## Install the build.mak fragment to $PSPSDK/lib.
 buildmakdir = @PSPSDK_LIBDIR@
-buildmak_DATA = build.mak
+buildmak_DATA = build.mak prxspecs
 
 buildmakprxdir = @PSPSDK_LIBDIR@
 buildmakprx_DATA = build_prx.mak linkfile.prx
 
-EXTRA_DIST = build.mak build_prx.mak linkfile.prx
+EXTRA_DIST = build.mak prxspecs build_prx.mak linkfile.prx

@@ -35,12 +35,18 @@ CXXFLAGS := $(CFLAGS) $(CXXFLAGS)
 ASFLAGS  := $(CFLAGS) $(ASFLAGS)
 
 ifeq ($(BUILD_PRX),1)
+CFLAGS   := -specs=$(PSPSDK)/lib/prxspecs $(CFLAGS)
 LDFLAGS  := $(addprefix -L,$(LIBDIR)) -Wl,-q,-T$(PSPSDK)/lib/linkfile.prx $(LDFLAGS)
 EXTRA_CLEAN += $(TARGET).elf
-ENABLE_PRX_OBJ = $(PSPSDK)/lib/prxenable.o
+# Setup default exports if needed
+ifdef PRX_EXPORTS
+EXPORT_OBJ=$(patsubst %.exp,%.o,$(PRX_EXPORTS))
+EXTRA_CLEAN += $(EXPORT_OBJ)
+else 
+EXPORT_OBJ=$(PSPSDK)/lib/prxexports.o
+endif
 else
 LDFLAGS  := $(addprefix -L,$(LIBDIR)) $(LDFLAGS)
-ENABLE_PRX_OBJ = 
 endif
 
 # Library selection.  By default we link with Newlib's libc.  Allow the
@@ -61,13 +67,6 @@ PSPSDK_LIBC_LIB = -lc
 endif
 endif
 
-# Setup default exports if needed
-ifdef PRX_EXPORTS
-EXPORT_OBJ=$(patsubst %.exp,%.o,$(PRX_EXPORTS))
-EXTRA_CLEAN += $(EXPORT_OBJ)
-else 
-EXPORT_OBJ=$(PSPSDK)/lib/pspexports.o
-endif
 
 # Link with following default libraries.  Other libraries should be specified in the $(LIBS) variable.
 # TODO: This library list needs to be generated at configure time.
@@ -142,7 +141,7 @@ kxploit: $(TARGET).elf $(PSP_EBOOT_SFO)
 		$(PSP_EBOOT_SND0) NULL $(PSP_EBOOT_PSAR)
 
 $(TARGET).elf: $(OBJS) $(EXPORT_OBJ)
-	$(LINK.c) $^ $(ENABLE_PRX_OBJ) $(LIBS) -o $@
+	$(LINK.c) $^ $(LIBS) -o $@
 	$(FIXUP) $@
 
 $(TARGET_LIB): $(OBJS)

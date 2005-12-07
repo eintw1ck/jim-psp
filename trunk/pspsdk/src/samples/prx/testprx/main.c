@@ -19,7 +19,6 @@ PSP_MODULE_INFO("TESTPRX", 0x1000, 1, 1);
 int main(int argc, char **argv)
 {
 	int i;
-	SceUID thid;
 	
 	printf(WELCOME_MESSAGE);
 

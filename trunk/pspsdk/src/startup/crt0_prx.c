@@ -3,11 +3,11 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * crt0.c - Startup code.
+ * crt0_prx.c - Pure PRX startup code.
  *
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  *
- * $Id$
+ * $Id: crt0.c 1526 2005-12-06 21:56:06Z tyranid $
  */
 
 #include <pspkerneltypes.h>
@@ -21,9 +21,12 @@
 
 /* Default thread parameters for the main program thread. */
 #define DEFAULT_THREAD_PRIORITY 32
-#define DEFAULT_THREAD_ATTRIBUTE PSP_THREAD_ATTR_USER
+#define DEFAULT_THREAD_ATTRIBUTE 0
 #define DEFAULT_THREAD_STACK_KB_SIZE 256
 #define DEFAULT_MAIN_THREAD_NAME "user_main"
+
+/* Define us as a prx */
+int __pspsdk_is_prx = 1;
 
 /* If these variables are defined by the program, then they override the
    defaults given above. */
@@ -61,6 +64,8 @@ void _main(SceSize args, void *argp)
 	int loc = 0;
 	char *ptr = argp;
 
+	_init();
+
 	/* Turn our thread arguments into main()'s argc and argv[]. */
 	while(loc < args)
 	{
@@ -89,6 +94,8 @@ void _main(SceSize args, void *argp)
 	exit(res);
 }
 
+int module_start(SceSize args, void *argp) __attribute__((alias("_start")));
+
 /**
  * Startup thread
  *
@@ -99,25 +106,9 @@ void _main(SceSize args, void *argp)
  */
 int _start(SceSize args, void *argp)
 {
-	void (*_main_func)(SceSize args, void *argp) = _main;
-	void (*_init_func)(void) = _init;
-
-	if ((&module_info != NULL) && (module_info.modattribute & 0x1000)) {
-		/* If we're running in kernel mode, the addresses of our _main() thread
-		   and _init() function must also reside in kernel mode. */
-		_main_func = (void *) ((u32) _main_func | 0x80000000);
-		_init_func = (void *) ((u32) _init_func | 0x80000000);
-	}
-
-	/* Call _init() here, because an app may have code that needs to run in
-	   kernel mode, but want their main() thread to run in user mode.  If they
-	   define "constructors" they can do any kernel mode initialization here
-	   before their app is switched. */
-	_init_func();
-
 	if (&sce_newlib_nocreate_thread_in_start != NULL) {
 		/* The program does not want main() to be run in a seperate thread. */
-		_main_func(args, argp);
+		_main(args, argp);
 		return 1;
 	}
 
@@ -139,35 +130,9 @@ int _start(SceSize args, void *argp)
 		threadName = sce_newlib_main_thread_name;
 	}
 
-	/* Does the _main() thread belong to the User, VSH, or USB/WLAN APIs? */
-	if (attribute & (PSP_THREAD_ATTR_USER | PSP_THREAD_ATTR_USBWLAN | PSP_THREAD_ATTR_VSH)) {
-		/* Remove the kernel mode addressing from the pointer to _main(). */
-		_main_func = (void *) ((u32) _main_func & 0x7fffffff);
-	}
-
 	SceUID thid;
-	thid = sceKernelCreateThread(threadName, (void *) _main_func, priority, stackSize, attribute, 0);
+	thid = sceKernelCreateThread(threadName, (void *) _main, priority, stackSize, attribute, 0);
 	sceKernelStartThread(thid, args, argp);
 
 	return 0;
 }
-
-/* The entry table provides pointers to the executable's _start() and
-   module_info structure. */
-static const unsigned int __entrytable[4] __attribute__((section(".rodata.sceResident"))) = {
-	0xD632ACDB, 0xF01D73A7, (unsigned int) &_start, (unsigned int) &module_info
-};
-
-/* Create the empty library entry used to describe the program's _start() and
-   module_info. */
-static const struct _library_entry {
-	const char *	name;
-	unsigned short	version;
-	unsigned short	attribute;
-	unsigned char	entLen;
-	unsigned char	varCount;
-	unsigned short	funcCount;
-	void *			entrytable;
-} _library_entry __attribute__((section(".lib.ent"), used)) = {
-	NULL, 0, 0x8000, 4, 1, 1, &__entrytable
-};
