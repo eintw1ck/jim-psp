@@ -40,7 +40,7 @@ int	sceNetInetSetsockopt(int s, int level, int optname, const void *optval, sock
 int	sceNetInetShutdown(int s, int how);
 int	sceNetInetSocket(int domain, int type, int protocol);
 int sceNetInetClose(int s) __attribute__((weak));
-int sceNetInetGetErrno(void);
+int sceNetInetGetErrno(void) __attribute__((weak));
 
 #ifdef __cplusplus
 }
