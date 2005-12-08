@@ -422,11 +422,11 @@
 
    ## Install the pspsdk documentation.
 
-#if $MAKE doxygen-doc ; then
-#       cp -rf doc $PSPDEV/psp/sdk/
-#   else
-#       echo "NON-FATAL ERROR INSTALLING PSPSDK DOCUMENTATION, CONTINUING...";
-#   fi
+   if $MAKE doxygen-doc ; then
+       cp -rf doc $PSPDEV/psp/sdk/
+   else
+       echo "NON-FATAL ERROR INSTALLING PSPSDK DOCUMENTATION, CONTINUING...";
+   fi
 
    ## Clean up the result.
    $MAKE clean
