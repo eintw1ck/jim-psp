@@ -22,7 +22,6 @@ extern "C" {
 #endif
 
 int sceNetInetInit(void);
-
 int sceNetInetTerm(void);
 
 /* Define functions, make recv, send and close weak to avoid
@@ -32,15 +31,15 @@ int	sceNetInetBind(int s, const struct sockaddr *my_addr, socklen_t addrlen);
 int	sceNetInetConnect(int s, const struct sockaddr *serv_addr, socklen_t addrlen);
 int	sceNetInetGetsockopt(int s, int level, int optname, void *optval, socklen_t *optlen);
 int	sceNetInetListen(int s, int backlog);
-size_t	sceNetInetRecv(int s, void *buf, size_t len, int flags) __attribute__((weak));
+size_t	sceNetInetRecv(int s, void *buf, size_t len, int flags);
 size_t	sceNetInetRecvfrom(int s, void *buf, size_t flags, int, struct sockaddr *from, socklen_t *fromlen);
-size_t	sceNetInetSend(int s, const void *buf, size_t len, int flags) __attribute__((weak));
+size_t	sceNetInetSend(int s, const void *buf, size_t len, int flags);
 size_t	sceNetInetSendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen);
 int	sceNetInetSetsockopt(int s, int level, int optname, const void *optval, socklen_t optlen);
 int	sceNetInetShutdown(int s, int how);
 int	sceNetInetSocket(int domain, int type, int protocol);
-int sceNetInetClose(int s) __attribute__((weak));
-int sceNetInetGetErrno(void) __attribute__((weak));
+int sceNetInetClose(int s);
+int sceNetInetGetErrno(void);
 
 #ifdef __cplusplus
 }
