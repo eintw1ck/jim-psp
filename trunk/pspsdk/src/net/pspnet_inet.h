@@ -15,8 +15,6 @@
 #ifndef PSPNET_INET_H
 #define PSPNET_INET_H
 
-#include <netinet/in.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,8 +22,8 @@ extern "C" {
 int sceNetInetInit(void);
 int sceNetInetTerm(void);
 
-/* Define functions, make recv, send and close weak to avoid
- * libc being dependant on pspnet */
+/* The real sceNetInet socket prototypes are in <sys/socket.h>. */
+#ifdef DOXYGEN
 int	sceNetInetAccept(int s, struct sockaddr *addr, socklen_t *addrlen);
 int	sceNetInetBind(int s, const struct sockaddr *my_addr, socklen_t addrlen);
 int	sceNetInetConnect(int s, const struct sockaddr *serv_addr, socklen_t addrlen);
@@ -40,6 +38,7 @@ int	sceNetInetShutdown(int s, int how);
 int	sceNetInetSocket(int domain, int type, int protocol);
 int sceNetInetClose(int s);
 int sceNetInetGetErrno(void);
+#endif /* DOXYGEN */
 
 #ifdef __cplusplus
 }

@@ -230,6 +230,7 @@ struct sockaddr {
 #define	SHUT_WR		1		/* Disallow further sends. */
 #define	SHUT_RDWR	2		/* Disallow further sends/receives. */
 
+/* BSD-compatible socket API. */
 int	accept(int, struct sockaddr * __restrict, socklen_t * __restrict);
 int	bind(int, const struct sockaddr *, socklen_t);
 int	connect(int, const struct sockaddr *, socklen_t);
@@ -250,6 +251,22 @@ int	socket(int, int, int);
 #define SOCKET_FD_PAT      0x7F000000
 #define SOCKET_IS_VALID(x) (((x) & SOCKET_FD_PAT) == SOCKET_FD_PAT)
 #define SOCKET_GET_SOCK(x) ((x) & ~SOCKET_FD_PAT)
+
+/* sceNetInet socket API. */
+int	sceNetInetAccept(int s, struct sockaddr *addr, socklen_t *addrlen);
+int	sceNetInetBind(int s, const struct sockaddr *my_addr, socklen_t addrlen);
+int	sceNetInetConnect(int s, const struct sockaddr *serv_addr, socklen_t addrlen);
+int	sceNetInetGetsockopt(int s, int level, int optname, void *optval, socklen_t *optlen);
+int	sceNetInetListen(int s, int backlog);
+size_t	sceNetInetRecv(int s, void *buf, size_t len, int flags);
+size_t	sceNetInetRecvfrom(int s, void *buf, size_t flags, int, struct sockaddr *from, socklen_t *fromlen);
+size_t	sceNetInetSend(int s, const void *buf, size_t len, int flags);
+size_t	sceNetInetSendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen);
+int	sceNetInetSetsockopt(int s, int level, int optname, const void *optval, socklen_t optlen);
+int	sceNetInetShutdown(int s, int how);
+int	sceNetInetSocket(int domain, int type, int protocol);
+int sceNetInetClose(int s);
+int sceNetInetGetErrno(void);
 
 #ifdef __cplusplus
 }

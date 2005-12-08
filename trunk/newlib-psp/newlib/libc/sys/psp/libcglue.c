@@ -34,7 +34,6 @@
 #include <psputils.h>
 #include <psputility.h>
 #include <pspstdio.h>
-#include <pspnet_inet.h>
 
 extern char __psp_cwd[MAXPATHLEN + 1];
 extern void __psp_init_cwd(char *argv_0);
