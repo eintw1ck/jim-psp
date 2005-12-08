@@ -10,9 +10,9 @@
  * 
  */
 #include <errno.h>
+#include <sys/socket.h>
 
 #include <psptypes.h>
-#include <pspnet_inet.h>
 
 #define __PSP_SOCKET_MAX 1024
 extern char __psp_socket_map[__PSP_SOCKET_MAX];
