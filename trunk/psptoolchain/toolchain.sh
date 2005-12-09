@@ -11,7 +11,7 @@
 
   ## Set the directories.
   SRCDIR="`pwd`"
-  TMPDIR="/tmp/pspdev"
+  BUILDDIR="/tmp/pspdev"
 
   ## Source code versions.
   BINUTILS="binutils-2.16.1"
@@ -193,7 +193,7 @@
   fi
 
   ## Create and enter the temp directory.
-  mkdir -p "$TMPDIR"; cd "$TMPDIR"
+  mkdir -p "$BUILDDIR"; cd "$BUILDDIR"
 
   ## Unpack and patch the binutils source.
   if test "$BUILD_BINUTILS" = "1" ; then
