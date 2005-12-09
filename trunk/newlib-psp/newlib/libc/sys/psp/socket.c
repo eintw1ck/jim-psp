@@ -47,6 +47,42 @@ int	socket(int domain, int type, int protocol)
 
 	return sock | SOCKET_FD_PAT;
 }
+
+/* These are glue routines that are called from _close(), _read(), and
+   _write().  They are here so that any program that uses socket() will pull
+   them in and have expanded socket capability. */
+
+int __psp_socket_close(int s)
+{
+	int ret;
+	int sock;
+
+	sock = SOCKET_GET_SOCK(s);
+	if((sock > 0) && (sock < __PSP_SOCKET_MAX))
+	{
+		__psp_socket_map[sock] = 0;
+	}
+
+	ret = sceNetInetClose(sock);
+	if(ret < 0)
+	{
+		/* If close is defined likely errno is */
+		errno = sceNetInetGetErrno();
+		return -1;
+	}
+
+	return 0;
+}
+
+size_t __psp_socket_recv(int s, void *buf, size_t len, int flags)
+{
+	return recv(s, buf, len, flags);
+}
+
+size_t __psp_socket_send(int s, const void *buf, size_t len, int flags)
+{
+	return send(s, buf, len, flags);
+}
 #endif
 
 #ifdef F_accept
@@ -215,11 +251,6 @@ size_t	recv(int s, void *buf, size_t len, int flags)
 	int sock;
 	int ret;
 
-	if(sceNetInetRecv == NULL)
-	{
-		return -1;
-	}
-
 	if(!(SOCKET_IS_VALID(s)))
 	{
 		errno = EBADF;
@@ -281,11 +312,6 @@ size_t	send(int s, const void *buf, size_t len, int flags)
 {
 	int sock;
 	int ret;
-
-	if(sceNetInetSend == NULL)
-	{
-		return -1;
-	}
 
 	if(!(SOCKET_IS_VALID(s)))
 	{

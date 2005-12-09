@@ -4310,8 +4310,8 @@
 +
 +void _start() { }
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/libcglue.c	1969-12-31 18:00:00.000000000 -0600
-+++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-12-07 23:47:49.000000000 -0600
-@@ -0,0 +1,740 @@
++++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-12-09 13:33:15.000000000 -0600
+@@ -0,0 +1,720 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -4353,9 +4353,15 @@
 +extern void __psp_init_cwd(char *argv_0);
 +extern int __psp_path_absolute(const char *in, char *out, int len);
 +
++/* The following functions are defined in socket.c.  They have weak linkage so
++   that the user doesn't have to link against the PSP network libraries if they
++   don't use the sockets API. */
++extern int __psp_socket_close(int s) __attribute__((weak));
++extern size_t __psp_socket_recv(int s, void *buf, size_t len, int flags) __attribute__((weak));
++extern size_t __psp_socket_send(int s, const void *buf, size_t len, int flags) __attribute__((weak));
++
 +#define __PSP_FILENO_MAX 1024
 +extern char * __psp_filename_map[__PSP_FILENO_MAX];
-+extern char   __psp_socket_map[__PSP_FILENO_MAX];
 +
 +int __psp_set_errno(int code);
 +
@@ -4511,32 +4517,8 @@
 +		return -1;
 +	}
 +
-+	if(SOCKET_IS_VALID(fd))
-+	{
-+		int ret;
-+		int sock;
-+
-+		sock = SOCKET_GET_SOCK(fd);
-+		if((sock > 0) && (sock < __PSP_FILENO_MAX))
-+		{
-+			__psp_socket_map[sock] = 0;
-+		}
-+
-+		if(sceNetInetClose == NULL)
-+		{
-+			errno = EIO;
-+			return -1;
-+		}
-+
-+		ret = sceNetInetClose(sock);
-+		if(ret < 0)
-+		{
-+			/* If close is defined likely errno is */
-+			errno = sceNetInetGetErrno();
-+			return -1;
-+		}
-+
-+		return 0;
++	if (SOCKET_IS_VALID(fd) && __psp_socket_close != NULL) {
++		return __psp_socket_close(fd);
 +	}
 +
 +	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
@@ -4558,9 +4540,8 @@
 +		return -1;
 +	}
 +
-+	if(SOCKET_IS_VALID(fd))
-+	{
-+		return recv(fd, buf, size, 0);
++	if (SOCKET_IS_VALID(fd) && __psp_socket_recv != NULL) {
++		return __psp_socket_recv(fd, buf, size, 0);
 +	}
 +
 +	return __psp_set_errno(sceIoRead(fd, buf, size));
@@ -4575,9 +4556,8 @@
 +		return -1;
 +	}
 +
-+	if(SOCKET_IS_VALID(fd))
-+	{
-+		return send(fd, buf, size, 0);
++	if (SOCKET_IS_VALID(fd) && __psp_socket_send != NULL) {
++		return __psp_socket_send(fd, buf, size, 0);
 +	}
 +
 +	return __psp_set_errno(sceIoWrite(fd, buf, size));
@@ -5035,7 +5015,7 @@
 +
 +	/* Initialize filenamap */
 +	memset(__psp_filename_map, '\0', sizeof(char *) * __PSP_FILENO_MAX);
-+	memset(__psp_socket_map,   '\0', sizeof(char) * __PSP_FILENO_MAX);
++
 +	fd = sceKernelStdin();
 +	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
 +		 __psp_filename_map[fd] = strdup("  __PSP_STDIO");
@@ -5492,8 +5472,8 @@
 +}
 +
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/socket.c	1969-12-31 18:00:00.000000000 -0600
-+++ newlib-psp/newlib/libc/sys/psp/socket.c	2005-12-08 05:22:10.000000000 -0600
-@@ -0,0 +1,416 @@
++++ newlib-psp/newlib/libc/sys/psp/socket.c	2005-12-09 13:40:39.000000000 -0600
+@@ -0,0 +1,442 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -5542,6 +5522,42 @@
 +	}
 +
 +	return sock | SOCKET_FD_PAT;
++}
++
++/* These are glue routines that are called from _close(), _read(), and
++   _write().  They are here so that any program that uses socket() will pull
++   them in and have expanded socket capability. */
++
++int __psp_socket_close(int s)
++{
++	int ret;
++	int sock;
++
++	sock = SOCKET_GET_SOCK(s);
++	if((sock > 0) && (sock < __PSP_SOCKET_MAX))
++	{
++		__psp_socket_map[sock] = 0;
++	}
++
++	ret = sceNetInetClose(sock);
++	if(ret < 0)
++	{
++		/* If close is defined likely errno is */
++		errno = sceNetInetGetErrno();
++		return -1;
++	}
++
++	return 0;
++}
++
++size_t __psp_socket_recv(int s, void *buf, size_t len, int flags)
++{
++	return recv(s, buf, len, flags);
++}
++
++size_t __psp_socket_send(int s, const void *buf, size_t len, int flags)
++{
++	return send(s, buf, len, flags);
 +}
 +#endif
 +
@@ -5711,11 +5727,6 @@
 +	int sock;
 +	int ret;
 +
-+	if(sceNetInetRecv == NULL)
-+	{
-+		return -1;
-+	}
-+
 +	if(!(SOCKET_IS_VALID(s)))
 +	{
 +		errno = EBADF;
@@ -5777,11 +5788,6 @@
 +{
 +	int sock;
 +	int ret;
-+
-+	if(sceNetInetSend == NULL)
-+	{
-+		return -1;
-+	}
 +
 +	if(!(SOCKET_IS_VALID(s)))
 +	{
@@ -6114,7 +6120,7 @@
 +#endif
 +#endif /* _SYS_ERRNO_H */
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/sys/socket.h	1969-12-31 18:00:00.000000000 -0600
-+++ newlib-psp/newlib/libc/sys/psp/sys/socket.h	2005-12-08 05:23:26.000000000 -0600
++++ newlib-psp/newlib/libc/sys/psp/sys/socket.h	2005-12-09 13:33:50.000000000 -0600
 @@ -0,0 +1,275 @@
 +/*	$NetBSD: socket.h,v 1.77 2005/11/29 03:12:16 christos Exp $	*/
 +
@@ -6376,15 +6382,15 @@
 +int	sceNetInetConnect(int s, const struct sockaddr *serv_addr, socklen_t addrlen);
 +int	sceNetInetGetsockopt(int s, int level, int optname, void *optval, socklen_t *optlen);
 +int	sceNetInetListen(int s, int backlog);
-+size_t	sceNetInetRecv(int s, void *buf, size_t len, int flags) __attribute__((weak));
++size_t	sceNetInetRecv(int s, void *buf, size_t len, int flags);
 +size_t	sceNetInetRecvfrom(int s, void *buf, size_t flags, int, struct sockaddr *from, socklen_t *fromlen);
-+size_t	sceNetInetSend(int s, const void *buf, size_t len, int flags) __attribute__((weak));
++size_t	sceNetInetSend(int s, const void *buf, size_t len, int flags);
 +size_t	sceNetInetSendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen);
 +int	sceNetInetSetsockopt(int s, int level, int optname, const void *optval, socklen_t optlen);
 +int	sceNetInetShutdown(int s, int how);
 +int	sceNetInetSocket(int domain, int type, int protocol);
-+int sceNetInetClose(int s) __attribute__((weak));
-+int sceNetInetGetErrno(void) __attribute__((weak));
++int sceNetInetClose(int s);
++int sceNetInetGetErrno(void);
 +
 +#ifdef __cplusplus
 +}

@@ -39,9 +39,15 @@ extern char __psp_cwd[MAXPATHLEN + 1];
 extern void __psp_init_cwd(char *argv_0);
 extern int __psp_path_absolute(const char *in, char *out, int len);
 
+/* The following functions are defined in socket.c.  They have weak linkage so
+   that the user doesn't have to link against the PSP network libraries if they
+   don't use the sockets API. */
+extern int __psp_socket_close(int s) __attribute__((weak));
+extern size_t __psp_socket_recv(int s, void *buf, size_t len, int flags) __attribute__((weak));
+extern size_t __psp_socket_send(int s, const void *buf, size_t len, int flags) __attribute__((weak));
+
 #define __PSP_FILENO_MAX 1024
 extern char * __psp_filename_map[__PSP_FILENO_MAX];
-extern char   __psp_socket_map[__PSP_FILENO_MAX];
 
 int __psp_set_errno(int code);
 
@@ -197,32 +203,8 @@ int _close(int fd)
 		return -1;
 	}
 
-	if(SOCKET_IS_VALID(fd))
-	{
-		int ret;
-		int sock;
-
-		sock = SOCKET_GET_SOCK(fd);
-		if((sock > 0) && (sock < __PSP_FILENO_MAX))
-		{
-			__psp_socket_map[sock] = 0;
-		}
-
-		if(sceNetInetClose == NULL)
-		{
-			errno = EIO;
-			return -1;
-		}
-
-		ret = sceNetInetClose(sock);
-		if(ret < 0)
-		{
-			/* If close is defined likely errno is */
-			errno = sceNetInetGetErrno();
-			return -1;
-		}
-
-		return 0;
+	if (SOCKET_IS_VALID(fd) && __psp_socket_close != NULL) {
+		return __psp_socket_close(fd);
 	}
 
 	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
@@ -244,9 +226,8 @@ int _read(int fd, void *buf, size_t size)
 		return -1;
 	}
 
-	if(SOCKET_IS_VALID(fd))
-	{
-		return recv(fd, buf, size, 0);
+	if (SOCKET_IS_VALID(fd) && __psp_socket_recv != NULL) {
+		return __psp_socket_recv(fd, buf, size, 0);
 	}
 
 	return __psp_set_errno(sceIoRead(fd, buf, size));
@@ -261,9 +242,8 @@ int _write(int fd, const void *buf, size_t size)
 		return -1;
 	}
 
-	if(SOCKET_IS_VALID(fd))
-	{
-		return send(fd, buf, size, 0);
+	if (SOCKET_IS_VALID(fd) && __psp_socket_send != NULL) {
+		return __psp_socket_send(fd, buf, size, 0);
 	}
 
 	return __psp_set_errno(sceIoWrite(fd, buf, size));
@@ -721,7 +701,7 @@ void __psp_libc_init(int argc, char *argv[])
 
 	/* Initialize filenamap */
 	memset(__psp_filename_map, '\0', sizeof(char *) * __PSP_FILENO_MAX);
-	memset(__psp_socket_map,   '\0', sizeof(char) * __PSP_FILENO_MAX);
+
 	fd = sceKernelStdin();
 	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
 		 __psp_filename_map[fd] = strdup("  __PSP_STDIO");
