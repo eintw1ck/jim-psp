@@ -55,7 +55,8 @@ namespace PSP2D {
       public:
        // Inherit documentation from Drawable
 
-       void blit(Drawable* drw, u16 sx, u16 sy, u16 w, u16 h, u16 dx, u16 dy, bool blend = false);
+       void blit(Drawable* drw, u16 sx, u16 sy, u16 w, u16 h, u16 dx, u16 dy, bool blend = false,
+                 u16 dw = (u16)-1, u16 dh = (u16)-1);
        void clear(u32 color);
        void putPixel(u32 color, u16 x, u16 y);
        u32 getPixel(u16 x, u16 y);

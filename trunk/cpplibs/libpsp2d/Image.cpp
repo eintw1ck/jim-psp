@@ -343,9 +343,9 @@ void Image::accept(DrawableVisitor *v)
     v->visitImage(this);
 }
 
-void Image::blit(Drawable *drw, u16 sx, u16 sy, u16 w, u16 h, u16 dx, u16 dy, bool blend)
+void Image::blit(Drawable *drw, u16 sx, u16 sy, u16 w, u16 h, u16 dx, u16 dy, bool blend, u16 dw, u16 dh)
 {
-    ImageBlitter blt(this, sx, sy, w, h, dx, dy, blend);
+    ImageBlitter blt(this, sx, sy, w, h, dx, dy, blend, dw, dh);
 
     drw->accept(&blt);
 }

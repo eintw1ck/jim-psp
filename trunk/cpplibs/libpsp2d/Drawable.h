@@ -81,7 +81,8 @@ namespace PSP2D {
        virtual void blit(Drawable* drw,
                          u16 sx, u16 sy, u16 w, u16 h,
                          u16 dx, u16 dy,
-                         bool blend = false) = 0;
+                         bool blend = false,
+                         u16 dw = (u16)-1, u16 dh = (u16)-1) = 0;
 
        /**
         * Fills the drawable with a solid color.

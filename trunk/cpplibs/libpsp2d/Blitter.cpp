@@ -51,9 +51,14 @@ typedef struct
 ScreenBlitter::ScreenBlitter(Screen *scr,
                              u16 sx, u16 sy, u16 w, u16 h,
                              u16 dx, u16 dy,
-                             bool blend)
-    : _scr(scr), _sx(sx), _sy(sy), _w(w), _h(h), _dx(dx), _dy(dy), _blend(blend)
+                             bool blend,
+                             u16 dw, u16 dh)
+    : _scr(scr), _sx(sx), _sy(sy), _w(w), _h(h), _dx(dx), _dy(dy), _dw(dw), _dh(dh), _blend(blend)
 {
+    if (dw == (u16)-1)
+       _dw = _w;
+    if (dh == (u16)-1)
+       _dh = _h;
 }
 
 void ScreenBlitter::visitScreen(Screen *scr)
@@ -89,8 +94,8 @@ void ScreenBlitter::visitImage(Image *img)
           vertices[0].z = 0;
           vertices[1].u = _sx + j + sliceWidth;
           vertices[1].v = _sy + _h;
-          vertices[1].x = _dx + j + sliceWidth;
-          vertices[1].y = _dy + _h;
+          vertices[1].x = _dx + (j + sliceWidth) * _dw / _w;
+          vertices[1].y = _dy + _dh;
           vertices[1].z = 0;
           sceGuDrawArray(GU_SPRITES, GU_TEXTURE_16BIT | GU_VERTEX_16BIT | GU_TRANSFORM_2D, 2, 0, vertices);
           j += sliceWidth;
@@ -114,9 +119,14 @@ ImageBlitter::ImageBlitter(Image *img,
                            u16 sx, u16 sy,
                            u16 w, u16 h,
                            u16 dx, u16 dy,
-                           bool blend)
-    : _img(img), _sx(sx), _sy(sy), _w(w), _h(h), _dx(dx), _dy(dy), _blend(blend)
+                           bool blend,
+                           u16 dw, u16 dh)
+    : _img(img), _sx(sx), _sy(sy), _w(w), _h(h), _dx(dx), _dy(dy), _dw(dw), _dh(dh), _blend(blend)
 {
+    if (dw == (u16)-1)
+       _dw = _w;
+    if (dh == (u16)-1)
+       _dh = _h;
 }
 
 void ImageBlitter::visitScreen(Screen *scr)

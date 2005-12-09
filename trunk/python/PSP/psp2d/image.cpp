@@ -185,17 +185,18 @@ static PyObject* image_blit(PyImage *self,
                             PyObject *kwargs)
 {
     PyImage *src;
-    int sx = 0, sy = 0, w = -1, h = -1, dx = 0, dy = 0;
+    int sx = 0, sy = 0, w = -1, h = -1, dx = 0, dy = 0, dw = -1, dh = -1;
     int blend = 0;
 
-    static char* kwids[] = { "src", "sx", "sy", "w", "h", "dx", "dy", "blend", NULL };
+    static char* kwids[] = { "src", "sx", "sy", "w", "h", "dx", "dy", "blend", "dw", "dh", NULL };
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs,
-                                     "O|iiiiiii", kwids,
+                                     "O|iiiiiiiii", kwids,
                                      &src,
                                      &sx, &sy, &w, &h,
                                      &dx, &dy,
-                                     &blend))
+                                     &blend,
+                                     &dw, &dh))
        return NULL;
 
 #ifdef CHECKTYPE
@@ -237,7 +238,7 @@ static PyObject* image_blit(PyImage *self,
 
     // OK
 
-    self->img->blit(src->img, sx, sy, w, h, dx, dy, blend);
+    self->img->blit(src->img, sx, sy, w, h, dx, dy, blend, dw, dh);
 
     Py_INCREF(Py_None);
     return Py_None;

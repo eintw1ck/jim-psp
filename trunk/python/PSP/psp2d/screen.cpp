@@ -54,17 +54,18 @@ static PyObject* screen_blit(PyScreen *self,
                              PyObject *args,
                              PyObject *kwargs)
 {
-    int sx = 0, sy = 0, w = -1, h = -1, dx = 0, dy = 0, blend = 0;
+    int sx = 0, sy = 0, w = -1, h = -1, dx = 0, dy = 0, blend = 0, dw = -1, dh = -1;
     PyImage *img;
 
-    static char* kwids[] = { "src", "sx", "sy", "w", "h", "dx", "dy", "blend", NULL };
+    static char* kwids[] = { "src", "sx", "sy", "w", "h", "dx", "dy", "blend", "dw", "dh", NULL };
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs,
-                                     "O|iiiiiii", kwids,
+                                     "O|iiiiiiiii", kwids,
                                      &img,
                                      &sx, &sy, &w, &h,
                                      &dx, &dy,
-                                     &blend))
+                                     &blend,
+                                     &dw, &dh))
        return NULL;
 
 #ifdef CHECKTYPE
@@ -106,7 +107,7 @@ static PyObject* screen_blit(PyScreen *self,
 
     // OK
 
-    self->scr->blit(img->img, sx, sy, w, h, dx, dy, blend);
+    self->scr->blit(img->img, sx, sy, w, h, dx, dy, blend, dw, dh);
 
     Py_INCREF(Py_None);
     return Py_None;

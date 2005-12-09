@@ -70,9 +70,9 @@ Screen::~Screen()
 {
 }
 
-void Screen::blit(Drawable* drw, u16 sx, u16 sy, u16 w, u16 h, u16 dx, u16 dy, bool blend)
+void Screen::blit(Drawable* drw, u16 sx, u16 sy, u16 w, u16 h, u16 dx, u16 dy, bool blend, u16 dw, u16 dh)
 {
-    ScreenBlitter blt(this, sx, sy, w, h, dx, dy, blend);
+    ScreenBlitter blt(this, sx, sy, w, h, dx, dy, blend, dw, dh);
 
     drw->accept(&blt);
 }

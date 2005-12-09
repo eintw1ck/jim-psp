@@ -85,12 +85,15 @@ namespace PSP2D
         * @param dx: Destination X coordinate
         * @param dy: Destination Y coordinate
         * @param blend: Wether to take the source alpha channel into account
+        * @param dw: Destination width
+        * @param dh: Destination height
         */
 
        ScreenBlitter(Screen *scr,
                      u16 sx, u16 sy, u16 w, u16 h,
                      u16 dx, u16 dy,
-                     bool blend = false);
+                     bool blend = false,
+                     u16 dw = (u16)-1, u16 dh = (u16)-1);
 
        /**
         * Called by Screen::accept
@@ -106,7 +109,7 @@ namespace PSP2D
 
       protected:
        Screen *_scr;
-       u16 _sx, _sy, _w, _h, _dx, _dy;
+       u16 _sx, _sy, _w, _h, _dx, _dy, _dw, _dh;
        bool _blend;
     };
 
@@ -129,12 +132,15 @@ namespace PSP2D
         * @param dx: Destination X coordinate
         * @param dy: Destination Y coordinate
         * @param blend: Wether to take the source alpha channel into account
+        * @param dw: Destination width (unused)
+        * @param dh: Destination height (unused)
         */
 
        ImageBlitter(Image *img,
                     u16 sx, u16 sy, u16 w, u16 h,
                     u16 dx, u16 dy,
-                    bool blend = false);
+                    bool blend = false,
+                    u16 dw = (u16)-1, u16 dh = (u16)-1);
 
        /**
         * Called by Screen::accept
@@ -150,7 +156,7 @@ namespace PSP2D
 
       protected:
        Image *_img;
-       u16 _sx, _sy, _w, _h, _dx, _dy;
+       u16 _sx, _sy, _w, _h, _dx, _dy, _dw, _dh;
        bool _blend;
     };
 };
