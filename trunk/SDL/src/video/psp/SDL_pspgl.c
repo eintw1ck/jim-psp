@@ -29,14 +29,10 @@
 
 #ifdef HAVE_OPENGL
 
-/* pspgl doesn't support several calls that SDL wants, so we have to stub them locally. */
+/* pspgl doesn't provide this call, so stub it out since SDL requires it. */
 #define GLSTUB(func,params) void func params {}
 GLSTUB(glCopyTexImage1D, (GLenum target, GLint level, GLenum internalFormat,
 			GLint x, GLint y, GLsizei width, GLint border))
-GLSTUB(glPopAttrib, (void))
-GLSTUB(glPopClientAttrib, (void))
-GLSTUB(glPushAttrib, (GLbitfield mask))
-GLSTUB(glPushClientAttrib, (GLbitfield mask))
 
 static const struct {
 	const char *proc;
