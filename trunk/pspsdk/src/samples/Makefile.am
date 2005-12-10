@@ -40,10 +40,11 @@ SAMPLES = \
 	power \
 	prx/prx_loader \
 	prx/testprx \
+	savedata/utility \
+	savedata/decrypt \
 	usb/storage \
 	utility/netconf \
 	utility/msgdialog \
-	utility/savedata \
 	utility/systemparam \
 	me/basic \
 	wlan

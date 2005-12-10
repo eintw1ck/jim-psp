@@ -60,7 +60,7 @@ int sceChnnlsv_E7833020(pspChnnlsvContext1 *ctx, int mode);
  * @param len - Length (aligned to 0x10)
  * @returns < 0 on error
  */
-int sceChnnlsv_F21A1FCA(pspChnnlsvContext1 *ctx, char *data, int len);
+int sceChnnlsv_F21A1FCA(pspChnnlsvContext1 *ctx, unsigned char *data, int len);
 
 /**
  * Finalize hash
@@ -70,7 +70,8 @@ int sceChnnlsv_F21A1FCA(pspChnnlsvContext1 *ctx, char *data, int len);
  * @param cryptkey - Crypt key or NULL.
  * @returns < 0 on error
  */
-int sceChnnlsv_C4C494F8(pspChnnlsvContext1 *ctx, char *hash, char *cryptkey);
+int sceChnnlsv_C4C494F8(pspChnnlsvContext1 *ctx, 
+			unsigned char *hash, unsigned char *cryptkey);
 
 /**
  * Prepare a key, and set up integrity check
@@ -82,8 +83,8 @@ int sceChnnlsv_C4C494F8(pspChnnlsvContext1 *ctx, char *hash, char *cryptkey);
  * @param cipherkey - Key in
  * @returns < 0 on error
  */
-int sceChnnlsv_ABFDFC8B(pspChnnlsvContext2 *ctx, 
-			int mode1, int mode2, char *hashkey, char *cipherkey);
+int sceChnnlsv_ABFDFC8B(pspChnnlsvContext2 *ctx, int mode1, int mode2,
+			unsigned char *hashkey, unsigned char *cipherkey);
 
 /**
  * Process data for integrity check
@@ -93,7 +94,7 @@ int sceChnnlsv_ABFDFC8B(pspChnnlsvContext2 *ctx,
  * @param len - Length (aligned to 0x10)
  * @returns < 0 on error
  */
-int sceChnnlsv_850A7FA1(pspChnnlsvContext2 *ctx, char *data, int len);
+int sceChnnlsv_850A7FA1(pspChnnlsvContext2 *ctx, unsigned char *data, int len);
 
 /**
  * Check integrity
