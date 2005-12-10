@@ -388,11 +388,6 @@ int	setsockopt(int s, int level, int optname, const void *optval, socklen_t optl
 		errno = EBADF;
 		return -1;
 	}
-	sock = modNetFindSocket(s);
-	if(sock < 0)
-	{
-		return -1;
-	}
 
 	ret = sceNetInetSetsockopt(sock, level, optname, optval, optlen);
 	if(ret < 0)
@@ -422,11 +417,6 @@ int	shutdown(int s, int how)
 	if(__psp_socket_map[sock] == 0)
 	{
 		errno = EBADF;
-		return -1;
-	}
-	sock = modNetFindSocket(s);
-	if(sock < 0)
-	{
 		return -1;
 	}
 
