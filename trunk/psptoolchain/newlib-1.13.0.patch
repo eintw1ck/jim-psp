@@ -5049,7 +5049,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/
 +.NOEXPORT:
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/netinet/in.h newlib-psp/newlib/libc/sys/psp/netinet/in.h
 --- newlib-1.13.0/newlib/libc/sys/psp/netinet/in.h	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/netinet/in.h	2005-12-10 00:20:18.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/netinet/in.h	2005-12-10 22:12:00.000000000 +0000
 @@ -0,0 +1,271 @@
 +/*	$NetBSD: in.h,v 1.71 2005/08/05 09:21:25 elad Exp $	*/
 +
@@ -5312,10 +5312,10 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/netinet/in.h newlib-psp/newlib/libc
 +#define	IP_PORTRANGE_HIGH	1	/* same as DEFAULT (FreeBSD compat) */
 +#define	IP_PORTRANGE_LOW	2	/* use privileged range */
 +
-+#define ntohs __builtin_allegrex_wsbh(x)
-+#define ntohl __builtin_allegrex_wsbw(x)
-+#define htons __builtin_allegrex_wsbh(x)
-+#define htonl __builtin_allegrex_wsbw(x)
++#define ntohs(x) __builtin_allegrex_wsbh(x)
++#define ntohl(x) __builtin_allegrex_wsbw(x)
++#define htons(x) __builtin_allegrex_wsbh(x)
++#define htonl(x) __builtin_allegrex_wsbw(x)
 +
 +#ifdef __cplusplus
 +}
