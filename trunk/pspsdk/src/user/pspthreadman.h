@@ -507,58 +507,6 @@ int sceKernelPollSema(SceUID semaid, int signal);
 int sceKernelReferSemaStatus(SceUID semaid, SceKernelSemaInfo *info);
 
 
-/* Callbacks. */
-
-/** Callback function prototype */
-typedef int (*SceKernelCallbackFunction)(int arg1, int arg2, void *arg);
-
-/** Structure to hold the status information for a callback */
-typedef struct SceKernelCallbackInfo {
-	/** Size of the structure (i.e. sizeof(PspCallbackStatus)) */
-	SceSize 	size;
-	/** The name given to the callback */
-	char 	name[32];
-	/** The thread id associated with the callback */
-	SceUID 	threadId;
-	/** Pointer to the callback function */
-	SceKernelCallbackFunction 	callback;
-	/** User supplied argument for the callback */
-	void * 	common;
-	/** Unknown */
-	int 	notifyCount;
-	/** Unknown */
-	int 	notifyArg;
-} SceKernelCallbackInfo;
-
-/**
- * Create callback
- *
- * @par Example:
- * @code
- * int cbid;
- * cbid = sceKernelCreateCallback("Exit Callback", exit_cb, NULL);
- * @endcode
- *
- * @param name - A textual name for the callback
- * @param func - A pointer to a function that will be called as the callback
- * @param arg  - Argument for the callback ?
- *
- * @return >= 0 A callback id which can be used in subsequent functions, < 0 an error.
- */
-int sceKernelCreateCallback(const char *name, SceKernelCallbackFunction func, void *arg);
-
-/**
-  * Gets the status of a specified callback.
-  *
-  * @param cb - The UID of the callback to refer.
-  * @param status - Pointer to a status structure. The size parameter should be
-  * initialised before calling.
-  *
-  * @return < 0 on error.
-  */
-int sceKernelReferCallbackStatus(SceUID cb, SceKernelCallbackInfo *status);
-
-
 /* Event flags. */
 
 /** Structure to hold the event flag information */
@@ -789,6 +737,79 @@ int sceKernelCancelReceiveMbx(SceUID mbxid, int *pnum);
  * @returns < 0 on error.
  */
 int sceKernelReferMbxStatus(SceUID mbxid, SceKernelMbxInfo *info);
+
+
+/* Alarms. */
+
+/** Prototype for alarm handlers. */
+typedef SceUInt (*SceKernelAlarmHandler)(void *common);
+
+typedef struct SceKernelAlarmInfo {
+	SceSize		size;
+	SceKernelSysClock schedule;
+	SceKernelAlarmHandler handler;
+	void *		common;
+} SceKernelAlarmInfo;
+
+SceUID sceKernelSetAlarm(SceUInt clock, SceKernelAlarmHandler handler, void *common);
+
+SceUID sceKernelSetSysClockAlarm(SceKernelSysClock *clock, SceKernelAlarmHandler handler, void *common);
+
+int sceKernelCancelAlarm(SceUID alarmid);
+
+int sceKernelReferAlarmStatus(SceUID alarmid, SceKernelAlarmInfo *info);
+
+
+/* Callbacks. */
+
+/** Callback function prototype */
+typedef int (*SceKernelCallbackFunction)(int arg1, int arg2, void *arg);
+
+/** Structure to hold the status information for a callback */
+typedef struct SceKernelCallbackInfo {
+	/** Size of the structure (i.e. sizeof(SceKernelCallbackInfo)) */
+	SceSize 	size;
+	/** The name given to the callback */
+	char 	name[32];
+	/** The thread id associated with the callback */
+	SceUID 	threadId;
+	/** Pointer to the callback function */
+	SceKernelCallbackFunction 	callback;
+	/** User supplied argument for the callback */
+	void * 	common;
+	/** Unknown */
+	int 	notifyCount;
+	/** Unknown */
+	int 	notifyArg;
+} SceKernelCallbackInfo;
+
+/**
+ * Create callback
+ *
+ * @par Example:
+ * @code
+ * int cbid;
+ * cbid = sceKernelCreateCallback("Exit Callback", exit_cb, NULL);
+ * @endcode
+ *
+ * @param name - A textual name for the callback
+ * @param func - A pointer to a function that will be called as the callback
+ * @param arg  - Argument for the callback ?
+ *
+ * @return >= 0 A callback id which can be used in subsequent functions, < 0 an error.
+ */
+int sceKernelCreateCallback(const char *name, SceKernelCallbackFunction func, void *arg);
+
+/**
+  * Gets the status of a specified callback.
+  *
+  * @param cb - The UID of the callback to refer.
+  * @param status - Pointer to a status structure. The size parameter should be
+  * initialised before calling.
+  *
+  * @return < 0 on error.
+  */
+int sceKernelReferCallbackStatus(SceUID cb, SceKernelCallbackInfo *status);
 
 
 /* Misc. */
