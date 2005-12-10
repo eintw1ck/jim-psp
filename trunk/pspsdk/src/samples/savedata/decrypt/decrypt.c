@@ -23,7 +23,7 @@ unsigned int align16(unsigned int v)
 	return ((v + 0xF) >> 4) << 4;
 }
 
-/* Detect the samegame format and decrypt it.  See main.c for an example.  */
+/* Read, decrypt, and write a savedata file.  See main.c for example usage. */
 int decrypt_file(const char *decrypted_filename,
 		 const char *encrypted_filename,
 		 const unsigned char *gamekey)
