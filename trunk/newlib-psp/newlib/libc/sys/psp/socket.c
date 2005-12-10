@@ -74,12 +74,12 @@ int __psp_socket_close(int s)
 	return 0;
 }
 
-size_t __psp_socket_recv(int s, void *buf, size_t len, int flags)
+ssize_t __psp_socket_recv(int s, void *buf, size_t len, int flags)
 {
 	return recv(s, buf, len, flags);
 }
 
-size_t __psp_socket_send(int s, const void *buf, size_t len, int flags)
+ssize_t __psp_socket_send(int s, const void *buf, size_t len, int flags)
 {
 	return send(s, buf, len, flags);
 }
@@ -246,7 +246,7 @@ int	listen(int s, int backlog)
 #endif
 
 #ifdef F_recv
-size_t	recv(int s, void *buf, size_t len, int flags)
+ssize_t	recv(int s, void *buf, size_t len, int flags)
 {
 	int sock;
 	int ret;
@@ -277,7 +277,7 @@ size_t	recv(int s, void *buf, size_t len, int flags)
 #endif
 
 #ifdef F_recvfrom
-size_t	recvfrom(int s, void *buf, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
+ssize_t	recvfrom(int s, void *buf, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
 {
 	int sock;
 	int ret;
@@ -308,7 +308,7 @@ size_t	recvfrom(int s, void *buf, size_t len, int flags, struct sockaddr *from, 
 #endif
 
 #ifdef F_send
-size_t	send(int s, const void *buf, size_t len, int flags)
+ssize_t	send(int s, const void *buf, size_t len, int flags)
 {
 	int sock;
 	int ret;
@@ -339,7 +339,7 @@ size_t	send(int s, const void *buf, size_t len, int flags)
 #endif
 
 #ifdef F_sendto
-size_t	sendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen)
+ssize_t	sendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen)
 {
 	int sock;
 	int ret;
@@ -421,6 +421,68 @@ int	shutdown(int s, int how)
 	}
 
 	ret = sceNetInetShutdown(sock, how);
+	if(ret < 0)
+	{
+		errno = sceNetInetGetErrno();
+		return -1;
+	}
+
+	return 0;
+}
+#endif
+
+#ifdef F_getpeername
+int	getpeername(int s, struct sockaddr *name, socklen_t *namelen)
+{
+	int sock;
+	int ret;
+
+	if(!(SOCKET_IS_VALID(s)))
+	{
+		errno = EBADF;
+		return -1;
+	}
+
+	sock = SOCKET_GET_SOCK(s);
+
+	if(__psp_socket_map[sock] == 0)
+	{
+		errno = EBADF;
+		return -1;
+	}
+
+	ret = sceNetInetGetpeername(sock, name, namelen);
+	if(ret < 0)
+	{
+		errno = sceNetInetGetErrno();
+		return -1;
+	}
+
+	return 0;
+}
+#endif
+
+#ifdef F_getsockname
+int	getsockname(int s, struct sockaddr *name, socklen_t *namelen)
+{
+	int sock;
+	int ret;
+
+	if(!(SOCKET_IS_VALID(s)))
+	{
+		errno = EBADF;
+		return -1;
+	}
+
+	sock = SOCKET_GET_SOCK(s);
+
+	if(__psp_socket_map[sock] == 0)
+	{
+		errno = EBADF;
+		return -1;
+	}
+
+	ret = sceNetInetGetsockname(sock, name, namelen);
 	if(ret < 0)
 	{
 		errno = sceNetInetGetErrno();

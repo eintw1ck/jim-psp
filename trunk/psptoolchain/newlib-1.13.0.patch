@@ -1991,6 +1991,23 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/aclocal.m4 newlib-psp/newlib/libc/s
 +]
 +)
 +
+diff -burN newlib-1.13.0/newlib/libc/sys/psp/arpa/inet.h newlib-psp/newlib/libc/sys/psp/arpa/inet.h
+--- newlib-1.13.0/newlib/libc/sys/psp/arpa/inet.h	1970-01-01 01:00:00.000000000 +0100
++++ newlib-psp/newlib/libc/sys/psp/arpa/inet.h	2005-12-10 18:52:28.000000000 +0000
+@@ -0,0 +1,13 @@
++/* arpa/inet.h - Functions for converting IP addresses between strings and numbers */
++
++#include <netinet/in.h>
++
++in_addr_t sceNetInetInetAddr(const char *ip);
++int sceNetInetInetAton(const char *ip, struct in_addr *in);
++int sceNetInetInetNtop(int af, const void *src, char *dst, socklen_t cnt);
++int sceNetInetInetPton(int af, const char *src, void *dst);
++
++#define inet_addr sceNetInetInetAddr
++#define inet_aton sceNetInetInetAton
++#define inet_ntop sceNetInetInetNtop
++#define inet_pton sceNetInetInetPton
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/configure newlib-psp/newlib/libc/sys/psp/configure
 --- newlib-1.13.0/newlib/libc/sys/psp/configure	1970-01-01 01:00:00.000000000 +0100
 +++ newlib-psp/newlib/libc/sys/psp/configure	2005-12-09 23:37:55.000000000 +0000
@@ -3900,7 +3917,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/crt0.c newlib-psp/newlib/libc/sys/p
 +void _start() { }
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/libcglue.c newlib-psp/newlib/libc/sys/psp/libcglue.c
 --- newlib-1.13.0/newlib/libc/sys/psp/libcglue.c	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-12-09 23:37:55.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-12-10 20:06:54.000000000 +0000
 @@ -0,0 +1,720 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -3947,8 +3964,8 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/libcglue.c newlib-psp/newlib/libc/s
 +   that the user doesn't have to link against the PSP network libraries if they
 +   don't use the sockets API. */
 +extern int __psp_socket_close(int s) __attribute__((weak));
-+extern size_t __psp_socket_recv(int s, void *buf, size_t len, int flags) __attribute__((weak));
-+extern size_t __psp_socket_send(int s, const void *buf, size_t len, int flags) __attribute__((weak));
++extern ssize_t __psp_socket_recv(int s, void *buf, size_t len, int flags) __attribute__((weak));
++extern ssize_t __psp_socket_send(int s, const void *buf, size_t len, int flags) __attribute__((weak));
 +
 +#define __PSP_FILENO_MAX 1024
 +extern char * __psp_filename_map[__PSP_FILENO_MAX];
@@ -4624,8 +4641,8 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/libcglue.c newlib-psp/newlib/libc/s
 +
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.am newlib-psp/newlib/libc/sys/psp/Makefile.am
 --- newlib-1.13.0/newlib/libc/sys/psp/Makefile.am	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2005-12-09 23:37:55.000000000 +0000
-@@ -0,0 +1,38 @@
++++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2005-12-10 18:52:13.000000000 +0000
+@@ -0,0 +1,39 @@
 +## Process this file with automake to generate Makefile.in
 +
 +AUTOMAKE_OPTIONS = cygnus
@@ -4644,7 +4661,8 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.am newlib-psp/newlib/libc/
 +
 +SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o \
 +				   listen.o recv.o recvfrom.o send.o sendto.o \
-+				   setsockopt.o shutdown.o __psp_socket_map.o
++				   setsockopt.o shutdown.o __psp_socket_map.o \
++				   getsockname.o getpeername.o
 +
 +XPRINTF_MULT_OBJS = vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o _sprintf_r.o
 +
@@ -4666,8 +4684,8 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.am newlib-psp/newlib/libc/
 +CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)/configure.host
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/sys/psp/Makefile.in
 --- newlib-1.13.0/newlib/libc/sys/psp/Makefile.in	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2005-12-09 23:37:55.000000000 +0000
-@@ -0,0 +1,360 @@
++++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2005-12-10 18:52:37.000000000 +0000
+@@ -0,0 +1,361 @@
 +# Makefile.in generated automatically by automake 1.4-p6 from Makefile.am
 +
 +# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
@@ -4765,7 +4783,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/
 +LIBCGLUE_MULT_OBJS = _close.o _exit.o _fork.o _fstat.o _getpid.o	                     _gettimeofday.o _kill.o _lseek.o _open.o _read.o	                     _sbrk.o _wait.o _write.o clock.o isatty.o time.o	                     _link.o _unlink.o sleep.o opendir.o readdir.o	                     closedir.o getcwd.o chdir.o mkdir.o rmdir.o	                     realpath.o _stat.o truncate.o access.o tzset.o	                     __psp_set_errno.o	
 +
 +
-+SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o 				   listen.o recv.o recvfrom.o send.o sendto.o 				   setsockopt.o shutdown.o __psp_socket_map.o
++SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o 				   listen.o recv.o recvfrom.o send.o sendto.o 				   setsockopt.o shutdown.o __psp_socket_map.o 				   getsockname.o getpeername.o
 +
 +
 +XPRINTF_MULT_OBJS = vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o _sprintf_r.o
@@ -4790,10 +4808,11 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/
 +readdir.o closedir.o getcwd.o chdir.o mkdir.o rmdir.o realpath.o \
 +_stat.o truncate.o access.o tzset.o __psp_set_errno.o socket.o accept.o \
 +bind.o connect.o getsockopt.o listen.o recv.o recvfrom.o send.o \
-+sendto.o setsockopt.o shutdown.o __psp_socket_map.o vxprintf.o \
-+_xprintf.o __sout.o vsnprintf.o snprintf.o vsprintf.o sprintf.o \
-+__mout.o mprintf.o vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o \
-+vfprintf.o printf.o vprintf.o _sprintf_r.o
++sendto.o setsockopt.o shutdown.o __psp_socket_map.o getsockname.o \
++getpeername.o vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o \
++vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o \
++vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o \
++_sprintf_r.o
 +lib_a_OBJECTS =  libcglue.o socket.o pspcwd.o xprintf.o
 +CFLAGS = @CFLAGS@
 +COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -5030,8 +5049,8 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/
 +.NOEXPORT:
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/netinet/in.h newlib-psp/newlib/libc/sys/psp/netinet/in.h
 --- newlib-1.13.0/newlib/libc/sys/psp/netinet/in.h	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/netinet/in.h	2005-12-09 23:37:55.000000000 +0000
-@@ -0,0 +1,266 @@
++++ newlib-psp/newlib/libc/sys/psp/netinet/in.h	2005-12-10 00:20:18.000000000 +0000
+@@ -0,0 +1,271 @@
 +/*	$NetBSD: in.h,v 1.71 2005/08/05 09:21:25 elad Exp $	*/
 +
 +/*
@@ -5293,6 +5312,11 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/netinet/in.h newlib-psp/newlib/libc
 +#define	IP_PORTRANGE_HIGH	1	/* same as DEFAULT (FreeBSD compat) */
 +#define	IP_PORTRANGE_LOW	2	/* use privileged range */
 +
++#define ntohs __builtin_allegrex_wsbh(x)
++#define ntohl __builtin_allegrex_wsbw(x)
++#define htons __builtin_allegrex_wsbh(x)
++#define htonl __builtin_allegrex_wsbw(x)
++
 +#ifdef __cplusplus
 +}
 +#endif
@@ -5491,8 +5515,8 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/README newlib-psp/newlib/libc/sys/p
 +Marcus R. Brown <mrbrown@ocgnet.org>
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys/psp/socket.c
 --- newlib-1.13.0/newlib/libc/sys/psp/socket.c	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/socket.c	2005-12-09 23:38:28.000000000 +0000
-@@ -0,0 +1,432 @@
++++ newlib-psp/newlib/libc/sys/psp/socket.c	2005-12-10 20:07:07.000000000 +0000
+@@ -0,0 +1,494 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -5569,12 +5593,12 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys
 +	return 0;
 +}
 +
-+size_t __psp_socket_recv(int s, void *buf, size_t len, int flags)
++ssize_t __psp_socket_recv(int s, void *buf, size_t len, int flags)
 +{
 +	return recv(s, buf, len, flags);
 +}
 +
-+size_t __psp_socket_send(int s, const void *buf, size_t len, int flags)
++ssize_t __psp_socket_send(int s, const void *buf, size_t len, int flags)
 +{
 +	return send(s, buf, len, flags);
 +}
@@ -5741,7 +5765,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys
 +#endif
 +
 +#ifdef F_recv
-+size_t	recv(int s, void *buf, size_t len, int flags)
++ssize_t	recv(int s, void *buf, size_t len, int flags)
 +{
 +	int sock;
 +	int ret;
@@ -5772,7 +5796,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys
 +#endif
 +
 +#ifdef F_recvfrom
-+size_t	recvfrom(int s, void *buf, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
++ssize_t	recvfrom(int s, void *buf, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
 +{
 +	int sock;
 +	int ret;
@@ -5803,7 +5827,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys
 +#endif
 +
 +#ifdef F_send
-+size_t	send(int s, const void *buf, size_t len, int flags)
++ssize_t	send(int s, const void *buf, size_t len, int flags)
 +{
 +	int sock;
 +	int ret;
@@ -5834,7 +5858,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys
 +#endif
 +
 +#ifdef F_sendto
-+size_t	sendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen)
++ssize_t	sendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen)
 +{
 +	int sock;
 +	int ret;
@@ -5916,6 +5940,68 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys
 +	}
 +
 +	ret = sceNetInetShutdown(sock, how);
++	if(ret < 0)
++	{
++		errno = sceNetInetGetErrno();
++		return -1;
++	}
++
++	return 0;
++}
++#endif
++
++#ifdef F_getpeername
++int	getpeername(int s, struct sockaddr *name, socklen_t *namelen)
++{
++	int sock;
++	int ret;
++
++	if(!(SOCKET_IS_VALID(s)))
++	{
++		errno = EBADF;
++		return -1;
++	}
++
++	sock = SOCKET_GET_SOCK(s);
++
++	if(__psp_socket_map[sock] == 0)
++	{
++		errno = EBADF;
++		return -1;
++	}
++
++	ret = sceNetInetGetpeername(sock, name, namelen);
++	if(ret < 0)
++	{
++		errno = sceNetInetGetErrno();
++		return -1;
++	}
++
++	return 0;
++}
++#endif
++
++#ifdef F_getsockname
++int	getsockname(int s, struct sockaddr *name, socklen_t *namelen)
++{
++	int sock;
++	int ret;
++
++	if(!(SOCKET_IS_VALID(s)))
++	{
++		errno = EBADF;
++		return -1;
++	}
++
++	sock = SOCKET_GET_SOCK(s);
++
++	if(__psp_socket_map[sock] == 0)
++	{
++		errno = EBADF;
++		return -1;
++	}
++
++	ret = sceNetInetGetsockname(sock, name, namelen);
 +	if(ret < 0)
 +	{
 +		errno = sceNetInetGetErrno();
@@ -6132,8 +6218,8 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/errno.h newlib-psp/newlib/libc/
 +#endif /* _SYS_ERRNO_H */
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/socket.h newlib-psp/newlib/libc/sys/psp/sys/socket.h
 --- newlib-1.13.0/newlib/libc/sys/psp/sys/socket.h	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/sys/socket.h	2005-12-09 23:37:55.000000000 +0000
-@@ -0,0 +1,275 @@
++++ newlib-psp/newlib/libc/sys/psp/sys/socket.h	2005-12-10 18:52:02.000000000 +0000
+@@ -0,0 +1,297 @@
 +/*	$NetBSD: socket.h,v 1.77 2005/11/29 03:12:16 christos Exp $	*/
 +
 +/*
@@ -6205,6 +6291,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/socket.h newlib-psp/newlib/libc
 +
 +#include <stdint.h>
 +#include <stddef.h>
++#include <sys/types.h>
 +
 +typedef uint8_t sa_family_t;
 +typedef uint32_t socklen_t;
@@ -6366,6 +6453,21 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/socket.h newlib-psp/newlib/libc
 +#define	SHUT_WR		1		/* Disallow further sends. */
 +#define	SHUT_RDWR	2		/* Disallow further sends/receives. */
 +
++struct iovec {
++	void	*iov_base;	/* Base address. */
++	size_t	 iov_len;	/* Length. */
++};
++
++struct msghdr {
++	void		*msg_name;	/* optional address */
++	socklen_t	msg_namelen;	/* size of address */
++	struct iovec	*msg_iov;	/* scatter/gather array */
++	int		msg_iovlen;	/* # elements in msg_iov */
++	void		*msg_control;	/* ancillary data, see below */
++	socklen_t	msg_controllen;	/* ancillary data buffer len */
++	int		msg_flags;	/* flags on received message */
++};
++
 +/* BSD-compatible socket API. */
 +int	accept(int, struct sockaddr * __restrict, socklen_t * __restrict);
 +int	bind(int, const struct sockaddr *, socklen_t);
@@ -6374,12 +6476,14 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/socket.h newlib-psp/newlib/libc
 +int	getsockname(int, struct sockaddr * __restrict, socklen_t * __restrict);
 +int	getsockopt(int, int, int, void * __restrict, socklen_t * __restrict);
 +int	listen(int, int);
-+size_t	recv(int, void *, size_t, int);
-+size_t	recvfrom(int, void * __restrict, size_t, int,
++ssize_t	recv(int, void *, size_t, int);
++ssize_t	recvfrom(int, void * __restrict, size_t, int,
 +	    struct sockaddr * __restrict, socklen_t * __restrict);
-+size_t	send(int, const void *, size_t, int);
-+size_t	sendto(int, const void *,
++ssize_t recvmsg(int s, struct msghdr *msg, int flags);
++ssize_t	send(int, const void *, size_t, int);
++ssize_t	sendto(int, const void *,
 +	    size_t, int, const struct sockaddr *, socklen_t);
++ssize_t sendmsg(int s, const struct msghdr *msg, int flags);
 +int	setsockopt(int, int, int, const void *, socklen_t);
 +int	shutdown(int, int);
 +int	socket(int, int, int);
@@ -6394,15 +6498,19 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/socket.h newlib-psp/newlib/libc
 +int	sceNetInetConnect(int s, const struct sockaddr *serv_addr, socklen_t addrlen);
 +int	sceNetInetGetsockopt(int s, int level, int optname, void *optval, socklen_t *optlen);
 +int	sceNetInetListen(int s, int backlog);
-+size_t	sceNetInetRecv(int s, void *buf, size_t len, int flags);
-+size_t	sceNetInetRecvfrom(int s, void *buf, size_t flags, int, struct sockaddr *from, socklen_t *fromlen);
-+size_t	sceNetInetSend(int s, const void *buf, size_t len, int flags);
-+size_t	sceNetInetSendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen);
++ssize_t	sceNetInetRecv(int s, void *buf, size_t len, int flags);
++ssize_t	sceNetInetRecvfrom(int s, void *buf, size_t flags, int, struct sockaddr *from, socklen_t *fromlen);
++ssize_t sceNetInetRecvmsg(int s, struct msghdr *msg, int flags);
++ssize_t	sceNetInetSend(int s, const void *buf, size_t len, int flags);
++ssize_t	sceNetInetSendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen);
++ssize_t sceNetInetSendmsg(int s, const struct msghdr *msg, int flags);
 +int	sceNetInetSetsockopt(int s, int level, int optname, const void *optval, socklen_t optlen);
 +int	sceNetInetShutdown(int s, int how);
 +int	sceNetInetSocket(int domain, int type, int protocol);
 +int sceNetInetClose(int s);
 +int sceNetInetGetErrno(void);
++int sceNetInetGetsockname(int s, struct sockaddr *name, socklen_t *namelen);
++int sceNetInetGetpeername(int s, struct sockaddr *name, socklen_t *namelen);
 +
 +#ifdef __cplusplus
 +}
@@ -7483,3 +7591,65 @@ diff -burN newlib-1.13.0/newlib/libc/time/tzvars.c newlib-psp/newlib/libc/time/t
 +
 +__tzrule_type __tzrule[2] = { {'J', 0, 0, 0, 0, (time_t)0, 0 }, 
 +			      {'J', 0, 0, 0, 0, (time_t)0, 0 } };
+diff -burN newlib-1.13.0/newlib/Makefile.am newlib-psp/newlib/Makefile.am
+--- newlib-1.13.0/newlib/Makefile.am	2004-12-03 23:46:28.000000000 +0000
++++ newlib-psp/newlib/Makefile.am	2005-12-10 18:56:42.000000000 +0000
+@@ -251,6 +251,18 @@
+ 	     $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/machine/`basename $$i`; \
+ 	    else true; fi ; \
+ 	  done; \
++	  $(mkinstalldirs) $(DESTDIR)$(tooldir)/include/netinet; \
++	  for i in $(srcdir)/libc/sys/$(sys_dir)/netinet/*.h; do \
++	    if [ -f $$i ]; then \
++	     $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/netinet/`basename $$i`; \
++	    else true; fi ; \
++	  done ; \
++	  $(mkinstalldirs) $(DESTDIR)$(tooldir)/include/arpa; \
++	  for i in $(srcdir)/libc/sys/$(sys_dir)/arpa/*.h; do \
++	    if [ -f $$i ]; then \
++	     $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/arpa/`basename $$i`; \
++	    else true; fi ; \
++	  done ; \
+ 	  $(mkinstalldirs) $(DESTDIR)$(tooldir)/include/sys; \
+ 	  for i in $(srcdir)/libc/include/sys/*.h; do \
+ 	   $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/sys/`basename $$i`; \
+diff -burN newlib-1.13.0/newlib/Makefile.in newlib-psp/newlib/Makefile.in
+--- newlib-1.13.0/newlib/Makefile.in	2004-12-03 23:46:28.000000000 +0000
++++ newlib-psp/newlib/Makefile.in	2005-12-10 18:56:56.000000000 +0000
+@@ -214,7 +214,7 @@
+ 
+ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+ 
+-TAR = gtar
++TAR = tar
+ GZIP_ENV = --best
+ DIST_SUBDIRS =  libc libm doc . @EXTRA_DIRS@
+ EXPECT = `if test -f $(top_builddir)/../expect/expect; then echo $(top_builddir)/../expect/expect; else echo expect; fi`
+@@ -472,7 +472,7 @@
+ 	  awk '    { files[$$0] = 1; } \
+ 	       END { for (i in files) print i; }'`; \
+ 	test -z "$(ETAGS_ARGS)newlib.hin$$unique$(LISP)$$tags" \
+-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags newlib.hin $$unique $(LISP) -o $$here/TAGS)
++	  || (cd $(srcdir) && etags -o $$here/TAGS $(ETAGS_ARGS) $$tags newlib.hin $$unique $(LISP))
+ 
+ mostlyclean-tags:
+ 
+@@ -756,6 +756,18 @@
+ 	     $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/machine/`basename $$i`; \
+ 	    else true; fi ; \
+ 	  done; \
++	  $(mkinstalldirs) $(DESTDIR)$(tooldir)/include/netinet; \
++	  for i in $(srcdir)/libc/sys/$(sys_dir)/netinet/*.h; do \
++	    if [ -f $$i ]; then \
++	     $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/netinet/`basename $$i`; \
++	    else true; fi ; \
++	  done ; \
++	  $(mkinstalldirs) $(DESTDIR)$(tooldir)/include/arpa; \
++	  for i in $(srcdir)/libc/sys/$(sys_dir)/arpa/*.h; do \
++	    if [ -f $$i ]; then \
++	     $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/arpa/`basename $$i`; \
++	    else true; fi ; \
++	  done ; \
+ 	  $(mkinstalldirs) $(DESTDIR)$(tooldir)/include/sys; \
+ 	  for i in $(srcdir)/libc/include/sys/*.h; do \
+ 	   $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/sys/`basename $$i`; \

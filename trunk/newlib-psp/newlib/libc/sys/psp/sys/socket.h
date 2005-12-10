@@ -69,6 +69,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include <sys/types.h>
 
 typedef uint8_t sa_family_t;
 typedef uint32_t socklen_t;
@@ -230,6 +231,21 @@ struct sockaddr {
 #define	SHUT_WR		1		/* Disallow further sends. */
 #define	SHUT_RDWR	2		/* Disallow further sends/receives. */
 
+struct iovec {
+	void	*iov_base;	/* Base address. */
+	size_t	 iov_len;	/* Length. */
+};
+
+struct msghdr {
+	void		*msg_name;	/* optional address */
+	socklen_t	msg_namelen;	/* size of address */
+	struct iovec	*msg_iov;	/* scatter/gather array */
+	int		msg_iovlen;	/* # elements in msg_iov */
+	void		*msg_control;	/* ancillary data, see below */
+	socklen_t	msg_controllen;	/* ancillary data buffer len */
+	int		msg_flags;	/* flags on received message */
+};
+
 /* BSD-compatible socket API. */
 int	accept(int, struct sockaddr * __restrict, socklen_t * __restrict);
 int	bind(int, const struct sockaddr *, socklen_t);
@@ -238,12 +254,14 @@ int	getpeername(int, struct sockaddr * __restrict, socklen_t * __restrict);
 int	getsockname(int, struct sockaddr * __restrict, socklen_t * __restrict);
 int	getsockopt(int, int, int, void * __restrict, socklen_t * __restrict);
 int	listen(int, int);
-size_t	recv(int, void *, size_t, int);
-size_t	recvfrom(int, void * __restrict, size_t, int,
+ssize_t	recv(int, void *, size_t, int);
+ssize_t	recvfrom(int, void * __restrict, size_t, int,
 	    struct sockaddr * __restrict, socklen_t * __restrict);
-size_t	send(int, const void *, size_t, int);
-size_t	sendto(int, const void *,
+ssize_t recvmsg(int s, struct msghdr *msg, int flags);
+ssize_t	send(int, const void *, size_t, int);
+ssize_t	sendto(int, const void *,
 	    size_t, int, const struct sockaddr *, socklen_t);
+ssize_t sendmsg(int s, const struct msghdr *msg, int flags);
 int	setsockopt(int, int, int, const void *, socklen_t);
 int	shutdown(int, int);
 int	socket(int, int, int);
@@ -258,15 +276,19 @@ int	sceNetInetBind(int s, const struct sockaddr *my_addr, socklen_t addrlen);
 int	sceNetInetConnect(int s, const struct sockaddr *serv_addr, socklen_t addrlen);
 int	sceNetInetGetsockopt(int s, int level, int optname, void *optval, socklen_t *optlen);
 int	sceNetInetListen(int s, int backlog);
-size_t	sceNetInetRecv(int s, void *buf, size_t len, int flags);
-size_t	sceNetInetRecvfrom(int s, void *buf, size_t flags, int, struct sockaddr *from, socklen_t *fromlen);
-size_t	sceNetInetSend(int s, const void *buf, size_t len, int flags);
-size_t	sceNetInetSendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen);
+ssize_t	sceNetInetRecv(int s, void *buf, size_t len, int flags);
+ssize_t	sceNetInetRecvfrom(int s, void *buf, size_t flags, int, struct sockaddr *from, socklen_t *fromlen);
+ssize_t sceNetInetRecvmsg(int s, struct msghdr *msg, int flags);
+ssize_t	sceNetInetSend(int s, const void *buf, size_t len, int flags);
+ssize_t	sceNetInetSendto(int s, const void *buf, size_t len, int flags, const struct sockaddr *to, socklen_t tolen);
+ssize_t sceNetInetSendmsg(int s, const struct msghdr *msg, int flags);
 int	sceNetInetSetsockopt(int s, int level, int optname, const void *optval, socklen_t optlen);
 int	sceNetInetShutdown(int s, int how);
 int	sceNetInetSocket(int domain, int type, int protocol);
 int sceNetInetClose(int s);
 int sceNetInetGetErrno(void);
+int sceNetInetGetsockname(int s, struct sockaddr *name, socklen_t *namelen);
+int sceNetInetGetpeername(int s, struct sockaddr *name, socklen_t *namelen);
 
 #ifdef __cplusplus
 }

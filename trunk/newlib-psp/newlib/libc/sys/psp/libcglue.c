@@ -43,8 +43,8 @@ extern int __psp_path_absolute(const char *in, char *out, int len);
    that the user doesn't have to link against the PSP network libraries if they
    don't use the sockets API. */
 extern int __psp_socket_close(int s) __attribute__((weak));
-extern size_t __psp_socket_recv(int s, void *buf, size_t len, int flags) __attribute__((weak));
-extern size_t __psp_socket_send(int s, const void *buf, size_t len, int flags) __attribute__((weak));
+extern ssize_t __psp_socket_recv(int s, void *buf, size_t len, int flags) __attribute__((weak));
+extern ssize_t __psp_socket_send(int s, const void *buf, size_t len, int flags) __attribute__((weak));
 
 #define __PSP_FILENO_MAX 1024
 extern char * __psp_filename_map[__PSP_FILENO_MAX];
