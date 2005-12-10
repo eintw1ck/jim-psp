@@ -19,7 +19,7 @@ int decrypt_file(const char *decrypted_filename,
 		 const unsigned char *gamekey);
 
 /* Do the actual hardware decryption.
-   mode is 3 for saves with a cryptkey, or 1 otherwise
+   mode is 3 for saves with a cryptkey, or 1 otherwise.
    data, alignedLen, and cryptkey must be multiples of 0x10.
    cryptkey is NULL if mode == 1.
 */

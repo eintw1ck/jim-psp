@@ -3,12 +3,12 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * main.c - Sample to demonstrate savedata decryption using sceChnnlsv
+ * main.c - Sample to demonstrate savedata encryption using sceChnnlsv
  *
  * Copyright (c) 2005 Jim Paris <jim@jtan.com>
  * Coypright (c) 2005 psp123
  *
- * $Id$
+ * $Id: main.c 1559 2005-12-10 01:10:11Z jim $
  */
 
 #include <pspkernel.h>
@@ -21,21 +21,25 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "decrypt.h"
+#include "encrypt.h"
 
-PSP_MODULE_INFO("SaveDecrypt", 0, 1, 1);
+PSP_MODULE_INFO("SaveEncrypt", 0, 1, 1);
 
 #define printf pspDebugScreenPrintf
 
 #if 0
   /* Old format save with no key (Mercury) */
-  const char *decrypted = "ms0:/MERCURY.BIN";
+  const char *plaintext = "ms0:/MERCURY.BIN";
   const char *encrypted = "ms0:/PSP/SAVEDATA/ULUS100170000/MERCURY.DAT";
+  const char *datafile  = "MERCURY.DAT";
+  const char *paramsfo  = "ms0:/PSP/SAVEDATA/ULUS100170000/PARAM.SFO";
   const unsigned char *gamekey = NULL;
 #else
   /* New format save with a key (GTA:LCS) */
-  const char *decrypted = "ms0:/GTA.BIN";
+  const char *plaintext = "ms0:/GTA.BIN";
   const char *encrypted = "ms0:/PSP/SAVEDATA/ULUS10041S0/DATA.BIN";
+  const char *datafile  = "DATA.BIN";
+  const char *paramsfo  = "ms0:/PSP/SAVEDATA/ULUS10041S0/PARAM.SFO";
   const unsigned char gamekey[] = { 
 	  0x70, 0x55, 0x8A, 0xC5, 0xB3, 0xB7, 0x47, 0x0C,
 	  0xB0, 0xE0, 0xC2, 0x71, 0xD0, 0xF5, 0xBA, 0x56
@@ -63,11 +67,11 @@ int main(int argc, char *argv[])
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_DIGITAL);
 
-	printf("Save Decrypt Sample\n");
+	printf("Save Encrypt Sample\n");
 	printf("by Jim Paris and psp123\n\n");
 
-	printf("Will decrypt: %s\n", encrypted);
-	printf("   Using key:");
+	printf(" Will encrypt: %s\n", plaintext);
+	printf("    Using key:");
 	if(gamekey) {
 		for (i = 0; i < 0x10; i++)
 			printf(" %02x", gamekey[i]);
@@ -75,7 +79,8 @@ int main(int argc, char *argv[])
 		printf(" none");
 	}
 	printf("\n\n");
-	printf(" Output file: %s\n\n", decrypted);
+	printf("  Output file: %s\n", encrypted);
+	printf("Update hashes: %s\n\n", paramsfo);
 	printf("Press X to continue, or O to quit.\n\n");
 
 	if (waitbutton(PSP_CTRL_CROSS | PSP_CTRL_CIRCLE) & PSP_CTRL_CIRCLE) 
@@ -83,12 +88,14 @@ int main(int argc, char *argv[])
 
 	printf("Working...\n\n");
 
-	ret = decrypt_file(decrypted, encrypted, gamekey);
+	ret = encrypt_file(plaintext, encrypted, datafile, paramsfo, gamekey);
 	if(ret < 0) {
-		printf("Error: decrypt_file() returned %d\n\n", ret);
+		printf("Error: encrypt_file() returned %d\n\n", ret);
 	} else {
 		printf("Successfully wrote %d bytes to\n", ret);
-		printf("  %s\n\n", decrypted);
+		printf("  %s\n", encrypted);
+		printf("and updated hashes in\n");
+		printf("  %s\n\n", paramsfo);
 	}
 
 	printf("Press any button to quit\n");

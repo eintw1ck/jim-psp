@@ -42,6 +42,7 @@ SAMPLES = \
 	prx/testprx \
 	savedata/utility \
 	savedata/decrypt \
+	savedata/encrypt \
 	usb/storage \
 	utility/netconf \
 	utility/msgdialog \

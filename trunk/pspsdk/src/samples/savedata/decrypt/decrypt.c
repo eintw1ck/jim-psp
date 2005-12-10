@@ -83,7 +83,7 @@ int decrypt_file(const char *decrypted_filename,
 		goto out3;
 	}
 
-	/* Write the data out.  Actual length is len-0x10 due to IV. */
+	/* Write the data out.  decrypt_data has set len correctly. */
 
 	if ((out = fopen(decrypted_filename, "w")) == NULL) {
 		retval = -6;
