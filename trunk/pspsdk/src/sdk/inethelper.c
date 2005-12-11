@@ -19,6 +19,7 @@
 #include <pspnet_apctl.h>
 //#include <pspNetApDialogDummy.h>
 
+#ifdef F_pspSdkLoadInetModules
 int pspSdkLoadInetModules()
 {
 	int modID;
@@ -59,7 +60,9 @@ int pspSdkLoadInetModules()
 
 	return 0;
 }
+#endif
 
+#ifdef F_pspSdkInetInit
 int pspSdkInetInit()
 {
 	u32 retVal;
@@ -87,7 +90,9 @@ int pspSdkInetInit()
 */
 	return 0;
 }
+#endif
 
+#ifdef F_pspSdkInetTerm
 void pspSdkInetTerm()
 {
 	//sceNetApDialogDummyTerm();
@@ -96,3 +101,4 @@ void pspSdkInetTerm()
 	sceNetInetTerm();
 	sceNetTerm();
 }
+#endif

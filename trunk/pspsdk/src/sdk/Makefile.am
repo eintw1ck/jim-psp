@@ -26,8 +26,13 @@ MODULEMGR_PATCHES_OBJS = \
 MULT_SRCS = modulemgr_patches.c
 MULT_OBJS = $(MODULEMGR_PATCHES_OBJS)
 
+INETHELPER_OBJS=pspSdkLoadInetModules.o pspSdkInetInit.o pspSdkInetTerm.o
+
 libpspsdk_a_SOURCES = query_mod.c loadmodule.c fixup.c inethelper.c $(MULT_SRCS)
-libpspsdk_a_LIBADD  = $(MULT_OBJS)
+libpspsdk_a_LIBADD  = $(MULT_OBJS) $(INETHELPER_OBJS)
 
 $(MODULEMGR_PATCHES_OBJS): modulemgr_patches.c
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(INETHELPER_OBJS): inethelper.c
 	$(COMPILE) -DF_$* $< -c -o $@
