@@ -37,6 +37,8 @@ SAMPLES = \
 	kernel/fileio \
 	kernel/messagebox \
 	nand/dumpipl \
+	net/simple \
+	net/simple_prx \
 	power \
 	prx/prx_loader \
 	prx/testprx \
