@@ -11,6 +11,7 @@
  */
 #include <errno.h>
 #include <sys/socket.h>
+#include <sys/select.h>
 
 #include <psptypes.h>
 
@@ -507,5 +508,19 @@ int	select(int n, fd_set *readfds, fd_set *writefds,
 	}
 
 	return ret;
+}
+#endif
+
+#ifdef F_inet_ntoa
+char *inet_ntoa(struct in_addr in)
+{
+	static char ip_addr[INET_ADDRSTRLEN+1];
+
+	if(sceNetInetInetNtop(AF_INET, &in, ip_addr, INET_ADDRSTRLEN) == NULL)
+	{
+		strcpy(ip_addr, "Invalid");
+	}
+
+	return ip_addr;
 }
 #endif

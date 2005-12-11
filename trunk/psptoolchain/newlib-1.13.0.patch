@@ -2049,17 +2049,18 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/aclocal.m4 newlib-psp/newlib/libc/s
 +
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/arpa/inet.h newlib-psp/newlib/libc/sys/psp/arpa/inet.h
 --- newlib-1.13.0/newlib/libc/sys/psp/arpa/inet.h	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/arpa/inet.h	2005-12-10 18:52:28.000000000 +0000
-@@ -0,0 +1,13 @@
++++ newlib-psp/newlib/libc/sys/psp/arpa/inet.h	2005-12-11 11:07:41.000000000 +0000
+@@ -0,0 +1,14 @@
 +/* arpa/inet.h - Functions for converting IP addresses between strings and numbers */
 +
 +#include <netinet/in.h>
 +
 +in_addr_t sceNetInetInetAddr(const char *ip);
 +int sceNetInetInetAton(const char *ip, struct in_addr *in);
-+int sceNetInetInetNtop(int af, const void *src, char *dst, socklen_t cnt);
++const char* sceNetInetInetNtop(int af, const void *src, char *dst, socklen_t cnt);
 +int sceNetInetInetPton(int af, const char *src, void *dst);
 +
++char *inet_ntoa(struct in_addr in);
 +#define inet_addr sceNetInetInetAddr
 +#define inet_aton sceNetInetInetAton
 +#define inet_ntop sceNetInetInetNtop
@@ -4697,7 +4698,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/libcglue.c newlib-psp/newlib/libc/s
 +
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.am newlib-psp/newlib/libc/sys/psp/Makefile.am
 --- newlib-1.13.0/newlib/libc/sys/psp/Makefile.am	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2005-12-11 09:28:50.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2005-12-11 11:03:25.000000000 +0000
 @@ -0,0 +1,39 @@
 +## Process this file with automake to generate Makefile.in
 +
@@ -4718,7 +4719,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.am newlib-psp/newlib/libc/
 +SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o \
 +				   listen.o recv.o recvfrom.o send.o sendto.o \
 +				   setsockopt.o shutdown.o __psp_socket_map.o \
-+				   getsockname.o getpeername.o select.o
++				   getsockname.o getpeername.o select.o inet_ntoa.o
 +
 +XPRINTF_MULT_OBJS = vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o _sprintf_r.o
 +
@@ -4740,7 +4741,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.am newlib-psp/newlib/libc/
 +CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)/configure.host
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/sys/psp/Makefile.in
 --- newlib-1.13.0/newlib/libc/sys/psp/Makefile.in	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2005-12-11 09:28:57.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2005-12-11 11:03:31.000000000 +0000
 @@ -0,0 +1,361 @@
 +# Makefile.in generated automatically by automake 1.4-p6 from Makefile.am
 +
@@ -4839,7 +4840,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/
 +LIBCGLUE_MULT_OBJS = _close.o _exit.o _fork.o _fstat.o _getpid.o	                     _gettimeofday.o _kill.o _lseek.o _open.o _read.o	                     _sbrk.o _wait.o _write.o clock.o isatty.o time.o	                     _link.o _unlink.o sleep.o opendir.o readdir.o	                     closedir.o getcwd.o chdir.o mkdir.o rmdir.o	                     realpath.o _stat.o truncate.o access.o tzset.o	                     __psp_set_errno.o	
 +
 +
-+SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o 				   listen.o recv.o recvfrom.o send.o sendto.o 				   setsockopt.o shutdown.o __psp_socket_map.o 				   getsockname.o getpeername.o select.o
++SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o 				   listen.o recv.o recvfrom.o send.o sendto.o 				   setsockopt.o shutdown.o __psp_socket_map.o 				   getsockname.o getpeername.o select.o inet_ntoa.o
 +
 +
 +XPRINTF_MULT_OBJS = vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o _sprintf_r.o
@@ -4865,10 +4866,10 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/
 +_stat.o truncate.o access.o tzset.o __psp_set_errno.o socket.o accept.o \
 +bind.o connect.o getsockopt.o listen.o recv.o recvfrom.o send.o \
 +sendto.o setsockopt.o shutdown.o __psp_socket_map.o getsockname.o \
-+getpeername.o select.o vxprintf.o _xprintf.o __sout.o vsnprintf.o \
-+snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o \
-+asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o \
-+_sprintf_r.o
++getpeername.o select.o inet_ntoa.o vxprintf.o _xprintf.o __sout.o \
++vsnprintf.o snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o \
++vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o \
++printf.o vprintf.o _sprintf_r.o
 +lib_a_OBJECTS =  libcglue.o socket.o pspcwd.o xprintf.o
 +CFLAGS = @CFLAGS@
 +COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -5571,8 +5572,8 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/README newlib-psp/newlib/libc/sys/p
 +Marcus R. Brown <mrbrown@ocgnet.org>
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys/psp/socket.c
 --- newlib-1.13.0/newlib/libc/sys/psp/socket.c	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/socket.c	2005-12-11 09:34:54.000000000 +0000
-@@ -0,0 +1,512 @@
++++ newlib-psp/newlib/libc/sys/psp/socket.c	2005-12-11 11:13:47.000000000 +0000
+@@ -0,0 +1,527 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -5587,6 +5588,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys
 +#include <errno.h>
 +#include <sys/socket.h>
 +#include <sys/select.h>
++#include <netinet/in.h>
 +
 +#include <psptypes.h>
 +
@@ -6083,6 +6085,20 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys
 +	}
 +
 +	return ret;
++}
++#endif
++
++#ifdef F_inet_ntoa
++char *inet_ntoa(struct in_addr in)
++{
++	static char ip_addr[INET_ADDRSTRLEN+1];
++
++	if(sceNetInetInetNtop(AF_INET, &in, ip_addr, INET_ADDRSTRLEN) == NULL)
++	{
++		strcpy(ip_addr, "Invalid");
++	}
++
++	return ip_addr;
 +}
 +#endif
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/dirent.h newlib-psp/newlib/libc/sys/psp/sys/dirent.h
