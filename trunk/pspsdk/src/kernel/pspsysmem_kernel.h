@@ -35,7 +35,7 @@ typedef struct _PspSysmemPartitionInfo
 {
 	SceSize size;
 	unsigned int startaddr;
-	unsigned int size;
+	unsigned int memsize;
 	unsigned int attr;
 } PspSysmemPartitionInfo;
 
