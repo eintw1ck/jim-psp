@@ -34,11 +34,13 @@
 #ifndef _SYS_SELECT_H_
 #define	_SYS_SELECT_H_
 
-#include <time.h>
+#include <sys/fd_set.h>
+#include <sys/time.h>
 
 int	sceNetInetSelect(int n, fd_set *readfds, fd_set *writefds,
 	    fd_set *exceptfds, struct timeval *timeout);
 
-#define select sceNetInetSelect
+int	select(int n, fd_set *readfds, fd_set *writefds,
+	    fd_set *exceptfds, struct timeval *timeout);
 
 #endif /* !_SYS_SELECT_H_ */

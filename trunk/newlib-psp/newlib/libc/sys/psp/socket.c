@@ -492,3 +492,20 @@ int	getsockname(int s, struct sockaddr *name, socklen_t *namelen)
 	return 0;
 }
 #endif
+
+#ifdef F_select
+int	select(int n, fd_set *readfds, fd_set *writefds,
+	    fd_set *exceptfds, struct timeval *timeout)
+{
+	int ret;
+
+	ret = sceNetInetSelect(n, readfds, writefds, exceptfds, timeout);
+	if(ret < 0)
+	{
+		errno = sceNetInetGetErrno();
+		return -1;
+	}
+
+	return ret;
+}
+#endif

@@ -802,6 +802,62 @@ diff -burN newlib-1.13.0/newlib/libc/include/sys/config.h newlib-psp/newlib/libc
  #ifdef __xstormy16__
  #define __SMALL_BITFIELDS
  #undef INT_MAX
+diff -burN newlib-1.13.0/newlib/libc/include/sys/types.h newlib-psp/newlib/libc/include/sys/types.h
+--- newlib-1.13.0/newlib/libc/include/sys/types.h	2003-07-02 21:32:07.000000000 +0100
++++ newlib-psp/newlib/libc/include/sys/types.h	2005-12-11 09:22:30.000000000 +0000
+@@ -188,52 +188,6 @@
+ 
+ typedef unsigned short nlink_t;
+ 
+-/* We don't define fd_set and friends if we are compiling POSIX
+-   source, or if we have included (or may include as indicated
+-   by __USE_W32_SOCKETS) the W32api winsock[2].h header which
+-   defines Windows versions of them.   Note that a program which
+-   includes the W32api winsock[2].h header must know what it is doing;
+-   it must not call the cygwin32 select function.
+-*/
+-# if !(defined (_POSIX_SOURCE) || defined (_WINSOCK_H) || defined (__USE_W32_SOCKETS)) 
+-#  define _SYS_TYPES_FD_SET
+-#  define	NBBY	8		/* number of bits in a byte */
+-/*
+- * Select uses bit masks of file descriptors in longs.
+- * These macros manipulate such bit fields (the filesystem macros use chars).
+- * FD_SETSIZE may be defined by the user, but the default here
+- * should be >= NOFILE (param.h).
+- */
+-#  ifndef	FD_SETSIZE
+-#	define	FD_SETSIZE	64
+-#  endif
+-
+-typedef	long	fd_mask;
+-#  define	NFDBITS	(sizeof (fd_mask) * NBBY)	/* bits per mask */
+-#  ifndef	howmany
+-#	define	howmany(x,y)	(((x)+((y)-1))/(y))
+-#  endif
+-
+-/* We use a macro for fd_set so that including Sockets.h afterwards
+-   can work.  */
+-typedef	struct _types_fd_set {
+-	fd_mask	fds_bits[howmany(FD_SETSIZE, NFDBITS)];
+-} _types_fd_set;
+-
+-#define fd_set _types_fd_set
+-
+-#  define	FD_SET(n, p)	((p)->fds_bits[(n)/NFDBITS] |= (1L << ((n) % NFDBITS)))
+-#  define	FD_CLR(n, p)	((p)->fds_bits[(n)/NFDBITS] &= ~(1L << ((n) % NFDBITS)))
+-#  define	FD_ISSET(n, p)	((p)->fds_bits[(n)/NFDBITS] & (1L << ((n) % NFDBITS)))
+-#  define	FD_ZERO(p)	(__extension__ (void)({ \
+-     size_t __i; \
+-     char *__tmp = (char *)p; \
+-     for (__i = 0; __i < sizeof (*(p)); ++__i) \
+-       *__tmp++ = 0; \
+-}))
+-
+-# endif	/* !(defined (_POSIX_SOURCE) || defined (_WINSOCK_H) || defined (__USE_W32_SOCKETS)) */
+-
+ #undef __MS_types__
+ #undef _ST_INT32
+ 
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/aclocal.m4 newlib-psp/newlib/libc/sys/psp/aclocal.m4
 --- newlib-1.13.0/newlib/libc/sys/psp/aclocal.m4	1970-01-01 01:00:00.000000000 +0100
 +++ newlib-psp/newlib/libc/sys/psp/aclocal.m4	2005-12-09 23:37:55.000000000 +0000
@@ -4641,7 +4697,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/libcglue.c newlib-psp/newlib/libc/s
 +
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.am newlib-psp/newlib/libc/sys/psp/Makefile.am
 --- newlib-1.13.0/newlib/libc/sys/psp/Makefile.am	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2005-12-10 18:52:13.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2005-12-11 09:28:50.000000000 +0000
 @@ -0,0 +1,39 @@
 +## Process this file with automake to generate Makefile.in
 +
@@ -4662,7 +4718,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.am newlib-psp/newlib/libc/
 +SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o \
 +				   listen.o recv.o recvfrom.o send.o sendto.o \
 +				   setsockopt.o shutdown.o __psp_socket_map.o \
-+				   getsockname.o getpeername.o
++				   getsockname.o getpeername.o select.o
 +
 +XPRINTF_MULT_OBJS = vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o _sprintf_r.o
 +
@@ -4684,7 +4740,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.am newlib-psp/newlib/libc/
 +CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)/configure.host
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/sys/psp/Makefile.in
 --- newlib-1.13.0/newlib/libc/sys/psp/Makefile.in	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2005-12-10 18:52:37.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2005-12-11 09:28:57.000000000 +0000
 @@ -0,0 +1,361 @@
 +# Makefile.in generated automatically by automake 1.4-p6 from Makefile.am
 +
@@ -4783,7 +4839,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/
 +LIBCGLUE_MULT_OBJS = _close.o _exit.o _fork.o _fstat.o _getpid.o	                     _gettimeofday.o _kill.o _lseek.o _open.o _read.o	                     _sbrk.o _wait.o _write.o clock.o isatty.o time.o	                     _link.o _unlink.o sleep.o opendir.o readdir.o	                     closedir.o getcwd.o chdir.o mkdir.o rmdir.o	                     realpath.o _stat.o truncate.o access.o tzset.o	                     __psp_set_errno.o	
 +
 +
-+SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o 				   listen.o recv.o recvfrom.o send.o sendto.o 				   setsockopt.o shutdown.o __psp_socket_map.o 				   getsockname.o getpeername.o
++SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o 				   listen.o recv.o recvfrom.o send.o sendto.o 				   setsockopt.o shutdown.o __psp_socket_map.o 				   getsockname.o getpeername.o select.o
 +
 +
 +XPRINTF_MULT_OBJS = vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o _sprintf_r.o
@@ -4809,9 +4865,9 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/Makefile.in newlib-psp/newlib/libc/
 +_stat.o truncate.o access.o tzset.o __psp_set_errno.o socket.o accept.o \
 +bind.o connect.o getsockopt.o listen.o recv.o recvfrom.o send.o \
 +sendto.o setsockopt.o shutdown.o __psp_socket_map.o getsockname.o \
-+getpeername.o vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o \
-+vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o \
-+vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o \
++getpeername.o select.o vxprintf.o _xprintf.o __sout.o vsnprintf.o \
++snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o \
++asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o \
 +_sprintf_r.o
 +lib_a_OBJECTS =  libcglue.o socket.o pspcwd.o xprintf.o
 +CFLAGS = @CFLAGS@
@@ -5515,8 +5571,8 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/README newlib-psp/newlib/libc/sys/p
 +Marcus R. Brown <mrbrown@ocgnet.org>
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys/psp/socket.c
 --- newlib-1.13.0/newlib/libc/sys/psp/socket.c	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/socket.c	2005-12-10 20:07:07.000000000 +0000
-@@ -0,0 +1,494 @@
++++ newlib-psp/newlib/libc/sys/psp/socket.c	2005-12-11 09:34:54.000000000 +0000
+@@ -0,0 +1,512 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -5530,6 +5586,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys
 + */
 +#include <errno.h>
 +#include <sys/socket.h>
++#include <sys/select.h>
 +
 +#include <psptypes.h>
 +
@@ -6011,6 +6068,23 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/socket.c newlib-psp/newlib/libc/sys
 +	return 0;
 +}
 +#endif
++
++#ifdef F_select
++int	select(int n, fd_set *readfds, fd_set *writefds,
++	    fd_set *exceptfds, struct timeval *timeout)
++{
++	int ret;
++
++	ret = sceNetInetSelect(n, readfds, writefds, exceptfds, timeout);
++	if(ret < 0)
++	{
++		errno = sceNetInetGetErrno();
++		return -1;
++	}
++
++	return ret;
++}
++#endif
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/dirent.h newlib-psp/newlib/libc/sys/psp/sys/dirent.h
 --- newlib-1.13.0/newlib/libc/sys/psp/sys/dirent.h	1970-01-01 01:00:00.000000000 +0100
 +++ newlib-psp/newlib/libc/sys/psp/sys/dirent.h	2005-12-09 23:37:55.000000000 +0000
@@ -6218,8 +6292,8 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/errno.h newlib-psp/newlib/libc/
 +#endif /* _SYS_ERRNO_H */
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/fd_set.h newlib-psp/newlib/libc/sys/psp/sys/fd_set.h
 --- newlib-1.13.0/newlib/libc/sys/psp/sys/fd_set.h	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/sys/fd_set.h	2005-12-11 00:05:20.000000000 +0000
-@@ -0,0 +1,65 @@
++++ newlib-psp/newlib/libc/sys/psp/sys/fd_set.h	2005-12-11 09:25:57.000000000 +0000
+@@ -0,0 +1,66 @@
 +/*	$NetBSD: fd_set.h,v 1.1 2005/05/22 12:44:24 kleink Exp $	*/
 +
 +/*-
@@ -6256,6 +6330,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/fd_set.h newlib-psp/newlib/libc
 +#ifndef _SYS_FD_SET_H_
 +#define	_SYS_FD_SET_H_
 +
++#include <sys/socket.h>
 +#include <stdint.h>
 +
 +/*
@@ -6277,18 +6352,18 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/fd_set.h newlib-psp/newlib/libc
 +} fd_set;
 +
 +#define	FD_SET(n, p)	\
-+    ((p)->fds_bits[(n)/__NFDBITS] |= (1 << ((n) % __NFDBITS)))
++    ((p)->fds_bits[((n) & 0xFF) /__NFDBITS] |= (1 << ((n) % __NFDBITS)))
 +#define	FD_CLR(n, p)	\
-+    ((p)->fds_bits[(n)/__NFDBITS] &= ~(1 << ((n) % __NFDBITS)))
++    ((p)->fds_bits[((n) & 0xFF) /__NFDBITS] &= ~(1 << ((n) % __NFDBITS)))
 +#define	FD_ISSET(n, p)	\
-+    ((p)->fds_bits[(n)/__NFDBITS] & (1 << ((n) % __NFDBITS)))
++    ((p)->fds_bits[((n) & 0xFF) /__NFDBITS] & (1 << ((n) % __NFDBITS)))
 +#define	FD_ZERO(p)	(void)__builtin_memset((p), 0, sizeof(*(p)))
 +
 +#endif /* _SYS_FD_SET_H_ */
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/select.h newlib-psp/newlib/libc/sys/psp/sys/select.h
 --- newlib-1.13.0/newlib/libc/sys/psp/sys/select.h	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/sys/select.h	2005-12-11 00:05:16.000000000 +0000
-@@ -0,0 +1,44 @@
++++ newlib-psp/newlib/libc/sys/psp/sys/select.h	2005-12-11 09:42:47.000000000 +0000
+@@ -0,0 +1,46 @@
 +/*	$NetBSD: select.h,v 1.24 2005/05/22 12:44:24 kleink Exp $	*/
 +
 +/*-
@@ -6325,12 +6400,14 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/select.h newlib-psp/newlib/libc
 +#ifndef _SYS_SELECT_H_
 +#define	_SYS_SELECT_H_
 +
-+#include <time.h>
++#include <sys/fd_set.h>
++#include <sys/time.h>
 +
 +int	sceNetInetSelect(int n, fd_set *readfds, fd_set *writefds,
 +	    fd_set *exceptfds, struct timeval *timeout);
 +
-+#define select sceNetInetSelect
++int	select(int n, fd_set *readfds, fd_set *writefds,
++	    fd_set *exceptfds, struct timeval *timeout);
 +
 +#endif /* !_SYS_SELECT_H_ */
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/socket.h newlib-psp/newlib/libc/sys/psp/sys/socket.h
