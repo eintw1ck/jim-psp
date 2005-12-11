@@ -35,8 +35,7 @@ CXXFLAGS := $(CFLAGS) $(CXXFLAGS)
 ASFLAGS  := $(CFLAGS) $(ASFLAGS)
 
 ifeq ($(BUILD_PRX),1)
-CFLAGS   := -specs=$(PSPSDK)/lib/prxspecs $(CFLAGS)
-LDFLAGS  := $(addprefix -L,$(LIBDIR)) -Wl,-q,-T$(PSPSDK)/lib/linkfile.prx $(LDFLAGS)
+LDFLAGS  := $(addprefix -L,$(LIBDIR)) -specs=$(PSPSDK)/lib/prxspecs -Wl,-q,-T$(PSPSDK)/lib/linkfile.prx $(LDFLAGS)
 EXTRA_CLEAN += $(TARGET).elf
 # Setup default exports if needed
 ifdef PRX_EXPORTS
