@@ -22,7 +22,7 @@ AR     := psp-ar rc
 RANLIB := psp-ranlib
 
 DEBUG_CFLAGS     := -Wall -Wno-unknown-pragmas -Wno-format -G0 -g -DDEBUG
-RELEASE_CFLAGS   := -Wall -Wno-unknown-pragmas -Wno-format -O2 -G0
+RELEASE_CFLAGS   := -Wall -Wno-unknown-pragmas -Wno-format -O2 -G0 -g
 
 LIBS		 :=
 
