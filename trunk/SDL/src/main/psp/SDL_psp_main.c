@@ -93,12 +93,22 @@ void sdl_psp_exception_handler(PspDebugRegBlock *regs)
 		regs->epc, regs->badvaddr, regs->r[31]);
 }
 
+/* If this flag is set to 1, the _init() function was called and all
+   global/static constructors have been called. */
+static int init_was_called = 0;
+
 __attribute__ ((constructor))
 void loaderInit()
 {
-	pspKernelSetKernelPC();
-	pspSdkInstallNoDeviceCheckPatch();
-	pspDebugInstallErrorHandler(sdl_psp_exception_handler);
+	int kmode_is_available = (sceKernelDevkitVersion() < 0x02000010);
+
+	if (kmode_is_available) {
+		pspKernelSetKernelPC();
+		pspSdkInstallNoDeviceCheckPatch();
+		pspDebugInstallErrorHandler(sdl_psp_exception_handler);
+	}
+
+	init_was_called = 1;
 }
 
 /* Remove the output files if there was no output written */
@@ -134,8 +144,18 @@ static void cleanup_output(void)
 #endif
 }
 
+extern void _init(void);
+
 int main(int argc, char *argv[])
 {
+	/* Fanjita's EBOOT loader can be configured to skip the call to _init().
+	   Since we need _init() for C++, we check to see if _init() has been
+	   called.  If it hasn't we call it manually, after determining whether or
+	   not we can access the kernel. */
+	if (!init_was_called) {
+		_init();
+	}
+	
 	pspDebugScreenInit();
 	sdl_psp_setup_callbacks();
 
