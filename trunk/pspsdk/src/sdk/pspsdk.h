@@ -18,6 +18,7 @@
 #include <pspkerneltypes.h>
 #include <pspmodulemgr.h>
 #include <pspmoduleinfo.h>
+#include <pspthreadman.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -109,6 +110,17 @@ int pspSdkInetInit();
  * Terminate Inet related modules.
  */
 void pspSdkInetTerm();
+
+/**
+ * Search for a thread with the given name and retrieve it's ::SceKernelThreadInfo struct.
+ *
+ * @param name - The name of the thread to search for.
+ * @param pUID - If the thread with the given name is found, it's ::SceUID is stored here.
+ * @param pInfo - If the thread with the given name is found, it's ::SceKernelThreadInfo data is stored here.
+ *
+ * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ */
+int pspSdkReferThreadStatusByName(const char *name, SceUID *pUID, SceKernelThreadInfo *pInfo);
 
 /*@}*/
 
