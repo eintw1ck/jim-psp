@@ -33,4 +33,4 @@ uninstall-hook:
 CLEANFILES = crt0.o crt0_prx.o prxexports.o 
 
 ## How else do I add a dependency for this?
-EXTRA_DIST = crt0.c crt0_prx.o prxexports.c
+EXTRA_DIST = crt0.c crt0_prx.c prxexports.c
