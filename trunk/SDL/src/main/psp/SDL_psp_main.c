@@ -52,8 +52,7 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 
 int sdl_psp_exit_callback(int arg1, int arg2, void *common)
 {
-	cleanup_output();
-	sceKernelExitGame();
+	exit(0);
 	return 0;
 }
 
@@ -145,6 +144,7 @@ static void cleanup_output(void)
 }
 
 extern void _init(void);
+extern void _fini(void);
 
 int main(int argc, char *argv[])
 {
@@ -168,12 +168,16 @@ int main(int argc, char *argv[])
 	setbuf(stderr, NULL);					/* No buffering */
 #endif /* NO_STDIO_REDIRECT */
 
+	/* Functions registered with atexit() are called in reverse order, so make
+	   sure that we register sceKernelExitGame() first, so that it's called last. */
+	atexit(sceKernelExitGame);
+	/* Make sure that _fini() is called before returning to the OS. */
+	atexit(_fini);
 	atexit(cleanup_output);
 
 	(void)SDL_main(argc, argv);
 
-	cleanup_output();
+	/* Delay 2.5 seconds before returning to the OS. */
 	sceKernelDelayThread(2500000);
-	sceKernelExitGame();
 	return 0;
 }
