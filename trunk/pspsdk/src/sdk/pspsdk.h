@@ -122,6 +122,28 @@ void pspSdkInetTerm();
  */
 int pspSdkReferThreadStatusByName(const char *name, SceUID *pUID, SceKernelThreadInfo *pInfo);
 
+/**
+ * Search for a semaphore with the given name and retrieve it's ::SceKernelSemaInfo struct.
+ *
+ * @param name - The name of the sema to search for.
+ * @param pUID - If the sema with the given name is found, it's ::SceUID is stored here.
+ * @param pInfo - If the sema with the given name is found, it's ::SceKernelSemaInfo data is stored here.
+ *
+ * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ */
+int pspSdkReferSemaStatusByName(const char *name, SceUID *pUID, SceKernelSemaInfo *pInfo);
+
+/**
+ * Search for an event flag with the given name and retrieve it's ::SceKernelEventFlagInfo struct.
+ *
+ * @param name - The name of the event flag to search for.
+ * @param pUID - If the event flag with the given name is found, it's ::SceUID is stored here.
+ * @param pInfo - If the event flag with the given name is found, it's ::SceKernelEventFlagInfo data is stored here.
+ *
+ * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ */
+int pspSdkReferEventFlagStatusByName(const char *name, SceUID *pUID, SceKernelEventFlagInfo *pInfo);
+
 /*@}*/
 
 #ifdef __cplusplus

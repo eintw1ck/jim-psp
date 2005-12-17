@@ -19,12 +19,21 @@
 
 /* TODO: Generalize this for all thread primatives that have names. */
 
-int pspSdkReferThreadStatusByName(const char *name, SceUID *pUID, SceKernelThreadInfo *pInfo)
+struct _ThreadInfoSkel
+{
+	SceSize size;
+	char name[32];
+};
+
+typedef int (*ReferFunc)(SceUID, struct _ThreadInfoSkel*);
+
+static int _pspSdkReferInternal(const char *name, enum SceKernelIdListType type, 
+		struct _ThreadInfoSkel *pInfo, int size, ReferFunc pRefer)
 {
 	int uid_count = 0;
 
 	/* First determine the number of threads we have. */
-	int res = sceKernelGetThreadmanIdList(SCE_KERNEL_TMID_Thread, NULL, 0, &uid_count);
+	int res = sceKernelGetThreadmanIdList(type, NULL, 0, &uid_count);
 	if (res < 0) {
 		return res;
 	}
@@ -34,38 +43,109 @@ int pspSdkReferThreadStatusByName(const char *name, SceUID *pUID, SceKernelThrea
 
 	/* Grab UIDs for all of the threads. */
 	SceUID uid_buf[uid_count];
-	res = sceKernelGetThreadmanIdList(SCE_KERNEL_TMID_Thread, uid_buf, uid_count, NULL);
+	res = sceKernelGetThreadmanIdList(type, uid_buf, uid_count, NULL);
 	if (res < 0) {
 		return res;
 	}
 
 	int i;
 	for (i = 0; i < uid_count; i++) {
-		SceKernelThreadInfo thread_info;
+		memset(pInfo, 0, size);
+		pInfo->size = size;
 
-		memset(&thread_info, 0, sizeof(SceKernelThreadInfo));
-		thread_info.size = sizeof(SceKernelThreadInfo);
-
-		res = sceKernelReferThreadStatus(uid_buf[i], &thread_info);
+		res = pRefer(uid_buf[i], pInfo);
 		if (res < 0) {
 			/* If we got an error than we probably don't have enough privileges
 			   to access the thread's info. */
 			continue;
 		}
 
-		if (thread_info.name[0] != '\0' && strcmp(thread_info.name, name) == 0) {
-			if (pUID != NULL) {
-				*pUID = uid_buf[i];
-			}
-			if (pInfo != NULL) {
-				memcpy(pInfo, &thread_info, sizeof(SceKernelThreadInfo));
-			}
-
+		if (pInfo->name[0] != '\0' && strcmp(pInfo->name, name) == 0) {
 			/* Found it. */
-			return 0;
+			return uid_buf[i];
 		}
 	}
 
 	/* Unable to find the thread (or insufficient access to retrieve it's info). */
 	return -1;  /* XXX: Should we return a kernel errorcode here? */
+}
+
+int pspSdkReferSemaStatusByName(const char *name, SceUID *pUID, SceKernelSemaInfo *pInfo)
+{
+	SceKernelSemaInfo intSema;
+	SceUID uid;
+
+	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_Semaphore, (struct _ThreadInfoSkel *) &intSema, 
+			sizeof(intSema), (ReferFunc) sceKernelReferSemaStatus);
+	if(uid > 0)
+	{
+		if(pUID != NULL)
+		{
+			*pUID = uid;
+		}
+
+		if(pInfo != NULL)
+		{
+			memcpy(pInfo, &intSema, sizeof(intSema));
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+int pspSdkReferEventFlagStatusByName(const char *name, SceUID *pUID, SceKernelEventFlagInfo *pInfo)
+{
+	SceKernelEventFlagInfo intEvent;
+	SceUID uid;
+
+	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_EventFlag, (struct _ThreadInfoSkel *) &intEvent, 
+			sizeof(intEvent), (ReferFunc) sceKernelReferEventFlagStatus);
+	if(uid > 0)
+	{
+		if(pUID != NULL)
+		{
+			*pUID = uid;
+		}
+
+		if(pInfo != NULL)
+		{
+			memcpy(pInfo, &intEvent, sizeof(intEvent));
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 0;
+}
+int pspSdkReferThreadStatusByName(const char *name, SceUID *pUID, SceKernelThreadInfo *pInfo)
+{
+	SceKernelThreadInfo intThread;
+	SceUID uid;
+
+	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_Thread, (struct _ThreadInfoSkel *) &intThread, 
+			sizeof(intThread), (ReferFunc) sceKernelReferThreadStatus);
+	if(uid > 0)
+	{
+		if(pUID != NULL)
+		{
+			*pUID = uid;
+		}
+
+		if(pInfo != NULL)
+		{
+			memcpy(pInfo, &intThread, sizeof(intThread));
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 0;
 }
