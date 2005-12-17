@@ -29,6 +29,11 @@ extern "C" {
  */
 int sceKernelGzipDecompress(u8 *dest, u32 destSize, const u8 *src, u32 unknown);
 
+/**
+ * Invalidate the entire instruction cache
+ */
+void sceKernelIcacheInvalidateAll();
+
 #ifdef __cplusplus
 }
 #endif
