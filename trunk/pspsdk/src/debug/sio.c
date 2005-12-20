@@ -23,6 +23,8 @@
 #define PSP_UART_TXFULL  0x20
 #define PSP_UART_RXEMPTY 0x10
 
+static int g_enablekprintf = 0;
+
 /* Some function prototypes we will need */
 int sceHprmEnd(void);
 int sceSysregUartIoEnable(int uart);
@@ -147,7 +149,7 @@ void pspDebugEnablePutchar(void)
 
 static void PutCharDebug(unsigned short *data, unsigned int type)
 {
-	if((type & 0xFF00) == 0)
+	if(((type & 0xFF00) == 0) && (g_enablekprintf))
 	{
 		if(type == '\n')
 		{
@@ -162,4 +164,15 @@ void pspDebugSioInstallKprintf(void)
 {
 	pspDebugEnablePutchar();
 	sceKernelRegisterDebugPutchar(PutCharDebug);
+	g_enablekprintf = 1;
+}
+
+void pspDebugSioEnableKprintf(void)
+{
+	g_enablekprintf = 1;
+}
+
+void pspDebugSioDisableKprintf(void)
+{
+	g_enablekprintf = 0;
 }

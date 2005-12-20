@@ -358,6 +358,16 @@ void pspDebugGdbStubInit(void);
   */
 void pspDebugBreakpoint(void);
 
+/**
+ * Enable the kprintf handler (once installed)
+ */
+void pspDebugSioEnableKprintf(void);
+
+/**
+ * Disable the kprintf handler (once installed)
+ */
+void pspDebugSioDisableKprintf(void);
+
 /*@}*/
 
 #ifdef __cplusplus
