@@ -83,7 +83,7 @@ void RenderFog()
 		{
 			struct Vertex* vertices = (struct Vertex*)sceGuGetMemory(sizeof(struct Vertex)*2);
 
-			// shift texture 1 pixel to avoid the 8 MSB, since they change very rapidly
+			// shift texture 1 pixel to avoid the 8 LSB, since they change very rapidly
 
 			vertices[0].u = 1 + j*(ZBUFFER_SLICE * 2);
 			vertices[0].v = 0;
