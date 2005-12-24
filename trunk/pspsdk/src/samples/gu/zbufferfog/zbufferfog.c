@@ -56,6 +56,7 @@ unsigned short __attribute__((aligned(16))) torus_indices[TORUS_SLICES*TORUS_ROW
 #define ZBUFFER_LINEAR(x) (0x600000 + x)
 #define ZBUFFER_SLICE 64
 #define VRAM_OFFSET(x) (0x4000000 + x)
+#define ZFAR_LIMIT 64
 #define ZNEAR_LIMIT 256
 #define FOG_COLOR 0x554433
 
@@ -159,9 +160,11 @@ int main(int argc, char* argv[])
 
 	for (i = 0; i < 256; ++i)
 	{
-		unsigned int j = (i * 256)/ZNEAR_LIMIT;
-		unsigned int k = j > 255 ? 255 : j;
+		unsigned int far = (i - ZFAR_LIMIT) < 0 ? 0 : (i - ZFAR_LIMIT);
+		unsigned int near = (far * 256) / (ZNEAR_LIMIT-ZFAR_LIMIT);
+		unsigned int k = near > 255 ? 255 : near;
 		fogPalette[i] = (k<<24)|FOG_COLOR;
+
 		rawPalette[i] = (i << 24)|(i << 16)|(i << 8)|i;
 	}
 
@@ -205,8 +208,6 @@ int main(int argc, char* argv[])
 
 	for(;;)
 	{
-		int i;
-	
 		sceGuStart(GU_DIRECT,list);
 
 		// switch mode if requested
@@ -240,7 +241,7 @@ int main(int argc, char* argv[])
 		sceGumMatrixMode(GU_MODEL);
 		sceGumLoadIdentity();
 		{
-			ScePspFVector3 pos = { 0, 0, -7.5f + sinf(val * (GU_PI/180.0f)) * 5.0f };
+			ScePspFVector3 pos = { 0, 0, -5.0f + sinf(val * (GU_PI/180.0f)) * 2.5f };
 			ScePspFVector3 rot = { val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f) };
 			sceGumTranslate(&pos);
 			sceGumRotateXYZ(&rot);
