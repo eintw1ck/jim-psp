@@ -3,6 +3,9 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
+ * This implements unswizzled depth-fog using the hardware unswizzling
+ * figured out by Jeremy Fitzhardinge.
+ *
  * Copyright (c) 2005 Jesper Svennevid
  */
 
@@ -53,7 +56,7 @@ unsigned short __attribute__((aligned(16))) torus_indices[TORUS_SLICES*TORUS_ROW
 #define ZBUFFER_LINEAR(x) (0x600000 + x)
 #define ZBUFFER_SLICE 64
 #define VRAM_OFFSET(x) (0x4000000 + x)
-#define ZNEAR_LIMIT 100
+#define ZNEAR_LIMIT 256
 #define FOG_COLOR 0x554433
 
 unsigned int fogPalette[256];
@@ -78,6 +81,8 @@ void RenderFog()
 		for (j = 0; j < (256/ZBUFFER_SLICE); ++j)
 		{
 			struct Vertex* vertices = (struct Vertex*)sceGuGetMemory(sizeof(struct Vertex)*2);
+
+			// shift texture 1 pixel to avoid the 8 MSB, since they change very rapidly
 
 			vertices[0].u = 1 + j*(ZBUFFER_SLICE * 2);
 			vertices[0].v = 0;
@@ -227,7 +232,7 @@ int main(int argc, char* argv[])
 
 		sceGumMatrixMode(GU_PROJECTION);
 		sceGumLoadIdentity();
-		sceGumPerspective(75.0f,16.0f/9.0f,0.5f,1000.0f);
+		sceGumPerspective(75.0f,16.0f/9.0f,1.0f,100.0f);
 
 		sceGumMatrixMode(GU_VIEW);
 		sceGumLoadIdentity();
@@ -235,7 +240,7 @@ int main(int argc, char* argv[])
 		sceGumMatrixMode(GU_MODEL);
 		sceGumLoadIdentity();
 		{
-			ScePspFVector3 pos = { 0, 0, -7.0f + sinf(val * (GU_PI/180.0f)) * 5.0f };
+			ScePspFVector3 pos = { 0, 0, -7.5f + sinf(val * (GU_PI/180.0f)) * 5.0f };
 			ScePspFVector3 rot = { val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f) };
 			sceGumTranslate(&pos);
 			sceGumRotateXYZ(&rot);
