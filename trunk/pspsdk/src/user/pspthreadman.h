@@ -347,12 +347,38 @@ int sceKernelChangeThreadPriority(SceUID thid, int priority);
   */
 int sceKernelGetThreadId(void);
 
-// sceKernelGetThreadCurrentPriority
-//
-// sceKernelGetThreadExitStatus
-//
-// sceKernelCheckThreadStack
-// sceKernelGetThreadStackFreeSize
+/**
+ * Get the current priority of the thread you are in.
+ *
+ * @return The current thread priority
+ */
+int sceKernelGetThreadCurrentPriority(void);
+
+/**
+ * Get the exit status of a thread.
+ *
+ * @param thid - The UID of the thread to check.
+ *
+ * @return The exit status
+ */
+int sceKernelGetThreadExitStatus(SceUID thid);
+
+/**
+ * Check the thread stack?
+ *
+ * @return Unknown.
+ */
+int sceKernelCheckThreadStack(void);
+
+/**
+ * Get the free stack size for a thread.
+ *
+ * @param thid - The thread ID. Seem to take current thread
+ * if set to 0.
+ *
+ * @return The free size.
+ */
+int sceKernelGetThreadStackFreeSize(SceUID thid);
 
 /** 
   * Get the status information for the specified thread.
@@ -871,6 +897,63 @@ typedef struct SceKernelSystemStatus {
   * @return < 0 on error.
   */
 int sceKernelReferSystemStatus(SceKernelSystemStatus *status);
+
+//sceKernelCreateMsgPipe
+//sceKernelDeleteMsgPipe
+//sceKernelSendMsgPipe
+//sceKernelSendMsgPipeCB
+//sceKernelTrySendMsgPipe
+//sceKernelReceiveMsgPipe
+//sceKernelReceiveMsgPipeCB
+//sceKernelTryReceiveMsgPipe
+//sceKernelCancelMsgPipe
+//sceKernelReferMsgPipeStatus
+//sceKernelCreateVpl
+//sceKernelDeleteVpl
+//sceKernelAllocateVpl
+//sceKernelAllocateVplCB
+//sceKernelTryAllocateVpl
+//sceKernelFreeVpl
+//sceKernelCancelVpl
+//sceKernelReferVplStatus
+//sceKernelCreateFpl
+//sceKernelDeleteFpl
+//sceKernelAllocateFpl
+//sceKernelAllocateFplCB
+//sceKernelTryAllocateFpl
+//sceKernelFreeFpl
+//sceKernelCancelFpl
+//sceKernelReferFplStatus
+//_sceKernelReturnFromTimerHandler
+//sceKernelUSec2SysClock
+//sceKernelUSec2SysClockWide
+//sceKernelSysClock2USec
+//sceKernelSysClock2USecWide
+//sceKernelGetSystemTime
+//sceKernelGetSystemTimeWide
+//sceKernelGetSystemTimeLow
+//sceKernelSetAlarm
+//sceKernelSetSysClockAlarm
+//sceKernelCancelAlarm
+//sceKernelReferAlarmStatus
+//sceKernelCreateVTimer
+//sceKernelDeleteVTimer
+//sceKernelGetVTimerBase
+//sceKernelGetVTimerBaseWide
+//sceKernelGetVTimerTime
+//sceKernelGetVTimerTimeWide
+//sceKernelSetVTimerTime
+//sceKernelSetVTimerTimeWide
+//sceKernelStartVTimer
+//sceKernelStopVTimer
+//sceKernelSetVTimerHandler
+//sceKernelSetVTimerHandlerWide
+//sceKernelCancelVTimerHandler
+//sceKernelReferVTimerStatus
+//_sceKernelExitThread
+//sceKernelGetThreadmanIdType
+//sceKernelReferThreadProfiler
+//sceKernelReferGlobalProfiler
 
 /*@}*/
 
