@@ -14,12 +14,12 @@ void sceGuScissor(int x, int y, int w, int h)
 
 	context->scissor_start[0] = x;
 	context->scissor_start[1] = y;
-	context->scissor_end[0] = (x+w)-1;
-	context->scissor_end[1] = (y+h)-1;
+	context->scissor_end[0] = w-1;
+	context->scissor_end[1] = h-1;
 
 	if (context->scissor_enable)
 	{
-		sendCommandi(212,(y << 10)|x);
-		sendCommandi(213,(((y+h)-1) << 10)|(((x+w)-1)));
+		sendCommandi(212,(context->scissor_start[1] << 10)|context->scissor_start[0]);
+		sendCommandi(213,(context->scissor_end[1] << 10)|context->scissor_end[0]);
 	}
 }
