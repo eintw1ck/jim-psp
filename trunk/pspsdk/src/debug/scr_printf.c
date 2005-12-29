@@ -30,13 +30,14 @@ static int X = 0, Y = 0;
 static int MX=68, MY=34;
 static u32 bg_col = 0, fg_col = 0xFFFFFFFF;
 static u32* g_vram_base = (u32 *) 0x04000000;
+static int g_vram_offset = 0;
 
 static int init = 0;
 
 static void clear_screen(u32 color)
 {
     int x;
-    u32 *vram = g_vram_base;
+    u32 *vram = g_vram_base + (g_vram_offset>>2);
 
     for(x = 0; x < (PSP_LINE_SIZE * PSP_SCREEN_HEIGHT); x++)
     {
@@ -49,6 +50,7 @@ void pspDebugScreenInit()
    X = Y = 0;
    /* Place vram in uncached memory */
    g_vram_base = (void *) (0x40000000 | (u32) sceGeEdramGetAddr());
+   g_vram_offset = 0;
    sceDisplaySetMode(0, PSP_SCREEN_WIDTH, PSP_SCREEN_HEIGHT);
    sceDisplaySetFrameBuf((void *) g_vram_base, PSP_LINE_SIZE, PSP_PIXEL_FORMAT, 1);
    clear_screen(bg_col);
@@ -82,7 +84,7 @@ pspDebugScreenPutChar( int x, int y, u32 color, u8 ch)
 	   return;
    }
 
-   vram = g_vram_base + x;
+   vram = g_vram_base + (g_vram_offset>>2) + x;
    vram += (y * PSP_LINE_SIZE);
    
    font = &msx[ (int)ch * 8];
@@ -172,6 +174,11 @@ void pspDebugScreenSetXY(int x, int y)
 {
 	if( x<MX && x>=0 ) X=x;
 	if( y<MY && y>=0 ) Y=y;
+}
+
+void pspDebugScreenSetOffset(int offset)
+{
+	g_vram_offset = offset;
 }
 
 int pspDebugScreenGetX()
