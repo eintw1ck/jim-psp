@@ -69,6 +69,43 @@ enum PspSubInterrupts
 	PSP_DISPLAY_SUBINT = PSP_VBLANK_INT
 };
 
+/**
+ * Suspend all interrupts.
+ *
+ * @returns The current state of the interrupt controller, to be used with ::sceKernelCpuResumeIntr().
+ */
+unsigned int sceKernelCpuSuspendIntr(void);
+
+/**
+ * Resume all interrupts.
+ *
+ * @param flags - The value returned from ::sceKernelCpuSuspendIntr().
+ */
+void sceKernelCpuResumeIntr(unsigned int flags);
+
+/**
+ * Resume all interrupts (using sync instructions).
+ *
+ * @param flags - The value returned from ::sceKernelCpuSuspendIntr()
+ */
+void sceKernelCpuResumeIntrWithSync(unsigned int flags);
+
+/**
+ * Determine if interrupts are suspended or active, based on the given flags.
+ *
+ * @param flags - The value returned from ::sceKernelCpuSuspendIntr().
+ *
+ * @returns 1 if flags indicate that interrupts were not suspended, 0 otherwise.
+ */
+int sceKernelIsCpuIntrSuspended(unsigned int flags);
+
+/**
+ * Determine if interrupts are enabled or disabled.
+ *
+ * @returns 1 if interrupts are currently enabled.
+ */
+int sceKernelIsCpuIntrEnable(void);
+
 /** 
   * Register a sub interrupt handler.
   * 
