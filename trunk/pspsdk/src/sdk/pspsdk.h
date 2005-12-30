@@ -144,6 +144,22 @@ int pspSdkReferSemaStatusByName(const char *name, SceUID *pUID, SceKernelSemaInf
  */
 int pspSdkReferEventFlagStatusByName(const char *name, SceUID *pUID, SceKernelEventFlagInfo *pInfo);
 
+/**
+ * Search for an message box with the given name and retrieve it's ::SceKernelMbxInfo struct.
+ *
+ * @param name - The name of the message box to search for.
+ * @param pUID - If the message box with the given name is found, it's ::SceUID is stored here.
+ * @param pInfo - If the message box with the given name is found, it's ::SceKernelMbxInfo data is stored here.
+ *
+ * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ */
+int pspSdkReferMboxStatusByName(const char *name, SceUID *pUID, SceKernelMbxInfo *pInfo);
+int pspSdkReferVplStatusByName(const char *name, SceUID *pUID, SceKernelVplInfo *pInfo);
+int pspSdkReferFplStatusByName(const char *name, SceUID *pUID, SceKernelFplInfo *pInfo);
+int pspSdkReferMppStatusByName(const char *name, SceUID *pUID, SceKernelMppInfo *pInfo);
+int pspSdkReferCallbackStatusByName(const char *name, SceUID *pUID, SceKernelCallbackInfo *pInfo);
+int pspSdkReferVTimerStatusByName(const char *name, SceUID *pUID, SceKernelVTimerInfo *pInfo);
+
 /*@}*/
 
 #ifdef __cplusplus

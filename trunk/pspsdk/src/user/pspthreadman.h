@@ -135,6 +135,16 @@ typedef struct SceKernelThreadRunStatus {
 	SceUInt 	releaseCount;
 } SceKernelThreadRunStatus;
 
+/* Sure there are more than this, but haven't seen them */
+enum PspThreadStatus
+{
+	PSP_THREAD_RUNNING = 1,
+	PSP_THREAD_READY   = 2,
+	PSP_THREAD_WAITING = 4,
+	PSP_THREAD_SUSPEND = 8,
+	PSP_THREAD_STOPPED = 16
+};
+
 /**
  * Create a thread
  *
@@ -770,21 +780,58 @@ int sceKernelReferMbxStatus(SceUID mbxid, SceKernelMbxInfo *info);
 /** Prototype for alarm handlers. */
 typedef SceUInt (*SceKernelAlarmHandler)(void *common);
 
+/** Struct containing alarm info */
 typedef struct SceKernelAlarmInfo {
+	/** Size of the structure (should be set before calling
+	 * :: sceKernelReferAlarmStatus */
 	SceSize		size;
+	/* The current schedule */
 	SceKernelSysClock schedule;
+	/** Pointer to the alarm handler */
 	SceKernelAlarmHandler handler;
+	/** Common pointer argument */
 	void *		common;
 } SceKernelAlarmInfo;
 
+/** 
+ * Set an alarm.
+ * @param clock - The number of micro seconds till the alarm occurrs.
+ * @param handler - Pointer to a ::SceKernelAlarmHandler
+ * @param common - Common pointer for the alarm handler
+ *
+ * @return A UID representing the created alarm, < 0 on error.
+ */
 SceUID sceKernelSetAlarm(SceUInt clock, SceKernelAlarmHandler handler, void *common);
 
+/**
+ * Set an alarm using a ::SceKernelSysClock structure for the time
+ * 
+ * @param clock - Pointer to a ::SceKernelSysClock structure
+ * @param handler - Pointer to a ::SceKernelAlarmHandler
+ * @param common - Common pointer for the alarm handler.
+ * 
+ * @return A UID representing the created alarm, < 0 on error.
+ */
 SceUID sceKernelSetSysClockAlarm(SceKernelSysClock *clock, SceKernelAlarmHandler handler, void *common);
 
+/**
+ * Cancel a pending alarm.
+ *
+ * @param alarmid - UID of the alarm to cancel.
+ *
+ * @return 0 on success, < 0 on error.
+ */
 int sceKernelCancelAlarm(SceUID alarmid);
 
+/**
+ * Refer the status of a created alarm.
+ *
+ * @param alarmid - UID of the alarm to get the info of
+ * @param info - Pointer to a ::SceKernelAlarmInfo structure
+ *
+ * @return 0 on success, < 0 on error.
+ */
 int sceKernelReferAlarmStatus(SceUID alarmid, SceKernelAlarmInfo *info);
-
 
 /* Callbacks. */
 
@@ -907,7 +954,28 @@ int sceKernelReferSystemStatus(SceKernelSystemStatus *status);
 //sceKernelReceiveMsgPipeCB
 //sceKernelTryReceiveMsgPipe
 //sceKernelCancelMsgPipe
-//sceKernelReferMsgPipeStatus
+
+typedef struct SceKernelMppInfo {
+	SceSize 	size;
+	char 	name[32];
+	SceUInt 	attr;
+	int 	bufSize;
+	int 	freeSize;
+	int 	numSendWaitThreads;
+	int 	numReceiveWaitThreads;
+} SceKernelMppInfo;
+ 
+/**
+ * Get the status of a Message Pipe
+ *
+ * @param uid - The uid of the Message Pipe
+ * @param info - Pointer to a ::SceKernelMppInfo structure
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelReferMsgPipeStatus(SceUID uid, SceKernelMppInfo *info);
+
+/* VPL Functions */
 //sceKernelCreateVpl
 //sceKernelDeleteVpl
 //sceKernelAllocateVpl
@@ -915,7 +983,27 @@ int sceKernelReferSystemStatus(SceKernelSystemStatus *status);
 //sceKernelTryAllocateVpl
 //sceKernelFreeVpl
 //sceKernelCancelVpl
-//sceKernelReferVplStatus
+
+typedef struct SceKernelVplInfo {
+	SceSize 	size;
+	char 	name[32];
+	SceUInt 	attr;
+	int 	poolSize;
+	int 	freeSize;
+	int 	numWaitThreads;
+} SceKernelVplInfo;
+
+/**
+ * Get the status of an VPL
+ *
+ * @param uid - The uid of the VPL
+ * @param info - Pointer to a ::SceKernelVplInfo structure
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelReferVplStatus(SceUID uid, SceKernelVplInfo *info);
+
+/* FPL Functions */
 //sceKernelCreateFpl
 //sceKernelDeleteFpl
 //sceKernelAllocateFpl
@@ -923,7 +1011,27 @@ int sceKernelReferSystemStatus(SceKernelSystemStatus *status);
 //sceKernelTryAllocateFpl
 //sceKernelFreeFpl
 //sceKernelCancelFpl
-//sceKernelReferFplStatus
+
+typedef struct SceKernelFplInfo {
+	SceSize 	size;
+	char 	name[32];
+	SceUInt 	attr;
+	int 	blockSize;
+	int 	numBlocks;
+	int 	freeBlocks;
+	int 	numWaitThreads;
+} SceKernelFplInfo;
+
+/**
+ * Get the status of an FPL
+ *
+ * @param uid - The uid of the FPL
+ * @param info - Pointer to a ::SceKernelFplInfo structure
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelReferFplStatus(SceUID uid, SceKernelFplInfo *info);
+
 //_sceKernelReturnFromTimerHandler
 //sceKernelUSec2SysClock
 //sceKernelUSec2SysClockWide
@@ -932,10 +1040,7 @@ int sceKernelReferSystemStatus(SceKernelSystemStatus *status);
 //sceKernelGetSystemTime
 //sceKernelGetSystemTimeWide
 //sceKernelGetSystemTimeLow
-//sceKernelSetAlarm
-//sceKernelSetSysClockAlarm
-//sceKernelCancelAlarm
-//sceKernelReferAlarmStatus
+
 //sceKernelCreateVTimer
 //sceKernelDeleteVTimer
 //sceKernelGetVTimerBase
@@ -949,7 +1054,30 @@ int sceKernelReferSystemStatus(SceKernelSystemStatus *status);
 //sceKernelSetVTimerHandler
 //sceKernelSetVTimerHandlerWide
 //sceKernelCancelVTimerHandler
-//sceKernelReferVTimerStatus
+
+typedef SceUInt (*SceKernelVTimerHandler)(SceUID uid, SceKernelSysClock *, SceKernelSysClock *, void *);
+
+typedef struct SceKernelVTimerInfo {
+	SceSize 	size;
+	char 	name[32];
+	int 	active;
+	SceKernelSysClock 	base;
+	SceKernelSysClock 	current;
+	SceKernelSysClock 	schedule;
+	SceKernelVTimerHandler 	handler;
+	void * 	common;
+} SceKernelVTimerInfo;
+
+/**
+ * Get the status of a VTimer
+ *
+ * @param uid - The uid of the VTimer
+ * @param info - Pointer to a ::SceKernelVTimerInfo structure
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelReferVTimerStatus(SceUID uid, SceKernelVTimerInfo *info);
+
 //_sceKernelExitThread
 //sceKernelGetThreadmanIdType
 //sceKernelReferThreadProfiler

@@ -123,6 +123,7 @@ int pspSdkReferEventFlagStatusByName(const char *name, SceUID *pUID, SceKernelEv
 
 	return 0;
 }
+
 int pspSdkReferThreadStatusByName(const char *name, SceUID *pUID, SceKernelThreadInfo *pInfo)
 {
 	SceKernelThreadInfo intThread;
@@ -140,6 +141,170 @@ int pspSdkReferThreadStatusByName(const char *name, SceUID *pUID, SceKernelThrea
 		if(pInfo != NULL)
 		{
 			memcpy(pInfo, &intThread, sizeof(intThread));
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+int pspSdkReferMboxStatusByName(const char *name, SceUID *pUID, SceKernelMbxInfo *pInfo)
+{
+	SceKernelMbxInfo intMbx;
+	SceUID uid;
+
+	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_Mbox, (struct _ThreadInfoSkel *) &intMbx, 
+			sizeof(intMbx), (ReferFunc) sceKernelReferMbxStatus);
+	if(uid > 0)
+	{
+		if(pUID != NULL)
+		{
+			*pUID = uid;
+		}
+
+		if(pInfo != NULL)
+		{
+			memcpy(pInfo, &intMbx, sizeof(intMbx));
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+
+int pspSdkReferVplStatusByName(const char *name, SceUID *pUID, SceKernelVplInfo *pInfo)
+{
+	SceKernelVplInfo intVpl;
+	SceUID uid;
+
+	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_Vpl, (struct _ThreadInfoSkel *) &intVpl, 
+			sizeof(intVpl), (ReferFunc) sceKernelReferVplStatus);
+	if(uid > 0)
+	{
+		if(pUID != NULL)
+		{
+			*pUID = uid;
+		}
+
+		if(pInfo != NULL)
+		{
+			memcpy(pInfo, &intVpl, sizeof(intVpl));
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+int pspSdkReferFplStatusByName(const char *name, SceUID *pUID, SceKernelFplInfo *pInfo)
+{
+	SceKernelVplInfo intFpl;
+	SceUID uid;
+
+	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_Fpl, (struct _ThreadInfoSkel *) &intFpl, 
+			sizeof(intFpl), (ReferFunc) sceKernelReferFplStatus);
+	if(uid > 0)
+	{
+		if(pUID != NULL)
+		{
+			*pUID = uid;
+		}
+
+		if(pInfo != NULL)
+		{
+			memcpy(pInfo, &intFpl, sizeof(intFpl));
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+
+int pspSdkReferMppStatusByName(const char *name, SceUID *pUID, SceKernelMppInfo *pInfo)
+{
+	SceKernelMbxInfo intMpp;
+	SceUID uid;
+
+	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_Mpipe, (struct _ThreadInfoSkel *) &intMpp, 
+			sizeof(intMpp), (ReferFunc) sceKernelReferMsgPipeStatus);
+	if(uid > 0)
+	{
+		if(pUID != NULL)
+		{
+			*pUID = uid;
+		}
+
+		if(pInfo != NULL)
+		{
+			memcpy(pInfo, &intMpp, sizeof(intMpp));
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+int pspSdkReferCallbackStatusByName(const char *name, SceUID *pUID, SceKernelCallbackInfo *pInfo)
+{
+	SceKernelMbxInfo intCB;
+	SceUID uid;
+
+	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_Callback, (struct _ThreadInfoSkel *) &intCB, 
+			sizeof(intCB), (ReferFunc) sceKernelReferCallbackStatus);
+	if(uid > 0)
+	{
+		if(pUID != NULL)
+		{
+			*pUID = uid;
+		}
+
+		if(pInfo != NULL)
+		{
+			memcpy(pInfo, &intCB, sizeof(intCB));
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+int pspSdkReferVTimerStatusByName(const char *name, SceUID *pUID, SceKernelVTimerInfo *pInfo)
+{
+	SceKernelMbxInfo intVT;
+	SceUID uid;
+
+	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_VTimer, (struct _ThreadInfoSkel *) &intVT, 
+			sizeof(intVT), (ReferFunc) sceKernelReferVTimerStatus);
+	if(uid > 0)
+	{
+		if(pUID != NULL)
+		{
+			*pUID = uid;
+		}
+
+		if(pInfo != NULL)
+		{
+			memcpy(pInfo, &intVT, sizeof(intVT));
 		}
 	}
 	else
