@@ -13,57 +13,25 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-#include <time.h>
 
 #include <pspctrl.h>
 #include <pspgu.h>
+#include <psprtc.h>
+
+#include "../common/callbacks.h"
+#include "../common/vram.h"
 
 PSP_MODULE_INFO("Blit Sample", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
-#define printf	pspDebugScreenPrintf
-
-#define SLICE_SIZE 64 // change this to experiment with different page-cache sizes
-
 static unsigned int __attribute__((aligned(16))) list[262144];
 
-int done = 0;
-/* Exit callback */
-int exit_callback(int arg1, int arg2, void *common)
-{
-	done = 1;
-	return 0;
-}
+#define BUF_WIDTH (512)
+#define SCR_WIDTH (480)
+#define SCR_HEIGHT (272)
 
-/* Callback thread */
-int CallbackThread(SceSize args, void *argp)
-{
-	int cbid;
-
-	cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
-	sceKernelRegisterExitCallback(cbid);
-
-	sceKernelSleepThreadCB();
-
-	return 0;
-}
-
-/* Sets up the callback thread and returns its thread id */
-int SetupCallbacks(void)
-{
-	int thid = 0;
-
-	thid = sceKernelCreateThread("update_thread", CallbackThread, 0x11, 0xFA0, 0, 0);
-	if(thid >= 0)
-	{
-		sceKernelStartThread(thid, 0, 0);
-	}
-
-	return thid;
-}
-
-static unsigned short __attribute__((aligned(16))) pixels[512*272];
-static unsigned short __attribute__((aligned(16))) swizzled_pixels[512*272];
+static unsigned short __attribute__((aligned(16))) pixels[BUF_WIDTH*SCR_HEIGHT];
+static unsigned short __attribute__((aligned(16))) swizzled_pixels[BUF_WIDTH*SCR_HEIGHT];
 
 struct Vertex
 {
@@ -89,26 +57,16 @@ void simpleBlit(int sx, int sy, int sw, int sh, int dx, int dy)
 	sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_COLOR_4444|GU_VERTEX_16BIT|GU_TRANSFORM_2D,2,0,vertices);
 }
 
-void advancedBlit(int sx, int sy, int sw, int sh, int dx, int dy)
+void advancedBlit(int sx, int sy, int sw, int sh, int dx, int dy, int slice)
 {
 	int start, end;
 
 	// blit maximizing the use of the texture-cache
 
-	/*
-		the texture cache is 8kB. It is used in the following fashions:
-		4-bit: 128x128
-		8-bit: 128x64
-		16-bit: 64x64
-		32-bit: 64x32
-
-		swizzling your input will give more than 100% increase in speed
-	*/
-
-	for (start = sx, end = sx+sw; start < end; start += SLICE_SIZE, dx += SLICE_SIZE)
+	for (start = sx, end = sx+sw; start < end; start += slice, dx += slice)
 	{
 		struct Vertex* vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
-		int width = (start + SLICE_SIZE) < end ? SLICE_SIZE : end-start;
+		int width = (start + slice) < end ? slice : end-start;
 
 		vertices[0].u = start; vertices[0].v = sy;
 		vertices[0].color = 0;
@@ -125,7 +83,7 @@ void advancedBlit(int sx, int sy, int sw, int sh, int dx, int dy)
 void swizzle_fast(u8* out, const u8* in, unsigned int width, unsigned int height)
 {
    unsigned int blockx, blocky;
-   unsigned int i,j;
+   unsigned int j;
  
    unsigned int width_blocks = (width / 16);
    unsigned int height_blocks = (height / 8);
@@ -169,19 +127,24 @@ int main(int argc, char* argv[])
 	unsigned int x,y;
 
 	pspDebugScreenInit();
-	SetupCallbacks();
+	setupCallbacks();
+
+	// Setup GU
+
+	void* fbp0 = getStaticVramBuffer(BUF_WIDTH,SCR_HEIGHT,GU_PSM_8888);
+	void* fbp1 = getStaticVramBuffer(BUF_WIDTH,SCR_HEIGHT,GU_PSM_8888);
+	void* zbp = getStaticVramBuffer(BUF_WIDTH,SCR_HEIGHT,GU_PSM_4444);
 
 	sceGuInit();
 
-	// setup
 	sceGuStart(GU_DIRECT,list);
-	sceGuDrawBuffer(GU_PSM_8888,(void*)0,512);
-	sceGuDispBuffer(480,272,(void*)0x88000,512);
-	sceGuDepthBuffer((void*)0x110000,512);
-	sceGuOffset(2048 - (480/2),2048 - (272/2));
-	sceGuViewport(2048,2048,480,272);
-	sceGuDepthRange(0xc350,0x2710);
-	sceGuScissor(0,0,480,272);
+	sceGuDrawBuffer(GU_PSM_8888,fbp0,BUF_WIDTH);
+	sceGuDispBuffer(SCR_WIDTH,SCR_HEIGHT,fbp1,BUF_WIDTH);
+	sceGuDepthBuffer(zbp,BUF_WIDTH);
+	sceGuOffset(2048 - (SCR_WIDTH/2),2048 - (SCR_HEIGHT/2));
+	sceGuViewport(2048,2048,SCR_WIDTH,SCR_HEIGHT);
+	sceGuDepthRange(65535,0);
+	sceGuScissor(0,0,SCR_WIDTH,SCR_HEIGHT);
 	sceGuEnable(GU_SCISSOR_TEST);
 	sceGuFrontFace(GU_CW);
 	sceGuEnable(GU_TEXTURE_2D);
@@ -192,25 +155,22 @@ int main(int argc, char* argv[])
 	sceDisplayWaitVblankStart();
 	sceGuDisplay(1);
 
-	int val = 0;
-
 	// generate dummy image to blit
 
-	for (y = 0; y < 272; ++y)
+	for (y = 0; y < SCR_HEIGHT; ++y)
 	{
-		unsigned short* row = &pixels[y * 512];
-		for (x = 0; x < 480; ++x)
+		unsigned short* row = &pixels[y * BUF_WIDTH];
+		for (x = 0; x < SCR_WIDTH; ++x)
 		{
 			row[x] = x * y;
 		}
 	}
 
-	swizzle_fast((u8*)swizzled_pixels,(const u8*)pixels,512*2,272); // 512*2 because swizzle operates in bytes, and each pixel in a 16-bit texture is 2 bytes
+	swizzle_fast((u8*)swizzled_pixels,(const u8*)pixels,BUF_WIDTH*2,SCR_HEIGHT); // 512*2 because swizzle operates in bytes, and each pixel in a 16-bit texture is 2 bytes
 
 	sceKernelDcacheWritebackAll();
 
 	float curr_ms = 1.0f;
-	struct timeval time_slices[16];
 	int blit_method = 0;
 	int swizzle = 0;
 	SceCtrlData oldPad;
@@ -219,7 +179,12 @@ int main(int argc, char* argv[])
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(0);
 
-	while (!done)
+	u64 last_tick;
+	sceRtcGetCurrentTick(&last_tick);
+	u32 tick_frequency = sceRtcGetTickResolution();
+	int frame_count = 0;
+
+	while(running())
 	{
 		SceCtrlData pad;
 
@@ -245,48 +210,34 @@ int main(int argc, char* argv[])
 		sceGuTexFilter(GU_NEAREST,GU_NEAREST); // point-filtered sampling
 
 		if (blit_method)
-			advancedBlit(0,0,480,272,0,0);
+			advancedBlit(0,0,SCR_WIDTH,SCR_HEIGHT,0,0,32);
 		else
-			simpleBlit(0,0,480,272,0,0);
+			simpleBlit(0,0,SCR_WIDTH,SCR_HEIGHT,0,0);
 
 		sceGuFinish();
 		sceGuSync(0,0);
 
 		float curr_fps = 1.0f / curr_ms;
 
-//		sceDisplayWaitVblankStart();
-		sceGuSwapBuffers();
-
+		pspDebugScreenSetOffset((int)fbp0);
 		pspDebugScreenSetXY(0,0);
-		pspDebugScreenPrintf("fps: %d.%03d (%dMB/s) (X = mode, O = swizzle) %s",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f),(((int)curr_fps * 480 * 272 * 2)/(1024*1024)),modes[blit_method + swizzle * 2]);
+		pspDebugScreenPrintf("fps: %d.%03d (%dMB/s) (X = mode, O = swizzle) %s",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f),(((int)curr_fps * SCR_WIDTH * SCR_HEIGHT * 2)/(1024*1024)),modes[blit_method + swizzle * 2]);
+
+//		sceDisplayWaitVblankStart();
+		fbp0 = sceGuSwapBuffers();
 
 		// simple frame rate counter
 
-		gettimeofday(&time_slices[val & 15],0);
-
-		val++;
-
-		if (!(val & 15))
+		++frame_count;
+		u64 curr_tick;
+		sceRtcGetCurrentTick(&curr_tick);
+		if ((curr_tick-last_tick) >= tick_frequency)
 		{
-			struct timeval last_time = time_slices[0];
-			unsigned int i;
+			float time_span = ((int)(curr_tick-last_tick)) / (float)tick_frequency;
+			curr_ms = time_span / frame_count;
 
-			curr_ms = 0;
-			for (i = 1; i < 16; ++i)
-			{
-				struct timeval curr_time = time_slices[i];
-
-				if (last_time.tv_usec > curr_time.tv_usec)
-				{
-					curr_time.tv_sec++;
-					curr_time.tv_usec-=1000000;
-				}
-
-				curr_ms += ((curr_time.tv_usec-last_time.tv_usec) + (curr_time.tv_sec-last_time.tv_sec) * 1000000) * (1.0f/1000000.0f);
-
-				last_time = time_slices[i];
-			}
-			curr_ms /= 15.0f;
+			frame_count = 0;
+			sceRtcGetCurrentTick(&last_tick);
 		}
 	}
 
