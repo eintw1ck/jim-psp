@@ -11,23 +11,28 @@ SAMPLES = \
 	debug/profiler \
 	debug/sio \
 	debug/gdb \
+	gu/blend \
 	gu/blit \
 	gu/clut \
+        gu/common \
 	gu/copy \
 	gu/cube \
+	gu/envmap \
 	gu/lights \
 	gu/lines \
 	gu/logic \
-	gu/sprite \
-	gu/blend \
-	gu/envmap \
-	gu/shadowprojection \
-	gu/spharm \
-	gu/rendertarget \
-	gu/reflection \
 	gu/morph \
-	gu/skinning \
+	gu/morphskin \
+	gu/reflection \
+	gu/rendertarget \
+	gu/shadowprojection \
 	gu/signals \
+	gu/skinning \
+	gu/speed \
+	gu/spharm \
+	gu/splinesurface \
+	gu/sprite \
+	gu/zbufferfog \
 	ir/sircs \
 	ir/irda \
 	kernel/kdumper \
