@@ -42,6 +42,21 @@
 
    The script grabs the latest version of pspsdk from the svn repository.
 
+  ==================================
+   CAN I INSTALL IT SOMEWHERE ELSE?
+  ==================================
+
+   If you want to have the toolchain installed to another location instead
+   of the default directory, you can override it by opening up the toolchain
+   script in a text editor and changing this line:
+
+    ## Main pspdev settings.
+    PSPDEV="/usr/local/pspdev"
+
+   Be advised that some projects and code may have hardcoded the default into
+   their configuration. While frowned upon, it does happen and you should be
+   prepared to edit them to work with your now non-standard installation.
+
   ============================
    HOW CAN I STAY UP TO DATE?
   ============================
