@@ -1,5 +1,5 @@
 TARGET = blend
-OBJS = blend.o
+OBJS = blend.o ../common/callbacks.o ../common/vram.o
 
 INCDIR =
 CFLAGS = -G0 -Wall -O2

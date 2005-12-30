@@ -21,38 +21,28 @@
 #include <pspgum.h>
 #include <pspctrl.h>
 
+#include "../common/callbacks.h"
+#include "../common/geometry.h"
+#include "../common/vram.h"
+
 PSP_MODULE_INFO("Depth Buffer Fog Sample", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
 static unsigned int __attribute__((aligned(16))) list[262144];
 
-struct Vertex
-{
-	float u, v;
-	unsigned int color;
-	float x,y,z;
-};
-
-int SetupCallbacks();
-
-#define BUF_WIDTH (512)
-#define SCR_WIDTH (480)
-#define SCR_HEIGHT (272)
-#define PIXEL_SIZE (4) /* change this if you change to another screenmode */
-#define FRAME_SIZE (BUF_WIDTH * SCR_HEIGHT * PIXEL_SIZE)
-#define ZBUF_SIZE (BUF_WIDTH SCR_HEIGHT * 2) /* zbuffer seems to be 16-bit? */
+#define BUFFER_WIDTH 512 // actual screen width
+#define SCREEN_WIDTH 480 // visible screen width
+#define SCREEN_HEIGHT 272 // visible screen height
+#define SCREEN_PSM GU_PSM_8888 // screen pixel format
 
 #define TORUS_SLICES 48 // numc
 #define TORUS_ROWS 48 // numt
 #define TORUS_RADIUS 1.0f
 #define TORUS_THICKNESS 0.5f
 
-struct Vertex __attribute__((aligned(16))) torus_vertices[TORUS_SLICES*TORUS_ROWS];
+TCPVertex __attribute__((aligned(16))) torus_vertices[TORUS_SLICES*TORUS_ROWS];
 unsigned short __attribute__((aligned(16))) torus_indices[TORUS_SLICES*TORUS_ROWS*6];
 
-#define COLOR1_OFFSET 0
-#define COLOR2_OFFSET 0x88000
-#define ZBUFFER_OFFSET 0x110000
 #define ZBUFFER_LINEAR(x) (0x600000 + x)
 #define ZBUFFER_SLICE 64
 #define VRAM_OFFSET(x) (0x4000000 + x)
@@ -60,10 +50,10 @@ unsigned short __attribute__((aligned(16))) torus_indices[TORUS_SLICES*TORUS_ROW
 #define ZNEAR_LIMIT 256
 #define FOG_COLOR 0x554433
 
-unsigned int fogPalette[256];
-unsigned int rawPalette[256];
+unsigned int __attribute__((aligned(16))) fogPalette[256];
+unsigned int __attribute__((aligned(16))) rawPalette[256];
 
-void RenderFog()
+void RenderFog(void* zbuffer)
 {
 	int i;
 
@@ -74,96 +64,50 @@ void RenderFog()
 		int j;
 
 		sceGuTexMode(GU_PSM_T8,0,0,0);
-		sceGuTexImage(0,512,512,1024,(void*)VRAM_OFFSET(ZBUFFER_LINEAR(ZBUFFER_OFFSET + i * (256*2))));
+		sceGuTexImage(0,512,512,1024,(void*)VRAM_OFFSET(ZBUFFER_LINEAR(((unsigned int)zbuffer) + i * (256*2))));
 		sceGuTexFunc(GU_TFX_REPLACE,GU_TCC_RGBA);
 		sceGuTexFilter(GU_NEAREST,GU_NEAREST);
 		sceGuColor(0);
 
 		for (j = 0; j < (256/ZBUFFER_SLICE); ++j)
 		{
-			struct Vertex* vertices = (struct Vertex*)sceGuGetMemory(sizeof(struct Vertex)*2);
+			TPVertex* vertices = (TPVertex*)sceGuGetMemory(sizeof(TPVertex)*2);
 
 			// shift texture 1 pixel to avoid the 8 LSB, since they change very rapidly
 
-			vertices[0].u = 1 + j*(ZBUFFER_SLICE * 2);
-			vertices[0].v = 0;
-			vertices[0].color = 0;
-			vertices[0].x = j*ZBUFFER_SLICE + i * 256;
-			vertices[0].y = 0;
-			vertices[0].z = 0;
+			vertices[0].texture.x = 1 + j*(ZBUFFER_SLICE * 2);
+			vertices[0].texture.y = 0;
+			vertices[0].position.x = j*ZBUFFER_SLICE + i * 256;
+			vertices[0].position.y = 0;
+			vertices[0].position.z = 0;
 
-			vertices[1].u = 1 + (j+1)*(ZBUFFER_SLICE * 2);
-			vertices[1].v = SCR_HEIGHT;
-			vertices[1].color = 0;
-			vertices[1].x = (j+1)*ZBUFFER_SLICE + i * 256;
-			vertices[1].y = SCR_HEIGHT;
-			vertices[1].z = 0;
+			vertices[1].texture.x = 1 + (j+1)*(ZBUFFER_SLICE * 2);
+			vertices[1].texture.y = SCREEN_HEIGHT;
+			vertices[1].position.x = (j+1)*ZBUFFER_SLICE + i * 256;
+			vertices[1].position.y = SCREEN_HEIGHT;
+			vertices[1].position.z = 0;
 
-			sceGuDrawArray(GU_SPRITES,GU_TEXTURE_32BITF|GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_2D,2,0,vertices);
+			sceGuDrawArray(GU_SPRITES,TP_VERTEX_FORMAT|GU_TRANSFORM_2D,2,0,vertices);
 		}
 	}
 }
 
 int main(int argc, char* argv[])
 {
-	SetupCallbacks();
+	setupCallbacks();
 
-	// generate torus (TODO: tri-strips)
+	// generate geometry & palettes
 
-	int i,j;
+	int i;
 
-	for (j = 0; j < TORUS_SLICES; ++j)
-	{
-		for (i = 0; i < TORUS_ROWS; ++i)
-		{
-			struct Vertex* curr = &torus_vertices[i+j*TORUS_ROWS];
-			float s = i + 0.5f;
-			float t = j;
-			float cs,ct,ss,st;
-
-			cs = cosf(s * (2*GU_PI)/TORUS_SLICES);
-			ct = cosf(t * (2*GU_PI)/TORUS_ROWS);
-			ss = sinf(s * (2*GU_PI)/TORUS_SLICES);
-			st = sinf(t * (2*GU_PI)/TORUS_ROWS);
-
-			curr->u = cs * ct;
-			curr->v = cs * st;
-
-			unsigned int r = 128 + (cs * ct) * 127;
-			unsigned int g = 128 + (cs * st) * 127;
-			unsigned int b = 128 + (ss) * 127;
-
-			curr->color = (0xff<<24)|(b << 16)|(g << 8)|r;
-
-			curr->x = (TORUS_RADIUS + TORUS_THICKNESS * cs) * ct;
-			curr->y = (TORUS_RADIUS + TORUS_THICKNESS * cs) * st;
-			curr->z = TORUS_THICKNESS * ss;
-		}
-	}
-
-	for (j = 0; j < TORUS_SLICES; ++j)
-	{
-		for (i = 0; i < TORUS_ROWS; ++i)
-		{
-			unsigned short* curr = &torus_indices[(i+(j*TORUS_ROWS))*6];
-			unsigned int i1 = (i+1)%TORUS_ROWS, j1 = (j+1)%TORUS_SLICES;
-
-			*curr++ = i + j * TORUS_ROWS;
-			*curr++ = i1 + j * TORUS_ROWS;
-			*curr++ = i + j1 * TORUS_ROWS;
-
-			*curr++ = i1 + j * TORUS_ROWS;
-			*curr++ = i1 + j1 * TORUS_ROWS;
-			*curr++ = i + j1 * TORUS_ROWS;
-		}
-	}
+	generateTorusTCP(TORUS_SLICES,TORUS_ROWS,TORUS_RADIUS,TORUS_THICKNESS,torus_vertices,torus_indices);
 
 	for (i = 0; i < 256; ++i)
 	{
 		unsigned int far = (i - ZFAR_LIMIT) < 0 ? 0 : (i - ZFAR_LIMIT);
 		unsigned int near = (far * 256) / (ZNEAR_LIMIT-ZFAR_LIMIT);
 		unsigned int k = near > 255 ? 255 : near;
-		fogPalette[i] = (k<<24)|FOG_COLOR;
+		fogPalette[i] = (k << 24)|FOG_COLOR;
 
 		rawPalette[i] = (i << 24)|(i << 16)|(i << 8)|i;
 	}
@@ -174,12 +118,16 @@ int main(int argc, char* argv[])
 
 	sceGuInit();
 
+	void* fbp0 = getStaticVramBuffer(BUFFER_WIDTH,SCREEN_HEIGHT,SCREEN_PSM); // drawbuffer 1, 512x272 (480x272 visible)
+	void* fbp1 = getStaticVramBuffer(BUFFER_WIDTH,SCREEN_HEIGHT,SCREEN_PSM); // drawbuffer 2
+	void* zbp = getStaticVramBuffer(BUFFER_WIDTH,SCREEN_HEIGHT,GU_PSM_4444); // zbuffer, always 16bit
+
 	sceGuStart(GU_DIRECT,list);
-	sceGuDrawBuffer(GU_PSM_8888,(void*)COLOR1_OFFSET,BUF_WIDTH);
-	sceGuDispBuffer(SCR_WIDTH,SCR_HEIGHT,(void*)COLOR2_OFFSET,BUF_WIDTH);
-	sceGuDepthBuffer((void*)ZBUFFER_OFFSET,BUF_WIDTH);
-	sceGuOffset(2048 - (SCR_WIDTH/2),2048 - (SCR_HEIGHT/2));
-	sceGuViewport(2048,2048,SCR_WIDTH,SCR_HEIGHT);
+	sceGuDrawBuffer(SCREEN_PSM,fbp0,BUFFER_WIDTH);
+	sceGuDispBuffer(SCREEN_WIDTH,SCREEN_HEIGHT,fbp1,BUFFER_WIDTH);
+	sceGuDepthBuffer(zbp,BUFFER_WIDTH);
+	sceGuOffset(2048 - (SCREEN_WIDTH/2),2048 - (SCREEN_HEIGHT/2));
+	sceGuViewport(2048,2048,SCREEN_WIDTH,SCREEN_HEIGHT);
 	sceGuDepthRange(65535,0);
 	sceGuDisable(GU_SCISSOR_TEST);
 	sceGuDepthFunc(GU_GEQUAL);
@@ -206,7 +154,7 @@ int main(int argc, char* argv[])
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(0);
 
-	for(;;)
+	while(running())
 	{
 		sceGuStart(GU_DIRECT,list);
 
@@ -264,7 +212,7 @@ int main(int argc, char* argv[])
 		sceGuEnable(GU_BLEND);
 		sceGuBlendFunc(GU_ADD,GU_ONE_MINUS_SRC_ALPHA,GU_SRC_ALPHA,0,0);
 
-		RenderFog();
+		RenderFog(zbp);
 
 		sceGuDisable(GU_BLEND);
 
@@ -273,12 +221,12 @@ int main(int argc, char* argv[])
 		if (split)
 		{
 			sceGuEnable(GU_SCISSOR_TEST);
-			sceGuScissor(SCR_WIDTH/2,0,SCR_WIDTH,SCR_HEIGHT);
+			sceGuScissor(SCREEN_WIDTH/2,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
 			sceGuClutMode(GU_PSM_8888,0,255,0);
 			sceGuClutLoad(256/8,rawPalette);
 
-			RenderFog();
+			RenderFog(zbp);
 
 			sceGuDisable(GU_SCISSOR_TEST);
 		}
@@ -290,11 +238,13 @@ int main(int argc, char* argv[])
 		sceGuFinish();
 		sceGuSync(0,0);
 
-		sceDisplayWaitVblankStart();
-		sceGuSwapBuffers();
-
+		pspDebugScreenSetOffset((int)fbp0);
 		pspDebugScreenSetXY(0,0);
 		pspDebugScreenPrintf("X = normal/split screen");
+
+		sceDisplayWaitVblankStart();
+		fbp0 = sceGuSwapBuffers();
+
 
 		val++;
 	}
@@ -303,38 +253,4 @@ int main(int argc, char* argv[])
 
 	sceKernelExitGame();
 	return 0;
-}
-
-/* Exit callback */
-int exit_callback(int arg1, int arg2, void *common)
-{
-	sceKernelExitGame();
-	return 0;
-}
-
-/* Callback thread */
-int CallbackThread(SceSize args, void *argp)
-{
-	int cbid;
-
-	cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
-	sceKernelRegisterExitCallback(cbid);
-
-	sceKernelSleepThreadCB();
-
-	return 0;
-}
-
-/* Sets up the callback thread and returns its thread id */
-int SetupCallbacks(void)
-{
-	int thid = 0;
-
-	thid = sceKernelCreateThread("update_thread", CallbackThread, 0x11, 0xFA0, 0, 0);
-	if(thid >= 0)
-	{
-		sceKernelStartThread(thid, 0, 0);
-	}
-
-	return thid;
 }

@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
 	sceGuInit();
 
 	sceGuStart(GU_DIRECT,list);
-	sceGuDrawBuffer(GU_PSM_8888,fbp0,BUF_WIDTH);
+	sceGuDrawBuffer(GU_PSM_5650,fbp0,BUF_WIDTH);
 	sceGuDispBuffer(SCR_WIDTH,SCR_HEIGHT,fbp1,BUF_WIDTH);
 	sceGuDepthBuffer(zbp,BUF_WIDTH);
 	sceGuOffset(2048 - (SCR_WIDTH/2),2048 - (SCR_HEIGHT/2));

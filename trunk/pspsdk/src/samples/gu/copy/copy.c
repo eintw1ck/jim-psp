@@ -17,48 +17,17 @@
 
 #include <pspgu.h>
 
+#include "../common/callbacks.h"
+#include "../common/vram.h"
+
 PSP_MODULE_INFO("CopyImage Sample", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
-#define printf	pspDebugScreenPrintf
+#define BUF_WIDTH (512)
+#define SCR_WIDTH (480)
+#define SCR_HEIGHT (272)
 
 static unsigned int __attribute__((aligned(16))) list[262144];
-
-int done = 0;
-/* Exit callback */
-int exit_callback(int arg1, int arg2, void *common)
-{
-	done = 1;
-	return 0;
-}
-
-/* Callback thread */
-int CallbackThread(SceSize args, void *argp)
-{
-	int cbid;
-
-	cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
-	sceKernelRegisterExitCallback(cbid);
-
-	sceKernelSleepThreadCB();
-
-	return 0;
-}
-
-/* Sets up the callback thread and returns its thread id */
-int SetupCallbacks(void)
-{
-	int thid = 0;
-
-	thid = sceKernelCreateThread("update_thread", CallbackThread, 0x11, 0xFA0, 0, 0);
-	if(thid >= 0)
-	{
-		sceKernelStartThread(thid, 0, 0);
-	}
-
-	return thid;
-}
-
 static unsigned int __attribute__((aligned(16))) pixels[512*272];
 
 struct Vertex
@@ -72,20 +41,25 @@ int main(int argc, char* argv[])
 {
 	unsigned int x,y;
 
-	pspDebugScreenInit();
-	SetupCallbacks();
-
-	sceGuInit();
+	setupCallbacks();
 
 	// setup
+
+	void* fbp0 = getStaticVramBuffer(BUF_WIDTH,SCR_HEIGHT,GU_PSM_8888);
+	void* fbp1 = getStaticVramBuffer(BUF_WIDTH,SCR_HEIGHT,GU_PSM_8888);
+	void* zbp = getStaticVramBuffer(BUF_WIDTH,SCR_HEIGHT,GU_PSM_4444);
+
+	pspDebugScreenInit();
+	sceGuInit();
+
 	sceGuStart(GU_DIRECT,list);
-	sceGuDrawBuffer(GU_PSM_8888,(void*)0,512);
-	sceGuDispBuffer(480,272,(void*)0x88000,512);
-	sceGuDepthBuffer((void*)0x110000,512);
-	sceGuOffset(2048 - (480/2),2048 - (272/2));
-	sceGuViewport(2048,2048,480,272);
-	sceGuDepthRange(0xc350,0x2710);
-	sceGuScissor(0,0,480,272);
+	sceGuDrawBuffer(GU_PSM_8888,fbp0,BUF_WIDTH);
+	sceGuDispBuffer(SCR_WIDTH,SCR_HEIGHT,fbp1,BUF_WIDTH);
+	sceGuDepthBuffer(zbp,BUF_WIDTH);
+	sceGuOffset(2048 - (SCR_WIDTH/2),2048 - (SCR_HEIGHT/2));
+	sceGuViewport(2048,2048,SCR_WIDTH,SCR_HEIGHT);
+	sceGuDepthRange(65535,0);
+	sceGuScissor(0,0,SCR_WIDTH,SCR_HEIGHT);
 	sceGuEnable(GU_SCISSOR_TEST);
 	sceGuFrontFace(GU_CW);
 	sceGuClear(GU_COLOR_BUFFER_BIT|GU_DEPTH_BUFFER_BIT);
@@ -115,16 +89,14 @@ int main(int argc, char* argv[])
 
 	void* framebuffer = 0;
 
-	while (!done)
+	while (running())
 	{
-		unsigned int j;
-		struct Vertex* vertices;
-
 		sceGuStart(GU_DIRECT,list);
 
 		// copy image from ram to vram
 
 		sceGuCopyImage(GU_PSM_8888,0,0,480,272,512,pixels,0,0,512,(void*)(0x04000000+(u32)framebuffer));
+		sceGuTexSync();
 
 		sceGuFinish();
 		sceGuSync(0,0);

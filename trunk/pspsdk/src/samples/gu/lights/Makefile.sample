@@ -1,5 +1,5 @@
 TARGET = lights
-OBJS = lights.o
+OBJS = lights.o ../common/callbacks.o ../common/geometry.o ../common/vram.o
 
 INCDIR =
 CFLAGS = -G0 -Wall -O2

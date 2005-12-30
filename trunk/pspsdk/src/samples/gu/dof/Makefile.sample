@@ -1,5 +1,5 @@
-TARGET = splinesurface
-OBJS = splinesurface.o ../common/callbacks.o ../common/vram.o
+TARGET = dof
+OBJS = dof.o
 
 INCDIR =
 CFLAGS = -G0 -Wall
@@ -11,7 +11,7 @@ LDFLAGS =
 LIBS= -lpspgum -lpspgu -lm
 
 EXTRA_TARGETS = EBOOT.PBP
-PSP_EBOOT_TITLE = Spline Surface Sample
+PSP_EBOOT_TITLE = Depth Of Field Sample
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak

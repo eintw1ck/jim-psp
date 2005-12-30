@@ -1,5 +1,5 @@
 TARGET = logic
-OBJS = logic.o
+OBJS = logic.o ../common/callbacks.o ../common/vram.o
 
 INCDIR =
 CFLAGS = -G0 -Wall -O2
