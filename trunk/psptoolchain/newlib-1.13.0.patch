@@ -4444,7 +4444,7 @@
 +
 +void _start() { }
 --- newlib-1.13.0.orig/newlib/libc/sys/psp/libcglue.c	1969-12-31 18:00:00.000000000 -0600
-+++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-12-29 18:21:47.000000000 -0600
++++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2005-12-29 21:36:15.000000000 -0600
 @@ -0,0 +1,744 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -5112,7 +5112,7 @@
 +
 +void __malloc_lock(struct _reent *ptr)
 +{
-+	unsigned int flags = sceKernelCpuSuspendIntr();
++	unsigned int flags = 0;/* = sceKernelCpuSuspendIntr();*/
 +
 +	if (lock_count == 0) {
 +		intr_flags = flags;
@@ -5124,7 +5124,7 @@
 +void __malloc_unlock(struct _reent *ptr)
 +{
 +	if (--lock_count == 0) {
-+		sceKernelCpuResumeIntr(intr_flags);
++		/*sceKernelCpuResumeIntr(intr_flags);*/
 +	}
 +}
 +#endif

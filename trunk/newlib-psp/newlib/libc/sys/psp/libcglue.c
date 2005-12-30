@@ -664,7 +664,7 @@ static unsigned int intr_flags = 0;
 
 void __malloc_lock(struct _reent *ptr)
 {
-	unsigned int flags = sceKernelCpuSuspendIntr();
+	unsigned int flags = 0;/* = sceKernelCpuSuspendIntr();*/
 
 	if (lock_count == 0) {
 		intr_flags = flags;
@@ -676,7 +676,7 @@ void __malloc_lock(struct _reent *ptr)
 void __malloc_unlock(struct _reent *ptr)
 {
 	if (--lock_count == 0) {
-		sceKernelCpuResumeIntr(intr_flags);
+		/*sceKernelCpuResumeIntr(intr_flags);*/
 	}
 }
 #endif
