@@ -30,9 +30,37 @@ extern "C" {
 int sceKernelGzipDecompress(u8 *dest, u32 destSize, const u8 *src, u32 unknown);
 
 /**
+ * Invalidate the entire data cache
+ */ 
+void sceKernelDcacheInvalidateAll(void);
+
+/**
+ * Check whether the specified address is in the data cache
+ * @param addr - The address to check
+ *
+ * @return 0 = not cached, 1 = cache
+ */
+int  sceKernelDcacheProbe(void *addr);
+
+/**
  * Invalidate the entire instruction cache
  */
-void sceKernelIcacheInvalidateAll();
+void sceKernelIcacheInvalidateAll(void);
+
+/**
+ * Invalidate a instruction cache range.
+ * @param addr - The start address of the range.
+ * @param size - The size in bytes
+ */
+void sceKernelIcacheInvalidateRange(const void *addr, unsigned int size);
+
+/**
+ * Check whether the specified address is in the instruction cache
+ * @param addr - The address to check
+ *
+ * @return 0 = not cached, 1 = cache
+ */
+int  sceKernelIcacheProbe(const void *addr);
 
 #ifdef __cplusplus
 }
