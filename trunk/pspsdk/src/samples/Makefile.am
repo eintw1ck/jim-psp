@@ -13,6 +13,7 @@ SAMPLES = \
 	debug/gdb \
 	gu/blend \
 	gu/blit \
+	gu/celshading \
 	gu/clut \
         gu/common \
 	gu/copy \
