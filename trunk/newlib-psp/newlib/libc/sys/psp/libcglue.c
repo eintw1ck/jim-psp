@@ -34,6 +34,7 @@
 #include <psputils.h>
 #include <psputility.h>
 #include <pspstdio.h>
+#include <pspintrman.h>
 
 extern char __psp_cwd[MAXPATHLEN + 1];
 extern void __psp_init_cwd(char *argv_0);
@@ -654,6 +655,29 @@ void tzset(void)
 	}
 
 	_tzset_r(_REENT);
+}
+#endif
+
+#ifdef F_mlock
+static unsigned int lock_count = 0;
+static unsigned int intr_flags = 0;
+
+void __malloc_lock(struct _reent *ptr)
+{
+	unsigned int flags = sceKernelCpuSuspendIntr();
+
+	if (lock_count == 0) {
+		intr_flags = flags;
+	}
+
+	lock_count++;
+}
+
+void __malloc_unlock(struct _reent *ptr)
+{
+	if (--lock_count == 0) {
+		sceKernelCpuResumeIntr(intr_flags);
+	}
 }
 #endif
 
