@@ -142,7 +142,8 @@ enum PspThreadStatus
 	PSP_THREAD_READY   = 2,
 	PSP_THREAD_WAITING = 4,
 	PSP_THREAD_SUSPEND = 8,
-	PSP_THREAD_STOPPED = 16
+	PSP_THREAD_STOPPED = 16,
+	PSP_THREAD_KILLED  = 32, /* Thread manager has killed the thread (stack overflow) */
 };
 
 /**
@@ -555,13 +556,19 @@ typedef struct SceKernelEventFlagInfo {
 	int 		numWaitThreads;
 } SceKernelEventFlagInfo;
 
+struct SceKernelEventFlagOptParam {
+	SceSize 	size;
+};
+
+typedef struct SceKernelEventFlagOptParam SceKernelEventFlagOptParam;
+
 /** 
   * Create an event flag.
   *
   * @param name - The name of the event flag.
-  * @param unk1 - Unknown, set to 0.
+  * @param attr - Set to 0
   * @param bits - Initial bit pattern.
-  * @param unk3 - Unknown, set to 0.
+  * @param opt  - Options, set to NULL
   * @return < 0 on error. >= 0 event flag id.
   *
   * @par Example:
@@ -570,7 +577,7 @@ typedef struct SceKernelEventFlagInfo {
   * evid = sceKernelCreateEventFlag("wait_event", 0, 0, 0);
   * @endcode
   */
-int sceKernelCreateEventFlag(const char *name, int unk1, int bits, int unk3);
+int sceKernelCreateEventFlag(const char *name, int attr, int bits, SceKernelEventFlagOptParam *opt);
 
 /** 
   * Set an event flag bit pattern.
@@ -1041,16 +1048,54 @@ int sceKernelReferFplStatus(SceUID uid, SceKernelFplInfo *info);
 //sceKernelGetSystemTimeWide
 //sceKernelGetSystemTimeLow
 
-//sceKernelCreateVTimer
-//sceKernelDeleteVTimer
+struct SceKernelVTimerOptParam {
+	SceSize 	size;
+};
+
+/**
+ * Create a virtual timer
+ *
+ * @param name - Name for the timer.
+ * @param opt  - Pointer to an ::SceKernelVTimerOptParam (pass NULL)
+ *
+ * @return The VTimer's UID or < 0 on error.
+ */
+SceUID sceKernelCreateVTimer(const char *name, struct SceKernelVTimerOptParam *opt);
+
+/**
+ * Delete a virtual timer
+ *
+ * @param uid - The UID of the timer
+ *
+ * @return < 0 on error.
+ */
+int sceKernelDeleteVTimer(SceUID uid);
+
 //sceKernelGetVTimerBase
 //sceKernelGetVTimerBaseWide
 //sceKernelGetVTimerTime
 //sceKernelGetVTimerTimeWide
 //sceKernelSetVTimerTime
 //sceKernelSetVTimerTimeWide
-//sceKernelStartVTimer
-//sceKernelStopVTimer
+
+/**
+ * Start a virtual timer
+ *
+ * @param uid - The UID of the timer
+ *
+ * @return < 0 on error
+ */
+int sceKernelStartVTimer(SceUID uid);
+
+/**
+ * Stop a virtual timer
+ *
+ * @param uid - The UID of the timer
+ *
+ * @return < 0 on error
+ */
+int sceKernelStopVTimer(SceUID uid);
+
 //sceKernelSetVTimerHandler
 //sceKernelSetVTimerHandlerWide
 //sceKernelCancelVTimerHandler
