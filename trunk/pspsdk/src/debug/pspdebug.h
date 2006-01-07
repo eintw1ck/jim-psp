@@ -214,27 +214,27 @@ int pspDebugGetStackTrace2(PspDebugRegBlock *regs, PspDebugStackTrace *trace, in
 /** Structure to hold the psp profiler register values */
 typedef struct _PspDebugProfilerRegs
 {
-	u32 enable;
-	u32 systemck;
-	u32 cpuck;
-	u32 stall;
-	u32 internal;
-	u32 memory;
-	u32 copz;
-	u32 vfpu;
-	u32 sleep;
-	u32 bus_access;
-	u32 uncached_load;
-	u32 uncached_store;
-	u32 cached_load;
-	u32 cached_store;
-	u32 i_miss;
-	u32 d_miss;
-	u32 d_writeback;
-	u32 cop0_inst;
-	u32 fpu_inst;
-	u32 vfpu_inst;
-	u32 local_bus;
+	volatile u32 enable;
+	volatile u32 systemck;
+	volatile u32 cpuck;
+	volatile u32 stall;
+	volatile u32 internal;
+	volatile u32 memory;
+	volatile u32 copz;
+	volatile u32 vfpu;
+	volatile u32 sleep;
+	volatile u32 bus_access;
+	volatile u32 uncached_load;
+	volatile u32 uncached_store;
+	volatile u32 cached_load;
+	volatile u32 cached_store;
+	volatile u32 i_miss;
+	volatile u32 d_miss;
+	volatile u32 d_writeback;
+	volatile u32 cop0_inst;
+	volatile u32 fpu_inst;
+	volatile u32 vfpu_inst;
+	volatile u32 local_bus;
 } PspDebugProfilerRegs;
 
 /** Enables the profiler hardware */

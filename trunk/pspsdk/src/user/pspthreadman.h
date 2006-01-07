@@ -17,6 +17,8 @@
 
 #include <psptypes.h>
 #include <pspkerneltypes.h>
+/* Include for profile register definitions */
+#include <pspdebug.h>
 
 /* Note: Some of the structures, types, and definitions in this file were
    extrapolated from symbolic debugging information found in the Japanese
@@ -135,7 +137,7 @@ typedef struct SceKernelThreadRunStatus {
 	SceUInt 	releaseCount;
 } SceKernelThreadRunStatus;
 
-/* Sure there are more than this, but haven't seen them */
+/* Sure there must be more than this, but haven't seen them */
 enum PspThreadStatus
 {
 	PSP_THREAD_RUNNING = 1,
@@ -217,10 +219,22 @@ int sceKernelTerminateThread(SceUID thid);
  */
 int sceKernelTerminateDeleteThread(SceUID thid);
 
-//
-// sceKernelSuspendDispatchThread
-// sceKernelResumeDispatchThread
-//
+/**
+ * Suspend the dispatch thread
+ *
+ * @return The current state of the dispatch thread, < 0 on error
+ */
+int sceKernelSuspendDispatchThread(void);
+
+/**
+ * Resume the dispatch thread
+ *
+ * @param state - The state of the dispatch thread 
+ * (from ::sceKernelSuspendDispatchThread)
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelResumeDispatchThread(int state);
 
 /**
  * Sleep thread
@@ -347,9 +361,23 @@ int sceKernelChangeCurrentThreadAttr(int unknown, SceUInt attr);
   */
 int sceKernelChangeThreadPriority(SceUID thid, int priority);
 
-// sceKernelRotateThreadReadyQueue
-//
-// sceKernelReleaseWaitThread
+/**
+ * Rotate thread ready queue at a set priority
+ *
+ * @param priority - The priority of the queue
+ * 
+ * @return 0 on success, < 0 on error.
+ */
+int sceKernelRotateThreadReadyQueue(int priority);
+
+/**
+ * Release a thread in the wait state.
+ *
+ * @param thid - The UID of the thread.
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelReleaseWaitThread(SceUID thid);
 
 /** 
   * Get the current thread Id
@@ -1039,7 +1067,17 @@ typedef struct SceKernelFplInfo {
  */
 int sceKernelReferFplStatus(SceUID uid, SceKernelFplInfo *info);
 
-//_sceKernelReturnFromTimerHandler
+/**
+ * Return from a timer handler (doesn't seem to do alot)
+ */
+void _sceKernelReturnFromTimerHandler(void);
+
+/**
+ * Return from a callback (used as a syscall for the return 
+ * of the callback function)
+ */
+void _sceKernelReturnFromCallback(void);
+
 //sceKernelUSec2SysClock
 //sceKernelUSec2SysClockWide
 //sceKernelSysClock2USec
@@ -1123,10 +1161,69 @@ typedef struct SceKernelVTimerInfo {
  */
 int sceKernelReferVTimerStatus(SceUID uid, SceKernelVTimerInfo *info);
 
-//_sceKernelExitThread
+/**
+ * Exit the thread (probably used as the syscall when the main thread
+ * returns
+ */
+void _sceKernelExitThread(void);
+
 //sceKernelGetThreadmanIdType
-//sceKernelReferThreadProfiler
-//sceKernelReferGlobalProfiler
+
+typedef int (*SceKernelThreadEventHandler)(int mask, SceUID thid, void *common);
+
+/** Struct for event handler info */
+struct SceKernelThreadEventHandlerInfo {
+	SceSize 	size;
+	char 	name[32];
+	SceUID 	threadId;
+	int 	mask;
+	SceKernelThreadEventHandler 	handler;
+	void * 	common;
+};
+
+/**
+ * Register a thread event handler
+ *
+ * @param name - Name for the thread event handler
+ * @param handler - Pointer to a ::SceKernelThreadEventHandler function
+ * @param mask - Bit mask for what events to handle (only lowest 4 bits valid)
+ * @param common - Common pointer
+ *
+ * @return The UID of the create event handler, < 0 on error
+ */
+SceUID sceKernelRegisterThreadEventHandler(const char *name, SceKernelThreadEventHandler handler, 
+		int mask, void *common);
+
+/**
+ * Release a thread event handler.
+ *
+ * @param uid - The UID of the event handler
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelReleaseThreadEventHandler(SceUID uid);
+
+/**
+ * Refer the status of an thread event handler
+ *
+ * @param uid - The UID of the event handler
+ * @param info - Pointer to a ::SceKernelThreadEventHandlerInfo structure
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelReferThreadEventHandlerStatus(SceUID uid, struct SceKernelThreadEventHandlerInfo *info);
+
+/**
+ * Get the thread profiler registers.
+ * @return Pointer to the registers, NULL on error
+ */
+PspDebugProfilerRegs *sceKernelReferThreadProfiler(void);
+
+/**
+ * Get the globile profiler registers.
+ * @return Pointer to the registers, NULL on error
+ */
+PspDebugProfilerRegs *sceKernelReferGlobalProfiler(void);
 
 /*@}*/
 
