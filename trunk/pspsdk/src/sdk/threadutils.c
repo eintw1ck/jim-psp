@@ -236,7 +236,7 @@ int pspSdkReferFplStatusByName(const char *name, SceUID *pUID, SceKernelFplInfo 
 
 int pspSdkReferMppStatusByName(const char *name, SceUID *pUID, SceKernelMppInfo *pInfo)
 {
-	SceKernelMbxInfo intMpp;
+	SceKernelMppInfo intMpp;
 	SceUID uid;
 
 	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_Mpipe, (struct _ThreadInfoSkel *) &intMpp, 
@@ -263,7 +263,7 @@ int pspSdkReferMppStatusByName(const char *name, SceUID *pUID, SceKernelMppInfo 
 
 int pspSdkReferCallbackStatusByName(const char *name, SceUID *pUID, SceKernelCallbackInfo *pInfo)
 {
-	SceKernelMbxInfo intCB;
+	SceKernelCallbackInfo intCB;
 	SceUID uid;
 
 	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_Callback, (struct _ThreadInfoSkel *) &intCB, 
@@ -290,7 +290,7 @@ int pspSdkReferCallbackStatusByName(const char *name, SceUID *pUID, SceKernelCal
 
 int pspSdkReferVTimerStatusByName(const char *name, SceUID *pUID, SceKernelVTimerInfo *pInfo)
 {
-	SceKernelMbxInfo intVT;
+	SceKernelVTimerInfo intVT;
 	SceUID uid;
 
 	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_VTimer, (struct _ThreadInfoSkel *) &intVT, 
@@ -305,6 +305,33 @@ int pspSdkReferVTimerStatusByName(const char *name, SceUID *pUID, SceKernelVTime
 		if(pInfo != NULL)
 		{
 			memcpy(pInfo, &intVT, sizeof(intVT));
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+int pspSdkReferThreadEventHandlerStatusByName(const char *name, SceUID *pUID, SceKernelThreadEventHandlerInfo *pInfo)
+{
+	SceKernelThreadEventHandlerInfo intEH;
+	SceUID uid;
+
+	uid = _pspSdkReferInternal(name, SCE_KERNEL_TMID_ThreadEventHandler, (struct _ThreadInfoSkel *) &intEH, 
+			sizeof(intEH), (ReferFunc) sceKernelReferThreadEventHandlerStatus);
+	if(uid > 0)
+	{
+		if(pUID != NULL)
+		{
+			*pUID = uid;
+		}
+
+		if(pInfo != NULL)
+		{
+			memcpy(pInfo, &intEH, sizeof(intEH));
 		}
 	}
 	else

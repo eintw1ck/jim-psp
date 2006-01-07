@@ -1172,14 +1172,14 @@ void _sceKernelExitThread(void);
 typedef int (*SceKernelThreadEventHandler)(int mask, SceUID thid, void *common);
 
 /** Struct for event handler info */
-struct SceKernelThreadEventHandlerInfo {
+typedef struct SceKernelThreadEventHandlerInfo {
 	SceSize 	size;
 	char 	name[32];
 	SceUID 	threadId;
 	int 	mask;
 	SceKernelThreadEventHandler 	handler;
 	void * 	common;
-};
+} SceKernelThreadEventHandlerInfo;
 
 /**
  * Register a thread event handler
