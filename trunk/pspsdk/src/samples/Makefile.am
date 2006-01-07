@@ -15,7 +15,7 @@ SAMPLES = \
 	gu/blit \
 	gu/celshading \
 	gu/clut \
-        gu/common \
+	gu/common \
 	gu/copy \
 	gu/cube \
 	gu/envmap \
@@ -51,6 +51,8 @@ SAMPLES = \
 	savedata/utility \
 	savedata/decrypt \
 	savedata/encrypt \
+	template/elf_template \
+	template/prx_template \
 	usb/storage \
 	utility/netconf \
 	utility/msgdialog \
