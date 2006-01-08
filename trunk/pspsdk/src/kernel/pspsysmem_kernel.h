@@ -43,7 +43,7 @@ typedef struct _PspSysmemPartitionInfo
  * Query the parition information
  *
  * @param pid  - The partition id
- * @param info - Pointer to the 
+ * @param info - Pointer to the ::PspSysmemPartitionInfo structure
  *
  * @returns 0 on success.
  */
