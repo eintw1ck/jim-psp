@@ -20,8 +20,9 @@ extern "C" {
 #endif
 
 int sceNetInit(int unk1, int unk2, int unk3, int unk4, int unk5);
-
 int sceNetTerm(void);
+
+int sceNetEtherNtostr(unsigned char *mac, char *name);
 
 #ifdef __cplusplus
 }

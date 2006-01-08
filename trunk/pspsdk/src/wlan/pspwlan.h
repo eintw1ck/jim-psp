@@ -38,6 +38,20 @@ int sceWlanGetSwitchState(void);
  */
 int sceWlanGetEtherAddr(char *etherAddr);
 
+/**
+ * Attach to the wlan device
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceWlanDevAttach(void);
+
+/**
+ * Detach from the wlan device
+ *
+ * @return 0 on success, < 0 on error/
+ */
+int sceWlanDevDetach(void);
+
 /*
 int sceWlanGPBindRegError();
 */
