@@ -980,16 +980,123 @@ typedef struct SceKernelSystemStatus {
   */
 int sceKernelReferSystemStatus(SceKernelSystemStatus *status);
 
-//sceKernelCreateMsgPipe
-//sceKernelDeleteMsgPipe
-//sceKernelSendMsgPipe
-//sceKernelSendMsgPipeCB
-//sceKernelTrySendMsgPipe
-//sceKernelReceiveMsgPipe
-//sceKernelReceiveMsgPipeCB
-//sceKernelTryReceiveMsgPipe
-//sceKernelCancelMsgPipe
 
+/**
+ * Create a message pipe
+ *
+ * @param name - Name of the pipe
+ * @param part - ID of the memory partition
+ * @param attr - Set to 0?
+ * @param unk1 - Unknown
+ * @param opt  - Message pipe options (set to NULL)
+ *
+ * @return The UID of the created pipe, < 0 on error
+ */
+SceUID sceKernelCreateMsgPipe(const char *name, int part, int attr, void *unk1, void *opt);
+
+/**
+ * Delete a message pipe
+ *
+ * @param uid - The UID of the pipe
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelDeleteMsgPipe(SceUID uid);
+
+/**
+ * Send a message to a pipe
+ *
+ * @param uid - The UID of the pipe
+ * @param message - Pointer to the message
+ * @param size - Size of the message
+ * @param unk1 - Unknown
+ * @param unk2 - Unknown
+ * @param timeout - Timeout for send
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelSendMsgPipe(SceUID uid, void *message, unsigned int size, int unk1, void *unk2, unsigned int *timeout);
+
+/**
+ * Send a message to a pipe (with callback)
+ *
+ * @param uid - The UID of the pipe
+ * @param message - Pointer to the message
+ * @param size - Size of the message
+ * @param unk1 - Unknown
+ * @param unk2 - Unknown
+ * @param timeout - Timeout for send
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelSendMsgPipeCB(SceUID uid, void *message, unsigned int size, int unk1, void *unk2, unsigned int *timeout);
+
+/**
+ * Try to send a message to a pipe
+ *
+ * @param uid - The UID of the pipe
+ * @param message - Pointer to the message
+ * @param size - Size of the message
+ * @param unk1 - Unknown
+ * @param unk2 - Unknown
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelTrySendMsgPipe(SceUID uid, void *message, unsigned int size, int unk1, void *unk2);
+
+/**
+ * Receive a message from a pipe
+ *
+ * @param uid - The UID of the pipe
+ * @param message - Pointer to the message
+ * @param size - Size of the message
+ * @param unk1 - Unknown
+ * @param unk2 - Unknown
+ * @param timeout - Timeout for receive
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelReceiveMsgPipe(SceUID uid, void *message, unsigned int size, int unk1, void *unk2, unsigned int *timeout);
+
+/**
+ * Receive a message from a pipe (with callback)
+ *
+ * @param uid - The UID of the pipe
+ * @param message - Pointer to the message
+ * @param size - Size of the message
+ * @param unk1 - Unknown
+ * @param unk2 - Unknown
+ * @param timeout - Timeout for receive
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelReceiveMsgPipeCB(SceUID uid, void *message, unsigned int size, int unk1, void *unk2, unsigned int *timeout);
+
+/**
+ * Receive a message from a pipe
+ *
+ * @param uid - The UID of the pipe
+ * @param message - Pointer to the message
+ * @param size - Size of the message
+ * @param unk1 - Unknown
+ * @param unk2 - Unknown
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelTryReceiveMsgPipe(SceUID uid, void *message, unsigned int size, int unk1, void *unk2);
+
+/**
+ * Cancel a message pipe
+ *
+ * @param uid - UID of the pipe to cancel
+ * @param psend - Receive number of sending threads?
+ * @param precv - Receive number of receiving threads?
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelCancelMsgPipe(SceUID uid, int *psend, int *precv);
+
+/** Message Pipe status info */
 typedef struct SceKernelMppInfo {
 	SceSize 	size;
 	char 	name[32];
@@ -1011,14 +1118,89 @@ typedef struct SceKernelMppInfo {
 int sceKernelReferMsgPipeStatus(SceUID uid, SceKernelMppInfo *info);
 
 /* VPL Functions */
-//sceKernelCreateVpl
-//sceKernelDeleteVpl
-//sceKernelAllocateVpl
-//sceKernelAllocateVplCB
-//sceKernelTryAllocateVpl
-//sceKernelFreeVpl
-//sceKernelCancelVpl
 
+struct SceKernelVplOptParam {
+	SceSize 	size;
+};
+
+/**
+ * Create a variable pool
+ *
+ * @param name - Name of the pool
+ * @param part - The memory partition ID
+ * @param attr - Attributes
+ * @param size - Size of pool
+ * @param opt  - Options (set to NULL)
+ *
+ * @return The UID of the created pool, < 0 on error.
+ */
+SceUID sceKernelCreateVpl(const char *name, int part, int attr, unsigned int size, struct SceKernelVplOptParam *opt);
+
+/**
+ * Delete a variable pool
+ *
+ * @param uid - The UID of the pool
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelDeleteVpl(SceUID uid);
+
+/**
+ * Allocate from the pool
+ *
+ * @param uid - The UID of the pool
+ * @param size - The size to allocate
+ * @param data - Receives the address of the allocated data
+ * @param timeout - Amount of time to wait for allocation?
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelAllocateVpl(SceUID uid, unsigned int size, void **data, unsigned int *timeout);
+
+/**
+ * Allocate from the pool (with callback)
+ *
+ * @param uid - The UID of the pool
+ * @param size - The size to allocate
+ * @param data - Receives the address of the allocated data
+ * @param timeout - Amount of time to wait for allocation?
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelAllocateVplCB(SceUID uid, unsigned int size, void **data, unsigned int *timeout);
+
+/**
+ * Try to allocate from the pool 
+ *
+ * @param uid - The UID of the pool
+ * @param size - The size to allocate
+ * @param data - Receives the address of the allocated data
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelTryAllocateVpl(SceUID uid, unsigned int size, void **data);
+
+/**
+ * Free a block
+ *
+ * @param uid - The UID of the pool
+ * @param data - The data block to deallocate
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelFreeVpl(SceUID uid, void *data);
+
+/**
+ * Cancel a pool
+ *
+ * @param uid - The UID of the pool
+ * @param pnum - Receives the number of waiting threads
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelCancelVpl(SceUID uid, int *pnum);
+
+/** Variable pool status info */
 typedef struct SceKernelVplInfo {
 	SceSize 	size;
 	char 	name[32];
@@ -1039,14 +1221,87 @@ typedef struct SceKernelVplInfo {
 int sceKernelReferVplStatus(SceUID uid, SceKernelVplInfo *info);
 
 /* FPL Functions */
-//sceKernelCreateFpl
-//sceKernelDeleteFpl
-//sceKernelAllocateFpl
-//sceKernelAllocateFplCB
-//sceKernelTryAllocateFpl
-//sceKernelFreeFpl
-//sceKernelCancelFpl
 
+struct SceKernelFplOptParam {
+	SceSize 	size;
+};
+
+/**
+ * Create a fixed pool
+ *
+ * @param name - Name of the pool
+ * @param part - The memory partition ID
+ * @param attr - Attributes
+ * @param size - Size of pool block
+ * @param blocks - Number of blocks to allocate
+ * @param opt  - Options (set to NULL)
+ *
+ * @return The UID of the created pool, < 0 on error.
+ */
+int sceKernelCreateFpl(const char *name, int part, int attr, unsigned int size, unsigned int blocks, struct SceKernelFplOptParam *opt);
+
+/**
+ * Delete a variable pool
+ *
+ * @param uid - The UID of the pool
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelDeleteFpl(SceUID uid);
+
+/**
+ * Allocate from the pool
+ *
+ * @param uid - The UID of the pool
+ * @param data - Receives the address of the allocated data
+ * @param timeout - Amount of time to wait for allocation?
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelAllocateFpl(SceUID uid, void **data, unsigned int *timeout);
+
+/**
+ * Allocate from the pool (with callback)
+ *
+ * @param uid - The UID of the pool
+ * @param data - Receives the address of the allocated data
+ * @param timeout - Amount of time to wait for allocation?
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelAllocateFplCB(SceUID uid, void **data, unsigned int *timeout);
+
+/**
+ * Try to allocate from the pool 
+ *
+ * @param uid - The UID of the pool
+ * @param data - Receives the address of the allocated data
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelTryAllocateFpl(SceUID uid, void **data);
+
+/**
+ * Free a block
+ *
+ * @param uid - The UID of the pool
+ * @param data - The data block to deallocate
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelFreeFpl(SceUID uid, void *data);
+
+/**
+ * Cancel a pool
+ *
+ * @param uid - The UID of the pool
+ * @param pnum - Receives the number of waiting threads
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelCancelFpl(SceUID uid, int *pnum);
+
+/** Fixed pool status information */
 typedef struct SceKernelFplInfo {
 	SceSize 	size;
 	char 	name[32];
@@ -1078,13 +1333,69 @@ void _sceKernelReturnFromTimerHandler(void);
  */
 void _sceKernelReturnFromCallback(void);
 
-//sceKernelUSec2SysClock
-//sceKernelUSec2SysClockWide
-//sceKernelSysClock2USec
-//sceKernelSysClock2USecWide
-//sceKernelGetSystemTime
-//sceKernelGetSystemTimeWide
-//sceKernelGetSystemTimeLow
+/**
+ * Convert a number of microseconds to a ::SceKernelSysClock structure
+ *
+ * @param usec - Number of microseconds
+ * @param clock - Pointer to a ::SceKernelSysClock structure
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelUSec2SysClock(unsigned int usec, SceKernelSysClock *clock);
+
+/**
+ * Convert a number of microseconds to a wide time
+ * 
+ * @param usec - Number of microseconds.
+ *
+ * @return The time
+ */
+long long sceKernelUSec2SysClockWide(unsigned int usec);
+
+/**
+ * Convert a ::SceKernelSysClock structure to microseconds
+ *
+ * @param clock - Pointer to a ::SceKernelSysClock structure
+ * @param low - Pointer to the low part of the time
+ * @param high - Pointer to the high part of the time
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelSysClock2USec(SceKernelSysClock *clock, unsigned int *low, unsigned int *high);
+
+/**
+ * Convert a wide time to microseconds
+ *
+ * @param clock - Wide time
+ * @param low - Pointer to the low part of the time
+ * @param high - Pointer to the high part of the time
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelSysClock2USecWide(long long clock, unsigned *low, unsigned int *high);
+
+/**
+ * Get the system time
+ *
+ * @param time - Pointer to a ::SceKernelSysClock structure
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelGetSystemTime(SceKernelSysClock *time);
+
+/**
+ * Get the system time (wide version)
+ *
+ * @return The system time
+ */
+long long sceKernelGetSystemTimeWide(void);
+
+/**
+ * Get the low 32bits of the current system time
+ *
+ * @return The low 32bits of the system time
+ */
+unsigned int sceKernelGetSystemTimeLow(void);
 
 struct SceKernelVTimerOptParam {
 	SceSize 	size;
@@ -1109,12 +1420,63 @@ SceUID sceKernelCreateVTimer(const char *name, struct SceKernelVTimerOptParam *o
  */
 int sceKernelDeleteVTimer(SceUID uid);
 
-//sceKernelGetVTimerBase
-//sceKernelGetVTimerBaseWide
-//sceKernelGetVTimerTime
-//sceKernelGetVTimerTimeWide
-//sceKernelSetVTimerTime
-//sceKernelSetVTimerTimeWide
+/**
+ * Get the timer base
+ *
+ * @param uid - UID of the vtimer
+ * @param base - Pointer to a ::SceKernelSysClock structure
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelGetVTimerBase(SceUID uid, SceKernelSysClock *base);
+
+/**
+ * Get the timer base (wide format)
+ *
+ * @param uid - UID of the vtimer
+ *
+ * @return The 64bit timer base
+ */
+long long sceKernelGetVTimerBaseWide(SceUID uid);
+
+/**
+ * Get the timer time
+ *
+ * @param uid - UID of the vtimer
+ * @param time - Pointer to a ::SceKernelSysClock structure
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelGetVTimerTime(SceUID uid, SceKernelSysClock *time);
+
+/**
+ * Get the timer time (wide format)
+ *
+ * @param uid - UID of the vtimer
+ *
+ * @return The 64bit timer time
+ */
+long long sceKernelGetVTimerTimeWide(SceUID uid);
+
+/**
+ * Set the timer time
+ *
+ * @param uid - UID of the vtimer
+ * @param time - Pointer to a ::SceKernelSysClock structure
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelSetVTimerTime(SceUID uid, SceKernelSysClock *time);
+
+/**
+ * Set the timer time (wide format)
+ *
+ * @param uid - UID of the vtimer
+ * @param time - Pointer to a ::SceKernelSysClock structure
+ *
+ * @return Possibly the last time
+ */
+long long sceKernelSetVTimerTimeWide(SceUID uid, long long time);
 
 /**
  * Start a virtual timer
@@ -1134,11 +1496,41 @@ int sceKernelStartVTimer(SceUID uid);
  */
 int sceKernelStopVTimer(SceUID uid);
 
-//sceKernelSetVTimerHandler
-//sceKernelSetVTimerHandlerWide
-//sceKernelCancelVTimerHandler
-
 typedef SceUInt (*SceKernelVTimerHandler)(SceUID uid, SceKernelSysClock *, SceKernelSysClock *, void *);
+typedef SceUInt (*SceKernelVTimerHandlerWide)(SceUID uid, long long, long long, void *);
+
+/**
+ * Set the timer handler
+ *
+ * @param uid - UID of the vtimer
+ * @param time - Time to call the handler?
+ * @param handler - The timer handler
+ * @param common  - Common pointer
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelSetVTimerHandler(SceUID uid, SceKernelSysClock *time, SceKernelVTimerHandler handler, void *common);
+
+/**
+ * Set the timer handler (wide mode)
+ *
+ * @param uid - UID of the vtimer
+ * @param time - Time to call the handler?
+ * @param handler - The timer handler
+ * @param common  - Common pointer
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelSetVTimerHandlerWide(SceUID uid, long long time, SceKernelVTimerHandlerWide handler, void *common);
+
+/**
+ * Cancel the timer handler
+ *
+ * @param uid - The UID of the vtimer
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelCancelVTimerHandler(SceUID uid);
 
 typedef struct SceKernelVTimerInfo {
 	SceSize 	size;
@@ -1167,7 +1559,14 @@ int sceKernelReferVTimerStatus(SceUID uid, SceKernelVTimerInfo *info);
  */
 void _sceKernelExitThread(void);
 
-//sceKernelGetThreadmanIdType
+/**
+ * Get the type of a threadman uid
+ *
+ * @param uid - The uid to get the type from
+ * 
+ * @return The type, < 0 on error
+ */
+enum SceKernelIdListType sceKernelGetThreadmanIdType(SceUID uid);
 
 typedef int (*SceKernelThreadEventHandler)(int mask, SceUID thid, void *common);
 
