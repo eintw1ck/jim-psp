@@ -45,6 +45,8 @@ SAMPLES = \
 	nand/dumpipl \
 	net/simple \
 	net/simple_prx \
+	net/resolver \
+	net/wlanscan \
 	power \
 	prx/prx_loader \
 	prx/testprx \
