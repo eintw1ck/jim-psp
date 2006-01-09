@@ -1241,7 +1241,7 @@ struct SceKernelFplOptParam {
 int sceKernelCreateFpl(const char *name, int part, int attr, unsigned int size, unsigned int blocks, struct SceKernelFplOptParam *opt);
 
 /**
- * Delete a variable pool
+ * Delete a fixed pool
  *
  * @param uid - The UID of the pool
  *
