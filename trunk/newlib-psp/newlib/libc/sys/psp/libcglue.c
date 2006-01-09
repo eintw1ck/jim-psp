@@ -689,7 +689,7 @@ extern int __psp_free_heap(void);
 
 void _exit(int status)
 {
-	if (&sce_newlib_nocreate_thread_in_start != NULL) {
+	if (&sce_newlib_nocreate_thread_in_start == NULL) {
 		/* Free the heap created by _sbrk(). */
 		__psp_free_heap();
 
