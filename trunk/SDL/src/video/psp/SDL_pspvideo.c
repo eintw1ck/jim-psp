@@ -505,13 +505,16 @@ SDL_Surface *PSP_SetVideoMode(_THIS, SDL_Surface *current,
 
 static int PSP_AllocHWSurface(_THIS, SDL_Surface *surface)
 {
-	surface->pixels = vidmem_alloc(surface->h * surface->pitch);
+	int pitch;
+
+	pitch = roundUpToPowerOfTwo(surface->pitch);
+	surface->pixels = vidmem_alloc(pitch * surface->h);
 
 	if (!surface->pixels)
 		return -1;
 
+	surface->pitch = pitch;
 	surface->flags |= SDL_HWSURFACE;
-
 	return 0;
 }
 static void PSP_FreeHWSurface(_THIS, SDL_Surface *surface)
