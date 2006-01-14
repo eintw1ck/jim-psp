@@ -34,14 +34,12 @@ AC_DEFUN([AC_PSPDEV_PATH],
   AC_SUBST(PSPDEV_LIBDIR)
 ])
 
-dnl Check for a tool prefixed with "psp-", and give an error if it's not found.
+dnl Check for a tool prefixed with "psp-".
 dnl __PSPDEV_CHECK_TOOL(VARIABLE, PREFIX, PROG-TO-CHECK-FOR[, VALUE-IF-NOT-FOUND [, PATH]])
 AC_DEFUN([__PSPDEV_CHECK_TOOL],
 [
   pspdev_tool_prefix="psp-"
   AC_CHECK_PROG($1, ${pspdev_tool_prefix}$2, ${pspdev_tool_prefix}$2, $3, $4)
-  eval tool=\$$1
-  test -n "$tool" || AC_MSG_ERROR(${pspdev_tool_prefix}$2 was not found in your path)
 ])
 
 dnl
@@ -53,11 +51,11 @@ dnl the psp- prefix.  That's highly unlikely though.
 
 AC_DEFUN([AC_PSPDEV_TOOLCHAIN],
 [
-  __PSPDEV_CHECK_TOOL(PSP_CC, gcc)
-  __PSPDEV_CHECK_TOOL(PSP_CXX, g++)
-  __PSPDEV_CHECK_TOOL(PSP_AS, as)
-  __PSPDEV_CHECK_TOOL(PSP_LD, ld)
-  __PSPDEV_CHECK_TOOL(PSP_AR, ar)
-  __PSPDEV_CHECK_TOOL(PSP_NM, nm)
-  __PSPDEV_CHECK_TOOL(PSP_RANLIB, ranlib)
+  __PSPDEV_CHECK_TOOL(PSP_CC, gcc, psp-gcc)
+  __PSPDEV_CHECK_TOOL(PSP_CXX, g++, psp-g++)
+  __PSPDEV_CHECK_TOOL(PSP_AS, as, psp-as)
+  __PSPDEV_CHECK_TOOL(PSP_LD, ld, psp-ld)
+  __PSPDEV_CHECK_TOOL(PSP_AR, ar, psp-ar)
+  __PSPDEV_CHECK_TOOL(PSP_NM, nm, psp-nm)
+  __PSPDEV_CHECK_TOOL(PSP_RANLIB, ranlib, psp-ranlib)
 ])
