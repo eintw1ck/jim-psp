@@ -37,6 +37,7 @@ PSP_MAIN_THREAD_ATTR(0);
 /* Exit callback */
 int exit_callback(int arg1, int arg2, void *common)
 {
+	sceKernelExitGame();
 	return 0;
 }
 

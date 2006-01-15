@@ -224,7 +224,5 @@ error:
 	sceWlanDevDetach();
 	sceNetTerm();
 
-	sceKernelSleepThread();
-
 	return 0;
 }

@@ -47,6 +47,7 @@ SAMPLES = \
 	net/simple_prx \
 	net/resolver \
 	net/wlanscan \
+	net/wlanscan_elf \
 	power \
 	prx/prx_loader \
 	prx/testprx \
