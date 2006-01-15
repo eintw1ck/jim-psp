@@ -75,48 +75,36 @@ void pspSdkFixupImports(int modId)
 	u32 *nid, *stub;
 	void* addr;
 	SceModule *modInfo;
-	struct PspModuleExport* exportEntry;
 
 	modInfo = sceKernelFindModuleByUID(modId);
 	if (modInfo == NULL) {
 		Kprintf("Could not find module with id 0x%08X\n", modId);
 		return;
 	}
-	exportEntry = (struct PspModuleExport*)modInfo->ent_top;
-
-	do {
-		if (exportEntry->name == NULL)
-			exportEntry++;
-		else
-			break;
-	} while (exportEntry < (struct PspModuleExport*)modInfo->ent_top+modInfo->ent_size);
 
 	while (stubEntry < (struct SceLibStubEntry*)module_info.stub_end) {
-		if (strcmp(exportEntry->name, stubEntry->moduleName) == 0) {
-			if (stubEntry->attr == 9) { //check to ensure this is a delayed import library
-				Kprintf("Fixing up imports for '%s'...\n", stubEntry->moduleName);
-				for (i = 0; i < stubEntry->numVars+stubEntry->numFuncs; i++) {
-					stub = stubEntry->stubs;
-					stub += i * 2; // since each stub is 8 bytes
-					nid = stubEntry->nidList;
-					nid += i;
+		if (stubEntry->attr == 9) { //check to ensure this is a delayed import library
+			/*Kprintf("Fixing up imports for '%s'...\n", stubEntry->moduleName);*/
+			for (i = 0; i < stubEntry->numVars+stubEntry->numFuncs; i++) {
+				stub = stubEntry->stubs;
+				stub += i * 2; // since each stub is 8 bytes
+				nid = stubEntry->nidList;
+				nid += i;
 
-					//get addr of NID from library
-					addr = pspSdkFindExport(modInfo, exportEntry->name, *nid);
-					if (addr != NULL) {
-						//fixup stub
-						//Kprintf("addr is 0x%08X\n", addr);
-						*stub = ((u32)addr & 0x03FFFFFF) >> 2 | 0x0A000000; //j addr
-						stub += 1;
-						*stub = 0; // nop
-					} else 
-						Kprintf("Could not find function for nid 0x%08X\n", *nid);
-				}
-			} else {
-				Kprintf("%s is not a delayed import.\n", stubEntry->moduleName);
-				return;
+				//get addr of NID from library
+				addr = pspSdkFindExport(modInfo, stubEntry->moduleName, *nid);
+				if (addr != NULL) {
+					//fixup stub
+					//Kprintf("addr is 0x%08X\n", addr);
+					*stub = ((u32)addr & 0x03FFFFFF) >> 2 | 0x0A000000; //j addr
+					stub += 1;
+					*stub = 0; // nop
+					/* Okay if we fix up at least one function set attribute to 1 */
+					stubEntry->attr = 1;
+				} 
 			}
-		}
+		} 
+
 		stubEntry += 1;
 	}
 	//clear caches
