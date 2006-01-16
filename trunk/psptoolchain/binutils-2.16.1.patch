@@ -119,7 +119,7 @@ diff -burN binutils-2.16.1/bfd/version.h binutils-psp/bfd/version.h
 +++ binutils-psp/bfd/version.h	2006-01-10 23:31:51.000000000 +0000
 @@ -1,3 +1,3 @@
 -#define BFD_VERSION_DATE 20050612
-+#define BFD_VERSION_DATE (PSPDEV 20051022)
++#define BFD_VERSION_DATE (PSPDEV 20060116)
  #define BFD_VERSION @bfd_version@
  #define BFD_VERSION_STRING @bfd_version_string@
 diff -burN binutils-2.16.1/binutils/readelf.c binutils-psp/binutils/readelf.c
@@ -165,8 +165,41 @@ diff -burN binutils-2.16.1/config.sub binutils-psp/config.sub
  		;;
 diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.c
 --- binutils-2.16.1/gas/config/tc-mips.c	2005-06-12 19:07:03.000000000 +0100
-+++ binutils-psp/gas/config/tc-mips.c	2006-01-15 21:51:09.000000000 +0000
-@@ -365,11 +365,15 @@
++++ binutils-psp/gas/config/tc-mips.c	2006-01-16 20:05:23.000000000 +0000
+@@ -92,6 +92,32 @@
+ 
+ #define ZERO 0
+ #define AT  1
++#define V0  2
++#define V1  3
++#define A0  4
++#define A1  5
++#define A2  6
++#define A3  7
++#define T0  8
++#define T1  9
++#define T2  10
++#define T3  11
++#define T4  12
++#define T5  13
++#define T6  14
++#define T7  15
++#define S0  16
++#define S1  17
++#define S2  18
++#define S3  19
++#define S4  20
++#define S5  21
++#define S6  22
++#define S7  23
++#define T8  24
++#define T9  25
++#define K0  26
++#define K1  27
+ #define TREG 24
+ #define PIC_CALL_REG 25
+ #define KT0 26
+@@ -365,11 +391,15 @@
  #define CPU_HAS_MDMX(cpu)	(FALSE                 \
  				 )
  
@@ -183,7 +216,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
  
  /* True if mflo and mfhi can be immediately followed by instructions
     which write to the HI and LO registers.
-@@ -393,6 +397,7 @@
+@@ -393,6 +423,7 @@
     || mips_opts.arch == CPU_R12000                    \
     || mips_opts.arch == CPU_RM7000                    \
     || mips_opts.arch == CPU_VR5500                    \
@@ -191,7 +224,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
     )
  
  /* Whether the processor uses hardware interlocks to protect reads
-@@ -1142,6 +1147,8 @@
+@@ -1142,6 +1173,8 @@
  static expressionS imm_expr;
  static expressionS imm2_expr;
  static expressionS offset_expr;
@@ -200,7 +233,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
  
  /* Relocs associated with imm_expr and offset_expr.  */
  
-@@ -1150,6 +1157,15 @@
+@@ -1150,6 +1183,15 @@
  static bfd_reloc_code_real_type offset_reloc[3]
    = {BFD_RELOC_UNUSED, BFD_RELOC_UNUSED, BFD_RELOC_UNUSED};
  
@@ -216,7 +249,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
  /* These are set by mips16_ip if an explicit extension is used.  */
  
  static bfd_boolean mips16_small, mips16_ext;
-@@ -1641,6 +1657,62 @@
+@@ -1641,6 +1683,62 @@
        return;
      }
  
@@ -279,7 +312,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
    if (insn.insn_mo->pinfo == INSN_MACRO)
      {
        macro_start ();
-@@ -3128,6 +3200,55 @@
+@@ -3128,6 +3226,55 @@
  	  insn.insn_opcode |= va_arg (args, unsigned long);
  	  continue;
  
@@ -335,7 +368,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
  	default:
  	  internalError ();
  	}
-@@ -4103,6 +4224,7 @@
+@@ -4103,6 +4250,7 @@
  macro (struct mips_cl_insn *ip)
  {
    register int treg, sreg, dreg, breg;
@@ -343,7 +376,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
    int tempreg;
    int mask;
    int used_at = 0;
-@@ -4128,6 +4250,13 @@
+@@ -4128,6 +4276,13 @@
    sreg = breg = (ip->insn_opcode >> 21) & 0x1f;
    mask = ip->insn_mo->mask;
  
@@ -357,7 +390,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
    expr1.X_op = O_constant;
    expr1.X_op_symbol = NULL;
    expr1.X_add_symbol = NULL;
-@@ -5654,6 +5783,26 @@
+@@ -5654,6 +5809,26 @@
        /* Itbl support may require additional care here.  */
        coproc = 1;
        goto ld;
@@ -384,7 +417,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
      case M_LWL_AB:
        s = "lwl";
        lr = 1;
-@@ -5738,6 +5887,29 @@
+@@ -5738,6 +5913,29 @@
        /* Itbl support may require additional care here.  */
        coproc = 1;
        goto st;
@@ -414,7 +447,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
      case M_SWL_AB:
        s = "swl";
        goto st;
-@@ -5787,6 +5959,22 @@
+@@ -5787,6 +5985,22 @@
  	  || mask == M_L_DAB
  	  || mask == M_S_DAB)
  	fmt = "T,o(b)";
@@ -437,7 +470,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
        else if (coproc)
  	fmt = "E,o(b)";
        else
-@@ -6150,6 +6338,138 @@
+@@ -6150,6 +6364,138 @@
  	  break;
  	}
  
@@ -576,7 +609,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
      case M_LI_D:
        /* Check if we have a constant in IMM_EXPR.  If the GPRs are 64 bits
           wide, IMM_EXPR is the entire value.  Otherwise IMM_EXPR is the high
-@@ -6672,6 +6992,27 @@
+@@ -6672,6 +7018,27 @@
        move_register (dreg, sreg);
        break;
  
@@ -604,7 +637,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
  #ifdef LOSING_COMPILER
      default:
        /* Try and see if this is a new itbl instruction.
-@@ -7348,6 +7689,39 @@
+@@ -7348,6 +7715,39 @@
        move_register (treg, tempreg);
        break;
  
@@ -644,7 +677,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
      case M_ULD_A:
        s = "ldl";
        s2 = "ldr";
-@@ -7430,6 +7804,55 @@
+@@ -7430,6 +7830,55 @@
        macro_build (&offset_expr, s2, "t,o(b)", treg, BFD_RELOC_LO16, breg);
        break;
  
@@ -700,7 +733,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
      case M_USD_A:
        s = "sdl";
        s2 = "sdr";
-@@ -7817,6 +8240,103 @@
+@@ -7817,6 +8266,103 @@
        case '%': USE_BITS (OP_MASK_VECALIGN,	OP_SH_VECALIGN); break;
        case '[': break;
        case ']': break;
@@ -804,7 +837,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
        default:
  	as_bad (_("internal: bad mips opcode (unknown operand type `%c'): %s %s"),
  		c, opc->name, opc->args);
-@@ -7845,12 +8365,15 @@
+@@ -7845,12 +8391,15 @@
    char c = 0;
    struct mips_opcode *insn;
    char *argsStart;
@@ -821,20 +854,38 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
  
    insn_error = NULL;
  
-@@ -8238,6 +8761,1151 @@
+@@ -8238,26 +8787,1171 @@
  	      s = expr_end;
  	      continue;
  
+-	    case 'b':		/* base register */
+-	    case 'd':		/* destination register */
+-	    case 's':		/* source register */
+-	    case 't':		/* target register */
+-	    case 'r':		/* both target and source */
+-	    case 'v':		/* both dest and source */
+-	    case 'w':		/* both dest and target */
+-	    case 'E':		/* coprocessor target register */
+-	    case 'G':		/* coprocessor destination register */
+-	    case 'K':		/* 'rdhwr' destination register */
+-	    case 'x':		/* ignore register name */
+-	    case 'z':		/* must be zero register */
+-	    case 'U':           /* destination register (clo/clz).  */
+-	      s_reset = s;
+-	      if (s[0] == '$')
 +	    /* VFPU fields */
 +	    case '?':
 +	    switch (*++args)
-+	      {
+ 		{
 +	      case '[':
 +	      case ']':
 +		if (*s++ == *args)
 +		  continue;
 +		break;
-+
+ 
+-		  if (ISDIGIT (s[1]))
+-		    {
+-		      ++s;
 +	      case 'y':		/* immediate separator */
 +		++args;
 +		vimm_expr[*args - '0'] = imm_expr;
@@ -1970,10 +2021,76 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
 +	      }
 +	      break;
 +
- 	    case 'b':		/* base register */
- 	    case 'd':		/* destination register */
- 	    case 's':		/* source register */
-@@ -8485,6 +10153,7 @@
++	    case 'b':		/* base register */
++	    case 'd':		/* destination register */
++	    case 's':		/* source register */
++	    case 't':		/* target register */
++	    case 'r':		/* both target and source */
++	    case 'v':		/* both dest and source */
++	    case 'w':		/* both dest and target */
++	    case 'E':		/* coprocessor target register */
++	    case 'G':		/* coprocessor destination register */
++	    case 'K':		/* 'rdhwr' destination register */
++	    case 'x':		/* ignore register name */
++	    case 'z':		/* must be zero register */
++	    case 'U':           /* destination register (clo/clz).  */
++	      s_reset = s;
++	      if (s[0] == '$')
++		{
++
++		  if (ISDIGIT (s[1]))
++		    {
++		      ++s;
+ 		      regno = 0;
+ 		      do
+ 			{
+@@ -8273,30 +9967,27 @@
+ 		    goto notreg;
+ 		  else
+ 		    {
+-		      if (s[1] == 'r' && s[2] == 'a')
++				const char regName[32][5] =
+ 			{
+-			  s += 3;
+-			  regno = RA;
+-			}
+-		      else if (s[1] == 'f' && s[2] == 'p')
++					"zero", "at", "v0", "v1", "a0", "a1", "a2", "a3",
++					"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", 
++					"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
++					"t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra"
++				};
++				int i;
++
++				for(i = 0; i < 32; i++)
+ 			{
+-			  s += 3;
+-			  regno = FP;
+-			}
+-		      else if (s[1] == 's' && s[2] == 'p')
++					if(strncmp(&s[1], regName[i], strlen(regName[i])) == 0)
+ 			{
+-			  s += 3;
+-			  regno = SP;
++						break;
+ 			}
+-		      else if (s[1] == 'g' && s[2] == 'p')
+-			{
+-			  s += 3;
+-			  regno = GP;
+ 			}
+-		      else if (s[1] == 'a' && s[2] == 't')
++
++				if(i < 32)
+ 			{
+-			  s += 3;
+-			  regno = AT;
++					s += strlen(regName[i]) + 1;
++					regno = i;
+ 			}
+ 		      else if (s[1] == 'k' && s[2] == 't' && s[3] == '0')
+ 			{
+@@ -8485,6 +10176,7 @@
  
  		  if ((regno & 1) != 0
  		      && HAVE_32BIT_FPRS
@@ -1981,7 +2098,7 @@ diff -burN binutils-2.16.1/gas/config/tc-mips.c binutils-psp/gas/config/tc-mips.
  		      && ! (strcmp (str, "mtc1") == 0
  			    || strcmp (str, "mfc1") == 0
  			    || strcmp (str, "lwc1") == 0
-@@ -13743,6 +15412,8 @@
+@@ -13743,6 +15435,8 @@
  
    /* MIPS II */
    { "r6000",          0,      ISA_MIPS2,      CPU_R6000 },

@@ -92,6 +92,32 @@ static char *mips_regmask_frag;
 
 #define ZERO 0
 #define AT  1
+#define V0  2
+#define V1  3
+#define A0  4
+#define A1  5
+#define A2  6
+#define A3  7
+#define T0  8
+#define T1  9
+#define T2  10
+#define T3  11
+#define T4  12
+#define T5  13
+#define T6  14
+#define T7  15
+#define S0  16
+#define S1  17
+#define S2  18
+#define S3  19
+#define S4  20
+#define S5  21
+#define S6  22
+#define S7  23
+#define T8  24
+#define T9  25
+#define K0  26
+#define K1  27
 #define TREG 24
 #define PIC_CALL_REG 25
 #define KT0 26
@@ -8764,7 +8790,7 @@ do_msbd:
 	    /* VFPU fields */
 	    case '?':
 	    switch (*++args)
-	      {
+		{
 	      case '[':
 	      case ']':
 		if (*s++ == *args)
@@ -9941,30 +9967,27 @@ do_msbd:
 		    goto notreg;
 		  else
 		    {
-		      if (s[1] == 'r' && s[2] == 'a')
+				const char regName[32][5] =
 			{
-			  s += 3;
-			  regno = RA;
-			}
-		      else if (s[1] == 'f' && s[2] == 'p')
+					"zero", "at", "v0", "v1", "a0", "a1", "a2", "a3",
+					"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", 
+					"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
+					"t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra"
+				};
+				int i;
+
+				for(i = 0; i < 32; i++)
+				{
+					if(strncmp(&s[1], regName[i], strlen(regName[i])) == 0)
+					{
+						break;
+					}
+				}
+
+				if(i < 32)
 			{
-			  s += 3;
-			  regno = FP;
-			}
-		      else if (s[1] == 's' && s[2] == 'p')
-			{
-			  s += 3;
-			  regno = SP;
-			}
-		      else if (s[1] == 'g' && s[2] == 'p')
-			{
-			  s += 3;
-			  regno = GP;
-			}
-		      else if (s[1] == 'a' && s[2] == 't')
-			{
-			  s += 3;
-			  regno = AT;
+					s += strlen(regName[i]) + 1;
+					regno = i;
 			}
 		      else if (s[1] == 'k' && s[2] == 't' && s[3] == '0')
 			{
