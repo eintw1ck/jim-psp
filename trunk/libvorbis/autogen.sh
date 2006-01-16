@@ -8,6 +8,8 @@ olddir=`pwd`
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
+ACLOCAL_FLAGS="-I ."
+
 cd "$srcdir"
 DIE=0
 
