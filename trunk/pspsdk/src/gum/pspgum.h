@@ -38,6 +38,7 @@ void sceGumLoadIdentity(void);
   * @param m - Matrix to load into stack
 **/
 void sceGumLoadMatrix(const ScePspFMatrix4* m);
+
 void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* up);
 
 /**
@@ -169,7 +170,13 @@ void sceGumFastInverse();
 
 // standalone functions
 
+/**
+  * Load matrix with identity
+  *
+  * @param m - Matrix to load with identity
+**/
 void gumLoadIdentity(ScePspFMatrix4* m);
+
 void gumLoadMatrix(ScePspFMatrix4* r, const ScePspFMatrix4* a);
 void gumLookAt(ScePspFMatrix4* m, ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* up);
 void gumMultMatrix(ScePspFMatrix4* result, const ScePspFMatrix4* a, const ScePspFMatrix4* b);
@@ -183,6 +190,16 @@ void gumRotateZYX(ScePspFMatrix4* m, const ScePspFVector3* v);
 void gumScale(ScePspFMatrix4* m, const ScePspFVector3* v);
 void gumTranslate(ScePspFMatrix4* m, const ScePspFVector3* v);
 void gumFullInverse(ScePspFMatrix4* r, const ScePspFMatrix4* a);
+
+/**
+  * Invert orthonogal 4x4 matrix
+  *
+  * Note that the matrix in the stack has to be orthonogal (that is, all rotational axises must be unit length & orthonogal against the others),
+  * otherwise the result of the function cannot be depended on. If you need to invert a matrix that is not orthonogal, use gumFullInverse().
+  *
+  * @param r - Matrix receiving result
+  * @param a - Orthonogal matrix that is to be inverted
+**/
 void gumFastInverse(ScePspFMatrix4* r, const ScePspFMatrix4* a);
 
 // vector functions
@@ -196,4 +213,3 @@ void gumNormalize(ScePspFVector3* v);
 #endif
 
 #endif
-

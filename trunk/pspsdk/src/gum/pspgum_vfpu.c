@@ -7,74 +7,142 @@
  */
 
 #include "gumInternal.h"
-#include "vfpu_ops.h"
 
 #include <string.h>
 #include <math.h>
 
+// TODO: write most standalone routines in vfpu assembler as well
+// TODO: get rid of all misalignments that require memcpy()-fixups
+
+#ifdef F_gumFastInverse_vfpu
+void gumFastInverse(ScePspFMatrix4* m, const ScePspFMatrix4* a)
+{
+	ScePspFMatrix4* r = GUM_ALIGNED_MATRIX();
+	memcpy(r,a,sizeof(ScePspFMatrix4));
+
+	__asm__ volatile (
+		"lv.q C200, 0(%1)\n"
+		"lv.q C210, 16(%1)\n"
+		"lv.q C220, 32(%1)\n"
+		"lv.q C230, 48(%1)\n"
+
+		"vmidt.q M000\n"
+		"vmmov.t M000, E200\n"
+		"vneg.t C100, C230\n"
+		"vdot.t S030, C100, C200\n"
+		"vdot.t S031, C100, C210\n"
+		"vdot.t S032, C100, C220\n"
+
+		"sv.q C000, 0(%1)\n"
+		"sv.q C010, 16(%1)\n"
+		"sv.q C020, 32(%1)\n"
+		"sv.q C030, 48(%1)\n"
+	: "=r"(r) : "r"(r) : "memory" );
+
+	memcpy(m,r,sizeof(ScePspFMatrix4));
+}
+#endif
+
+/*
+#ifdef F_gumMultMatrix_vfpu
+void gumMultMatrix(ScePspFMatrix4* result, const ScePspFMatrix4* a, const ScePspFMatrix4* b)
+{
+	ScePspFMatrix4* t1 = GUM_ALIGNED_MATRIX();
+	ScePspFMatrix4* t2 = GUM_ALIGNED_MATRIX();
+
+	memcpy(t1,a,sizeof(ScePspFMatrix4));
+	memcpy(t2,b,sizeof(ScePspFMatrix4));
+
+	__asm__ volatile
+	(
+		"lv.q C000, 0(%1)\n"
+		"lv.q C010, 16(%1)\n"
+		"lv.q C020, 32(%1)\n"
+		"lv.q C030, 48(%1)\n"
+
+		"lv.q C100, 0(%2)\n"
+		"lv.q C110, 16(%2)\n"
+		"lv.q C120, 32(%2)\n"
+		"lv.q C130, 48(%2)\n"
+
+		"vmmul.q M200, M100, M000\n"
+
+		"sv.q C200, 0(%1)\n"
+		"sv.q C210, 16(%1)\n"
+		"sv.q C220, 32(%1)\n"
+		"sv.q C230, 48(%1)\n"
+	: "=r"(t1) : "r"(t1), "r"(t2) : "memory");
+
+	memcpy(result,t1,sizeof(ScePspFMatrix4));
+}
+#endif
+*/
+
+#ifdef F_sceGumFastInverse_vfpu
+void sceGumFastInverse()
+{
+	__asm__ volatile (
+		"vmidt.q M000\n"
+		"vmmov.t M000, E300\n"
+		"vneg.t  C100, C330\n"
+		"vdot.t	 S030, C100, C300\n" // TODO: figure out if there is any op to multiply vector with matrix, and replace this sequence
+		"vdot.t	 S031, C100, C310\n"
+		"vdot.t	 S032, C100, C320\n"
+		"vmmov.q M300, M000\n"
+	);
+
+	gum_current_matrix_update = 1;
+}
+#endif
+/*
 #ifdef F_sceGumFastInverse_vfpu
 void sceGumFastInverse()
 {
 	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
 
-	{
-		register ScePspFMatrix4* r __asm("a0") = t;
-
-		__asm__ volatile (
-			cgen_asm(sv_q(Q_C300,0,R_a0,0))
-			cgen_asm(sv_q(Q_C310,4,R_a0,0))
-			cgen_asm(sv_q(Q_C320,8,R_a0,0))
-			cgen_asm(sv_q(Q_C330,12,R_a0,0))
-		: "=r"(r) : "r"(r) : "memory");
-	}
+	__asm__ volatile (
+		"sv.q C300, 0(%1)\n"
+		"sv.q C310, 16(%1)\n"
+		"sv.q C320, 32(%1)\n"
+		"sv.q C330, 48(%1)\n"
+	: "=r"(t) : "r"(t) : "memory");
 
 	gumFastInverse(t,t);
 
-	{
-		register ScePspFMatrix4* r __asm("a0") = t;
+	__asm__ volatile (
+		"lv.q C300.q, 0(%0)\n"
+		"lv.q C310.q, 16(%0)\n"
+		"lv.q C320.q, 32(%0)\n"
+		"lv.q C330.q, 48(%0)\n"
+	: : "r"(t) : "memory");
 
-		__asm__ volatile (
-			cgen_asm(lv_q(Q_C300,0,R_a0,0))
-			cgen_asm(lv_q(Q_C310,4,R_a0,0))
-			cgen_asm(lv_q(Q_C320,8,R_a0,0))
-			cgen_asm(lv_q(Q_C330,12,R_a0,0))
-		: "=r"(r) : "r"(r) : "memory");
-	}
-
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
+*/
 
 #ifdef F_sceGumFullInverse_vfpu
 void sceGumFullInverse()
 {
 	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
 
-	{
-		register ScePspFMatrix4* r __asm("a0") = t;
-
-		__asm__ volatile (
-			cgen_asm(sv_q(Q_C300,0,R_a0,0))
-			cgen_asm(sv_q(Q_C310,4,R_a0,0))
-			cgen_asm(sv_q(Q_C320,8,R_a0,0))
-			cgen_asm(sv_q(Q_C330,12,R_a0,0))
-		: "=r"(r) : "r"(r) : "memory");
-	}
+	__asm__ volatile (
+		"sv.q C300, 0(%1)\n"
+		"sv.q C310, 16(%1)\n"
+		"sv.q C320, 32(%1)\n"
+		"sv.q C330, 48(%1)\n"
+	: "=r"(t) : "r"(t) : "memory");
 
 	gumFastInverse(t,t);
 
-	{
-		register ScePspFMatrix4* r __asm("a0") = t;
+	__asm__ volatile (
+		"lv.q C300.q, 0(%0)\n"
+		"lv.q C310.q, 16(%0)\n"
+		"lv.q C320.q, 32(%0)\n"
+		"lv.q C330.q, 48(%0)\n"
+	: : "r"(t) : "memory");
 
-		__asm__ volatile (
-			cgen_asm(lv_q(Q_C300,0,R_a0,0))
-			cgen_asm(lv_q(Q_C310,4,R_a0,0))
-			cgen_asm(lv_q(Q_C320,8,R_a0,0))
-			cgen_asm(lv_q(Q_C330,12,R_a0,0))
-		: "=r"(r) : "r"(r) : "memory");
-	}
-
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -82,26 +150,26 @@ void sceGumFullInverse()
 void sceGumLoadIdentity(void)
 {
 	__asm__ volatile (
-		cgen_asm(vmidt_q(Q_M300))
+		"vmidt.q M300\n"
 	);
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
 #ifdef F_sceGumLoadMatrix_vfpu
 void sceGumLoadMatrix(const ScePspFMatrix4* m)
 {
-	register ScePspFMatrix4* r __asm("a0") = GUM_ALIGNED_MATRIX();
+	ScePspFMatrix4* r = GUM_ALIGNED_MATRIX();
 	memcpy(r,m,sizeof(ScePspFMatrix4));
 	
 	__asm__ volatile (
-		cgen_asm(lv_q(Q_C300,0,R_a0,0))
-		cgen_asm(lv_q(Q_C310,4,R_a0,0))
-		cgen_asm(lv_q(Q_C320,8,R_a0,0))
-		cgen_asm(lv_q(Q_C330,12,R_a0,0))
-	: "=r"(r) : "r"(r), "r"(m) : "memory");
+		"lv.q C300.q, 0(%0)\n"
+		"lv.q C310.q, 16(%0)\n"
+		"lv.q C320.q, 32(%0)\n"
+		"lv.q C330.q, 48(%0)\n"
+	: : "r"(r) : "memory");
 
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -111,76 +179,68 @@ void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* u
 	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
 	gumLookAt(t,eye,center,up);
 
-	{
-		register ScePspFMatrix4* r __asm("a0") = t;
-		__asm__ volatile (
-			cgen_asm(lv_q(Q_C000,0,R_a0,0))
-			cgen_asm(lv_q(Q_C010,4,R_a0,0))
-			cgen_asm(lv_q(Q_C020,8,R_a0,0))
-			cgen_asm(lv_q(Q_C030,12,R_a0,0))
-			cgen_asm(vmmul_q(Q_M100,Q_M300,Q_M000))
-			cgen_asm(vmmov_q(Q_M300,Q_M100))
-		: : "r"(r) );
-	}
+	__asm__ volatile (
+		"lv.q C300.q, 0(%0)\n"
+		"lv.q C310.q, 16(%0)\n"
+		"lv.q C320.q, 32(%0)\n"
+		"lv.q C330.q, 48(%0)\n"
+		"vmmul.q M100, M300, M000\n"
+		"vmmov.q M300, M100\n"
+	: : "r"(t) );
 
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
 #ifdef F_sceGumMatrixMode_vfpu
 void sceGumMatrixMode(int mode)
 {
-	{
-		register void* m __asm("a1") = gum_current_matrix;
-		__asm__ volatile (
-			cgen_asm(sv_q(Q_C300, 0, R_a1, 0))
-			cgen_asm(sv_q(Q_C310, 4, R_a1, 0))
-			cgen_asm(sv_q(Q_C320, 8, R_a1, 0))
-			cgen_asm(sv_q(Q_C330, 12, R_a1, 0))
-		: : "r"(m) : "memory");
-	}
+	__asm__ volatile (
+		"sv.q C300, 0(%1)\n"
+		"sv.q C310, 16(%1)\n"
+		"sv.q C320, 32(%1)\n"
+		"sv.q C330, 48(%1)\n"
+	: "=r"(gum_current_matrix) : "r"(gum_current_matrix) : "memory");
 
 	// switch stack
+	gum_matrix_update[gum_current_mode] = gum_current_matrix_update;
 	gum_stack_depth[gum_current_mode] = gum_current_matrix;
 	gum_current_matrix = gum_stack_depth[mode];
 	gum_current_mode = mode;
+	gum_current_matrix_update = gum_matrix_update[gum_current_mode];
 
-	{
-		register void* m __asm("a1") = gum_current_matrix;
-		__asm__ volatile (
-			cgen_asm(lv_q(Q_C300, 0, R_a1, 0))
-			cgen_asm(lv_q(Q_C310, 4, R_a1, 0))
-			cgen_asm(lv_q(Q_C320, 8, R_a1, 0))
-			cgen_asm(lv_q(Q_C330, 12, R_a1, 0))
-		: : "r"(m) : "memory");
-	}
+	__asm__ volatile (
+		"lv.q C300, 0(%0)\n"
+		"lv.q C310, 16(%0)\n"
+		"lv.q C320, 32(%0)\n"
+		"lv.q C330, 48(%0)\n"
+	: : "r"(gum_current_matrix) : "memory");
 }
 #endif
 
 #ifdef F_sceGumMultMatrix_vfpu
 void sceGumMultMatrix(const ScePspFMatrix4* m)
 {
-	register ScePspFMatrix4* t __asm("a0") = GUM_ALIGNED_MATRIX();
+	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
 	memcpy(t,m,sizeof(ScePspFMatrix4));
 
 	__asm__ volatile (
-		cgen_asm(lv_q(Q_C000,0,R_a0,0))
-		cgen_asm(lv_q(Q_C010,4,R_a0,0))
-		cgen_asm(lv_q(Q_C020,8,R_a0,0))
-		cgen_asm(lv_q(Q_C030,12,R_a0,0))
-
-		cgen_asm(vmmul_q(Q_M100,Q_M300,Q_M000))
-		cgen_asm(vmmov_q(Q_M300,Q_M100))
+		"lv.q C000, 0(%0)\n"
+		"lv.q C010, 16(%0)\n"
+		"lv.q C020, 32(%0)\n"
+		"lv.q C030, 48(%0)\n"
+		"vmmul.q M100, M300, M000\n"
+		"vmmov.q M300, M100\n"
 	: "=r"(t) : "r"(t));
 
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
 #ifdef F_sceGumOrtho_vfpu
 void sceGumOrtho(float left, float right, float bottom, float top, float near, float far)
 {
-	register ScePspFMatrix4* t __asm("a0") = GUM_ALIGNED_MATRIX();
+	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
 	float dx = right-left, dy = top-bottom, dz = far-near;
 
 	memset(t,0,sizeof(ScePspFMatrix4));
@@ -194,15 +254,15 @@ void sceGumOrtho(float left, float right, float bottom, float top, float near, f
 	t->w.w = 1.0f;
 
 	__asm__ volatile (
-		cgen_asm(lv_q(Q_C000,0,R_a0,0))
-		cgen_asm(lv_q(Q_C010,4,R_a0,0))
-		cgen_asm(lv_q(Q_C020,8,R_a0,0))
-		cgen_asm(lv_q(Q_C030,12,R_a0,0))
-		cgen_asm(vmmul_q(Q_M100,Q_M300,Q_M000))
-		cgen_asm(vmmov_q(Q_M300,Q_M100))
+		"lv.q C000, 0(%0)\n"
+		"lv.q C010, 16(%0)\n"
+		"lv.q C020, 32(%0)\n"
+		"lv.q C030, 48(%0)\n"
+		"vmmul.q M100, M300, M000\n"
+		"vmmov.q M300, M100\n"
 	: : "r"(t) );
 
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -212,7 +272,7 @@ void sceGumPerspective(float fovy, float aspect, float near, float far)
 	float angle = (fovy / 2) * (GU_PI/180.0f);
 	float cotangent = cosf(angle) / sinf(angle);
 	float delta_z = near-far;
-	register ScePspFMatrix4* t __asm("a0") = GUM_ALIGNED_MATRIX();
+	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
 
 	memset(t,0,sizeof(ScePspFMatrix4));
 	t->x.x = cotangent / aspect;
@@ -223,43 +283,43 @@ void sceGumPerspective(float fovy, float aspect, float near, float far)
 	t->w.w = 0.0f;
 
 	__asm__ volatile (
-		cgen_asm(lv_q(Q_C000,0,R_a0,0))
-		cgen_asm(lv_q(Q_C010,4,R_a0,0))
-		cgen_asm(lv_q(Q_C020,8,R_a0,0))
-		cgen_asm(lv_q(Q_C030,12,R_a0,0))
-		cgen_asm(vmmul_q(Q_M100,Q_M300,Q_M000))
-		cgen_asm(vmmov_q(Q_M300,Q_M100))
+		"lv.q C000, 0(%0)\n"
+		"lv.q C010, 16(%0)\n"
+		"lv.q C020, 32(%0)\n"
+		"lv.q C030, 48(%0)\n"
+		"vmmul.q M100, M300, M000\n"
+		"vmmov.q M300, M100\n"
 	: : "r"(t));
 
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
 #ifdef F_sceGumPopMatrix_vfpu
 void sceGumPopMatrix(void)
 {
-	register void* m __asm("a0") = gum_current_matrix-1;
+	ScePspFMatrix4* m = gum_current_matrix-1;
 	__asm__ volatile (
-		cgen_asm(lv_q(Q_C300,0,R_a0,0))
-		cgen_asm(lv_q(Q_C310,4,R_a0,0))
-		cgen_asm(lv_q(Q_C320,8,R_a0,0))
-		cgen_asm(lv_q(Q_C330,12,R_a0,0))
-	: "=r"(m) : "r"(m));
+		"lv.q C300.q, 0(%0)\n"
+		"lv.q C310.q, 16(%0)\n"
+		"lv.q C320.q, 32(%0)\n"
+		"lv.q C330.q, 48(%0)\n"
+	: : "r"(m));
 
 	gum_current_matrix--;
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
 #ifdef F_sceGumPushMatrix_vfpu
 void sceGumPushMatrix(void)
 {
-	register void* m __asm("a0") = gum_current_matrix;
+	ScePspFMatrix4* m = gum_current_matrix;
 	__asm__ volatile (
-		cgen_asm(sv_q(Q_C300,0,R_a0,0))
-		cgen_asm(sv_q(Q_C310,4,R_a0,0))
-		cgen_asm(sv_q(Q_C320,8,R_a0,0))
-		cgen_asm(sv_q(Q_C330,12,R_a0,0))
+		"sv.q C300, 0(%1)\n"
+		"sv.q C310, 16(%1)\n"
+		"sv.q C320, 32(%1)\n"
+		"sv.q C330, 48(%1)\n"
 	: "=r"(m) : "r"(m) : "memory");
 
 	gum_current_matrix++;
@@ -269,97 +329,97 @@ void sceGumPushMatrix(void)
 #ifdef F_sceGumRotateX_vfpu
 void sceGumRotateX(float angle)
 {
-	register ScePspFVector4* v __asm("a0") = GUM_ALIGNED_VECTOR();
+	ScePspFVector4* v = GUM_ALIGNED_VECTOR();
 	v->x = angle;
 
 	__asm__ volatile (
-		cgen_asm(vmidt_q(Q_M000))
-		cgen_asm(lv_s(S_S100, 0, R_a0, 0))
-		cgen_asm(vcst_s(S_S101, 5))
-		cgen_asm(vmul_s(S_S100, S_S101, S_S100))
-		cgen_asm(vcos_s(S_S011, S_S100))
-		cgen_asm(vsin_s(S_S012, S_S100))
-		cgen_asm(vneg_s(S_S021, S_S012))
-		cgen_asm(vmov_s(S_S022, S_S011))
-		cgen_asm(vmmul_q(Q_M100, Q_M300, Q_M000))
-		cgen_asm(vmmov_q(Q_M300, Q_M100))
+		"vmidt.q M000\n"
+		"lv.s S100, 0(%0)\n"
+		"vcst.s S101, VFPU_2_PI\n"
+		"vmul.s S100, S101, S100\n"
+		"vcos.s S011, S100\n"
+		"vsin.s S012, S100\n"
+		"vneg.s S021, S012\n"
+		"vmov.s S022, S011\n"
+		"vmmul.q M100, M300, M000\n"
+		"vmmov.q M300, M100\n"
 	: : "r"(v));
 
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
 #ifdef F_sceGumRotateY_vfpu
 void sceGumRotateY(float angle)
 {
-	register ScePspFVector4* v __asm("a0") = GUM_ALIGNED_VECTOR();
+	ScePspFVector4* v = GUM_ALIGNED_VECTOR();
 	v->x = angle;
 
 	__asm__ volatile (
-		cgen_asm(vmidt_q(Q_M000))
-		cgen_asm(lv_s(S_S100, 0, R_a0, 0))
-		cgen_asm(vcst_s(S_S101, 5))
-		cgen_asm(vmul_s(S_S100, S_S101, S_S100))
-		cgen_asm(vcos_s(S_S000, S_S100))
-		cgen_asm(vsin_s(S_S020, S_S100))
-		cgen_asm(vneg_s(S_S002, S_S020))
-		cgen_asm(vmov_s(S_S022, S_S000))
-		cgen_asm(vmmul_q(Q_M100, Q_M300, Q_M000))
-		cgen_asm(vmmov_q(Q_M300, Q_M100))
+		"vmidt.q M000\n"
+		"lv.s S100, 0(%0)\n"
+		"vcst.s S101, VFPU_2_PI\n"
+		"vmul.s S100, S101, S100\n"
+		"vcos.s S000, S100\n"
+		"vsin.s S020, S100\n"
+		"vneg.s S002, S020\n"
+		"vmov.s S022, S000\n"
+		"vmmul.q M100, M300, M000\n"
+		"vmmov.q M300, M100\n"
 	: : "r"(v));
 
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
 #ifdef F_sceGumRotateZ_vfpu
 void sceGumRotateZ(float angle)
 {
-	register ScePspFVector4* v __asm("a0") = GUM_ALIGNED_VECTOR();
+	ScePspFVector4* v = GUM_ALIGNED_VECTOR();
 	v->x = angle;
 
 	__asm volatile (
-		cgen_asm(vmidt_q(Q_M000))
-		cgen_asm(lv_s(S_S100, 0, R_a0, 0))
-		cgen_asm(vcst_s(S_S101, 5))
-		cgen_asm(vmul_s(S_S100, S_S101, S_S100))
-		cgen_asm(vcos_s(S_S000, S_S100))
-		cgen_asm(vsin_s(S_S001, S_S100))
-		cgen_asm(vneg_s(S_S010, S_S001))
-		cgen_asm(vmov_s(S_S011, S_S000))
-		cgen_asm(vmmul_q(Q_M100, Q_M300, Q_M000))
-		cgen_asm(vmmov_q(Q_M300, Q_M100))
+		"vmidt.q M000\n"
+		"lv.s S100, 0(%0)\n"
+		"vcst.s S101, VFPU_2_PI\n"
+		"vmul.s S100, S101, S100\n"
+		"vcos.s S000, S100\n"
+		"vsin.s S001, S100\n"
+		"vneg.s S010, S001\n"
+		"vmov.s S011, S000\n"
+		"vmmul.q M100, M300, M000\n"
+		"vmmov.q M300, M100\n"
 	: : "r"(v));
 
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
 #ifdef F_sceGumScale_vfpu
 void sceGumScale(const ScePspFVector3* v)
 {
-	register ScePspFVector4* t __asm("a1") = GUM_ALIGNED_VECTOR();
+	ScePspFVector4* t = GUM_ALIGNED_VECTOR();
 	memcpy(t,v,sizeof(ScePspFVector3));
 	__asm__ volatile (
-		cgen_asm(lv_q(Q_C000,0,R_a0,0))
-		cgen_asm(vscl_t(Q_C300,Q_C300,S_S000))
-		cgen_asm(vscl_t(Q_C310,Q_C310,S_S001))
-		cgen_asm(vscl_t(Q_C320,Q_C320,S_S002))
+		"lv.q C000, 0(%0)\n"
+		"vscl.t C300, C300, S000\n"
+		"vscl.t C310, C310, S001\n"
+		"vscl.t C320, C320, S002\n"
 	: : "r"(t));
 
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
 #ifdef F_sceGumStoreMatrix_vfpu
 void sceGumStoreMatrix(ScePspFMatrix4* m)
 {
-	register ScePspFMatrix4* t __asm("a0") = GUM_ALIGNED_MATRIX();
+	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
 	__asm__ volatile (
-		cgen_asm(sv_q(Q_C300,0,R_a0,0))
-		cgen_asm(sv_q(Q_C310,4,R_a0,0))
-		cgen_asm(sv_q(Q_C320,8,R_a0,0))
-		cgen_asm(sv_q(Q_C330,12,R_a0,0))
+		"sv.q C300, 0(%1)\n"
+		"sv.q C310, 16(%1)\n"
+		"sv.q C320, 32(%1)\n"
+		"sv.q C330, 48(%1)\n"
 	: "=r"(t) : "r"(t) : "memory");
 	memcpy(m,t,sizeof(ScePspFMatrix4));
 }
@@ -368,18 +428,18 @@ void sceGumStoreMatrix(ScePspFMatrix4* m)
 #ifdef F_sceGumTranslate_vfpu
 void sceGumTranslate(const ScePspFVector3* v)
 {
-	register ScePspFVector4* t __asm("a0") = GUM_ALIGNED_VECTOR();
+	ScePspFVector4* t = GUM_ALIGNED_VECTOR();
 	memcpy(t,v,sizeof(ScePspFVector4));
 	t->w = 1.0f;
 
 	__asm__ volatile (
-		cgen_asm(vmidt_q(Q_M000))
-		cgen_asm(lv_q(Q_C030,0,R_a0,0))
-		cgen_asm(vmmul_q(Q_M100,Q_M300,Q_M000))
-		cgen_asm(vmmov_q(Q_M300,Q_M100))
-	: "=r"(t) : "r"(t));
+		"vmidt.q M000\n"
+		"lv.q C030, 0(%0)\n"
+		"vmmul.q M100, M300, M000\n"
+		"vmmov.q M300, M100\n"
+	: : "r"(t));
 
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -389,16 +449,18 @@ void sceGumUpdateMatrix(void)
 	gum_stack_depth[gum_current_mode] = gum_current_matrix;
 
 	// flush dirty matrix from vfpu
-	if (gum_matrix_update[gum_current_mode])
+	if (gum_current_matrix_update)
 	{
-		register void* m __asm("a0") = gum_current_matrix;
 		__asm__ volatile (
-			cgen_asm(sv_q(Q_C300,0,R_a0,0))
-			cgen_asm(sv_q(Q_C310,4,R_a0,0))
-			cgen_asm(sv_q(Q_C320,8,R_a0,0))
-			cgen_asm(sv_q(Q_C330,12,R_a0,0))
-		: "=r"(m) : "r"(m) : "memory");
+			"sv.q C300, 0(%1)\n"
+			"sv.q C310, 16(%1)\n"
+			"sv.q C320, 32(%1)\n"
+			"sv.q C330, 48(%1)\n"
+		: "=r"(gum_current_matrix) : "r"(gum_current_matrix) : "memory");
+		gum_matrix_update[gum_current_mode] = gum_current_matrix_update;
+		gum_current_matrix_update = 0;
 	}
+
 
 	unsigned int i;
 	for (i = 0; i < 4; ++i)

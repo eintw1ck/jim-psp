@@ -374,7 +374,7 @@ void sceGumDrawSpline(int vtype, int ucount, int vcount, int uedge, int vedge, c
 void sceGumFastInverse()
 {
 	gumFastInverse(gum_current_matrix,gum_current_matrix);
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -382,7 +382,7 @@ void sceGumFastInverse()
 void sceGumFullInverse()
 {
 	gumFullInverse(gum_current_matrix,gum_current_matrix);
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -390,7 +390,7 @@ void sceGumFullInverse()
 void sceGumLoadIdentity(void)
 {
 	gumLoadIdentity(gum_current_matrix);
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -398,7 +398,7 @@ void sceGumLoadIdentity(void)
 void sceGumLoadMatrix(const ScePspFMatrix4* m)
 {
 	memcpy(gum_current_matrix,m,sizeof(ScePspFMatrix4));
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -406,7 +406,7 @@ void sceGumLoadMatrix(const ScePspFMatrix4* m)
 void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* up)
 {
 	gumLookAt(gum_current_matrix,eye,center,up);
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -414,9 +414,11 @@ void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* u
 void sceGumMatrixMode(int mode)
 {
 	// switch stack
+	gum_matrix_update[gum_current_mode] = gum_current_matrix_update;
 	gum_stack_depth[gum_current_mode] = gum_current_matrix;
 	gum_current_matrix = gum_stack_depth[mode];
 	gum_current_mode = mode;
+	gum_current_matrix_update = gum_matrix_update[gum_current_mode];
 }
 #endif
 
@@ -424,7 +426,7 @@ void sceGumMatrixMode(int mode)
 void sceGumMultMatrix(const ScePspFMatrix4* m)
 {
 	gumMultMatrix(gum_current_matrix,gum_current_matrix,m);  
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -472,7 +474,7 @@ void sceGumPerspective(float fovy, float aspect, float near, float far)
 void sceGumPopMatrix(void)
 {
 	gum_current_matrix--;
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -488,7 +490,7 @@ void sceGumPushMatrix(void)
 void sceGumRotateX(float angle)
 {
 	gumRotateX(gum_current_matrix,angle);
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -505,7 +507,7 @@ void sceGumRotateXYZ(const ScePspFVector3* v)
 void sceGumRotateY(float angle)
 {
 	gumRotateY(gum_current_matrix,angle);
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -513,7 +515,7 @@ void sceGumRotateY(float angle)
 void sceGumRotateZ(float angle)
 {
 	gumRotateZ(gum_current_matrix,angle);
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -530,7 +532,7 @@ void sceGumRotateZYX(const ScePspFVector3* v)
 void sceGumScale(const ScePspFVector3* v)
 {
 	gumScale(gum_current_matrix,v);
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -545,7 +547,7 @@ void sceGumStoreMatrix(ScePspFMatrix4* m)
 void sceGumTranslate(const ScePspFVector3* v)
 {
 	gumTranslate(gum_current_matrix,v);
-	gum_matrix_update[gum_current_mode] = 1;
+	gum_current_matrix_update = 1;
 }
 #endif
 
@@ -553,6 +555,8 @@ void sceGumTranslate(const ScePspFVector3* v)
 void sceGumUpdateMatrix(void)
 {
 	gum_stack_depth[gum_current_mode] = gum_current_matrix;
+	gum_matrix_update[gum_current_mode] = gum_current_matrix_update;
+	gum_current_matrix_update = 0;
 
 	unsigned int i;
 	for (i = 0; i < 4; ++i)

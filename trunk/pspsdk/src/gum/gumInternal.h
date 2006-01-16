@@ -24,6 +24,7 @@
 
 extern int gum_current_mode;
 extern int gum_matrix_update[4];
+extern int gum_current_matrix_update;
 extern ScePspFMatrix4* gum_current_matrix;
 extern ScePspFMatrix4* gum_stack_depth[4];
 extern ScePspFMatrix4 gum_matrix_stack[4][32];

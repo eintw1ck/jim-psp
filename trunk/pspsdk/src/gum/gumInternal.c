@@ -13,6 +13,7 @@
 int gum_current_mode = GU_PROJECTION;
 
 int gum_matrix_update[4] = { 0 };
+int gum_current_matrix_update = 0;
 
 ScePspFMatrix4* gum_current_matrix = gum_matrix_stack[GU_PROJECTION];
 
