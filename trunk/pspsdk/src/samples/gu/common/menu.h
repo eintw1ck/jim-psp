@@ -43,11 +43,15 @@ MenuContext* initMenu();
 // destroy menu
 void destroyMenu(MenuContext* context);
 // add menu-item into tree
-MenuItem* addMenuItem(MenuContext* context, MenuItem* parent, const char* name, MenuItemType type, int id, int data);
+MenuItem* addMenuItem(MenuContext* context, MenuItem* parent, MenuItem* item, int id, int data);
 // process menu input
 // - kills input while menu is open, pass the input-structure you intend to use with the rest of input
 // - returns triggered MenuItem
 MenuItem* handleMenu(MenuContext* context, SceCtrlData* input);
 void renderMenu(MenuContext* context,int startx, int starty);
+
+MenuItem* createMenuContainer(const char* name);
+MenuItem* createRadioButton(const char* name, int state);
+MenuItem* createTriggerButton(const char* name);
 
 #endif

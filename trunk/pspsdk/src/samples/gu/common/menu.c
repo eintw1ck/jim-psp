@@ -57,16 +57,10 @@ void destroyMenu(MenuContext* context)
 	free(context);
 }
 
-MenuItem* addMenuItem(MenuContext* context, MenuItem* parent, const char* name, MenuItemType type, int id, int data)
+MenuItem* addMenuItem(MenuContext* context, MenuItem* parent, MenuItem* item, int id, int data)
 {
-	MenuItem* item = (MenuItem*)malloc(sizeof(MenuItem));
-
 	// setup item
 
-	memset(item,0,sizeof(MenuItem));
-
-	item->name = name;
-	item->type = type;
 	item->id = id;
 	item->data = data;
 
@@ -107,6 +101,55 @@ MenuItem* addMenuItem(MenuContext* context, MenuItem* parent, const char* name, 
 			context->active = item;
 		}
 	}
+
+	switch (item->type)
+	{
+		case RadioButton:
+		{
+			if (item->state && item->parent)
+				item->parent->selected = item;
+			item->state = 0;
+		}
+		break;
+
+		default:
+		break;
+	}
+
+	return item;
+}
+
+MenuItem* createMenuContainer(const char* name)
+{
+	MenuItem* item = (MenuItem*)malloc(sizeof(MenuItem));
+	memset(item,0,sizeof(MenuItem));
+
+	item->name = name;
+	item->type = MenuContainer;
+
+	return item;
+}
+
+MenuItem* createRadioButton(const char* name, int state)
+{
+	MenuItem* item = (MenuItem*)malloc(sizeof(MenuItem));
+	memset(item,0,sizeof(MenuItem));
+
+	item->name = name;
+	item->type = RadioButton;
+
+	item->state = state;
+
+	return item;
+}
+
+MenuItem* createTriggerButton(const char* name)
+{
+	MenuItem* item = (MenuItem*)malloc(sizeof(MenuItem));
+	memset(item,0,sizeof(MenuItem));
+
+	item->name = name;
+	item->type = TriggerButton;
 
 	return item;
 }
@@ -203,8 +246,7 @@ MenuItem* handleMenu(MenuContext* context, SceCtrlData* input)
 
 void renderMenu(MenuContext* context,int startx, int starty)
 {
-
-	if (context->open)
+	if (context->open && context->root)
 	{
 		int depth = 0;
 		int row = starty;
@@ -224,6 +266,14 @@ void renderMenu(MenuContext* context,int startx, int starty)
 				}
 				break;
 
+				case MenuContainer:
+				{
+					pspDebugScreenPrintf("%s%s",curr->state ? "-" : "+", curr->name);
+					if (curr->selected && !curr->state)
+						pspDebugScreenPrintf(": %s",curr->selected->name);
+				}
+				break;
+
 				default:
 				{
 					pspDebugScreenPrintf(curr->name);
@@ -233,7 +283,7 @@ void renderMenu(MenuContext* context,int startx, int starty)
 
 			// traverse
 
-			if (curr->state && curr->children)
+			if (curr->state && curr->children && (curr->type == MenuContainer))
 			{
 				curr = curr->children;
 				++depth;
@@ -261,6 +311,6 @@ void renderMenu(MenuContext* context,int startx, int starty)
 	{
 
 		pspDebugScreenSetXY(0,33);
-		pspDebugScreenPrintf("O = Open Menu");
+		pspDebugScreenPrintf("O = Open Debug Menu");
 	}
 }
