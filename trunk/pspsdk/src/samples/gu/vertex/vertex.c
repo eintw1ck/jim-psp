@@ -45,12 +45,12 @@ int getVertexSize(int vertexFormat)
 
 	static int vertexValues[] =
 	{
-		4, 0, GU_TEXTURE_BITS, SIZE,	0, 1 * 2, 2 * 2, 4 * 2,
-		4, 9, GU_WEIGHT_BITS, WEIGHTS,  0, 1, 2, 4,
-		8, 2, GU_COLOR_BITS, SIZE,	0, 0, 0, 0, 2, 2, 2, 4,
-		4, 5, GU_NORMAL_BITS, SIZE,	0, 1 * 3, 2 * 3, 4 * 3,
-		4, 7, GU_VERTEX_BITS, SIZE,	0, 1 * 3, 2 * 3, 4 * 3,
-		0, 11, GU_VERTICES_BITS, VERTEX,
+		4, 0, GU_TEXTURE_BITS, SIZE,	2, 0, 1, 2, 4,
+		4, 9, GU_WEIGHT_BITS, WEIGHTS,  1, 0, 1, 2, 4,
+		8, 2, GU_COLOR_BITS, SIZE,	1, 0, 0, 0, 0, 2, 2, 2, 4,
+		4, 5, GU_NORMAL_BITS, SIZE,	3, 0, 1, 2, 4,
+		4, 7, GU_VERTEX_BITS, SIZE,	3, 0, 1, 2, 4,
+		0, 11, GU_VERTICES_BITS, VERTEX, 0,
 		0, 0, 0,
 	};
 
@@ -63,8 +63,9 @@ int getVertexSize(int vertexFormat)
 		int currentShift = current[1];
 		int currentBits = current[2];
 		int mode = current[3];
+		int numElements = current[4];
 
-		current += 4;
+		current += 5;
 
 		switch (mode)
 		{
@@ -76,7 +77,7 @@ int getVertexSize(int vertexFormat)
 				if (elementSize > 0)
 					size = (size + (elementSize-1)) & ~(elementSize-1);
 
-				size += elementSize;
+				size += elementSize * numElements;
 			}
 			break;
 
