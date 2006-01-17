@@ -79,6 +79,7 @@ char *strncat(char *s, const char *append, size_t count)
 	while((*append) && (count > 0))
 	{
 		*s++ = *append++;
+		count--;
 	}
 
 	*s = 0;
