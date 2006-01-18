@@ -53,7 +53,7 @@ endif
 
 ifeq ($(USE_KERNEL_LIBC),1)
 # Use the PSP's kernel libc
-PSPSDL_LIBC_LIB = 
+PSPSDK_LIBC_LIB = 
 CFLAGS := -I$(PSPSDK)/include/libc $(CFLAGS)
 else
 ifeq ($(USE_PSPSDK_LIBC),1)
