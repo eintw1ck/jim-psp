@@ -73,12 +73,13 @@ Dec Hex Name        Description
                             11: Open/Open
 
 7   07  BBOX        Bounding Box
-                        0-23: Value (???)
+                        0-15: Number of vertices to test for conditional rendering (0-65535)
 
 8   08  JUMP        Jump To New Address (BASE)
                         0-23: 24 least significant bits of pointer
 
 9   09  BJUMP       Conditional Jump (BASE)
+                        0-23: 24 least significant bits of pointer
 
 10  0A  CALL        Call Address (BASE)
                         0-23: 24 least significant bits of pointer
