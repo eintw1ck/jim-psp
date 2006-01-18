@@ -33,6 +33,7 @@ SAMPLES = \
 	gu/spharm \
 	gu/splinesurface \
 	gu/sprite \
+	gu/vertex \
 	gu/zbufferfog \
 	ir/sircs \
 	ir/irda \
