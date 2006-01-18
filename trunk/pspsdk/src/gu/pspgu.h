@@ -539,11 +539,33 @@ int sceGuSync(int mode, int a1);
   * @param vtype - Vertex type to process
   * @param count - How many vertices to process
   * @param indices - Optional pointer to an index-list
-  * @param vertices - Optional pointer to an vertex-list
+  * @param vertices - Pointer to a vertex-list
 **/
 void sceGuDrawArray(int prim, int vtype, int count, const void* indices, const void* vertices);
 
-void sceGuBeginObject(int type, int a1, const void* indices, const void* vertices);
+/**
+  * Begin conditional rendering of object
+  *
+  * If no vertices passed into this function are inside the view frustum, it will skip rendering
+  * the object. There can be up to 32 levels of conditional testing, and all levels HAVE to
+  * be terminated by sceGuEndObject().
+  *
+  * @par Example: test a boundingbox against the frustum, and if visible, render object
+  * @code
+  * sceGuBeginObject(GU_VERTEX_32BITF,8,0,boundingBox);
+  *   sceGuDrawArray(GU_TRIANGLES,GU_TEXTURE_32BITF|GU_VERTEX_32BITF,vertexCount,0,vertices);
+  * sceGuEndObject();
+  *
+  * @param vtype - Vertex type to process
+  * @param count - Number of vertices to test
+  * @param indices - Optional list to an index-list
+  * @param vertices - Pointer to a vertex-list
+**/
+void sceGuBeginObject(int vtype, int count, const void* indices, const void* vertices);
+
+/**
+  * End conditional rendering of object
+**/
 void sceGuEndObject(void);
 
 /**
