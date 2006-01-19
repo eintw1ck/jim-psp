@@ -35,6 +35,12 @@ typedef const _sceModuleInfo SceModuleInfo;
 
 extern char _gp[];
 
+enum PspModuleInfoAttr
+{
+	PSP_MODULE_USER   = 0,
+	PSP_MODULE_KERNEL = 0x1000,
+};
+
 #ifdef __cplusplus
 
 /* Declare a module.  This must be specified in the source of a library or executable. */

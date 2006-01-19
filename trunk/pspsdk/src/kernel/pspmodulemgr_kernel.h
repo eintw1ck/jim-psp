@@ -16,6 +16,7 @@
 #define __MODMGRKERNEL_H__
 
 #include <pspkerneltypes.h>
+#include <pspmodulemgr.h>
 
 /** @defgroup ModuleMgrKern Kernel Module Manager Library
   * This module contains the imports for the kernel's module management routines.
@@ -44,6 +45,19 @@ int sceKernelGetModuleList(int readbufsize, SceUID *readbuf);
   * @return The number of loaded modules.
   */
 int sceKernelModuleCount(void);
+
+/**
+ * Load a module from a buffer
+ *
+ * @param bufsize - Size (in bytes) of the buffer pointed to by buf.
+ * @param buf - Pointer to a buffer containing the module to load.  The buffer must reside at an
+ *              address that is a multiple to 64 bytes.
+ * @param flags - Unused, always 0.
+ * @param option - Pointer to an optional ::SceKernelLMOption structure.
+ *
+ * @returns The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.
+ */
+SceUID sceKernelLoadModuleBuffer(SceSize bufsize, void *buf, int flags, SceKernelLMOption *option);
 
 /*@}*/
 
