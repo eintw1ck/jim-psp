@@ -1,7 +1,7 @@
 /*
  * PSPPacker
  * -----------------------------------------------------------------------
- * Licensed under the BSD license, see LICENSE in PSPLINK root for details.
+ * Licensed under the BSD license, see LICENSE in PSPPacker root for details.
  *
  * pspstub.c - PSPPacker stub
  *
