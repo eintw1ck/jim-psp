@@ -1,0 +1,67 @@
+PSPPacker v0.1 (c) TyRaNiD 2k6 (www.pspdev.org)
+Based off original PSPPacker by John_K
+
+PSPPacker allows you to pack PSP executables (normal ELFs or PRX files)
+in order to reduce their code size on the memory stick. That's about it
+I am afraid, what did you think it did?
+
+BIG NOTE: A packed executable will not work on a v2+ machine using one
+of the EBOOT loaders. Not much I can really do about it, sorry.
+
+Building PSPPacker:
+
+You need the latest psptoolchain and pspsdk to build PSPPacker, get it 
+from svn.pspdev.org. You also need a pre-built version of zlib for the
+computer you are building on, the computer application is pretty much
+bog standard boring C so you should be able to build it in windows 
+(using Mingw/Cygwin or probably VC), linux, *bsd, MacOSX without issue.
+
+To actually build just go to the psppacker dir and type make. After it
+is complete there should be a psppacker executable in the pc dir. Copy
+that to somewhere in your path.
+
+The simplest usage is just to run the tool with your elf as the first
+argument (i.e. psp-packer myprog.elf). If successful that will pack
+the elf in place, then just use that output in your EBOOT or run it 
+using psplink. 
+
+Other options are:
+
+-o output.elf - Set the output file name (instead of comverting in place)
+-d - Depack a packed executable
+-v - Verbose mode (prints some extra crap to the screen)
+-s stub.elf - Specify a different stub file.
+
+As mentioned this should also work for prx files (a nice simple way of 
+loading them without needing psplink or your own tool) just pass the 
+prx file as the argument instead of the elf, this will output an ELF
+file which can be used in an EBOOT. You could probably build the stub
+as a PRX itself, but that is probably not worth the effort ;P
+
+Gritty Details:
+If you don't want to know how this works you can stop reading now, for
+all the interested parties here is a brief summary.
+
+The ELF file is packed using gzip, based on brief testing this seemed
+(surprisingly) the best compression of the few I tried (mainly ucl :P).
+The other advantage of using gzip is the PSP kernel has inbuilt functions
+for depacking the data. I found out the PSP kernel ignores any extra data 
+tacked onto the end of an ELF file, so the packed ELF is just written onto 
+the end of the stub with a small footer which contains a magic string (so
+it can be ID'd) the packed and unpacked sizes. When the kernel loads our
+packed ELF we open up the file (passed in argv[0]) and load up the gzipped
+data from the end, call the kernel to unpack then pass this to lmb to get
+it to load. The only other important point to note is the stub loads at
+an address lower than than normal link address for an ELF (0x8900000) so
+it does not get in the way of normal executables so you should be able to
+pack existing software. This still should work on a v1.0 EBOOT as the ELF
+is normally at the end of the file. That's about it.
+
+TODO:
+Write up a tool to shrink the stub further (could lose around 4k).
+Test out other decompressors to see if the unpacker to compression ratio
+can make our stuff smaller.
+Make a stripped down stub which relies on syscalls removing the need for
+the expensive import stubs.
+
+Remember, for all your psp dev needs you could do worse than pspdev.org ;)
