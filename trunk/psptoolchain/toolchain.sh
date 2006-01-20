@@ -168,6 +168,9 @@
     if test ! -f "$BINUTILS.tar.gz" ; then
      $WGET ftp://ftp.gnu.org/pub/gnu/binutils/$BINUTILS.tar.gz || { echo "ERROR DOWNLOADING BINUTILS"; exit; }
     fi
+    echo -n "Downloading the latest binutils patch... ";
+    $SVN cat svn://svn.pspdev.org/psp/trunk/psptoolchain/$BINUTILS.patch > $BINUTILS.patch
+    echo "Done!";
    fi
 
    ## Download the gcc source.
@@ -175,6 +178,9 @@
     if test ! -f "$GCC.tar.bz2" ; then
      $WGET ftp://ftp.gnu.org/pub/gnu/gcc/$GCC/$GCC.tar.bz2 || { echo "ERROR DOWNLOADING GCC"; exit; }
     fi
+    echo -n "Downloading the latest gcc patch... ";
+    $SVN cat svn://svn.pspdev.org/psp/trunk/psptoolchain/$GCC.patch > $GCC.patch
+    echo "Done!";
    fi
 
    ## Download the newlib source.
@@ -182,12 +188,18 @@
     if test ! -f "$NEWLIB.tar.gz" ; then
      $WGET ftp://sources.redhat.com/pub/newlib/$NEWLIB.tar.gz || { echo "ERROR DOWNLOADING NEWLIB"; exit; }
     fi
+    echo -n "Downloading the latest newlib patch... ";
+    $SVN cat svn://svn.pspdev.org/psp/trunk/psptoolchain/$NEWLIB.patch > $NEWLIB.patch
+    echo "Done!";
    fi
 
    if test "$BUILD_GDB" = "1" ; then
      if test ! -f "$GDB.tar.gz" ; then
       $WGET ftp://ftp.gnu.org/pub/gnu/gdb/$GDB.tar.gz || { echo "ERROR DOWNLOADING GDB"; exit; }
      fi
+     echo -n "Downloading the latest gdb patch... ";
+     $SVN cat svn://svn.pspdev.org/psp/trunk/psptoolchain/$GDB.patch > $GDB.patch
+     echo "Done!";
    fi
 
   fi
