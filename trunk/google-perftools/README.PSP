@@ -3,7 +3,7 @@ Requirements:
 Building and Installing:
 
    $ ./autogen.sh
-   $ LDFLAGS="-L`psp-config --pspsdk-path`/lib" LIBS="-lc -lpspuser" \
-     ./configure --host psp --prefix=`psp-config --psp-prefix`
+   $ LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
+     ./configure --host psp --prefix=$(psp-config --psp-prefix)
    $ make
    $ make install
