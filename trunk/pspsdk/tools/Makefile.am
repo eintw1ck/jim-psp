@@ -10,12 +10,12 @@ unpack_pbp_SOURCES = unpack-pbp.c
 
 mksfo_SOURCES = mksfo.c
 
-psp_config_SOURCES = psp-config.c getopt.c getopt1.c
+psp_config_SOURCES = psp-config.c getopt_long.c
 
-psp_build_exports_SOURCES = psp-build-exports.c getopt.c getopt1.c sha1.c
+psp_build_exports_SOURCES = psp-build-exports.c getopt_long.c sha1.c
 
-psp_prxgen_SOURCES = psp-prxgen.c getopt.c getopt1.c
+psp_prxgen_SOURCES = psp-prxgen.c getopt_long.c
 
-psp_fixup_imports_SOURCES = psp-fixup-imports.c getopt.c getopt1.c
+psp_fixup_imports_SOURCES = psp-fixup-imports.c getopt_long.c
 
 noinst_HEADERS = elftypes.h getopt.h prxtypes.h sha1.h types.h
