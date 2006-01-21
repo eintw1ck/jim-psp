@@ -555,6 +555,7 @@ void sceGuDrawArray(int prim, int vtype, int count, const void* indices, const v
   * sceGuBeginObject(GU_VERTEX_32BITF,8,0,boundingBox);
   *   sceGuDrawArray(GU_TRIANGLES,GU_TEXTURE_32BITF|GU_VERTEX_32BITF,vertexCount,0,vertices);
   * sceGuEndObject();
+  * @endcode
   *
   * @param vtype - Vertex type to process
   * @param count - Number of vertices to test
