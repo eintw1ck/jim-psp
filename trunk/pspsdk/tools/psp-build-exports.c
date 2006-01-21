@@ -47,6 +47,13 @@ struct psp_export
 	char name[MAX_LIB_ENTRY_NAME+1];
 };
 
+struct psp_alias
+{
+	struct psp_alias *pNext;
+	char name[MAX_LIB_ENTRY_NAME+1];
+	char alias[MAX_LIB_ENTRY_NAME+1];
+};
+
 struct psp_lib
 {
 	struct psp_lib *pNext;
@@ -57,6 +64,7 @@ struct psp_lib
 	struct psp_export *pFuncHead;
 	int varCount;
 	struct psp_export *pVarHead;
+	struct psp_alias *pAliasHead;
 };
 
 struct export_cmd
@@ -91,6 +99,22 @@ void free_export_chain(struct psp_export *pHead)
 	}
 }
 
+void free_alias_chain(struct psp_alias *pHead)
+{
+	struct psp_alias *pNext;
+
+	pNext = pHead;
+
+	while(pNext != NULL)
+	{
+		struct psp_alias *pTemp;
+
+		pTemp = pNext->pNext;
+		free(pNext);
+		pNext = pTemp;
+	}
+}
+
 void free_lib_data(void)
 {
 	struct psp_lib *pNext;
@@ -99,6 +123,7 @@ void free_lib_data(void)
 	{
 		free_export_chain(g_currlib->pFuncHead);
 		free_export_chain(g_currlib->pVarHead);
+		free_alias_chain(g_currlib->pAliasHead);
 		free(g_currlib);
 		g_currlib = NULL;
 	}
@@ -112,11 +137,32 @@ void free_lib_data(void)
 		pTemp = pNext->pNext;
 		free_export_chain(pNext->pFuncHead);
 		free_export_chain(pNext->pVarHead);
+		free_alias_chain(pNext->pAliasHead);
 		free(pNext);
 		pNext = pTemp;
 	}
 
 	g_libhead = NULL;
+}
+
+const char *find_alias(struct psp_alias *pHead, const char *name)
+{
+	struct psp_alias *pNext;
+	const char *szAlias = NULL;
+
+	pNext = pHead;
+	while(pNext)
+	{
+		if(strcmp(name, pNext->name) == 0)
+		{
+			szAlias = pNext->alias;
+			break;
+		}
+
+		pNext = pNext->pNext;
+	}
+
+	return szAlias;
 }
 
 static struct option arg_opts[] = 
@@ -391,7 +437,17 @@ void build_stubs_output_lib(struct psp_lib *pLib)
 		pExp = pLib->pFuncHead;
 		while(pExp != NULL)
 		{
-			fprintf(fp, "\tSTUB_FUNC  0x%08X,%s\n", pExp->nid, pExp->name);
+			const char *alias;
+
+			alias = find_alias(pLib->pAliasHead, pExp->name);
+			if(alias)
+			{
+				fprintf(fp, "\tSTUB_FUNC_WITH_ALIAS  0x%08X,%s,%s\n", pExp->nid, pExp->name,alias);
+			}
+			else
+			{
+				fprintf(fp, "\tSTUB_FUNC  0x%08X,%s\n", pExp->nid, pExp->name);
+			}
 			pExp = pExp->pNext;
 		}
 
@@ -443,8 +499,19 @@ void build_stubs_output_lib_new(struct psp_lib *pLib)
 		i = 1;
 		while(pExp != NULL)
 		{
+			const char *alias;
 			fprintf(fp, "#ifdef F_%s_%04d\n", pLib->name, i++);
-			fprintf(fp, "\tIMPORT_FUNC  \"%s\",0x%08X,%s\n", pLib->name, pExp->nid, pExp->name);
+
+			alias = find_alias(pLib->pAliasHead, pExp->name);
+			if(alias)
+			{
+				fprintf(fp, "\tIMPORT_FUNC_WITH_ALIAS  \"%s\",0x%08X,%s,%s\n", pLib->name, pExp->nid, pExp->name, alias);
+			}
+			else
+			{
+				fprintf(fp, "\tIMPORT_FUNC  \"%s\",0x%08X,%s\n", pLib->name, pExp->nid, pExp->name);
+			}
+
 			fprintf(fp, "#endif\n");
 			pExp = pExp->pNext;
 		}
@@ -565,7 +632,7 @@ int psp_export_end(char **params)
 	if(g_currlib == NULL)
 	{
 		snprintf(g_errstring, MAX_ERROR, "No matching start command for library end");
-		return 0;
+		return 1;
 	}
 
 	/* Add to the end of the chain */
@@ -752,6 +819,48 @@ int psp_export_var_hash(char **params)
 	return 0;
 }
 
+int psp_export_alias(char **params)
+{
+	struct psp_alias *pAlias;
+
+	if(g_currlib == NULL)
+	{
+		snprintf(g_errstring, MAX_ERROR, "Cannot alias name, not in a library definition");
+		return 0;
+	}
+
+	pAlias = (struct psp_alias *) malloc(sizeof(struct psp_alias));
+	if(pAlias == NULL)
+	{
+		snprintf(g_errstring, MAX_ERROR, "Cannot allocate memory for alias");
+		return 0;
+	}
+
+	memset(pAlias, 0, sizeof(*pAlias));
+	strncpy(pAlias->name, params[0], MAX_LIB_ENTRY_NAME);
+	strncpy(pAlias->alias, params[1], MAX_LIB_ENTRY_NAME);
+
+	if(g_currlib->pAliasHead == NULL)
+	{
+		g_currlib->pAliasHead = pAlias;
+	}
+	else
+	{
+		struct psp_alias *pNext = g_currlib->pAliasHead;
+
+		while(pNext->pNext)
+		{
+			pNext = pNext->pNext;
+		}
+
+		pNext->pNext = pAlias;
+	}
+
+	fprintf(stderr, "Alias %s->%s\n", params[0], params[1]);
+
+	return 1;
+}
+
 struct export_cmd commands[] = 
 {
 	{ "PSP_BEGIN_EXPORTS", 0, psp_begin_exports },
@@ -764,6 +873,7 @@ struct export_cmd commands[] =
 	{ "PSP_EXPORT_VAR_NID", 2, psp_export_var_nid },
 	{ "PSP_EXPORT_VAR", 1, psp_export_var_hash },
 	{ "PSP_EXPORT_VAR_HASH", 1, psp_export_var_hash },
+	{ "PSP_EXPORT_ALIAS", 2, psp_export_alias },
 	{ NULL, 0, NULL }
 };
 
