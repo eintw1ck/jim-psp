@@ -55,5 +55,29 @@ __stub_text_\module:
 	.set pop
 .endm
 
+.macro STUB_FUNC_WITH_ALIAS funcid, funcname, alias
+
+	.set push
+	.set noreorder
+
+	.section .sceStub.text, "ax", @progbits
+	.globl  \alias
+	.type   \alias, @function
+\alias:
+	.globl  \funcname
+	.type   \funcname, @function
+	.ent    \funcname, 0
+\funcname:
+	jr	$ra
+	nop
+	.end    \funcname
+	.size   \funcname, .-\funcname
+
+	.section .rodata.sceNid
+	.word   \funcid
+
+	.set pop
+.endm
+
 .macro STUB_END
 .endm

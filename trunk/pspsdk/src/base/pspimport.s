@@ -41,3 +41,28 @@ __stub_module_\module:
 
 	.set pop
 .endm
+
+.macro IMPORT_FUNC_WITH_ALIAS module, funcid, funcname, alias
+
+	.set push
+	.set noreorder
+
+	.extern __stub_module_\module
+	.section .sceStub.text, "ax", @progbits
+	.globl  \alias
+	.type   \alias, @function
+\alias:
+	.globl  \funcname
+	.type   \funcname, @function
+	.ent    \funcname, 0
+\funcname:
+	.word   __stub_module_\module
+	.word   \funcid
+	.end    \funcname
+	.size   \funcname, .-\funcname
+
+	.section .rodata.sceNid, "a"
+	.word   \funcid
+
+	.set pop
+.endm
