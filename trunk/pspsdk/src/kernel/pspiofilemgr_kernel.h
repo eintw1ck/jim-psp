@@ -79,7 +79,7 @@ typedef struct PspIoDrvFuncs
 	int (*IoChdir)(PspIoDrvFileArg *arg, const char *dir); 
 	int (*IoMount)(PspIoDrvFileArg *arg); 
 	int (*IoUmount)(PspIoDrvFileArg *arg); 
-	int (*IoDevctl)(PspIoDrvFileArg *arg, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen); 
+	int (*IoDevctl)(PspIoDrvFileArg *arg, const char *devname, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen); 
 	int (*IoUnk21)(PspIoDrvFileArg *arg); 
 } PspIoDrvFuncs;
 

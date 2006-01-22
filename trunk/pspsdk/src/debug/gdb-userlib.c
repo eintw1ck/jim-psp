@@ -164,7 +164,7 @@ static int io_umount(PspIoDrvFileArg *arg)
 void sceKernelDcacheWBinvAll(void);
 void sceKernelIcacheClearAll(void);
 
-static int io_devctl(PspIoDrvFileArg *arg,  unsigned int cmd, void *indata, int inlen, void *outdata, int outlen)
+static int io_devctl(PspIoDrvFileArg *arg, const char *devname, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen)
 {
 	pspKernelSetKernelPC();
 	sceKernelDcacheWBinvAll();

@@ -152,7 +152,7 @@ static int io_umount(PspIoDrvFileArg *arg)
 	return 0;
 }
 
-static int io_devctl(PspIoDrvFileArg *arg,  unsigned int cmd, void *indata, int inlen, void *outdata, int outlen)
+static int io_devctl(PspIoDrvFileArg *arg, const char *devname, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen)
 {
 	return 0;
 }
