@@ -11,8 +11,138 @@
 #include <string.h>
 #include <math.h>
 
-// TODO: write most standalone routines in vfpu assembler as well
-// TODO: get rid of all misalignments that require memcpy()-fixups
+#ifdef F_gumScale_vfpu
+void gumScale(ScePspFMatrix4* m, const ScePspFVector3* v)
+{
+	__asm__ volatile (
+		"ulv.q C100, 0(%1)\n"
+		"ulv.q C110, 16(%1)\n"
+		"ulv.q C120, 32(%1)\n"
+		"ulv.q C130, 48(%1)\n"
+
+		"ulv.q C000, 0(%2)\n"
+
+		"vscl.t C100, C100, S000\n"
+		"vscl.t C110, C110, S001\n"
+		"vscl.t C120, C120, S002\n"
+
+		"usv.q C100, 0(%1)\n"
+		"usv.q C110, 16(%1)\n"
+		"usv.q C120, 32(%1)\n"
+		"usv.q C130, 48(%1)\n"
+	: "=r"(m) : "r"(m), "r"(v));
+}
+#endif
+
+#ifdef F_gumTranslate_vfpu
+void gumTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
+{
+	__asm__ volatile (
+		"ulv.q C100, 0(%1)\n"
+		"ulv.q C110, 16(%1)\n"
+		"ulv.q C120, 32(%1)\n"
+		"ulv.q C130, 48(%1)\n"
+
+		"vmidt.q M000\n"
+		"ulv.q   C200, 0(%2)\n"
+		"vmov.t  C030, C200\n"
+		"vmmul.q M200, M100, M000\n"
+
+		"usv.q C200, 0(%1)\n"
+		"usv.q C210, 16(%1)\n"
+		"usv.q C220, 32(%1)\n"
+		"usv.q C230, 48(%1)\n"
+	: "=r"(m) : "r"(m), "r"(v));
+}
+#endif
+
+#ifdef F_gumRotateX_vfpu
+void gumRotateX(ScePspFMatrix4* m, float angle)
+{
+	__asm__ volatile (
+		"ulv.q C200, 0(%1)\n"
+		"ulv.q C210, 16(%1)\n"
+		"ulv.q C220, 32(%1)\n"
+		"ulv.q C230, 48(%1)\n"
+
+		"vmidt.q M000\n"
+		"lv.s   S100, 0(%2)\n"
+		"vcst.s S101, VFPU_2_PI\n"
+		"vmul.s S100, S101, S100\n"
+		"vrot.q C010, S100, [ 0, c, s, 0]\n"
+		"vrot.q C020, S100, [ 0,-s, c, 0]\n"
+		"vmmul.q M100, M200, M000\n"
+
+		"usv.q C100, 0(%1)\n"
+		"usv.q C110, 16(%1)\n"
+		"usv.q C120, 32(%1)\n"
+		"usv.q C130, 48(%1)\n"
+	: "=r"(m) : "r"(m), "r"(&angle));
+}
+#endif
+
+#ifdef F_gumRotateY_vfpu
+void gumRotateY(ScePspFMatrix4* m, float angle)
+{
+	__asm__ volatile (
+		"ulv.q C200, 0(%1)\n"
+		"ulv.q C210, 16(%1)\n"
+		"ulv.q C220, 32(%1)\n"
+		"ulv.q C230, 48(%1)\n"
+
+		"vmidt.q M000\n"
+		"lv.s   S100, 0(%2)\n"
+		"vcst.s S101, VFPU_2_PI\n"
+		"vmul.s S100, S101, S100\n"
+		"vrot.q C000, S100, [ c, 0,-s, 0]\n"
+		"vrot.q C020, S100, [ s, 0, c, 0]\n"
+		"vmmul.q M100, M200, M000\n"
+
+		"usv.q C100, 0(%1)\n"
+		"usv.q C110, 16(%1)\n"
+		"usv.q C120, 32(%1)\n"
+		"usv.q C130, 48(%1)\n"
+	: "=r"(m) : "r"(m), "r"(&angle));
+}
+#endif
+
+#ifdef F_gumRotateZ_vfpu
+void gumRotateZ(ScePspFMatrix4* m, float angle)
+{
+	__asm__ volatile (
+		"ulv.q C200, 0(%1)\n"
+		"ulv.q C210, 16(%1)\n"
+		"ulv.q C220, 32(%1)\n"
+		"ulv.q C230, 48(%1)\n"
+
+		"vmidt.q M000\n"
+		"lv.s   S100, 0(%2)\n"
+		"vcst.s S101, VFPU_2_PI\n"
+		"vmul.s S100, S101, S100\n"
+		"vrot.q C000, S100, [ c, s, 0, 0]\n"
+		"vrot.q C010, S100, [-s, c, 0, 0]\n"
+		"vmmul.q M100, M200, M000\n"
+
+		"usv.q C100, 0(%1)\n"
+		"usv.q C110, 16(%1)\n"
+		"usv.q C120, 32(%1)\n"
+		"usv.q C130, 48(%1)\n"
+	: "=r"(m) : "r"(m), "r"(&angle));
+}
+#endif
+
+#ifdef F_gumLoadIdentity_vfpu
+void gumLoadIdentity(ScePspFMatrix4* m)
+{
+	__asm__ volatile (
+		"vmidt.q M000\n"
+		"usv.q C000, 0(%1)\n"
+		"usv.q C010, 16(%1)\n"
+		"usv.q C020, 32(%1)\n"
+		"usv.q C030, 48(%1)\n"
+	: "=r"(m) : "r"(m) : "memory" );
+}
+#endif
 
 #ifdef F_gumFastInverse_vfpu
 void gumFastInverse(ScePspFMatrix4* m, const ScePspFMatrix4* a)
@@ -26,9 +156,7 @@ void gumFastInverse(ScePspFMatrix4* m, const ScePspFMatrix4* a)
 		"vmidt.q M000\n"
 		"vmmov.t M000, E200\n"
 		"vneg.t C100, C230\n"
-		"vdot.t S030, C100, C200\n"
-		"vdot.t S031, C100, C210\n"
-		"vdot.t S032, C100, C220\n"
+		"vtfm3.t C030, M200, C100\n"
 
 		"usv.q C000, 0(%2)\n"
 		"usv.q C010, 16(%2)\n"
@@ -70,9 +198,7 @@ void sceGumFastInverse()
 		"vmidt.q M000\n"
 		"vmmov.t M000, E300\n"
 		"vneg.t  C100, C330\n"
-		"vdot.t	 S030, C100, C300\n" // TODO: figure out if there is any op to multiply vector with matrix, and replace this sequence
-		"vdot.t	 S031, C100, C310\n"
-		"vdot.t	 S032, C100, C320\n"
+		"vtfm3.t C030, M300, C100\n"
 		"vmmov.q M300, M000\n"
 	);
 
@@ -364,8 +490,8 @@ void sceGumTranslate(const ScePspFVector3* v)
 {
 	__asm__ volatile (
 		"vmidt.q M000\n"
-		"ulv.q   C030, 0(%0)\n"
-		"vmov.q  C030, C030[X,Y,Z,1]\n"
+		"ulv.q   C100, 0(%0)\n"
+		"vmov.t  C030, C100\n"
 		"vmmul.q M100, M300, M000\n"
 		"vmmov.q M300, M100\n"
 	: : "r"(v));

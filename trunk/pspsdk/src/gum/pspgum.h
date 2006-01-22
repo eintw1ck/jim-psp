@@ -161,6 +161,25 @@ void sceGumFullInverse();
 **/
 void sceGumFastInverse();
 
+/**
+  * Stack-aware version of sceGuBeginObject() (look in pspgu.h for description)
+  *
+  * @note NOT YET IMPLEMENTED
+  *
+  * @param vtype - Vertex type to process
+  * @param count - Number of vertices to test
+  * @param indices - Optional index-list
+  * @param vertices - Vertex-list
+**/
+void sceGumBeginObject(int vtype, int count, const void* indices, const void* vertices);
+
+/**
+  * Stack-aware version of sceGuEndObject()
+  *
+  * @note NOT YET IMPLEMENTED
+**/
+void sceGumEndObject();
+
 // unimplemented functions
 
 //sceGumLoadContext
