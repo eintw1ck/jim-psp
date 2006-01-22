@@ -37,11 +37,11 @@
  */
 
 #include <assert.h>
-#include <err.h>
 #include <errno.h>
 #include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 int	opterr = 1;		/* if error message should be printed */
 int	optind = 1;		/* index into parent argv vector */
@@ -65,9 +65,9 @@ char    *optarg;		/* argument associated with option */
 
 #define	EMSG	""
 
-static int getopt_internal __P((int, char **, const char *));
-static int gcd __P((int, int));
-static void permute_args __P((int, int, int, char **));
+static int getopt_internal (int, char **, const char *);
+static int gcd (int, int);
+static void permute_args (int, int, int, char **);
 
 static const char *place = EMSG; /* option letter processing */
 
@@ -227,7 +227,7 @@ start:
 		if (!*place)
 			++optind;
 		if (PRINT_ERROR)
-			warnx(illoptchar, optchar);
+			fprintf(stderr, illoptchar, optchar);
 		optopt = optchar;
 		return BADCH;
 	}
@@ -239,7 +239,7 @@ start:
 		if (++optind >= nargc) {	/* no arg */
 			place = EMSG;
 			if (PRINT_ERROR)
-				warnx(recargchar, optchar);
+				fprintf(stderr, recargchar, optchar);
 			optopt = optchar;
 			return BADARG;
 		} else				/* white space */
@@ -262,7 +262,7 @@ start:
 			if (++optind >= nargc) {	/* no arg */
 				place = EMSG;
 				if (PRINT_ERROR)
-					warnx(recargchar, optchar);
+					fprintf(stderr, recargchar, optchar);
 				optopt = optchar;
 				return BADARG;
 			} else
@@ -333,7 +333,7 @@ getopt_long(int nargc, char * const *nargv, const char *options, const struct op
 			else {
 				/* ambiguous abbreviation */
 				if (PRINT_ERROR)
-					warnx(ambig, (int)current_argv_len,
+					fprintf(stderr, ambig, (int)current_argv_len,
 					     current_argv);
 				optopt = 0;
 				return BADCH;
@@ -343,7 +343,7 @@ getopt_long(int nargc, char * const *nargv, const char *options, const struct op
 		        if (long_options[match].has_arg == no_argument
 			    && has_equal) {
 				if (PRINT_ERROR)
-					warnx(noarg, (int)current_argv_len,
+					fprintf(stderr, noarg, (int)current_argv_len,
 					     current_argv);
 				/*
 				 * XXX: GNU sets optopt to val regardless of
@@ -375,7 +375,7 @@ getopt_long(int nargc, char * const *nargv, const char *options, const struct op
 				 * indicates no error should be generated
 				 */
 				if (PRINT_ERROR)
-					warnx(recargstring, current_argv);
+					fprintf(stderr, recargstring, current_argv);
 				/*
 				 * XXX: GNU sets optopt to val regardless
 				 * of flag
@@ -389,7 +389,7 @@ getopt_long(int nargc, char * const *nargv, const char *options, const struct op
 			}
 		} else {			/* unknown option */
 			if (PRINT_ERROR)
-				warnx(illoptstring, current_argv);
+				fprintf(stderr, illoptstring, current_argv);
 			optopt = 0;
 			return BADCH;
 		}
