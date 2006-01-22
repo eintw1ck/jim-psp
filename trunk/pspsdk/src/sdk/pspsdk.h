@@ -145,7 +145,7 @@ int pspSdkReferSemaStatusByName(const char *name, SceUID *pUID, SceKernelSemaInf
 int pspSdkReferEventFlagStatusByName(const char *name, SceUID *pUID, SceKernelEventFlagInfo *pInfo);
 
 /**
- * Search for an message box with the given name and retrieve it's ::SceKernelMbxInfo struct.
+ * Search for a message box with the given name and retrieve it's ::SceKernelMbxInfo struct.
  *
  * @param name - The name of the message box to search for.
  * @param pUID - If the message box with the given name is found, it's ::SceUID is stored here.
@@ -154,11 +154,112 @@ int pspSdkReferEventFlagStatusByName(const char *name, SceUID *pUID, SceKernelEv
  * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferMboxStatusByName(const char *name, SceUID *pUID, SceKernelMbxInfo *pInfo);
+
+/**
+ * Search for a VPL with the given name and retrieve it's ::SceKernelVplInfo struct.
+ *
+ * @param name - The name of to search for.
+ * @param pUID - If the given name is found, it's ::SceUID is stored here.
+ * @param pInfo - If the given name is found, it's ::SceKernelVplInfo data is stored here.
+ *
+ * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ */
 int pspSdkReferVplStatusByName(const char *name, SceUID *pUID, SceKernelVplInfo *pInfo);
+
+/**
+ * Search for a FPL with the given name and retrieve it's ::SceKernelFplInfo struct.
+ *
+ * @param name - The name of to search for.
+ * @param pUID - If the given name is found, it's ::SceUID is stored here.
+ * @param pInfo - If the given name is found, it's ::SceKernelFplInfo data is stored here.
+ *
+ * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ */
 int pspSdkReferFplStatusByName(const char *name, SceUID *pUID, SceKernelFplInfo *pInfo);
+
+/**
+ * Search for a message pipe with the given name and retrieve it's ::SceKernelMppInfo struct.
+ *
+ * @param name - The name of to search for.
+ * @param pUID - If the given name is found, it's ::SceUID is stored here.
+ * @param pInfo - If the given name is found, it's ::SceKernelMppInfo data is stored here.
+ *
+ * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ */
 int pspSdkReferMppStatusByName(const char *name, SceUID *pUID, SceKernelMppInfo *pInfo);
+
+/**
+ * Search for a callback with the given name and retrieve it's ::SceKernelCallbackInfo struct.
+ *
+ * @param name - The name of to search for.
+ * @param pUID - If the given name is found, it's ::SceUID is stored here.
+ * @param pInfo - If the given name is found, it's ::SceKernelMppInfo data is stored here.
+ *
+ * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ */
 int pspSdkReferCallbackStatusByName(const char *name, SceUID *pUID, SceKernelCallbackInfo *pInfo);
+
+/**
+ * Search for a vtimer with the given name and retrieve it's ::SceKernelVTimerInfo struct.
+ *
+ * @param name - The name of to search for.
+ * @param pUID - If the given name is found, it's ::SceUID is stored here.
+ * @param pInfo - If the given name is found, it's ::SceKernelVTimerInfo data is stored here.
+ *
+ * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ */
 int pspSdkReferVTimerStatusByName(const char *name, SceUID *pUID, SceKernelVTimerInfo *pInfo);
+
+/**
+ * Search for a thread event handler with the given name and retrieve it's ::SceKernelThreadEventHandlerInfo struct.
+ *
+ * @param name - The name of to search for.
+ * @param pUID - If the given name is found, it's ::SceUID is stored here.
+ * @param pInfo - If the given name is found, it's ::SceKernelThreadEventHandlerInfo data is stored here.
+ *
+ * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ */
+int pspSdkReferThreadEventHandlerStatusByName(const char *name, SceUID *pUID, SceKernelThreadEventHandlerInfo *pInfo);
+
+/**
+ * Disable interrupts
+ *
+ * @note Do not disable interrupts for too long otherwise the watchdog will get you.
+ *
+ * @return The previous state of the interrupt enable bit (should be passed back to ::pspSdkEnableInterrupts)
+ */
+unsigned int pspSdkDisableInterrupts(void);
+
+/**
+ * Enable interrupts
+ *
+ * @param istate - The interrupt state as returned from ::pspSdkDisableInterrupts
+ */
+void pspSdkEnableInterrupts(unsigned int istate);
+
+/**
+ * Set the processors K1 register to a known value
+ *
+ * @note This function is for use in kernel mode syscall exports. The kernel
+ * sets the k1 register to indicate what mode called the function, i.e. 
+ * whether it was directly called, was called via a syscall from a kernel
+ * thread or called via a syscall from a user thread. By setting k1 to 0
+ * before doing anything in your code you can make the other functions think
+ * you are calling from a kernel thread and therefore disable numerous 
+ * protections.
+ *
+ * @param k1 - The k1 value to set
+ * 
+ * @return The previous value of k1
+ */
+unsigned int pspSdkSetK1(unsigned int k1);
+
+/**
+ * Get the current value of the processors K1 register
+ *
+ * @return The current value of K1
+ */
+unsigned int pspSdkGetK1(void);
 
 /*@}*/
 
