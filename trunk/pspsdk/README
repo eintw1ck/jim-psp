@@ -1,5 +1,5 @@
                          PSP Software Development Kit
-                               Version 1.0+beta
+                               Version 1.0+beta2
                             http://www.pspdev.org/
 
 
@@ -19,7 +19,8 @@ Features
     PSPSDK provides a full set of libraries for creating PSP software:
 
     * Stub libraries and headers for interfacing with the PSP operating
-      system.
+      system, ranging from threading libraries, file io, display driver
+	  and wifi networking.
     * Basic runtime support (crt0) for executables and libraries.
     * A minimal port of the Standard C Library (libc) is included.  PSPSDK's
       mini-libc provides portable memory allocation, string formatting, and
@@ -29,7 +30,11 @@ Features
     * An implementation of the libGU graphics library.  libGU provides an
       interface to the 2D and 3D hardware acceleration features found in the
       PSP's Graphic Engine.
+    * An implementation of the libGUM library. libGUM provides an interface
+      for manipulating matrices for use in 3D software.
     * A simple audio library which can be used to play back PCM audio streams.
+    * Support for building static executables and PRX files (relocatable
+      modules).
 
     PSPSDK also includes several tools to assist in building PSP software:
 
@@ -39,6 +44,10 @@ Features
     * pack-pbp and unpack-pbp for adding files to and removing files from
       EBOOT.PBP.
     * psp-config for locating PSPDEV tools and libraries.
+    * psp-prxgen for converting specially made ELFs to PRX files.
+    * psp-build-exports for creating export tables
+    * psp-fixup-imports for fixing up import tables post-linking to remove
+      unused functions from the executable.
 
     Documentation for the libraries are also provided, and can be found in the
 doc/ directory of the PSPSDK source and binary distributions.
@@ -199,3 +208,9 @@ Resources
 
     The PSPSDK developers can be found hanging out in the #pspdev channel
     on irc.freenode.net.
+
+Thanks
+    The pspsdk developers wish to thank all the people who have contributed
+    bug fixes, ideas and support for the project.
+    Also big thanks to nem for kicking off PSP development with all his work,
+    the original imports system is based on his work in the hello world demo.
