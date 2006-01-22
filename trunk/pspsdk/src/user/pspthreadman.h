@@ -590,11 +590,29 @@ struct SceKernelEventFlagOptParam {
 
 typedef struct SceKernelEventFlagOptParam SceKernelEventFlagOptParam;
 
+/** Event flag creation attributes */
+enum PspEventFlagAttributes
+{
+	/** Allow the event flag to be waited upon by multiple threads */
+	PSP_EVENT_WAITMULTIPLE = 0x200
+};
+
+/** Event flag wait types */
+enum PspEventFlagWaitTypes
+{
+	/** Wait for all bits in the pattern to be set */
+	PSP_EVENT_WAITAND = 0,
+	/** Wait for one or more bits in the pattern to be set */
+	PSP_EVENT_WAITOR  = 1,
+	/** Clear the wait pattern when it matches */
+	PSP_EVENT_WAITCLEAR = 0x20
+};
+
 /** 
   * Create an event flag.
   *
   * @param name - The name of the event flag.
-  * @param attr - Set to 0
+  * @param attr - Attributes from ::PspEventFlagAttributes
   * @param bits - Initial bit pattern.
   * @param opt  - Options, set to NULL
   * @return < 0 on error. >= 0 event flag id.
@@ -605,7 +623,7 @@ typedef struct SceKernelEventFlagOptParam SceKernelEventFlagOptParam;
   * evid = sceKernelCreateEventFlag("wait_event", 0, 0, 0);
   * @endcode
   */
-int sceKernelCreateEventFlag(const char *name, int attr, int bits, SceKernelEventFlagOptParam *opt);
+SceUID sceKernelCreateEventFlag(const char *name, int attr, int bits, SceKernelEventFlagOptParam *opt);
 
 /** 
   * Set an event flag bit pattern.
@@ -615,14 +633,24 @@ int sceKernelCreateEventFlag(const char *name, int attr, int bits, SceKernelEven
   *
   * @return < 0 On error
   */
-int sceKernelSetEventFlag(int evid, u32 bits);
+int sceKernelSetEventFlag(SceUID evid, u32 bits);
+
+/**
+ * Clear a event flag bit pattern
+ *
+ * @param evid - The event id returned by ::sceKernelCreateEventFlag
+ * @param bits - The bits to clean
+ *
+ * @return < 0 on Error
+ */
+int sceKernelClearEventFlag(SceUID evid, u32 bits);
 
 /** 
   * Poll an event flag for a given bit pattern.
   *
   * @param evid - The event id returned by sceKernelCreateEventFlag.
   * @param bits - The bit pattern to poll for.
-  * @param wait - 0 to return immediately, 1 to wait until the pattern is matched
+  * @param wait - Wait type, one or more of ::PspEventFlagWaitTypes or'ed together
   * @param outBits - The bit pattern that was matched.
   * @return < 0 On error
   */
@@ -633,12 +661,24 @@ int sceKernelPollEventFlag(int evid, u32 bits, u32 wait, u32 *outBits);
   *
   * @param evid - The event id returned by sceKernelCreateEventFlag.
   * @param bits - The bit pattern to poll for.
-  * @param wait - 0 to return immediately, 1 to wait until the pattern is matched
+  * @param wait - Wait type, one or more of ::PspEventFlagWaitTypes or'ed together
   * @param outBits - The bit pattern that was matched.
-  * @param arg     - Unknown (possibly timeout)
+  * @param timeout  - Timeout in microseconds
   * @return < 0 On error
   */
-int sceKernelWaitEventFlag(int evid, u32 bits, u32 wait, u32 *outBits, void *arg);
+int sceKernelWaitEventFlag(int evid, u32 bits, u32 wait, u32 *outBits, SceUInt *timeout);
+
+/** 
+  * Wait for an event flag for a given bit pattern with callback.
+  *
+  * @param evid - The event id returned by sceKernelCreateEventFlag.
+  * @param bits - The bit pattern to poll for.
+  * @param wait - Wait type, one or more of ::PspEventFlagWaitTypes or'ed together
+  * @param outBits - The bit pattern that was matched.
+  * @param timeout  - Timeout in microseconds
+  * @return < 0 On error
+  */
+int sceKernelWaitEventFlagCB(int evid, u32 bits, u32 wait, u32 *outBits, SceUInt *timeout);
 
 /** 
   * Delete an event flag
