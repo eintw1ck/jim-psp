@@ -546,7 +546,7 @@ void sceGuDrawArray(int prim, int vtype, int count, const void* indices, const v
 /**
   * Begin conditional rendering of object
   *
-  * If no vertices passed into this function are inside the view frustum, it will skip rendering
+  * If no vertices passed into this function are inside the scissor region, it will skip rendering
   * the object. There can be up to 32 levels of conditional testing, and all levels HAVE to
   * be terminated by sceGuEndObject().
   *
