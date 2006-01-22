@@ -12,13 +12,31 @@
  */
 
 #include <string.h>
+#include <stdio.h>
 #include <pspuser.h>
 
-SceUID pspSdkLoadStartModule(const char *filename, int mpid)
+#define MAX_ARGS 2048
+
+SceUID pspSdkLoadStartModuleWithArgs(const char *filename, int mpid, int argc, char * const argv[])
 {
 	SceKernelLMOption option;
 	SceUID modid = 0;
 	int retVal = 0, mresult;
+	char args[MAX_ARGS];
+	int  argpos = 0;
+	int  i;
+
+	memset(args, 0, MAX_ARGS);
+	strcpy(args, filename);
+	argpos += strlen(args) + 1;
+	for(i = 0; (i < argc) && (argpos < MAX_ARGS); i++)
+	{
+		int len;
+
+		snprintf(&args[argpos], MAX_ARGS-argpos, "%s", argv[i]);
+		len = strlen(&args[argpos]);
+		argpos += len + 1;
+	}
 
 	memset(&option, 0, sizeof(option));
 	option.size = sizeof(option);
@@ -34,7 +52,7 @@ SceUID pspSdkLoadStartModule(const char *filename, int mpid)
 
 	modid = retVal;
 
-	retVal = sceKernelStartModule(modid, 0, 0, &mresult, NULL);
+	retVal = sceKernelStartModule(modid, argpos, args, &mresult, NULL);
 	if(retVal < 0){
 		return retVal;
 	}
@@ -42,4 +60,7 @@ SceUID pspSdkLoadStartModule(const char *filename, int mpid)
 	return modid;
 }
 
-
+SceUID pspSdkLoadStartModule(const char *filename, int mpid)
+{
+	return pspSdkLoadStartModuleWithArgs(filename, mpid, 0, NULL);
+}

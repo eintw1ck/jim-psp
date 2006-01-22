@@ -85,6 +85,18 @@ int pspSdkInstallNoPlainModuleCheckPatch(void);
 SceUID pspSdkLoadStartModule(const char *filename, int mpid);
 
 /**
+ * Load a module and start it with arguments
+ *
+ * @param filename - Path to the module.
+ * @param mpid - Memory parition ID to use to load the module int.
+ * @param argc - Number of arguments to pass to start module
+ * @param argv - Array of arguments
+ *
+ * @returns - The UID of the module on success, otherwise one of ::PspKernelErrorCodes.
+ */
+SceUID pspSdkLoadStartModuleWithArgs(const char *filename, int mpid, int argc, char * const argv[]);
+
+/**
  * Manually fixup library imports for late binding modules.
  *
  * @param moduleId - Id of the module to fixup
