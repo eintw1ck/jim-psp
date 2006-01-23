@@ -5,30 +5,35 @@
 #include "pspthreadman.h"
 #include "pspvfpu.h"
 
-#define ALIGNMENT	64
+#define ALIGNMENT	(sizeof(float)*4)
 
 #define NMAT	8
 
 struct pspvfpu_context {
-	float fpregs[4*4*NMAT] __attribute__((aligned(64)));
+	float fpregs[4*4*NMAT] __attribute__((aligned(ALIGNMENT)));
 
-	unsigned resident;	/* which matrices are in the VFPU at the moment */
+	/* 
+	   States a matrix can be in:
+	   owned   valid
+	     0       X		context has no knowledge of the matrix
+	     1       1		context is using matrix, and wants it preserved
+	     1       0          context is used matrix temporarily
+	 */
+	vfpumatrixset_t valid;	/* which matrices are valid in this context */
+	vfpumatrixset_t owned;	/* which matrices are in the VFPU at the moment */
 };
 
-/* XXX This should be per-thread info? */
+/* XXX This should be per-thread info */
 static struct pspvfpu_context *users[NMAT];
 
 static void save_matrix(struct pspvfpu_context *c, int mat)
 {
 #define SV(N)					\
-	asm("sv.q	c" #N "00, %0\n"	\
-	    "sv.q	c" #N "10, %1\n"	\
-	    "sv.q	c" #N "20, %2\n"	\
-	    "sv.q	c" #N "30, %3\n"	\
-	    : "=m" (c->fpregs[N * 4*4 +  0]),	\
-	      "=m" (c->fpregs[N * 4*4 +  4]),	\
-	      "=m" (c->fpregs[N * 4*4 +  8]),	\
-	      "=m" (c->fpregs[N * 4*4 + 12])	\
+	asm("sv.q	c"#N"00,  0 + %0\n"	\
+	    "sv.q	c"#N"10, 16 + %0\n"	\
+	    "sv.q	c"#N"20, 32 + %0\n"	\
+	    "sv.q	c"#N"30, 48 + %0\n"	\
+	    : "=m" (c->fpregs[N * 4*4])		\
 	    : : "memory")
 
 	switch(mat) {
@@ -44,40 +49,91 @@ static void save_matrix(struct pspvfpu_context *c, int mat)
 #undef SV
 }
 
-static void load_matrices(const struct pspvfpu_context *c, unsigned mat)
+static void load_matrix(const struct pspvfpu_context *c, int mat)
 {
 #define LV(N)					\
-	asm("lv.q	c" #N "00, %0\n"	\
-	    "lv.q	c" #N "10, %1\n"	\
-	    "lv.q	c" #N "20, %2\n"	\
-	    "lv.q	c" #N "30, %3\n"	\
-	    : :					\
-	      "m" (c->fpregs[N * 4*4 +  0]),	\
-	      "m" (c->fpregs[N * 4*4 +  4]),	\
-	      "m" (c->fpregs[N * 4*4 +  8]),	\
-	      "m" (c->fpregs[N * 4*4 + 12])	\
+	asm("lv.q	c"#N"00,  0 + %0\n"	\
+	    "lv.q	c"#N"10, 16 + %0\n"	\
+	    "lv.q	c"#N"20, 32 + %0\n"	\
+	    "lv.q	c"#N"30, 48 + %0\n"	\
+	    : : "m" (c->fpregs[N * 4*4])	\
 	    : "memory")
-
-	if (mat & (1<<0))
-		LV(0);
-	if (mat & (1<<1))
-		LV(1);
-	if (mat & (1<<2))
-		LV(2);
-	if (mat & (1<<3))
-		LV(3);
-	if (mat & (1<<4))
-		LV(4);
-	if (mat & (1<<5))
-		LV(5);
-	if (mat & (1<<6))
-		LV(6);
-	if (mat & (1<<7))
-		LV(7);
+	switch(mat) {
+	case 0:	LV(0); break;
+	case 1:	LV(1); break;
+	case 2:	LV(2); break;
+	case 3:	LV(3); break;
+	case 4:	LV(4); break;
+	case 5:	LV(5); break;
+	case 6:	LV(6); break;
+	case 7:	LV(7); break;
+	}
 #undef LV
 }
 
-struct pspvfpu_context *pspvfpu_initcontext(unsigned matrixmask)
+/* 
+   Switch the VFPU's register state for the current context.  This means:
+
+   1. save any other context's matrices in the set (keepset | tempset)
+   2. load the current context's valid keepset (keepset & c->valid)
+   3. mark the current context as owning (keepset | tempset), and having keepset valid
+ */
+void pspvfpu_use_matrices(struct pspvfpu_context *c, vfpumatrixset_t keepset, vfpumatrixset_t tempset)
+{
+	/* If a matrix is both in the keepset and tempset, drop it
+	   from tempset */
+	tempset &= ~keepset;
+
+	/* If the context already has a matrix owned, we
+	   don't need to handle it */
+	keepset &= ~c->owned;
+	tempset &= ~c->owned;
+
+	vfpumatrixset_t saveset = keepset | tempset;	/* save everything we use */
+	vfpumatrixset_t loadset = keepset & c->valid;	/* only reload valid matrices */
+
+	c->owned |= saveset;	/* will be true by the time we're done */
+	c->valid |= keepset;	/* likewise */
+	c->valid &= ~tempset;	/* temporaries aren't valid */
+
+	int m = 0;
+	while(saveset) {
+		/* skip to the next member of the matrix set
+		   (ctz -> count trailing zeros; the number of zeros in the LSB) */
+		int skip = __builtin_ctz(saveset);
+		m += skip;
+		saveset >>= skip;
+		loadset >>= skip;
+
+		/* we need to save everyone else's use of saveset
+		   matrices  */
+		if (users[m] != NULL) {
+			struct pspvfpu_context *other = users[m];
+
+			assert(other != c);
+
+			if (other->valid & (1 << m))
+				save_matrix(other, m);
+			other->owned &= ~(1 << m);
+			other->valid &= ~(1 << m);
+		}
+
+		/* reload matrix values if necessary */
+		if (loadset & 1)
+			load_matrix(c, m);
+
+		/* we own all the matrices we're about to use */
+		users[m] = c;
+
+		saveset &= ~1; /* that one's done */
+	}
+}
+
+/*
+   Create a new context, and make sure the matrices in matrixset are
+   ready for use.
+ */
+struct pspvfpu_context *pspvfpu_initcontext(void)
 {
 	struct pspvfpu_context *c;
 
@@ -89,17 +145,8 @@ struct pspvfpu_context *pspvfpu_initcontext(unsigned matrixmask)
 	if (c == NULL)
 		return c;
 
-	memset(c->fpregs, 0, sizeof(c->fpregs));
-
-	for(int i = 0; i < NMAT && matrixmask; i++) {
-		if (matrixmask & (1 << i)) {
-			if (users[i] != NULL) 
-				save_matrix(users[i], i);
-			users[i] = c;
-		}
-	}
-
-	c->resident = matrixmask;
+	c->owned = 0;
+	c->valid = 0;
 
 	return c;
 }
@@ -111,27 +158,4 @@ void pspvfpu_deletecontext(struct pspvfpu_context *c)
 			users[i] = NULL;
 
 	free(c);
-}
-
-void pspvfpu_usecontext(struct pspvfpu_context *c, unsigned matrixmask)
-{
-	unsigned reloadmask = 0;
-
-	matrixmask &= ~c->resident;
-
-	for(int i = 0; i < NMAT && matrixmask; i++) {
-		if (matrixmask & (1<<i)) {
-			if (users[i] != NULL) {
-				assert(users[i] != c);
-				reloadmask |= (1 << i);
-				save_matrix(users[i], i);
-			}
-			users[i] = c;
-		}
-	}
-
-	c->resident |= matrixmask;
-
-	if (reloadmask)
-		load_matrices(c, matrixmask);
 }

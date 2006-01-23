@@ -14,10 +14,11 @@
 
 
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 
 struct pspvfpu_context;
+typedef unsigned char vfpumatrixset_t;
 
 #define VMAT0	(1<<0)
 #define VMAT1	(1<<1)
@@ -31,12 +32,11 @@ struct pspvfpu_context;
 /**
    Prepare to use the VFPU.  This set's the calling thread's VFPU
    attribute, and returns a pointer to some VFPU state storage.
+   The initial value all all VFPU matrix registers is undefined.
 
-   @param matrixset A bitfield of matrices the caller wants to start
-   using.  This may be updated later on.
-   @return A vfpu context
+   @return A VFPU context
  */
-struct pspvfpu_context *pspvfpu_initcontext(unsigned matrixset);
+struct pspvfpu_context *pspvfpu_initcontext(void);
 
 /**
    Delete a VFPU context.  This frees the resources used by the VFPU
@@ -47,19 +47,25 @@ struct pspvfpu_context *pspvfpu_initcontext(unsigned matrixset);
 void pspvfpu_deletecontext(struct pspvfpu_context *context);
 
 /**
-   Resume use of the VFPU.  This restores the parts of the VFPU state
-   the caller wants restored (if necessary).  If the caller was the
-   previous user of the context, then this call is effectively a
-   no-op.
+   Resume use of a set of VFPU matrices.  This restores the parts of
+   the VFPU state the caller wants restored (if necessary).  If the
+   caller was the previous user of the the matrix set, then this call
+   is effectively a no-op.  If a matrix has never been used by this
+   context before, then it will initially have an undefined value.
 
-   @param vfpucontext The VFPU context the caller wants to restore.
-   @param matrixset The set of matrices the caller wants to use.  This
-   need not match the original matrixset when the context was created.
+   @param context The VFPU context the caller wants to restore from.
+
+   @param keepset The set of matrices the caller wants to use, and
+   keep the values persistently.  
+
+   @param tempset A set of matrices the callers wants to use
+   temporarily, but doesn't care about the values in the long-term.
  */
-void pspvfpu_usecontext(struct pspvfpu_context *context, unsigned matrixset);
+void pspvfpu_use_matrices(struct pspvfpu_context *context, 
+			  vfpumatrixset_t keepset, vfpumatrixset_t tempset);
 
 #ifdef __cplusplus
-//}
+}
 #endif
 
 #endif	/* __PSPVFPU_H__ */
