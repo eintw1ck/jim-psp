@@ -22,6 +22,7 @@ SUBDIRS = \
 	usbstor \
 	user \
 	utility \
+	vfpu \
 	vsh \
 	wlan \
 	samples
