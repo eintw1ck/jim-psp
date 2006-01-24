@@ -102,6 +102,7 @@ AC_CONFIG_FILES([Makefile
                  src/usbstor/Makefile
                  src/utility/Makefile
                  src/wlan/Makefile
+                 src/vfpu/Makefile
                  src/vsh/Makefile
                  src/samples/Makefile
                  tools/Makefile])

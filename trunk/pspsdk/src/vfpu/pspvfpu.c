@@ -1,23 +1,20 @@
 #include <malloc.h>
 #include <string.h>
-#include <assert.h>
 
 #include "pspthreadman.h"
 #include "pspvfpu.h"
 
-#define ALIGNMENT	(sizeof(float)*4)
-
 #define NMAT	8
 
 struct pspvfpu_context {
-	float fpregs[4*4*NMAT] __attribute__((aligned(ALIGNMENT)));
+	float fpregs[4*4*NMAT] __attribute__((aligned(VFPU_ALIGNMENT)));
 
 	/* 
 	   States a matrix can be in:
 	   owned   valid
 	     0       X		context has no knowledge of the matrix
 	     1       1		context is using matrix, and wants it preserved
-	     1       0          context is used matrix temporarily
+	     1       0          context is using matrix temporarily
 	 */
 	vfpumatrixset_t valid;	/* which matrices are valid in this context */
 	vfpumatrixset_t owned;	/* which matrices are in the VFPU at the moment */
@@ -110,8 +107,6 @@ void pspvfpu_use_matrices(struct pspvfpu_context *c, vfpumatrixset_t keepset, vf
 		if (users[m] != NULL) {
 			struct pspvfpu_context *other = users[m];
 
-			assert(other != c);
-
 			if (other->valid & (1 << m))
 				save_matrix(other, m);
 			other->owned &= ~(1 << m);
@@ -141,12 +136,12 @@ struct pspvfpu_context *pspvfpu_initcontext(void)
 	if (sceKernelChangeCurrentThreadAttr(0, PSP_THREAD_ATTR_VFPU) < 0)
 		return NULL;
 
-	c = memalign(sizeof(*c), ALIGNMENT);
-	if (c == NULL)
-		return c;
+	c = memalign(VFPU_ALIGNMENT, sizeof(*c));
 
-	c->owned = 0;
-	c->valid = 0;
+	if (c != NULL) {
+		c->owned = 0;
+		c->valid = 0;
+	}
 
 	return c;
 }

@@ -29,6 +29,8 @@ typedef unsigned char vfpumatrixset_t;
 #define VMAT6	(1<<6)
 #define VMAT7	(1<<7)
 
+#define VFPU_ALIGNMENT	(sizeof(float) * 4)	/* alignment required for VFPU matrix loads and stores */
+
 /**
    Prepare to use the VFPU.  This set's the calling thread's VFPU
    attribute, and returns a pointer to some VFPU state storage.
