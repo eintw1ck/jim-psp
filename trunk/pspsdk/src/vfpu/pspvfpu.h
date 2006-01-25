@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2005 Jeremy Fitzhardinge <jeremy@goop.org>
  *
- * $Id: pspwlan.h 1663 2006-01-08 23:35:29Z tyranid $
+ * $Id$
  */
 #ifndef __PSPVFPU_H__
 #define __PSPVFPU_H__

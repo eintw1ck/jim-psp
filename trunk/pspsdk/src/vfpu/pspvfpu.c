@@ -1,3 +1,14 @@
+/*
+ * PSP Software Development Kit - http://www.pspdev.org
+ * -----------------------------------------------------------------------
+ * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
+ *
+ * pspvfpu.h - Prototypes for the VFPU library
+ *
+ * Copyright (c) 2005 Jeremy Fitzhardinge <jeremy@goop.org>
+ *
+ * $Id$
+ */
 #include <malloc.h>
 #include <string.h>
 
