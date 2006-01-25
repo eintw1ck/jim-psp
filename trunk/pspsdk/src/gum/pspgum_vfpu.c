@@ -15,22 +15,22 @@
 void gumScale(ScePspFMatrix4* m, const ScePspFVector3* v)
 {
 	__asm__ volatile (
-		"ulv.q C100, 0(%1)\n"
-		"ulv.q C110, 16(%1)\n"
-		"ulv.q C120, 32(%1)\n"
-		"ulv.q C130, 48(%1)\n"
+		"ulv.q C100,  0 + %0\n"
+		"ulv.q C110, 16 + %0\n"
+		"ulv.q C120, 32 + %0\n"
+		"ulv.q C130, 48 + %0\n"
 
-		"ulv.q C000, 0(%2)\n"
+		"ulv.q C000, %1\n"
 
 		"vscl.t C100, C100, S000\n"
 		"vscl.t C110, C110, S001\n"
 		"vscl.t C120, C120, S002\n"
 
-		"usv.q C100, 0(%1)\n"
-		"usv.q C110, 16(%1)\n"
-		"usv.q C120, 32(%1)\n"
-		"usv.q C130, 48(%1)\n"
-	: "=r"(m) : "r"(m), "r"(v));
+		"usv.q C100,  0 + %0\n"
+		"usv.q C110, 16 + %0\n"
+		"usv.q C120, 32 + %0\n"
+		"usv.q C130, 48 + %0\n"
+	: "+m"(*m) : "m"(*v));
 }
 #endif
 
@@ -38,21 +38,21 @@ void gumScale(ScePspFMatrix4* m, const ScePspFVector3* v)
 void gumTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
 {
 	__asm__ volatile (
-		"ulv.q C100, 0(%1)\n"
-		"ulv.q C110, 16(%1)\n"
-		"ulv.q C120, 32(%1)\n"
-		"ulv.q C130, 48(%1)\n"
+		"ulv.q C100,  0 + %0\n"
+		"ulv.q C110, 16 + %0\n"
+		"ulv.q C120, 32 + %0\n"
+		"ulv.q C130, 48 + %0\n"
 
 		"vmidt.q M000\n"
-		"ulv.q   C200, 0(%2)\n"
+		"ulv.q   C200, %1\n"
 		"vmov.t  C030, C200\n"
 		"vmmul.q M200, M100, M000\n"
 
-		"usv.q C200, 0(%1)\n"
-		"usv.q C210, 16(%1)\n"
-		"usv.q C220, 32(%1)\n"
-		"usv.q C230, 48(%1)\n"
-	: "=r"(m) : "r"(m), "r"(v));
+		"usv.q C200,  0 + %0\n"
+		"usv.q C210, 16 + %0\n"
+		"usv.q C220, 32 + %0\n"
+		"usv.q C230, 48 + %0\n"
+	: "+m"(*m) : "m"(*v));
 }
 #endif
 
@@ -60,24 +60,24 @@ void gumTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
 void gumRotateX(ScePspFMatrix4* m, float angle)
 {
 	__asm__ volatile (
-		"ulv.q C200, 0(%1)\n"
-		"ulv.q C210, 16(%1)\n"
-		"ulv.q C220, 32(%1)\n"
-		"ulv.q C230, 48(%1)\n"
+		"ulv.q C200,  0 + %0\n"
+		"ulv.q C210, 16 + %0\n"
+		"ulv.q C220, 32 + %0\n"
+		"ulv.q C230, 48 + %0\n"
 
 		"vmidt.q M000\n"
-		"lv.s   S100, 0(%2)\n"
+		"mtv  %1, S100\n"
 		"vcst.s S101, VFPU_2_PI\n"
 		"vmul.s S100, S101, S100\n"
 		"vrot.q C010, S100, [ 0, c, s, 0]\n"
 		"vrot.q C020, S100, [ 0,-s, c, 0]\n"
 		"vmmul.q M100, M200, M000\n"
 
-		"usv.q C100, 0(%1)\n"
-		"usv.q C110, 16(%1)\n"
-		"usv.q C120, 32(%1)\n"
-		"usv.q C130, 48(%1)\n"
-	: "=r"(m) : "r"(m), "r"(&angle));
+		"usv.q C100,  0 + %0\n"
+		"usv.q C110, 16 + %0\n"
+		"usv.q C120, 32 + %0\n"
+		"usv.q C130, 48 + %0\n"
+	: "+m"(*m) : "r"(angle));
 }
 #endif
 
@@ -85,24 +85,24 @@ void gumRotateX(ScePspFMatrix4* m, float angle)
 void gumRotateY(ScePspFMatrix4* m, float angle)
 {
 	__asm__ volatile (
-		"ulv.q C200, 0(%1)\n"
-		"ulv.q C210, 16(%1)\n"
-		"ulv.q C220, 32(%1)\n"
-		"ulv.q C230, 48(%1)\n"
+		"ulv.q C200,  0 + %0\n"
+		"ulv.q C210, 16 + %0\n"
+		"ulv.q C220, 32 + %0\n"
+		"ulv.q C230, 48 + %0\n"
 
 		"vmidt.q M000\n"
-		"lv.s   S100, 0(%2)\n"
+		"mtv  %1, S100\n"
 		"vcst.s S101, VFPU_2_PI\n"
 		"vmul.s S100, S101, S100\n"
 		"vrot.q C000, S100, [ c, 0,-s, 0]\n"
 		"vrot.q C020, S100, [ s, 0, c, 0]\n"
 		"vmmul.q M100, M200, M000\n"
 
-		"usv.q C100, 0(%1)\n"
-		"usv.q C110, 16(%1)\n"
-		"usv.q C120, 32(%1)\n"
-		"usv.q C130, 48(%1)\n"
-	: "=r"(m) : "r"(m), "r"(&angle));
+		"usv.q C100,  0 + %0\n"
+		"usv.q C110, 16 + %0\n"
+		"usv.q C120, 32 + %0\n"
+		"usv.q C130, 48 + %0\n"
+	: "+m"(*m) : "r"(angle));
 }
 #endif
 
@@ -110,24 +110,24 @@ void gumRotateY(ScePspFMatrix4* m, float angle)
 void gumRotateZ(ScePspFMatrix4* m, float angle)
 {
 	__asm__ volatile (
-		"ulv.q C200, 0(%1)\n"
-		"ulv.q C210, 16(%1)\n"
-		"ulv.q C220, 32(%1)\n"
-		"ulv.q C230, 48(%1)\n"
+		"ulv.q C200,  0 + %0\n"
+		"ulv.q C210, 16 + %0\n"
+		"ulv.q C220, 32 + %0\n"
+		"ulv.q C230, 48 + %0\n"
 
 		"vmidt.q M000\n"
-		"lv.s   S100, 0(%2)\n"
+		"mtv  %1, S100\n"
 		"vcst.s S101, VFPU_2_PI\n"
 		"vmul.s S100, S101, S100\n"
 		"vrot.q C000, S100, [ c, s, 0, 0]\n"
 		"vrot.q C010, S100, [-s, c, 0, 0]\n"
 		"vmmul.q M100, M200, M000\n"
 
-		"usv.q C100, 0(%1)\n"
-		"usv.q C110, 16(%1)\n"
-		"usv.q C120, 32(%1)\n"
-		"usv.q C130, 48(%1)\n"
-	: "=r"(m) : "r"(m), "r"(&angle));
+		"usv.q C100,  0 + %0\n"
+		"usv.q C110, 16 + %0\n"
+		"usv.q C120, 32 + %0\n"
+		"usv.q C130, 48 + %0\n"
+	: "+m"(*m) : "r"(angle));
 }
 #endif
 
@@ -136,11 +136,11 @@ void gumLoadIdentity(ScePspFMatrix4* m)
 {
 	__asm__ volatile (
 		"vmidt.q M000\n"
-		"usv.q C000, 0(%1)\n"
-		"usv.q C010, 16(%1)\n"
-		"usv.q C020, 32(%1)\n"
-		"usv.q C030, 48(%1)\n"
-	: "=r"(m) : "r"(m) : "memory" );
+		"usv.q C000,  0 + %0\n"
+		"usv.q C010, 16 + %0\n"
+		"usv.q C020, 32 + %0\n"
+		"usv.q C030, 48 + %0\n"
+	: "=m"(*m) : : "memory" );
 }
 #endif
 
@@ -148,21 +148,21 @@ void gumLoadIdentity(ScePspFMatrix4* m)
 void gumFastInverse(ScePspFMatrix4* m, const ScePspFMatrix4* a)
 {
 	__asm__ volatile (
-		"ulv.q C200, 0(%1)\n"
-		"ulv.q C210, 16(%1)\n"
-		"ulv.q C220, 32(%1)\n"
-		"ulv.q C230, 48(%1)\n"
+		"ulv.q C200,  0 + %0\n"
+		"ulv.q C210, 16 + %0\n"
+		"ulv.q C220, 32 + %0\n"
+		"ulv.q C230, 48 + %0\n"
 
 		"vmidt.q M000\n"
 		"vmmov.t M000, E200\n"
 		"vneg.t C100, C230\n"
 		"vtfm3.t C030, M200, C100\n"
 
-		"usv.q C000, 0(%2)\n"
-		"usv.q C010, 16(%2)\n"
-		"usv.q C020, 32(%2)\n"
-		"usv.q C030, 48(%2)\n"
-	: "=r"(m) : "r"(a), "r"(m) : "memory" );
+		"usv.q C000,  0 + %0\n"
+		"usv.q C010, 16 + %0\n"
+		"usv.q C020, 32 + %0\n"
+		"usv.q C030, 48 + %0\n"
+	: "+m"(*m) : "m"(*a) : "memory" );
 }
 #endif
 
@@ -171,23 +171,23 @@ void gumMultMatrix(ScePspFMatrix4* result, const ScePspFMatrix4* a, const ScePsp
 {
 	__asm__ volatile
 	(
-		"ulv.q C000, 0(%2)\n"
-		"ulv.q C010, 16(%2)\n"
-		"ulv.q C020, 32(%2)\n"
-		"ulv.q C030, 48(%2)\n"
+		"ulv.q C000,  0 + %1\n"
+		"ulv.q C010, 16 + %1\n"
+		"ulv.q C020, 32 + %1\n"
+		"ulv.q C030, 48 + %1\n"
 
-		"ulv.q C100, 0(%3)\n"
-		"ulv.q C110, 16(%3)\n"
-		"ulv.q C120, 32(%3)\n"
-		"ulv.q C130, 48(%3)\n"
+		"ulv.q C100,  0 + %2\n"
+		"ulv.q C110, 16 + %2\n"
+		"ulv.q C120, 32 + %2\n"
+		"ulv.q C130, 48 + %2\n"
 
 		"vmmul.q M200, M000, M100\n"
 
-		"usv.q C200, 0(%1)\n"
-		"usv.q C210, 16(%1)\n"
-		"usv.q C220, 32(%1)\n"
-		"usv.q C230, 48(%1)\n"
-	: "=r"(result) : "r"(result), "r"(a), "r"(b) : "memory");
+		"usv.q C200,  0 + %0\n"
+		"usv.q C210, 16 + %0\n"
+		"usv.q C220, 32 + %0\n"
+		"usv.q C230, 48 + %0\n"
+	: "=m"(*result) : "m"(*a), "m"(*b) : "memory");
 }
 #endif
 
@@ -212,20 +212,20 @@ void sceGumFullInverse()
 	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
 
 	__asm__ volatile (
-		"sv.q C300, 0(%1)\n"
-		"sv.q C310, 16(%1)\n"
-		"sv.q C320, 32(%1)\n"
-		"sv.q C330, 48(%1)\n"
-	: "=r"(t) : "r"(t) : "memory");
+		"sv.q C300,  0 + %0\n"
+		"sv.q C310, 16 + %0\n"
+		"sv.q C320, 32 + %0\n"
+		"sv.q C330, 48 + %0\n"
+	: "=m"(*t) : : "memory");
 
 	gumFastInverse(t,t);
 
 	__asm__ volatile (
-		"lv.q C300.q, 0(%0)\n"
-		"lv.q C310.q, 16(%0)\n"
-		"lv.q C320.q, 32(%0)\n"
-		"lv.q C330.q, 48(%0)\n"
-	: : "r"(t) : "memory");
+		"lv.q C300.q,  0 + %0\n"
+		"lv.q C310.q, 16 + %0\n"
+		"lv.q C320.q, 32 + %0\n"
+		"lv.q C330.q, 48 + %0\n"
+	: : "m"(*t) : "memory");
 
 	gum_current_matrix_update = 1;
 }
@@ -245,11 +245,11 @@ void sceGumLoadIdentity(void)
 void sceGumLoadMatrix(const ScePspFMatrix4* m)
 {
 	__asm__ volatile (
-		"ulv.q C300.q, 0(%0)\n"
-		"ulv.q C310.q, 16(%0)\n"
-		"ulv.q C320.q, 32(%0)\n"
-		"ulv.q C330.q, 48(%0)\n"
-	: : "r"(m) : "memory");
+		"ulv.q C300.q,  0 + %0\n"
+		"ulv.q C310.q, 16 + %0\n"
+		"ulv.q C320.q, 32 + %0\n"
+		"ulv.q C330.q, 48 + %0\n"
+	: : "m"(*m) : "memory");
 
 	gum_current_matrix_update = 1;
 }
@@ -262,13 +262,13 @@ void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* u
 	gumLookAt(t,eye,center,up);
 
 	__asm__ volatile (
-		"lv.q C300.q, 0(%0)\n"
-		"lv.q C310.q, 16(%0)\n"
-		"lv.q C320.q, 32(%0)\n"
-		"lv.q C330.q, 48(%0)\n"
+		"lv.q C300.q,  0 + %0\n"
+		"lv.q C310.q, 16 + %0\n"
+		"lv.q C320.q, 32 + %0\n"
+		"lv.q C330.q, 48 + %0\n"
 		"vmmul.q M100, M300, M000\n"
 		"vmmov.q M300, M100\n"
-	: : "r"(t) );
+	: : "m"(*t) );
 
 	gum_current_matrix_update = 1;
 }
@@ -278,11 +278,11 @@ void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* u
 void sceGumMatrixMode(int mode)
 {
 	__asm__ volatile (
-		"sv.q C300, 0(%1)\n"
-		"sv.q C310, 16(%1)\n"
-		"sv.q C320, 32(%1)\n"
-		"sv.q C330, 48(%1)\n"
-	: "=r"(gum_current_matrix) : "r"(gum_current_matrix) : "memory");
+		"sv.q C300,  0 + %0\n"
+		"sv.q C310, 16 + %0\n"
+		"sv.q C320, 32 + %0\n"
+		"sv.q C330, 48 + %0\n"
+	: "=m"(*gum_current_matrix) : : "memory");
 
 	// switch stack
 	gum_matrix_update[gum_current_mode] = gum_current_matrix_update;
@@ -292,11 +292,11 @@ void sceGumMatrixMode(int mode)
 	gum_current_matrix_update = gum_matrix_update[gum_current_mode];
 
 	__asm__ volatile (
-		"lv.q C300, 0(%0)\n"
-		"lv.q C310, 16(%0)\n"
-		"lv.q C320, 32(%0)\n"
-		"lv.q C330, 48(%0)\n"
-	: : "r"(gum_current_matrix) : "memory");
+		"lv.q C300,  0 + %0\n"
+		"lv.q C310, 16 + %0\n"
+		"lv.q C320, 32 + %0\n"
+		"lv.q C330, 48 + %0\n"
+	: : "m"(*gum_current_matrix) : "memory");
 }
 #endif
 
@@ -304,13 +304,13 @@ void sceGumMatrixMode(int mode)
 void sceGumMultMatrix(const ScePspFMatrix4* m)
 {
 	__asm__ volatile (
-		"ulv.q C000, 0(%0)\n"
-		"ulv.q C010, 16(%0)\n"
-		"ulv.q C020, 32(%0)\n"
-		"ulv.q C030, 48(%0)\n"
+		"ulv.q C000,  0 + %0\n"
+		"ulv.q C010, 16 + %0\n"
+		"ulv.q C020, 32 + %0\n"
+		"ulv.q C030, 48 + %0\n"
 		"vmmul.q M100, M300, M000\n"
 		"vmmov.q M300, M100\n"
-	: : "r"(m));
+	: : "m"(*m));
 
 	gum_current_matrix_update = 1;
 }
@@ -333,13 +333,13 @@ void sceGumOrtho(float left, float right, float bottom, float top, float near, f
 	t->w.w = 1.0f;
 
 	__asm__ volatile (
-		"lv.q C000, 0(%0)\n"
-		"lv.q C010, 16(%0)\n"
-		"lv.q C020, 32(%0)\n"
-		"lv.q C030, 48(%0)\n"
+		"ulv.q C000,  0 + %0\n"
+		"ulv.q C010, 16 + %0\n"
+		"ulv.q C020, 32 + %0\n"
+		"ulv.q C030, 48 + %0\n"
 		"vmmul.q M100, M300, M000\n"
 		"vmmov.q M300, M100\n"
-	: : "r"(t) );
+	: : "m"(*t));
 
 	gum_current_matrix_update = 1;
 }
@@ -362,13 +362,13 @@ void sceGumPerspective(float fovy, float aspect, float near, float far)
 	t->w.w = 0.0f;
 
 	__asm__ volatile (
-		"lv.q C000, 0(%0)\n"
-		"lv.q C010, 16(%0)\n"
-		"lv.q C020, 32(%0)\n"
-		"lv.q C030, 48(%0)\n"
+		"ulv.q C000,  0 + %0\n"
+		"ulv.q C010, 16 + %0\n"
+		"ulv.q C020, 32 + %0\n"
+		"ulv.q C030, 48 + %0\n"
 		"vmmul.q M100, M300, M000\n"
 		"vmmov.q M300, M100\n"
-	: : "r"(t));
+	: : "m"(*t));
 
 	gum_current_matrix_update = 1;
 }
@@ -379,11 +379,11 @@ void sceGumPopMatrix(void)
 {
 	ScePspFMatrix4* m = gum_current_matrix-1;
 	__asm__ volatile (
-		"lv.q C300.q, 0(%0)\n"
-		"lv.q C310.q, 16(%0)\n"
-		"lv.q C320.q, 32(%0)\n"
-		"lv.q C330.q, 48(%0)\n"
-	: : "r"(m));
+		"lv.q C300.q,  0 + %0\n"
+		"lv.q C310.q, 16 + %0\n"
+		"lv.q C320.q, 32 + %0\n"
+		"lv.q C330.q, 48 + %0\n"
+	: : "m"(*m));
 
 	--gum_current_matrix;
 	gum_current_matrix_update = 1;
@@ -395,11 +395,11 @@ void sceGumPushMatrix(void)
 {
 	ScePspFMatrix4* m = gum_current_matrix;
 	__asm__ volatile (
-		"sv.q C300, 0(%1)\n"
-		"sv.q C310, 16(%1)\n"
-		"sv.q C320, 32(%1)\n"
-		"sv.q C330, 48(%1)\n"
-	: "=r"(m) : "r"(m) : "memory");
+		"sv.q C300,  0 + %0\n"
+		"sv.q C310, 16 + %0\n"
+		"sv.q C320, 32 + %0\n"
+		"sv.q C330, 48 + %0\n"
+	: "=m"(*m) : : "memory");
 
 	++gum_current_matrix;
 }
@@ -410,14 +410,14 @@ void sceGumRotateX(float angle)
 {
 	__asm__ volatile (
 		"vmidt.q M000\n"
-		"lv.s   S100, 0(%0)\n"
+		"mtv %0, S100\n"
 		"vcst.s S101, VFPU_2_PI\n"
 		"vmul.s S100, S101, S100\n"
 		"vrot.q C010, S100, [ 0, c, s, 0]\n"
 		"vrot.q C020, S100, [ 0,-s, c, 0]\n"
 		"vmmul.q M100, M300, M000\n"
 		"vmmov.q M300, M100\n"
-	: : "r"(&angle));
+	: : "r"(angle));
 
 	gum_current_matrix_update = 1;
 }
@@ -428,14 +428,14 @@ void sceGumRotateY(float angle)
 {
 	__asm__ volatile (
 		"vmidt.q M000\n"
-		"lv.s  S100, 0(%0)\n"
+		"mtv %0, S100\n"
 		"vcst.s S101, VFPU_2_PI\n"
 		"vmul.s S100, S101, S100\n"
 		"vrot.q C000, S100, [ c, 0,-s, 0]\n"
 		"vrot.q C020, S100, [ s, 0, c, 0]\n"
 		"vmmul.q M100, M300, M000\n"
 		"vmmov.q M300, M100\n"
-	: : "r"(&angle));
+	: : "r"(angle));
 
 	gum_current_matrix_update = 1;
 }
@@ -446,14 +446,14 @@ void sceGumRotateZ(float angle)
 {
 	__asm volatile (
 		"vmidt.q M000\n"
-		"lv.s  S100, 0(%0)\n"
+		"mtv %0, S100\n"
 		"vcst.s S101, VFPU_2_PI\n"
 		"vmul.s S100, S101, S100\n"
 		"vrot.q C000, S100, [ c, s, 0, 0]\n"
 		"vrot.q C010, S100, [-s, c, 0, 0]\n"
 		"vmmul.q M100, M300, M000\n"
 		"vmmov.q M300, M100\n"
-	: : "r"(&angle));
+	: : "r"(angle));
 
 	gum_current_matrix_update = 1;
 }
@@ -463,11 +463,11 @@ void sceGumRotateZ(float angle)
 void sceGumScale(const ScePspFVector3* v)
 {
 	__asm__ volatile (
-		"ulv.q C000, 0(%0)\n"
+		"ulv.q C000, %0\n"
 		"vscl.t C300, C300, S000\n"
 		"vscl.t C310, C310, S001\n"
 		"vscl.t C320, C320, S002\n"
-	: : "r"(v));
+	: : "m"(*v));
 
 	gum_current_matrix_update = 1;
 }
@@ -477,11 +477,11 @@ void sceGumScale(const ScePspFVector3* v)
 void sceGumStoreMatrix(ScePspFMatrix4* m)
 {
 	__asm__ volatile (
-		"usv.q C300, 0(%1)\n"
-		"usv.q C310, 16(%1)\n"
-		"usv.q C320, 32(%1)\n"
-		"usv.q C330, 48(%1)\n"
-	: "=r"(m) : "r"(m) : "memory");
+		"usv.q C300,  0 + %0\n"
+		"usv.q C310, 16 + %0\n"
+		"usv.q C320, 32 + %0\n"
+		"usv.q C330, 48 + %0\n"
+	: "=m"(*m) : : "memory");
 }
 #endif
 
@@ -490,11 +490,11 @@ void sceGumTranslate(const ScePspFVector3* v)
 {
 	__asm__ volatile (
 		"vmidt.q M000\n"
-		"ulv.q   C100, 0(%0)\n"
+		"ulv.q   C100, %0\n"
 		"vmov.t  C030, C100\n"
 		"vmmul.q M100, M300, M000\n"
 		"vmmov.q M300, M100\n"
-	: : "r"(v));
+	: : "m"(*v));
 
 	gum_current_matrix_update = 1;
 }
@@ -509,11 +509,11 @@ void sceGumUpdateMatrix(void)
 	if (gum_current_matrix_update)
 	{
 		__asm__ volatile (
-			"sv.q C300, 0(%1)\n"
-			"sv.q C310, 16(%1)\n"
-			"sv.q C320, 32(%1)\n"
-			"sv.q C330, 48(%1)\n"
-		: "=r"(gum_current_matrix) : "r"(gum_current_matrix) : "memory");
+			"sv.q C300,  0 + %0\n"
+			"sv.q C310, 16 + %0\n"
+			"sv.q C320, 32 + %0\n"
+			"sv.q C330, 48 + %0\n"
+		: "=m"(*gum_current_matrix) : : "memory");
 		gum_matrix_update[gum_current_mode] = gum_current_matrix_update;
 		gum_current_matrix_update = 0;
 	}
