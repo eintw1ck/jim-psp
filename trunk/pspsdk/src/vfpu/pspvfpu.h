@@ -49,13 +49,16 @@ struct pspvfpu_context *pspvfpu_initcontext(void);
 void pspvfpu_deletecontext(struct pspvfpu_context *context);
 
 /**
-   Resume use of a set of VFPU matrices.  This restores the parts of
-   the VFPU state the caller wants restored (if necessary).  If the
-   caller was the previous user of the the matrix set, then this call
-   is effectively a no-op.  If a matrix has never been used by this
+   Use a set of VFPU matrices.  This restores the parts of the VFPU
+   state the caller wants restored (if necessary).  If the caller was
+   the previous user of the the matrix set, then this call is
+   effectively a no-op.  If a matrix has never been used by this
    context before, then it will initially have an undefined value.
 
-   @param context The VFPU context the caller wants to restore from.
+   @param context The VFPU context the caller wants to restore
+   from. It is valid to pass NULL as a context.  This means the caller
+   wants to reserve a temporary matrix without affecting other VFPU
+   users, but doesn't want any long-term matrices itself.
 
    @param keepset The set of matrices the caller wants to use, and
    keep the values persistently.  

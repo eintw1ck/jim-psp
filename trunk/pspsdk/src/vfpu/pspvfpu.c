@@ -85,24 +85,35 @@ static void load_matrix(const struct pspvfpu_context *c, int mat)
    1. save any other context's matrices in the set (keepset | tempset)
    2. load the current context's valid keepset (keepset & c->valid)
    3. mark the current context as owning (keepset | tempset), and having keepset valid
+
+   Note, a NULL context is a valid special case.  It means that the
+   caller doesn't care about long-term matrix use, but does want to
+   claim a temporary matrix.
  */
 void pspvfpu_use_matrices(struct pspvfpu_context *c, vfpumatrixset_t keepset, vfpumatrixset_t tempset)
 {
+	vfpumatrixset_t saveset, loadset;
+
 	/* If a matrix is both in the keepset and tempset, drop it
 	   from tempset */
 	tempset &= ~keepset;
 
-	/* If the context already has a matrix owned, we
-	   don't need to handle it */
-	keepset &= ~c->owned;
-	tempset &= ~c->owned;
+	if (c != NULL) {
+		/* If the context already has a matrix owned, we
+		   don't need to handle it */
+		keepset &= ~c->owned;
+		tempset &= ~c->owned;
 
-	vfpumatrixset_t saveset = keepset | tempset;	/* save everything we use */
-	vfpumatrixset_t loadset = keepset & c->valid;	/* only reload valid matrices */
+		saveset = keepset | tempset;	/* save everything we use */
+		loadset = keepset & c->valid;	/* only reload valid matrices */
 
-	c->owned |= saveset;	/* will be true by the time we're done */
-	c->valid |= keepset;	/* likewise */
-	c->valid &= ~tempset;	/* temporaries aren't valid */
+		c->owned |= saveset;	/* will be true by the time we're done */
+		c->valid |= keepset;	/* likewise */
+		c->valid &= ~tempset;	/* temporaries aren't valid */
+	} else {
+		saveset = keepset | tempset;
+		loadset = 0;		/* no context, nothing to reload */
+	}
 
 	int m = 0;
 	while(saveset) {
