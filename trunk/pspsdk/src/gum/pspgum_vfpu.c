@@ -38,6 +38,7 @@ void gumScale(ScePspFMatrix4* m, const ScePspFVector3* v)
 void gumTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
 {
 	__asm__ volatile (
+#if 0
 		"ulv.q C100,  0 + %0\n"
 		"ulv.q C110, 16 + %0\n"
 		"ulv.q C120, 32 + %0\n"
@@ -52,6 +53,28 @@ void gumTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
 		"usv.q C210, 16 + %0\n"
 		"usv.q C220, 32 + %0\n"
 		"usv.q C230, 48 + %0\n"
+#else
+		/* This might be a little faster, since the vmmul is a
+		   pretty long-latency instruction, compared to simple
+		   scales and adds. Also uses fewer registers (M000 &
+		   M100) */
+		"ulv.q C030, %1\n"
+
+		"ulv.q C100,  0 + %0\n"
+		"ulv.q C110, 16 + %0\n"
+		"ulv.q C120, 32 + %0\n"
+		"ulv.q C130, 48 + %0\n"
+
+		"vscl.q	C000, C100, S030\n"
+		"vscl.q	C010, C110, S031\n"
+		"vscl.q	C020, C120, S032\n"
+
+		"vadd.q	C130, C130, C000\n"
+		"vadd.q	C130, C130, C010\n"
+		"vadd.q	C130, C130, C020\n"
+
+		"usv.q C130, 48 + %0\n"	// only C130 has changed
+#endif
 	: "+m"(*m) : "m"(*v));
 }
 #endif
@@ -148,10 +171,10 @@ void gumLoadIdentity(ScePspFMatrix4* m)
 void gumFastInverse(ScePspFMatrix4* m, const ScePspFMatrix4* a)
 {
 	__asm__ volatile (
-		"ulv.q C200,  0 + %0\n"
-		"ulv.q C210, 16 + %0\n"
-		"ulv.q C220, 32 + %0\n"
-		"ulv.q C230, 48 + %0\n"
+		"ulv.q C200,  0 + %1\n"
+		"ulv.q C210, 16 + %1\n"
+		"ulv.q C220, 32 + %1\n"
+		"ulv.q C230, 48 + %1\n"
 
 		"vmidt.q M000\n"
 		"vmmov.t M000, E200\n"
@@ -162,7 +185,7 @@ void gumFastInverse(ScePspFMatrix4* m, const ScePspFMatrix4* a)
 		"usv.q C010, 16 + %0\n"
 		"usv.q C020, 32 + %0\n"
 		"usv.q C030, 48 + %0\n"
-	: "+m"(*m) : "m"(*a) : "memory" );
+	: "=m"(*m) : "m"(*a) : "memory" );
 }
 #endif
 
@@ -377,7 +400,7 @@ void sceGumPerspective(float fovy, float aspect, float near, float far)
 #ifdef F_sceGumPopMatrix_vfpu
 void sceGumPopMatrix(void)
 {
-	ScePspFMatrix4* m = gum_current_matrix-1;
+	ScePspFMatrix4* m = --gum_current_matrix;
 	__asm__ volatile (
 		"lv.q C300.q,  0 + %0\n"
 		"lv.q C310.q, 16 + %0\n"
@@ -385,7 +408,6 @@ void sceGumPopMatrix(void)
 		"lv.q C330.q, 48 + %0\n"
 	: : "m"(*m));
 
-	--gum_current_matrix;
 	gum_current_matrix_update = 1;
 }
 #endif
@@ -393,15 +415,13 @@ void sceGumPopMatrix(void)
 #ifdef F_sceGumPushMatrix_vfpu
 void sceGumPushMatrix(void)
 {
-	ScePspFMatrix4* m = gum_current_matrix;
+	ScePspFMatrix4* m = gum_current_matrix++;
 	__asm__ volatile (
 		"sv.q C300,  0 + %0\n"
 		"sv.q C310, 16 + %0\n"
 		"sv.q C320, 32 + %0\n"
 		"sv.q C330, 48 + %0\n"
 	: "=m"(*m) : : "memory");
-
-	++gum_current_matrix;
 }
 #endif
 
