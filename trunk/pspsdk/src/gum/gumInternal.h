@@ -29,4 +29,6 @@ extern ScePspFMatrix4* gum_current_matrix;
 extern ScePspFMatrix4* gum_stack_depth[4];
 extern ScePspFMatrix4 gum_matrix_stack[4][32];
 
+extern struct pspvfpu_context *gum_vfpucontext;
+
 #endif

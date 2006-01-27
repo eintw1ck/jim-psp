@@ -26,3 +26,5 @@ ScePspFMatrix4* gum_stack_depth[4] =
 };
 
 ScePspFMatrix4 gum_matrix_stack[4][32];
+
+struct pspvfpu_context *gum_vfpucontext;

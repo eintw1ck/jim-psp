@@ -189,6 +189,8 @@ void sceGumEndObject();
 
 // standalone functions
 
+void gumInit(void);
+
 /**
   * Load matrix with identity
   *

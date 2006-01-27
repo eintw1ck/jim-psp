@@ -11,9 +11,21 @@
 #include <string.h>
 #include <math.h>
 
+#include "pspvfpu.h"
+
+#ifdef F_gumInit_vfpu
+void gumInit(void)
+{
+	if (gum_vfpucontext == NULL)
+		gum_vfpucontext = pspvfpu_initcontext();
+}
+#endif
+
 #ifdef F_gumScale_vfpu
 void gumScale(ScePspFMatrix4* m, const ScePspFVector3* v)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, 0, VMAT0 | VMAT1);
+
 	__asm__ volatile (
 		"ulv.q C100,  0 + %0\n"
 		"ulv.q C110, 16 + %0\n"
@@ -37,8 +49,10 @@ void gumScale(ScePspFMatrix4* m, const ScePspFVector3* v)
 #ifdef F_gumTranslate_vfpu
 void gumTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
 {
-	__asm__ volatile (
 #if 0
+	pspvfpu_use_matrices(gum_vfpucontext, 0, VMAT0 | VMAT1 | VMAT2);
+
+	__asm__ volatile (
 		"ulv.q C100,  0 + %0\n"
 		"ulv.q C110, 16 + %0\n"
 		"ulv.q C120, 32 + %0\n"
@@ -53,11 +67,15 @@ void gumTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
 		"usv.q C210, 16 + %0\n"
 		"usv.q C220, 32 + %0\n"
 		"usv.q C230, 48 + %0\n"
+		: "+m"(*m) : "m"(*v));
 #else
-		/* This might be a little faster, since the vmmul is a
-		   pretty long-latency instruction, compared to simple
-		   scales and adds. Also uses fewer registers (M000 &
-		   M100) */
+	pspvfpu_use_matrices(gum_vfpucontext, 0, VMAT0 | VMAT1);
+
+	/* This might be a little faster, since the vmmul is a
+	   pretty long-latency instruction, compared to simple
+	   scales and adds. Also uses fewer registers (M000 &
+	   M100) */
+	__asm__ volatile (
 		"ulv.q C030, %1\n"
 
 		"ulv.q C100,  0 + %0\n"
@@ -74,14 +92,16 @@ void gumTranslate(ScePspFMatrix4* m, const ScePspFVector3* v)
 		"vadd.q	C130, C130, C020\n"
 
 		"usv.q C130, 48 + %0\n"	// only C130 has changed
+		: "+m"(*m) : "m"(*v));
 #endif
-	: "+m"(*m) : "m"(*v));
 }
 #endif
 
 #ifdef F_gumRotateX_vfpu
 void gumRotateX(ScePspFMatrix4* m, float angle)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, 0, VMAT0 | VMAT1 | VMAT2);
+
 	__asm__ volatile (
 		"ulv.q C200,  0 + %0\n"
 		"ulv.q C210, 16 + %0\n"
@@ -107,6 +127,8 @@ void gumRotateX(ScePspFMatrix4* m, float angle)
 #ifdef F_gumRotateY_vfpu
 void gumRotateY(ScePspFMatrix4* m, float angle)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, 0, VMAT0 | VMAT1 | VMAT2);
+
 	__asm__ volatile (
 		"ulv.q C200,  0 + %0\n"
 		"ulv.q C210, 16 + %0\n"
@@ -132,6 +154,8 @@ void gumRotateY(ScePspFMatrix4* m, float angle)
 #ifdef F_gumRotateZ_vfpu
 void gumRotateZ(ScePspFMatrix4* m, float angle)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, 0, VMAT0 | VMAT1 | VMAT2);
+
 	__asm__ volatile (
 		"ulv.q C200,  0 + %0\n"
 		"ulv.q C210, 16 + %0\n"
@@ -157,6 +181,8 @@ void gumRotateZ(ScePspFMatrix4* m, float angle)
 #ifdef F_gumLoadIdentity_vfpu
 void gumLoadIdentity(ScePspFMatrix4* m)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, 0, VMAT0);
+
 	__asm__ volatile (
 		"vmidt.q M000\n"
 		"usv.q C000,  0 + %0\n"
@@ -170,6 +196,8 @@ void gumLoadIdentity(ScePspFMatrix4* m)
 #ifdef F_gumFastInverse_vfpu
 void gumFastInverse(ScePspFMatrix4* m, const ScePspFMatrix4* a)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, 0, VMAT0 | VMAT1 | VMAT2);
+
 	__asm__ volatile (
 		"ulv.q C200,  0 + %1\n"
 		"ulv.q C210, 16 + %1\n"
@@ -192,6 +220,8 @@ void gumFastInverse(ScePspFMatrix4* m, const ScePspFMatrix4* a)
 #ifdef F_gumMultMatrix_vfpu
 void gumMultMatrix(ScePspFMatrix4* result, const ScePspFMatrix4* a, const ScePspFMatrix4* b)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, 0, VMAT0 | VMAT1 | VMAT2);
+
 	__asm__ volatile
 	(
 		"ulv.q C000,  0 + %1\n"
@@ -217,6 +247,8 @@ void gumMultMatrix(ScePspFMatrix4* result, const ScePspFMatrix4* a, const ScePsp
 #ifdef F_sceGumFastInverse_vfpu
 void sceGumFastInverse()
 {
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
+
 	__asm__ volatile (
 		"vmidt.q M000\n"
 		"vmmov.t M000, E300\n"
@@ -233,6 +265,8 @@ void sceGumFastInverse()
 void sceGumFullInverse()
 {
 	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
+
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
 
 	__asm__ volatile (
 		"sv.q C300,  0 + %0\n"
@@ -257,6 +291,10 @@ void sceGumFullInverse()
 #ifdef F_sceGumLoadIdentity_vfpu
 void sceGumLoadIdentity(void)
 {
+	if (gum_vfpucontext == NULL)
+		gum_vfpucontext = pspvfpu_initcontext();
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, 0);
+
 	__asm__ volatile (
 		"vmidt.q M300\n"
 	);
@@ -267,6 +305,10 @@ void sceGumLoadIdentity(void)
 #ifdef F_sceGumLoadMatrix_vfpu
 void sceGumLoadMatrix(const ScePspFMatrix4* m)
 {
+	if (gum_vfpucontext == NULL)
+		gum_vfpucontext = pspvfpu_initcontext();
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, 0);
+
 	__asm__ volatile (
 		"ulv.q C300.q,  0 + %0\n"
 		"ulv.q C310.q, 16 + %0\n"
@@ -284,11 +326,13 @@ void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* u
 	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
 	gumLookAt(t,eye,center,up);
 
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
+
 	__asm__ volatile (
-		"lv.q C300.q,  0 + %0\n"
-		"lv.q C310.q, 16 + %0\n"
-		"lv.q C320.q, 32 + %0\n"
-		"lv.q C330.q, 48 + %0\n"
+		"lv.q C000.q,  0 + %0\n"
+		"lv.q C010.q, 16 + %0\n"
+		"lv.q C020.q, 32 + %0\n"
+		"lv.q C030.q, 48 + %0\n"
 		"vmmul.q M100, M300, M000\n"
 		"vmmov.q M300, M100\n"
 	: : "m"(*t) );
@@ -300,6 +344,8 @@ void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* u
 #ifdef F_sceGumMatrixMode_vfpu
 void sceGumMatrixMode(int mode)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, 0);
+
 	__asm__ volatile (
 		"sv.q C300,  0 + %0\n"
 		"sv.q C310, 16 + %0\n"
@@ -326,6 +372,8 @@ void sceGumMatrixMode(int mode)
 #ifdef F_sceGumMultMatrix_vfpu
 void sceGumMultMatrix(const ScePspFMatrix4* m)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
+
 	__asm__ volatile (
 		"ulv.q C000,  0 + %0\n"
 		"ulv.q C010, 16 + %0\n"
@@ -354,6 +402,8 @@ void sceGumOrtho(float left, float right, float bottom, float top, float near, f
 	t->z.z = -2.0f / dz;
 	t->w.z = -(far + near) / dz;
 	t->w.w = 1.0f;
+
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
 
 	__asm__ volatile (
 		"ulv.q C000,  0 + %0\n"
@@ -384,6 +434,8 @@ void sceGumPerspective(float fovy, float aspect, float near, float far)
 	t->z.w = -1.0f;
 	t->w.w = 0.0f;
 
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
+
 	__asm__ volatile (
 		"ulv.q C000,  0 + %0\n"
 		"ulv.q C010, 16 + %0\n"
@@ -401,6 +453,9 @@ void sceGumPerspective(float fovy, float aspect, float near, float far)
 void sceGumPopMatrix(void)
 {
 	ScePspFMatrix4* m = --gum_current_matrix;
+
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, 0);
+
 	__asm__ volatile (
 		"lv.q C300.q,  0 + %0\n"
 		"lv.q C310.q, 16 + %0\n"
@@ -416,6 +471,9 @@ void sceGumPopMatrix(void)
 void sceGumPushMatrix(void)
 {
 	ScePspFMatrix4* m = gum_current_matrix++;
+
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, 0);
+
 	__asm__ volatile (
 		"sv.q C300,  0 + %0\n"
 		"sv.q C310, 16 + %0\n"
@@ -428,6 +486,8 @@ void sceGumPushMatrix(void)
 #ifdef F_sceGumRotateX_vfpu
 void sceGumRotateX(float angle)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
+
 	__asm__ volatile (
 		"vmidt.q M000\n"
 		"mtv %0, S100\n"
@@ -446,6 +506,8 @@ void sceGumRotateX(float angle)
 #ifdef F_sceGumRotateY_vfpu
 void sceGumRotateY(float angle)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
+
 	__asm__ volatile (
 		"vmidt.q M000\n"
 		"mtv %0, S100\n"
@@ -464,6 +526,8 @@ void sceGumRotateY(float angle)
 #ifdef F_sceGumRotateZ_vfpu
 void sceGumRotateZ(float angle)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
+
 	__asm volatile (
 		"vmidt.q M000\n"
 		"mtv %0, S100\n"
@@ -482,6 +546,8 @@ void sceGumRotateZ(float angle)
 #ifdef F_sceGumScale_vfpu
 void sceGumScale(const ScePspFVector3* v)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0);
+
 	__asm__ volatile (
 		"ulv.q C000, %0\n"
 		"vscl.t C300, C300, S000\n"
@@ -496,6 +562,8 @@ void sceGumScale(const ScePspFVector3* v)
 #ifdef F_sceGumStoreMatrix_vfpu
 void sceGumStoreMatrix(ScePspFMatrix4* m)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, 0);
+
 	__asm__ volatile (
 		"usv.q C300,  0 + %0\n"
 		"usv.q C310, 16 + %0\n"
@@ -508,6 +576,8 @@ void sceGumStoreMatrix(ScePspFMatrix4* m)
 #ifdef F_sceGumTranslate_vfpu
 void sceGumTranslate(const ScePspFVector3* v)
 {
+	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
+
 	__asm__ volatile (
 		"vmidt.q M000\n"
 		"ulv.q   C100, %0\n"
@@ -528,6 +598,8 @@ void sceGumUpdateMatrix(void)
 	// flush dirty matrix from vfpu
 	if (gum_current_matrix_update)
 	{
+		pspvfpu_use_matrices(gum_vfpucontext, VMAT3, 0);
+
 		__asm__ volatile (
 			"sv.q C300,  0 + %0\n"
 			"sv.q C310, 16 + %0\n"

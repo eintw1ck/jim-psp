@@ -11,6 +11,12 @@
 #include <string.h>
 #include <math.h>
 
+#ifdef F_gumInit
+void gumInit(void)
+{
+}
+#endif
+
 #ifdef F_gumCrossProduct
 void gumCrossProduct(ScePspFVector3* r, const ScePspFVector3* a, const ScePspFVector3* b)
 {

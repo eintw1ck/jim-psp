@@ -6,7 +6,8 @@ CCAS = $(CC)
 AR = @PSP_AR@
 RANLIB = @PSP_RANLIB@
 
-INCLUDES = -I$(top_srcdir)/src/base -I$(top_srcdir)/src/kernel -I$(top_srcdir)/src/display -I$(top_srcdir)/src/ge -I$(top_srcdir)/src/user
+INCLUDES = -I$(top_srcdir)/src/base -I$(top_srcdir)/src/kernel -I$(top_srcdir)/src/display \
+	-I$(top_srcdir)/src/ge -I$(top_srcdir)/src/user -I$(top_srcdir)/src/vfpu
 CFLAGS =  @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) $(INCLUDES)
 
@@ -29,7 +30,7 @@ PSPGUM_FPU_OBJS =     sceGumLoadIdentity.o sceGumLoadMatrix.o sceGumMatrixMode.o
                       sceGumStoreMatrix.o sceGumLookAt.o sceGumRotateX.o sceGumRotateY.o \
                       sceGumRotateZ.o sceGumFullInverse.o sceGumFastInverse.o sceGumBeginObject.o \
                       sceGumEndObject.o gumScale.o gumTranslate.o gumLoadIdentity.o gumFastInverse.o \
-                      gumMultMatrix.o gumRotateX.o gumRotateY.o gumRotateZ.o
+                      gumMultMatrix.o gumRotateX.o gumRotateY.o gumRotateZ.o gumInit.o
 
 PSPGUM_VFPU_OBJS =    sceGumLoadIdentity_vfpu.o sceGumLoadMatrix_vfpu.o sceGumMatrixMode_vfpu.o \
                       sceGumMultMatrix_vfpu.o sceGumOrtho_vfpu.o sceGumPerspective_vfpu.o \
@@ -39,7 +40,8 @@ PSPGUM_VFPU_OBJS =    sceGumLoadIdentity_vfpu.o sceGumLoadMatrix_vfpu.o sceGumMa
                       sceGumRotateZ_vfpu.o sceGumFullInverse_vfpu.o sceGumFastInverse_vfpu.o \
                       sceGumBeginObject_vfpu.o sceGumEndObject_vfpu.o gumScale_vfpu.o \
                       gumTranslate_vfpu.o gumLoadIdentity_vfpu.o gumFastInverse_vfpu.o \
-                      gumMultMatrix_vfpu.o gumRotateX_vfpu.o gumRotateY_vfpu.o gumRotateZ_vfpu.o
+                      gumMultMatrix_vfpu.o gumRotateX_vfpu.o gumRotateY_vfpu.o gumRotateZ_vfpu.o \
+		      gumInit_vfpu.o
 
 libpspgum_a_SOURCES = gumInternal.c pspgum.c
 libpspgum_a_LIBADD = $(PSPGUM_FPU_OBJS) $(PSPGUM_SHARED_OBJS)
