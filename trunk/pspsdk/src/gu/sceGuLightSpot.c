@@ -8,14 +8,14 @@
 
 #include "guInternal.h"
 
-void sceGuLightSpot(int index, const ScePspFVector3* direction, float f12, float f13) // inner & outer cone?
+void sceGuLightSpot(int light, const ScePspFVector3* direction, float exponent, float cutoff)
 {
-	GuLightSettings* settings = &light_settings[index];
+	GuLightSettings* settings = &light_settings[light];
 
-	sendCommandf(settings->row3[2],f12);
-	sendCommandf(settings->row3[3],f13);
+	sendCommandf(settings->exponent,exponent);
+	sendCommandf(settings->cutoff,cutoff);
 
-	sendCommandf(settings->row1[1],direction->x);
-	sendCommandf(settings->row1[2],direction->y);
-	sendCommandf(settings->row1[3],direction->z);
+	sendCommandf(settings->xdir,direction->x);
+	sendCommandf(settings->ydir,direction->y);
+	sendCommandf(settings->zdir,direction->z);
 }

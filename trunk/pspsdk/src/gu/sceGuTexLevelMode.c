@@ -10,8 +10,6 @@
 
 #include <math.h>
 
-float truncf(float);
-
 void sceGuTexLevelMode(unsigned int a0, float f12)
 {
 	int offset = (int)truncf(f12 * 16.0f);

@@ -39,7 +39,7 @@ typedef struct
 	int near_plane;
 	int far_plane;
 	int depth_offset;
-	int unknown_state;
+	int fragment_2x;
 	int texture_function;
 	int texture_proj_map_mode;
 	int texture_map_mode;
@@ -64,10 +64,33 @@ typedef struct
 
 typedef struct
 {
-	unsigned char row0[4];
-	unsigned char row1[4];
-	unsigned char row2[4];
-	unsigned char row3[4];
+	/* row 0 */
+
+	unsigned char enable;	// Light enable
+	unsigned char type;	// Light type
+	unsigned char xpos;	// X position
+	unsigned char ypos;	// Y position
+
+	/* row 1 */
+
+	unsigned char zpos;	// Z position
+	unsigned char xdir;	// X direction
+	unsigned char ydir;	// Y direction
+	unsigned char zdir;	// Z direction
+
+	/* row 2 */
+
+	unsigned char ambient;	// Ambient color
+	unsigned char diffuse;	// Diffuse color
+	unsigned char specular;	// Specular color
+	unsigned char constant;	// Constant attenuation
+
+	/* row 3 */
+
+	unsigned char linear;	// Linear attenuation
+	unsigned char quadratic;// Quadratic attenuation
+	unsigned char exponent;	// Light exponent
+	unsigned char cutoff;	// Light cutoff
 } GuLightSettings;
 
 extern unsigned int gu_current_frame;

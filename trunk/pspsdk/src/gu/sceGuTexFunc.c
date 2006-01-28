@@ -13,5 +13,5 @@ void sceGuTexFunc(int tfx, int tcc)
 	GuContext* context = &gu_contexts[gu_curr_context];
 	context->texture_function = (tcc << 8) | tfx;
 
-	sendCommandi(201,((tcc << 8)|tfx)|context->unknown_state);
+	sendCommandi(201,((tcc << 8)|tfx)|context->fragment_2x);
 }

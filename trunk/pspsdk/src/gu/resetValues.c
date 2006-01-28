@@ -44,7 +44,7 @@ void resetValues()
 		context->far_plane = 1;
 
 		context->depth_offset = 0;
-		context->unknown_state = 0;
+		context->fragment_2x = 0;
 		context->texture_function = 0;
 		context->texture_proj_map_mode = 0;
 		context->texture_map_mode = 0;

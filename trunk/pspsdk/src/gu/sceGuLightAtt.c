@@ -12,7 +12,7 @@ void sceGuLightAtt(int light, float atten0, float atten1, float atten2)
 {
 	GuLightSettings* settings = &light_settings[light];
 
-	sendCommandf(settings->row2[3],atten0);
-	sendCommandf(settings->row3[0],atten1);
-	sendCommandf(settings->row3[1],atten2);
+	sendCommandf(settings->constant,atten0);
+	sendCommandf(settings->linear,atten1);
+	sendCommandf(settings->quadratic,atten2);
 }
