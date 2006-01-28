@@ -129,7 +129,7 @@ typedef struct _PspDebugRegBlock
 	u32 badvaddr;
 	u32 cause;
 	u32 epc;
-	u32 fpr[32];
+	float fpr[32];
 	u32 fsr;
 	u32 fir;
 	u32 frame_ptr;
