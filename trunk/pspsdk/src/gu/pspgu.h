@@ -23,6 +23,7 @@ extern "C" {
 /* PI, float-sized */
 #define GU_PI			(3.141593f)
 
+/* Boolean values for convenience */
 #define GU_FALSE		(0)
 #define GU_TRUE			(1)
 
@@ -51,8 +52,8 @@ extern "C" {
 #define GU_LIGHT1		(12)
 #define GU_LIGHT2		(13)
 #define GU_LIGHT3		(14)
-#define GU_UNKNOWN_15		(15)
-#define GU_UNKNOWN_16		(16)
+#define GU_LINE_SMOOTH		(15)
+#define GU_PATCH_CULL_FACE	(16)
 #define GU_COLOR_TEST		(17)
 #define GU_COLOR_LOGIC_OP	(18)
 #define GU_FACE_NORMAL_REVERSE	(19)
@@ -192,6 +193,7 @@ extern "C" {
 #define GU_COLOR_BUFFER_BIT	(1)
 #define GU_STENCIL_BUFFER_BIT	(2)
 #define GU_DEPTH_BUFFER_BIT	(4)
+#define GU_FAST_CLEAR_BIT	(16)
 
 /* Texture Effect */
 #define GU_TFX_MODULATE		(0)
@@ -239,6 +241,10 @@ extern "C" {
 #define GU_DIFFUSE_AND_SPECULAR	(GU_DIFFUSE|GU_SPECULAR)
 #define GU_UNKNOWN_LIGHT_COMPONENT (8)
 
+/* Light modes */
+#define GU_SINGLE_COLOR		(0)
+#define GU_SEPARATE_SPECULAR_COLOR (1)
+
 /* Light Type */
 #define GU_DIRECTIONAL		(0)
 #define GU_POINTLIGHT		(1)
@@ -252,6 +258,18 @@ extern "C" {
 /* List Queue */
 #define GU_TAIL			(0)
 #define GU_HEAD			(1)
+
+/* Signals */
+#define GU_CALLBACK_SIGNAL	(1)
+#define GU_CALLBACK_FINISH	(4)
+
+/* Color Macros, maps 8 bit unsigned channels into one 32-bit value */
+#define GU_ABGR(a,b,g,r)	(((a) << 24)|((b) << 16)|((g) << 8)|(r))
+#define GU_ARGB(a,r,g,b)	GU_ABGR((a),(b),(g),(r))
+#define GU_RGBA(r,g,b,a)	GU_ARGB((a),(r),(g),(b))
+
+/* Color Macro, maps floating point channels (0..1) into one 32-bit value */
+#define GU_COLOR(r,g,b,a)	GU_RGBA((u32)((r) * 255.0f),(u32)((g) * 255.0f),(u32)((b) * 255.0f),(u32)((a) * 255.0f))
 
 /** @addtogroup GU */
 /*@{*/
@@ -347,7 +365,22 @@ void sceGuDepthFunc(int function);
 void sceGuDepthMask(int mask);
 
 void sceGuDepthOffset(unsigned int offset);
+
+/**
+  * Set which range to use for depth calculations.
+  *
+  * @note The depth buffer is inversed, and takes values from 65535 to 0.
+  *
+  * Example: Use the entire depth-range for calculations:
+  * @code
+  * sceGuDepthRange(65535,0);
+  * @endcode
+  *
+  * @param near - Value to use for the near plane
+  * @param far - Value to use for the far plane
+**/
 void sceGuDepthRange(int near, int far);
+
 void sceGuFog(float near, float far, unsigned int color);
 
 /**
@@ -366,8 +399,31 @@ void sceGuTerm(void);
 
 void sceGuBreak(int a0);
 void sceGuContinue(void);
-void* sceGuSetCallback(int index, void (*callback)(int));
-void sceGuSignal(int a0, int a1);
+
+/**
+  * Setup signal handler
+  *
+  * Available signals are:
+  *   - GU_CALLBACK_SIGNAL
+  *   - GU_CALLBACK_FINISH
+  *
+  * @param signal - Signal index to install a handler for
+  * @param callback - Callback to call when signal index is triggered
+  * @returns The old callback handler
+**/
+void* sceGuSetCallback(int signal, void (*callback)(int));
+
+/**
+  * Trigger signal to call code from the command stream
+  *
+  * Available signals are:
+  *   - GU_CALLBACK_SIGNAL
+  *   - GU_CALLBACK_FINISH
+  *
+  * @param signal - Signal index to trigger
+  * @param argument - Argument to pass to the signal-handler
+**/
+void sceGuSignal(int signal, int argument);
 
 /**
   * Send raw float-command to the GE
@@ -391,6 +447,10 @@ void sceGuSendCommandi(int cmd, int argument);
 
 /**
   * Allocate memory on the current display list for temporary storage
+  *
+  * @note This function is NOT for permanent memory allocation, the
+  * memory will be invalid as soon as you start filling the same display
+  * list again.
   *
   * @param size - How much memory to allocate
   * @returns Memory-block ready for use
@@ -432,6 +492,12 @@ int sceGuFinish(void);
 **/
 void sceGuCallList(const void* list);
 
+/**
+  * Set wether to use stack-based calls or signals to handle execution of called lists.
+  *
+  * @param mode - GU_TRUE(1) to enable signals, GU_FALSE(0) to disable signals and use
+  * normal calls instead.
+**/
 void sceGuCallMode(int mode);
 
 /**
@@ -519,7 +585,7 @@ int sceGuSync(int mode, int a1);
   *   - GU_TRANSFORM_2D - Coordinate is passed directly to the rasterizer
   *   - GU_TRANSFORM_3D - Coordinate is transformed before passed to rasterizer
   *
-  * NOTE: Every vertex must align to 32 bits, which means that you HAVE to pad if it does not add up!
+  * @note Every vertex must align to 32 bits, which means that you HAVE to pad if it does not add up!
   *
   * Vertex order:
   * [for vertices(1-8)]
@@ -685,9 +751,29 @@ void sceGuLightAtt(int light, float atten0, float atten1, float atten2);
 **/
 void sceGuLightColor(int light, int component, unsigned int color);
 
+/**
+  * Set light mode
+  *
+  * Available light modes are:
+  *   - GU_SINGLE_COLOR
+  *   - GU_SEPARATE_SPECULAR_COLOR
+  *
+  * Separate specular colors are used to interpolate the specular component
+  * independently, so that it can be added to the fragment after the texture color.
+  *
+  * @param mode - Light mode to use
+**/
 void sceGuLightMode(int mode);
 
-void sceGuLightSpot(int index, const ScePspFVector3* direction, float f12, float f13);
+/**
+  * Set spotlight parameters
+  *
+  * @param light - Light index
+  * @param direction - Spotlight direction
+  * @param exponent - Spotlight exponent
+  * @param cutoff - Spotlight cutoff angle (in radians)
+**/
+void sceGuLightSpot(int light, const ScePspFVector3* direction, float exponent, float cutoff);
 
 /**
   * Clear current drawbuffer
@@ -947,7 +1033,7 @@ void sceGuShadeModel(int mode);
 /**
   * Image transfer using the GE
   *
-  * NOTE: Data must be aligned to 1 quad word (16 bytes)
+  * @note Data must be aligned to 1 quad word (16 bytes)
   *
   * @par Example: Copy a fullscreen 32-bit image from RAM to VRAM
   * @code
@@ -1041,7 +1127,7 @@ void sceGuTexFunc(int tfx, int tcc);
   * Textures may reside in main RAM, but it has a huge speed-penalty. Swizzle textures
   * to get maximum speed.
   *
-  * NOTE: Data must be aligned to 1 quad word (16 bytes)
+  * @note Data must be aligned to 1 quad word (16 bytes)
   *
   * @param mipmap - Mipmap level
   * @param width - Width of texture (must be a power of 2)
@@ -1083,6 +1169,16 @@ void sceGuTexMapMode(int mode, unsigned int a1, unsigned int a2);
   * @param swizzle - GU_TRUE(1) to swizzle texture-reads
 **/
 void sceGuTexMode(int tpsm, int maxmips, int a2, int swizzle);
+
+/**
+  * Set texture offset
+  *
+  * @note Only used by the 3D T&L pipe, renders done with GU_TRANSFORM_2D are
+  * not affected by this.
+  *
+  * @param u - Offset to add to the U coordinate
+  * @param v - Offset to add to the V coordinate
+**/
 void sceGuTexOffset(float u, float v);
 
 /**
@@ -1098,8 +1194,24 @@ void sceGuTexOffset(float u, float v);
 **/
 void sceGuTexProjMapMode(int mode);
 
+/**
+  * Set texture scale
+  *
+  * @note Only used by the 3D T&L pipe, renders ton with GU_TRANSFORM_2D are
+  * not affected by this.
+  *
+  * @param u - Scalar to multiply U coordinate with
+  * @param v - Scalar to multiply V coordinate with
+**/
 void sceGuTexScale(float u, float v);
 void sceGuTexSlope(float slope);
+
+/**
+  * Synchronize rendering pipeline with image upload.
+  *
+  * This will stall the rendering pipeline until the current image upload initiated by
+  * sceGuCopyImage() has completed.
+**/
 void sceGuTexSync();
 
 /**
@@ -1117,7 +1229,7 @@ void sceGuTexWrap(int u, int v);
 /**
   * Upload CLUT (Color Lookup Table)
   *
-  * NOTE: Data must be aligned to 1 quad word (16 bytes)
+  * @note Data must be aligned to 1 quad word (16 bytes)
   *
   * @param num_blocks - How many blocks of 8 entries to upload (32*8 is 256 colors)
   * @param cbp - Pointer to palette (16 byte aligned)
@@ -1182,11 +1294,21 @@ void sceGuScissor(int x, int y, int w, int h);
 **/
 void sceGuViewport(int cx, int cy, int width, int height);
 
-/* patches */
+/**
+  * Draw bezier surface
+  *
+  * @param vtype - Vertex type, look at sceGuDrawArray() for vertex definition
+  * @param ucount - Number of vertices used in the U direction
+  * @param vcount - Number of vertices used in the V direction
+  * @param indices - Pointer to index buffer
+  * @param vertices - Pointer to vertex buffer
+**/
 void sceGuDrawBezier(int vtype, int ucount, int vcount, const void* indices, const void* vertices);
+
 void sceGuPatchDivide(unsigned int a0, unsigned int a1);
 void sceGuPatchFrontFace(unsigned int a0);
 void sceGuPatchPrim(unsigned int a0);
+
 void sceGuDrawSpline(int vtype, int ucount, int vcount, int uedge, int vedge, const void* indices, const void* vertices);
 
 /**
@@ -1232,8 +1354,6 @@ void sceGuBoneMatrix(unsigned int index, const ScePspFMatrix4* matrix);
   * @param weight - Weight to set
 **/
 void sceGuMorphWeight(int index, float weight);
-
-void sceGuSpriteMode(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3);
 
 void sceGuDrawArrayN(int primitive_type, int vertex_type, int count, int a3, const void* indices, const void* vertices);
 
