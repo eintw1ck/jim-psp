@@ -89,8 +89,8 @@ Dec Hex Name        Description
 12  0C  END         Stop execution
 
 14  0E  SIGNAL      Raise Signal Interrupt
-                        0-15: Signal index to trigger
-                        16-23: Argument to pass to signal handler
+                        0-15: Argument to pass to signal handler
+                        16-23: Signal index to trigger
 
 15  0F  FINISH      Complete rendering
 
