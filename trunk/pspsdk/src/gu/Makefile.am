@@ -29,7 +29,7 @@ libpspgu_a_SOURCES = callbackFin.c callbackSig.c guInternal.c resetValues.c sceG
 	sceGuMaterial.c sceGuModelColor.c sceGuMorphWeight.c sceGuOffset.c sceGuPatchDivide.c sceGuPatchFrontFace.c \
 	sceGuPatchPrim.c sceGuPixelMask.c sceGuScissor.c sceGuSendCommandf.c sceGuSendCommandi.c sceGuSendList.c \
 	sceGuSetAllStatus.c sceGuSetCallback.c sceGuSetDither.c sceGuSetMatrix.c sceGuSetStatus.c sceGuShadeModel.c \
-	sceGuSignal.c sceGuSpecular.c sceGuSpriteMode.c sceGuStart.c sceGuStencilFunc.c sceGuStencilOp.c \
+	sceGuSignal.c sceGuSpecular.c sceGuStart.c sceGuStencilFunc.c sceGuStencilOp.c \
 	sceGuSwapBuffers.c sceGuSync.c sceGuTerm.c sceGuTexEnvColor.c sceGuTexFilter.c sceGuTexFlush.c sceGuTexFunc.c \
 	sceGuTexImage.c sceGuTexLevelMode.c sceGuTexMapMode.c sceGuTexMode.c sceGuTexOffset.c sceGuTexProjMapMode.c \
 	sceGuTexScale.c sceGuTexSlope.c sceGuTexSync.c sceGuTexWrap.c sceGuViewport.c sendCommand.c
