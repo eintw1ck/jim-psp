@@ -8,19 +8,25 @@
 
 #include "guInternal.h"
 
-void* sceGuSetCallback(int index, GuCallback callback)
+void* sceGuSetCallback(int signal, GuCallback callback)
 {
 	GuCallback old_callback = 0;
 
-	if (index == 1)
+	switch (signal)
 	{
-		old_callback = gu_settings.sig;
-		gu_settings.sig = callback;
-	}
-	else if (index == 4)
-	{
-		old_callback = gu_settings.fin;
-		gu_settings.fin = callback;
+		case GU_CALLBACK_SIGNAL:
+		{
+			old_callback = gu_settings.sig;
+			gu_settings.sig = callback;
+		}
+		break;
+
+		case GU_CALLBACK_FINISH:
+		{
+			old_callback = gu_settings.fin;
+			gu_settings.fin = callback;
+		}
+		break;
 	}
 
 	return old_callback;

@@ -8,13 +8,16 @@
 
 #include "guInternal.h"
 
-void sceGuSignal(int a0, int a1)
+void sceGuSignal(int signal, int argument)
 {
-	sendCommandi(14,((a0 & 0xff) << 16) | (a1 & 0xffff));
+	sendCommandi(14,((signal & 0xff) << 16) | (argument & 0xffff));
 	sendCommandi(12,0);
 
-	if (a0 == 3)
+	if (signal == 3)
+	{
 		sendCommandi(15,0);
+		sendCommandi(12,0);
+	}
 
 	sendCommandiStall(0,0);
 }
