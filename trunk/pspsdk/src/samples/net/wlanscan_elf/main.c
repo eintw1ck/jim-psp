@@ -6,6 +6,7 @@
  * main.c - ELF Based WLAN Scanner
  *
  * Copyright (c) 2005 James F <tyranid@gmail.com>
+ *                    adresd
  *
  * $Id$
  * $HeadURL$
@@ -68,11 +69,26 @@ const char *caps[8] = {
 	"IBSS, ",
 	"CF Pollable, ",
 	"CF Pollreq,  ",
-	"Privacy, ",
+	"Privacy (WEP), ",
 	"Short Preamble, ",
 	"PBCC, ",
 	"Channel Agility, "
 };
+
+/* Print the scan summary data to stdout */
+void print_apsum(struct ScanData *pData)
+{
+	char name[33];
+	int  loop;
+	strncpy(name, pData->name, 32);
+	name[32] = 0;
+	printf("RSSI:%02d  ", pData->rssi);
+	if (pData->capabilities & (1 << 4))
+		printf(" WEP! ");
+	else
+		printf("NO WEP");
+	printf("   SSID: %s\n", name);
+}
 
 /* Print the scan data to stdout */
 void print_ap(struct ScanData *pData)
@@ -158,7 +174,7 @@ struct ScanData *do_scan(int *count)
 			type[0x9+i] = i;
 		}
 		type[0x3C] = 1;
-		*((u32*) (type + 0x44)) = 6;    /* Minimum strength */
+		*((u32*) (type + 0x44)) = 1;    //6/* Minimum strength */
 		*((u32*) (type + 0x48)) = 100;  /* Maximum strength */
 		size = sizeof(scan_data);
 		unk  = 0;
@@ -225,32 +241,57 @@ void start_ui(struct ScanData *pScan, int count)
 	unsigned int last = 0;
 	SceCtrlData pad;
 	int ap = 0;
+	int loop = 1;
+	int vcount = 0;
 
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
-	while(1)
+	while(loop)
 	{
 		pspDebugScreenClear();
 		printf("Scan found %d access point(s)\n\n", count);
-		printf("Displaying access point %d\n", ap);
-		print_ap(&pScan[ap]);
-		printf("\nPress O to cycle through the access points\n");
 
-		while(1)
+		printf("Press X to rescan, SQUARE to quit\n");
+
+		if (count == 0) printf("\nAuto re-scan in 30 seconds\n");
+		else 			printf("Press O to view/cycle through the access points\n\n");
+		
+
+		if (ap == 0)
+		{
+			int x;
+			for (x=0;x<count;x++)
+			{
+				print_apsum(&pScan[x]);
+			}
+		}
+		else
+		{
+			printf("\nDisplaying access point %d:\n\n", ap);
+			print_ap(&pScan[ap-1]);
+		}
+		
+		while(loop)
 		{
 			unsigned int mask;
-
+	
 			sceCtrlReadBufferPositive(&pad, 1);
 			mask = pad.Buttons & ~last;
 			last = pad.Buttons;
-
 			if(mask & PSP_CTRL_CIRCLE)
 			{
-				ap = (ap + 1) % count;
+				ap = (ap + 1) % (count+1);
 				break;
 			}
-
+			if(mask & PSP_CTRL_CROSS) loop = 0;
+			if(mask & PSP_CTRL_SQUARE) sceKernelExitGame();
 			sceDisplayWaitVblankStart();
+			if (count == 0)
+			{
+				if ((vcount % 60) == 0) printf(".");
+				vcount++;
+				if (vcount > (30*60)) loop = 0; // auto-rescan
+			}
 		}
 	}
 }
@@ -287,13 +328,12 @@ int net_thread(SceSize args, void *argp)
 	}
 
 	pScan = do_scan(&count);
-	if(pScan != NULL)
+	while (pScan != NULL)
 	{
 		start_ui(pScan, count);
-	}
-	else
-	{
-		printf("No access points\n");
+
+		printf("\n\nPlease wait, performing WLAN AP scan...\n");
+		pScan = do_scan(&count);
 	}
 
 error:
