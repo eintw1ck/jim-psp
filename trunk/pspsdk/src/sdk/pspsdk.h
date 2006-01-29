@@ -273,6 +273,11 @@ unsigned int pspSdkSetK1(unsigned int k1);
  */
 unsigned int pspSdkGetK1(void);
 
+/**
+ * Disable the CPUs FPU exceptions
+ */
+void pspSdkDisableFPUExceptions(void);
+
 /*@}*/
 
 #ifdef __cplusplus

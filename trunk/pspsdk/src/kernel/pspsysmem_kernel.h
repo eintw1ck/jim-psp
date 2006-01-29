@@ -67,6 +67,22 @@ SceSize sceKernelPartitionTotalFreeMemSize(int pid);
  */
 SceSize sceKernelPartitionMaxFreeMemSize(int pid);
 
+/**
+ * Get the kernel to dump the internal memory table to Kprintf
+ */
+void sceKernelSysMemDump(void);
+
+/**
+ * Dump the list of memory blocks
+ */
+void sceKernelSysMemDumpBlock(void);
+
+/**
+ * Dump the tail blocks
+ */
+void sceKernelSysMemDumpTail(void);
+
+
 #ifdef __cplusplus
 }
 #endif
