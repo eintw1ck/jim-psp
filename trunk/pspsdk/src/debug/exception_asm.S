@@ -126,9 +126,9 @@ _pspDebugExceptionHandler:
 	sw		$0, REG_GPR_0($v0)
 	sw		$1, REG_GPR_1($v0)
 
-	cfc0	$1, $4
+	cfc0	$1, $4					# Get original v0
 	sw		$1, REG_GPR_2($v0)
-	cfc0 	$1, $5
+	cfc0 	$1, $5					# Get original v1
 	sw		$1, REG_GPR_3($v0)
 	sw		$4, REG_GPR_4($v0)
 	sw		$5, REG_GPR_5($v0)
@@ -214,6 +214,7 @@ _pspDebugExceptionHandler:
 	sw			$t0, REG_FSR($v0)
 	cfc1		$t0, FIR
 	sw			$t0, REG_FIR($v0)
+	ctc1		$0, FSR			# Clear any cause flags
 
 # Jump target for ignore cop1
 1:
@@ -279,6 +280,8 @@ _pspDebugExceptionResume:
 	lwc1		$31, REG_FPR_31($v0)
 
 	lw			$t0, REG_FSR($v0)
+	li			$t1, 0xFFFC0F83
+	and			$t0, $t0, $t1	# Clear the cause and flags before ret
 	ctc1 		$t0, FSR
 1:
 

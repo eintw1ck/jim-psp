@@ -44,16 +44,16 @@ static const unsigned char regName[32][5] =
 };
 
 /* Taken from the ps2, might not be 100% correct */
-static const char *codeTxt[32] = 
+static const char *codeTxt[32] =
 {
-    "Interrupt", "TLB modification", "TLB load/inst fetch", "TLB store",
-    "Address load/inst fetch", "Address store", "Bus error (instr)", 
-    "Bus error (data)", "Syscall", "Breakpoint", "Reserved instruction", 
-    "Coprocessor unusable", "Arithmetic overflow", "Unknown 14",
-	"Unknown 15", "Unknown 16", "Unknown 17", "Unknown 18", "Unknown 19",
-	"Unknown 20", "Unknown 21", "Unknown 22", "Unknown 23", "Unknown 24",
-	"Unknown 25", "Unknown 26", "Unknown 27", "Unknown 28", "Unknown 29",
-	"Unknown 31"
+	"Interrupt", "TLB modification", "TLB load/inst fetch", "TLB store",
+	"Address load/inst fetch", "Address store", "Bus error (instr)",
+	"Bus error (data)", "Syscall", "Breakpoint", "Reserved instruction",
+	"Coprocessor unusable", "Arithmetic overflow", "Unknown 13", "Unknown 14",
+	"FPU Exception", "Unknown 16", "Unknown 17", "Unknown 18",
+	"Unknown 20", "Unknown 21", "Unknown 22", "Unknown 23",
+	"Unknown 24", "Unknown 25", "Unknown 26", "Unknown 27",
+	"Unknown 28", "Unknown 29", "Unknown 30", "Unknown 31"
 };
 
 /* Dump an exception to screen */
