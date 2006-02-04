@@ -4,6 +4,7 @@ SUBDIRS = \
 	ctrl \
 	debug \
 	display \
+	fpu \
 	ge \
 	gu \
 	gum \
