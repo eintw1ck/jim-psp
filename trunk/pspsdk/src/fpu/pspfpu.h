@@ -174,7 +174,7 @@ uint32_t pspfpu_get_condbits(void);
 /**
  * Clear the condition bits
  *
- * @param clear - Bitmask of the bits to clear, one or more of ::FpuExceptions
+ * @param clear - Bitmask of the bits to clear
  */
 void pspfpu_clear_condbits(uint32_t clear);
 
