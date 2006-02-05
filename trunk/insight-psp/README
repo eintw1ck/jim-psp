@@ -1,26 +1,16 @@
 psp-insight.
 
-These are a couple of patches for Redhat's Insight debugger, basically
-gdb with a tk gui. There are two patches, one is for the latest official
-release of insight (6.1) the other targetted against the latest snapshot
-at time of writing (6.30.50.20050912). Hopefully the snapshot patch
-should continue to work for a fair period as most of the patching is done 
-in libopcode/libbfd which by now is relatively stable.
-
-NOTE: Seems when built for mips insight 6.1s register window craps out
-locking up the application, unless you just cannot get the CVS one working
-dont use 6.1.
+This is a patch for the Redhat Insight GDB Debugger version 6.4. It provides
+a simple GUI to help make GDB just that little bit easier to use.
 
 Usage:
 
-Download either the stable 6.1 or the latest CVS snapshot from the download
-page at http://sources.redhat.com/insight
+Download the stable Insight 6.4 from http://sources.redhat.com/insight
 
-Extract the source. In the source dir type patch -p1 < ../insight-6.1.patch
-(replacing the patch name with the CVS one if using a snapshot). Ensure it
-has patched correctly.
+Extract the source. In the source dir type patch -p1 < ../insight-6.4.patch.
+No errors should be printed during this operation.
 
-Finally type configure --prefix=/usr/local/pspdev --target=psp, then make
+Finally type ./configure --prefix=/usr/local/pspdev --target=psp, then make
 and make install to build and install it.
 
 Have fun.
