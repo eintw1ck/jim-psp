@@ -18,10 +18,10 @@ SECTIONS
   .gnu.version    : { *(.gnu.version) }
   .gnu.version_d  : { *(.gnu.version_d) }
   .gnu.version_r  : { *(.gnu.version_r) }
-  .rel.init       : { *(.rel.init) }
-  .rela.init      : { *(.rela.init) }
   .rel.text       : { *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*) }
   .rela.text      : { *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*) }
+  .rel.init       : { *(.rel.init) }
+  .rela.init      : { *(.rela.init) }
   .rel.fini       : { *(.rel.fini) }
   .rela.fini      : { *(.rela.fini) }
   /* PSP-specific relocations. */
@@ -64,11 +64,6 @@ SECTIONS
   .rela.bss       : { *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*) }
   .rel.plt        : { *(.rel.plt) }
   .rela.plt       : { *(.rela.plt) }
-  .init           :
-  {
-    KEEP (*(.init))
-  } =0
-  .plt            : { *(.plt) }
   .text           :
   {
     _ftext = . ;
@@ -78,6 +73,11 @@ SECTIONS
     *(.gnu.warning)
     *(.mips16.fn.*) *(.mips16.call.*)
   } =0
+  .init           :
+  {
+    KEEP (*(.init))
+  } =0
+  .plt            : { *(.plt) }
   .fini           :
   {
     KEEP (*(.fini))
