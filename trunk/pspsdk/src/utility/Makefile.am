@@ -18,7 +18,8 @@ libpsputilityinclude_HEADERS = psputility.h \
                                psputility_netconf.h \
                                psputility_netparam.h \
                                psputility_savedata.h \
-                               psputility_sysparam.h
+                               psputility_sysparam.h \
+                               psputility_osk.h
 
 lib_LIBRARIES = libpsputility.a
 libpsputility_a_SOURCES = sceUtility.S

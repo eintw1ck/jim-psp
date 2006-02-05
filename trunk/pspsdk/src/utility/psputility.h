@@ -17,6 +17,7 @@
 #include <psputility_netparam.h>
 #include <psputility_savedata.h>
 #include <psputility_sysparam.h>
+#include <psputility_osk.h>
 
 #define PSP_UTILITY_ACCEPT_CIRCLE 0
 #define PSP_UTILITY_ACCEPT_CROSS  1
