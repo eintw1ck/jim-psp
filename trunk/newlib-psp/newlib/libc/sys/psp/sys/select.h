@@ -34,6 +34,10 @@
 #ifndef _SYS_SELECT_H_
 #define	_SYS_SELECT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <sys/fd_set.h>
 #include <sys/time.h>
 
@@ -42,5 +46,9 @@ int	sceNetInetSelect(int n, fd_set *readfds, fd_set *writefds,
 
 int	select(int n, fd_set *readfds, fd_set *writefds,
 	    fd_set *exceptfds, struct timeval *timeout);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !_SYS_SELECT_H_ */

@@ -804,7 +804,7 @@ diff -burN newlib-1.13.0/newlib/libc/include/sys/config.h newlib-psp/newlib/libc
  #undef INT_MAX
 diff -burN newlib-1.13.0/newlib/libc/include/sys/types.h newlib-psp/newlib/libc/include/sys/types.h
 --- newlib-1.13.0/newlib/libc/include/sys/types.h	2003-07-02 21:32:07.000000000 +0100
-+++ newlib-psp/newlib/libc/include/sys/types.h	2006-02-06 23:17:07.000000000 +0000
++++ newlib-psp/newlib/libc/include/sys/types.h	2006-02-07 00:35:00.000000000 +0000
 @@ -188,52 +188,6 @@
  
  typedef unsigned short nlink_t;
@@ -858,6 +858,16 @@ diff -burN newlib-1.13.0/newlib/libc/include/sys/types.h newlib-psp/newlib/libc/
  #undef __MS_types__
  #undef _ST_INT32
  
+@@ -259,6 +213,9 @@
+ 
+ #include <sys/features.h>
+ 
++/* Include fd_set and FD_SET */
++#include <sys/select.h>
++
+ 
+ /* Cygwin will probably never have full posix compliance due to little things
+  * like an inability to set the stackaddress. Cygwin is also using void *  
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/aclocal.m4 newlib-psp/newlib/libc/sys/psp/aclocal.m4
 --- newlib-1.13.0/newlib/libc/sys/psp/aclocal.m4	1970-01-01 01:00:00.000000000 +0100
 +++ newlib-psp/newlib/libc/sys/psp/aclocal.m4	2006-02-06 23:17:50.000000000 +0000
@@ -6585,10 +6595,15 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/fd_set.h newlib-psp/newlib/libc
 +#define	FD_ZERO(p)	(void)__builtin_memset((p), 0, sizeof(*(p)))
 +
 +#endif /* _SYS_FD_SET_H_ */
+diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/ioctl.h newlib-psp/newlib/libc/sys/psp/sys/ioctl.h
+--- newlib-1.13.0/newlib/libc/sys/psp/sys/ioctl.h	1970-01-01 01:00:00.000000000 +0100
++++ newlib-psp/newlib/libc/sys/psp/sys/ioctl.h	2006-02-07 19:52:30.000000000 +0000
+@@ -0,0 +1 @@
++/* Empty file, here for compatibility */
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/select.h newlib-psp/newlib/libc/sys/psp/sys/select.h
 --- newlib-1.13.0/newlib/libc/sys/psp/sys/select.h	1970-01-01 01:00:00.000000000 +0100
-+++ newlib-psp/newlib/libc/sys/psp/sys/select.h	2006-02-06 23:17:50.000000000 +0000
-@@ -0,0 +1,46 @@
++++ newlib-psp/newlib/libc/sys/psp/sys/select.h	2006-02-07 19:56:25.000000000 +0000
+@@ -0,0 +1,54 @@
 +/*	$NetBSD: select.h,v 1.24 2005/05/22 12:44:24 kleink Exp $	*/
 +
 +/*-
@@ -6625,6 +6640,10 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/select.h newlib-psp/newlib/libc
 +#ifndef _SYS_SELECT_H_
 +#define	_SYS_SELECT_H_
 +
++#ifdef __cplusplus
++extern "C" {
++#endif
++
 +#include <sys/fd_set.h>
 +#include <sys/time.h>
 +
@@ -6633,6 +6652,10 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/select.h newlib-psp/newlib/libc
 +
 +int	select(int n, fd_set *readfds, fd_set *writefds,
 +	    fd_set *exceptfds, struct timeval *timeout);
++
++#ifdef __cplusplus
++}
++#endif
 +
 +#endif /* !_SYS_SELECT_H_ */
 diff -burN newlib-1.13.0/newlib/libc/sys/psp/sys/socket.h newlib-psp/newlib/libc/sys/psp/sys/socket.h
