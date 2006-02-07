@@ -57,6 +57,7 @@ SAMPLES = \
 	savedata/encrypt \
 	template/elf_template \
 	template/prx_template \
+	template/lib_template \
 	usb/storage \
 	utility/netconf \
 	utility/msgdialog \
