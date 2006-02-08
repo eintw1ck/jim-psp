@@ -37,10 +37,10 @@ static struct pspvfpu_context *users[NMAT];
 static void save_matrix(struct pspvfpu_context *c, int mat)
 {
 #define SV(N)					\
-	asm("sv.q	c"#N"00,  0 + %0\n"	\
-	    "sv.q	c"#N"10, 16 + %0\n"	\
-	    "sv.q	c"#N"20, 32 + %0\n"	\
-	    "sv.q	c"#N"30, 48 + %0\n"	\
+	asm("sv.q	c"#N"00,  0 + %0, wt\n"	\
+	    "sv.q	c"#N"10, 16 + %0, wt\n"	\
+	    "sv.q	c"#N"20, 32 + %0, wt\n"	\
+	    "sv.q	c"#N"30, 48 + %0, wt\n"	\
 	    : "=m" (c->fpregs[N * 4*4])		\
 	    : : "memory")
 
