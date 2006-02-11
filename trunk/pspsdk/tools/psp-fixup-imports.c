@@ -405,17 +405,18 @@ void free_data(void)
 #define MIPS_JR_31 0x03e00008
 #define MIPS_NOP   0x0
 
-void fixup_imports(void)
+int fixup_imports(void)
 {
 	unsigned int *pText;
 	unsigned int *pNid;
+	struct PspModuleImport *pLastImport = NULL;
 	int count;
 
 	/* First let's check the sizes are correct */
 	if(g_stubtext->iSize != (g_nid->iSize * 2))
 	{
 		fprintf(stderr, "Error, size of text section and nid section do not match\n");
-		return;
+		return 0;
 	}
 
 	count = g_nid->iSize / 4;
@@ -451,13 +452,13 @@ void fixup_imports(void)
 			if(stub_nid != sect_nid)
 			{
 				fprintf(stderr, "Error, unmatched NIDs\n");
-				break;
+				return 0;
 			}
 
 			if((stub_addr < g_libstub->iAddr) || (stub_addr > (g_libstub->iAddr + g_libstub->iSize)) || (stub_addr & 3))
 			{
 				fprintf(stderr, "Error, invalid stub address\n");
-				break;
+				return 0;
 			}
 
 			pImport = (struct PspModuleImport *) (g_libstub->pData + (stub_addr - g_libstub->iAddr));
@@ -476,11 +477,26 @@ void fixup_imports(void)
 				SW(&pImport->nids, ((unsigned char *) pNid - g_nid->pData) + g_nid->iAddr);
 				SW(&pImport->funcs, ((unsigned char *) pText - g_stubtext->pData) + g_stubtext->iAddr);
 			}
+			else
+			{
+				if((pLastImport) && (pImport != pLastImport))
+				{
+					fprintf(stderr, "Error, could not fixup imports, stubs out of order.\n");
+					fprintf(stderr, "Ensure the SDK libraries are linked in last to correct this error\n");
+					return 0;
+				}
+			}
 
+			pLastImport = pImport;
 			func_count++;
 			SH(&pImport->func_count, func_count);
 			SW(&pText[0], MIPS_JR_31);
 			SW(&pText[1], MIPS_NOP);
+		}
+		else
+		{
+			/* Set last import to some value so we know if we have out of order stubs over a fixed stub table */
+			pLastImport = (struct PspModuleImport *) pText;
 		}
 
 		pText += 2;
@@ -502,24 +518,37 @@ void fixup_imports(void)
 		else
 		{
 			fprintf(stderr, "Error, couldn't open %s for writing\n", g_outfile);
+			return 0;
 		}
 	}
+
+	return 1;
 }
 
 int main(int argc, char **argv)
 {
+	int ret = 0;
+
 	if(process_args(argc, argv))
 	{
 		if(load_elf(g_infile))
 		{
-			fixup_imports();
+			if(!fixup_imports())
+			{
+				ret = 1;
+			}
 			free_data();
+		}
+		else
+		{
+			ret = 1;
 		}
 	}
 	else
 	{
 		print_help();
+		ret = 1;
 	}
 
-	return 0;
+	return ret;
 }
