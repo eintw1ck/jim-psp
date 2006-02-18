@@ -27,39 +27,41 @@ extern "C" {
   * Start a USB driver.
   * 
   * @param driverName - name of the USB driver to start
-  * @param unknown1 - Unknown, set to 0 
-  * @param unknown2 - Unknown, set to 0
+  * @param size - Size of arguments to pass to USB driver start
+  * @param args - Arguments to pass to USB driver start
   *
   * @return 0 on success
   */
-int sceUsbStart(const char* driverName, int unknown1, int unknown2);
+int sceUsbStart(const char* driverName, int size, void *args);
 
 /**
   * Stop a USB driver.
   * 
   * @param driverName - name of the USB driver to stop
-  * @param unknown1 - Unknown, set to 0 
-  * @param unknown2 - Unknown, set to 0
+  * @param size - Size of arguments to pass to USB driver start
+  * @param args - Arguments to pass to USB driver start
   *
   * @return 0 on success
   */
-int sceUsbStop(const char* driverName, int unknown1, int unknown2);
+int sceUsbStop(const char* driverName, int size, void *args);
 
 /**
   * Activate a USB driver.
   * 
-  * @param flag - Unknown, set to 0x1c8
+  * @param pid - Product ID for the default USB Driver
   *
   * @return 0 on success
   */
-int sceUsbActivate(u32 flag);
+int sceUsbActivate(u32 pid);
 
 /**
   * Deactivate USB driver.
   *
+  * @param pid - Product ID for the default USB driver
+  * 
   * @return 0 on success
   */
-int sceUsbDeactivate();
+int sceUsbDeactivate(u32 pid);
 
 /**
   * Get USB state
@@ -68,18 +70,16 @@ int sceUsbDeactivate();
   */
 int sceUsbGetState(void);
 
-// the following are disabled until more testing is done
-#if 0
 /**
   * Get state of a specific USB driver
   * 
   * @param driverName - name of USB driver to get status from
   *
-  * @return unknown
+  * @return 1 if the driver has been started, 2 if it is stopped
   */
 int sceUsbGetDrvState(const char* driverName);
 
-
+#if 0
 int sceUsbGetDrvList(u32 r4one, u32* r5ret, u32 r6one);
 int sceUsbWaitState(?);
 int sceUsbWaitCancel(void);

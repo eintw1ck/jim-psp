@@ -41,7 +41,7 @@ void sceKernelRegisterDebugPutchar(PspDebugPutChar func);
  * @param format - The format string.
  * @param ... - Arguments for the format string.
  */
-void Kprintf(const char *format, ...);
+void Kprintf(const char *format, ...) __attribute__((format(printf, 1, 2)));
 
 /*@}*/
 
