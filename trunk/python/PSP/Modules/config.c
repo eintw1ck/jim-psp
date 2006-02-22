@@ -27,7 +27,7 @@ extern void initcStringIO(void);
 extern void initerrno(void);
 extern void initthread(void);
 extern void initcollections(void);
-
+extern void initmd5(void);
 extern void initpspos(void);
 
 #ifdef WITH_PSP
@@ -65,6 +65,7 @@ struct _inittab _PyImport_Inittab[] = {
         {"errno", initerrno},
         {"thread", initthread},
         {"collections", initcollections},
+        {"md5", initmd5 },
 
         {"pspos", initpspos},
 

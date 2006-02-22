@@ -20,7 +20,9 @@ MODULES_STATIC = \
 	../Modules/cStringIO.o \
 	../Modules/errnomodule.o \
 	../Modules/threadmodule.o \
-	../Modules/collectionsmodule.o
+	../Modules/collectionsmodule.o \
+	../Modules/md5module.o \
+	../Modules/md5c.o
 
 OBJECTS_PYTHON = \
 	../Python/traceback.o \
