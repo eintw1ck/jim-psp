@@ -194,7 +194,7 @@ int main(void)
 	if (oldButtons != pad.Buttons) {
 	    if (pad.Buttons & PSP_CTRL_CROSS) {
 		if (state & PSP_USB_ACTIVATED)
-		    retVal = sceUsbDeactivate();
+		    retVal = sceUsbDeactivate(0x1c8);
 		else
 		    retVal = sceUsbActivate(0x1c8);
 	    }
