@@ -152,7 +152,7 @@ CPPFLAGS += -DHAVE_CONFIG_H -DPSP -I../Include -DCHECKTYPE
 LIBS += -lc -lm
 
 CFLAGS = -O2 -G0 -Wall -Wno-strict-aliasing
-CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+CXXFLAGS = $(CFLAGS) -fno-rtti
 ASFLAGS = $(CFLAGS)
 
 LIBDIR =
