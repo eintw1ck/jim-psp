@@ -498,4 +498,7 @@ void initpspos(void)
     PyModule_AddIntConstant(mdl, "O_RDWR", O_RDWR);
     PyModule_AddIntConstant(mdl, "O_CREAT", O_CREAT);
     PyModule_AddIntConstant(mdl, "O_EXCL", O_EXCL);
+
+    Py_INCREF(PyExc_OSError);
+    PyModule_AddObject(mdl, "error", PyExc_OSError);
 }

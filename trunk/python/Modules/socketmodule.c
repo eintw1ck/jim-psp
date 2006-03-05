@@ -332,6 +332,10 @@ const char *inet_ntop(int af, const void *src, char *dst, socklen_t size);
 #define NO_DUP /* Sockets are Not Actual File Handles under OS/2 */
 #endif
 
+#ifdef PSP
+#define NO_DUP /* declared but not implemented yet */
+#endif
+
 #ifndef SOCKETCLOSE
 #define SOCKETCLOSE close
 #endif
@@ -3776,6 +3780,19 @@ os_init(void)
 #endif /* PYOS_OS2 */
 
 
+#ifdef PSP
+#define OS_INIT_DEFINED
+
+static int os_init(void)
+{
+    if (pspSdkInetInit())
+       return 0;
+
+    return 1;
+}
+
+#endif /* PSP */
+
 #ifndef OS_INIT_DEFINED
 static int
 os_init(void)
@@ -3793,7 +3810,6 @@ PySocketModule_APIObject PySocketModuleAPI =
 	&sock_type,
         NULL
 };
-
 
 /* Initialize the _socket module.
 

@@ -2,6 +2,7 @@
 #include <pspkernel.h>
 #include <pspdebug.h>
 #include <pspctrl.h>
+#include <pspsdk.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -12,8 +13,8 @@
 
 #include "Python.h"
 
-PSP_MODULE_INFO("Python", 0, 1, 1);
-PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
+PSP_MODULE_INFO("Python", 0x1000, 1, 1);
+PSP_MAIN_THREAD_ATTR(0);
 
 volatile int pspInterruptOccurred = 0;
 
@@ -25,6 +26,7 @@ volatile int pspInterruptOccurred = 0;
 int exit_callback(int arg1, int arg2, void *common)
 {
     pspInterruptOccurred = 1;
+
     return 0;
 }
 
@@ -55,15 +57,11 @@ int SetupCallbacks(void)
     return thid;
 }
 
-int main(int argc, char *argv[])
+int main_thread(SceSize args, void *argp)
 {
     FILE *fp;
-
-    SetupCallbacks();
-
-#ifdef DEBUG
-    pspDebugScreenInit();
-#endif
+    int argc = 1;
+    char *argv[] = {"python"};
 
 #ifdef WITH_PSP2D
     sceGuInit();
@@ -100,5 +98,28 @@ int main(int argc, char *argv[])
 #endif
 
     sceKernelExitGame();
+
+    return 0;
+}
+
+int main(int argc, char *argv[])
+{
+    SceUID thid;
+
+    SetupCallbacks();
+
+#ifdef DEBUG
+    pspDebugScreenInit();
+#endif
+
+    if(pspSdkLoadInetModules() < 0)
+       return 1;
+
+    thid = sceKernelCreateThread("python_thread", main_thread, 0x18, 0x10000,
+                                 PSP_THREAD_ATTR_USER|PSP_THREAD_ATTR_VFPU, NULL);
+    sceKernelStartThread(thid, 0, NULL);
+
+    sceKernelExitDeleteThread(0);
+
     return 0;
 }

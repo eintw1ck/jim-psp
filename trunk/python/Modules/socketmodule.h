@@ -1,5 +1,23 @@
 /* Socket module header file */
 
+#ifdef PSP
+#include <pspkernel.h>
+#include <pspdebug.h>
+#include <pspsdk.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <pspnet.h>
+#include <pspnet_inet.h>
+#include <pspnet_apctl.h>
+#include <pspnet_resolver.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/select.h>
+#include <sys/socket.h>
+#include <errno.h>
+#endif
+
 /* Includes needed for the sockaddr_* symbols below */
 #ifndef MS_WINDOWS
 #ifdef __VMS

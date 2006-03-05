@@ -57,6 +57,10 @@
 #include "addrinfo.h"
 #endif
 
+#ifdef PSP
+#include "pspsocket.h"
+#endif
+
 #if defined(__KAME__) && defined(ENABLE_IPV6)
 # define FAITH
 #endif

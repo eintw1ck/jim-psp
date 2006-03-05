@@ -22,7 +22,10 @@ MODULES_STATIC = \
 	../Modules/threadmodule.o \
 	../Modules/collectionsmodule.o \
 	../Modules/md5module.o \
-	../Modules/md5c.o
+	../Modules/md5c.o \
+	../Modules/socketmodule.o \
+	../Modules/selectmodule.o \
+	../Modules/pspsocket.o
 
 OBJECTS_PYTHON = \
 	../Python/traceback.o \
@@ -111,7 +114,7 @@ OBJECTS_PARSER = \
 	../Parser/bitset.o \
 	../Parser/acceler.o
 
-OBJS = main.o psperror.o support.o getmtime.o Modules/matrix.o \
+OBJS = main.o psperror.o support.o getmtime.o Modules/matrix.o pspnet/pspnet.o \
 	$(MODULES_STATIC) $(OBJECTS_PYTHON) $(OBJECTS_OBJECTS) $(OBJECTS_PARSER)
 
 CPPFLAGS=

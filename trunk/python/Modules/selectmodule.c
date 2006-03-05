@@ -8,6 +8,29 @@
 
 #include "Python.h"
 
+#ifdef PSP
+#include <pspkernel.h>
+#include <pspdebug.h>
+#include <pspsdk.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <pspnet.h>
+#include <pspnet_inet.h>
+#include <pspnet_apctl.h>
+#include <pspnet_resolver.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/select.h>
+#include <sys/socket.h>
+#include <errno.h>
+
+#else
+
+#define SOCKET_GET_SOCK(x) (x)
+
+#endif
+
 /* Windows #defines FD_SETSIZE to 64 if FD_SETSIZE isn't already defined.
    64 is too small (too many people have bumped into that limit).
    Here we boost it.
@@ -107,6 +130,9 @@ seq2set(PyObject *seq, fd_set *set, pylist fd2obj[FD_SETSIZE + 1])
 #if defined(_MSC_VER)
 		max = 0;		     /* not used for Win32 */
 #else  /* !_MSC_VER */
+#ifdef PSP
+                max = FD_SETSIZE;
+#else /* !PSP */
 		if (v < 0 || v >= FD_SETSIZE) {
 			PyErr_SetString(PyExc_ValueError,
 				    "filedescriptor out of range in select()");
@@ -114,6 +140,7 @@ seq2set(PyObject *seq, fd_set *set, pylist fd2obj[FD_SETSIZE + 1])
 		}
 		if (v > max)
 			max = v;
+#endif /* PSP */
 #endif /* _MSC_VER */
 		FD_SET(v, set);
 
@@ -146,7 +173,7 @@ set2list(fd_set *set, pylist fd2obj[FD_SETSIZE + 1])
 	SOCKET fd;
 
 	for (j = 0; fd2obj[j].sentinel >= 0; j++) {
-		if (FD_ISSET(fd2obj[j].fd, set))
+		if (FD_ISSET(SOCKET_GET_SOCK(fd2obj[j].fd), set))
 			count++;
 	}
 	list = PyList_New(count);
@@ -155,7 +182,7 @@ set2list(fd_set *set, pylist fd2obj[FD_SETSIZE + 1])
 
 	i = 0;
 	for (j = 0; fd2obj[j].sentinel >= 0; j++) {
-		fd = fd2obj[j].fd;
+		fd = SOCKET_GET_SOCK(fd2obj[j].fd);
 		if (FD_ISSET(fd, set)) {
 #ifndef _MSC_VER
 			if (fd > FD_SETSIZE) {
@@ -209,6 +236,11 @@ select_select(PyObject *self, PyObject *args)
 	long seconds;
 	int imax, omax, emax, max;
 	int n;
+
+#ifdef PSP
+        if (PyErr_CheckSignals())
+           return NULL;
+#endif
 
 	/* convert arguments */
 	if (!PyArg_ParseTuple(args, "OOO|O:select",

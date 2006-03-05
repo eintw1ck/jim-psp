@@ -31,7 +31,7 @@
 /* #undef GETTIMEOFDAY_NO_TZ */
 
 /* struct addrinfo (netdb.h) */
-#define HAVE_ADDRINFO 1
+/* #define HAVE_ADDRINFO 1 */
 
 /* Define to 1 if you have the `alarm' function. */
 #define HAVE_ALARM 1
@@ -155,10 +155,10 @@
 /* #define HAVE_FTRUNCATE 1 */
 
 /* Define to 1 if you have the `gai_strerror' function. */
-#define HAVE_GAI_STRERROR 1
+/* #define HAVE_GAI_STRERROR 1 */
 
 /* Define if you have the getaddrinfo function. */
-#define HAVE_GETADDRINFO 1
+/* #define HAVE_GETADDRINFO 1 */
 
 /* Define to 1 if you have the `getcwd' function. */
 #define HAVE_GETCWD 1
@@ -191,7 +191,7 @@
 #define HAVE_GETLOGIN 1
 
 /* Define to 1 if you have the `getnameinfo' function. */
-#define HAVE_GETNAMEINFO 1
+/* #define HAVE_GETNAMEINFO 1 */
 
 /* Define if you have the 'getpagesize' function. */
 #define HAVE_GETPAGESIZE 1
@@ -227,7 +227,7 @@
 #define HAVE_GRP_H 1
 
 /* Define if you have the 'hstrerror' function. */
-#define HAVE_HSTRERROR 1
+/* #define HAVE_HSTRERROR 1 */
 
 /* Define to 1 if you have the `hypot' function. */
 #define HAVE_HYPOT 1
@@ -314,7 +314,7 @@
 /* #undef HAVE_NDIR_H */
 
 /* Define to 1 if you have the <netpacket/packet.h> header file. */
-#define HAVE_NETPACKET_PACKET_H 1
+/* #define HAVE_NETPACKET_PACKET_H 1 */
 
 /* Define to 1 if you have the `nice' function. */
 #define HAVE_NICE 1
@@ -332,10 +332,10 @@
 /* #undef HAVE_PLOCK */
 
 /* Define to 1 if you have the `poll' function. */
-#define HAVE_POLL 1
+/* #define HAVE_POLL 1 */
 
 /* Define to 1 if you have the <poll.h> header file. */
-#define HAVE_POLL_H 1
+/* #define HAVE_POLL_H 1 */
 
 /* Define if your compiler supports function prototype */
 #define HAVE_PROTOTYPES 1
@@ -440,7 +440,7 @@
 #define HAVE_SOCKADDR_STORAGE 1
 
 /* Define if you have the 'socketpair' function. */
-#define HAVE_SOCKETPAIR 1
+/* #define HAVE_SOCKETPAIR 1 */
 
 /* Define to 1 if you have the `statvfs' function. */
 #define HAVE_STATVFS 1
@@ -558,7 +558,7 @@
 #define HAVE_SYS_TYPES_H 1
 
 /* Define to 1 if you have the <sys/un.h> header file. */
-#define HAVE_SYS_UN_H 1
+/* #define HAVE_SYS_UN_H 1 */
 
 /* Define to 1 if you have the <sys/utsname.h> header file. */
 #define HAVE_SYS_UTSNAME_H 1
