@@ -218,7 +218,7 @@
    fi
 
    if test "$BUILD_INSIGHT" = "1" ; then
-     if test ! -f "$INSIGHT.tar.gz" ; then
+     if test ! -f "$INSIGHT.tar.bz2" ; then
       $WGET ftp://sourceware.org/pub/insight/releases/$INSIGHT.tar.bz2 || { echo "ERROR DOWNLOADING INSIGHT"; exit; }
      fi
      echo -n "Downloading the latest insight patch... ";
