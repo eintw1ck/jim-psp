@@ -22,6 +22,8 @@ volatile int pspInterruptOccurred = 0;
 #define DEBUG
 #endif
 
+static char* save_argv0;
+
 /* Exit callback */
 int exit_callback(int arg1, int arg2, void *common)
 {
@@ -61,7 +63,7 @@ int main_thread(SceSize args, void *argp)
 {
     FILE *fp;
     int argc = 1;
-    char *argv[] = {"python"};
+    char *argv[] = {save_argv0};
 
 #ifdef WITH_PSP2D
     sceGuInit();
@@ -105,6 +107,8 @@ int main_thread(SceSize args, void *argp)
 int main(int argc, char *argv[])
 {
     SceUID thid;
+
+    save_argv0 = strdup(argv[0]);
 
     SetupCallbacks();
 
