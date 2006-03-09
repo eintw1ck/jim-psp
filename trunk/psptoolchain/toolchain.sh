@@ -17,7 +17,8 @@
   BINUTILS="binutils-2.16.1"
   GCC="gcc-4.0.2"
   NEWLIB="newlib-1.13.0"
-  GDB="gdb-6.3"
+  GDB="gdb-6.4"
+  INSIGHT="insight-6.4"
 
   ## PSPSDK subversion repository, or path to local working copy
   PSPSDK_SVN="svn://svn.pspdev.org/psp/trunk/pspsdk"
@@ -37,6 +38,7 @@
    BUILD_PSPSDK=1
    # By default dont build GDB
    BUILD_GDB=0
+   BUILD_INSIGHT=0
 
   ## Else...
   else
@@ -62,6 +64,9 @@
      -e | -gdb | --gdb)
       BUILD_GDB=1
       shift;;
+     -i | -insight | --insight)
+      BUILD_INSIGHT=1
+      shift;;
      -a | -all | --all)
       DO_DOWNLOAD=1
       BUILD_BINUTILS=1
@@ -70,6 +75,7 @@
       BUILD_PSPSDK=1
       # By default dont build GDB
       BUILD_GDB=0
+	  BUILD_INSIGHT=0
       shift;;
      -P | -pspsdk-src | --pspsdk-src)
       PSPSDK_SVN="$2"
@@ -144,6 +150,15 @@
 	 fi
   fi
 
+  if test "$BUILD_INSIGHT" = "1" ; then
+     if test "`flex --version 2> /dev/null`" ; then
+	    FLEX="flex"
+     else
+        echo "ERROR: To build Insight you need to have 'flex' installed."
+		exit
+	 fi
+  fi
+
   ## Check for autoconf and automake
   if test "$BUILD_PSPSDK" = "1" ; then
       if ! test "`automake --version 2> /dev/null`" ; then
@@ -202,6 +217,15 @@
      echo "Done!";
    fi
 
+   if test "$BUILD_INSIGHT" = "1" ; then
+     if test ! -f "$INSIGHT.tar.gz" ; then
+      $WGET ftp://sourceware.org/pub/insight/releases/$INSIGHT.tar.bz2 || { echo "ERROR DOWNLOADING INSIGHT"; exit; }
+     fi
+     echo -n "Downloading the latest insight patch... ";
+     $SVN cat svn://svn.pspdev.org/psp/trunk/insight-psp/$INSIGHT.patch > $INSIGHT.patch
+     echo "Done!";
+   fi
+
   fi
 
   ## Create and enter the temp directory.
@@ -232,6 +256,13 @@
   if test "$BUILD_GDB" = "1" ; then
    rm -Rf $GDB; gzip -cd "$SRCDIR/$GDB.tar.gz" | tar xvf -
    cd $GDB; cat "$SRCDIR/$GDB.patch" | $PATCH || { echo "ERROR PATCHING GDB"; exit; }
+   cd ..
+  fi
+
+  ## Unpack and patch the insight source
+  if test "$BUILD_INSIGHT" = "1" ; then
+   rm -Rf $INSIGHT; bunzip2 -cd "$SRCDIR/$INSIGHT.tar.bz2" | tar xvf -
+   cd $INSIGHT; cat "$SRCDIR/$INSIGHT.patch" | $PATCH || { echo "ERROR PATCHING INSIGHT"; exit; }
    cd ..
   fi
 
@@ -404,6 +435,31 @@
 
    ## Install the result.
    $MAKE install || { echo "ERROR INSTALLING GDB"; exit; }
+
+   ## Clean up the result.
+   $MAKE clean
+
+   ## Exit the build and source directories.
+   cd ..; cd ..
+
+  fi
+
+  if test "$BUILD_INSIGHT" = "1" ; then
+
+   ## Enter the source directory.
+   cd $INSIGHT
+
+   ## Create and enter the build directory.
+   mkdir build-insight; cd build-insight
+
+   ## Configure the source.
+   ../configure --prefix=$PSPDEV --target=psp --disable-nls || { echo "ERROR CONFIGURING INSIGHT"; exit; }
+
+   ## Build the source.
+   $MAKE clean; $MAKE || { echo "ERROR BUILDING INSIGHT"; exit; }
+
+   ## Install the result.
+   $MAKE install || { echo "ERROR INSTALLING INSIGHT"; exit; }
 
    ## Clean up the result.
    $MAKE clean
