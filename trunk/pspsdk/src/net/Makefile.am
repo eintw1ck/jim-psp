@@ -20,16 +20,28 @@ NET_INET_OBJS = sceNetInet_0000.o sceNetInet_0001.o sceNetInet_0002.o sceNetInet
 
 NET_RESOLVER_OBJS = sceNetResolver_0000.o sceNetResolver_0001.o sceNetResolver_0002.o sceNetResolver_0003.o sceNetResolver_0004.o sceNetResolver_0005.o sceNetResolver_0006.o sceNetResolver_0007.o 
 
+NET_ADHOC_OBJS = sceNetAdhoc_0000.o sceNetAdhoc_0001.o sceNetAdhoc_0002.o sceNetAdhoc_0003.o sceNetAdhoc_0004.o sceNetAdhoc_0005.o sceNetAdhoc_0006.o sceNetAdhoc_0007.o sceNetAdhoc_0008.o sceNetAdhoc_0009.o sceNetAdhoc_0010.o sceNetAdhoc_0011.o sceNetAdhoc_0012.o sceNetAdhoc_0013.o sceNetAdhoc_0014.o sceNetAdhoc_0015.o sceNetAdhoc_0016.o sceNetAdhoc_0017.o sceNetAdhoc_0018.o sceNetAdhoc_0019.o sceNetAdhoc_0020.o sceNetAdhoc_0021.o sceNetAdhoc_0022.o sceNetAdhoc_0023.o sceNetAdhoc_0024.o sceNetAdhoc_0025.o 
+
+NET_ADHOCCTL_OBJS = sceNetAdhocctl_0000.o sceNetAdhocctl_0001.o sceNetAdhocctl_0002.o sceNetAdhocctl_0003.o sceNetAdhocctl_0004.o sceNetAdhocctl_0005.o sceNetAdhocctl_0006.o sceNetAdhocctl_0007.o sceNetAdhocctl_0008.o sceNetAdhocctl_0009.o sceNetAdhocctl_0010.o sceNetAdhocctl_0011.o sceNetAdhocctl_0012.o sceNetAdhocctl_0013.o sceNetAdhocctl_0014.o sceNetAdhocctl_0015.o sceNetAdhocctl_0016.o sceNetAdhocctl_0017.o sceNetAdhocctl_0018.o sceNetAdhocctl_0019.o sceNetAdhocctl_0020.o 
+
+NET_ADHOCMATCHING_OBJS = sceNetAdhocMatching_0000.o sceNetAdhocMatching_0001.o sceNetAdhocMatching_0002.o sceNetAdhocMatching_0003.o sceNetAdhocMatching_0004.o sceNetAdhocMatching_0005.o sceNetAdhocMatching_0006.o sceNetAdhocMatching_0007.o sceNetAdhocMatching_0008.o sceNetAdhocMatching_0009.o sceNetAdhocMatching_0010.o sceNetAdhocMatching_0011.o sceNetAdhocMatching_0012.o 
+
 libpspnetincludedir = @PSPSDK_INCLUDEDIR@
 libpspnetinclude_HEADERS = pspnet.h			\
 			   pspnet_apctl.h		\
 			   pspnet_inet.h		\
-			   pspnet_resolver.h
+			   pspnet_resolver.h	\
+			   pspnet_adhoc.h		\
+			   pspnet_adhocctl.h	\
+			   pspnet_adhocmatching.h
 
 lib_LIBRARIES = libpspnet.a			\
 		libpspnet_apctl.a		\
 		libpspnet_inet.a		\
-		libpspnet_resolver.a
+		libpspnet_resolver.a	\
+		libpspnet_adhoc.a		\
+		libpspnet_adhocctl.a	\
+		libpspnet_adhocmatching.a	
 
 libpspnet_a_SOURCES = sceNet.S sceNet_lib.S
 libpspnet_a_LIBADD  = $(NET_OBJS) $(NETLIB_OBJS)
@@ -39,6 +51,12 @@ libpspnet_inet_a_SOURCES = sceNetInet.S
 libpspnet_inet_a_LIBADD  = $(NET_INET_OBJS)
 libpspnet_resolver_a_SOURCES = sceNetResolver.S
 libpspnet_resolver_a_LIBADD  = $(NET_RESOLVER_OBJS)
+libpspnet_adhoc_a_SOURCES = sceNetAdhoc.S
+libpspnet_adhoc_a_LIBADD = $(NET_ADHOC_OBJS)
+libpspnet_adhocctl_a_SOURCES = sceNetAdhocctl.S
+libpspnet_adhocctl_a_LIBADD = $(NET_ADHOCCTL_OBJS)
+libpspnet_adhocmatching_a_SOURCES = sceNetAdhocMatching.S
+libpspnet_adhocmatching_a_LIBADD = $(NET_ADHOCMATCHING_OBJS)
 
 $(NET_OBJS): sceNet.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -53,4 +71,13 @@ $(NET_INET_OBJS): sceNetInet.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(NET_RESOLVER_OBJS): sceNetResolver.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(NET_ADHOC_OBJS): sceNetAdhoc.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(NET_ADHOCCTL_OBJS): sceNetAdhocctl.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(NET_ADHOCMATCHING_OBJS): sceNetAdhocMatching.S
 	$(COMPILE) -DF_$* $< -c -o $@
