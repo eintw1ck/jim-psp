@@ -122,7 +122,7 @@ int __psp_path_normalize(char *out, int len)
 	/* Remove trailing "/" */
 	for(i=1; out[i]; i++)
 		continue;
-	if(i > 1 && out[i-1] == '/') 
+	if(i >= 1 && out[i-1] == '/') 
 		out[i-1] = 0;
 
 	return 0;

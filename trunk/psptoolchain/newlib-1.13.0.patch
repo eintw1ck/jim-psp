@@ -5725,7 +5725,7 @@ diff -burN newlib-1.13.0/newlib/libc/sys/psp/pspcwd.c newlib-psp/newlib/libc/sys
 +	/* Remove trailing "/" */
 +	for(i=1; out[i]; i++)
 +		continue;
-+	if(i > 1 && out[i-1] == '/') 
++	if(i >= 1 && out[i-1] == '/') 
 +		out[i-1] = 0;
 +
 +	return 0;
