@@ -1620,18 +1620,34 @@ typedef struct SceKernelThreadEventHandlerInfo {
 	void * 	common;
 } SceKernelThreadEventHandlerInfo;
 
+enum ThreadEventIds
+{
+	THREADEVENT_ALL = 0xFFFFFFFF,
+	THREADEVENT_KERN = 0xFFFFFFF8,
+	THREADEVENT_USER = 0xFFFFFFF0,
+	THREADEVENT_CURRENT = 0
+};
+
+enum ThreadEvents
+{
+	THREAD_CREATE = 1,
+	THREAD_START  = 2,
+	THREAD_EXIT   = 4,
+	THREAD_DELETE = 8,
+};
+
 /**
  * Register a thread event handler
  *
  * @param name - Name for the thread event handler
+ * @param threadId - Thread ID to monitor
  * @param handler - Pointer to a ::SceKernelThreadEventHandler function
  * @param mask - Bit mask for what events to handle (only lowest 4 bits valid)
  * @param common - Common pointer
  *
  * @return The UID of the create event handler, < 0 on error
  */
-SceUID sceKernelRegisterThreadEventHandler(const char *name, SceKernelThreadEventHandler handler, 
-		int mask, void *common);
+SceUID sceKernelRegisterThreadEventHandler(const char *name, SceUID threadID, int mask, SceKernelThreadEventHandler handler, void *common);
 
 /**
  * Release a thread event handler.
