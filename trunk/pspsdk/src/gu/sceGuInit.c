@@ -10,6 +10,7 @@
 
 #include <pspkernel.h>
 #include <pspge.h>
+#include <pspdisplay.h>
 
 unsigned int __attribute__((aligned(16))) ge_init_list[] =
 {
@@ -53,6 +54,9 @@ void sceGuInit(void)
 	callback.finish_func = callbackFin;
 	callback.finish_arg = &gu_settings;
 	gu_settings.ge_callback_id = sceGeSetCallback(&callback);
+
+	gu_settings.swapBuffersCallback = 0;
+	gu_settings.swapBuffersBehaviour = PSP_DISPLAY_SETBUF_IMMEDIATE;
 
 	ge_edram_address = sceGeEdramGetAddr();
 

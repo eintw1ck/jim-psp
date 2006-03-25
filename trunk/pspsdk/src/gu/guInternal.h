@@ -21,6 +21,9 @@ typedef struct
 	int signal_offset;
 	int kernel_event_flag;
 	int ge_callback_id;
+
+	GuSwapBuffersCallback swapBuffersCallback;
+	int swapBuffersBehaviour;	
 } GuSettings;
 
 typedef struct

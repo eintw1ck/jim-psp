@@ -14,9 +14,9 @@
 int sceGuDisplay(int state)
 {
 	if (state)
-		sceDisplaySetFrameBuf((void*)((unsigned int)ge_edram_address+(unsigned int)gu_draw_buffer.disp_buffer),gu_draw_buffer.frame_width,gu_draw_buffer.pixel_size,1);
+		sceDisplaySetFrameBuf((void*)((unsigned int)ge_edram_address+(unsigned int)gu_draw_buffer.disp_buffer),gu_draw_buffer.frame_width,gu_draw_buffer.pixel_size,PSP_DISPLAY_SETBUF_NEXTFRAME);
 	else
-		sceDisplaySetFrameBuf(0,0,0,1);
+		sceDisplaySetFrameBuf(0,0,0,PSP_DISPLAY_SETBUF_NEXTFRAME);
 
 	gu_display_on = state;
 	return state;

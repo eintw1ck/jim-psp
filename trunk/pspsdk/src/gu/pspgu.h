@@ -271,6 +271,8 @@ extern "C" {
 /* Color Macro, maps floating point channels (0..1) into one 32-bit value */
 #define GU_COLOR(r,g,b,a)	GU_RGBA((u32)((r) * 255.0f),(u32)((g) * 255.0f),(u32)((b) * 255.0f),(u32)((a) * 255.0f))
 
+typedef void (*GuSwapBuffersCallback)(void** display,void** render);
+
 /** @addtogroup GU */
 /*@{*/
 
@@ -1356,6 +1358,41 @@ void sceGuBoneMatrix(unsigned int index, const ScePspFMatrix4* matrix);
 void sceGuMorphWeight(int index, float weight);
 
 void sceGuDrawArrayN(int primitive_type, int vertex_type, int count, int a3, const void* indices, const void* vertices);
+
+/**
+  * Set how the display should be set
+  *
+  * Available behaviours are:
+  *   - PSP_DISPLAY_SETBUF_IMMEDIATE - Display is swapped immediately
+  *   - PSP_DISPLAY_SETBUF_NEXTFRAME - Display is swapped on the next frame
+  *
+  * Do remember that this swaps the pointers internally, regardless of setting, so be careful to wait until the next
+  * vertical blank or use another buffering algorithm (see guSwapBuffersCallback()).
+**/
+void guSwapBuffersBehaviour(int behaviour);
+
+/**
+  * Set a buffer swap callback to allow for more advanced buffer methods without hacking the library.
+  *
+  * The GuSwapBuffersCallback is defined like this:
+  * @code
+  * void swapBuffersCallback(void** display, void** render);
+  * @endcode
+  * and on entry they contain the variables that are to be set. To change the pointers that will be used, just
+  * write the new pointers. Example of a triple-buffering algorithm:
+  * @code
+  * void* doneBuffer;
+  * void swapBuffersCallback(void** display, void** render)
+  * {
+  *  void* active = doneBuffer;
+  *  doneBuffer = *display;
+     *display = active;
+  * }
+  * @endcode
+  *
+  * @param callback - Callback to access when buffers are swapped. Pass 0 to disable.
+**/
+void guSwapBuffersCallback(GuSwapBuffersCallback callback);
 
 /*@}*/
 
