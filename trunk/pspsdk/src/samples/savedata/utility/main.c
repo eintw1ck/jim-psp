@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * main.c - Sample to desmonstrate how to use savedata utility
+ * main.c - Sample to demonstrate how to use savedata utility
  *
  * Copyright (c) 2005 weltall (weltall@consoleworld.org)
  * Based on work by Shine

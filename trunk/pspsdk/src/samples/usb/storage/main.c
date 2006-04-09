@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * main.c - Sample to desmonstrate USB Mass Storage functionality
+ * main.c - Sample to demonstrate USB Mass Storage functionality
  *
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  *

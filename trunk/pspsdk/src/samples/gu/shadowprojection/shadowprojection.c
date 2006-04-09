@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * shadowmap.c - Sample to desmonstrate projective texture mapping
+ * shadowmap.c - Sample to demonstrate projective texture mapping
  *               used for shadowmap implementation
  *
  * Copyright (c) 2005 Jesper Svennevid

@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * rendertarget.c - Sample to desmonstrate usage of ofscreen
+ * rendertarget.c - Sample to demonstrate usage of ofscreen
  *                  texture as a render target
  *
  * Copyright (c) 2005 Jesper Svennevid

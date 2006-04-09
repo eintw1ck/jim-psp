@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * envmap.c - Sample to desmonstrate environment mapping functionality
+ * envmap.c - Sample to demonstrate environment mapping functionality
  *
  * Copyright (c) 2005 Jesper Svennevid
  * Copyright (c) 2005 Renaldas Zioma <rej@scene.lt>

@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * skinning.c - Sample to desmonstrate matrix skinning using 8 weights per vertex
+ * skinning.c - Sample to demonstrate matrix skinning using 8 weights per vertex
  *
  * Copyright (c) 2005 Jesper Svennevid
  * Copyright (c) 2005 Renaldas Zioma <rej@scene.lt>

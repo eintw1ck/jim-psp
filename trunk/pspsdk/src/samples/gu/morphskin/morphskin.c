@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * skinning.c - Sample to desmonstrate simultaneous
+ * skinning.c - Sample to demonstrate simultaneous
  *              keyframed morphing and matrix skinning on GPU
  *
  * Copyright (c) 2005 Jesper Svennevid

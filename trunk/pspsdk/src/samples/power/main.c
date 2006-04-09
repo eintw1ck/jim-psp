@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * main.c - Sample to desmonstrate proper use of the power library
+ * main.c - Sample to demonstrate proper use of the power library
  *
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  *

@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * main.c - Sample to desmonstrate how to use the message dialog utility
+ * main.c - Sample to demonstrate how to use the message dialog utility
  *
  * Copyright (c) 2005 Marcus Comstedt <marcus@mc.pp.se>
  *
