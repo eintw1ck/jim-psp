@@ -78,6 +78,7 @@ fi
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile
+				 src/atrac3/Makefile
                  src/audio/Makefile
                  src/base/Makefile
                  src/ctrl/Makefile

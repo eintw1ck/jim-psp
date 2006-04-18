@@ -1,4 +1,5 @@
 SUBDIRS = \
+	atrac3 \
 	audio \
 	base \
 	ctrl \
