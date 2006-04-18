@@ -35,6 +35,8 @@
     -g		- Build and install gcc. (both c and c++)
     -n		- Build and install newlib.
     -p		- Download, build and install pspsdk.
+	-e      - Build GDB (must specify -d to download the source)
+	-i      - Build the Insight Debugger (GDB with a simple GUI)
 
    For example, say you wanted to update only pspsdk:
 
