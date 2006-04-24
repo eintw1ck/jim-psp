@@ -63,7 +63,7 @@ int exit_callback(int arg1, int arg2, void *common)
 
     //cleanup drivers
     if (state & PSP_USB_ACTIVATED) {
-	retVal = sceUsbDeactivate();
+	retVal = sceUsbDeactivate(0);
 	if (retVal != 0)
 	    printf("Error calling sceUsbDeactivate (0x%08X)\n", retVal);
     }

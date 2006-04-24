@@ -1183,7 +1183,7 @@ CheckPSPGL()
         AC_MSG_RESULT($video_opengl)
         if test x$video_opengl = xyes; then
             CFLAGS="$CFLAGS -DHAVE_OPENGL"
-            SYSTEM_LIBS="$SYSTEM_LIBS -lGL"
+            SYSTEM_LIBS="$SYSTEM_LIBS -lGL -lpspvfpu"
         fi
     fi
 }
