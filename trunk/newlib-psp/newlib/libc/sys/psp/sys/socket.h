@@ -110,6 +110,7 @@ typedef uint32_t socklen_t;
 #define	SO_ERROR	0x1007		/* get error status and clear */
 #define	SO_TYPE		0x1008		/* get socket type */
 #define	SO_OVERFLOWED	0x1009		/* datagrams: return packets dropped */
+#define	SO_NONBLOCK     0x1009		/* non-blocking I/O */
 
 /*
  * Structure used for manipulating linger option.
@@ -265,10 +266,6 @@ ssize_t sendmsg(int s, const struct msghdr *msg, int flags);
 int	setsockopt(int, int, int, const void *, socklen_t);
 int	shutdown(int, int);
 int	socket(int, int, int);
-
-#define SOCKET_FD_PAT      0x7F000000
-#define SOCKET_IS_VALID(x) (((x) & SOCKET_FD_PAT) == SOCKET_FD_PAT)
-#define SOCKET_GET_SOCK(x) ((x) & ~SOCKET_FD_PAT)
 
 /* sceNetInet socket API. */
 int	sceNetInetAccept(int s, struct sockaddr *addr, socklen_t *addrlen);

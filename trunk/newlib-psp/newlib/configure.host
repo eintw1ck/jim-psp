@@ -574,7 +574,7 @@ case "${host}" in
 	  mipsallegrex*-psp-*)
 		sys_dir=psp
 		syscall_dir=syscalls
-		newlib_cflags="${newlib_cflags} -G0 -DCOMPACT_CTYPE -DCLOCK_PROVIDED -DMALLOC_ALIGNMENT=16 -I${prefix}/psp/sdk/include" ;;
+		newlib_cflags="${newlib_cflags} -G0 -mno-explicit-relocs -DCOMPACT_CTYPE -DCLOCK_PROVIDED -DHAVE_FCNTL -DMALLOC_ALIGNMENT=16 -I${prefix}/psp/sdk/include" ;;
 	  *)
 		newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES" ;;
 	esac

@@ -19,7 +19,6 @@
 #include <pspiofilemgr.h>
 
 char __psp_cwd[MAXPATHLEN + 1] = { 0 };
-char * __psp_filename_map[1024];
 
 /* Set the current working directory (CWD) to the path where the module was launched. */
 void __psp_init_cwd(char *argv_0)

@@ -56,11 +56,14 @@ typedef	struct fd_set {
 } fd_set;
 
 #define	FD_SET(n, p)	\
-    ((p)->fds_bits[((n) & 0xFF) /__NFDBITS] |= (1 << ((n) % __NFDBITS)))
+	((p)->fds_bits[(n) /__NFDBITS] |= (1 << ((n) % __NFDBITS)))
+
 #define	FD_CLR(n, p)	\
-    ((p)->fds_bits[((n) & 0xFF) /__NFDBITS] &= ~(1 << ((n) % __NFDBITS)))
+	((p)->fds_bits[(n) /__NFDBITS] &= ~(1 << ((n) % __NFDBITS)))
+
 #define	FD_ISSET(n, p)	\
-    ((p)->fds_bits[((n) & 0xFF) /__NFDBITS] & (1 << ((n) % __NFDBITS)))
+	((p)->fds_bits[(n) /__NFDBITS] & (1 << ((n) % __NFDBITS)))
+
 #define	FD_ZERO(p)	(void)__builtin_memset((p), 0, sizeof(*(p)))
 
 #endif /* _SYS_FD_SET_H_ */

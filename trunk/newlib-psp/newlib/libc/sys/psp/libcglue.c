@@ -35,6 +35,7 @@
 #include <psputility.h>
 #include <pspstdio.h>
 #include <pspintrman.h>
+#include "fdman.h"
 
 extern char __psp_cwd[MAXPATHLEN + 1];
 extern void __psp_init_cwd(char *argv_0);
@@ -47,8 +48,12 @@ extern int __psp_socket_close(int s) __attribute__((weak));
 extern ssize_t __psp_socket_recv(int s, void *buf, size_t len, int flags) __attribute__((weak));
 extern ssize_t __psp_socket_send(int s, const void *buf, size_t len, int flags) __attribute__((weak));
 
-#define __PSP_FILENO_MAX 1024
-extern char * __psp_filename_map[__PSP_FILENO_MAX];
+extern int pipe(int fildes[2]);
+extern int __psp_pipe_close(int filedes);
+extern int __psp_pipe_nonblocking_read(int fd, void *buf, size_t len);
+extern int __psp_pipe_read(int fd, void *buf, size_t len);
+extern int __psp_pipe_write(int fd, const void *buf, size_t size);
+extern int __psp_pipe_nonblocking_write(int fd, const void *buf, size_t len);
 
 int __psp_set_errno(int code);
 
@@ -158,7 +163,7 @@ char *realpath(const char *path, char *resolved_path)
 #ifdef F__open
 int _open(const char *name, int flags, int mode)
 {
-	int fd;
+	int scefd, fd;
 	int sce_flags;
 	char dest[MAXPATHLEN + 1];
 
@@ -188,79 +193,166 @@ int _open(const char *name, int flags, int mode)
 		sce_flags |= PSP_O_NBLOCK;
 	}
 	
-	fd = sceIoOpen(dest, sce_flags, mode);
-	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-		__psp_filename_map[fd] = strdup(dest);
+	scefd = sceIoOpen(dest, sce_flags, mode);
+	if (scefd >= 0) {
+		fd = __psp_fdman_get_new_descriptor();
+		if (fd != -1) {
+			__psp_descriptormap[fd]->sce_descriptor = scefd;
+			__psp_descriptormap[fd]->type     		= __PSP_DESCRIPTOR_TYPE_FILE;
+			__psp_descriptormap[fd]->flags    		= flags;
+			__psp_descriptormap[fd]->filename 		= strdup(dest);
+			return fd;
+		}
+		else {
+			sceIoClose(scefd);
+			errno = ENOMEM;
+			return -1;
+		}
+	} 
+	else {
+		return __psp_set_errno(scefd);
 	}
-	return __psp_set_errno(fd);
+	
 }
 #endif
 
 #ifdef F__close
 int _close(int fd)
 {
-	if (fd < 0) {
+	int ret = 0;
+
+	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
 		errno = EBADF;
 		return -1;
 	}
 
-	if (SOCKET_IS_VALID(fd) && __psp_socket_close != NULL) {
-		return __psp_socket_close(fd);
+	switch(__psp_descriptormap[fd]->type)
+	{
+		case __PSP_DESCRIPTOR_TYPE_FILE:
+		case __PSP_DESCRIPTOR_TYPE_TTY:
+			if (__psp_descriptormap[fd]->ref_count == 1) {
+				ret = __psp_set_errno(sceIoClose(__psp_descriptormap[fd]->sce_descriptor));
+			}
+			__psp_fdman_release_descriptor(fd);
+			return ret;
+			break;
+		case __PSP_DESCRIPTOR_TYPE_PIPE:
+			return __psp_pipe_close(fd);
+			break;
+		case __PSP_DESCRIPTOR_TYPE_SOCKET:
+			if (__psp_socket_close != NULL) {
+				ret = __psp_socket_close(fd);
+				return ret;
+			}
+			break;
+		default:
+			break;
 	}
 
-	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-		if (__psp_filename_map[fd] != NULL) {
-			free(__psp_filename_map[fd]);
-			__psp_filename_map[fd] = NULL;
-		}
-	}
-
-	return __psp_set_errno(sceIoClose(fd));
+	errno = EBADF;
+	return -1;
 }
 #endif
 
 #ifdef F__read
 int _read(int fd, void *buf, size_t size)
 {
-	if (fd < 0) {
+	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
 		errno = EBADF;
 		return -1;
 	}
 
-	if (SOCKET_IS_VALID(fd) && __psp_socket_recv != NULL) {
-		return __psp_socket_recv(fd, buf, size, 0);
+	switch(__psp_descriptormap[fd]->type)
+	{
+		case __PSP_DESCRIPTOR_TYPE_FILE:
+		case __PSP_DESCRIPTOR_TYPE_TTY:
+			return __psp_set_errno(sceIoRead(__psp_descriptormap[fd]->sce_descriptor, buf, size));
+			break;
+		case __PSP_DESCRIPTOR_TYPE_PIPE:
+			if (__psp_descriptormap[fd]->flags & O_NONBLOCK) {
+				return __psp_pipe_nonblocking_read(fd, buf, size);
+			}
+			else {
+				return __psp_pipe_read(fd, buf, size);
+			}
+			break;
+		case __PSP_DESCRIPTOR_TYPE_SOCKET:
+			if (__psp_socket_recv != NULL) {
+				return __psp_socket_recv(fd, buf, size, 0);
+			}
+			break;
+		default:
+			break;
 	}
 
-	return __psp_set_errno(sceIoRead(fd, buf, size));
+	errno = EBADF;
+	return -1;
+
 }
 #endif
 
 #ifdef F__write
 int _write(int fd, const void *buf, size_t size)
 {
-	if (fd < 0) {
+	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
 		errno = EBADF;
 		return -1;
 	}
 
-	if (SOCKET_IS_VALID(fd) && __psp_socket_send != NULL) {
-		return __psp_socket_send(fd, buf, size, 0);
+	switch(__psp_descriptormap[fd]->type)
+	{
+		case __PSP_DESCRIPTOR_TYPE_FILE:
+		case __PSP_DESCRIPTOR_TYPE_TTY:
+			return __psp_set_errno(sceIoWrite(__psp_descriptormap[fd]->sce_descriptor, buf, size));
+			break;
+		case __PSP_DESCRIPTOR_TYPE_PIPE:
+			if (__psp_descriptormap[fd]->flags & O_NONBLOCK) {
+				return __psp_pipe_nonblocking_write(fd, buf, size);
+			}
+			else {
+				return __psp_pipe_write(fd, buf, size);
+			}
+			break;
+			break;
+		case __PSP_DESCRIPTOR_TYPE_SOCKET:
+			if (__psp_socket_send != NULL) {
+				return __psp_socket_send(fd, buf, size, 0);
+			}
+			break;
+		default:
+			break;
 	}
 
-	return __psp_set_errno(sceIoWrite(fd, buf, size));
+	errno = EBADF;
+	return -1;
 }
 #endif
 
 #ifdef F__lseek
 off_t _lseek(int fd, off_t offset, int whence)
 {
-	if (fd < 0) {
+	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
 		errno = EBADF;
 		return -1;
 	}
 
-	/* We don't have to do anything with the whence argument because SEEK_* == PSP_SEEK_*. */
-	return (off_t) __psp_set_errno(sceIoLseek(fd, offset, whence));
+	switch(__psp_descriptormap[fd]->type)
+	{
+		case __PSP_DESCRIPTOR_TYPE_FILE:
+			/* We don't have to do anything with the whence argument because SEEK_* == PSP_SEEK_*. */
+			return (off_t) __psp_set_errno(sceIoLseek(__psp_descriptormap[fd]->sce_descriptor, offset, whence));
+			break;
+		case __PSP_DESCRIPTOR_TYPE_PIPE:
+			break;
+		case __PSP_DESCRIPTOR_TYPE_SOCKET:
+			break;
+		default:
+			break;
+	}
+
+	errno = EBADF;
+	return -1;
+
 }
 #endif
 
@@ -466,26 +558,37 @@ int _fstat(int fd, struct stat *sbuf)
 {
 	int ret;
 	SceOff oldpos;
-	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-		if (__psp_filename_map[fd] != NULL) {
-			if (strcmp(__psp_filename_map[fd], "  __PSP_STDIO") == 0) {
-				memset(sbuf, '\0', sizeof(struct stat));
-				sbuf->st_mode = S_IFCHR;
-				return 0;
-			} else {
-				ret = stat(__psp_filename_map[fd], sbuf);
+	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+		errno = EBADF;
+		return -1;
+	}
+
+	switch(__psp_descriptormap[fd]->type)
+	{
+		case __PSP_DESCRIPTOR_TYPE_TTY:
+			memset(sbuf, '\0', sizeof(struct stat));
+			sbuf->st_mode = S_IFCHR;
+			return 0;
+			break;		
+		case __PSP_DESCRIPTOR_TYPE_FILE:
+			if (__psp_descriptormap[fd]->filename != NULL) {
+				ret = stat(__psp_descriptormap[fd]->filename, sbuf);
 				
 				/* Find true size of the open file */
-				oldpos = sceIoLseek(fd, 0, SEEK_CUR);
+				oldpos = sceIoLseek(__psp_descriptormap[fd]->sce_descriptor, 0, SEEK_CUR);
 				if (oldpos != (off_t) -1) {
-					sbuf->st_size = (off_t) sceIoLseek(fd, 0, SEEK_END);
-					sceIoLseek(fd, oldpos, SEEK_SET);
+					sbuf->st_size = (off_t) sceIoLseek(__psp_descriptormap[fd]->sce_descriptor, 0, SEEK_END);
+					sceIoLseek(__psp_descriptormap[fd]->sce_descriptor, oldpos, SEEK_SET);
 				}
-
 				return ret;
 			}
-		}
+			break;
+		case __PSP_DESCRIPTOR_TYPE_PIPE:
+		case __PSP_DESCRIPTOR_TYPE_SOCKET:
+		default:
+			break;
 	}
+
 	errno = EBADF;
 	return -1;
 }
@@ -494,16 +597,17 @@ int _fstat(int fd, struct stat *sbuf)
 #ifdef F_isatty
 int isatty(int fd)
 {
-	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-		if (__psp_filename_map[fd] != NULL) {
-			if (strcmp(__psp_filename_map[fd], "  __PSP_STDIO") == 0) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
+	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+		errno = EBADF;
+		return 0;
 	}
-	return 0;
+
+	if (__psp_descriptormap[fd]->type == __PSP_DESCRIPTOR_TYPE_TTY) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
 }
 #endif
 
@@ -627,6 +731,68 @@ int access(const char *fn, int flags)
 }
 #endif
 
+#ifdef F__fcntl
+int _fcntl(int fd, int cmd, ...)
+{
+	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+		errno = EBADF;
+		return -1;
+	}
+
+	switch (cmd)
+	{
+		case F_DUPFD:
+		{
+			return __psp_fdman_get_dup_descriptor(fd);
+			break;
+		}
+		case F_GETFL:
+		{
+			return __psp_descriptormap[fd]->flags;
+			break;
+		}
+		case F_SETFL:
+		{
+			int newfl;
+			va_list args;
+	
+			va_start (args, cmd);         /* Initialize the argument list. */
+			newfl =  va_arg(args, int);
+			va_end (args);                /* Clean up. */
+
+			__psp_descriptormap[fd]->flags = newfl;
+
+			switch(__psp_descriptormap[fd]->type)
+			{
+				case __PSP_DESCRIPTOR_TYPE_FILE:
+					break;
+				case __PSP_DESCRIPTOR_TYPE_PIPE:
+					break;
+				case __PSP_DESCRIPTOR_TYPE_SOCKET:
+					if (newfl & O_NONBLOCK)
+					{
+						int one = 1;
+						return setsockopt(fd, SOL_SOCKET, SO_NONBLOCK, (char *)&one, sizeof(one));
+					}
+					else
+					{
+						int zero = 0;
+						return setsockopt(fd, SOL_SOCKET, SO_NONBLOCK, (char *)&zero, sizeof(zero));
+					}
+					break;
+				default:
+					break;
+			}
+			return 0;
+			break;
+		}
+	}
+
+	errno = EBADF;
+	return -1;
+}
+#endif /* F__fcntl */
+
 #ifdef F_tzset
 void tzset(void)
 {
@@ -717,27 +883,13 @@ void _exit(int status)
 */
 void __psp_libc_init(int argc, char *argv[])
 {
-	int fd;
 	(void) argc;
 
 	/* Initialize cwd from this program's path */
 	__psp_init_cwd(argv[0]);
 
-	/* Initialize filenamap */
-	memset(__psp_filename_map, '\0', sizeof(char *) * __PSP_FILENO_MAX);
-
-	fd = sceKernelStdin();
-	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-		 __psp_filename_map[fd] = strdup("  __PSP_STDIO");
-	}
-	fd = sceKernelStdout();
-	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-		 __psp_filename_map[fd] = strdup("  __PSP_STDIO");
-	}
-	fd = sceKernelStderr();
-	if ((fd >= 0) && (fd < __PSP_FILENO_MAX)) {
-		 __psp_filename_map[fd] = strdup("  __PSP_STDIO");
-	}
+	/* Initialize filedescriptor management */
+	__psp_fdman_init();
 }
 
 #endif /* F__exit */
