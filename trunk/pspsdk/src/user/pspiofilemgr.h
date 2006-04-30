@@ -396,7 +396,7 @@ int sceIoSync(const char *device, unsigned int unk);
   *
   * @return < 0 on error.
   */
-int sceIoWaitAsync(SceUID fd, long long *res);
+int sceIoWaitAsync(SceUID fd, SceInt64 *res);
 
 /**
   * Wait for asyncronous completion (with callbacks).
@@ -406,7 +406,7 @@ int sceIoWaitAsync(SceUID fd, long long *res);
   *
   * @return < 0 on error.
   */
-int sceIoWaitAsyncCB(SceUID fd, long long *res);
+int sceIoWaitAsyncCB(SceUID fd, SceInt64 *res);
 
 /**
   * Poll for asyncronous completion.
@@ -416,7 +416,7 @@ int sceIoWaitAsyncCB(SceUID fd, long long *res);
   *
   * @return < 0 on error.
   */
-int sceIoPollAsync(SceUID fd, long long *res);
+int sceIoPollAsync(SceUID fd, SceInt64 *res);
 
 /**
   * Get the asyncronous completion status.
@@ -427,7 +427,7 @@ int sceIoPollAsync(SceUID fd, long long *res);
   *
   * @return < 0 on error.
   */
-int sceIoGetAsyncStat(SceUID fd, int poll, long long *res);
+int sceIoGetAsyncStat(SceUID fd, int poll, SceInt64 *res);
 
 /**
   * Cancel an asynchronous operation on a file descriptor.

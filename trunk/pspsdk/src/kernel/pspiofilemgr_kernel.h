@@ -65,7 +65,7 @@ typedef struct PspIoDrvFuncs
 	int (*IoClose)(PspIoDrvFileArg *arg); 
 	int (*IoRead)(PspIoDrvFileArg *arg, char *data, int len); 
 	int (*IoWrite)(PspIoDrvFileArg *arg, const char *data, int len); 
-	int (*IoLseek)(PspIoDrvFileArg *arg, u32 unk, long long ofs, int whence); 
+	int (*IoLseek)(PspIoDrvFileArg *arg, u32 unk, SceInt64 ofs, int whence); 
 	int (*IoIoctl)(PspIoDrvFileArg *arg, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
 	int (*IoRemove)(PspIoDrvFileArg *arg, const char *name); 
 	int (*IoMkdir)(PspIoDrvFileArg *arg, const char *name, SceMode mode); 

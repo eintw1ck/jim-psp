@@ -107,9 +107,9 @@ u32 sceKernelUtilsMt19937UInt(SceKernelUtilsMt19937Context *ctx);
 typedef struct _SceKernelUtilsMd5Context {
 	unsigned int 	h[4];
 	unsigned int 	pad;
-	short unsigned int 	usRemains;
-	short unsigned int 	usComputed;
-	long long unsigned int 	ullTotalLen;
+	SceUShort16 	usRemains;
+	SceUShort16 	usComputed;
+	SceULong64 	ullTotalLen;
 	unsigned char 	buf[64];
 } SceKernelUtilsMd5Context;
 
@@ -165,9 +165,9 @@ int sceKernelUtilsMd5BlockResult(SceKernelUtilsMd5Context *ctx, u8 *digest);
 /** Type to hold a sha1 context */
 typedef struct _SceKernelUtilsSha1Context {
 	unsigned int 	h[5];
-	short unsigned int 	usRemains;
-	short unsigned int 	usComputed;
-	long long unsigned int 	ullTotalLen;
+	SceUShort16 	usRemains;
+	SceUShort16 	usComputed;
+	SceULong64 	ullTotalLen;
 	unsigned char 	buf[64];
 } SceKernelUtilsSha1Context;
 

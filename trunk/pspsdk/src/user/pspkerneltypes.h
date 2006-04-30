@@ -33,7 +33,7 @@ typedef unsigned int SceUInt;
 
 /* File I/O types. */
 typedef int SceMode;
-typedef long long int SceOff;
-typedef long long int SceIores;
+typedef SceInt64 SceOff;
+typedef SceInt64 SceIores;
 
 #endif /* PSPKERNELTYPES_H */

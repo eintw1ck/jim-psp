@@ -1390,7 +1390,7 @@ int sceKernelUSec2SysClock(unsigned int usec, SceKernelSysClock *clock);
  *
  * @return The time
  */
-long long sceKernelUSec2SysClockWide(unsigned int usec);
+SceInt64 sceKernelUSec2SysClockWide(unsigned int usec);
 
 /**
  * Convert a ::SceKernelSysClock structure to microseconds
@@ -1412,7 +1412,7 @@ int sceKernelSysClock2USec(SceKernelSysClock *clock, unsigned int *low, unsigned
  *
  * @return 0 on success, < 0 on error
  */
-int sceKernelSysClock2USecWide(long long clock, unsigned *low, unsigned int *high);
+int sceKernelSysClock2USecWide(SceInt64 clock, unsigned *low, unsigned int *high);
 
 /**
  * Get the system time
@@ -1428,7 +1428,7 @@ int sceKernelGetSystemTime(SceKernelSysClock *time);
  *
  * @return The system time
  */
-long long sceKernelGetSystemTimeWide(void);
+SceInt64 sceKernelGetSystemTimeWide(void);
 
 /**
  * Get the low 32bits of the current system time
@@ -1477,7 +1477,7 @@ int sceKernelGetVTimerBase(SceUID uid, SceKernelSysClock *base);
  *
  * @return The 64bit timer base
  */
-long long sceKernelGetVTimerBaseWide(SceUID uid);
+SceInt64 sceKernelGetVTimerBaseWide(SceUID uid);
 
 /**
  * Get the timer time
@@ -1496,7 +1496,7 @@ int sceKernelGetVTimerTime(SceUID uid, SceKernelSysClock *time);
  *
  * @return The 64bit timer time
  */
-long long sceKernelGetVTimerTimeWide(SceUID uid);
+SceInt64 sceKernelGetVTimerTimeWide(SceUID uid);
 
 /**
  * Set the timer time
@@ -1516,7 +1516,7 @@ int sceKernelSetVTimerTime(SceUID uid, SceKernelSysClock *time);
  *
  * @return Possibly the last time
  */
-long long sceKernelSetVTimerTimeWide(SceUID uid, long long time);
+SceInt64 sceKernelSetVTimerTimeWide(SceUID uid, SceInt64 time);
 
 /**
  * Start a virtual timer
@@ -1537,7 +1537,7 @@ int sceKernelStartVTimer(SceUID uid);
 int sceKernelStopVTimer(SceUID uid);
 
 typedef SceUInt (*SceKernelVTimerHandler)(SceUID uid, SceKernelSysClock *, SceKernelSysClock *, void *);
-typedef SceUInt (*SceKernelVTimerHandlerWide)(SceUID uid, long long, long long, void *);
+typedef SceUInt (*SceKernelVTimerHandlerWide)(SceUID uid, SceInt64, SceInt64, void *);
 
 /**
  * Set the timer handler
@@ -1561,7 +1561,7 @@ int sceKernelSetVTimerHandler(SceUID uid, SceKernelSysClock *time, SceKernelVTim
  *
  * @return 0 on success, < 0 on error
  */
-int sceKernelSetVTimerHandlerWide(SceUID uid, long long time, SceKernelVTimerHandlerWide handler, void *common);
+int sceKernelSetVTimerHandlerWide(SceUID uid, SceInt64 time, SceKernelVTimerHandlerWide handler, void *common);
 
 /**
  * Cancel the timer handler
