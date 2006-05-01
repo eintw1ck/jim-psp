@@ -86,6 +86,28 @@ int sceAtracSetLoopNum(int atracID, int nloops);
 */
 int sceAtracReleaseAtracID(int atracID);
 
+/**
+ * Gets the number of samples of the next frame to be decoded.
+ *
+ * @param atracID - the atrac ID
+ * @param outN - pointer to receives the number of samples of the next frame.
+ *
+ * @returns < 0 on error, otherwise 0
+ *
+ */
+int sceAtracGetNextSample(int atracID, int *outN);
+
+/**
+ * Gets the maximum number of samples of the atrac3 stream.
+ *
+ * @param atracID - the atrac ID
+ * @param outMax  - pointer to a integer that receives the maximum number of samples.
+ *
+ * @returns < 0 on error, otherwise 0
+ *
+ */
+int sceAtracGetMaxSample(int atracID, int *outMax); 
+
 #ifdef __cplusplus
 }
 #endif
