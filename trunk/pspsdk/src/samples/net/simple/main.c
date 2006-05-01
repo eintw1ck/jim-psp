@@ -142,10 +142,8 @@ void start_server(const char *szIpAddr)
 		{
 			if(FD_ISSET(i, &set))
 			{
-				int val;
+				int val = i;
 
-				/* Unfortunate cludge to make things work :( */
-				val = i | SOCKET_FD_PAT;
 				if(val == sock)
 				{
 					new = accept(sock, (struct sockaddr *) &client, &size);
