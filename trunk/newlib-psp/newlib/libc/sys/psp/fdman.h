@@ -13,6 +13,12 @@
 	
 	#define __PSP_FILENO_MAX 1024
 
+	#define __PSP_IS_FD_VALID(FD) \
+			( (FD >= 0) && (FD < __PSP_FILENO_MAX) && (__psp_descriptormap[FD] != NULL) )
+
+	#define __PSP_IS_FD_OF_TYPE(FD, TYPE) \
+			( (__PSP_IS_FD_VALID(FD)) && (__psp_descriptormap[FD]->type == TYPE) )
+			
 	typedef enum {
 		__PSP_DESCRIPTOR_TYPE_FILE  ,
 		__PSP_DESCRIPTOR_TYPE_PIPE ,

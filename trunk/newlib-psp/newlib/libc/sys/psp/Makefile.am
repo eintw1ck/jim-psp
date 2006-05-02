@@ -25,13 +25,15 @@ FDMAN_OBJS = fdman.o
 
 SELECT_OBJS = select.o
 
+INTERRUPT_OBJS = interrupt.o
+
 XPRINTF_MULT_OBJS = vxprintf.o _xprintf.o __sout.o vsnprintf.o snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o _sprintf_r.o
 
 NETDB_MULT_OBJS = h_errno.o gethostbyaddr.o gethostbyname.o
 
-lib_a_SOURCES = libcglue.c socket.c pspcwd.c xprintf.c netdb.c pipe.c fdman.c select.c
+lib_a_SOURCES = libcglue.c socket.c pspcwd.c xprintf.c netdb.c pipe.c fdman.c select.c interrupt.S
 lib_a_LIBADD  = $(LIBCGLUE_MULT_OBJS) $(SOCKET_MULT_OBJS) $(XPRINTF_MULT_OBJS) \
-				$(NETDB_MULT_OBJS) $(PIPE_OBJS) $(FDMAN_OBJS) $(SELECT_OBJS)
+				$(NETDB_MULT_OBJS) $(PIPE_OBJS) $(FDMAN_OBJS) $(SELECT_OBJS) $(INTERRUPT_OBJS)
 
 all: crt0.o
 
@@ -54,6 +56,9 @@ $(FDMAN_OBJS): fdman.c
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(SELECT_OBJS): select.c
+	$(COMPILE) -DF_$* $< -c -o $@
+	
+$(INTERRUPT_OBJS): interrupt.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 ACLOCAL_AMFLAGS = -I ../../..

@@ -85,7 +85,7 @@ int	accept(int s, struct sockaddr *addr, socklen_t *addrlen)
 {
 	int newscesock, newsock;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET) {
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -117,8 +117,7 @@ int	bind(int s, const struct sockaddr *my_addr, socklen_t addrlen)
 {
 	int ret;
 	
-	if( __psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET )
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -139,8 +138,7 @@ int	connect(int s, const struct sockaddr *serv_addr, socklen_t addrlen)
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -161,8 +159,7 @@ int	getsockopt(int s, int level, int optname, void *optval, socklen_t *optlen)
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -183,8 +180,7 @@ int	listen(int s, int backlog)
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -205,8 +201,7 @@ ssize_t	recv(int s, void *buf, size_t len, int flags)
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -227,8 +222,7 @@ ssize_t	recvfrom(int s, void *buf, size_t len, int flags, struct sockaddr *from,
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -249,8 +243,7 @@ ssize_t	send(int s, const void *buf, size_t len, int flags)
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -271,8 +264,7 @@ ssize_t	sendto(int s, const void *buf, size_t len, int flags, const struct socka
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -293,8 +285,7 @@ int	setsockopt(int s, int level, int optname, const void *optval, socklen_t optl
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -326,8 +317,7 @@ int	shutdown(int s, int how)
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -348,8 +338,7 @@ int	getpeername(int s, struct sockaddr *name, socklen_t *namelen)
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -370,8 +359,7 @@ int	getsockname(int s, struct sockaddr *name, socklen_t *namelen)
 {
 	int ret;
 
-	if(__psp_descriptormap[s] == NULL || __psp_descriptormap[s]->type != __PSP_DESCRIPTOR_TYPE_SOCKET)
-	{
+	if (!__PSP_IS_FD_OF_TYPE(s, __PSP_DESCRIPTOR_TYPE_SOCKET)) {
 		errno = EBADF;
 		return -1;
 	}

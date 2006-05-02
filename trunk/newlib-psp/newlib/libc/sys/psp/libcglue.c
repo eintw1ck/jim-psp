@@ -40,6 +40,8 @@
 extern char __psp_cwd[MAXPATHLEN + 1];
 extern void __psp_init_cwd(char *argv_0);
 extern int __psp_path_absolute(const char *in, char *out, int len);
+extern int  pspDisableInterrupts();
+extern void pspEnableInterrupts(int); 
 
 /* The following functions are defined in socket.c.  They have weak linkage so
    that the user doesn't have to link against the PSP network libraries if they
@@ -221,7 +223,7 @@ int _close(int fd)
 {
 	int ret = 0;
 
-	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+	if (!__PSP_IS_FD_VALID(fd)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -257,7 +259,7 @@ int _close(int fd)
 #ifdef F__read
 int _read(int fd, void *buf, size_t size)
 {
-	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+	if (!__PSP_IS_FD_VALID(fd)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -294,7 +296,7 @@ int _read(int fd, void *buf, size_t size)
 #ifdef F__write
 int _write(int fd, const void *buf, size_t size)
 {
-	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+	if (!__PSP_IS_FD_VALID(fd)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -331,7 +333,7 @@ int _write(int fd, const void *buf, size_t size)
 #ifdef F__lseek
 off_t _lseek(int fd, off_t offset, int whence)
 {
-	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+	if (!__PSP_IS_FD_VALID(fd)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -558,7 +560,7 @@ int _fstat(int fd, struct stat *sbuf)
 {
 	int ret;
 	SceOff oldpos;
-	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+	if (!__PSP_IS_FD_VALID(fd)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -597,7 +599,7 @@ int _fstat(int fd, struct stat *sbuf)
 #ifdef F_isatty
 int isatty(int fd)
 {
-	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+	if (!__PSP_IS_FD_VALID(fd)) {
 		errno = EBADF;
 		return 0;
 	}
@@ -734,7 +736,7 @@ int access(const char *fn, int flags)
 #ifdef F__fcntl
 int _fcntl(int fd, int cmd, ...)
 {
-	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+	if (!__PSP_IS_FD_VALID(fd)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -830,7 +832,7 @@ static unsigned int intr_flags = 0;
 
 void __malloc_lock(struct _reent *ptr)
 {
-	unsigned int flags = 0;/* = sceKernelCpuSuspendIntr();*/
+	unsigned int flags = pspDisableInterrupts();
 
 	if (lock_count == 0) {
 		intr_flags = flags;
@@ -842,7 +844,7 @@ void __malloc_lock(struct _reent *ptr)
 void __malloc_unlock(struct _reent *ptr)
 {
 	if (--lock_count == 0) {
-		/*sceKernelCpuResumeIntr(intr_flags);*/
+		pspEnableInterrupts(intr_flags);
 	}
 }
 #endif

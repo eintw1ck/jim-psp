@@ -25,6 +25,12 @@ size_t __psp_pipe_peekmsgsize(int fd)
 {
 	SceKernelMppInfo info;
 	info.size = sizeof(info);
+	
+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
+		errno = EBADF;
+		return -1;
+	}
+	
 	if (sceKernelReferMsgPipeStatus(__psp_descriptormap[fd]->sce_descriptor, &info) == 0) {
 		return (info.bufSize - info.freeSize);
 	}
@@ -77,7 +83,7 @@ int __psp_pipe_close(int fd)
 {
 	int ret = 0;
 
-	if( fd < 0 || fd > (__PSP_FILENO_MAX - 1) || (__psp_descriptormap[fd]->type != __PSP_DESCRIPTOR_TYPE_PIPE) ) {
+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -109,7 +115,7 @@ int __psp_pipe_nonblocking_read(int fd, void *buf, size_t len)
 	int sceuid;
 	int size;
 	
-	if( fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd]->type != __PSP_DESCRIPTOR_TYPE_PIPE ) {
+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -159,7 +165,7 @@ int __psp_pipe_read(int fd, void *buf, size_t len)
 	int sceuid;
 	int size;
 	
-	if( fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd]->type != __PSP_DESCRIPTOR_TYPE_PIPE ) {
+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -205,7 +211,7 @@ int __psp_pipe_write(int fd, const void *buf, size_t len)
 	int sceuid;
 	char *cbuf;
 	
-	if( fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd]->type != __PSP_DESCRIPTOR_TYPE_PIPE ) {
+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
 		errno = EBADF;
 		return -1;
 	}
@@ -241,7 +247,7 @@ int __psp_pipe_nonblocking_write(int fd, const void *buf, size_t len)
 	int sceuid;
 	char *cbuf;
 	
-	if( fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd]->type != __PSP_DESCRIPTOR_TYPE_PIPE ) {
+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
 		errno = EBADF;
 		return -1;
 	}

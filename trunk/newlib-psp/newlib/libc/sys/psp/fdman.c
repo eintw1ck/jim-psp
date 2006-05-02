@@ -7,10 +7,12 @@
  *
  * Copyright (c) 2006 Rafael Cabezas <rafpsp@gmail.com>
  */
- 
 #include <psptypes.h>
 #include <errno.h>
 #include "fdman.h"
+
+extern int  pspDisableInterrupts();
+extern void pspEnableInterrupts(int); 
 
 static __psp_descriptormap_type  __psp_descriptor_data_pool[__PSP_FILENO_MAX];
 __psp_descriptormap_type        *__psp_descriptormap       [__PSP_FILENO_MAX];
@@ -47,16 +49,19 @@ void __psp_fdman_init()
 int __psp_fdman_get_new_descriptor()
 {
 	int i = 0;
-//lock here
+	int inten;
+
+	inten = pspDisableInterrupts(); /* lock here to make thread safe */
 	for (i = 0; i < __PSP_FILENO_MAX; i++) {
 		if (__psp_descriptormap[i] == NULL) {
 			__psp_descriptormap[i] = &__psp_descriptor_data_pool[i];
 			__psp_descriptormap[i]->ref_count++;
+			pspEnableInterrupts(inten); /* release lock */
 			return i;
 		}
 	}
-//unlock here
-	
+	pspEnableInterrupts(inten); /* release lock */
+		
 	errno = ENOMEM;
 	return -1;
 }
@@ -64,21 +69,23 @@ int __psp_fdman_get_new_descriptor()
 int __psp_fdman_get_dup_descriptor(int fd)
 {
 	int i = 0;
+	int inten;
 	
-	if (fd < 0 || fd > (__PSP_FILENO_MAX - 1) || __psp_descriptormap[fd] == NULL) {
+	if (!__PSP_IS_FD_VALID(fd)) {
 		errno = EBADF;
 		return -1;
 	}
 
-	//lock here
+	inten = pspDisableInterrupts(); /* lock here to make thread safe */
 	for (i = 0; i < __PSP_FILENO_MAX; i++) {
 		if (__psp_descriptormap[i] == NULL) {
 			__psp_descriptormap[i] = &__psp_descriptor_data_pool[fd];
 			__psp_descriptormap[i]->ref_count++;
+			pspEnableInterrupts(inten); /* release lock */
 			return i;
 		}
 	}
-	//unlock here
+	pspEnableInterrupts(inten); /* release lock */
 	
 	errno = ENOMEM;
 	return -1;
@@ -86,6 +93,11 @@ int __psp_fdman_get_dup_descriptor(int fd)
 
 void __psp_fdman_release_descriptor(int fd)
 {
+	if (!__PSP_IS_FD_VALID(fd)) {
+		errno = EBADF;
+		return;
+	}
+
 	__psp_descriptormap[fd]->ref_count--;
 	
 	if (__psp_descriptormap[fd]->ref_count == 0) {
@@ -95,7 +107,7 @@ void __psp_fdman_release_descriptor(int fd)
 		}
 		__psp_descriptormap[fd]->filename       = NULL;
 		__psp_descriptormap[fd]->sce_descriptor = 0;
-		__psp_descriptormap[fd]->type           = 0;//__PSP_DESCRIPTOR_TYPE_NA;
+		__psp_descriptormap[fd]->type           = 0;
 		__psp_descriptormap[fd]->flags          = 0;
 		
 	}
