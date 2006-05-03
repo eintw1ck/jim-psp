@@ -21,15 +21,10 @@
 
 /* Pipe functions */
 /* Returns how many bytes are in the pipe -- waiting to be read */
-size_t __psp_pipe_peekmsgsize(int fd)
+static size_t __psp_pipe_peekmsgsize(int fd)
 {
 	SceKernelMppInfo info;
 	info.size = sizeof(info);
-	
-	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-		errno = EBADF;
-		return -1;
-	}
 	
 	if (sceKernelReferMsgPipeStatus(__psp_descriptormap[fd]->sce_descriptor, &info) == 0) {
 		return (info.bufSize - info.freeSize);
@@ -83,12 +78,6 @@ int __psp_pipe_close(int fd)
 {
 	int ret = 0;
 
-	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-		errno = EBADF;
-		return -1;
-	}
-	
-		
 	if ( __psp_descriptormap[fd]->ref_count == 1 ) {
 			/**
 			* Delete a message pipe
@@ -115,11 +104,6 @@ int __psp_pipe_nonblocking_read(int fd, void *buf, size_t len)
 	int sceuid;
 	int size;
 	
-	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-		errno = EBADF;
-		return -1;
-	}
-	
 	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 
 	size = __psp_pipe_peekmsgsize(fd);
@@ -129,7 +113,7 @@ int __psp_pipe_nonblocking_read(int fd, void *buf, size_t len)
 		}
 	}
 	else {
-		errno = EBADF;
+		errno = EAGAIN;
 		return -1;
 	}
  
@@ -165,11 +149,6 @@ int __psp_pipe_read(int fd, void *buf, size_t len)
 	int sceuid;
 	int size;
 	
-	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-		errno = EBADF;
-		return -1;
-	}
-	
 	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 
 	size = __psp_pipe_peekmsgsize(fd);
@@ -177,10 +156,6 @@ int __psp_pipe_read(int fd, void *buf, size_t len)
 		if (size < len) {
 			len = size;
 		}
-	}
-	else {
-		errno = EBADF;
-		return -1;
 	}
 
 	/**
@@ -210,11 +185,6 @@ int __psp_pipe_write(int fd, const void *buf, size_t len)
 	int ret;
 	int sceuid;
 	char *cbuf;
-	
-	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-		errno = EBADF;
-		return -1;
-	}
 	
 	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 
@@ -246,11 +216,6 @@ int __psp_pipe_nonblocking_write(int fd, const void *buf, size_t len)
 	int ret;
 	int sceuid;
 	char *cbuf;
-	
-	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-		errno = EBADF;
-		return -1;
-	}
 	
 	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 
