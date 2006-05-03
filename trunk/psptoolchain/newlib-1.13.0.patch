@@ -6081,8 +6081,8 @@
 +
 +#endif
 --- newlib-1.13.0/newlib/libc/sys/psp/pipe.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/pipe.c	2006-04-28 10:08:50.000000000 -0400
-@@ -0,0 +1,271 @@
++++ newlib-psp/newlib/libc/sys/psp/pipe.c	2006-05-03 14:36:35.000000000 -0400
+@@ -0,0 +1,236 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -6106,15 +6106,10 @@
 +
 +/* Pipe functions */
 +/* Returns how many bytes are in the pipe -- waiting to be read */
-+size_t __psp_pipe_peekmsgsize(int fd)
++static size_t __psp_pipe_peekmsgsize(int fd)
 +{
 +	SceKernelMppInfo info;
 +	info.size = sizeof(info);
-+	
-+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-+		errno = EBADF;
-+		return -1;
-+	}
 +	
 +	if (sceKernelReferMsgPipeStatus(__psp_descriptormap[fd]->sce_descriptor, &info) == 0) {
 +		return (info.bufSize - info.freeSize);
@@ -6168,12 +6163,6 @@
 +{
 +	int ret = 0;
 +
-+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-+		errno = EBADF;
-+		return -1;
-+	}
-+	
-+		
 +	if ( __psp_descriptormap[fd]->ref_count == 1 ) {
 +			/**
 +			* Delete a message pipe
@@ -6200,11 +6189,6 @@
 +	int sceuid;
 +	int size;
 +	
-+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-+		errno = EBADF;
-+		return -1;
-+	}
-+	
 +	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 +
 +	size = __psp_pipe_peekmsgsize(fd);
@@ -6214,7 +6198,7 @@
 +		}
 +	}
 +	else {
-+		errno = EBADF;
++		errno = EAGAIN;
 +		return -1;
 +	}
 + 
@@ -6250,11 +6234,6 @@
 +	int sceuid;
 +	int size;
 +	
-+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-+		errno = EBADF;
-+		return -1;
-+	}
-+	
 +	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 +
 +	size = __psp_pipe_peekmsgsize(fd);
@@ -6262,10 +6241,6 @@
 +		if (size < len) {
 +			len = size;
 +		}
-+	}
-+	else {
-+		errno = EBADF;
-+		return -1;
 +	}
 +
 +	/**
@@ -6295,11 +6270,6 @@
 +	int ret;
 +	int sceuid;
 +	char *cbuf;
-+	
-+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-+		errno = EBADF;
-+		return -1;
-+	}
 +	
 +	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 +
@@ -6331,11 +6301,6 @@
 +	int ret;
 +	int sceuid;
 +	char *cbuf;
-+	
-+	if (!__PSP_IS_FD_OF_TYPE(fd, __PSP_DESCRIPTOR_TYPE_PIPE)) {
-+		errno = EBADF;
-+		return -1;
-+	}
 +	
 +	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 +
