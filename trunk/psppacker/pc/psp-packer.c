@@ -93,7 +93,7 @@ int parse_args(int argc, char **argv, struct Config *cnf)
 void print_help(void)
 {
 	fprintf(stderr, "PSPPacker v%d.%d (c) TyRaNiD 2k6\n", VER_MAJ, VER_MIN);
-	fprintf(stderr, "Usage: packelf [options] input.elf\n");
+	fprintf(stderr, "Usage: psp-packer [options] input.elf\n");
 	fprintf(stderr, "Options:\n");
 	fprintf(stderr, "-s stub        : Specify stub file\n");
 	fprintf(stderr, "-o output.elf  : Output file name (default to input name)\n");
