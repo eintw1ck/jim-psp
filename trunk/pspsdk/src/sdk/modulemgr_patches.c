@@ -114,3 +114,31 @@ int pspSdkInstallNoPlainModuleCheckPatch(void)
     return 0;
 }
 #endif /* F_InstallNoPlainModuleCheckPatch */
+
+#ifdef F_InstallKernelLoadModulePatch
+
+#define LOAD_MODULE_KERN_CHECK 0x001BDC02 /* srl $k1, 16 */
+#define LOAD_MODULE_KERN_PATCH 0x0000d821 /* move $k1, $0 */
+
+extern u32 sceKernelLoadModuleWithApitype;
+
+int pspSdkInstallKernelLoadModulePatch(void)
+{
+    u32 *addr;
+    int i;
+
+    addr = (u32*) (0x80000000 | ((sceKernelLoadModuleWithApitype & 0x03FFFFFF) << 2));
+    for(i = 0; i < 100; i++)
+    {
+        if(addr[i] == LOAD_MODULE_KERN_CHECK)
+        {
+            addr[i] = LOAD_MODULE_KERN_PATCH;
+        }
+    }
+
+	sceKernelDcacheWritebackInvalidateAll();
+	sceKernelIcacheInvalidateAll();
+
+    return 0;
+}
+#endif

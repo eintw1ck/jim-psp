@@ -22,7 +22,8 @@ lib_LIBRARIES = libpspsdk.a
 
 MODULEMGR_PATCHES_OBJS = \
 	InstallNoDeviceCheckPatch.o \
-	InstallNoPlainModuleCheckPatch.o
+	InstallNoPlainModuleCheckPatch.o \
+	InstallKernelLoadModulePatch.o
 
 INETHELPER_OBJS = pspSdkLoadInetModules.o pspSdkInetInit.o pspSdkInetTerm.o
 

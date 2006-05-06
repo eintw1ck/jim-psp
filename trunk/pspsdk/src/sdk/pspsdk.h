@@ -75,6 +75,15 @@ int pspSdkInstallNoDeviceCheckPatch(void);
 int pspSdkInstallNoPlainModuleCheckPatch(void);
 
 /**
+ * Patch sceLoadModuleWithApiType to remove the kernel check in loadmodule allowing all modules to load
+ *
+ * @note This function must be called while running in kernel mode
+ *
+ * @returns 0 on success
+ */
+int pspSdkInstallKernelLoadModulePatch(void);
+
+/**
  * Load a module and start it.
  *
  * @param filename - Path to the module.
