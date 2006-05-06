@@ -19,6 +19,7 @@
 #include <psputilsforkernel.h>
 #include <string.h>
 #include <stdio.h>
+#include <pspsdk.h>
 #include "psppacker.h"
 
 PSP_MODULE_INFO("PSPPacker", PSP_MODULE_KERNEL, 1, 1);
@@ -41,6 +42,10 @@ int main_thread(SceSize args, void *argp)
 	struct PackHeader ph;
 	int total_size;
 	void *unpacked;
+	int (*Unload)(SceSize args, void *argp, int *status, SceKernelSMOption *option) = NULL;
+
+	pspSdkInstallNoPlainModuleCheckPatch();
+	pspSdkInstallKernelLoadModulePatch();
 
 	dbgprintf("PSPPacker ver %d.%d (c) TyRaNiD/John_K 2k6\n", VER_MAJ, VER_MIN);
 
@@ -122,7 +127,9 @@ int main_thread(SceSize args, void *argp)
 
 exit:
 
+	Unload = (void*) (0xFFFFFFF & (u32)sceKernelStopUnloadSelfModule);
 	/* Let's bug out */
+	Unload(0, NULL, NULL, NULL);
 	sceKernelExitDeleteThread(0);
 
 	return 0;
@@ -138,7 +145,7 @@ int module_start(SceSize args, void *argp)
 	func |= 0x80000000;
 
 	/* Create a high priority thread */
-	thid = sceKernelCreateThread("main_thread", (void *) func, 0x20, 0x10000, 0, NULL);
+	thid = sceKernelCreateThread("", (void *) func, 0x20, 0x10000, 0, NULL);
 	if(thid >= 0)
 	{
 		sceKernelStartThread(thid, args, argp);
