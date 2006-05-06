@@ -1,14 +1,19 @@
-PSPPacker v0.1 (c) TyRaNiD 2k6 (www.pspdev.org)
+PSPPacker v0.2 (c) TyRaNiD 2k6 (www.pspdev.org)
 Based off original PSPPacker by John_K
 
 PSPPacker allows you to pack PSP executables (normal ELFs or PRX files)
-in order to reduce their code size on the memory stick. That's about it
-I am afraid, what did you think it did?
+in order to reduce their code size on the memory stick. It will also 
+patch the PSPs kernel to remove some load module checks. The upshot of
+this is you can write a user mode application and call the normal 
+sceKernelLoadModule function to load anything from anywhere including
+flash.
 
 BIG NOTE: A packed executable will not work on a v2+ machine using one
 of the EBOOT loaders. Not much I can really do about it, sorry.
 
 Building PSPPacker:
+
+If you downloaded a precompiled binary you can skip this section.
 
 You need the latest psptoolchain and pspsdk to build PSPPacker, get it 
 from svn.pspdev.org. You also need a pre-built version of zlib for the
@@ -19,6 +24,8 @@ bog standard boring C so you should be able to build it in windows
 To actually build just go to the psppacker dir and type make. After it
 is complete there should be a psppacker executable in the pc dir. Copy
 that to somewhere in your path.
+
+Using PSPPacker:
 
 The simplest usage is just to run the tool with your elf as the first
 argument (i.e. psp-packer myprog.elf). If successful that will pack
