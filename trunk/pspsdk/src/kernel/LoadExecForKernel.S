@@ -3,7 +3,7 @@
 #include "pspimport.s"
 
 #ifdef F_LoadExecForKernel_0000
-	IMPORT_START	"LoadExecForKernel",0x00010000
+	IMPORT_START	"LoadExecForKernel",0x00090000
 #endif
 #ifdef F_LoadExecForKernel_0001
 	IMPORT_FUNC	"LoadExecForKernel",0xBD2F1094,sceKernelLoadExec
@@ -21,7 +21,7 @@
 	IMPORT_FUNC	"LoadExecForKernel",0x1B97BDB3,sceKernelLoadExecVSHDisc
 #endif
 #ifdef F_LoadExecForKernel_0006
-	IMPORT_FUNC	"LoadExecForKernel",0x821BE114,LoadExecForKernel_821BE114
+	IMPORT_FUNC	"LoadExecForKernel",0x821BE114,sceKernelLoadExecVSHDiscUpdater
 #endif
 #ifdef F_LoadExecForKernel_0007
 	IMPORT_FUNC	"LoadExecForKernel",0x015DA036,sceKernelLoadExecBufferVSHUsbWlan
@@ -67,4 +67,7 @@
 #endif
 #ifdef F_LoadExecForKernel_0021
 	IMPORT_FUNC	"LoadExecForKernel",0x62A27008,sceKernelInvokeExitCallback
+#endif
+#ifdef F_LoadExecForKernel_0022
+	IMPORT_FUNC	"LoadExecForKernel",0x7B7C47EF,sceKernelLoadExecVSHDiscDebug
 #endif
