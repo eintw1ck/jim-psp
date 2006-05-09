@@ -54,6 +54,4 @@ int sceKernelRegisterPriorityExceptionHandler(int exno, int priority, void *func
 }
 #endif
 
-/*@}*/
-
 #endif /* PSPEXCEPTION_H */

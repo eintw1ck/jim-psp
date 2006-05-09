@@ -51,7 +51,8 @@ libpspkernelinclude_HEADERS =	\
 	pspintrman_kernel.h  \
 	pspmodulemgr_kernel.h \
 	pspsysmem_kernel.h    \
-	pspthreadman_kernel.h
+	pspthreadman_kernel.h \
+	pspexception.h
 	
 lib_LIBRARIES = libpspkernel.a
 
