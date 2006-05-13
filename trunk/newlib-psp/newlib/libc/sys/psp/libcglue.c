@@ -21,6 +21,7 @@
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/times.h>
 #include <sys/types.h>
 #include <sys/unistd.h>
 #include <sys/dirent.h>
@@ -161,7 +162,7 @@ char *realpath(const char *path, char *resolved_path)
 }
 #endif
 
-/* Wrappers of the standard open(), close(), read(), write(), unlink() and lseek() routines. */
+/* Wrappers of the standard open(), close(), read(), write(), unlink(), rename() and lseek() routines. */
 #ifdef F__open
 int _open(const char *name, int flags, int mode)
 {
@@ -377,6 +378,26 @@ int _link(const char *name1, const char *name2)
 {
 	errno = ENOSYS;
 	return -1; /* not supported */
+}
+#endif
+
+#ifdef F__rename
+int _rename(const char *old, const char *new)
+{
+	char oldname[MAXPATHLEN + 1];
+	char newname[MAXPATHLEN + 1];
+
+	if(__psp_path_absolute(old, oldname, MAXPATHLEN) < 0) {
+		errno = ENAMETOOLONG;
+		return -1;
+	}
+	
+	if(__psp_path_absolute(new, newname, MAXPATHLEN) < 0) {
+		errno = ENAMETOOLONG;
+		return -1;
+	}
+
+	return __psp_set_errno(sceIoRename(oldname, newname));
 }
 #endif
 

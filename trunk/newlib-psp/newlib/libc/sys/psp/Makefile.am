@@ -12,7 +12,7 @@ LIBCGLUE_MULT_OBJS = _close.o _exit.o _fork.o _fstat.o _getpid.o	\
                      _link.o _unlink.o sleep.o opendir.o readdir.o	\
                      closedir.o getcwd.o chdir.o mkdir.o rmdir.o	\
                      realpath.o _stat.o truncate.o access.o tzset.o	\
-                     __psp_set_errno.o mlock.o _fcntl.o
+                     __psp_set_errno.o mlock.o _fcntl.o _rename.o
 
 SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o \
 				   listen.o recv.o recvfrom.o send.o sendto.o \

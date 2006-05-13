@@ -1,5 +1,5 @@
---- newlib-1.13.0/config.sub	2004-11-15 20:18:39.000000000 -0500
-+++ newlib-psp/config.sub	2005-07-24 01:06:05.000000000 -0400
+--- newlib-1.13.0/config.sub	2004-11-16 01:18:39.000000000 +0000
++++ newlib-psp/config.sub	2006-05-13 20:29:29.000000000 +0000
 @@ -253,6 +253,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
@@ -27,8 +27,8 @@
  	mips3*-*)
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
---- newlib-1.13.0/configure	2004-12-16 14:51:28.000000000 -0500
-+++ newlib-psp/configure	2005-07-24 01:06:05.000000000 -0400
+--- newlib-1.13.0/configure	2004-12-16 19:51:28.000000000 +0000
++++ newlib-psp/configure	2006-05-13 20:29:29.000000000 +0000
 @@ -1507,6 +1507,9 @@
    mips*-*-linux*)
      noconfigdirs="$noconfigdirs target-newlib target-libgloss"
@@ -39,8 +39,8 @@
    mips*-*-*)
      noconfigdirs="$noconfigdirs gprof ${libgcj}"
      ;;
---- newlib-1.13.0/configure.in	2004-12-16 14:51:28.000000000 -0500
-+++ newlib-psp/configure.in	2005-07-24 01:06:05.000000000 -0400
+--- newlib-1.13.0/configure.in	2004-12-16 19:51:28.000000000 +0000
++++ newlib-psp/configure.in	2006-05-13 20:29:29.000000000 +0000
 @@ -716,6 +716,9 @@
    mips*-*-linux*)
      noconfigdirs="$noconfigdirs target-newlib target-libgloss"
@@ -51,8 +51,8 @@
    mips*-*-*)
      noconfigdirs="$noconfigdirs gprof ${libgcj}"
      ;;
---- newlib-1.13.0/newlib/Makefile.am	2004-12-03 18:46:28.000000000 -0500
-+++ newlib-psp/newlib/Makefile.am	2005-12-12 19:16:32.000000000 -0500
+--- newlib-1.13.0/newlib/Makefile.am	2004-12-03 23:46:28.000000000 +0000
++++ newlib-psp/newlib/Makefile.am	2006-05-13 20:29:28.000000000 +0000
 @@ -251,6 +251,18 @@
  	     $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/machine/`basename $$i`; \
  	    else true; fi ; \
@@ -72,8 +72,8 @@
  	  $(mkinstalldirs) $(DESTDIR)$(tooldir)/include/sys; \
  	  for i in $(srcdir)/libc/include/sys/*.h; do \
  	   $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/sys/`basename $$i`; \
---- newlib-1.13.0/newlib/Makefile.in	2004-12-03 18:46:28.000000000 -0500
-+++ newlib-psp/newlib/Makefile.in	2005-12-12 19:16:32.000000000 -0500
+--- newlib-1.13.0/newlib/Makefile.in	2004-12-03 23:46:28.000000000 +0000
++++ newlib-psp/newlib/Makefile.in	2006-05-13 20:29:28.000000000 +0000
 @@ -214,7 +214,7 @@
  
  DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -111,8 +111,8 @@
  	  $(mkinstalldirs) $(DESTDIR)$(tooldir)/include/sys; \
  	  for i in $(srcdir)/libc/include/sys/*.h; do \
  	   $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/sys/`basename $$i`; \
---- newlib-1.13.0/newlib/configure.host	2004-10-05 15:44:24.000000000 -0400
-+++ newlib-psp/newlib/configure.host	2006-04-28 09:34:11.000000000 -0400
+--- newlib-1.13.0/newlib/configure.host	2004-10-05 19:44:24.000000000 +0000
++++ newlib-psp/newlib/configure.host	2006-05-13 21:50:57.000000000 +0000
 @@ -570,7 +570,14 @@
  	;;
    mips*-*-elf*)
@@ -122,15 +122,15 @@
 +	  mipsallegrex*-psp-*)
 +		sys_dir=psp
 +		syscall_dir=syscalls
-+		newlib_cflags="${newlib_cflags} -G0 -mno-explicit-relocs -DCOMPACT_CTYPE -DCLOCK_PROVIDED -DHAVE_FCNTL -DMALLOC_ALIGNMENT=16 -I${prefix}/psp/sdk/include" ;;
++		newlib_cflags="${newlib_cflags} -G0 -mno-explicit-relocs -DCOMPACT_CTYPE -DCLOCK_PROVIDED -DHAVE_RENAME -DHAVE_FCNTL -DMALLOC_ALIGNMENT=16 -I${prefix}/psp/sdk/include" ;;
 +	  *)
 +		newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES" ;;
 +	esac
  	;;
    mmix-*)
  	syscall_dir=syscalls
---- newlib-1.13.0/newlib/libc/include/inttypes.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/include/inttypes.h	2005-12-08 11:54:33.000000000 -0500
+--- newlib-1.13.0/newlib/libc/include/inttypes.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/include/inttypes.h	2006-05-13 20:29:20.000000000 +0000
 @@ -0,0 +1,290 @@
 +/*
 + * Copyright (c) 2004, 2005 by
@@ -422,8 +422,8 @@
 +#endif
 +
 +#endif
---- newlib-1.13.0/newlib/libc/include/machine/time.h	2000-12-04 14:06:37.000000000 -0500
-+++ newlib-psp/newlib/libc/include/machine/time.h	2005-10-28 12:26:33.000000000 -0400
+--- newlib-1.13.0/newlib/libc/include/machine/time.h	2000-12-04 19:06:37.000000000 +0000
++++ newlib-psp/newlib/libc/include/machine/time.h	2006-05-13 20:29:19.000000000 +0000
 @@ -9,6 +9,10 @@
  #endif
  #endif /* !__rtems__ */
@@ -435,8 +435,8 @@
  #endif	/* _MACHTIME_H_ */
  
  
---- newlib-1.13.0/newlib/libc/include/stdint.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/include/stdint.h	2005-12-08 11:54:33.000000000 -0500
+--- newlib-1.13.0/newlib/libc/include/stdint.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/include/stdint.h	2006-05-13 20:29:20.000000000 +0000
 @@ -0,0 +1,401 @@
 +/*
 + * Copyright (c) 2004, 2005 by
@@ -839,8 +839,8 @@
 +#endif
 +
 +#endif /* _STDINT_H */
---- newlib-1.13.0/newlib/libc/include/sys/config.h	2004-06-22 17:54:51.000000000 -0400
-+++ newlib-psp/newlib/libc/include/sys/config.h	2005-09-07 13:04:52.000000000 -0400
+--- newlib-1.13.0/newlib/libc/include/sys/config.h	2004-06-22 21:54:51.000000000 +0000
++++ newlib-psp/newlib/libc/include/sys/config.h	2006-05-13 20:29:20.000000000 +0000
 @@ -94,6 +94,12 @@
  #endif
  #endif
@@ -854,8 +854,8 @@
  #ifdef __xstormy16__
  #define __SMALL_BITFIELDS
  #undef INT_MAX
---- newlib-1.13.0/newlib/libc/include/sys/types.h	2003-07-02 16:32:07.000000000 -0400
-+++ newlib-psp/newlib/libc/include/sys/types.h	2005-12-12 19:16:32.000000000 -0500
+--- newlib-1.13.0/newlib/libc/include/sys/types.h	2003-07-02 20:32:07.000000000 +0000
++++ newlib-psp/newlib/libc/include/sys/types.h	2006-05-13 20:29:20.000000000 +0000
 @@ -188,52 +188,6 @@
  
  typedef unsigned short nlink_t;
@@ -909,8 +909,8 @@
  #undef __MS_types__
  #undef _ST_INT32
  
---- newlib-1.13.0/newlib/libc/sys/psp/Makefile.am	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2006-04-28 15:21:57.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/Makefile.am	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/Makefile.am	2006-05-11 20:51:00.000000000 +0000
 @@ -0,0 +1,65 @@
 +## Process this file with automake to generate Makefile.in
 +
@@ -926,7 +926,7 @@
 +                     _link.o _unlink.o sleep.o opendir.o readdir.o	\
 +                     closedir.o getcwd.o chdir.o mkdir.o rmdir.o	\
 +                     realpath.o _stat.o truncate.o access.o tzset.o	\
-+                     __psp_set_errno.o mlock.o _fcntl.o
++                     __psp_set_errno.o mlock.o _fcntl.o _rename.o
 +
 +SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o \
 +				   listen.o recv.o recvfrom.o send.o sendto.o \
@@ -977,8 +977,8 @@
 +
 +ACLOCAL_AMFLAGS = -I ../../..
 +CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)/configure.host
---- newlib-1.13.0/newlib/libc/sys/psp/Makefile.in	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2006-04-28 15:22:03.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/Makefile.in	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/Makefile.in	2006-05-11 20:54:00.000000000 +0000
 @@ -0,0 +1,389 @@
 +# Makefile.in generated automatically by automake 1.4-p6 from Makefile.am
 +
@@ -1074,7 +1074,7 @@
 +
 +noinst_LIBRARIES = lib.a
 +
-+LIBCGLUE_MULT_OBJS = _close.o _exit.o _fork.o _fstat.o _getpid.o	                     _gettimeofday.o _kill.o _lseek.o _open.o _read.o	                     _sbrk.o _wait.o _write.o clock.o isatty.o time.o	                     _link.o _unlink.o sleep.o opendir.o readdir.o	                     closedir.o getcwd.o chdir.o mkdir.o rmdir.o	                     realpath.o _stat.o truncate.o access.o tzset.o	                     __psp_set_errno.o mlock.o _fcntl.o
++LIBCGLUE_MULT_OBJS = _close.o _exit.o _fork.o _fstat.o _getpid.o	                     _gettimeofday.o _kill.o _lseek.o _open.o _read.o	                     _sbrk.o _wait.o _write.o clock.o isatty.o time.o	                     _link.o _unlink.o sleep.o opendir.o readdir.o	                     closedir.o getcwd.o chdir.o mkdir.o rmdir.o	                     realpath.o _stat.o truncate.o access.o tzset.o	                     __psp_set_errno.o mlock.o _fcntl.o _rename.o
 +
 +
 +SOCKET_MULT_OBJS = socket.o accept.o bind.o connect.o getsockopt.o 				   listen.o recv.o recvfrom.o send.o sendto.o 				   setsockopt.o shutdown.o getsockname.o getpeername.o 				   inet_ntoa.o
@@ -1112,8 +1112,8 @@
 +_write.o clock.o isatty.o time.o _link.o _unlink.o sleep.o opendir.o \
 +readdir.o closedir.o getcwd.o chdir.o mkdir.o rmdir.o realpath.o \
 +_stat.o truncate.o access.o tzset.o __psp_set_errno.o mlock.o _fcntl.o \
-+socket.o accept.o bind.o connect.o getsockopt.o listen.o recv.o \
-+recvfrom.o send.o sendto.o setsockopt.o shutdown.o getsockname.o \
++_rename.o socket.o accept.o bind.o connect.o getsockopt.o listen.o \
++recv.o recvfrom.o send.o sendto.o setsockopt.o shutdown.o getsockname.o \
 +getpeername.o inet_ntoa.o vxprintf.o _xprintf.o __sout.o vsnprintf.o \
 +snprintf.o vsprintf.o sprintf.o __mout.o mprintf.o vmprintf.o \
 +asprintf.o vasprintf.o __fout.o fprintf.o vfprintf.o printf.o vprintf.o \
@@ -1369,8 +1369,8 @@
 +# Tell versions [3.59,3.63) of GNU make to not export all variables.
 +# Otherwise a system limit (for SysV at least) may be exceeded.
 +.NOEXPORT:
---- newlib-1.13.0/newlib/libc/sys/psp/README	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/README	2006-05-02 11:27:31.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/README	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/README	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,16 @@
 +Newlib for PSP
 +--
@@ -1388,8 +1388,8 @@
 +
 +--
 +Marcus R. Brown <mrbrown@ocgnet.org>
---- newlib-1.13.0/newlib/libc/sys/psp/aclocal.m4	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/aclocal.m4	2006-05-02 11:27:31.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/aclocal.m4	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/aclocal.m4	2006-05-13 20:29:26.000000000 +0000
 @@ -0,0 +1,1185 @@
 +dnl aclocal.m4 generated automatically by aclocal 1.4-p6
 +
@@ -2576,8 +2576,8 @@
 +]
 +)
 +
---- newlib-1.13.0/newlib/libc/sys/psp/arpa/inet.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/arpa/inet.h	2006-05-02 11:27:30.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/arpa/inet.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/arpa/inet.h	2006-05-13 20:29:22.000000000 +0000
 @@ -0,0 +1,26 @@
 +/* arpa/inet.h - Functions for converting IP addresses between strings and numbers */
 +
@@ -2605,12 +2605,8 @@
 +}
 +#endif
 +#endif /* _ARPA_INET_H_ */
---- newlib-1.13.0/newlib/libc/sys/psp/confdefs.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/confdefs.h	2005-10-12 15:36:20.000000000 -0400
-@@ -0,0 +1 @@
-+
---- newlib-1.13.0/newlib/libc/sys/psp/configure	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/configure	2006-05-02 11:27:31.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/configure	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/configure	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,1880 @@
 +#! /bin/sh
 +
@@ -4492,8 +4488,8 @@
 +rm -fr confdefs* $ac_clean_files
 +test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 +
---- newlib-1.13.0/newlib/libc/sys/psp/configure.in	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/configure.in	2006-05-02 11:27:31.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/configure.in	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/configure.in	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,12 @@
 +dnl This is the newlib/libc/sys/psp configure.in file.
 +dnl Process this file with autoconf to produce a configure script.
@@ -4507,14 +4503,14 @@
 +NEWLIB_CONFIGURE(../../..)
 +
 +AC_OUTPUT(Makefile)
---- newlib-1.13.0/newlib/libc/sys/psp/crt0.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/crt0.c	2006-03-13 00:00:00.000000000 -0500
+--- newlib-1.13.0/newlib/libc/sys/psp/crt0.c	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/crt0.c	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,3 @@
 +/* The real crt0.c lives in PSPSDK. */
 +
 +void _start() { }
---- newlib-1.13.0/newlib/libc/sys/psp/fdman.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/fdman.c	2006-05-02 11:02:56.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/fdman.c	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/fdman.c	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,115 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -4631,8 +4627,8 @@
 +	}
 +	__psp_descriptormap[fd] = NULL;
 +}
---- newlib-1.13.0/newlib/libc/sys/psp/fdman.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/fdman.h	2006-04-28 10:06:39.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/fdman.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/fdman.h	2006-05-13 20:29:26.000000000 +0000
 @@ -0,0 +1,44 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -4678,8 +4674,8 @@
 +	void __psp_fdman_release_descriptor(int fd);
 +
 +#endif
---- newlib-1.13.0/newlib/libc/sys/psp/include/netdb.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/include/netdb.h	2006-05-02 11:27:30.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/include/netdb.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/include/netdb.h	2006-05-13 20:29:22.000000000 +0000
 @@ -0,0 +1,36 @@
 +/* Simple gethostbyname and gethostbyaddr replacements, note not thread safe */
 +#ifndef __NETDB_H__
@@ -4717,8 +4713,8 @@
 +#endif
 +
 +#endif
---- newlib-1.13.0/newlib/libc/sys/psp/interrupt.S	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/interrupt.S	2006-05-02 11:28:43.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/interrupt.S	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/interrupt.S	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,66 @@
 +
 +	.set noreorder
@@ -4786,9 +4782,9 @@
 +	nop
 +
 +	.end pspEnableInterrupts
---- newlib-1.13.0/newlib/libc/sys/psp/libcglue.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2006-05-02 11:03:27.000000000 -0400
-@@ -0,0 +1,898 @@
+--- newlib-1.13.0/newlib/libc/sys/psp/libcglue.c	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/libcglue.c	2006-05-11 20:55:00.000000000 +0000
+@@ -0,0 +1,919 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -4812,6 +4808,7 @@
 +#include <sys/fcntl.h>
 +#include <sys/stat.h>
 +#include <sys/time.h>
++#include <sys/times.h>
 +#include <sys/types.h>
 +#include <sys/unistd.h>
 +#include <sys/dirent.h>
@@ -4952,7 +4949,7 @@
 +}
 +#endif
 +
-+/* Wrappers of the standard open(), close(), read(), write(), unlink() and lseek() routines. */
++/* Wrappers of the standard open(), close(), read(), write(), unlink(), rename() and lseek() routines. */
 +#ifdef F__open
 +int _open(const char *name, int flags, int mode)
 +{
@@ -5168,6 +5165,26 @@
 +{
 +	errno = ENOSYS;
 +	return -1; /* not supported */
++}
++#endif
++
++#ifdef F__rename
++int _rename(const char *old, const char *new)
++{
++	char oldname[MAXPATHLEN + 1];
++	char newname[MAXPATHLEN + 1];
++
++	if(__psp_path_absolute(old, oldname, MAXPATHLEN) < 0) {
++		errno = ENAMETOOLONG;
++		return -1;
++	}
++	
++	if(__psp_path_absolute(new, newname, MAXPATHLEN) < 0) {
++		errno = ENAMETOOLONG;
++		return -1;
++	}
++
++	return __psp_set_errno(sceIoRename(oldname, newname));
 +}
 +#endif
 +
@@ -5687,8 +5704,8 @@
 +
 +#endif /* F__exit */
 +
---- newlib-1.13.0/newlib/libc/sys/psp/netdb.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/netdb.c	2006-03-13 00:00:00.000000000 -0500
+--- newlib-1.13.0/newlib/libc/sys/psp/netdb.c	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/netdb.c	2006-05-13 20:29:26.000000000 +0000
 @@ -0,0 +1,101 @@
 +/* Simple gethostbyname and gethostbyaddr replacements using the resolver lib */
 +#include <stdio.h>
@@ -5791,8 +5808,8 @@
 +}
 +
 +#endif
---- newlib-1.13.0/newlib/libc/sys/psp/netinet/in.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/netinet/in.h	2006-05-02 11:27:30.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/netinet/in.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/netinet/in.h	2006-05-13 20:29:23.000000000 +0000
 @@ -0,0 +1,271 @@
 +/*	$NetBSD: in.h,v 1.71 2005/08/05 09:21:25 elad Exp $	*/
 +
@@ -6065,8 +6082,8 @@
 +#endif
 +
 +#endif /* !_NETINET_IN_H_ */
---- newlib-1.13.0/newlib/libc/sys/psp/netinet/tcp.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/netinet/tcp.h	2006-05-02 11:27:30.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/netinet/tcp.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/netinet/tcp.h	2006-05-13 20:29:23.000000000 +0000
 @@ -0,0 +1,12 @@
 +#ifndef __NETINET_TCP_H__
 +#define __NETINET_TCP_H__
@@ -6080,8 +6097,8 @@
 +#define	TCP_MAXSEG	0x02	/* set maximum segment size */
 +
 +#endif
---- newlib-1.13.0/newlib/libc/sys/psp/pipe.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/pipe.c	2006-05-03 14:36:35.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/pipe.c	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/pipe.c	2006-05-13 20:29:26.000000000 +0000
 @@ -0,0 +1,236 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -6319,8 +6336,8 @@
 +	}
 +}
 +
---- newlib-1.13.0/newlib/libc/sys/psp/pspcwd.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/pspcwd.c	2006-04-26 10:50:46.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/pspcwd.c	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/pspcwd.c	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,166 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -6488,8 +6505,8 @@
 +	return __psp_path_normalize(out + dr, len - dr);
 +}
 +
---- newlib-1.13.0/newlib/libc/sys/psp/select.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/select.c	2006-04-28 09:10:56.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/select.c	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/select.c	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,172 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -6663,8 +6680,8 @@
 +	return count;
 +}
 +
---- newlib-1.13.0/newlib/libc/sys/psp/socket.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/socket.c	2006-04-28 10:11:57.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/socket.c	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/socket.c	2006-05-13 20:29:26.000000000 +0000
 @@ -0,0 +1,390 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -7056,8 +7073,8 @@
 +	return ip_addr;
 +}
 +#endif
---- newlib-1.13.0/newlib/libc/sys/psp/sys/dirent.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/sys/dirent.h	2006-05-02 11:27:31.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/sys/dirent.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/sys/dirent.h	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,39 @@
 +#ifndef _SYS_DIRENT_H
 +#define _SYS_DIRENT_H
@@ -7098,8 +7115,8 @@
 +#endif
 +
 +#endif
---- newlib-1.13.0/newlib/libc/sys/psp/sys/errno.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/sys/errno.h	2006-05-02 11:27:31.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/sys/errno.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/sys/errno.h	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,158 @@
 +/* errno.h for PSP, based on newlib/libc/include/sys/errno.h. */
 +
@@ -7259,8 +7276,8 @@
 +}
 +#endif
 +#endif /* _SYS_ERRNO_H */
---- newlib-1.13.0/newlib/libc/sys/psp/sys/fd_set.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/sys/fd_set.h	2006-05-02 11:27:31.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/sys/fd_set.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/sys/fd_set.h	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,69 @@
 +/*	$NetBSD: fd_set.h,v 1.1 2005/05/22 12:44:24 kleink Exp $	*/
 +
@@ -7331,12 +7348,12 @@
 +#define	FD_ZERO(p)	(void)__builtin_memset((p), 0, sizeof(*(p)))
 +
 +#endif /* _SYS_FD_SET_H_ */
---- newlib-1.13.0/newlib/libc/sys/psp/sys/ioctl.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/sys/ioctl.h	2006-05-02 11:27:31.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/sys/ioctl.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/sys/ioctl.h	2006-05-13 20:29:24.000000000 +0000
 @@ -0,0 +1 @@
 +/* Empty file, here for compatibility */
---- newlib-1.13.0/newlib/libc/sys/psp/sys/select.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/sys/select.h	2006-05-02 11:27:31.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/sys/select.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/sys/select.h	2006-05-13 20:29:24.000000000 +0000
 @@ -0,0 +1,54 @@
 +/*	$NetBSD: select.h,v 1.24 2005/05/22 12:44:24 kleink Exp $	*/
 +
@@ -7392,8 +7409,8 @@
 +#endif
 +
 +#endif /* !_SYS_SELECT_H_ */
---- newlib-1.13.0/newlib/libc/sys/psp/sys/socket.h	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/sys/socket.h	2006-05-02 11:27:31.000000000 -0400
+--- newlib-1.13.0/newlib/libc/sys/psp/sys/socket.h	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/sys/socket.h	2006-05-13 20:29:25.000000000 +0000
 @@ -0,0 +1,294 @@
 +/*	$NetBSD: socket.h,v 1.77 2005/11/29 03:12:16 christos Exp $	*/
 +
@@ -7689,8 +7706,8 @@
 +#endif
 +
 +#endif /* !_SYS_SOCKET_H_ */
---- newlib-1.13.0/newlib/libc/sys/psp/xprintf.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/sys/psp/xprintf.c	2006-03-13 00:00:00.000000000 -0500
+--- newlib-1.13.0/newlib/libc/sys/psp/xprintf.c	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/sys/psp/xprintf.c	2006-05-13 20:29:26.000000000 +0000
 @@ -0,0 +1,984 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
@@ -8676,8 +8693,8 @@
 +	return ret;
 +}
 +#endif
---- newlib-1.13.0/newlib/libc/time/Makefile.am	2002-04-17 17:23:31.000000000 -0400
-+++ newlib-psp/newlib/libc/time/Makefile.am	2005-11-22 19:56:27.000000000 -0500
+--- newlib-1.13.0/newlib/libc/time/Makefile.am	2002-04-17 21:23:31.000000000 +0000
++++ newlib-psp/newlib/libc/time/Makefile.am	2006-05-13 20:29:27.000000000 +0000
 @@ -22,7 +22,8 @@
  	time.c		\
  	tzlock.c	\
@@ -8688,8 +8705,8 @@
  
  libtime_la_LDFLAGS = -Xcompiler -nostdlib
  
---- newlib-1.13.0/newlib/libc/time/Makefile.in	2004-01-27 18:26:26.000000000 -0500
-+++ newlib-psp/newlib/libc/time/Makefile.in	2005-11-22 19:56:27.000000000 -0500
+--- newlib-1.13.0/newlib/libc/time/Makefile.in	2004-01-27 23:26:26.000000000 +0000
++++ newlib-psp/newlib/libc/time/Makefile.in	2006-05-13 20:29:27.000000000 +0000
 @@ -110,7 +110,7 @@
  
  INCLUDES = $(NEWLIB_CFLAGS) $(CROSS_CFLAGS) $(TARGET_CFLAGS)
@@ -8717,8 +8734,8 @@
  CFLAGS = @CFLAGS@
  COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
  LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
---- newlib-1.13.0/newlib/libc/time/tzset_r.c	2004-12-09 16:36:48.000000000 -0500
-+++ newlib-psp/newlib/libc/time/tzset_r.c	2005-11-22 19:56:27.000000000 -0500
+--- newlib-1.13.0/newlib/libc/time/tzset_r.c	2004-12-09 21:36:48.000000000 +0000
++++ newlib-psp/newlib/libc/time/tzset_r.c	2006-05-13 20:29:27.000000000 +0000
 @@ -11,18 +11,6 @@
  static char __tzname_dst[11];
  static char *prev_tzenv = NULL;
@@ -8738,8 +8755,8 @@
  _VOID
  _DEFUN (_tzset_r, (reent_ptr),
          struct _reent *reent_ptr)
---- newlib-1.13.0/newlib/libc/time/tzvars.c	1969-12-31 19:00:00.000000000 -0500
-+++ newlib-psp/newlib/libc/time/tzvars.c	2005-11-22 19:56:27.000000000 -0500
+--- newlib-1.13.0/newlib/libc/time/tzvars.c	1970-01-01 00:00:00.000000000 +0000
++++ newlib-psp/newlib/libc/time/tzvars.c	2006-05-13 20:29:27.000000000 +0000
 @@ -0,0 +1,17 @@
 +/* Moved these variables from tzset_r.c to avoid including all of _tzset_r()
 +   and the functions it uses. -- MRB (PSPDEV LOCAL) */
