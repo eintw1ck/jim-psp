@@ -1,0 +1,39 @@
+OpenSSL PSP Port by Raf (rafpsp<at>gmail<dot>com)
+--------------------------------------------------
+
+First, you will need to get openssl-0.9.7j.tar.gz (http://www.openssl.org/ , 
+http://www.openssl.org/source/openssl-0.9.7j.tar.gz)
+
+Unpack:
+--------
+
+user$> gunzip < openssl-0.9.7j.tar.gz | tar xv
+
+*Then cd over to openssl-0.9.7j
+
+To Patch:
+----------
+
+user$> patch -p1 < ../openssl-0.9.7j.patch
+
+To configure and compile, run:
+-------------------------------
+
+user$> ./Configure psp --prefix=$(psp-config --psp-prefix) threads zlib no-shared no-asm
+
+Then:
+
+user$> make
+
+To install, as root run:
+-------------------------
+
+root$> make install
+
+
+Port Notes:
+------------
+It is also worth noting that you will have to manually initialize the SSL 
+random number generator by calling RAND_seed() before you can use the 
+library.
+
