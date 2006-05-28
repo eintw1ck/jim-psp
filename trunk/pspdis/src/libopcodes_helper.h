@@ -20,10 +20,11 @@ extern "C" {
 #endif
 
 #include "dis-asm.h"
+#include "util.h"
 
-int libopcodes_read_mem(bfd_vma memaddr, bfd_byte *myaddr, unsigned int length, struct disassemble_info *info);
+int libopcodes_read_mem(bfd_vma memaddr, bfd_byte *myaddr, u32 length, struct disassemble_info *info);
 void libopcodes_print_addr(bfd_vma addr, struct disassemble_info *info);
-void libopcodes_mem_error(int status, bfd_vma memaddr, struct disassemble_info *info);
+void libopcodes_mem_error(u32 status, bfd_vma memaddr, struct disassemble_info *info);
 int libopcodes_symbol_at_addr(bfd_vma addr, struct disassemble_info * info);
 bfd_boolean libopcodes_symbol_is_valid(asymbol *symbol, struct disassemble_info * info);
 

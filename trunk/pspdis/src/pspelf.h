@@ -101,15 +101,15 @@ typedef struct {
 
 typedef struct {
     // 0, 0, 1, 1 ?
-    unsigned char c1, c2, c3, c4;
+    u8 c1, c2, c3, c4;
     // 28 bytes of module name, packed with 0's.
     // (might be less with 0 longs after)
     char name[28];
-    unsigned long gp;         /* ptr to somewhere after executable */
-    unsigned long libEnt;       /* ptr to .lib.ent section */
-    unsigned long libEntBtm;    /* ptr to end of .lib.ent section */
-    unsigned long libStub;      /* ptr to .lib.stub section */
-    unsigned long libStubBtm;   /* ptr to end of .lib.stub section */
+    u32 gp;         /* ptr to somewhere after executable */
+    u32 libEnt;       /* ptr to .lib.ent section */
+    u32 libEntBtm;    /* ptr to end of .lib.ent section */
+    u32 libStub;      /* ptr to .lib.stub section */
+    u32 libStubBtm;   /* ptr to end of .lib.stub section */
 } __attribute__((packed)) SceModuleInfo;
 
 // this struct seems to appear as the data in
@@ -117,10 +117,10 @@ typedef struct {
 // the module info
 typedef struct {
     const char *libname;	/* Library name. */
-    unsigned int flags;		/* Flags. */
-    unsigned char ent_len;	/* Number of DWORDs in this entry. The size of the entry is ent_len * 4. */
-    unsigned char var_ent_count; /* Number of variable entries following function entries. */
-    unsigned short func_ent_count; /* Number of function entries. */
+    u32 flags;		/* Flags. */
+    u8 ent_len;	/* Number of DWORDs in this entry. The size of the entry is ent_len * 4. */
+    u8 var_ent_count; /* Number of variable entries following function entries. */
+    u16 func_ent_count; /* Number of function entries. */
     // func_ent_count pointers to 
     // addr of start of .rodata.sceResident, which has 4
     // longs (and one 0 long) before module name strings start,
@@ -135,23 +135,23 @@ typedef struct {
 // including a terminating 0.
 
 typedef struct {
-    unsigned long l1; // unknown 0xd632acdb
-    unsigned long l2; // unknown 0xf01d73a7
-    unsigned long startAddress; // address of _start
-    unsigned long moduleInfoAddr; // address of sceModuleInfo struct
+    u32 l1; // unknown 0xd632acdb
+    u32 l2; // unknown 0xf01d73a7
+    u32 startAddress; // address of _start
+    u32 moduleInfoAddr; // address of sceModuleInfo struct
 } SceResidentData;
     
 
 typedef struct {
     // pointer to module name (will be in .rodata.sceResident section)
-    unsigned long moduleNameSymbol;
+    u32 moduleNameSymbol;
     // mod version
-    unsigned short version;
-    unsigned short attr;
-    unsigned char structsz; // 0x5
-    unsigned char numVars;
+    u16 version;
+    u16 attr;
+    u8 structsz; // 0x5
+    u8 numVars;
     // number of symbols
-    unsigned short numFuncs;
+    u16 numFuncs;
     // each symbol has an associated nid; nidData is a pointer
     // (in .rodata.sceNid section) to an array of longs, one
     // for each function, which identifies the function whose
@@ -160,9 +160,9 @@ typedef struct {
     // The hash is the first 4 bytes of a SHA-1 hash of the function
     // name.  (Represented as a little-endian long, so the order 
     // of the bytes is reversed.)
-    unsigned long nidData;
+    u32 nidData;
     // the function to be relocated
-    unsigned long firstSymAddr;
+    u32 firstSymAddr;
 } __attribute__((packed)) SceLibStubEntry;
 
 #endif

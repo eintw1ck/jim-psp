@@ -22,7 +22,7 @@
      put the bytes in, and LENGTH is the number of bytes to read.
      INFO is a pointer to this struct.
      Returns an errno value or 0 for success.  */
-int libopcodes_read_mem(bfd_vma memaddr, bfd_byte *myaddr, unsigned int length, struct disassemble_info *info) {
+int libopcodes_read_mem(bfd_vma memaddr, bfd_byte *myaddr, u32 length, struct disassemble_info *info) {
 	void * result;
 	//printf("disasm is trying to read %d bytes from 0x%08lX (dest contains 0x%08X)\n", length, memaddr, *(int *)&myaddr[0]);
 	result = memcpy(myaddr, (void *)(u32)memaddr, length);
@@ -44,7 +44,7 @@ void libopcodes_print_addr(bfd_vma addr, struct disassemble_info *info) {
      recover from.  STATUS is the errno value from read_memory_func and
      MEMADDR is the address that we were trying to read.  INFO is a
      pointer to this struct.  */
-void libopcodes_mem_error(int status, bfd_vma memaddr, struct disassemble_info *info) {
+void libopcodes_mem_error(u32 status, bfd_vma memaddr, struct disassemble_info *info) {
 	printf("mem error called with status %d @", status);
 	libopcodes_print_addr(memaddr, info);
 	printf("\n");

@@ -17,7 +17,8 @@
 #include <string.h>
 #include "pspdis.h"
 #include "pspelf.h"
-#include "../libopcodes/dis-asm.h"
+//#include "../libopcodes/dis-asm.h"
+#include "dis-asm.h"
 #include "libopcodes_helper.h"
 #include "nidDb.h"
 
@@ -55,7 +56,7 @@ int main(int argc, char *argv[]) {
 	elfData = (u8*)malloc(elfDataSize);
 	fseek(in, 0, SEEK_SET);
 	if(fread(elfData, 1, elfDataSize, in) != elfDataSize) {
-		printf("Error reading %d bytes.\n", elfDataSize);
+		printf("Error reading %d bytes.\n", (u32)elfDataSize);
 		free(elfData);
 		fclose(in);
 		return 1;
@@ -80,20 +81,23 @@ int main(int argc, char *argv[]) {
 		else
 			sprintf(elfType, "an unrecognized ELF type 0x%02X", header->elfType);
 	else {
-		printf("File is not a valid PSP ELF (0x%08X)\n", (unsigned int)header->ident);
+		printf("File is not a valid PSP ELF (0x%08X)\n", (u32)header->ident);
 		fclose(in);
 		free(elfData);
 		return 1;
 	}
+
 	printf("File is %s with %d sections\n", elfType, header->numSectionHeaderEntries);
 	
 	//Load XML NID List
-	printf("Loading NID definitions...\n");
-	nids.loadFromXml("../libdoc/psplibdoc.xml");
+	printf("Loading NID definitions...");
+//	nids.loadFromXml("../libdoc/psplibdoc.xml");
+	nids.loadFromXml("./psplibdoc.xml");
+	printf("ok\n");
 	
 	//get section header string table (.shstrtab)
 	sectionStringTable = &elfData[sHeaders[header->sectionHeaderStringTableIndex].offset];
-	
+
 	//read ModuleInfo
 	for (i = 0; i < header->numSectionHeaderEntries; i++) {
 		if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".rodata.sceModuleInfo") == 0) {
@@ -101,21 +105,24 @@ int main(int argc, char *argv[]) {
 			printf("Module name: %s\n", moduleInfo->name);
 		}
 	}
+
 	if (!moduleInfo) {
 		printf("Could not find .rodata.sceModuleInfo section, aborting.\n");
 		fclose(in);
 		free(elfData);
 		return 1;
 	}
+
 	//enumerate section headers
 	for (i = 0; i < header->numSectionHeaderEntries; i++) {
-		dprintf("Section %u: '%s' (%u bytes)\n", (unsigned int)i, &sectionStringTable[sHeaders[i].nameIndex], (unsigned int)sHeaders[i].size);
+		dprintf("Section %u: '%s' (%u bytes)\n", (u32)i, &sectionStringTable[sHeaders[i].nameIndex], (u32)sHeaders[i].size);
 		if (strcmp((const char *)&sectionStringTable[sHeaders[i].nameIndex], ".text") == 0) {
 			text = &elfData[sHeaders[i].offset];
 			textSize = sHeaders[i].size;
 			textSection = &sHeaders[i];
 		}
 	}
+
 	if (!text) {
 		printf("Could not find .text section, aborting.\n");
 		fclose(in);
@@ -125,7 +132,7 @@ int main(int argc, char *argv[]) {
 	
 	//print out imports
 	//printf("moduleinfo: stub: 0x%08X, libent: 0x%08X\n", moduleInfo->libStub, moduleInfo->libEnt);
-	printf("Found %d imports:\n", (int)(moduleInfo->libStubBtm-moduleInfo->libStub)/sizeof(SceLibStubEntry));
+	printf("Found %d imports:\n", (u32)(moduleInfo->libStubBtm-moduleInfo->libStub)/sizeof(SceLibStubEntry));
 	
 	u8 *stubPos = &text[moduleInfo->libStub];
 	SceLibStubEntry* stubEntry;
@@ -136,7 +143,7 @@ int main(int argc, char *argv[]) {
 			libName = (char *)&text[stubEntry->moduleNameSymbol];
 			printf("\t%s\n", libName);
 			for(i = 0; i < stubEntry->numFuncs; i++) {
-				printf("\t\t0x%08X %s (%s)\n", *(unsigned int*)&text[stubEntry->nidData+4*i], nids.resolveNid(libName, *(u32*)&text[stubEntry->nidData+4*i]), nids.getNidType(libName, *(u32*)&text[stubEntry->nidData+4*i]) == nidType_Function ? "Function" : "Variable");
+				printf("\t\t0x%08X %s (%s)\n", *(u32*)&text[stubEntry->nidData+4*i], nids.resolveNid(libName, *(u32*)&text[stubEntry->nidData+4*i]), nids.getNidType(libName, *(u32*)&text[stubEntry->nidData+4*i]) == nidType_Function ? "Function" : "Variable");
 				fflush(stdin);
 			}
 			printf("\n");
@@ -151,7 +158,7 @@ int main(int argc, char *argv[]) {
 		u32 libNameOffset = *(u32*)&text[moduleInfo->libEntBtm-16];
 		printf("Found %d exports for library %s:\n", numExports, (char*)&text[libNameOffset]);
 		for(u32 i = 0; i < numExports; i++) {
-			printf("\t\t0x%08X %s (%s)\n", *(unsigned int*)&text[exportsOffset+4*i], nids.resolveNid((char*)&text[libNameOffset], *(u32*)&text[exportsOffset+4*i]), nids.getNidType((char*)&text[libNameOffset], *(u32*)&text[exportsOffset+4*i]) == nidType_Function ? "Function" : "Variable");
+			printf("\t\t0x%08X %s (%s)\n", *(u32*)&text[exportsOffset+4*i], nids.resolveNid((char*)&text[libNameOffset], *(u32*)&text[exportsOffset+4*i]), nids.getNidType((char*)&text[libNameOffset], *(u32*)&text[exportsOffset+4*i]) == nidType_Function ? "Function" : "Variable");
 		}
 	}
 	
@@ -165,7 +172,7 @@ int main(int argc, char *argv[]) {
 	dinfo.mach = bfd_mach_mips_allegrex;
 	disassemble_init_for_target(&dinfo);
 	
-	printf("data in buffer at 0x%08X, section vma is 0x%08X, length is %u\n", (unsigned int)text, (unsigned int)textSection->address, (unsigned int)textSize);
+	printf("data in buffer at 0x%08X, section vma is 0x%08X, length is %u\n", (u32)text, (u32)textSection->address, (u32)textSize);
 	dinfo.buffer = text;
 	dinfo.buffer_vma = textSection->address;
 	dinfo.buffer_length = textSize;
@@ -179,7 +186,7 @@ int main(int argc, char *argv[]) {
 	u32 bytecount = 0;
 	while (bytecount < textSize) {
 		int increment = 0;
-		printf("\n0x%08X: ", (unsigned int)bytecount);
+		printf("\n0x%08X: ", (u32)bytecount);
 		dinfo.insn_info_valid = 0;
 		increment += print_insn_little_mips((bfd_vma)bytecount, &dinfo);
 		if (dinfo.insn_info_valid != 0) {
@@ -187,7 +194,7 @@ int main(int argc, char *argv[]) {
 			    dinfo.insn_type == dis_condbranch ||
 			    dinfo.insn_type == dis_jsr ||
 			    dinfo.insn_type == dis_condjsr) {
-			    	//fixme: msotly special cased atm
+			    	//fixme: mostly special cased atm
 			    	//ignore xrefs to 0x00000000 unless they're straight to 0 or a relative jump to 0 (todo)
 			    	int instr = *(u32*)&text[bytecount];
 			    	if(dinfo.target != 0 || dinfo.target == 0 && (instr & 0x00FFFFFF) == 0) {
@@ -201,9 +208,9 @@ int main(int argc, char *argv[]) {
 	//print xrefs
 	printf("\n\nxref report\n");
 	for (xref_type::iterator it = xrefs.begin(); it != xrefs.end(); ++it) {
-		printf("%u xrefs for addr 0x%08X\n", (unsigned int)(*it).second.size(), (unsigned int)(*it).first);
+		printf("%u xrefs for addr 0x%08X\n", (u32)(*it).second.size(), (u32)(*it).first);
 		for(size_t i = 0; i < (*it).second.size(); i++)
-			printf("\t0x%08X\n", (unsigned int)(*it).second[i]);
+			printf("\t0x%08X\n", (u32)(*it).second[i]);
 	}
 	free(elfData);
 	fclose(in);

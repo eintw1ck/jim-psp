@@ -1,3 +1,7 @@
+Mai 18 2006 - groepaz
+	- fixes for 64bit systems
+	- added readme, notes on how to build
+
 June 13 2005 - John_K
 	- Added tinyxml
 	- Added nidDb class to enable NID name resolution
