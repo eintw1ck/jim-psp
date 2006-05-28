@@ -1,0 +1,52 @@
+#
+#  $Id: Makefile.skel,v 1.1 2005/08/29 14:46:34 debug Exp $
+#
+#  Makefile for GXemul src/promemul
+#
+
+.SILENT:
+
+CFLAGS=$(CWARNINGS) $(COPTIM) $(XINCLUDE) $(DINCLUDE) -I .
+
+OBJS=psp_syscalls.o \
+	psp_hooks.o \
+	psp_hle_display.o \
+	psp_hle_controller.o \
+	psp_hle_nand.o \
+	psp_hle_audio.o \
+	psp_hle_rtc.o \
+	psp_hle_io.o \
+	psp_hle_misc.o \
+	psp_hle_gameshare.o \
+	psp_hle_netplay.o \
+	psp_hle_registry.o \
+	psp_hle_ge.o \
+	psp_hle_modulemanager.o \
+	psp_hle_threadmanager.o \
+	psp_hle_memorymanager.o \
+	psp_hle_power.o \
+	psp_hle_umd.o \
+	\
+	psp_hook_libc.o \
+	\
+	psp_hle_misc.o \
+
+all: $(OBJS)
+
+makeautohle:
+	./makeautohle.sh 
+
+psp_autohle.h: makeautohle
+psp_autohle.c: makeautohle
+
+$(OBJS): Makefile psp_autohle.h psp_autohle.c
+
+clean:
+	rm -f $(OBJS) *core tmp_*.c
+	rm -f *~
+	rm -f psp_autohle.h
+	rm -f psp_autohle.c
+
+clean_all: clean
+	rm -f Makefile
+

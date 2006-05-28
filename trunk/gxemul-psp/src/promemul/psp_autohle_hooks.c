@@ -1,0 +1,18 @@
+PSP_Hook pspmemhooks[]={
+{0x00000000,"chdir",HLE_chdir,1},
+{0x00000000,"CheckPspCompress",HLE_nohook,4},
+{0x00000000,"exception_and_uart4_stuff_88c04104",HLE_nohook,4},
+{0x00000000,"getcwd",HLE_getcwd,2},
+{0x00000000,"kprintf",HLE_kprintf,8},
+{0x00000000,"memcpy",HLE_memcpy,3},
+{0x00000000,"memset",HLE_memset,3},
+{0x00000000,"sceKernelCheckExecFile",HLE_sceKernelCheckExecFile,4},
+{0x00000000,"sceKernelProbeExecuteableObject",HLE_nohook,4},
+{0x00000000,"sprintf",HLE_sprintf,8},
+{0x00000000,"strchr",HLE_strchr,2},
+{0x00000000,"strcpy",HLE_strcpy,2},
+{0x00000000,"strlen",HLE_strlen,1},
+{0x00000000,"strrchr",HLE_strrchr,2},
+{0x00000000,"vsnprintf",HLE_vsnprintf,8},
+{0x00000000,"vsprintf",HLE_vsprintf,8},
+};
