@@ -1,0 +1,9 @@
+to build this
+
+- put tinyxml library into ./pspdis/tinyxml (or edit the makefile to fit)
+- create a configured binutils source (step 1 of the newtoolchain script)
+- edit the makefile to point to the location of the binutils source
+- copy psplibdoc.xml into ./pspdis
+
+after this pspdis should build by issuing "make"
+
