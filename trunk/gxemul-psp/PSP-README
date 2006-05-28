@@ -1,0 +1,176 @@
+
+warning: i just hacked this up for myself, take it with a grain of salt
+
+=============================================================================
+Source Overview
+=============================================================================
+
+Interface
+=========
+
+main.c - Command Line Interpreter
+
+include/debugger.h
+debugger.c
+
+include/console.h
+console.c - console i/o stuff
+
+include/x11.h
+x11.c - x11 framebuffer output and key/mouse input
+
+General Core
+============
+
+include/symbol.h - symbol handling header
+(ok) symbol.c - symbol handling
+
+(ok) useremul.c - syscall emulation general code
+ - useremul_init: machine type
+
+(ok) include/device.h - generic part of memory mapped device emu header
+device.c
+emul_parse.c
+(ok) include/machine.h - generic machine emulation header
+machine.c
+memory_rw.c - main memory r/w interface
+psp_bios.c 
+cpu.c - non cpu specific part of cpu emulation
+include/diskimage.h
+diskimage.c - generic disc image handler
+include/misc.h
+misc.c
+include/emul.h
+emul.c
+include/float_emul.h
+float_emul.c
+(ok) include/memory.h - basic memory interface header
+memory.c  - basic memory interface 
+include/net.h
+net.c
+
+include/devices.h
+include/quick_pc_to_pointers.h
+include/mp.h
+
+PSP Core
+========
+
+PSP Machine
+-----------------------------------------------------------------------------
+machines/machine_psp.c - main PSP machine description
+
+PSP ELF Loader (called from emul.c)
+-----------------------------------------------------------------------------
+include/exec_elf.h - elf format header
+file.c
+
+PSP Syscall HLE (called from useremul.c)
+-----------------------------------------------------------------------------
+promemul/psp_hle.h - psp syscall emulation header
+promemul/psp_syscalls.c - syscall emulation psp specific code
+promemul/psp_hle_*.c - syscall emulation hooks
+
+TODO:	proper handling of modules
+	proper handling of threading
+
+Interrupts
+-----------------------------------------------------------------------------
+machines/interrupts_psp.c - PSP Interrupt Hook
+include/machine_interrupts.h
+
+PSP Framebuffer
+-----------------------------------------------------------------------------
+
+devices/dev_fb.c -
+devices/fb_include.c -
+
+TODO: framebuffer baseaddress has no effect atm
+
+PSP CPU
+=======
+
+cpus/cpu_dyntrans.c
+cpus/cpu_mips_instr.c
+cpus/cpu_mips.c - main MIPS cpu core, mips disassembler
+cpus/cpu_run.c
+cpus/memory_fast_v2h.c
+cpus/cpu_mips_coproc.c
+cpus/memory_mips.c
+
+include/cop0.h
+include/opcodes_mips.h
+include/cpu.h
+include/cpu_mips.h
+include/cpuregs.h
+
+include/mips_cpu_types.h - Table of flags for various MIPS CPUs
+ - Allegrex CPU Type definition
+
+TODO: allegrex special opcodes are not handled correctly atm
+
+Allegrex "TLB"
+-----------------------------------------------------------------------------
+cpus/memory_mips_v2p.c - 'TRANSLATE_ADDRESS' function
+	TODO: this is a hack
+
+=============================================================================
+Tested examples from PSPSDK
+=============================================================================
+
+polyphonic		display ok, unsupported opcodes
+wavegen			display ok, unsupported opcodes
+
+controller/basic	display ok
+
+exception		display ok
+gdb			display ok, can not fully work yet
+kprintf 		display ok
+profiler 		display ok, profiler hw support missing
+prxdecrypt 		display ok
+sio	 		display ok
+
+gu/blend		some display
+gu/blit			some display
+gu/celshading		no display, crash
+[...]
+gu/cube			no display
+[...]
+
+irda			display ok
+sircs			display ok
+
+cwd			display ok
+fileio			display ok
+kdumper			display ok
+loadmodule		display ok
+messagebox		display ok
+threadstatus		display ok
+
+me/basic		display ok
+
+dumpipl			display ok
+
+net/resolver		no display
+net/simple		no display
+net/simple_prx		crash
+net/wlanscan		crash
+
+power			display ok
+
+prx_loader		display ok
+testprx			crash
+
+savedata/decrypt	display ok
+savedata/encrypt	display ok
+savedata/utility	display ok
+
+elf_template		ok
+
+usb/storage		display ok
+
+msgdialog		crash
+netconf			displays crap
+systemparam		displays crap
+
+samples/wlan		display ok
