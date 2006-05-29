@@ -82,7 +82,7 @@ static int io_write(PspIoDrvFileArg *arg, const char *data, int len)
 	return ret;
 }
 
-static int io_lseek(PspIoDrvFileArg *arg, u32 unk, long long ofs, int whence)
+static SceOff io_lseek(PspIoDrvFileArg *arg, SceOff ofs, int whence)
 {
 	return 0;
 }
