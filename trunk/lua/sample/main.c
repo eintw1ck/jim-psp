@@ -137,7 +137,7 @@ int main(int argc, char** argv)
 	luaopen_table(L);
 	luaopen_string(L);
 	luaopen_math(L);
-	luaopen_loadlib(L);
+	luaL_openlibs(L);
 	
 	// register our own functions
 	lua_register(L, "ctrlRead", lua_ctrlRead);
