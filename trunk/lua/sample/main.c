@@ -132,11 +132,11 @@ int main(int argc, char** argv)
 
 	// init Lua and load all libraries
 	lua_State *L = lua_open();
-	luaopen_io(L);
+/*	luaopen_io(L);
 	luaopen_base(L);
 	luaopen_table(L);
 	luaopen_string(L);
-	luaopen_math(L);
+	luaopen_math(L);*/
 	luaL_openlibs(L);
 	
 	// register our own functions
