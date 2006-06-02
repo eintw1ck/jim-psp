@@ -1,8 +1,6 @@
 
 LUA= .
 
-include $(LUA)/config
-
 PSPSDK = $(shell psp-config --pspsdk-path)
 PSPDIR = $(shell psp-config --psp-prefix)
 
@@ -10,11 +8,12 @@ CFLAGS = -O2 -G0 -I$(LUA)/include
 
 LIBLUA_OBJS = src/lapi.o src/lcode.o src/ldebug.o src/ldo.o src/ldump.o src/lfunc.o \
 	src/lgc.o src/llex.o src/lmem.o src/lobject.o src/lopcodes.o \
-	src/lparser.o src/lstate.o src/lstring.o src/ltable.o src/ltests.o \
+	src/lparser.o src/lstate.o src/lstring.o src/ltable.o \
 	src/ltm.o src/lundump.o src/lvm.o src/lzio.o
-LIBLUALIB_OBJS = src/lib/lauxlib.o src/lib/lbaselib.o src/lib/ldblib.o \
-	src/lib/liolib.o src/lib/lmathlib.o src/lib/ltablib.o \
-	src/lib/lstrlib.o src/lib/loadlib.o
+
+LIBLUALIB_OBJS = src/lauxlib.o src/lbaselib.o src/ldblib.o \
+	src/liolib.o src/lmathlib.o src/loslib.o src/ltablib.o \
+	src/lstrlib.o src/loadlib.o src/linit.o
 
 OBJS = $(LIBLUA_OBJS)
 TARGET_LIB = liblua.a
@@ -32,5 +31,5 @@ clean_liblualib:
 
 install: all
 	mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
-	$(INSTALL_DATA) include/*.h $(PSPDIR)/include
-	$(INSTALL_DATA) *.a $(PSPDIR)/lib
+	cp src/lua.h src/luaconf.h src/lualib.h src/lauxlib.h etc/lua.hpp $(PSPDIR)/include
+	cp *.a $(PSPDIR)/lib
