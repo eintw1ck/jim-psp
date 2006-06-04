@@ -135,6 +135,28 @@ int sceIoDelDrv(const char *drv_name);
   */
 int sceIoReopen(const char *file, int flags, SceMode mode, SceUID fd);
 
+/**
+ * Get the current working directory for a thread.
+ *
+ * @param uid - The UID of the thread
+ * @param dir - A character buffer in which to store the cwd
+ * @param len - The length of the buffer
+ *
+ * @return Number of characters written to buf, if no cwd then 0 is 
+ * returned.
+ */
+int sceIoGetThreadCwd(SceUID uid, char *dir, int len);
+
+/**
+ * Set the current working directory for a thread
+ *
+ * @param uid - The UID of the thread
+ * @param dir - The directory to set
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceIoChangeThreadCwd(SceUID uid, char *dir);
+
 /*@}*/
 
 #ifdef __cplusplus
