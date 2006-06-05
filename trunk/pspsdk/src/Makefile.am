@@ -12,9 +12,11 @@ SUBDIRS = \
 	hprm \
 	kernel \
 	libc \
+	mpeg \
 	nand \
 	net \
 	power \
+	prof  \
 	rtc \
 	sircs \
 	sdk \
