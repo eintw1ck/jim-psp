@@ -78,34 +78,36 @@ fi
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile
-				 src/atrac3/Makefile
+                 src/atrac3/Makefile
                  src/audio/Makefile
                  src/base/Makefile
                  src/ctrl/Makefile
                  src/debug/Makefile
                  src/display/Makefile
+                 src/fpu/Makefile
                  src/ge/Makefile
                  src/gu/Makefile
                  src/gum/Makefile
                  src/hprm/Makefile
                  src/kernel/Makefile
                  src/libc/Makefile
-		 src/nand/Makefile
-		 src/net/Makefile
+                 src/mpeg/Makefile
+                 src/nand/Makefile
+                 src/net/Makefile
                  src/power/Makefile
+                 src/prof/Makefile
                  src/rtc/Makefile
                  src/sircs/Makefile
                  src/sdk/Makefile
                  src/startup/Makefile
-		 src/user/Makefile
                  src/umd/Makefile
                  src/usb/Makefile
                  src/usbstor/Makefile
+                 src/user/Makefile
                  src/utility/Makefile
-                 src/wlan/Makefile
-                 src/fpu/Makefile
                  src/vfpu/Makefile
                  src/vsh/Makefile
+                 src/wlan/Makefile
                  src/samples/Makefile
                  tools/Makefile])
 AC_OUTPUT

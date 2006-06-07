@@ -16,7 +16,7 @@ SUBDIRS = \
 	nand \
 	net \
 	power \
-	prof  \
+	prof \
 	rtc \
 	sircs \
 	sdk \
