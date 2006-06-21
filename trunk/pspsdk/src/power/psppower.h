@@ -217,6 +217,21 @@ int scePowerIdleTimerEnable(int unknown);
  */
 int scePowerIdleTimerDisable(int unknown);
 
+/**
+ * Request the PSP to go into standby
+ *
+ * @return 0 always
+ */
+int scePowerRequestStandby(void);
+
+/**
+ * Request the PSP to go into suspend
+ *
+ * @return 0 always
+ */
+int scePowerRequestSuspend(void);
+
+
 #ifdef __cplusplus
 }
 #endif
