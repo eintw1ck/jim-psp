@@ -133,69 +133,13 @@ void load_psplink_user(const char *bootpath)
 	load_start_module(prx_path, 0, NULL);
 }
 
-SceUID load_wifi(const char *bootpath, int ap)
-{
-	char prx_path[MAXPATHLEN];
-	char num[32];
-	char *args[2];
-
-	load_start_module("flash0:/kd/ifhandle.prx", 0, NULL);
-	load_start_module("flash0:/kd/pspnet.prx", 0, NULL);
-	load_start_module("flash0:/kd/pspnet_inet.prx", 0, NULL);
-	load_start_module("flash0:/kd/pspnet_apctl.prx", 0, NULL);
-	load_start_module("flash0:/kd/pspnet_resolver.prx", 0, NULL);
-
-	sprintf(num, "%d", ap);
-	args[0] = num;
-	args[1] = NULL;
-	strcpy(prx_path, bootpath);
-	strcat(prx_path, "modnet.prx");
-	g_context.wifi = ap;
-	return load_start_module(prx_path, 1, args);
-}
-
-SceUID load_wifishell(const char *bootpath)
-{
-	char prx_path[MAXPATHLEN];
-
-	strcpy(prx_path, bootpath);
-	strcat(prx_path, "netshell.prx");
-	g_context.wifishell = 1;
-	return load_start_module(prx_path, 0, NULL);
-}
-
 SceUID load_usbshell(const char *bootpath)
 {
 	char prx_path[MAXPATHLEN];
 
 	strcpy(prx_path, bootpath);
 	strcat(prx_path, "usbshell.prx");
-	g_context.usbshell = 1;
 	return load_start_module(prx_path, 0, NULL);
-}
-
-SceUID load_conshell(const char *bootpath)
-{
-	char prx_path[MAXPATHLEN];
-
-	strcpy(prx_path, bootpath);
-	strcat(prx_path, "conshell.prx");
-	g_context.conshell = 1;
-	return load_start_module(prx_path, 0, NULL);
-}
-
-void copy_conscontext(const struct ConfigContext *cctx, struct GlobalContext *gctx)
-{
-	strcpy(gctx->conscrosscmd, cctx->conscrosscmd);
-	strcpy(gctx->conssquarecmd, cctx->conssquarecmd);
-	strcpy(gctx->constrianglecmd, cctx->constrianglecmd);
-	strcpy(gctx->conscirclecmd, cctx->conscirclecmd);
-	strcpy(gctx->consselectcmd, cctx->consselectcmd);
-	strcpy(gctx->consstartcmd, cctx->consstartcmd);
-	strcpy(gctx->consdowncmd, cctx->consdowncmd);
-	strcpy(gctx->consleftcmd, cctx->consleftcmd);
-	strcpy(gctx->consupcmd, cctx->consupcmd);
-	strcpy(gctx->consrightcmd, cctx->consrightcmd);
 }
 
 SceUID load_gdb(const char *bootpath, int argc, char **argv)
@@ -203,14 +147,7 @@ SceUID load_gdb(const char *bootpath, int argc, char **argv)
 	char prx_path[MAXPATHLEN];
 
 	strcpy(prx_path, bootpath);
-	if(g_context.usbgdb)
-	{
-		strcat(prx_path, "usbgdb.prx");
-	}
-	else
-	{
-		strcat(prx_path, "netgdb.prx");
-	}
+	strcat(prx_path, "usbgdb.prx");
 	g_context.gdb = 1;
 	return load_start_module(prx_path, argc, argv);
 }
@@ -232,17 +169,6 @@ void exit_reset(void)
 
 void psplinkStop(void)
 {
-	int status;
-
-	stop_usbmass();
-	if(g_context.netshelluid >= 0)
-	{
-		sceKernelStopModule(g_context.netshelluid, 0, NULL, &status, NULL);
-	}
-	if(g_context.conshelluid >= 0)
-	{
-		sceKernelStopModule(g_context.conshelluid, 0, NULL, &status, NULL);
-	}
 	if(g_context.thevent >= 0)
 	{
 		sceKernelReleaseThreadEventHandler(g_context.thevent);
@@ -282,11 +208,6 @@ int psplinkPresent(void)
 	return 1;
 }
 
-int psplinkConsolePermit(void)
-{
-	return (!g_context.inexec || g_context.consinterfere);
-}
-
 int RegisterExceptionDummy(void)
 {
 	return 0;
@@ -314,29 +235,18 @@ int psplinkPatchException(void)
 void initialise(SceSize args, void *argp)
 {
 	struct ConfigContext ctx;
-	const char *init_dir = "ms0:/";
+	const char *init_dir = "host0:/";
 	struct SavedContext *save = (struct SavedContext *) SAVED_ADDR;
 
 	map_firmwarerev();
 	memset(&g_context, 0, sizeof(g_context));
 	exceptionInit();
-	g_context.netshelluid = -1;
-	g_context.conshelluid = -1;
 	g_context.thevent = -1;
 	parse_sceargs(args, argp);
 	configLoad(g_context.bootpath, &ctx);
 	disasmSetSymResolver(symbolFindNameByAddressEx);
-	g_context.usbgdb = ctx.usbgdb;
 	ttyInit();
-	if(ctx.usbhost)
-	{
-		init_usbhost(g_context.bootpath);
-		init_dir = "host0:/";
-	}
-	else if(ctx.usbmass)
-	{
-		init_usbmass();
-	}
+	init_usbhost(g_context.bootpath);
 
 	if(save->magic == SAVED_MAGIC)
 	{
@@ -354,21 +264,12 @@ void initialise(SceSize args, void *argp)
 		ctx.baudrate = DEFAULT_BAUDRATE;
 	}
 
-	if(ctx.sioshell)
-	{
-		sioInit(ctx.baudrate, 0);
-		ttySetSioHandler(sioPutText);
-		g_context.sioshell = 1;
-	}
-	else if(ctx.kprintf)
+	if(ctx.kprintf)
 	{
 		sioInit(ctx.baudrate, 1);
 	}
 
-	if(ctx.usbshell)
-	{
-		load_usbshell(g_context.bootpath);
-	}
+	load_usbshell(g_context.bootpath);
 
 	sceUmdActivate(1, "disc0:");
 
@@ -385,27 +286,8 @@ void initialise(SceSize args, void *argp)
 		load_psplink_user(g_context.bootpath);
 	}
 
-#ifndef USB_ONLY
-	if(ctx.wifi > 0)
-	{
-		load_wifi(g_context.bootpath, ctx.wifi);
-
-		if(ctx.wifishell)
-		{
-			g_context.netshelluid = load_wifishell(g_context.bootpath);
-		}
-	}
-
-	if (ctx.conshell)
-	{
-		g_context.consinterfere = ctx.consinterfere;
-		g_context.conshelluid = load_conshell(g_context.bootpath);
-		copy_conscontext(&ctx, &g_context);
-	}
-#endif
-
 	g_context.resetonexit = ctx.resetonexit;
-	g_context.pcterm  = ctx.pcterm;
+	g_context.pcterm  = 1;
 
 	if(g_context.execfile[0] != 0)
 	{
@@ -423,20 +305,7 @@ int main_thread(SceSize args, void *argp)
 
 	printf(WELCOME_MESSAGE);
 
-#ifndef USB_ONLY
-	if(g_context.sioshell)
-	{
-		shellStart();
-
-		psplinkStop();
-
-		psplinkExitShell();
-	}
-	else
-#endif
-	{
-		sceKernelSleepThread();
-	}
+	sceKernelSleepThread();
 
 	return 0;
 }

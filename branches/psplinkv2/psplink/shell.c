@@ -58,31 +58,12 @@
 
 extern struct GlobalContext g_context;
 
-int (*g_readchar)(void) = sioReadChar;
-int (*g_readcharwithtimeout)(void) = sioReadCharWithTimeout;
-
 typedef struct _CommandMsg
 {
 	struct _CommandMsg *link;
 	char   *command;
 	int    res;
 } CommandMsg;
-
-#ifndef USB_ONLY
-/* Last command line (history) */
-static char g_lastcli[CLI_HISTSIZE][CLI_MAX];
-/* Current command line */
-static char g_cli[CLI_MAX];
-/* Current position in the command line buffer */
-static int  g_cli_pos = 0;
-/* Current size of the cli buffer */
-static int  g_cli_size = 0;
-/* Last position in the history buffer */
-static int  g_lastcli_pos = 0;
-/* Current scrolling position in the history buffer */
-static int  g_currcli_pos = 0;
-/* Message box for command line parsing */
-#endif 
 
 static SceUID g_command_msg = -1;
 /* Thread ID for the command line parsing */
@@ -1478,12 +1459,6 @@ static int debug_cmd(int argc, char **argv)
 
 	if(handlepath(g_context.currdir, argv[0], path, TYPE_FILE, 1))
 	{
-		if((!g_context.usbgdb) && (g_context.wifi == 0))
-		{
-			/* Default to AP 1 */
-			load_wifi(g_context.bootpath, 1);
-		}
-
 		if(g_context.gdb == 0)
 		{
 			argv[0] = path;
@@ -3537,44 +3512,6 @@ static int pspver_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int wifi_cmd(int argc, char **argv)
-{
-	if(g_context.wifi == 0)
-	{
-		int ap = 1;
-		if(argc > 0)
-		{
-			ap = atoi(argv[1]);
-		}
-
-		load_wifi(g_context.bootpath, ap);
-	}
-	else
-	{
-		printf("Wifi already enabled: ap %d\n", g_context.wifi);
-	}
-
-	return CMD_OK;
-}
-
-static int wifishell_cmd(int argc, char **argv)
-{
-	if(g_context.wifi == 0)
-	{
-		int ap = 1;
-		if(argc > 0)
-		{
-			ap = atoi(argv[1]);
-		}
-
-		load_wifi(g_context.bootpath, ap);
-	}
-
-	load_wifishell(g_context.bootpath);
-
-	return CMD_OK;
-}
-
 static int config_cmd(int argc, char **argv)
 {
 	configPrint(g_context.bootpath);
@@ -3754,8 +3691,6 @@ static int exit_cmd(int argc, char **argv)
 
 static int help_cmd(int argc, char **argv);
 
-static int custom_cmd(int argc, char **argv);
-
 /* Structure to hold a single command entry */
 struct sh_command 
 {
@@ -3902,8 +3837,6 @@ const struct sh_command commands[] = {
 	{ "run",  NULL, run_cmd, 1, "Run a shell script", "file [args]"},
 	{ "calc", NULL, calc_cmd, 1, "Do a simple address calculation", "addr [d|o|x]"},
 	{ "reset", "r", reset_cmd, 0, "Reset", ""},
-	{ "wifi", NULL, wifi_cmd, 0, "Enable WIFI with a specified AP config", "[ap]"},
-	{ "wifishell", NULL, wifishell_cmd, 0, "Enable WIFI Shell with a specified AP config", "[ap]"},
 	{ "ver", "v", version_cmd, 0, "Print version of psplink", ""},
 	{ "pspver", NULL, pspver_cmd, 0, "Print the version of PSP", ""},
 	{ "config", NULL, config_cmd, 0, "Print the configuration file settings", ""},
@@ -3917,7 +3850,6 @@ const struct sh_command commands[] = {
 	{ "profmode", NULL, profmode_cmd, 0, "Set or display the current profiler mode", "[t|g|o]" },
 	{ "debugreg", NULL, debugreg_cmd, 0, "Set or display the current debug register", "[val]" },
 	{ "help", "?", help_cmd, 0, "Help (Obviously)", "[command|category]"},
-	{ "custom", "cst", custom_cmd, 1, NULL, NULL},
 	{ NULL, NULL, NULL, 0, NULL, NULL}
 };
 
@@ -4100,249 +4032,6 @@ int psplinkParseCommand(char *command)
 	return ret;
 }
 
-#ifndef USB_ONLY
-
-/* Process command line */
-static int process_cli()
-{
-	int ret;
-
-	putchar(13);
-	putchar(10);
-
-	g_cli[g_cli_pos] = 0;
-	g_cli_pos = 0;
-	memcpy(&g_lastcli[g_lastcli_pos][0], g_cli, CLI_MAX);
-	g_lastcli_pos = (g_lastcli_pos + 1) % CLI_HISTSIZE;
-	g_currcli_pos = g_lastcli_pos;
-
-	ret = psplinkParseCommand(g_cli);
-	if(ret != CMD_EXITSHELL)
-	{
-		print_prompt();
-	}
-
-	return ret;
-}
-
-/* Handle an escape sequence */
-static void cli_handle_escape(void)
-{
-	char ch;
-
-	ch = g_readcharwithtimeout();
-
-	if(ch != -1)
-	{
-		/* Arrow keys UDRL/ABCD */
-		if(ch == '[')
-		{
-			ch = g_readcharwithtimeout();
-			switch(ch)
-			{
-				case 'A' : {
-							   int pos;
-
-							   pos = g_currcli_pos - 1;
-							   if(pos < 0)
-							   {
-								   pos += CLI_HISTSIZE;
-							   }
-
-							   if(g_lastcli[pos][0] != 0)
-							   {
-								   char *src, *dst;
-
-								   src = g_lastcli[pos];
-								   dst = g_cli;
-								   g_currcli_pos = pos;
-								   g_cli_pos = 0;
-								   g_cli_size = 0;
-								   while(*src)
-								   {
-									   *dst++ = *src++;
-									   g_cli_pos++;
-									   g_cli_size++;
-								   }
-								   *dst = 0;
-
-								   printf("\n");
-								   print_prompt();
-								   printf("%s", g_cli);
-							   } 
-						   } 
-						   break;
-
-				case 'B' : {
-							   int pos;
-
-							   pos = g_currcli_pos + 1;
-							   pos %= CLI_HISTSIZE;
-
-							   if(g_lastcli[pos][0] != 0)
-							   {
-								   char *src, *dst;
-
-								   src = g_lastcli[pos];
-								   dst = g_cli;
-								   g_currcli_pos = pos;
-								   g_cli_pos = 0;
-								   g_cli_size = 0;
-								   while(*src)
-								   {
-									   *dst++ = *src++;
-									   g_cli_pos++;
-									   g_cli_size++;
-								   }
-								   *dst = 0;
-
-								   printf("\n");
-								   print_prompt();
-								   printf("%s", g_cli);
-							   } 
-						   } 
-						   break;
-
-
-
-				default: 
-							printf("Unknown character %d\n", ch);
-						   break;
-			};
-		}
-		else
-		{
-			printf("Unknown character %d\n", ch);
-		}
-	}
-}
-
-int shellProcessChar(int ch)
-{
-	int exit_shell = 0;
-
-	switch(ch)
-	{
-		case -1 : break; // No char
-				  /* ^D */
-		case 4  : printf("\nExiting Shell\n");
-				  exit_shell = 1;
-				  break;
-		case 8  : // Backspace
-	               case 127: if(g_cli_pos > 0)
-				  {
-					  g_cli_pos--;
-					  g_cli[g_cli_pos] = 0;
-					  putchar(8);
-					  putchar(' ');
-					  putchar(8);
-				  }
-				  break;
-		case 9  : break; // Ignore tab
-		case 13 :		 // Enter key 
-		case 10 : if(process_cli() == CMD_EXITSHELL) 
-				  {
-					  exit_shell = 1;
-				  }
-				  break;
-				  /* TODO: CTRL + P and CTRL + N */
-		case 11 : /* CTRL + K */
-				  debugStep(1);
-				  break;
-		case 18 : /* CTRL + R */
-				  psplinkReset();
-				  break;
-		case 19 : /* CTRL + S */
-				  debugStep(0);
-				  break;
-		case 27 : /* Escape character */
-				  cli_handle_escape();
-				  break;
-		default : if((g_cli_pos < (CLI_MAX - 1)) && (ch >= 32))
-				  {
-					  g_cli[g_cli_pos++] = ch;
-					  g_cli[g_cli_pos] = 0;
-					  putchar(ch);
-				  }
-				  break;
-	}
-
-	return exit_shell;
-}
-
-/* Main shell function */
-void shellStart(void)
-{		
-	int exit_shell = 0;
-
-	print_prompt();
-
-	if(g_context.pcterm)
-	{
-		char cli[1024];
-		int  pos = 0;
-
-		while(!exit_shell)
-		{
-			int ch;
-			int ret;
-
-			ch = g_readchar();
-			switch(ch)
-			{
-				case 10:
-				case 13: cli[pos] = 0;
-						 ret = psplinkParseCommand(cli);
-						 if(ret != CMD_EXITSHELL)
-						 {
-							print_prompt();
-							pos = 0;
-						 }
-						 else
-						 {
-							 exit_shell = 1;
-						 }
-
-						 break;
-				/* TODO: CTRL + P and CTRL + N */
-				case 11 : /* CTRL + K */
-					  debugStep(1);
-					  break;
-				case 18 : /* CTRL + R */
-					  psplinkReset();
-					  break;
-				case 19 : /* CTRL + S */
-					  debugStep(0);
-					  break;
-				default: if(ch >= 32)
-						 {
-							 if(pos < (sizeof(cli)-1))
-							 {
-								 cli[pos++] = ch;
-							 }
-						 }
-						 break;
-			};
-		}
-	}
-	else
-	{
-		g_cli_pos = 0;
-		g_cli_size = 0;
-		memset(g_cli, 0, CLI_MAX);
-
-		while(!exit_shell) {
-			int ch;
-
-			ch = g_readchar();
-
-			exit_shell = shellProcessChar(ch);
-		}
-	}
-}
-
-#endif
-
 /* Help command */
 static int help_cmd(int argc, char **argv)
 {
@@ -4396,60 +4085,6 @@ static int help_cmd(int argc, char **argv)
 	}
 
 	return CMD_OK;
-}
-
-static int custom_cmd(int argc, char **argv)
-{
-	int retval = CMD_OK;
-	int cmdnum = atoi(argv[0]);
-	char cmd[64];
-	
-	cmd[0] = 0;
-
-	switch(cmdnum) 
-	{
-	case 0:
-		strcpy(cmd, g_context.conscrosscmd);
-		break;
-	case 1:
-		strcpy(cmd, g_context.conssquarecmd);
-		break;
-	case 2:
-		strcpy(cmd, g_context.constrianglecmd);
-		break;
-	case 3:
-		strcpy(cmd, g_context.conscirclecmd);
-		break;
-	case 4:
-		strcpy(cmd, g_context.consselectcmd);
-		break;
-	case 5:
-		strcpy(cmd, g_context.consstartcmd);
-		break;
-	case 6:
-		strcpy(cmd, g_context.consdowncmd);
-		break;
-	case 7:
-		strcpy(cmd, g_context.consleftcmd);
-		break;
-	case 8:
-		strcpy(cmd, g_context.consupcmd);
-		break;
-	case 9:
-		strcpy(cmd, g_context.consrightcmd);
-		break;
-	default:
-		printf("Error: Illegal custom command\n");
-		break;
-	}
-
-	if(strlen(cmd) > 0)
-	{
-		printf("%s\n", cmd);
-		retval = shellParse(cmd);
-		print_prompt();
-	}
-	return retval;
 }
 
 int shellInit(const char *cliprompt, const char *path, const char *init_dir)

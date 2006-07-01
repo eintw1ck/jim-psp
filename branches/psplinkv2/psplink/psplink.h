@@ -56,7 +56,6 @@ SceUID load_gdb(const char *bootpath, int argc, char **argv);
 
 struct ConfigContext;
 struct GlobalContext;
-void copy_consconfig(const struct ConfigContext *cctx, struct GlobalContext *gctx);
 
 #define SAVED_MAGIC 0xBAA1A11C
 #define SAVED_ADDR  0x883F0000
@@ -85,27 +84,8 @@ struct GlobalContext
 	char execfile[MAXPATHLEN];
 	int resetonexit;
 	int pcterm;
-	SceUID netshelluid;
-	SceUID conshelluid;
 	SceUID thevent;
-	int sioshell;
-	int wifi;
-	int wifishell;
-	int conshell;
-	int consinterfere;
-	char conscrosscmd[64];    /* custom 0 */
-	char conssquarecmd[64];   /* custom 1 */
-	char constrianglecmd[64]; /* custom 2 */
-	char conscirclecmd[64];   /* custom 3 */
-	char consselectcmd[64];   /* custom 4 */
-	char consstartcmd[64];    /* custom 5 */
-	char consdowncmd[64];     /* custom 6 */
-	char consleftcmd[64];     /* custom 7 */
-	char consupcmd[64];	  /* custom 8 */
-	char consrightcmd[64];    /* custom 9 */
 	int gdb;
-	int usbshell;
-	int usbgdb;
 };
 
 #endif

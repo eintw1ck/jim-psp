@@ -39,16 +39,6 @@ struct psplink_config
 	void (*handler)(struct ConfigContext *ctx, const char *szVal, unsigned int iVal);
 };
 
-static void config_usbmass(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	ctx->usbmass = iVal;
-}
-
-static void config_usbhost(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	ctx->usbhost = iVal;
-}
-
 static void config_baud(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
 {
 	int valid = 0;
@@ -79,11 +69,6 @@ static void config_baud(struct ConfigContext *ctx, const char *szVal, unsigned i
 	}
 }
 
-static void config_modload(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	(void) load_start_module(szVal, 0, NULL);
-}
-
 static void config_pluser(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
 {
 	ctx->enableuser = iVal;
@@ -106,137 +91,9 @@ static void config_resetonexit(struct ConfigContext *ctx, const char *szVal, uns
 	ctx->resetonexit = iVal;
 }
 
-static void config_wifishell(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	ctx->wifishell = iVal;
-	if((iVal) && (ctx->wifi == 0))
-	{
-		/* Set default wifi access point */
-		ctx->wifi = 1;
-	}
-}
-
-#ifndef USB_ONLY
-
-static void config_conshell(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	ctx->conshell = iVal;
-}
-
-static void config_conscrosscmd(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	const int len = sizeof(ctx->conscrosscmd)-1;
-	char* dest = ctx->conscrosscmd;
-	strncpy(dest, szVal, len);
-	dest[len] = 0;
-}
-
-static void config_conssquarecmd(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	const int len = sizeof(ctx->conssquarecmd)-1;
-	char* dest = ctx->conssquarecmd;
-	strncpy(dest, szVal, len);
-	dest[len] = 0;
-}
-
-static void config_constrianglecmd(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	const int len = sizeof(ctx->constrianglecmd)-1;
-	char* dest = ctx->constrianglecmd;
-	strncpy(dest, szVal, len);
-	dest[len] = 0;
-}
-
-static void config_conscirclecmd(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	const int len = sizeof(ctx->conscirclecmd)-1;
-	char* dest = ctx->conscirclecmd;
-	strncpy(dest, szVal, len);
-	dest[len] = 0;
-}
-
-static void config_consselectcmd(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	const int len = sizeof(ctx->consselectcmd)-1;
-	char* dest = ctx->consselectcmd;
-	strncpy(dest, szVal, len);
-	dest[len] = 0;
-}
-
-static void config_consstartcmd(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	const int len = sizeof(ctx->consstartcmd)-1;
-	char* dest = ctx->consstartcmd;
-	strncpy(dest, szVal, len);
-	dest[len] = 0;
-}
-
-static void config_consdowncmd(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	const int len = sizeof(ctx->consdowncmd)-1;
-	char* dest = ctx->consdowncmd;
-	strncpy(dest, szVal, len);
-	dest[len] = 0;
-}
-
-static void config_consleftcmd(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	const int len = sizeof(ctx->consleftcmd)-1;
-	char* dest = ctx->consleftcmd;
-	strncpy(dest, szVal, len);
-	dest[len] = 0;
-}
-
-static void config_consupcmd(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	const int len = sizeof(ctx->consupcmd)-1;
-	char* dest = ctx->consupcmd;
-	strncpy(dest, szVal, len);
-	dest[len] = 0;
-}
-
-static void config_consrightcmd(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	const int len = sizeof(ctx->consrightcmd)-1;
-	char* dest = ctx->consrightcmd;
-	strncpy(dest, szVal, len);
-	dest[len] = 0;
-}
-
-static void config_consinterfere(struct ConfigContext *ctx, const char* szVal, unsigned int iVal)
-{
-	ctx->consinterfere = iVal;
-}
-
-#endif
-
-static void config_sioshell(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	ctx->sioshell = iVal;
-}
-
 static void config_pcterm(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
 {
 	ctx->pcterm = iVal;
-}
-
-static void config_wifi(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	ctx->wifi = iVal;
-}
-
-static void config_usbshell(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	if(iVal)
-	{
-		ctx->usbhost = 1;
-		ctx->usbshell = 1;
-	}
-}
-
-static void config_usbgdb(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	ctx->usbgdb = iVal;
 }
 
 static void config_disopt(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
@@ -250,35 +107,13 @@ static void config_kprintf(struct ConfigContext *ctx, const char *szVal, unsigne
 }
 
 struct psplink_config config_names[] = {
-	{ "usbmass", 1, config_usbmass },
-	{ "usbhost", 1, config_usbhost },
 	{ "baud", 1, config_baud },
-	{ "modload", 0, config_modload },
 	{ "pluser", 1, config_pluser },
 	{ "prompt", 0, config_prompt },
 	{ "resetonexit", 1, config_resetonexit },
-	{ "wifishell", 1, config_wifishell },
-	{ "sioshell", 1, config_sioshell },
 	{ "pcterm", 1, config_pcterm },
-#ifndef USB_ONLY
-	{ "conshell", 1, config_conshell },
-	{ "consinterfere", 1, config_consinterfere },
-	{ "conscrosscmd", 0, config_conscrosscmd },
-	{ "conssquarecmd", 0, config_conssquarecmd },
-	{ "constrianglecmd", 0, config_constrianglecmd },
-	{ "conscirclecmd", 0, config_conscirclecmd },
-	{ "consselectcmd", 0, config_consselectcmd },
-	{ "consstartcmd", 0, config_consstartcmd },
-	{ "consdowncmd", 0, config_consdowncmd },
-	{ "consleftcmd", 0, config_consleftcmd },
-	{ "consupcmd", 0, config_consupcmd },
-	{ "consrightcmd", 0, config_consrightcmd },
-#endif
-	{ "wifi", 1, config_wifi },
 	{ "path", 0, config_path },
 	{ "disopt", 0, config_disopt },
-	{ "usbshell", 1, config_usbshell },
-	{ "usbgdb", 1, config_usbgdb },
 	{ "kprintf", 1, config_kprintf },
 	{ NULL, 0, NULL }
 };
@@ -328,12 +163,6 @@ void configLoad(const char *bootpath, struct ConfigContext *ctx)
 		}
 
 		psplinkConfigClose(&cnf);
-	}
-
-	/* Always enable at least the sio shell */
-	if((ctx->usbshell == 0) && (ctx->wifishell == 0))
-	{
-		ctx->sioshell = 1;
 	}
 }
 

@@ -356,7 +356,13 @@ struct BulkCommand
 
 #ifndef PC_SIDE
 
+//#define DOMODPRINTF
+
+#ifdef DOMODPRINTF
 #define MODPRINTF(fmt, ...) Kprintf("%s: " fmt, MODULE_NAME, ## __VA_ARGS__)
+#else 
+#define MODPRINTF(fmt, ...)
+#endif
 
 #ifdef DEBUG
 #define DEBUG_PRINTF(fmt, ...) Kprintf("%s: " fmt, MODULE_NAME, ## __VA_ARGS__)
