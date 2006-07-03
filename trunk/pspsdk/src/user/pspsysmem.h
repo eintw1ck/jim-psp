@@ -93,6 +93,11 @@ SceSize sceKernelMaxFreeMemSize(void);
  * @returns The firmware version.
  * 0x01000300 on v1.00 unit
  * 0x01050001 on v1.50 unit
+ * 0x01050100 on v1.51 unit
+ * 0x01050200 on v1.52 unit
+ * 0x02000010 on v2.00/v2.01 unit
+ * 0x02050010 on v2.50 unit
+ * 0x02060010 on v2.50 unit
  */
 int sceKernelDevkitVersion(void);
 
