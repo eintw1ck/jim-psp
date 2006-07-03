@@ -97,7 +97,7 @@ SceSize sceKernelMaxFreeMemSize(void);
  * 0x01050200 on v1.52 unit
  * 0x02000010 on v2.00/v2.01 unit
  * 0x02050010 on v2.50 unit
- * 0x02060010 on v2.50 unit
+ * 0x02060010 on v2.60 unit
  */
 int sceKernelDevkitVersion(void);
 
