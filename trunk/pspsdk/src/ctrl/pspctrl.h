@@ -29,7 +29,7 @@ extern "C" {
 /**
  * Enumeration for the digital controller buttons.
  *
- * @note PSP_CTRL_NOTE, PSP_CTRL_SCREEN, PSP_CTRL_VOLUP, PSP_CTRL_VOLDOWN, PSP_CTRL_DISC, PSP_CTRL_WLAN_UP, PSP_CTRL_REMOTE can only be read in kernel mode
+ * @note PSP_CTRL_NOTE, PSP_CTRL_SCREEN, PSP_CTRL_VOLUP, PSP_CTRL_VOLDOWN, PSP_CTRL_DISC, PSP_CTRL_WLAN_UP, PSP_CTRL_REMOTE, PSP_CTRL_MS can only be read in kernel mode
  */
 enum PspCtrlButtons
 {
@@ -63,18 +63,20 @@ enum PspCtrlButtons
 	PSP_CTRL_HOLD       = 0x020000,
 	/** Music Note button. */
 	PSP_CTRL_NOTE       = 0x800000,
-	/** Screen button */
+	/** Screen button. */
 	PSP_CTRL_SCREEN     = 0x400000,
-	/** Volume up button */
+	/** Volume up button. */
 	PSP_CTRL_VOLUP      = 0x100000,
-	/** Volume down button */
+	/** Volume down button. */
 	PSP_CTRL_VOLDOWN    = 0x200000,
-	/** Wlan switch up */
+	/** Wlan switch up. */
 	PSP_CTRL_WLAN_UP    = 0x040000,
-	/** Remote hold position  */
+	/** Remote hold position. */
 	PSP_CTRL_REMOTE     = 0x080000,	
-	/** Disc slide  */
+	/** Disc present. */
 	PSP_CTRL_DISC       = 0x1000000,
+	/** Memory stick present. */
+	PSP_CTRL_MS         = 0x2000000,
 };
 
 /** Controller mode. */
