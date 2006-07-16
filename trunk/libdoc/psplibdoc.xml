@@ -4082,15 +4082,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x31DF42BF</NID>
-						<NAME>LoadExecForKernel_31DF42BF</NAME>
+						<NAME>sceKernelLoadExecVshMs1</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28D0D249</NID>
-						<NAME>LoadExecForKernel_28D0D249</NAME>
+						<NAME>sceKernelLoadExecVshMs2</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x70901231</NID>
-						<NAME>LoadExecForKernel_70901231</NAME>
+						<NAME>sceKernelLoadExecVshMs3</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA3D5E142</NID>
