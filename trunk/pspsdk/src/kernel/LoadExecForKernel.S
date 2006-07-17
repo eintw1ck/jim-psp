@@ -2,6 +2,9 @@
 
 #include "pspimport.s"
 
+// Build List
+// LoadExecForKernel_0000.o LoadExecForKernel_0001.o LoadExecForKernel_0002.o LoadExecForKernel_0003.o LoadExecForKernel_0004.o LoadExecForKernel_0005.o LoadExecForKernel_0006.o LoadExecForKernel_0007.o LoadExecForKernel_0008.o LoadExecForKernel_0009.o LoadExecForKernel_0010.o LoadExecForKernel_0011.o LoadExecForKernel_0012.o LoadExecForKernel_0013.o LoadExecForKernel_0014.o LoadExecForKernel_0015.o LoadExecForKernel_0016.o LoadExecForKernel_0017.o LoadExecForKernel_0018.o LoadExecForKernel_0019.o LoadExecForKernel_0020.o LoadExecForKernel_0021.o LoadExecForKernel_0022.o 
+
 #ifdef F_LoadExecForKernel_0000
 	IMPORT_START	"LoadExecForKernel",0x00090000
 #endif
@@ -30,13 +33,13 @@
 	IMPORT_FUNC	"LoadExecForKernel",0x4F41E75E,sceKernelLoadExecBufferVSHUsbWlanDebug
 #endif
 #ifdef F_LoadExecForKernel_0009
-	IMPORT_FUNC	"LoadExecForKernel",0x31DF42BF,LoadExecForKernel_31DF42BF
+	IMPORT_FUNC	"LoadExecForKernel",0x31DF42BF,sceKernelLoadExecVSHMs1
 #endif
 #ifdef F_LoadExecForKernel_0010
-	IMPORT_FUNC	"LoadExecForKernel",0x28D0D249,LoadExecForKernel_28D0D249
+	IMPORT_FUNC	"LoadExecForKernel",0x28D0D249,sceKernelLoadExecVSHMs2
 #endif
 #ifdef F_LoadExecForKernel_0011
-	IMPORT_FUNC	"LoadExecForKernel",0x70901231,LoadExecForKernel_70901231
+	IMPORT_FUNC	"LoadExecForKernel",0x70901231,sceKernelLoadExecVSHMs3
 #endif
 #ifdef F_LoadExecForKernel_0012
 	IMPORT_FUNC	"LoadExecForKernel",0xA3D5E142,sceKernelExitVSHVSH

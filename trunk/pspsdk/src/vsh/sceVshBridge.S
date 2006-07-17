@@ -2,6 +2,9 @@
 
 #include "pspimport.s"
 
+// Build List
+// sceVshBridge_0000.o sceVshBridge_0001.o sceVshBridge_0002.o sceVshBridge_0003.o sceVshBridge_0004.o sceVshBridge_0005.o sceVshBridge_0006.o sceVshBridge_0007.o sceVshBridge_0008.o sceVshBridge_0009.o sceVshBridge_0010.o sceVshBridge_0011.o sceVshBridge_0012.o sceVshBridge_0013.o sceVshBridge_0014.o sceVshBridge_0015.o sceVshBridge_0016.o sceVshBridge_0017.o sceVshBridge_0018.o sceVshBridge_0019.o sceVshBridge_0020.o sceVshBridge_0021.o sceVshBridge_0022.o sceVshBridge_0023.o sceVshBridge_0024.o sceVshBridge_0025.o sceVshBridge_0026.o sceVshBridge_0027.o sceVshBridge_0028.o sceVshBridge_0029.o sceVshBridge_0030.o sceVshBridge_0031.o sceVshBridge_0032.o sceVshBridge_0033.o sceVshBridge_0034.o sceVshBridge_0035.o sceVshBridge_0036.o sceVshBridge_0037.o sceVshBridge_0038.o sceVshBridge_0039.o sceVshBridge_0040.o sceVshBridge_0041.o sceVshBridge_0042.o sceVshBridge_0043.o sceVshBridge_0044.o sceVshBridge_0045.o sceVshBridge_0046.o sceVshBridge_0047.o sceVshBridge_0048.o sceVshBridge_0049.o sceVshBridge_0050.o sceVshBridge_0051.o sceVshBridge_0052.o sceVshBridge_0053.o sceVshBridge_0054.o sceVshBridge_0055.o sceVshBridge_0056.o sceVshBridge_0057.o sceVshBridge_0058.o sceVshBridge_0059.o sceVshBridge_0060.o sceVshBridge_0061.o sceVshBridge_0062.o sceVshBridge_0063.o sceVshBridge_0064.o sceVshBridge_0065.o 
+
 #ifdef F_sceVshBridge_0000
 	IMPORT_START	"sceVshBridge",0x40010000
 #endif
@@ -162,32 +165,41 @@
 	IMPORT_FUNC	"sceVshBridge",0x9929DDA5,vshKernelExitVSH
 #endif
 #ifdef F_sceVshBridge_0053
-	IMPORT_FUNC	"sceVshBridge",0xB7C46DCA,sceVshBridge_B7C46DCA
+	IMPORT_FUNC	"sceVshBridge",0xB7C46DCA,vshKernelLoadExecVSHDiscUpdater
 #endif
 #ifdef F_sceVshBridge_0054
-	IMPORT_FUNC	"sceVshBridge",0xF4873F4D,sceVshBridge_F4873F4D
+	IMPORT_FUNC	"sceVshBridge",0x04AEC74C,vshKernelLoadExecVSHDiscDebug
 #endif
 #ifdef F_sceVshBridge_0055
-	IMPORT_FUNC	"sceVshBridge",0x83528906,vshKernelLoadExecBufferVSHUsbWlan
+	IMPORT_FUNC	"sceVshBridge",0xF4873F4D,sceVshBridge_F4873F4D
 #endif
 #ifdef F_sceVshBridge_0056
-	IMPORT_FUNC	"sceVshBridge",0xF35BFB7D,sceVshBridge_F35BFB7D
+	IMPORT_FUNC	"sceVshBridge",0x83528906,vshKernelLoadExecBufferVSHUsbWlan
 #endif
 #ifdef F_sceVshBridge_0057
-	IMPORT_FUNC	"sceVshBridge",0x97FB006F,sceVshBridge_97FB006F
+	IMPORT_FUNC	"sceVshBridge",0x68BE3316,vshKernelLoadExecBufferVSHUsbWlanDebug
 #endif
 #ifdef F_sceVshBridge_0058
-	IMPORT_FUNC	"sceVshBridge",0x029EF6C9,sceVshBridge_029EF6C9
+	IMPORT_FUNC	"sceVshBridge",0xF35BFB7D,vshKernelLoadExecVSHMs1
 #endif
 #ifdef F_sceVshBridge_0059
-	IMPORT_FUNC	"sceVshBridge",0x40716012,vshKernelExitVSHVSH
+	IMPORT_FUNC	"sceVshBridge",0x97FB006F,vshKernelLoadExecVSHMs2
 #endif
 #ifdef F_sceVshBridge_0060
-	IMPORT_FUNC	"sceVshBridge",0x88DA81A5,vshKernelLoadExecBufferVSHPlain
+	IMPORT_FUNC	"sceVshBridge",0x029EF6C9,vshKernelLoadExecVSHMs3
 #endif
 #ifdef F_sceVshBridge_0061
-	IMPORT_FUNC	"sceVshBridge",0x88BD8364,vshKernelLoadExecBufferVSHFromHost
+	IMPORT_FUNC	"sceVshBridge",0x40716012,vshKernelExitVSHVSH
 #endif
 #ifdef F_sceVshBridge_0062
+	IMPORT_FUNC	"sceVshBridge",0x88DA81A5,vshKernelLoadExecBufferVSHPlain
+#endif
+#ifdef F_sceVshBridge_0063
+	IMPORT_FUNC	"sceVshBridge",0x88BD8364,vshKernelLoadExecBufferVSHFromHost
+#endif
+#ifdef F_sceVshBridge_0064
 	IMPORT_FUNC	"sceVshBridge",0x74DA9D25,vshLflashFatfmtStartFatfmt
+#endif
+#ifdef F_sceVshBridge_0065
+	IMPORT_FUNC	"sceVshBridge",0x61001D64,vshChkregGetPsCode
 #endif
