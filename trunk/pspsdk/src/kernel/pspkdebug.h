@@ -36,6 +36,13 @@ typedef void (*PspDebugPutChar)(unsigned short* args, unsigned int ch);
 void sceKernelRegisterDebugPutchar(PspDebugPutChar func);
 
 /**
+ * Get the debug put character handler
+ *
+ * @return The current debug putchar handler
+ */
+PspDebugPutChar sceKernelGetDebugPutchar(void);
+
+/**
  * Kernel printf function.
  *
  * @param format - The format string.
