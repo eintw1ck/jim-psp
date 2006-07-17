@@ -1658,7 +1658,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2FF6081B</NID>
-						<NAME>sceNand_driver_2FF6081B</NAME>
+						<NAME>sceNandDetectChipMakersBBM</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2674CFFE</NID>
@@ -3960,7 +3960,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x616FCCCD</NID>
-						<NAME>LoadCoreForKernel_616FCCCD</NAME>
+						<NAME>sceKernelSetBootCallbackLevel</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF32A2940</NID>
@@ -4013,6 +4013,30 @@
 					<FUNCTION>
 						<NID>0xC0584F0C</NID>
 						<NAME>sceKernelGetModuleList</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0x929B5C69</NID>
+						<NAME>sceKernelGetModuleListWithAlloc</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0x8D8A8ACE</NID>
+						<NAME>sceKernelAssignModule</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0xaff947d4</NID>
+						<NAME>sceKernelCreateAssignModule</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0x05D915DB</NID>
+						<NAME>sceKernelGetModuleIdListForKernel</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0x52A86C21</NID>
+						<NAME>sceKernelGetModuleFromUID</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0x5248a98f</NID>
+						<NAME>sceKernelLoadModuleBootLoadCore</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -4082,15 +4106,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x31DF42BF</NID>
-						<NAME>sceKernelLoadExecVshMs1</NAME>
+						<NAME>sceKernelLoadExecVSHMs1</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x28D0D249</NID>
-						<NAME>sceKernelLoadExecVshMs2</NAME>
+						<NAME>sceKernelLoadExecVSHMs2</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x70901231</NID>
-						<NAME>sceKernelLoadExecVshMs3</NAME>
+						<NAME>sceKernelLoadExecVSHMs3</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA3D5E142</NID>
@@ -5261,10 +5285,6 @@
 						<NID>0x748CBED9</NID>
 						<NAME>sceKernelQueryModuleInfo</NAME>
 					</FUNCTION>
-					<FUNCTION>
-					    <NID>0x644395E2</NID>
-						<NAME>sceKernelGetModuleIdList</NAME>
-					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
 			<LIBRARY>
@@ -5358,6 +5378,22 @@
 					<FUNCTION>
 					    <NID>0x644395E2</NID>
 						<NAME>sceKernelGetModuleIdList</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0xd8b73127</NID>
+						<NAME>sceKernelGetModuleIdByAddress</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0xf0a26395</NID>
+						<NAME>sceKernelGetModuleId</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0xa6e8c1f5</NID>
+						<NAME>sceKernelRebootPhaseForKernel</NAME>
+					</FUNCTION>
+					<FUNCTION>
+					    <NID>0xAB77DC5A</NID>
+						<NAME>sceKernelLoadModuleBootInitConfig</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -9386,6 +9422,14 @@
 						<NID>0x3FC9AE6A</NID>
 						<NAME>sceKernelDevkitVersion</NAME>
 					</FUNCTION>
+					<FUNCTION>
+						<NID>0x4887802f</NID>
+						<NAME>sceKernelMemset32</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xA089ECA4</NID>
+						<NAME>sceKernelMemset</NAME>
+					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
 			<LIBRARY>
@@ -9839,11 +9883,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x63B9EB65</NID>
-						<NAME>sceSysreg_driver_63B9EB65</NAME>
+						<NAME>sceSysregApbBusClockEnable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE1AA9788</NID>
-						<NAME>sceSysreg_driver_E1AA9788</NAME>
+						<NAME>sceSysregApbBusClockDisable</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAA63C8BD</NID>
@@ -11449,7 +11493,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7ED141FE</NID>
-						<NAME>sceUmdMan_driver_7ED141FE</NAME>
+						<NAME>sceUmdManUMDDriveStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5A302102</NID>
@@ -11461,7 +11505,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x40BEB9D1</NID>
-						<NAME>sceUmdMan_driver_40BEB9D1</NAME>
+						<NAME>sceUmdManDVDDriveStart</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xDF407479</NID>
@@ -11481,7 +11525,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6A77A311</NID>
-						<NAME>sceUmdMan_driver_6A77A311</NAME>
+						<NAME>sceUmdManLPNCreateCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB511F821</NID>
@@ -11493,15 +11537,15 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5C026599</NID>
-						<NAME>sceUmdMan_driver_5C026599</NAME>
+						<NAME>sceUmdManLPNReadAlive</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xCD48F9C2</NID>
-						<NAME>sceUmdMan_driver_CD48F9C2</NAME>
+						<NAME>sceUmdManLPNSetVersion</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB3311B6E</NID>
-						<NAME>sceUmdMan_driver_B3311B6E</NAME>
+						<NAME>sceUmdManLPNGetVersion</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC1D7C860</NID>
@@ -11525,11 +11569,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1B1BF9FD</NID>
-						<NAME>sceUmdMan_driver_1B1BF9FD</NAME>
+						<NAME>sceUmdExecRead10Cmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x18DE1880</NID>
-						<NAME>sceUmdMan_driver_18DE1880</NAME>
+						<NAME>sceUmdExecPrefetch10Cmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3D44BABF</NID>
@@ -11537,11 +11581,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xE3F448E0</NID>
-						<NAME>sceUmdMan_driver_E3F448E0</NAME>
+						<NAME>sceUmdExecStartStopUnitCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1B19A313</NID>
-						<NAME>sceUmdMan_driver_1B19A313</NAME>
+						<NAME>sceUmdExecInquiryCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2CBE959B</NID>
@@ -11561,47 +11605,47 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x65E1B97E</NID>
-						<NAME>sceUmdMan_driver_65E1B97E</NAME>
+						<NAME>sceUmdExecGetEventStatusCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5AA96415</NID>
-						<NAME>sceUmdMan_driver_5AA96415</NAME>
+						<NAME>sceUmdExecReadCapacityCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x250E6975</NID>
-						<NAME>sceUmdMan_driver_250E6975</NAME>
+						<NAME>sceUmdExecSeekCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x2A08FE9A</NID>
-						<NAME>sceUmdMan_driver_2A08FE9A</NAME>
+						<NAME>sceUmdExecPreventAllowMediaCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x68577709</NID>
-						<NAME>sceUmdMan_driver_68577709</NAME>
+						<NAME>sceUmdExecAllocateFromReadCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF819E17C</NID>
-						<NAME>sceUmdMan_driver_F819E17C</NAME>
+						<NAME>sceUmdExecReadMKICmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x61C32A52</NID>
-						<NAME>sceUmdMan_driver_61C32A52</NAME>
+						<NAME>sceUmdExecSetAreaLimitCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7094E3A7</NID>
-						<NAME>sceUmdMan_driver_7094E3A7</NAME>
+						<NAME>sceUmdExecSetAccessLimitCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xD31DAD7E</NID>
-						<NAME>sceUmdMan_driver_D31DAD7E</NAME>
+						<NAME>sceUmdExecSetLockLengthCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x108B2322</NID>
-						<NAME>sceUmdMan_driver_108B2322</NAME>
+						<NAME>sceUmdExecGetMediaInfoCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x98345381</NID>
-						<NAME>sceUmdMan_driver_98345381</NAME>
+						<NAME>sceUmdExecReportCacheCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xBF88476F</NID>
@@ -11609,11 +11653,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x485D4925</NID>
-						<NAME>sceUmdMan_driver_485D4925</NAME>
+						<NAME>sceUmdExecSetStreamingCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x73E49F8F</NID>
-						<NAME>sceUmdMan_driver_73E49F8F</NAME>
+						<NAME>sceUmdExecClearCacheInfoCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x14D3381C</NID>
@@ -11621,7 +11665,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x92F1CC33</NID>
-						<NAME>sceUmdMan_driver_92F1CC33</NAME>
+						<NAME>sceUmdExecAdjustDataCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x61EB07A5</NID>
@@ -11653,7 +11697,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB989E127</NID>
-						<NAME>sceUmdMan_driver_B989E127</NAME>
+						<NAME>sceUmdManLeptonAliveOnOff</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xAF6D5838</NID>
@@ -11781,19 +11825,19 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4EA8EA5D</NID>
-						<NAME>sceUmdMan_driver_4EA8EA5D</NAME>
+						<NAME>sceUmdManSPKInitConfiguration</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7EBAEA9F</NID>
-						<NAME>sceUmdMan_driver_7EBAEA9F</NAME>
+						<NAME>sceUmdManSPKStartStep0</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xC984E1CF</NID>
-						<NAME>sceUmdMan_driver_C984E1CF</NAME>
+						<NAME>sceUmdManSPKStartStep1</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA0B257A7</NID>
-						<NAME>sceUmdMan_driver_A0B257A7</NAME>
+						<NAME>sceUmdManSPKStartStep2</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4C6BF421</NID>
@@ -11801,39 +11845,39 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x6E7FC8F0</NID>
-						<NAME>sceUmdMan_driver_6E7FC8F0</NAME>
+						<NAME>sceUmdManSPKStartStep4</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x66CB0CC4</NID>
-						<NAME>sceUmdMan_driver_66CB0CC4</NAME>
+						<NAME>sceUmdManSPKStartStep5</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xA8359E04</NID>
-						<NAME>sceUmdMan_driver_A8359E04</NAME>
+						<NAME>sceUmdManSPKSetupCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x73966DE9</NID>
-						<NAME>sceUmdMan_driver_73966DE9</NAME>
+						<NAME>sceUmdManSPKStartCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xFD1A113A</NID>
-						<NAME>sceUmdMan_driver_FD1A113A</NAME>
+						<NAME>sceUmdManSPKStopCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x23C3C3D6</NID>
-						<NAME>sceUmdMan_driver_23C3C3D6</NAME>
+						<NAME>sceUmdManSPKEndCmd</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x7C3D307C</NID>
-						<NAME>sceUmdMan_driver_7C3D307C</NAME>
+						<NAME>sceUmdManSPKGetMKI</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x58E3718D</NID>
-						<NAME>sceUmdMan_driver_58E3718D</NAME>
+						<NAME>sceUmdManSPKEnableIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x08EB09C8</NID>
-						<NAME>sceUmdMan_driver_08EB09C8</NAME>
+						<NAME>sceUmdManSPKDisableIntr</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x5304CA4A</NID>
@@ -13097,7 +13141,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xB7C46DCA</NID>
-						<NAME>sceVshBridge_B7C46DCA</NAME>
+						<NAME>vshKernelLoadExecVSHDiscUpdater</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x04aec74c</NID>
+						<NAME>vshKernelLoadExecVSHDiscDebug</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0xF4873F4D</NID>
@@ -13108,16 +13156,20 @@
 						<NAME>vshKernelLoadExecBufferVSHUsbWlan</NAME>
 					</FUNCTION>
 					<FUNCTION>
+						<NID>0x68be3316</NID>
+						<NAME>vshKernelLoadExecBufferVSHUsbWlanDebug</NAME>
+					</FUNCTION>
+					<FUNCTION>
 						<NID>0xF35BFB7D</NID>
-						<NAME>sceVshBridge_F35BFB7D</NAME>
+						<NAME>vshKernelLoadExecVSHMs1</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x97FB006F</NID>
-						<NAME>sceVshBridge_97FB006F</NAME>
+						<NAME>vshKernelLoadExecVSHMs2</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x029EF6C9</NID>
-						<NAME>sceVshBridge_029EF6C9</NAME>
+						<NAME>vshKernelLoadExecVSHMs3</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x40716012</NID>
@@ -13134,6 +13186,10 @@
 					<FUNCTION>
 						<NID>0x74DA9D25</NID>
 						<NAME>vshLflashFatfmtStartFatfmt</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x61001D64</NID>
+						<NAME>vshChkregGetPsCode</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
@@ -13868,6 +13924,10 @@
 					<FUNCTION>
 						<NID>0x107EDCD9</NID>
 						<NAME>sceVshCommonUtil_107EDCD9</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x58234CB0</NID>
+						<NAME>vshRegSysconfUpdateRegistry</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 				<VARIABLES>
