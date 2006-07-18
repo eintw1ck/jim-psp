@@ -3,7 +3,7 @@
 #include "pspimport.s"
 
 #ifdef F_sceNetAdhocctl_0000
-	IMPORT_START	"sceNetAdhocctl",0x00010000
+	IMPORT_START	"sceNetAdhocctl",0x00090000
 #endif
 #ifdef F_sceNetAdhocctl_0001
 	IMPORT_FUNC	"sceNetAdhocctl",0xE26F226E,sceNetAdhocctlInit

@@ -3,7 +3,7 @@
 #include "pspimport.s"
 
 #ifdef F_sceNetAdhocMatching_0000
-	IMPORT_START	"sceNetAdhocMatching",0x00010000
+	IMPORT_START	"sceNetAdhocMatching",0x00090000
 #endif
 #ifdef F_sceNetAdhocMatching_0001
 	IMPORT_FUNC	"sceNetAdhocMatching",0x2A2A1E07,sceNetAdhocMatchingInit
