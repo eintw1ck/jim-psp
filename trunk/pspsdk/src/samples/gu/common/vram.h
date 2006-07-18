@@ -1,6 +1,10 @@
 #ifndef common_vram_h
 #define common_vram_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 	The following are a few helperfunctions to help manage vram in gu-examples.
 	Do not use for your own code, it's better you manage it in your own way.
@@ -19,5 +23,9 @@ void endDynamicVramFrame();
 void* getDynamicVramBuffer(unsigned int width, unsigned int height, unsigned int psm);
 void* getDynamicVramTexture(unsigned int width, unsigned int height, unsigned int psm);
 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

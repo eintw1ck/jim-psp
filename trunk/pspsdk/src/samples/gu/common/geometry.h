@@ -3,6 +3,10 @@
 
 #include <psptypes.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
 	ScePspFVector2 texture;
@@ -53,5 +57,9 @@ void generateTorusNP(unsigned int slices, unsigned int rows, float radius, float
 void generateGridTCNP(unsigned int columns, unsigned int rows, float width, float depth, TCNPVertex* vertices, unsigned short* indices);
 void generateGridTCP(unsigned int columns, unsigned int rows, float width, float depth, TCPVertex* vertices, unsigned short* indices);
 void generateGridNP(unsigned int columns, unsigned int rows, float width, float depth, NPVertex* vertices, unsigned short* indices);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

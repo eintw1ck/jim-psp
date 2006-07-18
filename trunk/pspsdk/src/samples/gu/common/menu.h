@@ -3,6 +3,10 @@
 
 #include <pspctrl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
 	MenuContainer,
@@ -53,5 +57,9 @@ void renderMenu(MenuContext* context,int startx, int starty);
 MenuItem* createMenuContainer(const char* name);
 MenuItem* createRadioButton(const char* name, int state);
 MenuItem* createTriggerButton(const char* name);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
