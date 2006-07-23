@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = 1.4
 ACLOCAL_AMFLAGS = -I config
 
-SUBDIRS = src include examples doc
+SUBDIRS = src include
 
 pkgconfigdatadir = $(libdir)/pkgconfig
 

@@ -186,7 +186,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SUBDIRS = cppunit DllPlugInTester
+SUBDIRS = cppunit
 all: all-recursive
 
 .SUFFIXES:

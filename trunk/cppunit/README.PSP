@@ -1,0 +1,27 @@
+cppunit unit testing framework
+-----------------------------
+
+WARNING: THIS DOES NOT CURRENTLY WORK
+
+I had been attempting port cppunit to psp, but have run into problems.
+After working through some other problems, it appears cppunit requires
+rtti and exceptions, which the homebrew psp toolchain does not seem to
+currently support.  The lib will build but is not usable AFAICT.
+
+The config.sub and makefiles have been changed.  Dllplugintester, examples,
+and docs are removed from makefiles and no longer built, for varying reasons.
+
+I'm commiting this in the hope someone will some day get things working to
+the point in which cppunit can be used on psp.
+
+To attempt building use the following commands:
+
+ $ CXXFLAGS="-G0" LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" \
+	./configure --host psp --prefix=$(psp-config --psp-prefix)
+
+ $ make
+ $ make install
+
+
+(NOTE: For those not familiar with unix, '$' is the typically prompt symbol,
+ and is often used in docs to denote a command that needs to be run)

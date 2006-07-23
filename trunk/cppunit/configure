@@ -21139,7 +21139,7 @@ _ACEOF
 #[defined to disable TestPlugIn])
 
 
-                                                                                                                                                                                                                                                                              ac_config_files="$ac_config_files Makefile cppunit.pc cppunit.spec cppunit-config src/Makefile src/DllPlugInTester/Makefile src/cppunit/Makefile include/Makefile include/cppunit/Makefile include/cppunit/config/Makefile include/cppunit/extensions/Makefile include/cppunit/plugin/Makefile include/cppunit/portability/Makefile include/cppunit/tools/Makefile include/cppunit/ui/Makefile include/cppunit/ui/mfc/Makefile include/cppunit/ui/qt/Makefile include/cppunit/ui/text/Makefile doc/Makefile doc/Doxyfile examples/Makefile examples/simple/Makefile examples/hierarchy/Makefile examples/cppunittest/Makefile examples/ClockerPlugIn/Makefile examples/DumperPlugIn/Makefile examples/money/Makefile"
+                                                                                                                                                                                                                                                                              ac_config_files="$ac_config_files Makefile cppunit.pc cppunit.spec cppunit-config src/Makefile src/cppunit/Makefile include/Makefile include/cppunit/Makefile include/cppunit/config/Makefile include/cppunit/extensions/Makefile include/cppunit/plugin/Makefile include/cppunit/portability/Makefile include/cppunit/tools/Makefile include/cppunit/ui/Makefile include/cppunit/ui/mfc/Makefile include/cppunit/ui/qt/Makefile include/cppunit/ui/text/Makefile doc/Makefile doc/Doxyfile examples/Makefile examples/simple/Makefile examples/hierarchy/Makefile examples/cppunittest/Makefile examples/ClockerPlugIn/Makefile examples/DumperPlugIn/Makefile examples/money/Makefile"
           ac_config_commands="$ac_config_commands default"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -21709,7 +21709,6 @@ do
   "cppunit.spec" ) CONFIG_FILES="$CONFIG_FILES cppunit.spec" ;;
   "cppunit-config" ) CONFIG_FILES="$CONFIG_FILES cppunit-config" ;;
   "src/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
-  "src/DllPlugInTester/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/DllPlugInTester/Makefile" ;;
   "src/cppunit/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/cppunit/Makefile" ;;
   "include/Makefile" ) CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
   "include/cppunit/Makefile" ) CONFIG_FILES="$CONFIG_FILES include/cppunit/Makefile" ;;
