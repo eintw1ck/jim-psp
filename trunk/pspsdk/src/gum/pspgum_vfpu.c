@@ -324,6 +324,7 @@ void sceGumLoadMatrix(const ScePspFMatrix4* m)
 void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* up)
 {
 	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
+	gumLoadIdentity(t);
 	gumLookAt(t,eye,center,up);
 
 	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
