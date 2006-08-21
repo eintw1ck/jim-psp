@@ -79,7 +79,7 @@ int pspSdkInetInit()
 	if (retVal != 0)
 		return retVal;
 	
-	retVal = sceNetApctlInit(0x1000, 0x42);
+	retVal = sceNetApctlInit(0x1400, 0x42);
 	if (retVal != 0)
 		return retVal;
 
