@@ -27,18 +27,12 @@ PSP_MODULE_INFO("Savedata Sample", 0, 1, 0);
 /* Define printf, just to make typing easier */
 #define printf  pspDebugScreenPrintf
 
-#if 1
-/* Wipeout Pure US profile 0 (UCUS98612P0000). */
-char *gameName = "UCUS98612";
-char *saveName = "P0000";
-char *fileName = "PROFILE.BIN";
-#else
-/* This is for the save under the folder ULJS00015-000 with a DATA.BIN file
-   inside it, the game is Tales of Eternia (J). */
-char *gameName = "ULJS00015";
-char *saveName = "-001";
-char *fileName = "DATA.BIN";
-#endif
+/* Game information.  This example would place savedata in
+   the directory /PSP/SAVEDATA/DEMO111110000, with the 
+   encrypted data being stored in the file SAVE.BIN. */
+char *gameName = "DEMO11111";
+char *saveName = "0000";
+char *fileName = "SAVE.BIN";
 
 /* define for buffer length */
 

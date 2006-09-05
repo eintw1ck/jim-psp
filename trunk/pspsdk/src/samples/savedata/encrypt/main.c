@@ -28,21 +28,21 @@ PSP_MODULE_INFO("SaveEncrypt", 0, 1, 1);
 #define printf pspDebugScreenPrintf
 
 #if 0
-  /* Old format save with no key (Mercury) */
-  const char *plaintext = "ms0:/MERCURY.BIN";
-  const char *encrypted = "ms0:/PSP/SAVEDATA/ULUS100170000/MERCURY.DAT";
-  const char *datafile  = "MERCURY.DAT";
-  const char *paramsfo  = "ms0:/PSP/SAVEDATA/ULUS100170000/PARAM.SFO";
+  /* Old format save with no key, supported by 1.0+ firmware */
+  const char *plaintext = "ms0:/PLAIN.BIN";
+  const char *encrypted = "ms0:/PSP/SAVEDATA/DATA111110000/DATA.BIN";
+  const char *datafile  = "DATA.BIN";
+  const char *paramsfo  = "ms0:/PSP/SAVEDATA/DATA111110000/PARAM.SFO";
   const unsigned char *gamekey = NULL;
 #else
   /* New format save with a key (GTA:LCS) */
-  const char *plaintext = "ms0:/GTA.BIN";
-  const char *encrypted = "ms0:/PSP/SAVEDATA/ULUS10041S0/DATA.BIN";
+  const char *plaintext = "ms0:/PLAIN.BIN";
+  const char *encrypted = "ms0:/PSP/SAVEDATA/DATA222220000/DATA.BIN";
   const char *datafile  = "DATA.BIN";
-  const char *paramsfo  = "ms0:/PSP/SAVEDATA/ULUS10041S0/PARAM.SFO";
+  const char *paramsfo  = "ms0:/PSP/SAVEDATA/DATA222220000/PARAM.SFO";
   const unsigned char gamekey[] = { 
-	  0x70, 0x55, 0x8A, 0xC5, 0xB3, 0xB7, 0x47, 0x0C,
-	  0xB0, 0xE0, 0xC2, 0x71, 0xD0, 0xF5, 0xBA, 0x56
+	  0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF,
+	  0xFA, 0xCA, 0xDE, 0x00, 0xDE, 0xAD, 0xBE, 0xEF
   };
 #endif
 
