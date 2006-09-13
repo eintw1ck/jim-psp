@@ -591,8 +591,8 @@ int sceGuSync(int mode, int a1);
   *
   * Vertex order:
   * [for vertices(1-8)]
-  * [texture uv]
   * [weights (0-8)]
+  * [texture uv]
   * [color]
   * [normal]
   * [vertex]
