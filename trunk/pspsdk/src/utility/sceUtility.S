@@ -107,3 +107,9 @@
 #ifdef F_sceUtility_0034
 	IMPORT_FUNC	"sceUtility",0x434D4B3A,sceUtilityGetNetParam
 #endif
+#ifdef F_sceUtility_0035
+	IMPORT_FUNC	"sceUtility",0x1579a159,sceUtilityLoadNetModule
+#endif
+#ifdef F_sceUtility_0036
+	IMPORT_FUNC	"sceUtility",0x64d50c56,sceUtilityUnloadNetModule
+#endif
