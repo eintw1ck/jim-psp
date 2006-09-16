@@ -27,9 +27,10 @@ extern "C" {
 #define PSP_NET_MODULE_SSL 7
 
 /**
- * Load a network module (PRX) from user mode
+ * Load a network module (PRX) from user mode.
  * Load PSP_NET_MODULE_COMMON and PSP_NET_MODULE_INET
- * to use infrastructure WifI (via an access point)
+ * to use infrastructure WifI (via an access point).
+ * Available on firmware 2.00 and higher only.
  *
  * @param module - module number to load (PSP_NET_MODULE_xxx)
  * @return 0 on success, < 0 on error
@@ -37,7 +38,8 @@ extern "C" {
 int sceUtilityLoadNetModule(int module);
 
 /**
- * Unload a network module (PRX) from user mode
+ * Unload a network module (PRX) from user mode.
+ * Available on firmware 2.00 and higher only.
  *
  * @param module - module number be unloaded
  * @return 0 on success, < 0 on error
