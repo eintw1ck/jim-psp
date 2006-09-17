@@ -312,7 +312,7 @@ void sceGuDispBuffer(int width, int height, void* dispbp, int dispbw);
   *
   * @par Example: Setup a standard 16-bit draw buffer
   * @code
-  * sceGuDispBuffer(GU_PSM_5551,(void*)0,512);
+  * sceGuDrawBuffer(GU_PSM_5551,(void*)0,512);
   * @endcode
   *
   * @param psm - Pixel format to use for rendering (and display)
