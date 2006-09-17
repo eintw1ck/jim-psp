@@ -39,6 +39,7 @@ libpspuserinclude_HEADERS =	\
 	pspkerneltypes.h	\
 	pspkerror.h		\
 	psploadexec.h		\
+	pspmscm.h			\
 	pspmoduleinfo.h		\
 	pspmodulemgr.h		\
 	pspsysmem.h		\
