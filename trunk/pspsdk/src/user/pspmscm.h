@@ -64,4 +64,4 @@ static __inline__ int MScmUnregisterMSInsertEjectCallback(SceUID cbid)
 }
 #endif
 
-#endif /* PSPMODULEINFO_H */
+#endif /* PSPMSCM_H */
