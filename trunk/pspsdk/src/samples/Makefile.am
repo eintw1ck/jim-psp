@@ -44,6 +44,7 @@ SAMPLES = \
 	kernel/cwd \
 	kernel/fileio \
 	kernel/messagebox \
+	kernel/mscm \
 	nand/dumpipl \
 	net/simple \
 	net/simple_prx \
