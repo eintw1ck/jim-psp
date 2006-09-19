@@ -123,7 +123,7 @@
 	IMPORT_FUNC	"sceSyscon_driver",0x5F19C00F,sceSyscon_driver_5F19C00F
 #endif
 #ifdef F_sceSyscon_driver_0040
-	IMPORT_FUNC	"sceSyscon_driver",0xCC04A978,sceSyscon_driver_CC04A978
+	IMPORT_FUNC	"sceSyscon_driver",0xCC04A978,sceSysconGetWlanLedCtrl
 #endif
 #ifdef F_sceSyscon_driver_0041
 	IMPORT_FUNC	"sceSyscon_driver",0xE6B74CB9,sceSysconNop

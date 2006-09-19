@@ -89,9 +89,24 @@ int sceDisplayGetFrameBuf(void **topaddr, int *bufferwidth, int *pixelformat, in
 unsigned int sceDisplayGetVcount(void);
 
 /**
- * Wait for vertical blank
+ * Wait for vertical blank start
  */
 int sceDisplayWaitVblankStart(void);
+
+/**
+ * Wait for vertical blank start with callback
+ */
+int sceDisplayWaitVblankStartCB(void);
+
+/**
+ * Wait for vertical blank
+ */
+int sceDisplayWaitVblank(void);
+
+/**
+ * Wait for vertical blank with callback
+ */
+int sceDisplayWaitVblankCB(void);
 
 #ifdef __cplusplus
 }
