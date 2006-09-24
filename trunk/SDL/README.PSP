@@ -15,10 +15,14 @@ To build for the PSP, make sure psp-config is in the path and run:
 
 Status
 ------
-   Video - yes, single 32-bit ABGR framebuffer surface only; SDL will
-           emulate other formats as necessary.  No HW accel.  No 3D.
-  Timers - yes, with multiple callbacks
- Threads - yes, with mutexes and semaphores
+   Video - yes
+           - For accelerated 2D video output using the GU hardware,
+  	     use SDL_SWSURFACE in SDL_SetVideoMode.
+           - For video output via direct framebuffer access, use
+	     SDL_HWSURFACE.
+           - OpenGL is supported.
+  Timers - yes
+ Threads - yes
    Input - yes, see "Input" below
    Audio - yes
 
