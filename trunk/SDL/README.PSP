@@ -16,11 +16,11 @@ To build for the PSP, make sure psp-config is in the path and run:
 Status
 ------
    Video - yes
-           - For accelerated 2D video output using the GU hardware,
+           - For accelerated 2D video output using the GE hardware,
   	     use SDL_SWSURFACE in SDL_SetVideoMode.
            - For video output via direct framebuffer access, use
 	     SDL_HWSURFACE.
-           - OpenGL is supported.
+           - OpenGL is supported with SDL_OPENGL.
   Timers - yes
  Threads - yes
    Input - yes, see "Input" below
