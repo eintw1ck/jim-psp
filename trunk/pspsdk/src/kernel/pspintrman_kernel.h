@@ -57,6 +57,13 @@ int sceKernelEnableIntr(int intno);
   */
 int sceKernelDisableIntr(int intno);
 
+/**
+ * Check if we are in an interrupt context or not
+ *
+ * @return 1 if we are in an interrupt context, else 0
+ */
+int sceKernelIsIntrContext(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -96,6 +96,7 @@ AC_CONFIG_FILES([Makefile
                  src/net/Makefile
                  src/power/Makefile
                  src/prof/Makefile
+				 src/registry/Makefile
                  src/rtc/Makefile
                  src/sircs/Makefile
                  src/sdk/Makefile

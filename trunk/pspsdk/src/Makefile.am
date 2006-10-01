@@ -17,6 +17,7 @@ SUBDIRS = \
 	net \
 	power \
 	prof \
+	registry \
 	rtc \
 	sircs \
 	sdk \
