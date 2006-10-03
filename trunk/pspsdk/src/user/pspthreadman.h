@@ -335,6 +335,25 @@ void sceKernelDelayThread(SceUInt delay);
 void sceKernelDelayThreadCB(SceUInt delay);
 
 /**
+  * Delay the current thread by a specified number of sysclocks
+  *
+  * @param delay - Delay in sysclocks
+  *
+  * @return 0 on success, < 0 on error
+  */
+void sceKernelDelaySysClockThread(SceKernelSysClock *delay);
+
+/**
+  * Delay the current thread by a specified number of sysclocks handling callbacks
+  *
+  * @param delay - Delay in sysclocks
+  *
+  * @return 0 on success, < 0 on error
+  *
+  */
+void sceKernelDelaySysClockThreadCB(SceKernelSysClock *delay);
+
+/**
  * Modify the attributes of the current thread.
  *
  * @param unknown - Set to 0.
@@ -959,6 +978,49 @@ int sceKernelCreateCallback(const char *name, SceKernelCallbackFunction func, vo
   */
 int sceKernelReferCallbackStatus(SceUID cb, SceKernelCallbackInfo *status);
 
+/**
+ * Delete a callback
+ *
+ * @param cb - The UID of the specified callback
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelDeleteCallback(SceUID cb);
+
+/**
+ * Notify a callback
+ *
+ * @param cb - The UID of the specified callback
+ * @param arg2 - Passed as arg2 into the callback function
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceKernelNotifyCallback(SceUID cb, int arg2);
+
+/**
+ * Cancel a callback ?
+ *
+ * @param cb - The UID of the specified callback
+ *
+ * @return 0 on succes, < 0 on error
+ */
+int sceKernelCancelCallback(SceUID cb);
+
+/**
+ * Get the callback count
+ *
+ * @param cb - The UID of the specified callback
+ *
+ * @return The callback count, < 0 on error
+ */
+int sceKernelGetCallbackCount(SceUID cb);
+
+/**
+ * Check callback ?
+ *
+ * @return Something or another
+ */
+int sceKernelCheckCallback(void);
 
 /* Misc. */
 
