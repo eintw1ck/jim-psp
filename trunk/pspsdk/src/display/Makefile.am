@@ -15,7 +15,7 @@ DISPLAY_OBJS = sceDisplay_0000.o sceDisplay_0001.o sceDisplay_0002.o sceDisplay_
 DISPLAYDRIVER_OBJS = sceDisplay_driver_0000.o sceDisplay_driver_0001.o sceDisplay_driver_0002.o sceDisplay_driver_0003.o sceDisplay_driver_0004.o sceDisplay_driver_0005.o sceDisplay_driver_0006.o sceDisplay_driver_0007.o sceDisplay_driver_0008.o sceDisplay_driver_0009.o sceDisplay_driver_0010.o sceDisplay_driver_0011.o sceDisplay_driver_0012.o sceDisplay_driver_0013.o sceDisplay_driver_0014.o sceDisplay_driver_0015.o sceDisplay_driver_0016.o sceDisplay_driver_0017.o sceDisplay_driver_0018.o sceDisplay_driver_0019.o sceDisplay_driver_0020.o sceDisplay_driver_0021.o sceDisplay_driver_0022.o sceDisplay_driver_0023.o sceDisplay_driver_0024.o sceDisplay_driver_0025.o sceDisplay_driver_0026.o 
 
 libpspdisplayincludedir = @PSPSDK_INCLUDEDIR@
-libpspdisplayinclude_HEADERS = pspdisplay.h
+libpspdisplayinclude_HEADERS = pspdisplay.h pspdisplay_kernel.h
 
 lib_LIBRARIES = libpspdisplay.a libpspdisplay_driver.a
 libpspdisplay_a_SOURCES = sceDisplay.S 

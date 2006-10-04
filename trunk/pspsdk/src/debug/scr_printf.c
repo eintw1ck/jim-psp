@@ -181,6 +181,11 @@ void pspDebugScreenSetOffset(int offset)
 	g_vram_offset = offset;
 }
 
+void pspDebugScreenSetBase(u32* base)
+{
+	g_vram_base = base;
+}
+
 int pspDebugScreenGetX()
 {
 	return X;

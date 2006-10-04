@@ -76,6 +76,13 @@ void pspDebugScreenSetXY(int x, int y);
   */
 void pspDebugScreenSetOffset(int offset);
 
+/**
+ * Set the video ram base used for the screen
+ *
+ * @param base - Base address in bytes
+ */
+void pspDebugScreenSetBase(u32* base);
+
 /** 
   * Get the current X co-ordinate (in character units)
   *
