@@ -57,6 +57,11 @@ int sceCtrl_driver_5E77BC8A(unsigned int mask);
  */
 int sceCtrl_driver_5C56C779(int no, unsigned int mask, void (*cb)(int, int, void*), void *arg);
 
+/* Just define some random names for the functions to make them easier to use */
+#define sceCtrlSetButtonMasks sceCtrl_driver_7CA723DC
+#define sceCtrlGetButtonMask sceCtrl_driver_5E77BC8A
+#define sceCtrlRegisterButtonCallback sceCtrl_driver_5C56C779
+
 
 #ifdef __cplusplus
 }
