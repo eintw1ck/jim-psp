@@ -15,7 +15,7 @@ CTRL_OBJS = sceCtrl_0000.o sceCtrl_0001.o sceCtrl_0002.o sceCtrl_0003.o sceCtrl_
 CTRLDRIVER_OBJS = sceCtrl_driver_0000.o sceCtrl_driver_0001.o sceCtrl_driver_0002.o sceCtrl_driver_0003.o sceCtrl_driver_0004.o sceCtrl_driver_0005.o sceCtrl_driver_0006.o sceCtrl_driver_0007.o sceCtrl_driver_0008.o sceCtrl_driver_0009.o sceCtrl_driver_0010.o sceCtrl_driver_0011.o sceCtrl_driver_0012.o sceCtrl_driver_0013.o sceCtrl_driver_0014.o sceCtrl_driver_0015.o sceCtrl_driver_0016.o sceCtrl_driver_0017.o sceCtrl_driver_0018.o sceCtrl_driver_0019.o sceCtrl_driver_0020.o sceCtrl_driver_0021.o sceCtrl_driver_0022.o sceCtrl_driver_0023.o 
 
 libpspctrlincludedir = @PSPSDK_INCLUDEDIR@
-libpspctrlinclude_HEADERS = pspctrl.h
+libpspctrlinclude_HEADERS = pspctrl.h pspctrl_kernel.h
 
 lib_LIBRARIES = libpspctrl.a libpspctrl_driver.a
 libpspctrl_a_SOURCES = sceCtrl.S
