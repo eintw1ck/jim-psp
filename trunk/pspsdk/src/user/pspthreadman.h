@@ -252,7 +252,7 @@ int sceKernelSleepThread(void);
  * sceKernelSleepThreadCB();
  * @endcode
  */
-void sceKernelSleepThreadCB(void);
+int sceKernelSleepThreadCB(void);
 
 /**
  * Wake a thread previously put into the sleep state.
@@ -320,7 +320,7 @@ int sceKernelWaitThreadEndCB(SceUID thid, SceUInt *timeout);
   * sceKernelDelayThread(1000000); // Delay for a second
   * @endcode
   */
-void sceKernelDelayThread(SceUInt delay);
+int sceKernelDelayThread(SceUInt delay);
 
 /**
   * Delay the current thread by a specified number of microseconds and handle any callbacks.
@@ -332,7 +332,7 @@ void sceKernelDelayThread(SceUInt delay);
   * sceKernelDelayThread(1000000); // Delay for a second
   * @endcode
   */
-void sceKernelDelayThreadCB(SceUInt delay);
+int sceKernelDelayThreadCB(SceUInt delay);
 
 /**
   * Delay the current thread by a specified number of sysclocks
@@ -341,7 +341,7 @@ void sceKernelDelayThreadCB(SceUInt delay);
   *
   * @return 0 on success, < 0 on error
   */
-void sceKernelDelaySysClockThread(SceKernelSysClock *delay);
+int sceKernelDelaySysClockThread(SceKernelSysClock *delay);
 
 /**
   * Delay the current thread by a specified number of sysclocks handling callbacks
@@ -351,7 +351,7 @@ void sceKernelDelaySysClockThread(SceKernelSysClock *delay);
   * @return 0 on success, < 0 on error
   *
   */
-void sceKernelDelaySysClockThreadCB(SceKernelSysClock *delay);
+int sceKernelDelaySysClockThreadCB(SceKernelSysClock *delay);
 
 /**
  * Modify the attributes of the current thread.
