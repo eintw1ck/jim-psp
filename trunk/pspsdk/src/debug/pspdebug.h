@@ -32,6 +32,15 @@ extern "C" {
 void pspDebugScreenInit(void);
 
 /**
+ * Extended debug screen init
+ *
+ * @param vram_base - Base address of frame buffer, if NULL then sets a default
+ * @param mode - Colour mode
+ * @param setup - Setup the screen if 1
+ */
+void pspDebugScreenInitEx(void *vram_base, int mode, int setup);
+
+/**
   * Do a printf to the debug screen.
   *
   * @param fmt - Format string to print
@@ -53,6 +62,13 @@ void pspDebugScreenSetBackColor(u32 color);
   * @param color - A 32 bit RGB color
   */
 void pspDebugScreenSetTextColor(u32 color);
+
+/**
+ * Set the color mode (you must have switched the frame buffer appropriately)
+ *
+ * @param mode - Color mode
+ */
+void pspDebugScreenSetColorMode(int mode);
 
 /** 
   * Draw a single character to the screen.
@@ -111,6 +127,15 @@ void pspDebugScreenClear(void);
   * @return The number of characters written
   */
 int pspDebugScreenPrintData(const char *buff, int size);
+
+/**
+ * Print a string
+ *
+ * @param str - String
+ *
+ * @return The number of characters written
+ */
+int pspDebugScreenPuts(const char *str);
 
 /**
   * Get a MIPS stack trace (might work :P)

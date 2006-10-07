@@ -14,6 +14,8 @@ INCLUDES = -I$(top_srcdir)/src/base \
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) $(INCLUDES)
 
+SCRPRINT_OBJS = pspDebugScreenInit.o pspDebugScreenPrintf.o
+
 libpspdebugincludedir = @PSPSDK_INCLUDEDIR@
 libpspdebuginclude_HEADERS =	\
 	pspdebug.h
@@ -33,8 +35,13 @@ libpspdebug_a_SOURCES =		\
 	stdio.c		\
 	sio.c
 
+libpspdebug_a_LIBADD = $(SCRPRINT_OBJS)
+
 libpspgdb_a_SOURCES = gdb-stub.c
 
 libpspgdb_user_a_SOURCES = gdb-userlib.c
 
 libpspgdb_kernel_a_SOURCES = gdb-kernellib.c
+
+$(SCRPRINT_OBJS): scr_printf.c
+	$(COMPILE) -DF_$* $< -c -o $@

@@ -38,7 +38,11 @@ void sceDisplay_driver_63E22A26(int pri, void *topaddr, int bufferwidth, int pix
  * @param pixelformat - pointer to int to receive one of ::PspDisplayPixelFormats.
  * @param unk1 - pointer to int, receives unknown, always 1? (vblank sync?)
  */
-int sceDisplay_driver_585AEFAD(int pri, void **topaddr, int *bufferwidth, int *pixelformat, int *unk1);
+int sceDisplay_driver_5B5AEFAD(int pri, void **topaddr, int *bufferwidth, int *pixelformat, int *unk1);
+
+/* Define some names to make it nicer */
+#define sceDisplaySetFrameBufferInternal sceDisplay_driver_63E22A26
+#define sceDisplayGetFrameBufferInternal sceDisplay_driver_5B5AEFAD
 
 #ifdef __cplusplus
 }
