@@ -38,6 +38,17 @@ void sceSysconPowerStandby(void);
  */
 void sceSysconResetDevice(int unk1, int unk2);
 
+#define SCE_LED_POWER 1
+#define LED_ON 1
+#define LED_OFF 0
+/**
+ * Control an LED
+ *
+ * @param SceLED - The led to toggle (only SCE_LED_POWER)
+ * @param state - Whether to turn on or off
+ */
+int sceSysconCtrlLED(int SceLED, int state);
+
 /*@}*/
 
 #ifdef __cplusplus
