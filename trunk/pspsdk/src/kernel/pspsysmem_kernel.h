@@ -82,6 +82,16 @@ void sceKernelSysMemDumpBlock(void);
  */
 void sceKernelSysMemDumpTail(void);
 
+/**
+ * Set the protection of a block of ddr memory
+ *
+ * @param addr - Address to set protection on
+ * @param size - Size of block
+ * @param prot - Protection bitmask
+ *
+ * @return < 0 on error
+ */
+int sceKernelSetDdrMemoryProtection(void *addr, int size, int prot);
 
 #ifdef __cplusplus
 }

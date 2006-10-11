@@ -93,7 +93,7 @@
 	IMPORT_FUNC	"SysMemForKernel",0x6CD838EC,sceKernelLookupUIDFunction
 #endif
 #ifdef F_SysMemForKernel_0030
-	IMPORT_FUNC	"SysMemForKernel",0xAD09C397,SysMemForKernel_AD09C397
+	IMPORT_FUNC	"SysMemForKernel",0xAD09C397,sceKernelCreateUIDtypeInherit
 #endif
 #ifdef F_SysMemForKernel_0031
 	IMPORT_FUNC	"SysMemForKernel",0xFEFC8666,sceKernelCreateUIDtype
@@ -123,7 +123,7 @@
 	IMPORT_FUNC	"SysMemForKernel",0xCF4DE78C,sceKernelGetUIDcontrolBlock
 #endif
 #ifdef F_SysMemForKernel_0040
-	IMPORT_FUNC	"SysMemForKernel",0x41FFC7F9,SysMemForKernel_41FFC7F9
+	IMPORT_FUNC	"SysMemForKernel",0x41FFC7F9,sceKernelGetUIDcontrolBlockWithType
 #endif
 #ifdef F_SysMemForKernel_0041
 	IMPORT_FUNC	"SysMemForKernel",0x82D3CEE3,SysMemForKernel_82D3CEE3
@@ -178,4 +178,13 @@
 #endif
 #ifdef F_SysMemForKernel_0058
 	IMPORT_FUNC	"SysMemForKernel",0x3FC9AE6A,sceKernelDevkitVersion
+#endif
+#ifdef F_SysMemForKernel_0059
+	IMPORT_FUNC	"SysMemForKernel",0x4887802F,sceKernelMemset32
+#endif
+#ifdef F_SysMemForKernel_0060
+	IMPORT_FUNC	"SysMemForKernel",0xA089ECA4,sceKernelMemset
+#endif
+#ifdef F_SysMemForKernel_0061
+	IMPORT_FUNC	"SysMemForKernel",0xB2C7AA36,sceKernelSetDdrMemoryProtection
 #endif

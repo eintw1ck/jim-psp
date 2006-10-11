@@ -188,3 +188,12 @@
 #ifdef F_scePower_driver_0061
 	IMPORT_FUNC	"scePower_driver",0xC23AC778,scePower_driver_C23AC778
 #endif
+#ifdef F_scePower_driver_0062
+	IMPORT_FUNC	"scePower_driver",0x23C31FFE,scePower_driver_23C31FFE
+#endif
+#ifdef F_scePower_driver_0063
+	IMPORT_FUNC	"scePower_driver",0xFA97A599,scePower_driver_FA97A599
+#endif
+#ifdef F_scePower_driver_0064
+	IMPORT_FUNC	"scePower_driver",0xB3EDD801,scePower_driver_B3EDD801
+#endif

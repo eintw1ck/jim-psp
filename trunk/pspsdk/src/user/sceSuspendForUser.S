@@ -14,3 +14,12 @@
 #ifdef F_sceSuspendForUser_0003
 	IMPORT_FUNC	"sceSuspendForUser",0x090CCB3F,sceKernelPowerTick
 #endif
+#ifdef F_sceSuspendForUser_0004
+	IMPORT_FUNC	"sceSuspendForUser",0x3E0271D3,sceSuspendForUser_3E0271D3
+#endif
+#ifdef F_sceSuspendForUser_0005
+	IMPORT_FUNC	"sceSuspendForUser",0xA14F40B2,sceSuspendForUser_A14F40B2
+#endif
+#ifdef F_sceSuspendForUser_0006
+	IMPORT_FUNC	"sceSuspendForUser",0xA569E425,sceSuspendForUser_A569E425
+#endif
