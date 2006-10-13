@@ -1,2 +1,0 @@
-Simple wget like clone using libcurl, allows you to download files to
-the ms without needing USB (well you still need wifi and a web/ftp server :P)
