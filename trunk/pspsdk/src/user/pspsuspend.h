@@ -24,7 +24,7 @@
  *
  * @return 0 on success
  */
-int sceSuspendForUser_3E0271D3(int unk, void **ptr, int *size);
+int sceKernelVolatileMemLock(int unk, void **ptr, int *size);
 
 /**
  * Try and allocate the extra 4megs of RAM, will return an error if 
@@ -36,17 +36,13 @@ int sceSuspendForUser_3E0271D3(int unk, void **ptr, int *size);
  *
  * @return 0 on success
  */
-int sceSuspendForUser_A14F40B2(int unk, void **ptr, int *size);
+int sceKernelVolatileMemTryLock(int unk, void **ptr, int *size);
 
 /**
  * Deallocate the extra 4 megs of RAM
  *
  * @return 0 on success
  */
-int sceSuspendForUser_A569E425(void);
-
-#define sceSuspendAllocExtraMem sceSuspendForUser_3E0271D3
-#define sceSuspendTryAllocExtraMem sceSuspendForUser_A14F40B2
-#define sceSuspendDeallocExtraMem sceSuspendForUser_A569E425
+int sceKernelVolatileMemUnlock(void);
 
 #endif
