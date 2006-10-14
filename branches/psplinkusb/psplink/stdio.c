@@ -18,10 +18,12 @@
 #include <pspdebug.h>
 #include <pspstdio.h>
 
+int g_shellfd = -1;
 static int g_initialised = 0;
 static PspDebugInputHandler g_stdin_handler = NULL;
 static PspDebugPrintHandler g_stdout_handler = NULL;
 static PspDebugPrintHandler g_stderr_handler = NULL;
+static PspDebugPrintHandler g_shell_handler = NULL;
 static SceUID g_in_sema = 0;
 /* Probably stdout and stderr should not be guarded by the same mutex */
 static SceUID g_out_sema = 0;
@@ -44,7 +46,8 @@ static int io_exit(PspIoDrvArg *arg)
 
 static int io_open(PspIoDrvFileArg *arg, char *file, int mode, SceMode mask)
 {
-	if((arg->fs_num != STDIN_FILENO) && (arg->fs_num != STDOUT_FILENO) && (arg->fs_num != STDERR_FILENO))
+	if((arg->fs_num != STDIN_FILENO) && (arg->fs_num != STDOUT_FILENO) 
+			&& (arg->fs_num != STDERR_FILENO) && (arg->fs_num != SHELL_FILENO))
 	{
 		return SCE_KERNEL_ERROR_NOFILE;
 	}
@@ -78,6 +81,10 @@ static int io_write(PspIoDrvFileArg *arg, const char *data, int len)
 	else if((arg->fs_num == STDERR_FILENO) && (g_stderr_handler != NULL))
 	{
 		ret = g_stderr_handler(data, len);
+	}
+	else if((arg->fs_num == SHELL_FILENO) && (g_shell_handler != NULL))
+	{
+		ret = g_shell_handler(data, len);
 	}
 	(void) sceKernelSignalSema(g_out_sema, 1);
 
@@ -115,7 +122,7 @@ static PspIoDrv tty_driver =
 	"tty", 0x10, 0x800, "TTY", &tty_funcs
 };
 
-static int tty_init(void)
+int stdioTtyInit(void)
 {
 	int ret;
 	(void) sceIoDelDrv("tty"); /* Ignore error */
@@ -155,6 +162,13 @@ static int tty_init(void)
 		return ret;
 	}
 
+	/* Open a new file descriptor for just shell output */
+	g_shellfd = sceIoOpen("tty3:", PSP_O_WRONLY, 0777);
+	if(g_shellfd < 0)
+	{
+		return ret;
+	}
+
 	g_initialised = 1;
 
 	return 0;
@@ -162,16 +176,6 @@ static int tty_init(void)
 
 int stdioInstallStdinHandler(PspDebugInputHandler handler)
 {
-	if(g_initialised == 0)
-	{
-		int ret;
-		ret = tty_init();
-		if(ret < 0)
-		{
-			return ret;
-		}
-	}
-
 	g_stdin_handler = handler;
 
 	return 0;
@@ -179,16 +183,6 @@ int stdioInstallStdinHandler(PspDebugInputHandler handler)
 
 int stdioInstallStdoutHandler(PspDebugPrintHandler handler)
 {
-	if(g_initialised == 0)
-	{
-		int ret;
-		ret = tty_init();
-		if(ret < 0)
-		{
-			return ret;
-		}
-	}
-
 	g_stdout_handler = handler;
 
 	return 0;
@@ -196,17 +190,14 @@ int stdioInstallStdoutHandler(PspDebugPrintHandler handler)
 
 int stdioInstallStderrHandler(PspDebugPrintHandler handler)
 {
-	if(g_initialised == 0)
-	{
-		int ret;
-		ret = tty_init();
-		if(ret < 0)
-		{
-			return ret;
-		}
-	}
-
 	g_stderr_handler = handler;
+
+	return 0;
+}
+
+int stdioInstallShellHandler(PspDebugPrintHandler handler)
+{
+	g_shell_handler = handler;
 
 	return 0;
 }

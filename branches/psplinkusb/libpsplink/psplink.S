@@ -2,6 +2,8 @@
 
 #include "pspimport.s"
 
+// Build files
+// psplink_0000.o psplink_0001.o psplink_0002.o psplink_0003.o psplink_0004.o psplink_0005.o psplink_0006.o psplink_0007.o psplink_0008.o psplink_0009.o psplink_0010.o psplink_0011.o psplink_0012.o psplink_0013.o psplink_0014.o psplink_0015.o psplink_0016.o psplink_0017.o psplink_0018.o psplink_0019.o psplink_0020.o psplink_0021.o psplink_0022.o 
 
 #ifdef F_psplink_0000
 	IMPORT_START "psplink",0x40090000
@@ -25,59 +27,50 @@
 	IMPORT_FUNC  "psplink",0x8F31ACE7,psplinkReferModule
 #endif
 #ifdef F_psplink_0007
-	IMPORT_FUNC  "psplink",0xA02A6B96,psplinkConsolePermit
-#endif
-#ifdef F_psplink_0008
 	IMPORT_FUNC  "psplink",0x94804B42,psplinkRegisterExceptions
 #endif
-#ifdef F_psplink_0009
+#ifdef F_psplink_0008
 	IMPORT_FUNC  "psplink",0xB3277521,psplinkFindUserThreadContext
 #endif
-#ifdef F_psplink_0010
+#ifdef F_psplink_0009
 	IMPORT_FUNC  "psplink",0x754F9BB8,psplinkReferModuleByName
 #endif
-#ifdef F_psplink_0011
+#ifdef F_psplink_0010
 	IMPORT_FUNC  "psplink",0x4A45386D,psplinkReset
 #endif
-#ifdef F_psplink_0012
+#ifdef F_psplink_0011
 	IMPORT_FUNC  "psplink",0xCBA8647D,apiHookByName
 #endif
-#ifdef F_psplink_0013
+#ifdef F_psplink_0012
 	IMPORT_FUNC  "psplink",0x4ED59445,apiHookByNid
 #endif
-#ifdef F_psplink_0014
+#ifdef F_psplink_0013
 	IMPORT_FUNC  "psplink",0xEFB166B7,debugEnableHW
 #endif
-#ifdef F_psplink_0015
+#ifdef F_psplink_0014
 	IMPORT_FUNC  "psplink",0xDD3E47DE,debugDisableHW
 #endif
-#ifdef F_psplink_0016
+#ifdef F_psplink_0015
 	IMPORT_FUNC  "psplink",0xEF83FB58,debugHWEnabled
 #endif
-#ifdef F_psplink_0017
+#ifdef F_psplink_0016
 	IMPORT_FUNC  "psplink",0xD0A22864,debugGetEnv
 #endif
-#ifdef F_psplink_0018
+#ifdef F_psplink_0017
 	IMPORT_FUNC  "psplink",0x4EC6E035,debugSetEnv
 #endif
-#ifdef F_psplink_0019
-	IMPORT_FUNC  "psplink",0x4DFA5010,ttySetWifiHandler
-#endif
-#ifdef F_psplink_0020
+#ifdef F_psplink_0018
 	IMPORT_FUNC  "psplink",0x31F8AFD5,ttySetUsbHandler
 #endif
-#ifdef F_psplink_0021
-	IMPORT_FUNC  "psplink",0x753A27AC,ttySetConsHandler
-#endif
-#ifdef F_psplink_0022
+#ifdef F_psplink_0019
 	IMPORT_FUNC  "psplink",0x79D1C3FA,sceKernelDcacheWritebackAll
 #endif
-#ifdef F_psplink_0023
+#ifdef F_psplink_0020
 	IMPORT_FUNC  "psplink",0x864A9D72,sceKernelDcacheInvalidateAll
 #endif
-#ifdef F_psplink_0024
+#ifdef F_psplink_0021
 	IMPORT_FUNC  "psplink",0xB435DEC5,sceKernelDcacheWritebackInvalidateAll
 #endif
-#ifdef F_psplink_0025
+#ifdef F_psplink_0022
 	IMPORT_FUNC  "psplink",0x920F104A,sceKernelIcacheInvalidateAll
 #endif

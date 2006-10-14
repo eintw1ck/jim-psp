@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <util.h>
+#include "psplink.h"
 #include "parse_args.h"
 
 int decode_hex(const char *str, unsigned char *ch)
@@ -33,12 +34,12 @@ int decode_hex(const char *str, unsigned char *ch)
 	}
 	if(i == 0)
 	{
-		printf("Missing following hex characters\n");
+		SHELL_PRINT("Missing following hex characters\n");
 		return 0;
 	}
 	if(*ch == 0)
 	{
-		printf("Invalid hex character (not allowed NULs)\n");
+		SHELL_PRINT("Invalid hex character (not allowed NULs)\n");
 		return 0;
 	}
 
@@ -61,12 +62,12 @@ int decode_oct(const char *str, unsigned char *ch)
 	}
 	if(i == 0)
 	{
-		printf("Missing following octal characters\n");
+		SHELL_PRINT("Missing following octal characters\n");
 		return 0;
 	}
 	if(*ch == 0)
 	{
-		printf("Invalid octal character (not allowed NULs)\n");
+		SHELL_PRINT("Invalid octal character (not allowed NULs)\n");
 		return 0;
 	}
 
@@ -80,7 +81,7 @@ int parse_args(char *in, char *out, int *argc, char **argv, int max_args)
 
 	if((in == NULL) || (out == NULL) || (argc == NULL) || (argv == NULL) || (max_args <= 0))
 	{
-		printf("Error in parse_args, invalid arguments\n");
+		SHELL_PRINT("Error in parse_args, invalid arguments\n");
 		return 0;
 	}
 
@@ -195,7 +196,7 @@ int parse_args(char *in, char *out, int *argc, char **argv, int max_args)
 
 	if(in_quote)
 	{
-		printf("Missing matching quote %c\n", in_quote);
+		SHELL_PRINT("Missing matching quote %c\n", in_quote);
 		return 0;
 	}
 

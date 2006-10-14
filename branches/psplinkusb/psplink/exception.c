@@ -99,12 +99,12 @@ void exceptionPrintCPURegs(u32 *pRegs)
 {
 	int i;
 
-	printf("%s:0x00000000 %s:0x%08X %s:0x%08X %s:0x%08X\n", regName[0], 
+	SHELL_PRINT("%s:0x00000000 %s:0x%08X %s:0x%08X %s:0x%08X\n", regName[0], 
 			regName[1], pRegs[1], regName[2], 
 			pRegs[2], regName[3], pRegs[3]);
 	for(i = 4; i < 32; i+=4)
 	{
-		printf("%s:0x%08X %s:0x%08X %s:0x%08X %s:0x%08X\n", regName[i], pRegs[i],
+		SHELL_PRINT("%s:0x%08X %s:0x%08X %s:0x%08X %s:0x%08X\n", regName[i], pRegs[i],
 				regName[i+1], pRegs[i+1], regName[i+2], 
 				pRegs[i+2], regName[i+3], pRegs[i+3]);
 	}
@@ -187,14 +187,14 @@ void exceptionPrint(int ex)
 
 	if(ctx)
 	{
-		printf("Exception - %s\n", exception_cause(ctx));
-		printf("Thread ID - 0x%08X\n", ctx->thid);
+		SHELL_PRINT("Exception - %s\n", exception_cause(ctx));
+		SHELL_PRINT("Thread ID - 0x%08X\n", ctx->thid);
 
 		memset(&thread, 0, sizeof(thread));
 		thread.size = sizeof(thread);
 		if(!sceKernelReferThreadStatus(ctx->thid, &thread))
 		{
-			printf("Th Name   - %s\n", thread.name);
+			SHELL_PRINT("Th Name   - %s\n", thread.name);
 		}
 
 		if((ctx->regs.epc < 0x88000000) || (ctx->regs.epc > 0x88400000))
@@ -211,34 +211,34 @@ void exceptionPrint(int ex)
 		{
 			PspDebugPutChar kp;
 
-			printf("Module ID - 0x%08X\n", pMod->modid);
+			SHELL_PRINT("Module ID - 0x%08X\n", pMod->modid);
 			memset(&mod, 0, sizeof(mod));
 			mod.size = sizeof(mod);
 			kp = sioDisableKprintf();
 			if(!g_QueryModuleInfo(pMod->modid, &mod))
 			{
-				printf("Mod Name  - %s\n", mod.name);
+				SHELL_PRINT("Mod Name  - %s\n", mod.name);
 			}
 			sioEnableKprintf(kp);
 		}
 
-		printf("EPC       - 0x%08X\n", ctx->regs.epc);
+		SHELL_PRINT("EPC       - 0x%08X\n", ctx->regs.epc);
 		if(g_currex->regs.type == PSPLINK_EXTYPE_NORMAL)
 		{
-			printf("Cause     - 0x%08X\n", ctx->regs.cause);
-			printf("BadVAddr  - 0x%08X\n", ctx->regs.badvaddr);
+			SHELL_PRINT("Cause     - 0x%08X\n", ctx->regs.cause);
+			SHELL_PRINT("BadVAddr  - 0x%08X\n", ctx->regs.badvaddr);
 		}
 		else
 		{
-			printf("DRCNTL    - 0x%08X\n", ctx->drcntl);
+			SHELL_PRINT("DRCNTL    - 0x%08X\n", ctx->drcntl);
 		}
 
-		printf("Status    - 0x%08X\n", ctx->regs.status);
+		SHELL_PRINT("Status    - 0x%08X\n", ctx->regs.status);
 		exceptionPrintCPURegs(ctx->regs.r);
 	}
 	else
 	{
-		printf("No exception occurred\n");
+		SHELL_PRINT("No exception occurred\n");
 	}
 }
 
@@ -252,14 +252,14 @@ void exceptionList(void)
 		{
 			if(g_list[i].valid)
 			{
-				printf("Exception %-2d: EPC 0x%08X, Cause %s\n", i, g_list[i].regs.epc, 
+				SHELL_PRINT("Exception %-2d: EPC 0x%08X, Cause %s\n", i, g_list[i].regs.epc, 
 						exception_cause(&g_list[i]));
 			}
 		}
 	}
 	else
 	{
-		printf("No exception handler registered\n");
+		SHELL_PRINT("No exception handler registered\n");
 	}
 }
 
@@ -275,9 +275,9 @@ void exceptionPrintFPURegs(float *pFpu, unsigned int fsr, unsigned int fir)
 
 		f_cvt(pFpu[i], left, sizeof(left), 6, MODE_GENERIC);
 		f_cvt(pFpu[i+1], right, sizeof(right), 6, MODE_GENERIC);
-		printf("fpr%02d: %-20s - fpr%02d: %-20s\n", i, left, i+1, right);
+		SHELL_PRINT("fpr%02d: %-20s - fpr%02d: %-20s\n", i, left, i+1, right);
 	}
-	printf("fsr: %08X   - fir %08X\n", fsr, fir);
+	SHELL_PRINT("fsr: %08X   - fir %08X\n", fsr, fir);
 }
 
 void exceptionFpuPrint(int ex)
@@ -305,12 +305,12 @@ void exceptionFpuPrint(int ex)
 		}
 		else
 		{
-			printf("FPU not enabled in context\n");
+			SHELL_PRINT("FPU not enabled in context\n");
 		}
 	}
 	else
 	{
-		printf("No exception occurred\n");
+		SHELL_PRINT("No exception occurred\n");
 	}
 }
 
@@ -324,12 +324,12 @@ static void print_vfpu_row(char type, int m, int c, int r, float x, float y, flo
 	f_cvt(w, ws, sizeof(ws), 6, MODE_GENERIC);
 	if(type != 0)
 	{
-		printf("%c%d%d%d: { %14s, %14s, %14s, %14s }\n", 
+		SHELL_PRINT("%c%d%d%d: { %14s, %14s, %14s, %14s }\n", 
 				type, m, c, r, xs, ys, zs, ws );
 	}
 	else
 	{
-		printf("      { %14s, %14s, %14s, %14s }\n", 
+		SHELL_PRINT("      { %14s, %14s, %14s, %14s }\n", 
 				xs, ys, zs, ws );
 	}
 }
@@ -348,7 +348,7 @@ void exceptionPrintVFPURegs(float *pFpu, int mode)
 
 			f_cvt(pFpu[i], left, sizeof(left), 6, MODE_GENERIC);
 			f_cvt(pFpu[i+1], right, sizeof(right), 6, MODE_GENERIC);
-			printf("S%d%d%d: %-20s - S%d%d%d: %-20s\n", 
+			SHELL_PRINT("S%d%d%d: %-20s - S%d%d%d: %-20s\n", 
 					MAT_NUM(i), COL_NUM(i), ROW_NUM(i), left, 
 					MAT_NUM(i+1), COL_NUM(i+1), ROW_NUM(i+1),  right);
 		}
@@ -418,12 +418,12 @@ void exceptionVfpuPrint(int ex, int mode)
 		}
 		else
 		{
-			printf("VFPU not enabled in context\n");
+			SHELL_PRINT("VFPU not enabled in context\n");
 		}
 	}
 	else
 	{
-		printf("No exception occurred\n");
+		SHELL_PRINT("No exception occurred\n");
 	}
 }
 

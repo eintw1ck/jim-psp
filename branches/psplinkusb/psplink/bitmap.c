@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include "psplink.h"
 
 #define BMP_ID "BM"
 
@@ -176,7 +177,7 @@ int bitmapWrite(void *frame_addr, void *tmp_buf, int format, const char *file)
 	fd = sceIoOpen(file, PSP_O_WRONLY | PSP_O_CREAT | PSP_O_TRUNC, 0777);
 	if(fd < 0)
 	{
-		printf("Could not open file '%s' for writing\n", file);
+		SHELL_PRINT("Could not open file '%s' for writing\n", file);
 		return -1;
 	}
 

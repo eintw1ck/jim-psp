@@ -34,7 +34,6 @@ enum UsbStates
 };
 
 /* Indicates whether the usb drivers have been loaded */
-static enum UsbStates g_usbmassstate = USB_NOSTART;
 static enum UsbStates g_usbhoststate = USB_NOSTART;
 
 /* Global functions which are setup to point to the correct function
@@ -257,7 +256,7 @@ int handlepath(const char *currentdir, const char *relative, char *path, int typ
 				sceIoClose(fd);
 			}
 		} else {
-			printf("unable to validate ether type\n");
+			SHELL_PRINT("unable to validate ether type\n");
 			return 0;
 		}
 	}
@@ -300,7 +299,7 @@ int findinpath(const char *relative, char *output, const char *pathvar)
 			{
 				strcat(output, "/");
 				strcat(output, relative);
-				printf("%s\n", output);
+				SHELL_PRINT("%s\n", output);
 				fd = sceIoOpen(output, PSP_O_RDONLY, 0777);
 				if(fd >= 0)
 				{
@@ -405,88 +404,6 @@ void map_firmwarerev(void)
 	}
 }
 
-int init_usbmass(void)
-{
-	int retVal;
-
-	do
-	{
-		if((g_usbmassstate == USB_ON) || (g_usbhoststate == USB_ON))
-		{
-			retVal = 0;
-			break;
-		}
-
-		if(g_usbmassstate == USB_NOSTART)
-		{
-			load_start_module("flash0:/kd/semawm.prx", 0, NULL);
-			load_start_module("flash0:/kd/usbstor.prx", 0, NULL);
-			load_start_module("flash0:/kd/usbstormgr.prx", 0, NULL);
-			load_start_module("flash0:/kd/usbstorms.prx", 0, NULL);
-			load_start_module("flash0:/kd/usbstorboot.prx", 0, NULL);
-		}
-
-		retVal = sceUsbStart(PSP_USBBUS_DRIVERNAME, 0, 0);
-		if (retVal != 0) {
-			Kprintf("Error starting USB Bus driver (0x%08X)\n", retVal);
-			break;
-		}
-		retVal = sceUsbStart(PSP_USBSTOR_DRIVERNAME, 0, 0);
-		if (retVal != 0) {
-			Kprintf("Error starting USB Mass Storage driver (0x%08X)\n",
-			   retVal);
-			break;
-		}
-		retVal = sceUsbstorBootSetCapacity(0x800000);
-		if (retVal != 0) {
-			Kprintf
-			("Error setting capacity with USB Mass Storage driver (0x%08X)\n",
-			 retVal);
-			break;
-		}
-
-		retVal = sceUsbActivate(0x1c8);
-
-		if(retVal == 0)
-		{
-			g_usbmassstate = USB_ON;
-		}
-	}
-	while(0);
-
-	return retVal;
-}
-
-int stop_usbmass(void)
-{
-	int retVal;
-
-	if((g_usbmassstate != USB_ON) || (g_usbhoststate == USB_ON))
-	{
-		return 0;
-	}
-
-	retVal = sceUsbDeactivate(0x1c8);
-	if (retVal != 0) {
-	    Kprintf("Error calling sceUsbDeactivate (0x%08X)\n", retVal);
-    }
-
-    retVal = sceUsbStop(PSP_USBSTOR_DRIVERNAME, 0, 0);
-    if (retVal != 0) {
-		Kprintf("Error stopping USB Mass Storage driver (0x%08X)\n",
-	       retVal);
-	}
-
-    retVal = sceUsbStop(PSP_USBBUS_DRIVERNAME, 0, 0);
-    if (retVal != 0) {
-		Kprintf("Error stopping USB BUS driver (0x%08X)\n", retVal);
-	}
-
-	g_usbmassstate = USB_OFF;
-
-	return 0;
-}
-
 int init_usbhost(const char *bootpath)
 {
 	int retVal;
@@ -494,7 +411,7 @@ int init_usbhost(const char *bootpath)
 
 	do
 	{
-		if((g_usbmassstate == USB_ON) || (g_usbhoststate == USB_ON))
+		if((g_usbhoststate == USB_ON))
 		{
 			retVal = 0;
 			break;
@@ -535,7 +452,7 @@ int stop_usbhost(void)
 {
 	int retVal;
 
-	if((g_usbhoststate != USB_ON) || (g_usbmassstate == USB_ON))
+	if((g_usbhoststate != USB_ON))
 	{
 		return 0;
 	}
@@ -547,7 +464,7 @@ int stop_usbhost(void)
 
     retVal = sceUsbStop(HOSTFSDRIVER_NAME, 0, 0);
     if (retVal != 0) {
-		Kprintf("Error stopping USB Mass Storage driver (0x%08X)\n",
+		Kprintf("Error stopping USB host driver (0x%08X)\n",
 	       retVal);
 	}
 
@@ -559,22 +476,6 @@ int stop_usbhost(void)
 	g_usbhoststate = USB_OFF;
 
 	return 0;
-}
-
-void save_execargs(int argc, char **argv)
-{
-	int i;
-	int loc = 0;
-
-	for(i = 0; i < (argc < MAX_ARGS ? argc : MAX_ARGS-1); i++)
-	{
-		strcpy(&g_context.execargs[loc], argv[i]);
-		g_context.execargv[i] = &g_context.execargs[loc];
-		loc += strlen(argv[i]) + 1;
-	}
-
-	argv[i] = NULL;
-	g_context.execargc = argc;
 }
 
 int openfile(const char *filename, PspFile *pFile)
@@ -801,13 +702,13 @@ int decode_hexstr(const char *str, unsigned char *data, int max)
 	hexlen = strlen(str);
 	if(hexlen & 1)
 	{
-		printf("Invalid number of hex characters\n");
+		SHELL_PRINT("Invalid number of hex characters\n");
 		return 0;
 	}
 
 	if((hexlen / 2) > max)
 	{
-		printf("Hex string too long to fit in buffer\n");
+		SHELL_PRINT("Hex string too long to fit in buffer\n");
 		return 0;
 	}
 
@@ -815,7 +716,7 @@ int decode_hexstr(const char *str, unsigned char *data, int max)
 	{
 		if((!is_hex(str[i*2])) || (!is_hex(str[(i*2)+1])))
 		{
-			printf("Invalid hex byte %.2s\n", &str[i*2]);
+			SHELL_PRINT("Invalid hex byte %.2s\n", &str[i*2]);
 			return 0;
 		}
 

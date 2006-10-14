@@ -123,11 +123,11 @@ int threadFindContext(SceUID uid)
 
 	if(tcb)
 	{
-		printf("TCB 0x%p\n", tcb);
-		printf("kstack 0x%08X kstacksize 0x%08X\n", tcbCopy.kstack, tcbCopy.kstacksize);
-		printf("stack  0x%08X stacksize  0x%08X\n", tcbCopy.stack, tcbCopy.stacksize);
-		printf("context 0x%p, vfpu 0x%p\n", tcbCopy.context, tcbCopy.vfpu_context);
-		printf("EPC 0x%08X\n", ctxCopy.EPC);
+		SHELL_PRINT("TCB 0x%p\n", tcb);
+		SHELL_PRINT("kstack 0x%08X kstacksize 0x%08X\n", tcbCopy.kstack, tcbCopy.kstacksize);
+		SHELL_PRINT("stack  0x%08X stacksize  0x%08X\n", tcbCopy.stack, tcbCopy.stacksize);
+		SHELL_PRINT("context 0x%p, vfpu 0x%p\n", tcbCopy.context, tcbCopy.vfpu_context);
+		SHELL_PRINT("EPC 0x%08X\n", ctxCopy.EPC);
 		exceptionPrintCPURegs((u32 *) &ctxCopy);
 		return 0;
 	}

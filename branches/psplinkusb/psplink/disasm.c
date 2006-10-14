@@ -12,6 +12,7 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include "psplink.h"
 #include "disasm.h"
 
 /* Format codes
@@ -612,7 +613,7 @@ void disasmSetOpts(const char *opts, int set)
 		}
 		if(i == DISASM_OPT_MAX)
 		{
-			printf("Unknown disassembler option '%c'\n", ch);
+			SHELL_PRINT("Unknown disassembler option '%c'\n", ch);
 		}
 	}
 }
@@ -641,10 +642,10 @@ void disasmPrintOpts(void)
 {
 	int i;
 
-	printf("Disassembler Options:\n");
+	SHELL_PRINT("Disassembler Options:\n");
 	for(i = 0; i < DISASM_OPT_MAX; i++)
 	{
-		printf("%c : %-3s - %s \n", g_disopts[i].opt, *g_disopts[i].value ? "on" : "off", 
+		SHELL_PRINT("%c : %-3s - %s \n", g_disopts[i].opt, *g_disopts[i].value ? "on" : "off", 
 				g_disopts[i].name);
 	}
 }

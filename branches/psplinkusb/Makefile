@@ -3,9 +3,6 @@ all:
 	$(MAKE) -C psplink	all
 	$(MAKE) -C psplink_user all
 	$(MAKE) -C gdbcommon all
-	$(MAKE) -C modnet all
-	$(MAKE) -C netshell all
-	$(MAKE) -C netgdb   all
 	$(MAKE) -C usbhostfs all
 	$(MAKE) -C usbshell  all
 	$(MAKE) -C usbgdb    all
@@ -25,9 +22,6 @@ release: all
 	cp psplink/psplink.ini.usb release/v1.0/psplink
 	cp psplink/psplink.ini.wifi release/v1.0/psplink
 	cp psplink_user/psplink_user.prx release/v1.0/psplink
-	cp modnet/modnet.prx release/v1.0/psplink
-	cp netshell/netshell.prx release/v1.0/psplink
-	cp netgdb/netgdb.prx release/v1.0/psplink
 	cp usbhostfs/usbhostfs.prx release/v1.0/psplink
 	cp usbshell/usbshell.prx release/v1.0/psplink
 	cp conshell/conshell.prx release/v1.0/psplink
@@ -39,9 +33,6 @@ release: all
 	cp psplink/psplink.ini.usb release/v1.5/psplink
 	cp psplink/psplink.ini.wifi release/v1.5/psplink
 	cp psplink_user/psplink_user.prx release/v1.5/psplink
-	cp modnet/modnet.prx release/v1.5/psplink
-	cp netshell/netshell.prx release/v1.5/psplink
-	cp netgdb/netgdb.prx release/v1.5/psplink
 	cp usbhostfs/usbhostfs.prx release/v1.5/psplink
 	cp usbshell/usbshell.prx release/v1.5/psplink
 	cp conshell/conshell.prx release/v1.5/psplink
@@ -60,13 +51,10 @@ clean:
 	$(MAKE) -C libpsplink clean
 	$(MAKE) -C psplink	clean
 	$(MAKE) -C psplink_user clean
-	$(MAKE) -C modnet clean
-	$(MAKE) -C netshell clean
 	$(MAKE) -C usbhostfs clean
 	$(MAKE) -C usbshell clean
 	$(MAKE) -C conshell clean
 	$(MAKE) -C usbgdb   clean
-	$(MAKE) -C netgdb   clean
 	$(MAKE) -C gdbcommon clean
 	$(MAKE) -C bootstrap clean
 	rm -rf release

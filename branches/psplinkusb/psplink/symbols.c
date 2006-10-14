@@ -60,7 +60,7 @@ static struct SymbolFile *alloc_symbolfile(unsigned int size)
 		g_block_id = sceKernelAllocPartitionMemory(HEAP_PARTITION, "symbols", PSP_SMEM_Low, HEAP_SIZE, NULL);
 		if(g_block_id < 0)
 		{
-			printf("Error could not allocate memory buffer %08X\n", g_block_id);
+			SHELL_PRINT("Error could not allocate memory buffer %08X\n", g_block_id);
 			return NULL;
 		}
 		g_baseaddr = g_curraddr = sceKernelGetBlockHeadAddr(g_block_id);
@@ -95,7 +95,7 @@ static struct SymbolFile *alloc_symbolfile(unsigned int size)
 	}
 	else
 	{
-		printf("Error not enough memory to allocate %d bytes\n", size);
+		SHELL_PRINT("Error not enough memory to allocate %d bytes\n", size);
 	}
 
 	return pRet;
@@ -309,14 +309,14 @@ unsigned int symbolFindByName(const char *name, unsigned int *size)
 	}
 	else
 	{
-		printf("Error symbol address must be of the form module:name\n");
+		SHELL_PRINT("Error symbol address must be of the form module:name\n");
 		return 0;
 	}
 
 	uid = refer_module_by_name(modname, &info);
 	if(uid < 0)
 	{
-		printf("Error cannot find loaded module %s\n", modname);
+		SHELL_PRINT("Error cannot find loaded module %s\n", modname);
 		return 0;
 	}
 
@@ -352,7 +352,7 @@ unsigned int symbolFindByName(const char *name, unsigned int *size)
 	}
 	else
 	{
-		printf("Error could not file module %s's symbols\n", modname);
+		SHELL_PRINT("Error could not file module %s's symbols\n", modname);
 	}
 
 	return addr;
@@ -370,13 +370,13 @@ void symbolPrintLoadList(void)
 			struct SymfileHeader *pHead;
 
 			pHead = (struct SymfileHeader *) pNext->data;
-			printf("Module %.28s - Size %d - Symcount %d\n", pHead->modname, pNext->size, pHead->symcount);
+			SHELL_PRINT("Module %.28s - Size %d - Symcount %d\n", pHead->modname, pNext->size, pHead->symcount);
 			pNext = pNext->pNext;
 		}
 	}
 	else
 	{
-		printf("No symbols loaded\n");
+		SHELL_PRINT("No symbols loaded\n");
 	}
 }
 
@@ -395,13 +395,13 @@ void symbolPrintSymbols(const char *modname)
 		pEntry = (struct SymfileEntry *) (pFile->data + sizeof(struct SymfileHeader));
 		for(i = 0; i < pHead->symcount; i++)
 		{
-			printf("Symbol %d - Address 0x%08X - Size %-10d - Name %s\n", i, 
+			SHELL_PRINT("Symbol %d - Address 0x%08X - Size %-10d - Name %s\n", i, 
 					pEntry[i].addr, pEntry[i].size, pEntry[i].name);
 		}
 	}
 	else
 	{
-		printf("Could not file module %s's symbols\n", modname);
+		SHELL_PRINT("Could not file module %s's symbols\n", modname);
 	}
 }
 
@@ -419,28 +419,28 @@ int symbolLoadSymbols(const char *file)
 	memset(&st, 0, sizeof(st));
 	if(sceIoGetstat(file, &st) < 0)
 	{
-		printf("Error file %s does not exist\n", file);
+		SHELL_PRINT("Error file %s does not exist\n", file);
 		goto error;
 	}
 
 	pFile = alloc_symbolfile(st.st_size);
 	if(pFile == NULL)
 	{
-		printf("Error could not allocate memory for symbol file\n");
+		SHELL_PRINT("Error could not allocate memory for symbol file\n");
 		goto error;
 	}
 
 	fd = sceIoOpen(file, PSP_O_RDONLY, 0777);
 	if(fd < 0)
 	{
-		printf("Error could not open file %s - %08X\n", file, fd);
+		SHELL_PRINT("Error could not open file %s - %08X\n", file, fd);
 		goto error;
 	}
 
 	ret = sceIoRead(fd, pFile->data, st.st_size);
 	if(ret != st.st_size)
 	{
-		printf("Error reading data from file\n");
+		SHELL_PRINT("Error reading data from file\n");
 		goto error;
 	}
 
@@ -450,13 +450,13 @@ int symbolLoadSymbols(const char *file)
 	pHead = (struct SymfileHeader *) pFile->data;
 	if(memcmp(pHead->magic, SYMFILE_MAGIC, 4) != 0)
 	{
-		printf("Error invalid magic\n");
+		SHELL_PRINT("Error invalid magic\n");
 		goto error;
 	}
 
 	if(((pHead->symcount * sizeof(struct SymfileEntry)) + pHead->strsize + sizeof(struct SymfileHeader)) != pFile->size)
 	{
-		printf("Error invalid size for symbol file\n");
+		SHELL_PRINT("Error invalid size for symbol file\n");
 		goto error;
 	}
 

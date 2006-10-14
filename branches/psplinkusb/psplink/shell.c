@@ -27,6 +27,8 @@
 #include <pspthreadman_kernel.h>
 #include <psppower.h>
 #include <stdint.h>
+#include <usbhostfs.h>
+#include <usbasync.h>
 #include "memoryUID.h"
 #include "psplink.h"
 #include "psplinkcnf.h"
@@ -47,20 +49,15 @@
 #include "disasm.h"
 #include "apihook.h"
 #include "tty.h"
+#include "shellcmd.h"
 
 #define MAX_SHELL_VAR      128
 #define SHELL_PROMPT	"psplink %d>"
-/* Maximum command line */
-#define CLI_MAX			128
-/* Maximum history */
-#define CLI_HISTSIZE	8
+#define MAX_CLI            4096
 /* Define the pass prompt value */
 #define PASSPROMPT_VAL  0xFF
 
 extern struct GlobalContext g_context;
-
-int (*g_readchar)(void) = sioReadChar;
-int (*g_readcharwithtimeout)(void) = sioReadCharWithTimeout;
 
 typedef struct _CommandMsg
 {
@@ -69,25 +66,7 @@ typedef struct _CommandMsg
 	int    res;
 } CommandMsg;
 
-#ifndef USB_ONLY
-/* Last command line (history) */
-static char g_lastcli[CLI_HISTSIZE][CLI_MAX];
-/* Current command line */
-static char g_cli[CLI_MAX];
-/* Current position in the command line buffer */
-static int  g_cli_pos = 0;
-/* Current size of the cli buffer */
-static int  g_cli_size = 0;
-/* Last position in the history buffer */
-static int  g_lastcli_pos = 0;
-/* Current scrolling position in the history buffer */
-static int  g_currcli_pos = 0;
-/* Message box for command line parsing */
-#endif 
-
 static SceUID g_command_msg = -1;
-/* Thread ID for the command line parsing */
-static SceUID g_command_thid = -1;
 /* Semaphore to lock the cli */
 static SceUID g_cli_sema = -1;
 /* Event flag to indicate the end of command parse */
@@ -161,17 +140,14 @@ void print_prompt(void)
 	cliprompt = find_shell_var("prompt");
 	if(cliprompt == NULL)
 	{
-		printf("ERROR> ");
+		SHELL_PRINT("ERROR> ");
 		return;
 	}
 
 	out = 0;
 	in = 0;
 
-	if(g_context.pcterm)
-	{
-		tmp[out++] = PASSPROMPT_VAL;
-	}
+	tmp[out++] = PASSPROMPT_VAL;
 
 	while((cliprompt[in]) && (out < (MAX_SHELL_VAR-2)))
 	{
@@ -200,13 +176,10 @@ void print_prompt(void)
 		}
 	}
 
-	if(g_context.pcterm)
-	{
-		tmp[out++] = PASSPROMPT_VAL;
-	}
+	tmp[out++] = PASSPROMPT_VAL;
 
 	tmp[out] = 0;
-	printf("%s ", tmp);
+	SHELL_PRINT("%s ", tmp);
 }
 
 void psplinkPrintPrompt(void)
@@ -232,7 +205,7 @@ static SceUID get_module_uid(const char *name)
 		uid = strtoul(name, &endp, 16);
 		if(*endp != 0)
 		{
-			printf("ERROR: Invalid uid %s\n", name);
+			SHELL_PRINT("ERROR: Invalid uid %s\n", name);
 			uid = -1;
 		}
 	}
@@ -251,7 +224,7 @@ static SceUID get_thread_uid(const char *name, ReferFunc pRefer)
 	{
 		if(pRefer(&name[1], &uid, NULL) < 0)
 		{
-			printf("ERROR: Invalid name %s\n", name);
+			SHELL_PRINT("ERROR: Invalid name %s\n", name);
 			return CMD_ERROR;
 		}
 	}
@@ -260,7 +233,7 @@ static SceUID get_thread_uid(const char *name, ReferFunc pRefer)
 		uid = strtoul(name, &endp, 16);
 		if(*endp != 0)
 		{
-			printf("ERROR: Invalid uid %s\n", name);
+			SHELL_PRINT("ERROR: Invalid uid %s\n", name);
 			uid = -1;
 		}
 	}
@@ -288,12 +261,12 @@ static int threadmanlist_cmd(int argc, char **argv, enum SceKernelIdListType typ
 	ret = sceKernelGetThreadmanIdList(type, ids, 100, &count);
 	if(ret >= 0)
 	{
-		printf("<%s List (%d entries)>\n", name, count);
+		SHELL_PRINT("<%s List (%d entries)>\n", name, count);
 		for(i = 0; i < count; i++)
 		{
 			if(pinfo(ids[i], verbose) < 0)
 			{
-				printf("ERROR: Unknown %s 0x%08X\n", name, ids[i]);
+				SHELL_PRINT("ERROR: Unknown %s 0x%08X\n", name, ids[i]);
 			}
 		}
 	}
@@ -312,7 +285,7 @@ static int threadmaninfo_cmd(int argc, char **argv, const char *name, threadmanp
 	{
 		if(pinfo(uid, 1) < 0)
 		{
-			printf("ERROR: Unknown %s 0x%08X\n", name, uid);
+			SHELL_PRINT("ERROR: Unknown %s 0x%08X\n", name, uid);
 		}
 
 		ret = CMD_OK;
@@ -369,23 +342,23 @@ static int print_threadinfo(SceUID uid, int verbose)
 	ret = sceKernelReferThreadStatus(uid, &info);
 	if(ret == 0)
 	{
-		printf("UID: 0x%08X - Name: %s\n", uid, info.name);
+		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			printf("Attr: 0x%08X - Status: %d/%s- Entry: %p\n", info.attr, info.status, 
+			SHELL_PRINT("Attr: 0x%08X - Status: %d/%s- Entry: %p\n", info.attr, info.status, 
 					get_thread_status(info.status, status), info.entry);
-			printf("Stack: %p - StackSize 0x%08X - GP: 0x%08X\n", info.stack, info.stackSize,
+			SHELL_PRINT("Stack: %p - StackSize 0x%08X - GP: 0x%08X\n", info.stack, info.stackSize,
 					(u32) info.gpReg);
-			printf("InitPri: %d - CurrPri: %d - WaitType %d\n", info.initPriority,
+			SHELL_PRINT("InitPri: %d - CurrPri: %d - WaitType %d\n", info.initPriority,
 					info.currentPriority, info.waitType);
-			printf("WaitId: 0x%08X - WakeupCount: %d - ExitStatus: 0x%08X\n", info.waitId,
+			SHELL_PRINT("WaitId: 0x%08X - WakeupCount: %d - ExitStatus: 0x%08X\n", info.waitId,
 					info.wakeupCount, info.exitStatus);
-			printf("RunClocks: %d - IntrPrempt: %d - ThreadPrempt: %d\n", info.runClocks.low,
+			SHELL_PRINT("RunClocks: %d - IntrPrempt: %d - ThreadPrempt: %d\n", info.runClocks.low,
 					info.intrPreemptCount, info.threadPreemptCount);
-			printf("ReleaseCount: %d, StackFree: %d\n", info.releaseCount, sceKernelGetThreadStackFreeSize(uid));
+			SHELL_PRINT("ReleaseCount: %d, StackFree: %d\n", info.releaseCount, sceKernelGetThreadStackFreeSize(uid));
 			if(sceIoGetThreadCwd(uid, cwd, sizeof(cwd)) > 0)
 			{
-				printf("Current Dir: %s\n", cwd);
+				SHELL_PRINT("Current Dir: %s\n", cwd);
 			}
 		}
 	}
@@ -436,7 +409,7 @@ static int thread_do_cmd(const char *name, const char *type, ReferFunc refer, in
 		err = fn(uid);
 		if(err < 0)
 		{
-			printf("Cannot %s uid 0x%08X (error: 0x%08X)\n", type, uid, err);
+			SHELL_PRINT("Cannot %s uid 0x%08X (error: 0x%08X)\n", type, uid, err);
 		}
 
 		ret = CMD_OK;
@@ -501,7 +474,7 @@ static int thpri_cmd(int argc, char **argv)
 		err = sceKernelChangeThreadPriority(uid, pri);
 		if(err < 0)
 		{
-			printf("Cannot %s uid 0x%08X (error: 0x%08X)\n", "change priority", uid, err);
+			SHELL_PRINT("Cannot %s uid 0x%08X (error: 0x%08X)\n", "change priority", uid, err);
 		}
 
 		ret = CMD_OK;
@@ -520,12 +493,12 @@ static int print_eventinfo(SceUID uid, int verbose)
 	ret = sceKernelReferEventFlagStatus(uid, &info);
 	if(ret == 0)
 	{
-		printf("UID: 0x%08X - Name: %s\n", uid, info.name);
+		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			printf("Attr: 0x%08X - initPattern 0x%08X - currPatten 0x%08X\n", info.attr, info.initPattern, 
+			SHELL_PRINT("Attr: 0x%08X - initPattern 0x%08X - currPatten 0x%08X\n", info.attr, info.initPattern, 
 					info.currentPattern);
-			printf("NumWaitThreads: 0x%08X\n", info.numWaitThreads);
+			SHELL_PRINT("NumWaitThreads: 0x%08X\n", info.numWaitThreads);
 		}
 	}
 
@@ -552,12 +525,12 @@ static int print_semainfo(SceUID uid, int verbose)
 	ret = sceKernelReferSemaStatus(uid, &info);
 	if(ret == 0)
 	{
-		printf("UID: 0x%08X - Name: %s\n", uid, info.name);
+		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			printf("Attr: 0x%08X - initCount: 0x%08X - currCount: 0x%08X\n", info.attr, info.initCount, 
+			SHELL_PRINT("Attr: 0x%08X - initCount: 0x%08X - currCount: 0x%08X\n", info.attr, info.initCount, 
 					info.currentCount);
-			printf("maxCount: 0x%08X - NumWaitThreads: 0x%08X\n", info.maxCount, info.numWaitThreads);
+			SHELL_PRINT("maxCount: 0x%08X - NumWaitThreads: 0x%08X\n", info.maxCount, info.numWaitThreads);
 		}
 	}
 
@@ -584,12 +557,12 @@ static int print_mboxinfo(SceUID uid, int verbose)
 	ret = sceKernelReferMbxStatus(uid, &info);
 	if(ret == 0)
 	{
-		printf("UID: 0x%08X - Name: %s\n", uid, info.name);
+		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			printf("Attr: 0x%08X - numWaitThreads: 0x%08X - numMessages: 0x%08X\n", info.attr, info.numWaitThreads, 
+			SHELL_PRINT("Attr: 0x%08X - numWaitThreads: 0x%08X - numMessages: 0x%08X\n", info.attr, info.numWaitThreads, 
 					info.numMessages);
-			printf("firstMessage %p\n", info.firstMessage);
+			SHELL_PRINT("firstMessage %p\n", info.firstMessage);
 		}
 	}
 
@@ -616,11 +589,11 @@ static int print_cbinfo(SceUID uid, int verbose)
 	ret = sceKernelReferCallbackStatus(uid, &info);
 	if(ret == 0)
 	{
-		printf("UID: 0x%08X - Name: %s\n", uid, info.name);
+		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			printf("threadId 0x%08X - callback %p - common %p\n", info.threadId, info.callback, info.common);
-			printf("notifyCount %d - notifyArg %d\n", info.notifyCount, info.notifyArg);
+			SHELL_PRINT("threadId 0x%08X - callback %p - common %p\n", info.threadId, info.callback, info.common);
+			SHELL_PRINT("notifyCount %d - notifyArg %d\n", info.notifyCount, info.notifyArg);
 		}
 	}
 
@@ -647,12 +620,12 @@ static int print_vtinfo(SceUID uid, int verbose)
 	ret = sceKernelReferVTimerStatus(uid, &info);
 	if(ret == 0)
 	{
-		printf("UID: 0x%08X - Name: %s\n", uid, info.name);
+		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			printf("active %d - base.hi %d - base.low %d - current.hi %d - current.low %d\n", 
+			SHELL_PRINT("active %d - base.hi %d - base.low %d - current.hi %d - current.low %d\n", 
 				   info.active, info.base.hi, info.base.low, info.current.hi, info.current.low);	
-			printf("schedule.hi %d - schedule.low %d - handler %p - common %p\n", info.schedule.hi,
+			SHELL_PRINT("schedule.hi %d - schedule.low %d - handler %p - common %p\n", info.schedule.hi,
 					info.schedule.low, info.handler, info.common);
 		}
 	}
@@ -680,10 +653,10 @@ static int print_vplinfo(SceUID uid, int verbose)
 	ret = sceKernelReferVplStatus(uid, &info);
 	if(ret == 0)
 	{
-		printf("UID: 0x%08X - Name: %s\n", uid, info.name);
+		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			printf("Attr 0x%08X - poolSize %d - freeSize %d - numWaitThreads %d\n",
+			SHELL_PRINT("Attr 0x%08X - poolSize %d - freeSize %d - numWaitThreads %d\n",
 					info.attr, info.poolSize, info.freeSize, info.numWaitThreads);
 		}
 	}
@@ -711,10 +684,10 @@ static int print_fplinfo(SceUID uid, int verbose)
 	ret = sceKernelReferFplStatus(uid, &info);
 	if(ret == 0)
 	{
-		printf("UID: 0x%08X - Name: %s\n", uid, info.name);
+		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			printf("Attr 0x%08X - blockSize %d - numBlocks %d - freeBlocks %d - numWaitThreads %d\n",
+			SHELL_PRINT("Attr 0x%08X - blockSize %d - numBlocks %d - freeBlocks %d - numWaitThreads %d\n",
 					info.attr, info.blockSize, info.numBlocks, info.freeBlocks, info.numWaitThreads);
 		}
 	}
@@ -742,11 +715,11 @@ static int print_mppinfo(SceUID uid, int verbose)
 	ret = sceKernelReferMsgPipeStatus(uid, &info);
 	if(ret == 0)
 	{
-		printf("UID: 0x%08X - Name: %s\n", uid, info.name);
+		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			printf("Attr 0x%08X - bufSize %d - freeSize %d\n", info.attr, info.bufSize, info.freeSize);
-			printf("numSendWaitThreads %d - numReceiveWaitThreads %d\n", info.numSendWaitThreads,
+			SHELL_PRINT("Attr 0x%08X - bufSize %d - freeSize %d\n", info.attr, info.bufSize, info.freeSize);
+			SHELL_PRINT("numSendWaitThreads %d - numReceiveWaitThreads %d\n", info.numSendWaitThreads,
 					info.numReceiveWaitThreads);
 		}
 	}
@@ -774,11 +747,11 @@ static int print_thevinfo(SceUID uid, int verbose)
 	ret = sceKernelReferThreadEventHandlerStatus(uid, &info);
 	if(ret == 0)
 	{
-		printf("UID: 0x%08X - Name: %s\n", uid, info.name);
+		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			printf("threadId 0x%08X - mask %02X - handler %p\n", info.threadId, info.mask, info.handler);
-			printf("common %p\n", info.common);
+			SHELL_PRINT("threadId 0x%08X - mask %02X - handler %p\n", info.threadId, info.mask, info.handler);
+			SHELL_PRINT("common %p\n", info.common);
 		}
 	}
 
@@ -821,7 +794,7 @@ int thread_event_handler(int mask, SceUID thid, void *common)
 		thname = thinfo.name;
 	}
 
-	printf("Thread %-6s: thid 0x%08X name %s\n", event, thid, thname);
+	SHELL_PRINT("Thread %-6s: thid 0x%08X name %s\n", event, thid, thname);
 
 	return 0;
 }
@@ -901,11 +874,11 @@ static int sysstat_cmd(int argc, char **argv)
 
 	if(!sceKernelReferSystemStatus(&stat))
 	{
-		printf("System Status: 0x%08X\n", stat.status);
-		printf("Idle Clocks:   %08X%08X\n", stat.idleClocks.hi, stat.idleClocks.low);
-		printf("Resume Count:  %d\n", stat.comesOutOfIdleCount);
-		printf("Thread Switch: %d\n", stat.threadSwitchCount);
-		printf("VFPU Switch:   %d\n", stat.vfpuSwitchCount);
+		SHELL_PRINT("System Status: 0x%08X\n", stat.status);
+		SHELL_PRINT("Idle Clocks:   %08X%08X\n", stat.idleClocks.hi, stat.idleClocks.low);
+		SHELL_PRINT("Resume Count:  %d\n", stat.comesOutOfIdleCount);
+		SHELL_PRINT("Thread Switch: %d\n", stat.threadSwitchCount);
+		SHELL_PRINT("VFPU Switch:   %d\n", stat.vfpuSwitchCount);
 	}
 
 	return CMD_OK;
@@ -951,7 +924,7 @@ static int uidinfo_cmd(int argc, char **argv)
 		printUIDEntry(entry);
 		if(entry->realParent)
 		{
-			printf("Parent:\n");
+			SHELL_PRINT("Parent:\n");
 			printUIDEntry(entry->realParent);
 		}
 	}
@@ -966,17 +939,17 @@ static int cop0_cmd(int argc, char **argv)
 
 	psplinkGetCop0(regs);
 
-	printf("MXC0 Regs:\n");
+	SHELL_PRINT("MXC0 Regs:\n");
 	for(i = 0; i < 32; i += 2)
 	{
-		printf("$%02d: 0x%08X  -  $%02d: 0x%08X\n", i, regs[i], i+1, regs[i+1]);
+		SHELL_PRINT("$%02d: 0x%08X  -  $%02d: 0x%08X\n", i, regs[i], i+1, regs[i+1]);
 	}
-	printf("\n");
+	SHELL_PRINT("\n");
 
-	printf("CXC0 Regs:\n");
+	SHELL_PRINT("CXC0 Regs:\n");
 	for(i = 0; i < 32; i += 2)
 	{
-		printf("$%02d: 0x%08X  -  $%02d: 0x%08X\n", i, regs[i+32], i+1, regs[i+33]);
+		SHELL_PRINT("$%02d: 0x%08X  -  $%02d: 0x%08X\n", i, regs[i+32], i+1, regs[i+33]);
 	}
 
 	return CMD_OK;
@@ -996,22 +969,21 @@ static int print_modinfo(SceUID uid, int verbose)
 	if(ret >= 0)
 	{
 		int i;
-		printf("UID: 0x%08X Attr: %04X - Name: %s\n", uid, info.attribute, info.name);
+		SHELL_PRINT("UID: 0x%08X Attr: %04X - Name: %s\n", uid, info.attribute, info.name);
 		if(verbose)
 		{
-			printf("Entry: 0x%08X - GP: 0x%08X - TextAddr: 0x%08X\n", info.entry_addr,
+			SHELL_PRINT("Entry: 0x%08X - GP: 0x%08X - TextAddr: 0x%08X\n", info.entry_addr,
 					info.gp_value, info.text_addr);
-			printf("TextSize: 0x%08X - DataSize: 0x%08X BssSize: 0x%08X\n", info.text_size,
+			SHELL_PRINT("TextSize: 0x%08X - DataSize: 0x%08X BssSize: 0x%08X\n", info.text_size,
 					info.data_size, info.bss_size);
 			for(i = 0; (i < info.nsegment) && (i < 4); i++)
 			{
-				printf("Segment %d: Addr 0x%08X - Size 0x%08X\n", i, 
+				SHELL_PRINT("Segment %d: Addr 0x%08X - Size 0x%08X\n", i, 
 						(u32) info.segmentaddr[i], (u32) info.segmentsize[i]);
 			}
 		}
 	}
 	sioEnableKprintf(kp);
-
 
 	return ret;
 }
@@ -1027,7 +999,7 @@ static int modinfo_cmd(int argc, char **argv)
 	{
 		if(print_modinfo(uid, 1) < 0)
 		{
-			printf("ERROR: Unknown module 0x%08X\n", uid);
+			SHELL_PRINT("ERROR: Unknown module 0x%08X\n", uid);
 		}
 		else
 		{
@@ -1036,7 +1008,7 @@ static int modinfo_cmd(int argc, char **argv)
 	}
 	else
 	{
-		printf("ERROR: Invalid module %s\n", argv[0]);
+		SHELL_PRINT("ERROR: Invalid module %s\n", argv[0]);
 	}
 
 	return ret;
@@ -1062,7 +1034,7 @@ static int modlist_cmd(int argc, char **argv)
 	ret = g_GetModuleIdList(ids, 100 * sizeof(SceUID), &count);
 	if(ret >= 0)
 	{
-		printf("<Module List (%d modules)>\n", count);
+		SHELL_PRINT("<Module List (%d modules)>\n", count);
 		for(i = 0; i < count; i++)
 		{
 			print_modinfo(ids[i], verbose);
@@ -1084,13 +1056,13 @@ static int modstop_cmd(int argc, char **argv)
 		int status;
 
 		uid_ret = sceKernelStopModule(uid, 0, NULL, &status, NULL);
-		printf("Module Stop 0x%08X Status 0x%08X\n", uid_ret, status);
+		SHELL_PRINT("Module Stop 0x%08X Status 0x%08X\n", uid_ret, status);
 
 		ret = CMD_OK;
 	}
 	else
 	{
-		printf("ERROR: Invalid argument %s\n", argv[0]);
+		SHELL_PRINT("ERROR: Invalid argument %s\n", argv[0]);
 	}
 
 	return ret;
@@ -1108,13 +1080,13 @@ static int modunld_cmd(int argc, char **argv)
 		SceUID uid_ret;
 
 		uid_ret = sceKernelUnloadModule(uid);
-		printf("Module Unload 0x%08X\n", uid_ret);
+		SHELL_PRINT("Module Unload 0x%08X\n", uid_ret);
 
 		ret = CMD_OK;
 	}
 	else
 	{
-		printf("ERROR: Invalid argument %s\n", argv[0]);
+		SHELL_PRINT("ERROR: Invalid argument %s\n", argv[0]);
 	}
 
 	return ret;
@@ -1134,13 +1106,13 @@ static int modstun_cmd(int argc, char **argv)
 
 		stop = sceKernelStopModule(uid, 0, NULL, &status, NULL);
 		unld = sceKernelUnloadModule(uid);
-		printf("Module Stop/Unload 0x%08X/0x%08X Status 0x%08X\n", stop, unld, status);
+		SHELL_PRINT("Module Stop/Unload 0x%08X/0x%08X Status 0x%08X\n", stop, unld, status);
 
 		ret = CMD_OK;
 	}
 	else
 	{
-		printf("ERROR: Invalid argument %s\n", argv[0]);
+		SHELL_PRINT("ERROR: Invalid argument %s\n", argv[0]);
 	}
 
 	return ret;
@@ -1169,13 +1141,13 @@ static int modstart_cmd(int argc, char **argv)
 		}
 
 		uid_ret = sceKernelStartModule(uid, len, args, &status, NULL);
-		printf("Module Start 0x%08X Status 0x%08X\n", uid_ret, status);
+		SHELL_PRINT("Module Start 0x%08X Status 0x%08X\n", uid_ret, status);
 
 		ret = CMD_OK;
 	}
 	else
 	{
-		printf("ERROR: Invalid argument %s\n", argv[0]);
+		SHELL_PRINT("ERROR: Invalid argument %s\n", argv[0]);
 	}
 
 	return ret;
@@ -1195,12 +1167,12 @@ static int modexp_cmd(int argc, char **argv)
 		}
 		else
 		{
-			printf("ERROR: Couldn't find module %s\n", argv[0]);
+			SHELL_PRINT("ERROR: Couldn't find module %s\n", argv[0]);
 		}
 	}
 	else
 	{
-		printf("ERROR: Invalid argument %s\n", argv[0]);
+		SHELL_PRINT("ERROR: Invalid argument %s\n", argv[0]);
 	}
 
 	return ret;
@@ -1220,12 +1192,12 @@ static int modimp_cmd(int argc, char **argv)
 		}
 		else
 		{
-			printf("ERROR: Couldn't find module %s\n", argv[0]);
+			SHELL_PRINT("ERROR: Couldn't find module %s\n", argv[0]);
 		}
 	}
 	else
 	{
-		printf("ERROR: Invalid argument %s\n", argv[0]);
+		SHELL_PRINT("ERROR: Invalid argument %s\n", argv[0]);
 	}
 
 	return ret;
@@ -1252,7 +1224,7 @@ static int modfindx_cmd(int argc, char **argv)
 			nid = strtoul(argv[2], &endp, 16);
 			if(*endp != 0)
 			{
-				printf("ERROR: Invalid nid %s\n", argv[2]);
+				SHELL_PRINT("ERROR: Invalid nid %s\n", argv[2]);
 			}
 			else
 			{
@@ -1262,18 +1234,18 @@ static int modfindx_cmd(int argc, char **argv)
 	}
 	else
 	{
-		printf("ERROR: Invalid argument %s\n", argv[0]);
+		SHELL_PRINT("ERROR: Invalid argument %s\n", argv[0]);
 	}
 
 	if(addr != 0)
 	{
-		printf("Library: %s, Exp %s, Addr: 0x%08X\n", argv[1], argv[2], addr);
+		SHELL_PRINT("Library: %s, Exp %s, Addr: 0x%08X\n", argv[1], argv[2], addr);
 
 		ret = CMD_OK;
 	}
 	else
 	{
-		printf("Couldn't find module export\n");
+		SHELL_PRINT("Couldn't find module export\n");
 	}
 
 	return ret;
@@ -1308,7 +1280,7 @@ static int apihook_common(int argc, char **argv, int sleep)
 			nid = strtoul(argv[2], &endp, 16);
 			if(*endp != 0)
 			{
-				printf("ERROR: Invalid nid %s\n", argv[2]);
+				SHELL_PRINT("ERROR: Invalid nid %s\n", argv[2]);
 			}
 			else
 			{
@@ -1321,7 +1293,7 @@ static int apihook_common(int argc, char **argv, int sleep)
 	}
 	else
 	{
-		printf("ERROR: Invalid argument %s\n", argv[0]);
+		SHELL_PRINT("ERROR: Invalid argument %s\n", argv[0]);
 	}
 
 	return ret;
@@ -1353,7 +1325,7 @@ static int apihd_cmd(int argc, char **argv)
 	}
 	else
 	{
-		printf("Invalid ID for delete\n");
+		SHELL_PRINT("Invalid ID for delete\n");
 		return CMD_ERROR;
 	}
 
@@ -1371,18 +1343,18 @@ static int modload_cmd(int argc, char **argv)
 		modid = sceKernelLoadModule(path, 0, NULL);
 		if(!psplinkReferModule(modid, &info))
 		{
-			printf("Module Load '%s' UID: 0x%08X\n", path, modid);
+			SHELL_PRINT("Module Load '%s' UID: 0x%08X\n", path, modid);
 		}
 		else
 		{
-			printf("Module Load '%s' UID: 0x%08X Name: %s\n", path, modid, info.name);
+			SHELL_PRINT("Module Load '%s' UID: 0x%08X Name: %s\n", path, modid, info.name);
 			strncpy(g_lastmod, info.name, 31);
 			g_lastmod[31] = 0;
 		}
 	}
 	else
 	{
-		printf("Error invalid file %s\n", path);
+		SHELL_PRINT("Error invalid file %s\n", path);
 	}
 
 	return CMD_OK;
@@ -1444,25 +1416,25 @@ static int ldstart_cmd(int argc, char **argv)
 			{
 				if(!psplinkReferModule(modid, &info))
 				{
-					printf("Load/Start %s UID: 0x%08X\n", path, modid);
+					SHELL_PRINT("Load/Start %s UID: 0x%08X\n", path, modid);
 				}
 				else
 				{
-					printf("Load/Start %s UID: 0x%08X Name: %s\n", path, modid, info.name);
+					SHELL_PRINT("Load/Start %s UID: 0x%08X Name: %s\n", path, modid, info.name);
 					strncpy(g_lastmod, info.name, 31);
 					g_lastmod[31] = 0;
 				}
 			}
 			else
 			{
-				printf("Failed to Load/Start module '%s' Error: 0x%08X\n", path, modid);
+				SHELL_PRINT("Failed to Load/Start module '%s' Error: 0x%08X\n", path, modid);
 			}
 
 			ret = CMD_OK;
 		}
 		else
 		{
-			printf("Error invalid file %s\n", path);
+			SHELL_PRINT("Error invalid file %s\n", path);
 		}
 	}
 
@@ -1490,11 +1462,11 @@ static int kill_cmd(int argc, char **argv)
 			error = sceKernelStopModule(uid, 0, NULL, &status, NULL);
 			if(error < 0)
 			{
-				printf("Error could not stop module 0x%08X\n", error);
+				SHELL_PRINT("Error could not stop module 0x%08X\n", error);
 				break;
 			}
 
-			printf("Stop status %08X\n", status);
+			SHELL_PRINT("Stop status %08X\n", status);
 			memset(thids, 0, sizeof(thids));
 			if(sceKernelGetThreadmanIdList(SCE_KERNEL_TMID_Thread, thids, 100, &count) >= 0)
 			{
@@ -1516,7 +1488,7 @@ static int kill_cmd(int argc, char **argv)
 
 			if(sceKernelUnloadModule(uid) < 0)
 			{
-				printf("Error could not unload module\n");
+				SHELL_PRINT("Error could not unload module\n");
 				break;
 			}
 
@@ -1535,12 +1507,6 @@ static int debug_cmd(int argc, char **argv)
 
 	if(handlepath(g_context.currdir, argv[0], path, TYPE_FILE, 1))
 	{
-		if((!g_context.usbgdb) && (g_context.wifi == 0))
-		{
-			/* Default to AP 1 */
-			load_wifi(g_context.bootpath, 1);
-		}
-
 		if(g_context.gdb == 0)
 		{
 			argv[0] = path;
@@ -1548,14 +1514,14 @@ static int debug_cmd(int argc, char **argv)
 		}
 		else
 		{
-			printf("Error GDB already running, please reset\n");
+			SHELL_PRINT("Error GDB already running, please reset\n");
 		}
 
 		ret = CMD_OK;
 	}
 	else
 	{
-		printf("Error invalid file %s\n", path);
+		SHELL_PRINT("Error invalid file %s\n", path);
 	}
 
 	return ret;
@@ -1579,18 +1545,18 @@ static int calc_cmd(int argc, char **argv)
 
 		switch(disp)
 		{
-			case 'D': printf("Result = %d\n", val);
+			case 'D': SHELL_PRINT("Result = %d\n", val);
 					  break;
-			case 'O': printf("Result = %o\n", val);
+			case 'O': SHELL_PRINT("Result = %o\n", val);
 					  break;
 			default :
-			case 'X': printf("Result = 0x%08X\n", val);
+			case 'X': SHELL_PRINT("Result = 0x%08X\n", val);
 					  break;
 		};
 	}
 	else
 	{
-		printf("Error could not calculate address\n");
+		SHELL_PRINT("Error could not calculate address\n");
 	}
 
 	return CMD_OK;
@@ -1617,85 +1583,6 @@ static int reset_cmd(int argc, char **argv)
 	psplinkReset();
 
 	return CMD_OK;
-}
-
-static int exec_cmd(int argc, char **argv)
-{
-	struct SceKernelLoadExecParam le;
-	char args[512];
-	int size;
-	int ret = CMD_ERROR;
-	char file[1024];
-	char *exe;
-
-	do
-	{
-		if((g_context.inexec) && (argc == 0))
-		{
-			exe = g_context.execfile;
-		}
-		else
-		{
-			if(argc > 0)
-			{
-				exe = argv[0];
-			}
-			else
-			{
-				break;
-			}
-		}
-
-		if(handlepath(g_context.currdir, exe, file, TYPE_FILE, 1) == 0)
-		{
-			printf("Error, invalid file %s\n", file);
-			break;
-		}
-
-		printf("Exec '%s'\n", file);
-
-		if(g_context.inexec)
-		{
-			if(argc == 0)
-			{
-				size = build_bootargs(args, g_context.bootfile, file, g_context.execargc, g_context.execargv);
-			}
-			else
-			{
-				size = build_bootargs(args, g_context.bootfile, file, argc-1, &argv[1]);
-			}
-
-			psplinkStop();
-
-			le.size = sizeof(le);
-			le.args = size;
-			le.argp = (char *) args;
-			le.key = NULL;
-
-			sceKernelLoadExec(g_context.bootfile, &le);
-		}
-		else
-		{
-			SceUID modid;
-
-			modid = load_start_module(file, argc-1, &argv[1]);
-			if(modid >= 0)
-			{
-				printf("Load/Start module UID: 0x%08X\n", modid);
-				strcpy(g_context.execfile, file);
-				g_context.inexec = 1;
-				save_execargs(argc-1, &argv[1]);
-				ret = CMD_OK;
-			}
-			else
-			{
-				printf("Failed to Load/Start module '%s' Error: 0x%08X\n", file, modid);
-			}
-		}
-	}
-	while(0);
-
-	return ret;
 }
 
 static int list_dir(const char *name)
@@ -1763,7 +1650,7 @@ static int list_dir(const char *name)
 					dir.d_stat.st_mtime.hour, dir.d_stat.st_mtime.minute);
 			p += strlen(p);
 			sprintf(p, "%s", dir.d_name);
-			printf("%s\n", buffer);
+			SHELL_PRINT("%s\n", buffer);
 			memset(&dir, 0, sizeof(dir));
 		}
 
@@ -1771,7 +1658,7 @@ static int list_dir(const char *name)
 	}
 	else
 	{
-		printf("Could not open directory '%s'\n", name);
+		SHELL_PRINT("Could not open directory '%s'\n", name);
 		return CMD_ERROR;
 	}
 
@@ -1784,7 +1671,7 @@ static int ls_cmd(int argc, char **argv)
 
 	if(argc == 0)
 	{
-		printf("Listing directory %s\n", g_context.currdir);
+		SHELL_PRINT("Listing directory %s\n", g_context.currdir);
 		list_dir(g_context.currdir);
 	}
 	else
@@ -1796,7 +1683,7 @@ static int ls_cmd(int argc, char **argv)
 		{
 			if(handlepath(g_context.currdir, argv[loop], path, TYPE_DIR, 1))
 			{
-				printf("Listing directory %s\n", path);
+				SHELL_PRINT("Listing directory %s\n", path);
 				list_dir(path);
 			}
 		}
@@ -1817,7 +1704,7 @@ static int chdir_cmd(int argc, char **argv)
 
 	if(handlepath(g_context.currdir, dir, path, TYPE_DIR, 1) == 0)
 	{
-		printf("'%s' not a valid directory\n", dir);
+		SHELL_PRINT("'%s' not a valid directory\n", dir);
 	}
 	else
 	{
@@ -1830,35 +1717,7 @@ static int chdir_cmd(int argc, char **argv)
 
 static int pwd_cmd(int argc, char **argv)
 {
-	printf("%s\n", g_context.currdir);
-
-	return CMD_OK;
-}
-
-static int usbmasson_cmd(int argc, char **argv)
-{
-	(void) init_usbmass();
-
-	return CMD_OK;
-}
-
-static int usbmassoff_cmd(int argc, char **argv)
-{
-	(void) stop_usbmass();
-
-	return CMD_OK;
-}
-
-static int usbhoston_cmd(int argc, char **argv)
-{
-	(void) init_usbhost(g_context.bootpath);
-
-	return CMD_OK;
-}
-
-static int usbhostoff_cmd(int argc, char **argv)
-{
-	(void) stop_usbhost();
+	SHELL_PRINT("%s\n", g_context.currdir);
 
 	return CMD_OK;
 }
@@ -1868,10 +1727,10 @@ static int usbstat_cmd(int argc, char **argv)
 	u32 state;
 
 	state = sceUsbGetState();
-	printf("USB Status:\n");
-	printf("Connection    : %s\n", state & PSP_USB_ACTIVATED ? "activated" : "deactivated");
-	printf("USB Cable     : %s\n", state & PSP_USB_CABLE_CONNECTED ? "connected" : "disconnected");
-	printf("USB Connection: %s\n", state & PSP_USB_ACTIVATED ? "established" : "notpresent");
+	SHELL_PRINT("USB Status:\n");
+	SHELL_PRINT("Connection    : %s\n", state & PSP_USB_ACTIVATED ? "activated" : "deactivated");
+	SHELL_PRINT("USB Cable     : %s\n", state & PSP_USB_CABLE_CONNECTED ? "connected" : "disconnected");
+	SHELL_PRINT("USB Connection: %s\n", state & PSP_USB_ACTIVATED ? "established" : "notpresent");
 
 	return CMD_OK;
 }
@@ -1893,7 +1752,7 @@ static int rename_cmd(int argc, char **argv)
 	if( sceIoRename(asrc, adst) < 0)
 		return CMD_ERROR;
 
-	printf("rename %s -> %s\n", asrc, adst);
+	SHELL_PRINT("rename %s -> %s\n", asrc, adst);
 
 	return CMD_OK;
 }
@@ -1913,7 +1772,7 @@ static int rm_cmd(int argc, char **argv)
 		if( sceIoRemove(afile) < 0 )
 			continue;
 
-		printf("rm %s\n", afile);
+		SHELL_PRINT("rm %s\n", afile);
 	}
 
 	return CMD_OK;
@@ -1931,7 +1790,7 @@ static int mkdir_cmd(int argc, char **argv)
 	if( sceIoMkdir(afile, 0777) < 0 )
 		return CMD_ERROR;
 
-	printf("mkdir %s\n", afile);
+	SHELL_PRINT("mkdir %s\n", afile);
 
 	return CMD_OK;
 }
@@ -1948,7 +1807,7 @@ static int rmdir_cmd(int argc, char **argv)
 	if( sceIoRmdir(afile) < 0 )
 		return CMD_ERROR;
 
-	printf("rmdir %s\n", afile);
+	SHELL_PRINT("rmdir %s\n", afile);
 
 	return CMD_OK;
 }
@@ -1988,12 +1847,12 @@ static int cp_cmd(int argc, char **argv)
 		strcat(fdst, slash+1);
 	}
 
-	printf("cp %s -> %s\n", fsrc, fdst);
+	SHELL_PRINT("cp %s -> %s\n", fsrc, fdst);
 
 	in = sceIoOpen(fsrc, PSP_O_RDONLY, 0777);
 	if(in < 0)
 	{
-		printf("Couldn't open source file %s, 0x%08X\n", fsrc, in);
+		SHELL_PRINT("Couldn't open source file %s, 0x%08X\n", fsrc, in);
 		return CMD_ERROR;
 	}
 
@@ -2002,7 +1861,7 @@ static int cp_cmd(int argc, char **argv)
 	if(out < 0)
 	{
 		sceIoClose(in);
-		printf("Couldn't open destination file %s, 0x%08X\n", fdst, out);
+		SHELL_PRINT("Couldn't open destination file %s, 0x%08X\n", fdst, out);
 		return CMD_ERROR;
 	}
 
@@ -2030,7 +1889,7 @@ static int remap_cmd(int argc, char **argv)
 	ret = sceIoAssign(argv[1], argv[0], NULL, IOASSIGN_RDWR, NULL, 0);
 	if(ret < 0)
 	{
-		printf("Error remapping %s to %s, %08X\n", argv[0], argv[1], ret);
+		SHELL_PRINT("Error remapping %s to %s, %08X\n", argv[0], argv[1], ret);
 	}
 
 	return CMD_OK;
@@ -2045,18 +1904,18 @@ static int meminfo_cmd(int argc, char **argv)
 	if(argc > 0)
 	{
 		pid = atoi(argv[0]);
-		printf("pid: %d\n", pid);
+		SHELL_PRINT("pid: %d\n", pid);
 		if((pid <= 0) || (pid > 4))
 		{
-			printf("Error, invalid partition number %d\n", pid);
+			SHELL_PRINT("Error, invalid partition number %d\n", pid);
 			return CMD_ERROR;
 		}
 		max = pid + 1;
 	}
 
-	printf("Memory Partitions:\n");
-	printf("N |    BASE    |   SIZE   | TOTALFREE |  MAXFREE  | ATTR |\n");
-	printf("--|------------|----------|-----------|-----------|------|\n");
+	SHELL_PRINT("Memory Partitions:\n");
+	SHELL_PRINT("N |    BASE    |   SIZE   | TOTALFREE |  MAXFREE  | ATTR |\n");
+	SHELL_PRINT("--|------------|----------|-----------|-----------|------|\n");
 	for(i = pid; i < max; i++)
 	{
 		SceSize total;
@@ -2068,7 +1927,7 @@ static int meminfo_cmd(int argc, char **argv)
 		memset(&info, 0, sizeof(info));
 		info.size = sizeof(info);
 		sceKernelQueryMemoryPartitionInfo(i, &info);
-		printf("%d | 0x%08X | %8d | %9d | %9d | %04X |\n", 
+		SHELL_PRINT("%d | 0x%08X | %8d | %9d | %9d | %04X |\n", 
 				i, info.startaddr, info.memsize, total, free, info.attr);
 	}
 
@@ -2190,7 +2049,7 @@ static void print_row(const u32* row, s32 row_size, u32 addr, int type)
 	}
 	*p = 0;
 
-	printf("%s\n", buffer);
+	SHELL_PRINT("%s\n", buffer);
 }
 
 /* Print a memory dump to SIO */
@@ -2203,18 +2062,18 @@ static void print_memdump(u32 addr, s32 size, int type)
 
 	if(type == MEMDUMP_TYPE_WORD)
 	{
-		printf("         - 00       04       08       0c       - 0123456789abcdef\n");
-		printf("-----------------------------------------------------------------\n");
+		SHELL_PRINT("         - 00       04       08       0c       - 0123456789abcdef\n");
+		SHELL_PRINT("-----------------------------------------------------------------\n");
 	}
 	else if(type == MEMDUMP_TYPE_HALF)
 	{
-		printf("         - 00   02   04   06   08   0a   0c   0e   - 0123456789abcdef\n");
-		printf("---------------------------------------------------------------------\n");
+		SHELL_PRINT("         - 00   02   04   06   08   0a   0c   0e   - 0123456789abcdef\n");
+		SHELL_PRINT("---------------------------------------------------------------------\n");
 	}
 	else 
 	{
-		printf("         - 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f - 0123456789abcdef\n");
-		printf("-----------------------------------------------------------------------------\n");
+		SHELL_PRINT("         - 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f - 0123456789abcdef\n");
+		SHELL_PRINT("-----------------------------------------------------------------------------\n");
 	}
 
 	size_left = size > MAX_MEMDUMP_SIZE ? MAX_MEMDUMP_SIZE : size;
@@ -2253,7 +2112,7 @@ static int memdump_cmd(int argc, char **argv)
 		{
 			if(!memDecode(argv[0], &addr))
 			{
-				printf("Error, invalid memory address %s\n", argv[0]);
+				SHELL_PRINT("Error, invalid memory address %s\n", argv[0]);
 				return CMD_ERROR;
 			}
 		}
@@ -2291,7 +2150,7 @@ static int memdump_cmd(int argc, char **argv)
 	}
 	else
 	{
-		printf("Invalid memory address %x\n", addr);
+		SHELL_PRINT("Invalid memory address %x\n", addr);
 	}
 
 	return CMD_OK;
@@ -2307,14 +2166,14 @@ static int savemem_cmd(int argc, char **argv)
 
 	if(!handlepath(g_context.currdir, argv[2], path, TYPE_FILE, 0))
 	{
-		printf("Error invalid path\n");
+		SHELL_PRINT("Error invalid path\n");
 		return CMD_ERROR;
 	}
 
 	size = strtoul(argv[1], &endp, 0);
 	if(*endp != 0)
 	{
-		printf("Size parameter invalid '%s'\n", argv[1]);
+		SHELL_PRINT("Size parameter invalid '%s'\n", argv[1]);
 		return CMD_ERROR;
 	}
 
@@ -2328,7 +2187,7 @@ static int savemem_cmd(int argc, char **argv)
 		fd = sceIoOpen(path, PSP_O_CREAT | PSP_O_TRUNC | PSP_O_WRONLY, 0777);
 		if(fd < 0)
 		{
-			printf("Could not open file '%s' for writing 0x%08X\n", path, fd);
+			SHELL_PRINT("Could not open file '%s' for writing 0x%08X\n", path, fd);
 		}
 		else
 		{
@@ -2340,7 +2199,7 @@ static int savemem_cmd(int argc, char **argv)
 				ret = sceIoWrite(fd, (void *) (addr + written), size - written);
 				if(ret <= 0)
 				{
-					printf("Could not write out file\n");
+					SHELL_PRINT("Could not write out file\n");
 					break;
 				}
 
@@ -2366,7 +2225,7 @@ static int loadmem_cmd(int argc, char **argv)
 
 	if(!handlepath(g_context.currdir, argv[1], path, TYPE_FILE, 1))
 	{
-		printf("Error invalid path\n");
+		SHELL_PRINT("Error invalid path\n");
 		return CMD_ERROR;
 	}
 
@@ -2375,7 +2234,7 @@ static int loadmem_cmd(int argc, char **argv)
 		maxsize = strtoul(argv[2], &endp, 0);
 		if(*endp != 0)
 		{
-			printf("Size parameter invalid '%s'\n", argv[2]);
+			SHELL_PRINT("Size parameter invalid '%s'\n", argv[2]);
 			return CMD_ERROR;
 		}
 	}
@@ -2390,7 +2249,7 @@ static int loadmem_cmd(int argc, char **argv)
 		fd = sceIoOpen(path, PSP_O_RDONLY, 0777);
 		if(fd < 0)
 		{
-			printf("Could not open file '%s' for reading 0x%08X\n", path, fd);
+			SHELL_PRINT("Could not open file '%s' for reading 0x%08X\n", path, fd);
 		}
 		else
 		{
@@ -2413,7 +2272,7 @@ static int loadmem_cmd(int argc, char **argv)
 				ret = sceIoRead(fd, (void *) (addr + readbytes), size - readbytes);
 				if(ret < 0)
 				{
-					printf("Could not write out file\n");
+					SHELL_PRINT("Could not write out file\n");
 					break;
 				}
 				else if(ret == 0)
@@ -2424,7 +2283,7 @@ static int loadmem_cmd(int argc, char **argv)
 				readbytes += ret;
 			}
 			sceIoClose(fd);
-			printf("Read %d bytes into memory\n", readbytes);
+			SHELL_PRINT("Read %d bytes into memory\n", readbytes);
 		}
 	}
 	else
@@ -2460,7 +2319,7 @@ static int pokew_cmd(int argc, char **argv)
 				}
 				else
 				{
-					printf("Invalid value %s\n", argv[i]);
+					SHELL_PRINT("Invalid value %s\n", argv[i]);
 				}
 
 				addr += 4;
@@ -2473,7 +2332,7 @@ static int pokew_cmd(int argc, char **argv)
 		}
 		else
 		{
-			printf("Invalid memory address 0x%08X\n", addr);
+			SHELL_PRINT("Invalid memory address 0x%08X\n", addr);
 			return CMD_ERROR;
 		}
 	}
@@ -2506,7 +2365,7 @@ static int pokeh_cmd(int argc, char **argv)
 				}
 				else
 				{
-					printf("Invalid value %s\n", argv[i]);
+					SHELL_PRINT("Invalid value %s\n", argv[i]);
 				}
 
 				addr += 2;
@@ -2519,7 +2378,7 @@ static int pokeh_cmd(int argc, char **argv)
 		}
 		else
 		{
-			printf("Invalid memory address 0x%08X\n", addr);
+			SHELL_PRINT("Invalid memory address 0x%08X\n", addr);
 			return CMD_ERROR;
 		}
 	}
@@ -2551,7 +2410,7 @@ static int pokeb_cmd(int argc, char **argv)
 				}
 				else
 				{
-					printf("Invalid value %s\n", argv[i]);
+					SHELL_PRINT("Invalid value %s\n", argv[i]);
 				}
 
 				addr += 1;
@@ -2564,7 +2423,7 @@ static int pokeb_cmd(int argc, char **argv)
 		}
 		else
 		{
-			printf("Invalid memory address 0x%08X\n", addr);
+			SHELL_PRINT("Invalid memory address 0x%08X\n", addr);
 			return CMD_ERROR;
 		}
 	}
@@ -2599,21 +2458,21 @@ static int peekw_cmd(int argc, char **argv)
 							  pspSdkDisableFPUExceptions();
 							  pdata = (float *) addr;
 							  f_cvt(*pdata, floatbuf, sizeof(floatbuf), 6, MODE_GENERIC);
-							  printf("0x%08X: %s\n", addr, floatbuf);
+							  SHELL_PRINT("0x%08X: %s\n", addr, floatbuf);
 						  }
 						  break;
-				case 'd': printf("0x%08X: %d\n", addr, _lw(addr));
+				case 'd': SHELL_PRINT("0x%08X: %d\n", addr, _lw(addr));
 						  break;
-				case 'o': printf("0x%08X: %o\n", addr, _lw(addr));
+				case 'o': SHELL_PRINT("0x%08X: %o\n", addr, _lw(addr));
 						  break;
 				case 'x':
-				default:  printf("0x%08X: 0x%08X\n", addr, _lw(addr));
+				default:  SHELL_PRINT("0x%08X: 0x%08X\n", addr, _lw(addr));
 						  break;
 			};
 		}
 		else
 		{
-			printf("Invalid memory address 0x%08X\n", addr);
+			SHELL_PRINT("Invalid memory address 0x%08X\n", addr);
 			return CMD_ERROR;
 		}
 	}
@@ -2641,18 +2500,18 @@ static int peekh_cmd(int argc, char **argv)
 		{
 			switch(fmt)
 			{
-				case 'd': printf("0x%08X: %d\n", addr, _lh(addr));
+				case 'd': SHELL_PRINT("0x%08X: %d\n", addr, _lh(addr));
 						  break;
-				case 'o': printf("0x%08X: %o\n", addr, _lh(addr));
+				case 'o': SHELL_PRINT("0x%08X: %o\n", addr, _lh(addr));
 						  break;
 				case 'x':
-				default:  printf("0x%08X: 0x%04X\n", addr, _lh(addr));
+				default:  SHELL_PRINT("0x%08X: 0x%04X\n", addr, _lh(addr));
 						  break;
 			};
 		}
 		else
 		{
-			printf("Invalid memory address 0x%08X\n", addr);
+			SHELL_PRINT("Invalid memory address 0x%08X\n", addr);
 			return CMD_ERROR;
 		}
 	}
@@ -2679,18 +2538,18 @@ static int peekb_cmd(int argc, char **argv)
 		{
 			switch(fmt)
 			{
-				case 'd': printf("0x%08X: %d\n", addr, _lb(addr));
+				case 'd': SHELL_PRINT("0x%08X: %d\n", addr, _lb(addr));
 						  break;
-				case 'o': printf("0x%08X: %o\n", addr, _lb(addr));
+				case 'o': SHELL_PRINT("0x%08X: %o\n", addr, _lb(addr));
 						  break;
 				case 'x':
-				default:  printf("0x%08X: 0x%02X\n", addr, _lb(addr));
+				default:  SHELL_PRINT("0x%08X: 0x%02X\n", addr, _lb(addr));
 						  break;
 			};
 		}
 		else
 		{
-			printf("Invalid memory address 0x%08X\n", addr);
+			SHELL_PRINT("Invalid memory address 0x%08X\n", addr);
 			return CMD_ERROR;
 		}
 	}
@@ -2713,7 +2572,7 @@ static int fillb_cmd(int argc, char **argv)
 
 		if(strtoint(argv[2], &val) == 0)
 		{
-			printf("Invalid fill value %s\n", argv[2]);
+			SHELL_PRINT("Invalid fill value %s\n", argv[2]);
 			return CMD_ERROR;
 		}
 
@@ -2742,7 +2601,7 @@ static int fillh_cmd(int argc, char **argv)
 
 		if(strtoint(argv[2], &val) == 0)
 		{
-			printf("Invalid fill value %s\n", argv[2]);
+			SHELL_PRINT("Invalid fill value %s\n", argv[2]);
 			return CMD_ERROR;
 		}
 
@@ -2776,7 +2635,7 @@ static int fillw_cmd(int argc, char **argv)
 
 		if(strtoint(argv[2], &val) == 0)
 		{
-			printf("Invalid fill value %s\n", argv[2]);
+			SHELL_PRINT("Invalid fill value %s\n", argv[2]);
 			return CMD_ERROR;
 		}
 
@@ -2812,7 +2671,7 @@ static int findstr_cmd(int argc, char **argv)
 			found = memmem_mask(curr, NULL, size, argv[2], searchlen);
 			if(found)
 			{
-				printf("Found match at address 0x%p\n", found);
+				SHELL_PRINT("Found match at address 0x%p\n", found);
 				found++;
 				size -= (found - curr);
 				curr = found;
@@ -2844,7 +2703,7 @@ static int findw_cmd(int argc, char **argv)
 
 			if(strtoint(argv[i], &val) == 0)
 			{
-				printf("Invalid search value %s\n", argv[i]);
+				SHELL_PRINT("Invalid search value %s\n", argv[i]);
 				return CMD_ERROR;
 			}
 
@@ -2861,7 +2720,7 @@ static int findw_cmd(int argc, char **argv)
 			found = memmem_mask(curr, NULL, size, search, searchlen);
 			if(found)
 			{
-				printf("Found match at address 0x%p\n", found);
+				SHELL_PRINT("Found match at address 0x%p\n", found);
 				found++;
 				size -= (found - curr);
 				curr = found;
@@ -2893,7 +2752,7 @@ static int findh_cmd(int argc, char **argv)
 
 			if(strtoint(argv[i], &val) == 0)
 			{
-				printf("Invalid search value %s\n", argv[i]);
+				SHELL_PRINT("Invalid search value %s\n", argv[i]);
 				return CMD_ERROR;
 			}
 
@@ -2910,7 +2769,7 @@ static int findh_cmd(int argc, char **argv)
 			found = memmem_mask(curr, NULL, size, search, searchlen);
 			if(found)
 			{
-				printf("Found match at address 0x%p\n", found);
+				SHELL_PRINT("Found match at address 0x%p\n", found);
 				found++;
 				size -= (found - curr);
 				curr = found;
@@ -2940,7 +2799,7 @@ static int findhex_cmd(int argc, char **argv)
 		hexsize = decode_hexstr(argv[2], hex, sizeof(hex));
 		if(hexsize == 0)
 		{
-			printf("Error in search string\n");
+			SHELL_PRINT("Error in search string\n");
 			return CMD_ERROR;
 		}
 
@@ -2949,13 +2808,13 @@ static int findhex_cmd(int argc, char **argv)
 			masksize = decode_hexstr(argv[4], mask_d, sizeof(mask_d));
 			if(masksize == 0)
 			{
-				printf("Error in mask string\n");
+				SHELL_PRINT("Error in mask string\n");
 				return CMD_ERROR;
 			}
 
 			if(masksize != hexsize)
 			{
-				printf("Hex and mask do not match\n");
+				SHELL_PRINT("Hex and mask do not match\n");
 				return CMD_ERROR;
 			}
 
@@ -2971,7 +2830,7 @@ static int findhex_cmd(int argc, char **argv)
 			found = memmem_mask(curr, mask, size, hex, hexsize);
 			if(found)
 			{
-				printf("Found match at address 0x%p\n", found);
+				SHELL_PRINT("Found match at address 0x%p\n", found);
 				found++;
 				size -= (found - curr);
 				curr = found;
@@ -3016,7 +2875,7 @@ static int disasm_cmd(int argc, char **argv)
 	{
 		if(!memDecode(argv[1], &count) || (count == 0))
 		{
-			printf("Invalid count argument\n");
+			SHELL_PRINT("Invalid count argument\n");
 			return CMD_ERROR;
 		}
 	}
@@ -3034,7 +2893,7 @@ static int disasm_cmd(int argc, char **argv)
 
 		for(i = 0; i < count; i++)
 		{
-			printf("%s\n", disasmInstruction(_lw(addr), addr, NULL, NULL));
+			SHELL_PRINT("%s\n", disasmInstruction(_lw(addr), addr, NULL, NULL));
 			addr += 4;
 		}
 	}
@@ -3100,26 +2959,25 @@ static int scrshot_cmd(int argc, char **argv)
 
 	if(!handlepath(g_context.currdir, argv[0], path, TYPE_FILE, 0))
 	{
-		printf("Error invalid path\n");
+		SHELL_PRINT("Error invalid path\n");
 		return CMD_ERROR;
 	}
 
 	if((sceDisplayGetFrameBufferInternal(pri, &frame_addr, &frame_width, &pixel_format, &sync) < 0) || (frame_addr == NULL))
 	{
-		printf("Invalid frame address\n");
+		SHELL_PRINT("Invalid frame address\n");
 		return CMD_ERROR;
 	}
 
 	block_id = sceKernelAllocPartitionMemory(4, "scrshot", PSP_SMEM_Low, 512*1024, NULL);
 	if(block_id < 0)
 	{
-		printf("Error could not allocate memory buffer 0x%08X\n", block_id);
+		SHELL_PRINT("Error could not allocate memory buffer 0x%08X\n", block_id);
 		return CMD_ERROR;
 	}
 	 
 	block_addr = sceKernelGetBlockHeadAddr(block_id);
-	//sceDisplayGetFrameBuf(&frame_addr, &frame_width, &pixel_format, &sync);
-	printf("frame_addr %p, frame_width %d, pixel_format %d output %s\n", frame_addr, frame_width, pixel_format, path);
+	SHELL_PRINT("frame_addr %p, frame_width %d, pixel_format %d output %s\n", frame_addr, frame_width, pixel_format, path);
 
 	p = (u32) frame_addr;
 	if(p & 0x80000000)
@@ -3145,7 +3003,7 @@ static int set_cmd(int argc, char **argv)
 		int i = 0;
 		while(g_shellvars[i].name)
 		{
-			printf("%s=%s\n", g_shellvars[i].name, g_shellvars[i].data);
+			SHELL_PRINT("%s=%s\n", g_shellvars[i].name, g_shellvars[i].data);
 			i++;
 		}
 	}
@@ -3160,12 +3018,12 @@ static int set_cmd(int argc, char **argv)
 			equals++;
 			if(set_shell_var(argv[0], equals) == 0)
 			{
-				printf("Error, couldn't find shell variable '%s'\n", argv[0]);
+				SHELL_PRINT("Error, couldn't find shell variable '%s'\n", argv[0]);
 			}
 		}
 		else
 		{
-			printf("Error, must be of the form var=value\n");
+			SHELL_PRINT("Error, must be of the form var=value\n");
 		}
 	}
 
@@ -3183,7 +3041,7 @@ static int run_cmd(int argc, char **argv)
 	}
 	else
 	{
-		printf("Invalid file %s\n", path);
+		SHELL_PRINT("Invalid file %s\n", path);
 	}
 
 	return ret;
@@ -3198,7 +3056,7 @@ static int dcache_cmd(int argc, char **argv)
 
 	if(argc == 2)
 	{
-		printf("Must specify a size\n");
+		SHELL_PRINT("Must specify a size\n");
 		return CMD_ERROR;
 	}
 
@@ -3219,7 +3077,7 @@ static int dcache_cmd(int argc, char **argv)
 	}
 	else
 	{
-		printf("Invalid type specifier '%s'\n", argv[0]);
+		SHELL_PRINT("Invalid type specifier '%s'\n", argv[0]);
 		return CMD_ERROR;
 	}
 
@@ -3227,13 +3085,13 @@ static int dcache_cmd(int argc, char **argv)
 	{
 		if(!memDecode(argv[1], &addr))
 		{
-			printf("Invalid address\n");
+			SHELL_PRINT("Invalid address\n");
 			return CMD_ERROR;
 		}
 
 		if(!strtoint(argv[2], &size))
 		{
-			printf("Invalid size argument\n");
+			SHELL_PRINT("Invalid size argument\n");
 			return CMD_ERROR;
 		}
 
@@ -3254,7 +3112,7 @@ static int icache_cmd(int argc, char **argv)
 
 	if(argc == 1)
 	{
-		printf("Must specify a size\n");
+		SHELL_PRINT("Must specify a size\n");
 		return CMD_ERROR;
 	}
 
@@ -3262,13 +3120,13 @@ static int icache_cmd(int argc, char **argv)
 	{
 		if(!memDecode(argv[0], &addr))
 		{
-			printf("Invalid address\n");
+			SHELL_PRINT("Invalid address\n");
 			return CMD_ERROR;
 		}
 
 		if(!strtoint(argv[1], &size))
 		{
-			printf("Invalid size argument\n");
+			SHELL_PRINT("Invalid size argument\n");
 			return CMD_ERROR;
 		}
 
@@ -3296,12 +3154,12 @@ static int modaddr_cmd(int argc, char **argv)
 		}
 		else
 		{
-			printf("Couldn't find module at address 0x%08X\n", addr);
+			SHELL_PRINT("Couldn't find module at address 0x%08X\n", addr);
 		}
 	}
 	else
 	{
-		printf("Invalid address %s\n", argv[0]);
+		SHELL_PRINT("Invalid address %s\n", argv[0]);
 		return CMD_ERROR;
 	}
 
@@ -3366,7 +3224,7 @@ static int exprvfpu_cmd(int argc, char **argv)
 					  break;
 			case 'e': type = VFPU_PRINT_TRANS;
 					  break;
-			default: printf("Unknown format code '%c'\n", argv[0][0]);
+			default: SHELL_PRINT("Unknown format code '%c'\n", argv[0][0]);
 					 return CMD_ERROR;
 		}
 	}
@@ -3399,7 +3257,7 @@ static int exresume_cmd(int argc, char **argv)
 			}
 			else
 			{
-				printf("Could not get EPC register\n");
+				SHELL_PRINT("Could not get EPC register\n");
 			}
 		}
 		else
@@ -3422,14 +3280,14 @@ static int setreg_cmd(int argc, char **argv)
 	{
 		if(argv[0][0] != '$')
 		{
-			printf("Error register must start with a $\n");
+			SHELL_PRINT("Error register must start with a $\n");
 			return CMD_ERROR;
 		}
 
 		reg = exceptionGetReg(&argv[0][1]);
 		if(reg == NULL)
 		{
-			printf("Error could not find register %s\n", argv[0]);
+			SHELL_PRINT("Error could not find register %s\n", argv[0]);
 			return CMD_ERROR;
 		}
 
@@ -3458,7 +3316,7 @@ static int hwena_cmd(int argc, char **argv)
 	}
 	else
 	{
-		printf("Debug HW: %s\n", debugHWEnabled() ? "on" : "off" );
+		SHELL_PRINT("Debug HW: %s\n", debugHWEnabled() ? "on" : "off" );
 	}
 
 	return CMD_OK;
@@ -3513,7 +3371,7 @@ static int bpset_cmd(int argc, char **argv)
 		}
 		else
 		{
-			printf("Error, invalidate memory address for breakpoint\n");
+			SHELL_PRINT("Error, invalidate memory address for breakpoint\n");
 		}
 	}
 
@@ -3587,18 +3445,18 @@ static int symbyaddr_cmd(int argc, char **argv)
 		{
 			if((baseaddr + pEntry->addr) < addr)
 			{
-				printf("%s+0x%x\n", pEntry->name, addr - (baseaddr + pEntry->addr));
+				SHELL_PRINT("%s+0x%x\n", pEntry->name, addr - (baseaddr + pEntry->addr));
 			}
 			else
 			{
-				printf("%s\n", pEntry->name);
+				SHELL_PRINT("%s\n", pEntry->name);
 			}
 
 			ret = CMD_OK;
 		}
 		else
 		{
-			printf("Error could not find symbol at address 0x%08X\n", addr);
+			SHELL_PRINT("Error could not find symbol at address 0x%08X\n", addr);
 		}
 	}
 
@@ -3613,11 +3471,11 @@ static int symbyname_cmd(int argc, char **argv)
 	addr = symbolFindByName(argv[0], &size);
 	if(addr > 0)
 	{
-		printf("%s = 0x%08X size %d\n", argv[0], addr, size);
+		SHELL_PRINT("%s = 0x%08X size %d\n", argv[0], addr, size);
 	}
 	else
 	{
-		printf("Could not find symbol %s\n", argv[0]);
+		SHELL_PRINT("Could not find symbol %s\n", argv[0]);
 		return CMD_ERROR;
 	}
 
@@ -3626,7 +3484,7 @@ static int symbyname_cmd(int argc, char **argv)
 
 static int version_cmd(int argc, char **argv)
 {
-	printf("PSPLink Version %s\n", PSPLINK_VERSION);
+	SHELL_PRINT("PSPLink Version %s\n", PSPLINK_VERSION);
 
 	return CMD_OK;
 }
@@ -3636,45 +3494,7 @@ static int pspver_cmd(int argc, char **argv)
 	unsigned int ver;
 
 	ver = sceKernelDevkitVersion();
-	printf("Version: %d.%d\n", (ver >> 24) & 0xFF, (ver >> 16) & 0xFF);
-
-	return CMD_OK;
-}
-
-static int wifi_cmd(int argc, char **argv)
-{
-	if(g_context.wifi == 0)
-	{
-		int ap = 1;
-		if(argc > 0)
-		{
-			ap = atoi(argv[1]);
-		}
-
-		load_wifi(g_context.bootpath, ap);
-	}
-	else
-	{
-		printf("Wifi already enabled: ap %d\n", g_context.wifi);
-	}
-
-	return CMD_OK;
-}
-
-static int wifishell_cmd(int argc, char **argv)
-{
-	if(g_context.wifi == 0)
-	{
-		int ap = 1;
-		if(argc > 0)
-		{
-			ap = atoi(argv[1]);
-		}
-
-		load_wifi(g_context.bootpath, ap);
-	}
-
-	load_wifishell(g_context.bootpath);
+	SHELL_PRINT("Version: %d.%d\n", (ver >> 24) & 0xFF, (ver >> 16) & 0xFF);
 
 	return CMD_OK;
 }
@@ -3712,23 +3532,23 @@ static int power_cmd(int argc, char **argv)
 	int batteryLifeTime = 0;
 	char fbuf[128];
 
-	printf("External Power: %s\n", scePowerIsPowerOnline()? "yes" : "no ");
-	printf("%-14s: %s\n", "Battery", scePowerIsBatteryExist()? "present" : "absent ");
+	SHELL_PRINT("External Power: %s\n", scePowerIsPowerOnline()? "yes" : "no ");
+	SHELL_PRINT("%-14s: %s\n", "Battery", scePowerIsBatteryExist()? "present" : "absent ");
 
 	if (scePowerIsBatteryExist()) {
-	    printf("%-14s: %s\n", "Low Charge", scePowerIsLowBattery()? "yes" : "no ");
-	    printf("%-14s: %s\n", "Charging", scePowerIsBatteryCharging()? "yes" : "no ");
+	    SHELL_PRINT("%-14s: %s\n", "Low Charge", scePowerIsLowBattery()? "yes" : "no ");
+	    SHELL_PRINT("%-14s: %s\n", "Charging", scePowerIsBatteryCharging()? "yes" : "no ");
 	    batteryLifeTime = scePowerGetBatteryLifeTime();
-	    printf("%-14s: %d%% (%02dh%02dm)     \n", "Charge",
+	    SHELL_PRINT("%-14s: %d%% (%02dh%02dm)     \n", "Charge",
 		   scePowerGetBatteryLifePercent(), batteryLifeTime/60, batteryLifeTime-(batteryLifeTime/60*60));
 		f_cvt((float) scePowerGetBatteryVolt() / 1000.0, fbuf, sizeof(fbuf), 3, MODE_GENERIC);
-	    printf("%-14s: %sV\n", "Volts", fbuf);
-	    printf("%-14s: %d deg C\n", "Battery Temp", scePowerGetBatteryTemp());
+	    SHELL_PRINT("%-14s: %sV\n", "Volts", fbuf);
+	    SHELL_PRINT("%-14s: %d deg C\n", "Battery Temp", scePowerGetBatteryTemp());
 	} else
-	    printf("Battery stats unavailable\n");
+	    SHELL_PRINT("Battery stats unavailable\n");
 
-	printf("%-14s: %d MHz\n", "CPU Speed", scePowerGetCpuClockFrequency());
-	printf("%-14s: %d MHz\n", "Bus Speed", scePowerGetBusClockFrequency());
+	SHELL_PRINT("%-14s: %d MHz\n", "CPU Speed", scePowerGetCpuClockFrequency());
+	SHELL_PRINT("%-14s: %d MHz\n", "Bus Speed", scePowerGetBusClockFrequency());
 
 	return CMD_OK;
 }
@@ -3750,7 +3570,7 @@ static int clock_cmd(int argc, char **argv)
 	}
 	else
 	{
-		printf("Invalid clock values\n");
+		SHELL_PRINT("Invalid clock values\n");
 		return CMD_ERROR;
 	}
 
@@ -3780,10 +3600,10 @@ static int profmode_cmd(int argc, char **argv)
 				case 'o': 
 						*debug &= DEBUG_REG_PROFILER_MASK;
 						break;
-				default: printf("Invalid profiler mode '%s'\n", argv[0]);
+				default: SHELL_PRINT("Invalid profiler mode '%s'\n", argv[0]);
 						 return CMD_ERROR;
 			};
-			printf("Profiler mode set, you must now reset psplink\n");
+			SHELL_PRINT("Profiler mode set, you must now reset psplink\n");
 		}
 		else
 		{
@@ -3800,7 +3620,7 @@ static int profmode_cmd(int argc, char **argv)
 				mode = "Off";
 			}
 
-			printf("Profiler Mode: %s\n", mode);
+			SHELL_PRINT("Profiler Mode: %s\n", mode);
 		}
 	}
 
@@ -3825,13 +3645,13 @@ static int debugreg_cmd(int argc, char **argv)
 			}
 			else
 			{
-				printf("Invalid debug reg value '%s'\n", argv[0]);
+				SHELL_PRINT("Invalid debug reg value '%s'\n", argv[0]);
 				return CMD_ERROR;
 			}
 		}
 		else
 		{
-			printf("Debug Register: 0x%08X\n", *debug);
+			SHELL_PRINT("Debug Register: 0x%08X\n", *debug);
 		}
 	}
 
@@ -3846,7 +3666,7 @@ static int tty_cmd(int argc, char **argv)
 
 static int tonid_cmd(int argc, char **argv)
 {
-	printf("Name: %s, Nid: 0x%08X\n", argv[0], libsNameToNid(argv[0]));
+	SHELL_PRINT("Name: %s, Nid: 0x%08X\n", argv[0], libsNameToNid(argv[0]));
 
 	return CMD_OK;
 }
@@ -3858,174 +3678,9 @@ static int exit_cmd(int argc, char **argv)
 
 static int help_cmd(int argc, char **argv);
 
-static int custom_cmd(int argc, char **argv);
-
-/* Structure to hold a single command entry */
-struct sh_command 
-{
-	const char *name;		/* Normal name of the command */
-	const char *syn;		/* Synonym of the command */
-	int (*func)(int argc, char **argv);		/* Pointer to the command function */
-	int min_args;
-	const char *desc;		/* Textual description */
-	const char *help;		/* Command usage */
-};
-
 /* Define the list of commands */
 const struct sh_command commands[] = {
-	{ "thread", NULL, NULL, 0, "Commands to manipulate threads", NULL },
-	{ "thlist", "tl", thlist_cmd, 0, "List the threads in the system", "[v]" },
-	{ "thsllist", NULL, thsllist_cmd, 0, "List the sleeping threads in the system", "[v]" },
-	{ "thdelist", NULL, thdelist_cmd, 0, "List the delayed threads in the system", "[v]" },
-	{ "thsulist", NULL, thsulist_cmd, 0, "List the suspended threads in the system", "[v]" },
-	{ "thdolist", NULL, thdolist_cmd, 0, "List the dormant threads in the system", "[v]" },
-	{ "thinfo", "ti", thinfo_cmd, 1, "Print info about a thread", "uid|@name" },
-	{ "thsusp", "ts", thsusp_cmd, 1, "Suspend a thread", "uid|@name" },
-	{ "thspuser", NULL, thspuser_cmd, 0, "Suspend all user threads", "" },
-	{ "thresm", "tr", thresm_cmd, 1, "Resume a thread", "uid|@name"},
-	{ "thwake", "tw", thwake_cmd, 1, "Wakeup a thread", "uid|@name"},
-	{ "thterm", "tt", thterm_cmd, 1, "Terminate a thread", "uid|@name"},
-	{ "thdel", "td", thdel_cmd, 1, "Delete a thread", "uid|@name"},
-	{ "thtdel", "tx", thtdel_cmd, 1, "Terminate and delete a thread", "uid|@name" },
-	{ "thctx",  "tt", thctx_cmd, 1, "Find and print the full thread context", "uid|@name" },
-	{ "thpri",  "tp", thpri_cmd, 2, "Change a threads current priority", "uid|@name pri" },
-	{ "evlist", "el", evlist_cmd, 0, "List the event flags in the system", "[v]" },
-	{ "evinfo", "ei", evinfo_cmd, 1, "Print info about an event flag", "uid|@name" },
-	{ "smlist", "sl", smlist_cmd, 0, "List the semaphores in the system", "[v]" },
-	{ "sminfo", "si", sminfo_cmd, 1, "Print info about a semaphore", "uid|@name" },
-	{ "mxlist", "xl", mxlist_cmd, 0, "List the message boxes in the system", "[v]" },
-	{ "mxinfo", "xi", mxinfo_cmd, 1, "Print info about a message box", "uid|@name" },
-	{ "cblist", "cl", cblist_cmd, 0, "List the callbacks in the system", "[v]" },
-	{ "cbinfo", "ci", cbinfo_cmd, 1, "Print info about a callback", "uid|@name" },
-	{ "vtlist", "zl", vtlist_cmd, 0, "List the virtual timers in the system", "[v]" },
-	{ "vtinfo", "zi", vtinfo_cmd, 1, "Print info about a virtual timer", "uid|@name" },
-	{ "vpllist","vl", vpllist_cmd, 0, "List the variable pools in the system", "[v]" },
-	{ "vplinfo","vi", vplinfo_cmd, 1, "Print info about a variable pool", "uid|@name" },
-	{ "fpllist","fl", fpllist_cmd, 0, "List the fixed pools in the system", "[v]" },
-	{ "fplinfo","fi", fplinfo_cmd, 1, "Print info about a fixed pool", "uid|@name" },
-	{ "mpplist","pl", mpplist_cmd, 0, "List the message pipes in the system", "[v]" },
-	{ "mppinfo","pi", mppinfo_cmd, 1, "Print info about a message pipe", "uid|@name" },
-	{ "thevlist","tel", thevlist_cmd, 0, "List the thread event handlers in the system", "[v]" },
-	{ "thevinfo","tei", thevinfo_cmd, 1, "Print info about a thread event handler", "uid|@name" },
-	{ "thmon", "tm", thmon_cmd, 1, "Monitor thread events", "u|k|a [csed]" },
-	{ "thmonoff", NULL, thmonoff_cmd, 0, "Disable the thread monitor", "" },
-	{ "sysstat", NULL, sysstat_cmd, 0, "Print the system status", "" },
-	
-	{ "module", NULL, NULL, 0, "Commands to handle modules", NULL },
-	{ "modlist","ml", modlist_cmd, 0, "List the currently loaded modules", "[v]" },
-	{ "modinfo","mi", modinfo_cmd, 1, "Print info about a module", "uid|@name" },
-	{ "modstop","ms", modstop_cmd, 1, "Stop a running module", "uid|@name" },
-	{ "modunld","mu", modunld_cmd, 1, "Unload a module (must be stopped)", "uid|@name" },
-	{ "modstun","mn", modstun_cmd, 1, "Stop and unload a module", "uid|@name" },
-	{ "modload","md", modload_cmd, 1, "Load a module", "path" },
-	{ "modstart","mt", modstart_cmd, 1, "Start a module", "uid|@name [args]" },
-	{ "modexec","me", modexec_cmd, 1, "LoadExec a module", "[@key] path [args]" },
-	{ "modaddr","ma", modaddr_cmd, 1, "Display info about the module at a specified address", "addr" },
-	{ "exec", "e", exec_cmd, 0, "Execute a new program (under psplink)", "[path] [args]" },
-	{ "ldstart","ld", ldstart_cmd, 1, "Load and start a module", "path [args]" },
-	{ "kill", "k", kill_cmd, 1, "Kill a module and all it's threads", "uid|@name" },
-	{ "debug", "d", debug_cmd, 1, "Start a module under GDB", "program.elf [args]" },
-	{ "modexp", "mp", modexp_cmd, 1, "List the exports from a module", "uid|@name" },
-	{ "modimp", NULL, modimp_cmd, 1, "List the imports in a module", "uid|@name" },
-	{ "modfindx", "mfx", modfindx_cmd, 3, "Find a module's export address", "uid|@name library nid|@name" },
-	{ "apihook", NULL, apihook_cmd, 4, "Hook a user mode API call", "uid|@name library nid|@name ret [param]" },
-	{ "apihooks", NULL, apihooks_cmd, 4, "Hook a user mode API call with sleep", "uid|@name library nid|@name ret [param]" },
-	{ "apihp", NULL, apihp_cmd, 0, "Print the user mode API hooks", "" },
-	{ "apihd", NULL, apihd_cmd, 1, "Delete an user mode API hook", "id" },
-	
-	{ "memory", NULL, NULL, 0, "Commands to manipulate memory", NULL },
-	{ "meminfo", "mf", meminfo_cmd, 0, "Print free memory info", "[partitionid]" },
-	{ "memreg",  "mr", memreg_cmd, 0, "Print available memory regions (for other commands)", "" },
-	{ "memdump", "dm", memdump_cmd, 0, "Dump memory to screen", "[addr|-] [b|h|w]" },
-	{ "memblocks", "mk", memblocks_cmd, 0, "Dump the sysmem block table", "[f|t]" },
-	{ "savemem", "sm", savemem_cmd, 3, "Save memory to a file", "addr size path" },
-	{ "loadmem", "lm", loadmem_cmd, 2, "Load memory from a file", "addr path [maxsize]" },
-	{ "pokew",   "pw", pokew_cmd, 2, "Poke words into memory", "addr val1 [val2..valN]"},
-	{ "pokeh",   "pw", pokeh_cmd, 2, "Poke half words into memory", "addr val1 [val2..valN]"},
-	{ "pokeb",   "pw", pokeb_cmd, 2, "Poke bytes into memory", "addr val1 [val2..valN]"},
-	{ "peekw",   "kw", peekw_cmd, 1, "Peek the word at address", "addr [o|b|x|f]"},
-	{ "peekh",   "kh", peekh_cmd, 1, "Peek the half word at address", "addr [o|b|x]"},
-	{ "peekb",   "kb", peekb_cmd, 1, "Peek the byte at address", "addr [o|b|x]"},
-	{ "fillw",   "fw", fillw_cmd, 3, "Fill a block of memory with a word value", "addr size val"},
-	{ "fillh",   "fh", fillh_cmd, 3, "Fill a block of memory with a half value", "addr size val"},
-	{ "fillb",   "fb", fillb_cmd, 3, "Fill a block of memory with a byte value", "addr size val"},
-	{ "copymem", "cm", copymem_cmd, 3, "Copy a block of memory", "srcaddr destaddr size"},
-	{ "findstr", "ns", findstr_cmd, 3, "Find an ASCII string", "addr size str"},
-	{ "findhex", "nx", findhex_cmd, 3, "Find an hexstring string", "addr size hexstr [mask]"},
-	{ "findw",   "nw", findw_cmd, 3, "Find a list of words", "addr size val1 [val2..valN]"},
-	{ "findh",   "nh", findh_cmd, 3, "Find a list of half words", "addr size val1 [val2..valN]"},
-	{ "dcache",  "dc", dcache_cmd, 1, "Perform a data cache operation", "w|i|wi [addr size]"},
-	{ "icache",  "ic", icache_cmd, 0, "Perform an instruction cache operation", "[addr size]"},
-	{ "disasm",  "di", disasm_cmd, 1, "Disassemble instructions", "address [count]"},
-	{ "disopts", NULL, disopts_cmd, 0, "Print the current disassembler options", ""},
-	{ "disset", NULL, disset_cmd, 1, "Set some disassembler options", "options"},
-	{ "disclear", NULL, disclear_cmd, 1, "Clear some disassembler options", "options"},
-	{ "memprot", NULL, memprot_cmd, 1, "Set memory protection on or off", "on|off" },
-	
-	{ "fileio", NULL, NULL, 0, "Commands to handle file io", NULL},
-	{ "ls",  "dir", ls_cmd,    0, "List the files in a directory", "[path1..pathN]"},
-	{ "chdir", "cd", chdir_cmd, 1, "Change the current directory", "path"},
-	{ "cp",  "copy", cp_cmd, 2, "Copy a file", "source destination"},
-	{ "mkdir", NULL, mkdir_cmd, 1, "Make a Directory", "dir"},
-	{ "rm", "del", rm_cmd, 1, "Removes a File", "file"},
-	{ "rmdir", "rd", rmdir_cmd, 1, "Removes a Directory", "dir"},
-	{ "rename", "ren", rename_cmd, 2, "Renames a File", "src dst"},
-	{ "remap", NULL, remap_cmd, 2, "Remaps a device to another", "devfrom: devto:"},
-	{ "pwd",   NULL, pwd_cmd, 0, "Print the current working directory", ""},
-
-	{ "debugger", NULL, NULL, 0, "Debug commands", NULL},
-	{ "exprint", "ep", exprint_cmd, 0, "Print the current exception info", "[ex]"},
-	{ "exlist",  "el", exlist_cmd, 0, "List the exception contexts", "" },
-	{ "exctx",   "ec", exctx_cmd, 1, "Set the current exception context", "ex" },
-	{ "exresume", "c", exresume_cmd, 0, "Resume from the exception", "[addr]"},
-	{ "exprfpu", "ef", exprfpu_cmd, 0, "Print the current FPU registers", "[ex]"},
-	{ "exprvfpu", "ev", exprvfpu_cmd, 0, "Print the current VFPU registers", "[s|c|r|m|e] [ex]"},
-	{ "setreg", "str", setreg_cmd, 2, "Set the value of an exception register", "$reg value"},
-	{ "hwena",  NULL, hwena_cmd, 0, "Enable or disable the HW debugger", "[on|off]" },
-	{ "hwregs", NULL, hwregs_cmd, 0, "Print or change the current HW breakpoint setup (v1.5 only)", "[reg=val]..." },
-	{ "hwbp", NULL, hwbp_cmd, 1, "Set a hardware instruction breakpoint", "addr [mask]" },
-	{ "bpset", "bp", bpset_cmd, 1, "Set a break point", "addr"},
-	{ "bpprint", "bt", bpprint_cmd, 0, "Print the current breakpoints", ""},
-	{ "step", "s", step_cmd, 0, "Step the next instruction", ""},
-	{ "skip", "k", skip_cmd, 0, "Skip the next instruction (i.e. jump over jals)", ""},
-	{ "symload", "syl", symload_cmd, 1, "Load a symbol file", "file.sym"},
-	{ "symlist", "syt", symlist_cmd, 0, "List the loaded symbols", ""},
-	{ "symprint", "syp", symprint_cmd, 1, "Print the symbols for a module", "modname"},
-	{ "symbyaddr", "sya", symbyaddr_cmd, 1, "Print the symbol at the specified address", "addr"},
-	{ "symbyname", "syn", symbyname_cmd, 1, "Print the specified symbol address", "module:symname"},
-
-	{ "misc", NULL, NULL, 0, "Miscellaneous commands (e.g. USB, exit)", NULL},
-	{ "usbmon", "umn", usbmasson_cmd, 0, "Enable USB mass storage device", ""},
-	{ "usbmoff", "umf", usbmassoff_cmd, 0, "Disable USB mass storage device", ""},
-	{ "usbhon", "uhn", usbhoston_cmd, 0, "Enable USB hostfs device", ""},
-	{ "usbhoff", "uhf", usbhostoff_cmd, 0, "Disable USB hostfs device", ""},
-	{ "usbstat", "us", usbstat_cmd, 0, "Display the status of the USB connection", ""},
-    { "uidlist","ul", uidlist_cmd, 0, "List the system UIDS", "[root]"},
-	{ "uidinfo", "ui", uidinfo_cmd, 1, "Print info about a UID", "uid|@name [parent]" },
-	{ "cop0", "c0", cop0_cmd, 0, "Print the cop0 registers", ""},
-	{ "exit", "quit", exit_cmd, 0, "Exit the shell", ""},
-	{ "set", NULL, set_cmd, 0, "Set a shell variable", "[var=value]"},
-	{ "scrshot", "ss", scrshot_cmd, 1, "Take a screen shot", "file [pri]"},
-	{ "run",  NULL, run_cmd, 1, "Run a shell script", "file [args]"},
-	{ "calc", NULL, calc_cmd, 1, "Do a simple address calculation", "addr [d|o|x]"},
-	{ "reset", "r", reset_cmd, 0, "Reset", "[key]"},
-	{ "wifi", NULL, wifi_cmd, 0, "Enable WIFI with a specified AP config", "[ap]"},
-	{ "wifishell", NULL, wifishell_cmd, 0, "Enable WIFI Shell with a specified AP config", "[ap]"},
-	{ "ver", "v", version_cmd, 0, "Print version of psplink", ""},
-	{ "pspver", NULL, pspver_cmd, 0, "Print the version of PSP", ""},
-	{ "config", NULL, config_cmd, 0, "Print the configuration file settings", ""},
-	{ "confset", NULL, confset_cmd, 1, "Set a configuration value", "name [value]"},
-	{ "confdel", NULL, confdel_cmd, 1, "Delete a configuration value", "name"},
-	{ "power", NULL, power_cmd, 0, "Print power information", ""},
-	{ "poweroff", NULL, poweroff_cmd, 0, "Power off the PSP", ""},
-	{ "clock", NULL, clock_cmd, 3, "Set the clock frequencies", "cpu ram bus" },
-	{ "tty", NULL, tty_cmd, 0, "Enter TTY mode. All input goes to stdin", ""},
-	{ "tonid", NULL, tonid_cmd, 1, "Calculate the NID from a name", "name" },
-	{ "profmode", NULL, profmode_cmd, 0, "Set or display the current profiler mode", "[t|g|o]" },
-	{ "debugreg", NULL, debugreg_cmd, 0, "Set or display the current debug register", "[val]" },
-	{ "help", "?", help_cmd, 0, "Help (Obviously)", "[command|category]"},
-	{ "custom", "cst", custom_cmd, 1, NULL, NULL},
-	{ NULL, NULL, NULL, 0, NULL, NULL}
+	SHELL_COMMANDS
 };
 
 /* Find a command from the command list */
@@ -4081,7 +3736,7 @@ int shellParse(char *command)
 	{
 		if(parse_args(command, outbuf, &argc, argv, 16) == 0)
 		{
-			printf("Error parsing command\n");
+			SHELL_PRINT("Error parsing command\n");
 			return CMD_ERROR;
 		}
 
@@ -4105,7 +3760,7 @@ int shellParse(char *command)
 
 					if(findinpath(cmd, path, pathvar) == 0)
 					{
-						printf("Could not find %s in the path\n", cmd);
+						SHELL_PRINT("Could not find %s in the path\n", cmd);
 						return CMD_ERROR;
 					}
 					/* Otherwise assign to argv[0] */
@@ -4129,12 +3784,12 @@ int shellParse(char *command)
 				{
 					if((found_cmd->min_args > (argc - 1)) || ((ret = found_cmd->func(argc-1, &argv[1])) == CMD_ERROR))
 					{
-						printf("Usage: %s\n", found_cmd->help);
+						SHELL_PRINT("Usage: %s\n", found_cmd->help);
 					}
 				}
 				else
 				{
-					printf("Unknown command %s\n", cmd);
+					SHELL_PRINT("Unknown command %s\n", cmd);
 					ret = CMD_ERROR;
 				}
 			}
@@ -4144,7 +3799,7 @@ int shellParse(char *command)
 	return ret;
 }
 
-static int shellParseThread(SceSize args, void *argp)
+int shellParseThread(SceSize args, void *argp)
 {
 	int error;
 	void *data;
@@ -4161,7 +3816,7 @@ static int shellParseThread(SceSize args, void *argp)
 		error = sceKernelReceiveMbx(g_command_msg, &data, NULL);
 		if(error < 0)
 		{
-			printf("Error in receiving message 0x%08X\n", error);
+			SHELL_PRINT("Error in receiving message 0x%08X\n", error);
 			sceKernelExitDeleteThread(0);
 		}
 
@@ -4192,7 +3847,7 @@ int psplinkParseCommand(char *command)
 	ret = sceKernelWaitSema(g_cli_sema, 1, &timeout);
 	if(ret < 0)
 	{
-		printf("Error, could not wait on cli sema 0x%08X\n", ret);
+		SHELL_PRINT("Error, could not wait on cli sema 0x%08X\n", ret);
 		return 1;
 	}
 
@@ -4209,7 +3864,7 @@ int psplinkParseCommand(char *command)
 		}
 		else
 		{
-			printf("Error waiting for parse event 0x%08X\n", ret);
+			SHELL_PRINT("Error waiting for parse event 0x%08X\n", ret);
 			ret = CMD_EXITSHELL;
 		}
 	}
@@ -4220,249 +3875,6 @@ int psplinkParseCommand(char *command)
 	return ret;
 }
 
-#ifndef USB_ONLY
-
-/* Process command line */
-static int process_cli()
-{
-	int ret;
-
-	putchar(13);
-	putchar(10);
-
-	g_cli[g_cli_pos] = 0;
-	g_cli_pos = 0;
-	memcpy(&g_lastcli[g_lastcli_pos][0], g_cli, CLI_MAX);
-	g_lastcli_pos = (g_lastcli_pos + 1) % CLI_HISTSIZE;
-	g_currcli_pos = g_lastcli_pos;
-
-	ret = psplinkParseCommand(g_cli);
-	if(ret != CMD_EXITSHELL)
-	{
-		print_prompt();
-	}
-
-	return ret;
-}
-
-/* Handle an escape sequence */
-static void cli_handle_escape(void)
-{
-	char ch;
-
-	ch = g_readcharwithtimeout();
-
-	if(ch != -1)
-	{
-		/* Arrow keys UDRL/ABCD */
-		if(ch == '[')
-		{
-			ch = g_readcharwithtimeout();
-			switch(ch)
-			{
-				case 'A' : {
-							   int pos;
-
-							   pos = g_currcli_pos - 1;
-							   if(pos < 0)
-							   {
-								   pos += CLI_HISTSIZE;
-							   }
-
-							   if(g_lastcli[pos][0] != 0)
-							   {
-								   char *src, *dst;
-
-								   src = g_lastcli[pos];
-								   dst = g_cli;
-								   g_currcli_pos = pos;
-								   g_cli_pos = 0;
-								   g_cli_size = 0;
-								   while(*src)
-								   {
-									   *dst++ = *src++;
-									   g_cli_pos++;
-									   g_cli_size++;
-								   }
-								   *dst = 0;
-
-								   printf("\n");
-								   print_prompt();
-								   printf("%s", g_cli);
-							   } 
-						   } 
-						   break;
-
-				case 'B' : {
-							   int pos;
-
-							   pos = g_currcli_pos + 1;
-							   pos %= CLI_HISTSIZE;
-
-							   if(g_lastcli[pos][0] != 0)
-							   {
-								   char *src, *dst;
-
-								   src = g_lastcli[pos];
-								   dst = g_cli;
-								   g_currcli_pos = pos;
-								   g_cli_pos = 0;
-								   g_cli_size = 0;
-								   while(*src)
-								   {
-									   *dst++ = *src++;
-									   g_cli_pos++;
-									   g_cli_size++;
-								   }
-								   *dst = 0;
-
-								   printf("\n");
-								   print_prompt();
-								   printf("%s", g_cli);
-							   } 
-						   } 
-						   break;
-
-
-
-				default: 
-							printf("Unknown character %d\n", ch);
-						   break;
-			};
-		}
-		else
-		{
-			printf("Unknown character %d\n", ch);
-		}
-	}
-}
-
-int shellProcessChar(int ch)
-{
-	int exit_shell = 0;
-
-	switch(ch)
-	{
-		case -1 : break; // No char
-				  /* ^D */
-		case 4  : printf("\nExiting Shell\n");
-				  exit_shell = 1;
-				  break;
-		case 8  : // Backspace
-	               case 127: if(g_cli_pos > 0)
-				  {
-					  g_cli_pos--;
-					  g_cli[g_cli_pos] = 0;
-					  putchar(8);
-					  putchar(' ');
-					  putchar(8);
-				  }
-				  break;
-		case 9  : break; // Ignore tab
-		case 13 :		 // Enter key 
-		case 10 : if(process_cli() == CMD_EXITSHELL) 
-				  {
-					  exit_shell = 1;
-				  }
-				  break;
-				  /* TODO: CTRL + P and CTRL + N */
-		case 11 : /* CTRL + K */
-				  debugStep(1);
-				  break;
-		case 18 : /* CTRL + R */
-				  psplinkReset();
-				  break;
-		case 19 : /* CTRL + S */
-				  debugStep(0);
-				  break;
-		case 27 : /* Escape character */
-				  cli_handle_escape();
-				  break;
-		default : if((g_cli_pos < (CLI_MAX - 1)) && (ch >= 32))
-				  {
-					  g_cli[g_cli_pos++] = ch;
-					  g_cli[g_cli_pos] = 0;
-					  putchar(ch);
-				  }
-				  break;
-	}
-
-	return exit_shell;
-}
-
-/* Main shell function */
-void shellStart(void)
-{		
-	int exit_shell = 0;
-
-	print_prompt();
-
-	if(g_context.pcterm)
-	{
-		char cli[1024];
-		int  pos = 0;
-
-		while(!exit_shell)
-		{
-			int ch;
-			int ret;
-
-			ch = g_readchar();
-			switch(ch)
-			{
-				case 10:
-				case 13: cli[pos] = 0;
-						 ret = psplinkParseCommand(cli);
-						 if(ret != CMD_EXITSHELL)
-						 {
-							print_prompt();
-							pos = 0;
-						 }
-						 else
-						 {
-							 exit_shell = 1;
-						 }
-
-						 break;
-				/* TODO: CTRL + P and CTRL + N */
-				case 11 : /* CTRL + K */
-					  debugStep(1);
-					  break;
-				case 18 : /* CTRL + R */
-					  psplinkReset();
-					  break;
-				case 19 : /* CTRL + S */
-					  debugStep(0);
-					  break;
-				default: if(ch >= 32)
-						 {
-							 if(pos < (sizeof(cli)-1))
-							 {
-								 cli[pos++] = ch;
-							 }
-						 }
-						 break;
-			};
-		}
-	}
-	else
-	{
-		g_cli_pos = 0;
-		g_cli_size = 0;
-		memset(g_cli, 0, CLI_MAX);
-
-		while(!exit_shell) {
-			int ch;
-
-			ch = g_readchar();
-
-			exit_shell = shellProcessChar(ch);
-		}
-	}
-}
-
-#endif
-
 /* Help command */
 static int help_cmd(int argc, char **argv)
 {
@@ -4470,15 +3882,15 @@ static int help_cmd(int argc, char **argv)
 
 	if(argc < 1)
 	{
-		printf("Command Categories\n\n");
+		SHELL_PRINT("Command Categories\n\n");
 		for(cmd_loop = 0; commands[cmd_loop].name; cmd_loop++)
 		{
 			if(commands[cmd_loop].func == NULL)
 			{
-				printf("%-10s - %s\n", commands[cmd_loop].name, commands[cmd_loop].desc);
+				SHELL_PRINT("%-10s - %s\n", commands[cmd_loop].name, commands[cmd_loop].desc);
 			}
 		}
-		printf("\nType 'help category' for more information\n");
+		SHELL_PRINT("\nType 'help category' for more information\n");
 	}
 	else
 	{
@@ -4490,92 +3902,36 @@ static int help_cmd(int argc, char **argv)
 			if(found_cmd->func == NULL)
 			{
 				/* Print the commands listed under the separator */
-				printf("Category %s\n\n", found_cmd->name);
+				SHELL_PRINT("Category %s\n\n", found_cmd->name);
 				for(cmd_loop = 1; found_cmd[cmd_loop].name && found_cmd[cmd_loop].func != NULL; cmd_loop++)
 				{
 					if(found_cmd[cmd_loop].desc)
 					{
-						printf("%-10s - %s\n", found_cmd[cmd_loop].name, found_cmd[cmd_loop].desc);
+						SHELL_PRINT("%-10s - %s\n", found_cmd[cmd_loop].name, found_cmd[cmd_loop].desc);
 					}
 				}
 			}
 			else
 			{
-				printf("%s\t - %s\n", found_cmd->name, found_cmd->desc);
+				SHELL_PRINT("%s\t - %s\n", found_cmd->name, found_cmd->desc);
 				if(found_cmd->syn)
 				{
-					printf("Synonym: %s\n", found_cmd->syn);
+					SHELL_PRINT("Synonym: %s\n", found_cmd->syn);
 				}
-				printf("Usage: %s %s\n", found_cmd->name, found_cmd->help);
+				SHELL_PRINT("Usage: %s %s\n", found_cmd->name, found_cmd->help);
 			}
 		}
 		else
 		{
-			printf("Unknown command %s, type help for information\n", argv[0]);
+			SHELL_PRINT("Unknown command %s, type help for information\n", argv[0]);
 		}
 	}
 
 	return CMD_OK;
 }
 
-static int custom_cmd(int argc, char **argv)
-{
-	int retval = CMD_OK;
-	int cmdnum = atoi(argv[0]);
-	char cmd[64];
-	
-	cmd[0] = 0;
-
-	switch(cmdnum) 
-	{
-	case 0:
-		strcpy(cmd, g_context.conscrosscmd);
-		break;
-	case 1:
-		strcpy(cmd, g_context.conssquarecmd);
-		break;
-	case 2:
-		strcpy(cmd, g_context.constrianglecmd);
-		break;
-	case 3:
-		strcpy(cmd, g_context.conscirclecmd);
-		break;
-	case 4:
-		strcpy(cmd, g_context.consselectcmd);
-		break;
-	case 5:
-		strcpy(cmd, g_context.consstartcmd);
-		break;
-	case 6:
-		strcpy(cmd, g_context.consdowncmd);
-		break;
-	case 7:
-		strcpy(cmd, g_context.consleftcmd);
-		break;
-	case 8:
-		strcpy(cmd, g_context.consupcmd);
-		break;
-	case 9:
-		strcpy(cmd, g_context.consrightcmd);
-		break;
-	default:
-		printf("Error: Illegal custom command\n");
-		break;
-	}
-
-	if(strlen(cmd) > 0)
-	{
-		printf("%s\n", cmd);
-		retval = shellParse(cmd);
-		print_prompt();
-	}
-	return retval;
-}
-
 int shellInit(const char *cliprompt, const char *path, const char *init_dir, const char *startsh)
 {
-	int ret;
-
 	if(strlen(cliprompt) > 0)
 	{
 		set_shell_var("prompt", cliprompt);
@@ -4585,46 +3941,24 @@ int shellInit(const char *cliprompt, const char *path, const char *init_dir, con
 
 	strcpy(g_context.currdir, init_dir);
 
-	g_command_thid = sceKernelCreateThread("PspLinkParse", shellParseThread, 9, 0x10000, 0, NULL);
-	if(g_command_thid < 0)
-	{
-		printf("Error, couldn't create thread for parsing 0x%08X\n", g_command_thid);
-		return -1;
-	}
-
 	g_command_msg = sceKernelCreateMbx("PspLinkCmdMbx", 0, 0);
 	if(g_command_msg < 0)
 	{
-		printf("Error, couldn't create message box 0x%08X\n", g_command_msg);
+		Kprintf("Error, couldn't create message box 0x%08X\n", g_command_msg);
 		return -1;
 	}
 
 	g_cli_sema = sceKernelCreateSema("PspLinkCliSema", 0, 1, 1, NULL);
 	if(g_cli_sema < 0)
 	{
-		printf("Error, couldn't create cli semaphore 0x%08X\n", g_cli_sema);
+		Kprintf("Error, couldn't create cli semaphore 0x%08X\n", g_cli_sema);
 		return -1;
 	}
 
 	g_command_event = sceKernelCreateEventFlag("PspLinkCmdEvent", 0, 0, NULL);
 	if(g_command_event < 0)
 	{
-		printf("Error, couldn't create command event 0x%08X\n", g_command_event);
-		return -1;
-	}
-
-	if(strlen(startsh) > 0)
-	{
-		ret = sceKernelStartThread(g_command_thid, strlen(startsh)+1, (void*) startsh);
-	}
-	else
-	{
-		ret = sceKernelStartThread(g_command_thid, 0, NULL);
-	}
-
-	if(ret < 0)
-	{
-		printf("Error, couldn't start command thread 0x%08X\n", ret);
+		Kprintf("Error, couldn't create command event 0x%08X\n", g_command_event);
 		return -1;
 	}
 

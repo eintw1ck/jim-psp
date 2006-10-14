@@ -15,6 +15,7 @@
 #define __PSPLINK_H
 
 #include <stdint.h>
+#include "pspstdio.h"
 
 /* Event flags */
 #define EVENT_SIO       0x01
@@ -47,20 +48,19 @@ int longjmp(jmp_buf jmp, int ret);
 
 int fdprintf(int fd, const char *fmt, ...);
 
+#define SHELL_PRINT(fmt, ...) fdprintf(g_shellfd, fmt, ## __VA_ARGS__)
+#define SHELL_PRINT_CMD(cmd, fmt, ...) fdprintf(g_shellfd, "\xff" fmt "\xfe", ## __VA_ARGS__)
+
 void psplinkReset(void);
 void psplinkStop(void);
 u32  psplinkSetK1(u32 k1);
 void psplinkGetCop0(u32 *regs);
 int psplinkParseComamnd(char *command);
 int psplinkRegisterExceptions(void *def, void *debug, void *ctx);
-SceUID load_wifi(const char *bootpath, int ap);
-SceUID load_wifishell(const char *bootpath);
-SceUID load_conshell(const char *bootpath);
 SceUID load_gdb(const char *bootpath, int argc, char **argv);
 
 struct ConfigContext;
 struct GlobalContext;
-void copy_consconfig(const struct ConfigContext *cctx, struct GlobalContext *gctx);
 
 #define SAVED_MAGIC 0xBAA1A11C
 #define SAVED_ADDR  0x883F0000
@@ -84,37 +84,10 @@ struct GlobalContext
 	char bootpath[MAXPATHLEN];
 	/* Indicates the current directory */
 	char currdir[MAXPATHLEN];
-	/* Arguments for auto exec */
-	int  execargc;
-	char *execargv[MAX_ARGS+1];
-	char execargs[1024];
-	/* Inidicates whether a file has already been executed */
-	int  inexec;
-	/* The program to execute */
-	char execfile[MAXPATHLEN];
+	char startsh[MAXPATHLEN];
 	int resetonexit;
-	int pcterm;
-	SceUID netshelluid;
-	SceUID conshelluid;
 	SceUID thevent;
-	int sioshell;
-	int wifi;
-	int wifishell;
-	int conshell;
-	int consinterfere;
-	char conscrosscmd[64];    /* custom 0 */
-	char conssquarecmd[64];   /* custom 1 */
-	char constrianglecmd[64]; /* custom 2 */
-	char conscirclecmd[64];   /* custom 3 */
-	char consselectcmd[64];   /* custom 4 */
-	char consstartcmd[64];    /* custom 5 */
-	char consdowncmd[64];     /* custom 6 */
-	char consleftcmd[64];     /* custom 7 */
-	char consupcmd[64];	  /* custom 8 */
-	char consrightcmd[64];    /* custom 9 */
 	int gdb;
-	int usbshell;
-	int usbgdb;
 	int pid;
 	int rebootkey;
 	jmp_buf parseenv;

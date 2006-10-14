@@ -157,24 +157,24 @@ void *_apiHookHandle(int id, u32 *args)
 		char str[128];
 		int strleft;
 
-		printf("Function %s called from thread 0x%08X (RA:0x%08X)\n", g_apihooks[id].name, sceKernelGetThreadId(), sceKernelGetSyscallRA());
+		SHELL_PRINT("Function %s called from thread 0x%08X (RA:0x%08X)\n", g_apihooks[id].name, sceKernelGetThreadId(), sceKernelGetSyscallRA());
 		for(i = 0; i < APIHOOK_MAXPARAM; i++)
 		{
 			if(g_apihooks[id].param[i])
 			{
-				printf("Arg %d: ", i);
+				SHELL_PRINT("Arg %d: ", i);
 				switch(g_apihooks[id].param[i])
 				{
-					case PARAM_TYPE_INT: printf("%d\n", args[i]);
+					case PARAM_TYPE_INT: SHELL_PRINT("%d\n", args[i]);
 							  break;
-					case PARAM_TYPE_HEX: printf("0x%08X\n", args[i]);
+					case PARAM_TYPE_HEX: SHELL_PRINT("0x%08X\n", args[i]);
 							  break;
-					case PARAM_TYPE_OCT: printf("0%o\n", args[i]);
+					case PARAM_TYPE_OCT: SHELL_PRINT("0%o\n", args[i]);
 							  break;
 					case PARAM_TYPE_STR: strleft = memValidate(args[i], MEM_ATTRIB_READ | MEM_ATTRIB_BYTE);
 							  if(strleft == 0)
 							  {
-								  printf("Invalid pointer 0x%08X\n", args[i]);
+								  SHELL_PRINT("Invalid pointer 0x%08X\n", args[i]);
 								  break;
 							  }
 
@@ -186,9 +186,9 @@ void *_apiHookHandle(int id, u32 *args)
 							  strncpy(str, (const char *) args[i], strleft);
 							  str[strleft] = 0;
 
-							  printf("\"%s\"\n", str);
+							  SHELL_PRINT("\"%s\"\n", str);
 							  break;
-					default:  printf("Unknown parameter type '%c'\n", g_apihooks[id].param[i]);
+					default:  SHELL_PRINT("Unknown parameter type '%c'\n", g_apihooks[id].param[i]);
 							  break;
 				};
 			}
@@ -200,7 +200,7 @@ void *_apiHookHandle(int id, u32 *args)
 
 		if(g_apihooks[id].sleep)
 		{
-			printf("Sleeping thread 0x%08X\n", sceKernelGetThreadId());
+			SHELL_PRINT("Sleeping thread 0x%08X\n", sceKernelGetThreadId());
 			sceKernelSleepThread();
 		}
 	}
@@ -227,22 +227,22 @@ void _apiHookReturn(int id, u32* ret)
 
 	if(func)
 	{
-		printf("Function %s returned ", g_apihooks[id].name);
+		SHELL_PRINT("Function %s returned ", g_apihooks[id].name);
 		switch(g_apihooks[id].ret)
 		{
-			case RET_TYPE_INT32: printf("%d\n", ret[0]);
+			case RET_TYPE_INT32: SHELL_PRINT("%d\n", ret[0]);
 					  break;
-			case RET_TYPE_HEX32: printf("0x%08X\n", ret[0]);
+			case RET_TYPE_HEX32: SHELL_PRINT("0x%08X\n", ret[0]);
 								 break;
-			case RET_TYPE_HEX64: printf("0x%08X%08X\n", ret[1], ret[0]);
+			case RET_TYPE_HEX64: SHELL_PRINT("0x%08X%08X\n", ret[1], ret[0]);
 					  break;
-			default: printf("void\n");
+			default: SHELL_PRINT("void\n");
 					break;
 		}
 
 		if(g_apihooks[id].sleep)
 		{
-			printf("Sleeping thread 0x%08X\n", sceKernelGetThreadId());
+			SHELL_PRINT("Sleeping thread 0x%08X\n", sceKernelGetThreadId());
 			sceKernelSleepThread();
 		}
 	}
@@ -280,7 +280,7 @@ void apiHookGenericPrint(void)
 	{
 		if(g_apihooks[i].func)
 		{
-			printf("Hook %2d: Name %s, Param %.*s, Sleep %d, Syscall 0x%p\n", i,
+			SHELL_PRINT("Hook %2d: Name %s, Param %.*s, Sleep %d, Syscall 0x%p\n", i,
 					g_apihooks[i].name, APIHOOK_MAXPARAM, g_apihooks[i].param, 
 					g_apihooks[i].sleep, g_apihooks[i].syscall);
 		}
@@ -333,7 +333,7 @@ int apiHookGenericByName(SceUID uid, const char *library, const char *name, char
 	id = find_free_hook();
 	if(id < 0)
 	{
-		printf("No free API hooks left\n");
+		SHELL_PRINT("No free API hooks left\n");
 		return 0;
 	}
 
@@ -356,12 +356,12 @@ int apiHookGenericByName(SceUID uid, const char *library, const char *name, char
 		}
 		else
 		{
-			printf("Couldn't find syscall address\n");
+			SHELL_PRINT("Couldn't find syscall address\n");
 		}
 	}
 	else
 	{
-		printf("Couldn't find export address\n");
+		SHELL_PRINT("Couldn't find export address\n");
 	}
 
 	return 0;
@@ -376,7 +376,7 @@ int apiHookGenericByNid(SceUID uid, const char *library, u32 nid, char ret, cons
 	id = find_free_hook();
 	if(id < 0)
 	{
-		printf("No free API hooks left\n");
+		SHELL_PRINT("No free API hooks left\n");
 		return 0;
 	}
 

@@ -30,10 +30,9 @@
 
 #define STDIN_BUFSIZE 4096
 
-static PspDebugPrintHandler g_sioHandler = NULL;
-static PspDebugPrintHandler g_wifiHandler = NULL;
-static PspDebugPrintHandler g_usbHandler = NULL;
-static PspDebugPrintHandler g_consHandler = NULL;
+static PspDebugPrintHandler g_usbStdoutHandler = NULL;
+static PspDebugPrintHandler g_usbStderrHandler = NULL;
+static PspDebugPrintHandler g_usbShellHandler = NULL;
 
 /* STDIN buffer */
 static char g_stdinbuf[STDIN_BUFSIZE];
@@ -46,35 +45,32 @@ static SceUID g_stdinwaitth = -1;
 
 extern struct GlobalContext g_context;
 
-static int outputHandler(const char *data, int size)
+static int stdoutHandler(const char *data, int size)
 {
-#ifndef USB_ONLY
-	if(g_sioHandler)
+	if(g_usbStdoutHandler)
 	{
-		g_sioHandler(data, size);
+		g_usbStdoutHandler(data, size);
 	}
 
-	if(g_wifiHandler)
-	{
-		g_wifiHandler(data, size);
-	}
-#endif
+	return size;
+}
 
-	if(g_usbHandler)
+static int stderrHandler(const char *data, int size)
+{
+	if(g_usbStderrHandler)
 	{
-		g_usbHandler(data, size);
+		g_usbStderrHandler(data, size);
 	}
 
-#ifndef USB_ONLY
+	return size;
+}
 
-	if(g_consHandler)
+static int shellHandler(const char *data, int size)
+{
+	if(g_usbShellHandler)
 	{
-		if ((!g_context.inexec) || g_context.consinterfere)
-		{
-			g_consHandler(data, size);
-		}
+		g_usbShellHandler(data, size);
 	}
-#endif
 
 	return size;
 }
@@ -113,24 +109,11 @@ static int inputHandler(char *data, int size)
 	return sizeread;
 }
 
-void ttySetWifiHandler(PspDebugPrintHandler wifiHandler)
+void ttySetUsbHandler(PspDebugPrintHandler usbShellHandler, PspDebugPrintHandler usbStdoutHandler, PspDebugPrintHandler usbStderrHandler)
 {
-	g_wifiHandler = wifiHandler;
-}
-
-void ttySetSioHandler(PspDebugPrintHandler sioHandler)
-{
-	g_sioHandler = sioHandler;
-}
-
-void ttySetUsbHandler(PspDebugPrintHandler usbHandler)
-{
-	g_usbHandler = usbHandler;
-}
-
-void ttySetConsHandler(PspDebugPrintHandler consHandler)
-{
-	g_consHandler = consHandler;
+	g_usbStdoutHandler = usbStdoutHandler;
+	g_usbStderrHandler = usbStderrHandler;
+	g_usbShellHandler = usbShellHandler;
 }
 
 void ttyAddInputData(const char *data, int size)
@@ -159,7 +142,7 @@ static int close_func(int fd)
 {
 	int ret = SCE_KERNEL_ERROR_FILEERR;
 
-	if(fd > 2)
+	if((fd > 2) && (fd != g_shellfd))
 	{
 		ret = sceIoClose(fd);
 	}
@@ -171,8 +154,15 @@ void ttyInit(void)
 {
 	SceUID uid;
 
-	stdioInstallStdoutHandler(outputHandler);
-	stdioInstallStderrHandler(outputHandler);
+	if(stdioTtyInit() < 0)
+	{
+		Kprintf("Could not initialise tty\n");
+		return;
+	}
+
+	stdioInstallStdoutHandler(stdoutHandler);
+	stdioInstallStderrHandler(stderrHandler);
+	stdioInstallShellHandler(shellHandler);
 	stdioInstallStdinHandler(inputHandler);
 	/* Install a patch to prevent a naughty app from closing stdout */
 	uid = refer_module_by_name("sceIOFileManager", NULL);

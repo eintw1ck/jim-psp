@@ -232,7 +232,7 @@ void debugStep(int skip)
 	}
 	else
 	{
-		printf("Error, not in an exception\n");
+		SHELL_PRINT("Error, not in an exception\n");
 	}
 }
 
@@ -288,7 +288,7 @@ int debugSetBP(unsigned int address)
 		}
 		else
 		{
-			printf("Error, could not find a free breakpoint\n");
+			SHELL_PRINT("Error, could not find a free breakpoint\n");
 		}
 	}
 
@@ -315,12 +315,12 @@ void debugPrintBPS(void)
 {
 	int i;
 
-	printf("Breakpoint List:\n");
+	SHELL_PRINT("Breakpoint List:\n");
 	for(i = 0; i < MAX_BPS; i++)
 	{
 		if(g_bps[i].active)
 		{
-			printf("%-2d: Address %08X - Old Instruction %08X\n", i, g_bps[i].address, g_bps[i].oldinst);
+			SHELL_PRINT("%-2d: Address %08X - Old Instruction %08X\n", i, g_bps[i].address, g_bps[i].oldinst);
 		}
 	}
 }
@@ -378,7 +378,7 @@ int debugHandleException(PsplinkRegBlock *pRegs)
 
 		sceKernelDcacheWritebackInvalidateAll();
 		sceKernelIcacheInvalidateAll();
-		printf("%s\n", disasmInstruction(_lw(address), address, &pRegs->r[0], &regmask));
+		SHELL_PRINT("%s\n", disasmInstruction(_lw(address), address, &pRegs->r[0], &regmask));
 		if(regmask)
 		{
 			int i;
@@ -386,7 +386,7 @@ int debugHandleException(PsplinkRegBlock *pRegs)
 			{
 				if(regmask & (1 << i))
 				{
-					printf("$%s = 0x%08X\n", regName[i], pRegs->r[i]);
+					SHELL_PRINT("$%s = 0x%08X\n", regName[i], pRegs->r[i]);
 				}
 			}
 		}
@@ -575,7 +575,7 @@ void debugSetHWRegs(int argc, char **argv)
 				}
 				else
 				{
-					printf("Unknown register %s\n", argv[i]);
+					SHELL_PRINT("Unknown register %s\n", argv[i]);
 					return;
 				}
 
@@ -583,14 +583,14 @@ void debugSetHWRegs(int argc, char **argv)
 			}
 			else
 			{
-				printf("Invalid memory specification %s\n", pEquals);
+				SHELL_PRINT("Invalid memory specification %s\n", pEquals);
 				return;
 			}
 
 		}
 		else
 		{
-			printf("Invalid register specification %s\n", argv[i]);
+			SHELL_PRINT("Invalid register specification %s\n", argv[i]);
 			return;
 		}
 	}
@@ -605,24 +605,24 @@ void debugPrintHWRegs(void)
 		pEnv = debug_get_env();
 		if(pEnv)
 		{
-			printf("<HW Debug Registers>\n");
-			printf("%-6s: 0x%08X\n", "DRCNTL", pEnv->DRCNTL);
-			printf("%-6s: 0x%08X\n", "IBC", pEnv->IBC);
-			printf("%-6s: 0x%08X\n", "DBC", pEnv->DBC);
-			printf("%-6s: 0x%08X\n", "IBA", pEnv->IBA);
-			printf("%-6s: 0x%08X\n", "IBAM", pEnv->IBAM);
-			printf("%-6s: 0x%08X\n", "DBA", pEnv->DBA);
-			printf("%-6s: 0x%08X\n", "DBAM", pEnv->DBAM);
-			printf("%-6s: 0x%08X\n", "DBD", pEnv->DBD);
-			printf("%-6s: 0x%08X\n", "DBDM", pEnv->DBDM);
+			SHELL_PRINT("<HW Debug Registers>\n");
+			SHELL_PRINT("%-6s: 0x%08X\n", "DRCNTL", pEnv->DRCNTL);
+			SHELL_PRINT("%-6s: 0x%08X\n", "IBC", pEnv->IBC);
+			SHELL_PRINT("%-6s: 0x%08X\n", "DBC", pEnv->DBC);
+			SHELL_PRINT("%-6s: 0x%08X\n", "IBA", pEnv->IBA);
+			SHELL_PRINT("%-6s: 0x%08X\n", "IBAM", pEnv->IBAM);
+			SHELL_PRINT("%-6s: 0x%08X\n", "DBA", pEnv->DBA);
+			SHELL_PRINT("%-6s: 0x%08X\n", "DBAM", pEnv->DBAM);
+			SHELL_PRINT("%-6s: 0x%08X\n", "DBD", pEnv->DBD);
+			SHELL_PRINT("%-6s: 0x%08X\n", "DBDM", pEnv->DBDM);
 		}
 		else
 		{
-			printf("HW Debugger not enabled\n");
+			SHELL_PRINT("HW Debugger not enabled\n");
 		}
 	}
 	else
 	{
-		printf("Not available on v1.0 firmware\n");
+		SHELL_PRINT("Not available on v1.0 firmware\n");
 	}
 }

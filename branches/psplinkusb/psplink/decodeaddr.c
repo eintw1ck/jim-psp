@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "psplink.h"
 #include "decodeaddr.h"
 #include "exception.h"
 #include "util.h"
@@ -126,7 +127,7 @@ static unsigned int do_op(enum Operator op, int not, unsigned int left, unsigned
 					 }
 					 else
 					 {
-						 printf("Division by zero\n");
+						 SHELL_PRINT("Division by zero\n");
 					 }
 					 break;
 		default:     ret = right;
@@ -145,14 +146,14 @@ static int deref_addr(unsigned int *val, int deref)
 	{
 		if(*val & 0x3)
 		{
-			printf("Error, unaligned address when dereferencing\n");
+			SHELL_PRINT("Error, unaligned address when dereferencing\n");
 			return 0;
 		}
 
 		size = memValidate(*val, MEM_ATTRIB_READ | MEM_ATTRIB_WORD);
 		if(size < sizeof(unsigned int *))
 		{
-			printf("Error, invalid memory address when dereferencing %08X\n", *val);
+			SHELL_PRINT("Error, invalid memory address when dereferencing %08X\n", *val);
 			return 0;
 		}
 
@@ -186,7 +187,7 @@ static int get_modaddr(char *name, unsigned int *val)
 		uid = strtoul(name, &endp, 16);
 		if(*endp != 0)
 		{
-			printf("Error, invalid module name %s\n", name);
+			SHELL_PRINT("Error, invalid module name %s\n", name);
 			return 0;
 		}
 	}
@@ -199,7 +200,7 @@ static int get_modaddr(char *name, unsigned int *val)
 	{
 		if(ret < 0)
 		{
-			printf("Error, could not get module info\n");
+			SHELL_PRINT("Error, could not get module info\n");
 			return 0;
 		}
 	}
@@ -264,7 +265,7 @@ static int get_modaddr(char *name, unsigned int *val)
 	}
 	else
 	{
-		printf("Error, invalid module address extension %s\n", pcolon);
+		SHELL_PRINT("Error, invalid module address extension %s\n", pcolon);
 		return 0;
 	}
 
@@ -291,7 +292,7 @@ static int get_threadaddr(char *name, unsigned int *val)
 		uid = strtoul(name, &endp, 16);
 		if(*endp != 0)
 		{
-			printf("Error, invalid thread name %s\n", name);
+			SHELL_PRINT("Error, invalid thread name %s\n", name);
 			return 0;
 		}
 	}
@@ -300,7 +301,7 @@ static int get_threadaddr(char *name, unsigned int *val)
 	info.size = sizeof(info);
 	if(sceKernelReferThreadStatus(uid, &info))
 	{
-		printf("Error, could not get thread info\n");
+		SHELL_PRINT("Error, could not get thread info\n");
 		return 0;
 	}
 
@@ -318,7 +319,7 @@ static int get_threadaddr(char *name, unsigned int *val)
 	}
 	else
 	{
-		printf("Error, invalid thread address extension %s\n", pcolon);
+		SHELL_PRINT("Error, invalid thread address extension %s\n", pcolon);
 		return 0;
 	}
 
@@ -370,7 +371,7 @@ static int parse_line(char *line, unsigned int *val)
 			reg = exceptionGetReg(buf);
 			if(reg == NULL)
 			{
-				printf("Unknown register '%s'\n", buf);
+				SHELL_PRINT("Unknown register '%s'\n", buf);
 				return 0;
 			}
 
@@ -384,7 +385,7 @@ static int parse_line(char *line, unsigned int *val)
 			endp = strchr(line, '@');
 			if(endp == NULL)
 			{
-				printf("Error, no matching '@' for module name\n");
+				SHELL_PRINT("Error, no matching '@' for module name\n");
 				return 0;
 			}
 
@@ -404,7 +405,7 @@ static int parse_line(char *line, unsigned int *val)
 			endp = strchr(line, '%');
 			if(endp == NULL)
 			{
-				printf("Error, no matching '%%' for thread name\n");
+				SHELL_PRINT("Error, no matching '%%' for thread name\n");
 				return 0;
 			}
 
@@ -427,7 +428,7 @@ static int parse_line(char *line, unsigned int *val)
 			endp = strchr(line, '?');
 			if(endp == NULL)
 			{
-				printf("Error, no matching '?' for symbol name\n");
+				SHELL_PRINT("Error, no matching '?' for symbol name\n");
 				return 0;
 			}
 
@@ -443,7 +444,7 @@ static int parse_line(char *line, unsigned int *val)
 			temp = symbolFindByName(line, &size);
 			if(temp == 0)
 			{
-				printf("Error, could not find symbol %s\n", line);
+				SHELL_PRINT("Error, could not find symbol %s\n", line);
 				return 0;
 			}
 			if(getsize)
@@ -484,7 +485,7 @@ static int parse_line(char *line, unsigned int *val)
 
 			if(depth != 0)
 			{
-				printf("Error, unmatched bracket\n");
+				SHELL_PRINT("Error, unmatched bracket\n");
 				return 0;
 			}
 
@@ -501,7 +502,7 @@ static int parse_line(char *line, unsigned int *val)
 
 			if(op == OP_NONE)
 			{
-				printf("Error, cannot place two numbers together\n");
+				SHELL_PRINT("Error, cannot place two numbers together\n");
 				return 0;
 			}
 			/* strtoul the value */
@@ -512,7 +513,7 @@ static int parse_line(char *line, unsigned int *val)
 		{
 			if(op != OP_NONE)
 			{
-				printf("Invalid character %c\n", *line);
+				SHELL_PRINT("Invalid character %c\n", *line);
 				return 0;
 			}
 
@@ -555,7 +556,7 @@ static int parse_line(char *line, unsigned int *val)
 						  }
 						  else
 						  {
-							  printf("Missing second '=' from equals operator\n");
+							  SHELL_PRINT("Missing second '=' from equals operator\n");
 							  return 0;
 						  }
 						  break;
@@ -567,7 +568,7 @@ static int parse_line(char *line, unsigned int *val)
 						  }
 						  else
 						  {
-							  printf("Missing second '=' from not equals operator\n");
+							  SHELL_PRINT("Missing second '=' from not equals operator\n");
 							  return 0;
 						  }
 						  break;
@@ -605,7 +606,7 @@ static int parse_line(char *line, unsigned int *val)
 						  break;
 				case '/': op = OP_DIV;
 						  break;
-				default : printf("Invalid character %c\n", *line);
+				default : SHELL_PRINT("Invalid character %c\n", *line);
 						  return 0;
 			};
 			line++;
@@ -677,13 +678,13 @@ int memValidate(u32 addr, u32 attrib)
 void memPrintRegions(void)
 {
 	int i;
-	printf("Memory Regions:\n");
+	SHELL_PRINT("Memory Regions:\n");
 	i = 0;
 	while(g_memareas[i].addr)
 	{
 		if((!g_memareas[i].v1only) || (g_isv1))
 		{
-			printf("Region %2d: Base 0x%08X - Size 0x%08X - %s\n", i,
+			SHELL_PRINT("Region %2d: Base 0x%08X - Size 0x%08X - %s\n", i,
 				g_memareas[i].addr, g_memareas[i].size, g_memareas[i].desc);
 		}
 		i++;

@@ -13,8 +13,13 @@
 #ifndef __PSP_STDIO_H__
 #define __PSP_STDIO_H__
 
+#define SHELL_FILENO 3
+extern int g_shellfd;
+
+int stdioTtyInit(void);
 int stdioInstallStdinHandler(PspDebugInputHandler handler);
 int stdioInstallStdoutHandler(PspDebugPrintHandler handler);
 int stdioInstallStderrHandler(PspDebugPrintHandler handler);
+int stdioInstallShellHandler(PspDebugPrintHandler handler);
 
 #endif

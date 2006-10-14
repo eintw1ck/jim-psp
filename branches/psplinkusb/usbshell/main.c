@@ -24,16 +24,30 @@ PSP_MODULE_INFO("USBShell", PSP_MODULE_KERNEL, 1, 1);
 
 #define MAX_CLI 4096
 
-void ttySetUsbHandler(PspDebugPrintHandler usbHandler);
+void ttySetUsbHandler(PspDebugPrintHandler usbShellHandler, PspDebugPrintHandler usbStdoutHandler, PspDebugPrintHandler usbStderrHandler);
 int psplinkParseCommand(unsigned char *command);
 void psplinkPrintPrompt(void);
 void psplinkExitShell(void);
 
 struct AsyncEndpoint g_endp;
 
-int usbPrint(const char *data, int size)
+int usbShellPrint(const char *data, int size)
 {
 	usbAsyncWrite(ASYNC_SHELL, data, size);
+
+	return size;
+}
+
+int usbStdoutPrint(const char *data, int size)
+{
+	usbAsyncWrite(ASYNC_STDOUT, data, size);
+
+	return size;
+}
+
+int usbStderrPrint(const char *data, int size)
+{
+	usbAsyncWrite(ASYNC_STDERR, data, size);
 
 	return size;
 }
@@ -44,7 +58,7 @@ int main_thread(SceSize args, void *argp)
 	int cli_pos = 0;
 
 	usbAsyncRegister(ASYNC_SHELL, &g_endp);
-	ttySetUsbHandler(usbPrint);
+	ttySetUsbHandler(usbShellPrint, usbStdoutPrint, usbStderrPrint);
 	usbWaitForConnect();
 	psplinkPrintPrompt();
 

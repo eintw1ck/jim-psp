@@ -25,8 +25,6 @@
 #include "psplink.h"
 #include "util.h"
 
-static SceUID g_eventflag = -1;
-
 /* Define some important parameters, not really sure on names. Probably doesn't matter */
 #define PSP_UART4_FIFO 0xBE500000
 #define PSP_UART4_STAT 0xBE500018
@@ -46,16 +44,6 @@ void sioPutchar(int ch)
 {
 	while(_lw(PSP_UART4_STAT) & PSP_UART_TXFULL);
 	_sw(ch, PSP_UART4_FIFO);
-}
-
-int sioGetchar(void)
-{
-	if(_lw(PSP_UART4_STAT) & PSP_UART_RXEMPTY)
-	{
-		return -1;
-	}
-
-	return _lw(PSP_UART4_FIFO);
 }
 
 /* Put data to SIO converting any line feeds as necessary */
@@ -155,68 +143,9 @@ void sioEnableKprintf(PspDebugPutChar kp)
 	sceKernelRegisterDebugPutchar(kp);
 }
 
-static int intr_handler(void *arg)
-{
-	u32 stat;
-
-	/* Read out the interrupt state and clear it */
-	stat = _lw(0xBE500040);
-	_sw(stat, 0xBE500044);
-
-	sceKernelDisableIntr(PSP_HPREMOTE_INT);
-
-	sceKernelSetEventFlag(g_eventflag, EVENT_SIO);
-
-	return -1;
-}
-
-/* Read a character with a timeout */
-int sioReadCharWithTimeout(void)
-{
-	int ch;
-	u32 result;
-	SceUInt timeout;
-
-	timeout = 500000;
-	ch = sioGetchar();
-	if(ch == -1)
-	{
-		sceKernelEnableIntr(PSP_HPREMOTE_INT);
-		sceKernelWaitEventFlag(g_eventflag, EVENT_SIO, 0x21, &result, &timeout);
-		ch = sioGetchar();
-	}
-
-	return ch;
-}
-
-int sioReadChar(void)
-{
-	int ch;
-	u32 result;
-
-	ch = sioGetchar();
-	if(ch == -1)
-	{
-		sceKernelEnableIntr(PSP_HPREMOTE_INT);
-		sceKernelWaitEventFlag(g_eventflag, EVENT_SIO, 0x21, &result, NULL);
-
-		ch = sioGetchar();
-	}
-
-	return ch;
-}
-
-void sioInit(int baud, int kponly)
+void sioInit(int baud)
 {
 	_sioInit();
-	if(!kponly)
-	{
-		g_eventflag = sceKernelCreateEventFlag("SioShellEvent", 0, 0, 0);
-		sceKernelRegisterIntrHandler(PSP_HPREMOTE_INT, 1, intr_handler, NULL, NULL);
-		sceKernelEnableIntr(PSP_HPREMOTE_INT);
-		/* Delay thread for a bit */
-		sceKernelDelayThread(2000000);
-	}
 	sioSetBaud(baud);
 	sioInstallKprintf();
 }

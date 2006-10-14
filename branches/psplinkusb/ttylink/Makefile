@@ -1,10 +1,10 @@
-OUTPUT=pcterm
-OBJS=pcterm.o
+OUTPUT=ttylink
+OBJS=ttylink.o
 
-CFLAGS=-Wall -g -DSERIAL_SUPPORT -D_PCTERM -I../psplink
+CFLAGS=-Wall -g -DSERIAL_SUPPORT 
 LIBS=-lreadline -lcurses
 
-all: pcterm
+all: ttylink
 
 $(OUTPUT): $(OBJS)
 	$(CC) -o $@ $^ $(LIBS)

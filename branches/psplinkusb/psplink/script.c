@@ -138,20 +138,20 @@ int scriptRun(const char *filename, int argc, char **argv, const char *lastmod, 
 			}
 			else if(!process_arguments(line, argc, argv, lastmod))
 			{
-				printf("Error processing arguments on line %d\n", i);
+				SHELL_PRINT("Error processing arguments on line %d\n", i);
 				ret = CMD_ERROR;
 				break;
 			}
 
 			if(print)
 			{
-				printf("line %d: %s\n", i, line);
+				SHELL_PRINT("line %d: %s\n", i, line);
 			}
 
 			ret = shellParse(line);
 			if(ret != CMD_OK)
 			{
-				printf("Error in command on line %d\n", i);
+				SHELL_PRINT("Error in command on line %d\n", i);
 				break;
 			}
 		}

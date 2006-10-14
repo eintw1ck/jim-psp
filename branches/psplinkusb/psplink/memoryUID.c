@@ -14,6 +14,7 @@
 #include <pspsysmem.h>
 #include <stdio.h>
 #include <string.h>
+#include "psplink.h"
 #include "memoryUID.h"
 
 uidList* findUIDObject(SceUID uid, const char *name, const char *parent)
@@ -84,7 +85,7 @@ void printUIDEntry(uidList *entry)
 {
 	if(entry)
 	{
-		printf("(UID): 0x%08X, (entry): 0x%p, (size): %d, (attr): 0x%X, (Name): %s\n", entry->UID, entry, entry->size << 2, entry->attribute, entry->name);
+		SHELL_PRINT("(UID): 0x%08X, (entry): 0x%p, (size): %d, (attr): 0x%X, (Name): %s\n", entry->UID, entry, entry->size << 2, entry->attribute, entry->name);
 	}
 }
 
@@ -109,13 +110,13 @@ void printUIDList(const char *name)
 
 		if(cmp == 0)
 		{
-			printf("\n[%s]    UID 0x%08X (attr 0x%X entry 0x%p)\n", entry->name, entry->UID, entry->attribute, entry);
+			SHELL_PRINT("\n[%s]    UID 0x%08X (attr 0x%X entry 0x%p)\n", entry->name, entry->UID, entry->attribute, entry);
 		}
 
 		if (entry->nextChild == entry) {
 			if(cmp == 0)
 			{
-				printf("    <No UID objects>\n");
+				SHELL_PRINT("    <No UID objects>\n");
 			}
 
 		} else {

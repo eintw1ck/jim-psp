@@ -14,9 +14,7 @@
 #ifndef __SIO_H__
 #define __SIO_H__
 
-void sioInit(int baudrate, int kponly);
-int sioReadChar(void);
-int sioReadCharWithTimeout(void);
+void sioInit(int baudrate);
 int sioPutText(const char *data, int len);
 PspDebugPutChar sioDisableKprintf(void);
 void sioEnableKprintf(PspDebugPutChar kp);
