@@ -263,6 +263,10 @@ extern "C" {
 #define GU_CALLBACK_SIGNAL	(1)
 #define GU_CALLBACK_FINISH	(4)
 
+/* Signal behavior */
+#define GU_BEHAVIOR_SUSPEND (1)
+#define GU_BEHAVIOR_CONTINUE (2)
+
 /* Color Macros, maps 8 bit unsigned channels into one 32-bit value */
 #define GU_ABGR(a,b,g,r)	(((a) << 24)|((b) << 16)|((g) << 8)|(r))
 #define GU_ARGB(a,r,g,b)	GU_ABGR((a),(b),(g),(r))
@@ -406,8 +410,8 @@ void sceGuContinue(void);
   * Setup signal handler
   *
   * Available signals are:
-  *   - GU_CALLBACK_SIGNAL
-  *   - GU_CALLBACK_FINISH
+  *   - GU_CALLBACK_SIGNAL - Called when sceGuSignal is used
+  *   - GU_CALLBACK_FINISH - Called when display list is finished
   *
   * @param signal - Signal index to install a handler for
   * @param callback - Callback to call when signal index is triggered
@@ -418,14 +422,14 @@ void* sceGuSetCallback(int signal, void (*callback)(int));
 /**
   * Trigger signal to call code from the command stream
   *
-  * Available signals are:
-  *   - GU_CALLBACK_SIGNAL
-  *   - GU_CALLBACK_FINISH
+  * Available behaviors are:
+  *   - GU_BEHAVIOR_SUSPEND - Stops display list execution until callback function finished
+  *   - GU_BEHAVIOR_CONTINUE - Do not stop display list execution during callback
   *
   * @param signal - Signal index to trigger
-  * @param argument - Argument to pass to the signal-handler
+  * @param behavior - Behavior type
 **/
-void sceGuSignal(int signal, int argument);
+void sceGuSignal(int signal, int behavior);
 
 /**
   * Send raw float-command to the GE
