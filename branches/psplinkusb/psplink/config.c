@@ -187,7 +187,7 @@ void configPrint(const char *bootpath)
 
 	strcpy(cnf_path, bootpath);
 	strcat(cnf_path, "psplink.ini");
-	Kprintf("Config Path %s\n", cnf_path);
+	SHELL_PRINT("Config Path %s\n", cnf_path);
 	if(psplinkConfigOpen(cnf_path, &cnf))
 	{
 		const char *name;
@@ -195,7 +195,7 @@ void configPrint(const char *bootpath)
 
 		while((val = psplinkConfigReadNext(&cnf, &name)))
 		{
-			Kprintf("%s=%s\n", name, val);
+			SHELL_PRINT("%s=%s\n", name, val);
 		}
 
 		psplinkConfigClose(&cnf);
@@ -217,7 +217,7 @@ void configChange(const char *bootpath, const char *newname, const char *newval,
 
 	strcpy(cnf_path, bootpath);
 	strcat(cnf_path, "psplink.ini");
-	Kprintf("Config Path %s\n", cnf_path);
+	SHELL_PRINT("Config Path %s\n", cnf_path);
 
 	strcpy(new_path, bootpath);
 	strcat(new_path, "psplink.ini.tmp");

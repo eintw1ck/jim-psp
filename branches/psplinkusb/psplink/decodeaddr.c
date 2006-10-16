@@ -668,8 +668,8 @@ int memValidate(u32 addr, u32 attrib)
 
 	if((g_protoff) && (size_left == 0))
 	{
-		/* Allow for a 4 byte read, so we can read/write "dangerous" regs */
-		size_left = 4;
+		/* Allow for upto 256 byte read, so we can at least dump one page of memory in dm */
+		size_left = 256;
 	}
 
 	return size_left;
