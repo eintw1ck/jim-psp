@@ -32,7 +32,6 @@
 
 #define DEFAULT_PORT 10000
 #define HISTORY_FILE ".pcterm.hist"
-#define CONNECT_RETRIES 5
 #define DEFAULT_IP     "localhost"
 
 struct Args
@@ -41,7 +40,6 @@ struct Args
 	const char *hist;
 	const char *log;
 	unsigned short port;
-	int retries;
 	int notty;
 };
 
@@ -196,14 +194,13 @@ int parse_args(int argc, char **argv, struct Args *args)
 {
 	memset(args, 0, sizeof(*args));
 	args->port = DEFAULT_PORT;
-	args->retries = CONNECT_RETRIES;
 
 	while(1)
 	{
 		int ch;
 		int error = 0;
 
-		ch = getopt(argc, argv, "np:h:r:l:");
+		ch = getopt(argc, argv, "np:h:l:");
 		if(ch < 0)
 		{
 			break;
@@ -214,8 +211,6 @@ int parse_args(int argc, char **argv, struct Args *args)
 			case 'p': args->port = atoi(optarg);
 					  break;
 			case 'h': args->hist = optarg;
-					  break;
-			case 'r': args->retries = atoi(optarg);
 					  break;
 			case 'l': args->log = optarg;
 					  break;
@@ -253,7 +248,6 @@ void print_help(void)
 	fprintf(stderr, "Options:\n");
 	fprintf(stderr, "-p port     : Specify the port number\n");
 	fprintf(stderr, "-h history  : Specify the history file (default ~/%s)\n", HISTORY_FILE);
-	fprintf(stderr, "-r retries  : Number of connection retries (default %d)\n", CONNECT_RETRIES);
 	fprintf(stderr, "-l logfile  : Write out all shell text to a log file\n");
 	fprintf(stderr, "-n          : Do not connect up the tty (stdin/stdout/stderr)\n");
 }

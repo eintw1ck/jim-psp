@@ -1,5 +1,5 @@
 TARGET = remotejoy
-OBJS = main.o psplink.o USBHostFS.o exports.o
+OBJS = main.o exports.o
 
 # Use the kernel's small inbuilt libc
 USE_KERNEL_LIBC = 1
@@ -11,10 +11,11 @@ INCDIR =
 CFLAGS = -Os -G0 -Wall -fno-builtin-printf -I../../usbhostfs -I../../psplink
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
+LDFLAGS = -L../../libpsplink_driver -L../../libusbhostfs_driver
 
 LIBDIR =
 
-LIBS = -lpsppower_driver
+LIBS = -lpsppower_driver -lpsplink_driver -lusbhostfs_driver
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build_prx.mak

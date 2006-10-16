@@ -1,5 +1,5 @@
 TARGET = usbgdb
-OBJS = usbgdb.o USBHostFS.o psplinkUser.o
+OBJS = usbgdb.o psplinkUser.o
 
 PRX_EXPORTS=exports.exp
 BUILD_PRX=1
@@ -9,9 +9,9 @@ INCDIR =
 CFLAGS = -O0 -G0 -Wall -g -I../gdbcommon/ -I../usbhostfs -I../libpsplink
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
-LDFLAGS = -L../gdbcommon/ -L../libpsplink
+LDFLAGS = -L../gdbcommon/ -L../libpsplink -L../libusbhostfs
 
-LIBS=-lgdb -lpsplink
+LIBS=-lgdb -lpsplink -lusbhostfs
 
 LIBDIR =
 

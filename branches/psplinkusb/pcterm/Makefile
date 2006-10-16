@@ -1,7 +1,7 @@
 OUTPUT=pcterm
 OBJS=pcterm.o
 
-CFLAGS=-Wall -g -DSERIAL_SUPPORT -D_PCTERM -I../psplink
+CFLAGS=-Wall -g -D_PCTERM -I../psplink
 LIBS=-lreadline -lcurses
 
 all: pcterm
