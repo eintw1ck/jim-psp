@@ -53,8 +53,9 @@ struct GlobalContext
 	int outsock;
 	int errsock;
 	int log;
-	int promptwait;
 	char history_file[PATH_MAX];
+	char currpath[PATH_MAX];
+	char currcmd[PATH_MAX];
 };
 
 struct GlobalContext g_context;
@@ -151,7 +152,6 @@ void cli_handler(char *buf)
 			/* Remove the handler and prompt */
 			rl_callback_handler_remove();
 			rl_callback_handler_install("", cli_handler);
-			g_context.promptwait = 1;
 		}
 
 		execute_line(buf);
@@ -185,7 +185,6 @@ int init_readline(void)
 	rl_bind_key_in_map(META('s'), cli_step, emacs_standard_keymap);
 	rl_bind_key_in_map(META('k'), cli_skip, emacs_standard_keymap);
 	rl_callback_handler_install("", cli_handler);
-	g_context.promptwait = 1;
 
 	return 1;
 }
@@ -286,14 +285,46 @@ int set_socknonblock(int sock, int block)
 	return fcntl(sock, F_SETFL, fopt);
 }
 
+int process_cmd(const unsigned char *str)
+{
+	if(*str < 128)
+	{
+		if(g_context.log >= 0)
+		{
+			write(g_context.log, str, strlen((char*) str));
+		}
+
+		printf("%s", str);
+		fflush(stdout);
+	}
+	else
+	{
+		if(*str == SHELL_CMD_CWD)
+		{
+			snprintf(g_context.currpath, PATH_MAX, "%s", str+1);
+		}
+		else if((*str == SHELL_CMD_SUCCESS) || (*str == SHELL_CMD_ERROR))
+		{
+			char prompt[PATH_MAX];
+
+			/* If end of command then restore prompt */
+			printf("\n");
+			rl_callback_handler_remove();
+			snprintf(prompt, PATH_MAX, "%s> ", g_context.currpath);
+			rl_callback_handler_install(prompt, cli_handler);
+		}
+	}
+
+	return 1;
+}
+
 int read_socket(int sock)
 {
-	static char linebuf[16*1024];
+	static unsigned char linebuf[16*1024];
 	static int pos = 0;
-	char buf[1024];
-	char prompt[1024];
+	unsigned char buf[1024];
+	unsigned char *curr;
 	int len;
-	int promptfind = 0;
 
 	len = read(sock, buf, sizeof(buf)-1);
 	if(len < 0)
@@ -309,68 +340,35 @@ int read_socket(int sock)
 	}
 
 	buf[len] = 0;
+	curr = buf;
 
-	if(g_context.promptwait)
+	while(*curr)
 	{
-		char *start;
-
-		if(pos == 0)
+		if(*curr == SHELL_CMD_BEGIN)
 		{
-			start = strchr(buf, 0xFF);
-			if(start)
+			/* Reset start pos, discard any data we ended up missing */
+			pos = 1;
+		}
+		else if(*curr == SHELL_CMD_END)
+		{
+			if(pos > 1)
 			{
-				char *end;
-
-				end = strchr(start+1, 0xFF);
-				if(end)
-				{
-					*end = 0;
-					strcpy(prompt, start+1);
-					strcpy(start, end+1);
-					promptfind = 1;
-				}
-				else
-				{
-					*start = 0;
-					strcpy(linebuf, start+1);
-					pos = strlen(linebuf);
-				}
+				linebuf[pos-1] = 0;
+				/* Found a command, process */
+				process_cmd(linebuf);
+				pos = 0;
 			}
 		}
 		else
 		{
-			char *end;
-
-			end = strchr(buf, 0xFF);
-			if(end)
+			if(pos > 0)
 			{
-				*end = 0;
-				snprintf(prompt, sizeof(prompt), "%s%s", linebuf, buf);
-				strcpy(buf, end+1);
-				pos = 0;
-				promptfind = 1;
-			}
-			else
-			{
-				strncat(linebuf, buf, sizeof(linebuf) - pos);
-				linebuf[sizeof(linebuf)-1] = 0;
-				pos = strlen(linebuf);
+				linebuf[pos-1] = *curr;
+				pos++;
 			}
 		}
-	}
-	
-	printf("%s", buf);
-	fflush(stdout);
-	if(g_context.log >= 0)
-	{
-		write(g_context.log, buf, strlen(buf));
-	}
 
-	if(promptfind)
-	{
-		printf("\n");
-		rl_callback_handler_remove();
-		rl_callback_handler_install(prompt, cli_handler);
+		curr++;
 	}
 
 	return len;
@@ -499,8 +497,8 @@ void shell(void)
 	history_set_pos(history_length);
 
 	FD_SET(STDIN_FILENO, &g_context.readsave);
-	/* Write a new line to get the prompt (temporary) */
-	write(g_context.sock, "\n", 1);
+	/* Change to the current directory, should return our path */
+	write(g_context.sock, "cd .\n", strlen("cd .\n"));
 
 	while(!g_context.exit)
 	{

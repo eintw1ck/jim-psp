@@ -14,6 +14,13 @@
 #ifndef __SHELLCMD_H
 #define __SHELLCMD_H
 
+#define SHELL_CMD_BEGIN     0xFF
+#define SHELL_CMD_END       0xFE
+#define SHELL_CMD_SUCCESS 	0xFD
+#define SHELL_CMD_ERROR     0xFC
+#define SHELL_CMD_CWD 		0xFB
+#define SHELL_CMD_TAB		0xFA
+
 #ifdef _PCTERM
 /* Structure to hold a single command entry */
 struct sh_command 

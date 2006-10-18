@@ -1,12 +1,14 @@
 all:
 	$(MAKE) -C libpsplink all
+	$(MAKE) -C libpsplink_driver all
+	$(MAKE) -C libusbhostfs all
+	$(MAKE) -C libusbhostfs_driver all
 	$(MAKE) -C psplink	all
 	$(MAKE) -C psplink_user all
 	$(MAKE) -C gdbcommon all
 	$(MAKE) -C usbhostfs all
 	$(MAKE) -C usbshell  all
 	$(MAKE) -C usbgdb    all
-	$(MAKE) -C conshell all
 	$(MAKE) -C bootstrap all
 	$(MAKE) -C bootstrap kxploit
 
@@ -49,11 +51,13 @@ release: all
 
 clean:
 	$(MAKE) -C libpsplink clean
+	$(MAKE) -C libpsplink_driver clean
+	$(MAKE) -C libusbhostfs clean
+	$(MAKE) -C libusbhostfs_driver clean
 	$(MAKE) -C psplink	clean
 	$(MAKE) -C psplink_user clean
 	$(MAKE) -C usbhostfs clean
 	$(MAKE) -C usbshell clean
-	$(MAKE) -C conshell clean
 	$(MAKE) -C usbgdb   clean
 	$(MAKE) -C gdbcommon clean
 	$(MAKE) -C bootstrap clean

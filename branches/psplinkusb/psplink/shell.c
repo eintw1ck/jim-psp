@@ -128,58 +128,8 @@ int set_shell_var(const char *name, const char *data)
 
 void print_prompt(void)
 {
-	char tmp[MAX_SHELL_VAR];
-	const char *cliprompt;
-	int in, out;
-
-	if(g_ttymode)
-	{
-		return;
-	}
-
-	cliprompt = find_shell_var("prompt");
-	if(cliprompt == NULL)
-	{
-		SHELL_PRINT("ERROR> ");
-		return;
-	}
-
-	out = 0;
-	in = 0;
-
-	tmp[out++] = PASSPROMPT_VAL;
-
-	while((cliprompt[in]) && (out < (MAX_SHELL_VAR-2)))
-	{
-		if(cliprompt[in] == '%')
-		{
-			switch(cliprompt[in+1])
-			{
-				case '%': tmp[out++] = '%';
-						  in += 2;
-						  break;
-				case 'd': strncpy(&tmp[out], g_context.currdir, MAX_SHELL_VAR - out - 1);
-						  tmp[MAX_SHELL_VAR-1] = 0;
-						  while(tmp[out])
-						  {
-							  out++;
-						  }
-						  in += 2;
-						  break;
-				default : in++;
-						  break;
-			};
-		}
-		else
-		{
-			tmp[out++] = cliprompt[in++];
-		}
-	}
-
-	tmp[out++] = PASSPROMPT_VAL;
-
-	tmp[out] = 0;
-	SHELL_PRINT("%s ", tmp);
+	SHELL_PRINT_CMD(SHELL_CMD_CWD, "%s", g_context.currdir);
+	SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "");
 }
 
 void psplinkPrintPrompt(void)
@@ -1709,6 +1659,7 @@ static int chdir_cmd(int argc, char **argv)
 	else
 	{
 		strcpy(g_context.currdir, path);
+		SHELL_PRINT_CMD(SHELL_CMD_CWD, "%s", g_context.currdir);
 		ret = CMD_OK;
 	}
 
@@ -3866,6 +3817,16 @@ int psplinkParseCommand(char *command)
 		{
 			SHELL_PRINT("Error waiting for parse event 0x%08X\n", ret);
 			ret = CMD_EXITSHELL;
+		}
+
+		/* Return status code */
+		if(ret == CMD_OK)
+		{
+			SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "");
+		}
+		else if(ret == CMD_ERROR)
+		{
+			SHELL_PRINT_CMD(SHELL_CMD_ERROR, "");
 		}
 	}
 

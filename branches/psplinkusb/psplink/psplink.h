@@ -48,8 +48,8 @@ int longjmp(jmp_buf jmp, int ret);
 
 int fdprintf(int fd, const char *fmt, ...);
 
-#define SHELL_PRINT(fmt, ...) fdprintf(g_shellfd, fmt, ## __VA_ARGS__)
-#define SHELL_PRINT_CMD(cmd, fmt, ...) fdprintf(g_shellfd, "\xff" fmt "\xfe", ## __VA_ARGS__)
+#define SHELL_PRINT(fmt, ...) fdprintf(g_shellfd, "\xff" fmt "\xfe", ## __VA_ARGS__)
+#define SHELL_PRINT_CMD(cmd, fmt, ...) fdprintf(g_shellfd, "\xff" "%c" fmt "\xfe", cmd, ## __VA_ARGS__)
 
 void psplinkReset(void);
 void psplinkStop(void);

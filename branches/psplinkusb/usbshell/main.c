@@ -77,7 +77,6 @@ int main_thread(SceSize args, void *argp)
 			{
 				psplinkExitShell();
 			}
-			psplinkPrintPrompt();
 			cli_pos = 0;
 		}
 		else
