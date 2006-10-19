@@ -7,16 +7,49 @@
  *
  * Copyright (c) 2005 James F <tyranid@gmail.com>
  *
- * $HeadURL$
- * $Id$
+ * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/psplink/parse_args.c $
+ * $Id: parse_args.c 2026 2006-10-14 13:09:48Z tyranid $
  */
 
-#include <pspkernel.h>
 #include <stdio.h>
 #include <string.h>
-#include <util.h>
-#include "psplink.h"
+#include <ctype.h>
 #include "parse_args.h"
+
+int hex_to_int(char ch)
+{
+	ch = toupper(ch);
+	if((ch >= '0') && (ch <= '9'))
+	{
+		return ch-'0';
+	}
+	else if((ch >= 'A') && (ch <= 'F'))
+	{
+		return ch-'A';
+	}
+	
+	return 0;
+}
+
+int oct_to_int(char ch)
+{
+	if((ch >= '0') && (ch < '8'))
+	{
+		return ch-'0';
+	}
+
+	return 0;
+}
+
+int isodigit(char ch)
+{
+	if((ch >= '0') && (ch < '8'))
+	{
+		return 1;
+	}
+
+	return 0;
+}
 
 int decode_hex(const char *str, unsigned char *ch)
 {
@@ -25,7 +58,7 @@ int decode_hex(const char *str, unsigned char *ch)
 	*ch = 0;
 	for(i = 0; i < 2; i++)
 	{
-		if(!is_hex(str[i]))
+		if(!isxdigit(str[i]))
 		{
 			break;
 		}
@@ -34,12 +67,12 @@ int decode_hex(const char *str, unsigned char *ch)
 	}
 	if(i == 0)
 	{
-		SHELL_PRINT("Missing following hex characters\n");
+		printf("Missing following hex characters\n");
 		return 0;
 	}
 	if(*ch == 0)
 	{
-		SHELL_PRINT("Invalid hex character (not allowed NULs)\n");
+		printf("Invalid hex character (not allowed NULs)\n");
 		return 0;
 	}
 
@@ -53,7 +86,7 @@ int decode_oct(const char *str, unsigned char *ch)
 	*ch = 0;
 	for(i = 0; i < 4; i++)
 	{
-		if(!is_oct(str[i]))
+		if(!isodigit(str[i]))
 		{
 			break;
 		}
@@ -62,33 +95,33 @@ int decode_oct(const char *str, unsigned char *ch)
 	}
 	if(i == 0)
 	{
-		SHELL_PRINT("Missing following octal characters\n");
+		printf("Missing following octal characters\n");
 		return 0;
 	}
 	if(*ch == 0)
 	{
-		SHELL_PRINT("Invalid octal character (not allowed NULs)\n");
+		printf("Invalid octal character (not allowed NULs)\n");
 		return 0;
 	}
 
 	return i;
 }
 
-int parse_args(char *in, char *out, int *argc, char **argv, int max_args)
+int parse_cli(const char *in, char *out, int *argc, char **argv, int max_args)
 {
-	int ret = 1;
 	char in_quote = 0;
+	char *outstart = out;
 
 	if((in == NULL) || (out == NULL) || (argc == NULL) || (argv == NULL) || (max_args <= 0))
 	{
-		SHELL_PRINT("Error in parse_args, invalid arguments\n");
+		printf("Error in parse_args, invalid arguments\n");
 		return 0;
 	}
 
 	*argc = 0;
 
 	/* Skip any leading white space */
-	while(is_aspace(*in))
+	while(isspace(*in))
 	{
 		in++;
 	}
@@ -96,8 +129,7 @@ int parse_args(char *in, char *out, int *argc, char **argv, int max_args)
 	/* Check this isn't an empty string */
 	if(*in == 0)
 	{
-		/* An empty string is technically valid */
-		return 1;
+		return 0;
 	}
 
 	/* Set first arg */
@@ -125,7 +157,7 @@ int parse_args(char *in, char *out, int *argc, char **argv, int max_args)
 							  unsigned char ch;
 							  in++;
 							  i = decode_oct(in, &ch);
-							  if(i == 0)
+							  if((i == 0) || (i == 1))
 							  {
 								  return 0;
 							  }
@@ -139,7 +171,7 @@ int parse_args(char *in, char *out, int *argc, char **argv, int max_args)
 							  unsigned char ch;
 							  in++;
 							  i = decode_hex(in, &ch);
-							  if(i == 0)
+							  if((i == 0) || (i == 1))
 							  {
 								  return 0;
 							  }
@@ -154,10 +186,10 @@ int parse_args(char *in, char *out, int *argc, char **argv, int max_args)
 		}
 		else
 		{
-			if((is_aspace(*in)) && (in_quote == 0))
+			if((isspace(*in)) && (in_quote == 0))
 			{
 				*out++ = 0;
-				while(is_aspace(*in))
+				while(isspace(*in))
 				{
 					in++;
 				}
@@ -196,17 +228,14 @@ int parse_args(char *in, char *out, int *argc, char **argv, int max_args)
 
 	if(in_quote)
 	{
-		SHELL_PRINT("Missing matching quote %c\n", in_quote);
+		printf("Missing matching quote %c\n", in_quote);
 		return 0;
 	}
 
-	*out = 0;
-	if(argv[*argc-1][0] == 0)
-	{
-		*argc -= 1;
-	}
-
 	argv[*argc] = NULL;
+	*out++ = 0;
+	/* A command ends with a 1 */
+	*out++ = 1;
 
-	return ret;
+	return out-outstart;
 }

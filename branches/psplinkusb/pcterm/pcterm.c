@@ -25,6 +25,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <shellcmd.h>
+#include "parse_args.h"
 
 #ifndef SOL_TCP
 #define SOL_TCP 6
@@ -89,28 +90,45 @@ int fixed_write(int s, const void *buf, int len)
 
 int execute_line(const char *buf)
 {
+	char args[4096];
+	char *argv[16];
+	int  argc;
 	int len;
 
 	len = strlen(buf);
 
 	if(len > 0)
 	{
-		len = fixed_write(g_context.sock, buf, len);
-		if(len < 0)
+		int binlen = parse_cli(buf, args, &argc, argv, 16);
+		if(binlen > 0)
 		{
-			close(g_context.sock);
-			g_context.sock = -1;
-			return 0;
+			/*
+			int i;
+			for(i = 0; i < argc; i++)
+			{
+				printf("Arg %d: '%s'\n", i, argv[i]);
+			}
+			for(i = 0; i < binlen; i++)
+			{
+				if(args[i] < 32)
+				{
+					printf("\\x%02x", args[i]);
+				}
+				else
+				{
+					printf("%c", args[i]);
+				}
+			}
+			printf("\n");
+			*/
+			len = fixed_write(g_context.sock, args, binlen);
+			if(len < 0)
+			{
+				close(g_context.sock);
+				g_context.sock = -1;
+				return 0;
+			}
 		}
-	}
-
-	len = fixed_write(g_context.sock, "\n", 1);
-
-	if(len < 0)
-	{
-		close(g_context.sock);
-		g_context.sock = -1;
-		return 0;
 	}
 
 	return 1;
@@ -498,7 +516,7 @@ void shell(void)
 
 	FD_SET(STDIN_FILENO, &g_context.readsave);
 	/* Change to the current directory, should return our path */
-	write(g_context.sock, "cd .\n", strlen("cd .\n"));
+	execute_line("cd .");
 
 	while(!g_context.exit)
 	{

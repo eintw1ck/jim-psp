@@ -1,6 +1,6 @@
 TARGET=libpsplink_driver.a
 all: $(TARGET)
-OBJS = psplink_driver_0000.o psplink_driver_0001.o psplink_driver_0002.o psplink_driver_0003.o psplink_driver_0004.o psplink_driver_0005.o psplink_driver_0006.o psplink_driver_0007.o psplink_driver_0008.o psplink_driver_0009.o psplink_driver_0010.o psplink_driver_0011.o psplink_driver_0012.o psplink_driver_0013.o psplink_driver_0014.o psplink_driver_0015.o psplink_driver_0016.o psplink_driver_0017.o psplink_driver_0018.o 
+OBJS = psplink_driver_0000.o psplink_driver_0001.o psplink_driver_0002.o psplink_driver_0003.o psplink_driver_0004.o psplink_driver_0005.o psplink_driver_0006.o psplink_driver_0007.o psplink_driver_0008.o psplink_driver_0009.o psplink_driver_0010.o psplink_driver_0011.o psplink_driver_0012.o psplink_driver_0013.o psplink_driver_0014.o psplink_driver_0015.o 
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 

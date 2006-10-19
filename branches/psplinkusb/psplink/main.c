@@ -26,7 +26,7 @@
 #include "memoryUID.h"
 #include "psplink.h"
 #include "psplinkcnf.h"
-#include "parse_args.h"
+//#include "parse_args.h"
 #include "debug.h"
 #include "util.h"
 #include "sio.h"
@@ -126,15 +126,6 @@ void load_psplink_user(const char *bootpath)
 	strcpy(prx_path, bootpath);
 	strcat(prx_path, "psplink_user.prx");
 	load_start_module(prx_path, 0, NULL);
-}
-
-SceUID load_usbshell(const char *bootpath)
-{
-	char prx_path[MAXPATHLEN];
-
-	strcpy(prx_path, bootpath);
-	strcat(prx_path, "usbshell.prx");
-	return load_start_module(prx_path, 0, NULL);
 }
 
 SceUID load_gdb(const char *bootpath, int argc, char **argv)
@@ -285,8 +276,6 @@ void initialise(SceSize args, void *argp)
 	}
 
 	sioInit(ctx.baudrate);
-	load_usbshell(g_context.bootpath);
-
 	sceUmdActivate(1, "disc0:");
 
 	/* Hook sceKernelExitGame */

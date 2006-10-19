@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2005 James F <tyranid@gmail.com>
  *
- * $HeadURL$
- * $Id$
+ * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/psplink/parse_args.h $
+ * $Id: parse_args.h 1604 2005-12-18 13:55:03Z tyranid $
  */
 
-int parse_args(char *in, char *out, int *argc, char **argv, int max_args);
+int parse_cli(const char *in, char *out, int *argc, char **argv, int max_args);

@@ -12,50 +12,41 @@
 	IMPORT_FUNC  "psplink_driver",0x811971CE,psplinkHandleException
 #endif
 #ifdef F_psplink_driver_0003
-	IMPORT_FUNC  "psplink_driver",0x8B5F450B,psplinkParseCommand
-#endif
-#ifdef F_psplink_driver_0004
-	IMPORT_FUNC  "psplink_driver",0xE3010EA1,psplinkPrintPrompt
-#endif
-#ifdef F_psplink_driver_0005
 	IMPORT_FUNC  "psplink_driver",0xB03642D9,psplinkExitShell
 #endif
-#ifdef F_psplink_driver_0006
+#ifdef F_psplink_driver_0004
 	IMPORT_FUNC  "psplink_driver",0x8F31ACE7,psplinkReferModule
 #endif
-#ifdef F_psplink_driver_0007
+#ifdef F_psplink_driver_0005
 	IMPORT_FUNC  "psplink_driver",0x94804B42,psplinkRegisterExceptions
 #endif
-#ifdef F_psplink_driver_0008
+#ifdef F_psplink_driver_0006
 	IMPORT_FUNC  "psplink_driver",0xB3277521,psplinkFindUserThreadContext
 #endif
-#ifdef F_psplink_driver_0009
+#ifdef F_psplink_driver_0007
 	IMPORT_FUNC  "psplink_driver",0x754F9BB8,psplinkReferModuleByName
 #endif
-#ifdef F_psplink_driver_0010
+#ifdef F_psplink_driver_0008
 	IMPORT_FUNC  "psplink_driver",0x4A45386D,psplinkReset
 #endif
-#ifdef F_psplink_driver_0011
+#ifdef F_psplink_driver_0009
 	IMPORT_FUNC  "psplink_driver",0xCBA8647D,apiHookByName
 #endif
-#ifdef F_psplink_driver_0012
+#ifdef F_psplink_driver_0010
 	IMPORT_FUNC  "psplink_driver",0x4ED59445,apiHookByNid
 #endif
-#ifdef F_psplink_driver_0013
+#ifdef F_psplink_driver_0011
 	IMPORT_FUNC  "psplink_driver",0xEFB166B7,debugEnableHW
 #endif
-#ifdef F_psplink_driver_0014
+#ifdef F_psplink_driver_0012
 	IMPORT_FUNC  "psplink_driver",0xDD3E47DE,debugDisableHW
 #endif
-#ifdef F_psplink_driver_0015
+#ifdef F_psplink_driver_0013
 	IMPORT_FUNC  "psplink_driver",0xEF83FB58,debugHWEnabled
 #endif
-#ifdef F_psplink_driver_0016
+#ifdef F_psplink_driver_0014
 	IMPORT_FUNC  "psplink_driver",0xD0A22864,debugGetEnv
 #endif
-#ifdef F_psplink_driver_0017
+#ifdef F_psplink_driver_0015
 	IMPORT_FUNC  "psplink_driver",0x4EC6E035,debugSetEnv
-#endif
-#ifdef F_psplink_driver_0018
-	IMPORT_FUNC  "psplink_driver",0x31F8AFD5,ttySetUsbHandler
 #endif

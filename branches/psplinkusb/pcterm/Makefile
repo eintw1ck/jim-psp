@@ -1,5 +1,5 @@
 OUTPUT=pcterm
-OBJS=pcterm.o
+OBJS=pcterm.o parse_args.o
 
 CFLAGS=-Wall -g -D_PCTERM -I../psplink
 LIBS=-lreadline -lcurses

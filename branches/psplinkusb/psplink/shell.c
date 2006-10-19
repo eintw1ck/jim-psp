@@ -32,13 +32,11 @@
 #include "memoryUID.h"
 #include "psplink.h"
 #include "psplinkcnf.h"
-#include "parse_args.h"
 #include "util.h"
 #include "sio.h"
 #include "bitmap.h"
 #include "config.h"
 #include "shell.h"
-#include "script.h"
 #include "version.h"
 #include "exception.h"
 #include "decodeaddr.h"
@@ -50,28 +48,13 @@
 #include "apihook.h"
 #include "tty.h"
 #include "shellcmd.h"
+#include "usbshell.h"
 
 #define MAX_SHELL_VAR      128
-#define SHELL_PROMPT	"psplink %d>"
 #define MAX_CLI            4096
-/* Define the pass prompt value */
-#define PASSPROMPT_VAL  0xFF
 
 extern struct GlobalContext g_context;
 
-typedef struct _CommandMsg
-{
-	struct _CommandMsg *link;
-	char   *command;
-	int    res;
-} CommandMsg;
-
-static SceUID g_command_msg = -1;
-/* Semaphore to lock the cli */
-static SceUID g_cli_sema = -1;
-/* Event flag to indicate the end of command parse */
-static SceUID g_command_event = -1;
-/* Indicates the name of the last module we loaded */
 static char g_lastmod[32] = "";
 /* Indicates we are in tty mode */
 static int g_ttymode = 0;
@@ -80,65 +63,10 @@ static int g_ttymode = 0;
 
 typedef int (*threadmanprint_func)(SceUID uid, int verbose);
 
-struct shell_variable
-{
-	const char *name;
-	char data[MAX_SHELL_VAR];
-};
-
-struct shell_variable g_shellvars[] = 
-{
-	{ "prompt", SHELL_PROMPT },
-	{ "path", "" },
-	{ NULL, "" },
-};
-
-char *find_shell_var(const char *name)
-{
-	int i;
-
-	i = 0;
-	while(g_shellvars[i].name)
-	{
-		if(strcmp(name, g_shellvars[i].name) == 0)
-		{
-			return g_shellvars[i].data;
-		}
-		i++;
-	}
-
-	return NULL;
-}
-
-int set_shell_var(const char *name, const char *data)
-{
-	char *vardata;
-
-	vardata = find_shell_var(name);
-	if(vardata == NULL)
-	{
-		return 0;
-	}
-;
-	strncpy(vardata, data, MAX_SHELL_VAR-1);
-	vardata[MAX_SHELL_VAR-1] = 0;
-
-	return 1;
-}
-
-void print_prompt(void)
+void psplinkPrintPrompt(void)
 {
 	SHELL_PRINT_CMD(SHELL_CMD_CWD, "%s", g_context.currdir);
 	SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "");
-}
-
-void psplinkPrintPrompt(void)
-{
-	u32 k1;
-
-	k1 = psplinkSetK1(0);
-	print_prompt();
-	psplinkSetK1(k1);
 }
 
 static SceUID get_module_uid(const char *name)
@@ -2947,40 +2875,7 @@ static int scrshot_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int set_cmd(int argc, char **argv)
-{
-	if(argc == 0)
-	{
-		int i = 0;
-		while(g_shellvars[i].name)
-		{
-			SHELL_PRINT("%s=%s\n", g_shellvars[i].name, g_shellvars[i].data);
-			i++;
-		}
-	}
-	else
-	{
-		char *equals;
-
-		equals = strchr(argv[0], '=');
-		if(equals)
-		{
-			*equals = 0;
-			equals++;
-			if(set_shell_var(argv[0], equals) == 0)
-			{
-				SHELL_PRINT("Error, couldn't find shell variable '%s'\n", argv[0]);
-			}
-		}
-		else
-		{
-			SHELL_PRINT("Error, must be of the form var=value\n");
-		}
-	}
-
-	return CMD_OK;
-}
-
+/*
 static int run_cmd(int argc, char **argv)
 {
 	char path[1024];
@@ -2997,6 +2892,7 @@ static int run_cmd(int argc, char **argv)
 
 	return ret;
 }
+*/
 
 static int dcache_cmd(int argc, char **argv)
 {
@@ -3661,6 +3557,7 @@ static const struct sh_command* find_command(const char *cmd)
 	return found_cmd;
 }
 
+#if 0
 int shellParse(char *command)
 {
 	int ret = CMD_OK;
@@ -3749,38 +3646,79 @@ int shellParse(char *command)
 
 	return ret;
 }
+#endif
+
+int shellExecute(int argc, char **argv)
+{
+	int ret = CMD_OK;
+	char *cmd;
+
+	scePowerTick(0);
+
+	if((argc > 0) && (argv[0][0] != '#'))
+	{
+		const struct sh_command *found_cmd;
+
+		cmd = argv[0];
+		/* Check for a completion function */
+		found_cmd = find_command(cmd);
+		if((found_cmd) && (found_cmd->func))
+		{
+			if((found_cmd->min_args > (argc - 1)) || ((ret = found_cmd->func(argc-1, &argv[1])) == CMD_ERROR))
+			{
+				SHELL_PRINT("Usage: %s\n", found_cmd->help);
+			}
+		}
+		else
+		{
+			SHELL_PRINT("Unknown command %s\n", cmd);
+			ret = CMD_ERROR;
+		}
+	}
+
+	return ret;
+}
 
 int shellParseThread(SceSize args, void *argp)
 {
-	int error;
-	void *data;
-	CommandMsg *msg;
+	int ret;
+	unsigned char cli[MAX_CLI];
+	int argc;
+	char *argv[16];
 
+#if 0
 	if((args > 0) && (argp))
 	{
 		/* Run startup script */
 		scriptRun(argp, 0, NULL, NULL, 0);
 	}
+#endif
+
+	usbShellInit();
 
 	while(1)
 	{
-		error = sceKernelReceiveMbx(g_command_msg, &data, NULL);
-		if(error < 0)
+		argc = usbShellReadInput(cli, argv, MAX_CLI, 16);
+		if(argc > 0)
 		{
-			SHELL_PRINT("Error in receiving message 0x%08X\n", error);
-			sceKernelExitDeleteThread(0);
-		}
+			if(setjmp(g_context.parseenv) == 0)
+			{
+				ret = shellExecute(argc, argv);
+			}
+			else
+			{
+				ret = CMD_ERROR;
+			}
 
-		msg = (CommandMsg *) data;
-		if(setjmp(g_context.parseenv) == 0)
-		{
-			msg->res = shellParse(msg->command);
+			if(ret == CMD_OK)
+			{
+				SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "");
+			}
+			else if(ret == CMD_ERROR)
+			{
+				SHELL_PRINT_CMD(SHELL_CMD_ERROR, "");
+			}
 		}
-		else
-		{
-			msg->res = CMD_ERROR;
-		}
-		sceKernelSetEventFlag(g_command_event, COMMAND_EVENT_DONE);
 	}
 
 	return 0;
@@ -3788,52 +3726,7 @@ int shellParseThread(SceSize args, void *argp)
 
 int psplinkParseCommand(char *command)
 {
-	u32 k1;
-	int ret;
-	CommandMsg msg;
-	SceUInt timeout = (10*1000*1000);
-
-	k1 = psplinkSetK1(0);
-
-	ret = sceKernelWaitSema(g_cli_sema, 1, &timeout);
-	if(ret < 0)
-	{
-		SHELL_PRINT("Error, could not wait on cli sema 0x%08X\n", ret);
-		return 1;
-	}
-
-	msg.command = command;
-	msg.res = 0;
-	ret = sceKernelSendMbx(g_command_msg, &msg);
-	if(ret >= 0)
-	{
-		u32 result;
-		ret = sceKernelWaitEventFlag(g_command_event, COMMAND_EVENT_DONE, 0x21, &result, NULL);
-		if(ret >= 0)
-		{
-			ret = msg.res;
-		}
-		else
-		{
-			SHELL_PRINT("Error waiting for parse event 0x%08X\n", ret);
-			ret = CMD_EXITSHELL;
-		}
-
-		/* Return status code */
-		if(ret == CMD_OK)
-		{
-			SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "");
-		}
-		else if(ret == CMD_ERROR)
-		{
-			SHELL_PRINT_CMD(SHELL_CMD_ERROR, "");
-		}
-	}
-
-	sceKernelSignalSema(g_cli_sema, 1);
-	psplinkSetK1(k1);
-
-	return ret;
+	return 0;
 }
 
 /* Help command */
@@ -3893,35 +3786,7 @@ static int help_cmd(int argc, char **argv)
 
 int shellInit(const char *cliprompt, const char *path, const char *init_dir, const char *startsh)
 {
-	if(strlen(cliprompt) > 0)
-	{
-		set_shell_var("prompt", cliprompt);
-	}
-
-	set_shell_var("path", path);
-
 	strcpy(g_context.currdir, init_dir);
-
-	g_command_msg = sceKernelCreateMbx("PspLinkCmdMbx", 0, 0);
-	if(g_command_msg < 0)
-	{
-		Kprintf("Error, couldn't create message box 0x%08X\n", g_command_msg);
-		return -1;
-	}
-
-	g_cli_sema = sceKernelCreateSema("PspLinkCliSema", 0, 1, 1, NULL);
-	if(g_cli_sema < 0)
-	{
-		Kprintf("Error, couldn't create cli semaphore 0x%08X\n", g_cli_sema);
-		return -1;
-	}
-
-	g_command_event = sceKernelCreateEventFlag("PspLinkCmdEvent", 0, 0, NULL);
-	if(g_command_event < 0)
-	{
-		Kprintf("Error, couldn't create command event 0x%08X\n", g_command_event);
-		return -1;
-	}
 
 	return 0;
 }

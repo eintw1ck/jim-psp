@@ -49,6 +49,8 @@ struct sh_command
 	const char *help;		/* Command usage */
 };
 
+//	SHELL_CMD("run",  NULL, run_cmd, 1, "Run a shell script", "file [args]")
+
 #define SHELL_CAT(name, desc) \
    { name, NULL, NULL, 0, desc, NULL },
 #define SHELL_CMD(name, syn, func, min_args, desc, help) \
@@ -184,9 +186,7 @@ struct sh_command
 	SHELL_CMD("uidinfo", "ui", uidinfo_cmd, 1, "Print info about a UID", "uid|@name [parent]") \
 	SHELL_CMD("cop0", "c0", cop0_cmd, 0, "Print the cop0 registers", "") \
 	SHELL_CMD("exit", "quit", exit_cmd, 0, "Exit the shell", "") \
-	SHELL_CMD("set", NULL, set_cmd, 0, "Set a shell variable", "[var=value]") \
 	SHELL_CMD("scrshot", "ss", scrshot_cmd, 1, "Take a screen shot", "file [pri]") \
-	SHELL_CMD("run",  NULL, run_cmd, 1, "Run a shell script", "file [args]") \
 	SHELL_CMD("calc", NULL, calc_cmd, 1, "Do a simple address calculation", "addr [d|o|x]") \
 	SHELL_CMD("reset", "r", reset_cmd, 0, "Reset", "[key]") \
 	SHELL_CMD("ver", "v", version_cmd, 0, "Print version of psplink", "") \
