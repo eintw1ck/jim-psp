@@ -1,10 +1,10 @@
-OUTPUT=pcterm
-OBJS=pcterm.o parse_args.o
+OUTPUT=pspsh
+OBJS=pspsh.o parse_args.o
 
 CFLAGS=-Wall -g -D_PCTERM -I../psplink
 LIBS=-lreadline -lcurses
 
-all: pcterm
+all: pspsh
 
 $(OUTPUT): $(OBJS)
 	$(CC) -o $@ $^ $(LIBS)
