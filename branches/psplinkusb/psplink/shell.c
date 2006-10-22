@@ -2875,25 +2875,6 @@ static int scrshot_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-/*
-static int run_cmd(int argc, char **argv)
-{
-	char path[1024];
-	int ret = CMD_ERROR;
-
-	if(handlepath(g_context.currdir, argv[0], path, TYPE_FILE, 1))
-	{
-		ret = scriptRun(path, argc, argv, g_lastmod, 0);
-	}
-	else
-	{
-		SHELL_PRINT("Invalid file %s\n", path);
-	}
-
-	return ret;
-}
-*/
-
 static int dcache_cmd(int argc, char **argv)
 {
 	u32 addr = 0;
@@ -3518,12 +3499,69 @@ static int tonid_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
+static int tab_cmd(int argc, char **argv)
+{
+	char *dir;
+	char path[1024];
+
+	dir = argv[0];
+	if(handlepath(g_context.currdir, dir, path, TYPE_DIR, 1) == 0)
+	{
+		/* We dont care about sending an error, shouldn't even print */
+	}
+	else
+	{
+		int did;
+		int namelen;
+		const char *name;
+		SceIoDirent entry;
+
+		if(argc > 1)
+		{
+			name = argv[1];
+		}
+		else
+		{
+			name = "";
+		}
+		namelen = strlen(name);
+		did = sceIoDopen(path);
+		if(did >= 0)
+		{
+			while(1)
+			{
+				memset(&entry, 0, sizeof(entry));
+				if(sceIoDread(did, &entry) <= 0)
+				{
+					break;
+				}
+				/* We eliminate . and .. */
+				if(strcmp(entry.d_name, ".") && strcmp(entry.d_name, ".."))
+				{
+					if(strncmp(entry.d_name, name, namelen) == 0)
+					{
+						if(entry.d_stat.st_attr & FIO_SO_IFDIR)
+						{
+							SHELL_PRINT_CMD(SHELL_CMD_TAB, "%s/", entry.d_name);
+						}
+						else
+						{
+							SHELL_PRINT_CMD(SHELL_CMD_TAB, "%s", entry.d_name);
+						}
+					}
+				}
+			}
+			sceIoDclose(did);
+		}
+	}
+
+	return CMD_OK;
+}
+
 static int exit_cmd(int argc, char **argv)
 {
 	return CMD_EXITSHELL;
 }
-
-static int help_cmd(int argc, char **argv);
 
 /* Define the list of commands */
 const struct sh_command commands[] = {
@@ -3557,97 +3595,6 @@ static const struct sh_command* find_command(const char *cmd)
 	return found_cmd;
 }
 
-#if 0
-int shellParse(char *command)
-{
-	int ret = CMD_OK;
-	char *cmd;
-	int argc;
-	char *argv[16];
-	char outbuf[MAX_BUFFER];
-	char *ext;
-
-	scePowerTick(0);
-
-	if(g_ttymode)
-	{
-		if((command[0] == '~') && (command[1] == '.'))
-		{
-			g_ttymode = 0;
-		}
-		else
-		{
-			ttyAddInputData(command, strlen(command));
-		}
-	}
-	else
-	{
-		if(parse_args(command, outbuf, &argc, argv, 16) == 0)
-		{
-			SHELL_PRINT("Error parsing command\n");
-			return CMD_ERROR;
-		}
-
-		if((argc > 0) && (argv[0][0] != '#'))
-		{
-			const struct sh_command *found_cmd;
-
-			/* See if the command contains a '.', if so this cannot be a command, try and execute it direct */
-			cmd = argv[0];
-			ext = strrchr(cmd, '.');
-			if(ext)
-			{
-				char path[MAXPATHLEN];
-
-				/* Not a relative path, try and find it in our path */
-				if(strchr(cmd, '/') == NULL)
-				{
-					const char *pathvar;
-
-					pathvar = find_shell_var("path");
-
-					if(findinpath(cmd, path, pathvar) == 0)
-					{
-						SHELL_PRINT("Could not find %s in the path\n", cmd);
-						return CMD_ERROR;
-					}
-					/* Otherwise assign to argv[0] */
-					argv[0] = path;
-				}
-
-				if((strcmp(ext, ".sh") == 0) || (strcmp(ext, ".SH") == 0))
-				{
-					ret = run_cmd(argc, argv);
-				}
-				else
-				{
-					ret = ldstart_cmd(argc, argv);
-				}
-			}
-			else
-			{
-				/* Check for a completion function */
-				found_cmd = find_command(cmd);
-				if((found_cmd) && (found_cmd->func))
-				{
-					if((found_cmd->min_args > (argc - 1)) || ((ret = found_cmd->func(argc-1, &argv[1])) == CMD_ERROR))
-					{
-						SHELL_PRINT("Usage: %s\n", found_cmd->help);
-					}
-				}
-				else
-				{
-					SHELL_PRINT("Unknown command %s\n", cmd);
-					ret = CMD_ERROR;
-				}
-			}
-		}
-	}
-
-	return ret;
-}
-#endif
-
 int shellExecute(int argc, char **argv)
 {
 	int ret = CMD_OK;
@@ -3662,16 +3609,12 @@ int shellExecute(int argc, char **argv)
 		cmd = argv[0];
 		/* Check for a completion function */
 		found_cmd = find_command(cmd);
-		if((found_cmd) && (found_cmd->func))
+		if((found_cmd) && (found_cmd->func) && (found_cmd->min_args <= (argc-1)))
 		{
-			if((found_cmd->min_args > (argc - 1)) || ((ret = found_cmd->func(argc-1, &argv[1])) == CMD_ERROR))
-			{
-				SHELL_PRINT("Usage: %s\n", found_cmd->help);
-			}
+			ret = found_cmd->func(argc-1, &argv[1]);
 		}
 		else
 		{
-			SHELL_PRINT("Unknown command %s\n", cmd);
 			ret = CMD_ERROR;
 		}
 	}
@@ -3685,14 +3628,6 @@ int shellParseThread(SceSize args, void *argp)
 	unsigned char cli[MAX_CLI];
 	int argc;
 	char *argv[16];
-
-#if 0
-	if((args > 0) && (argp))
-	{
-		/* Run startup script */
-		scriptRun(argp, 0, NULL, NULL, 0);
-	}
-#endif
 
 	usbShellInit();
 
@@ -3718,73 +3653,17 @@ int shellParseThread(SceSize args, void *argp)
 			{
 				SHELL_PRINT_CMD(SHELL_CMD_ERROR, "");
 			}
+			else if(ret == CMD_EXITSHELL)
+			{
+				psplinkExitShell();
+			}
 		}
 	}
 
 	return 0;
 }
 
-int psplinkParseCommand(char *command)
-{
-	return 0;
-}
-
-/* Help command */
-static int help_cmd(int argc, char **argv)
-{
-	int cmd_loop;
-
-	if(argc < 1)
-	{
-		SHELL_PRINT("Command Categories\n\n");
-		for(cmd_loop = 0; commands[cmd_loop].name; cmd_loop++)
-		{
-			if(commands[cmd_loop].func == NULL)
-			{
-				SHELL_PRINT("%-10s - %s\n", commands[cmd_loop].name, commands[cmd_loop].desc);
-			}
-		}
-		SHELL_PRINT("\nType 'help category' for more information\n");
-	}
-	else
-	{
-		const struct sh_command* found_cmd;
-
-		found_cmd = find_command(argv[0]);
-		if((found_cmd != NULL) && (found_cmd->desc))
-		{
-			if(found_cmd->func == NULL)
-			{
-				/* Print the commands listed under the separator */
-				SHELL_PRINT("Category %s\n\n", found_cmd->name);
-				for(cmd_loop = 1; found_cmd[cmd_loop].name && found_cmd[cmd_loop].func != NULL; cmd_loop++)
-				{
-					if(found_cmd[cmd_loop].desc)
-					{
-						SHELL_PRINT("%-10s - %s\n", found_cmd[cmd_loop].name, found_cmd[cmd_loop].desc);
-					}
-				}
-			}
-			else
-			{
-				SHELL_PRINT("%s\t - %s\n", found_cmd->name, found_cmd->desc);
-				if(found_cmd->syn)
-				{
-					SHELL_PRINT("Synonym: %s\n", found_cmd->syn);
-				}
-				SHELL_PRINT("Usage: %s %s\n", found_cmd->name, found_cmd->help);
-			}
-		}
-		else
-		{
-			SHELL_PRINT("Unknown command %s, type help for information\n", argv[0]);
-		}
-	}
-
-	return CMD_OK;
-}
-
-int shellInit(const char *cliprompt, const char *path, const char *init_dir, const char *startsh)
+int shellInit(const char *init_dir)
 {
 	strcpy(g_context.currdir, init_dir);
 

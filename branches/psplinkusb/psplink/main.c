@@ -26,7 +26,6 @@
 #include "memoryUID.h"
 #include "psplink.h"
 #include "psplinkcnf.h"
-//#include "parse_args.h"
 #include "debug.h"
 #include "util.h"
 #include "sio.h"
@@ -40,8 +39,6 @@
 #include "libs.h"
 
 PSP_MODULE_INFO("PSPLINK", 0x1000, 1, 1);
-
-#define WELCOME_MESSAGE "PSPLINK Initialised\n"
 
 #define BOOTLOADER_NAME "PSPLINKLOADER"
 
@@ -265,7 +262,7 @@ void initialise(SceSize args, void *argp)
 		g_context.rebootkey = save->rebootkey;
 	}
 
-	if(shellInit(ctx.cliprompt, ctx.path, init_dir, ctx.startsh) < 0)
+	if(shellInit(init_dir) < 0)
 	{
 		sceKernelExitGame();
 	}
@@ -292,7 +289,6 @@ void initialise(SceSize args, void *argp)
 	}
 
 	g_context.resetonexit = ctx.resetonexit;
-	strcpy(g_context.startsh, ctx.startsh);
 }
 
 /* Simple thread */
@@ -300,9 +296,7 @@ int main_thread(SceSize args, void *argp)
 {
 	initialise(args, argp);
 
-	SHELL_PRINT(WELCOME_MESSAGE);
-
-	shellParseThread(strlen(g_context.startsh), g_context.startsh);
+	shellParseThread(0, NULL);
 	sceKernelSleepThread();
 
 	return 0;

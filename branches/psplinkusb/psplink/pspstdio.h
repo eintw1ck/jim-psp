@@ -16,6 +16,10 @@
 #define SHELL_FILENO 3
 extern int g_shellfd;
 
+#define STDIN_FILENO  0
+#define STDOUT_FILENO 1
+#define STDERR_FILENO 2
+
 int stdioTtyInit(void);
 int stdioInstallStdinHandler(PspDebugInputHandler handler);
 int stdioInstallStdoutHandler(PspDebugPrintHandler handler);

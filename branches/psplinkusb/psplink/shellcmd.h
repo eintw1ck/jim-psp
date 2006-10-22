@@ -27,15 +27,20 @@ struct sh_command
 {
 	const char *name;		/* Normal name of the command */
 	const char *syn;		/* Synonym of the command */
+	int (*func)(int argc, char **argv);
 	int min_args;
 	const char *desc;		/* Textual description */
 	const char *help;		/* Command usage */
 };
 
 #define SHELL_CAT(name, desc) \
-   { name, NULL, 0, desc, NULL },
+   { name, NULL, NULL, 0, desc, NULL },
 #define SHELL_CMD(name, syn, func, min_args, desc, help) \
-   { name, syn, min_args, desc, help },
+   { name, syn, NULL, min_args, desc, help },
+#define SHELL_CMD_SHARED(name, syn, func, min_args, desc, help)  \
+   { name, syn, func, min_args, desc, help },
+#define SHELL_CMD_PCTERM SHELL_CMD_SHARED
+#define SHELL_CMD_PSP(name, syn, func, min_args, desc, help)
 
 #else
 /* Structure to hold a single command entry */
@@ -45,16 +50,19 @@ struct sh_command
 	const char *syn;		/* Synonym of the command */
 	int (*func)(int argc, char **argv);		/* Pointer to the command function */
 	int min_args;
-	const char *desc;		/* Textual description */
-	const char *help;		/* Command usage */
 };
 
-//	SHELL_CMD("run",  NULL, run_cmd, 1, "Run a shell script", "file [args]")
-
-#define SHELL_CAT(name, desc) \
-   { name, NULL, NULL, 0, desc, NULL },
+/* Help category, empty on psp side */
+#define SHELL_CAT(name, desc)
+/* Normal command */
 #define SHELL_CMD(name, syn, func, min_args, desc, help) \
-   { name, syn, func, min_args, desc, help },
+   { name, syn, func, min_args },
+/* Command that is used on both PSP and PCTERM side (to do special processing) */
+#define SHELL_CMD_SHARED SHELL_CMD
+/* Command that is only used on the PCTERM */
+#define SHELL_CMD_PCTERM(name, syn, func, min_args, desc, help)
+/* Command that is only used on the PSP */
+#define SHELL_CMD_PSP SHELL_CMD
 
 #endif
 
@@ -185,7 +193,8 @@ struct sh_command
     SHELL_CMD("uidlist","ul", uidlist_cmd, 0, "List the system UIDS", "[root]") \
 	SHELL_CMD("uidinfo", "ui", uidinfo_cmd, 1, "Print info about a UID", "uid|@name [parent]") \
 	SHELL_CMD("cop0", "c0", cop0_cmd, 0, "Print the cop0 registers", "") \
-	SHELL_CMD("exit", "quit", exit_cmd, 0, "Exit the shell", "") \
+	SHELL_CMD_SHARED("exit", "quit", exit_cmd, 0, "Exit the shell", "") \
+	SHELL_CMD_PCTERM("close", NULL, close_cmd, 0, "Close the shell (leave PSP running)", "") \
 	SHELL_CMD("scrshot", "ss", scrshot_cmd, 1, "Take a screen shot", "file [pri]") \
 	SHELL_CMD("calc", NULL, calc_cmd, 1, "Do a simple address calculation", "addr [d|o|x]") \
 	SHELL_CMD("reset", "r", reset_cmd, 0, "Reset", "[key]") \
@@ -201,7 +210,8 @@ struct sh_command
 	SHELL_CMD("tonid", NULL, tonid_cmd, 1, "Calculate the NID from a name", "name") \
 	SHELL_CMD("profmode", NULL, profmode_cmd, 0, "Set or display the current profiler mode", "[t|g|o]") \
 	SHELL_CMD("debugreg", NULL, debugreg_cmd, 0, "Set or display the current debug register", "[val]") \
-	SHELL_CMD("help", "?", help_cmd, 0, "Help (Obviously)", "[command|category]") \
+	SHELL_CMD_PSP("tab", NULL, tab_cmd, 1, "Tab Completion", "dir [file]") \
+	SHELL_CMD_PCTERM("help", "?", help_cmd, 0, "Print help about a command", "[category|command]") \
 	SHELL_CMD(NULL, NULL, NULL, 0, NULL, NULL)
 
 #endif

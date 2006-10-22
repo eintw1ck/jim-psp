@@ -47,8 +47,8 @@ int setjmp(jmp_buf jmp);
 int longjmp(jmp_buf jmp, int ret);
 
 int fdprintf(int fd, const char *fmt, ...);
-
-#define SHELL_PRINT(fmt, ...) fdprintf(g_shellfd, "\xff" fmt "\xfe", ## __VA_ARGS__)
+#define SHELL_PRINT_FD(fd, fmt, ...) fdprintf(fd, "\xff" fmt "\xfe", ## __VA_ARGS__)
+#define SHELL_PRINT(fmt, ...) SHELL_PRINT_FD(g_shellfd, fmt, ## __VA_ARGS__ )
 #define SHELL_PRINT_CMD(cmd, fmt, ...) fdprintf(g_shellfd, "\xff" "%c" fmt "\xfe", cmd, ## __VA_ARGS__)
 
 void psplinkReset(void);
@@ -57,6 +57,7 @@ u32  psplinkSetK1(u32 k1);
 void psplinkGetCop0(u32 *regs);
 int psplinkParseComamnd(char *command);
 int psplinkRegisterExceptions(void *def, void *debug, void *ctx);
+void psplinkExitShell(void);
 SceUID load_gdb(const char *bootpath, int argc, char **argv);
 
 struct ConfigContext;
@@ -84,7 +85,6 @@ struct GlobalContext
 	char bootpath[MAXPATHLEN];
 	/* Indicates the current directory */
 	char currdir[MAXPATHLEN];
-	char startsh[MAXPATHLEN];
 	int resetonexit;
 	SceUID thevent;
 	int gdb;

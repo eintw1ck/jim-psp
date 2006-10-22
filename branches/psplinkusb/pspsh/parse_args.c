@@ -188,13 +188,13 @@ int parse_cli(const char *in, char *out, int *argc, char **argv, int max_args)
 		{
 			if((isspace(*in)) && (in_quote == 0))
 			{
-				*out++ = 0;
 				while(isspace(*in))
 				{
 					in++;
 				}
 				if(*in != 0)
 				{
+					*out++ = 0;
 					argv[*argc] = out;
 					*argc += 1;
 				}

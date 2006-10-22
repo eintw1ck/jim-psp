@@ -20,5 +20,5 @@
 /* Parse a command string */
 int shellParse(char *command);
 void shellStart(void);
-int shellInit(const char *cliprompt, const char *path, const char *init_dir, const char *startsh);
+int shellInit(const char *init_dir);
 int shellParseThread(SceSize args, void *argp);
