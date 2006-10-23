@@ -55,7 +55,6 @@
 
 extern struct GlobalContext g_context;
 
-static char g_lastmod[32] = "";
 /* Indicates we are in tty mode */
 static int g_ttymode = 0;
 
@@ -66,7 +65,7 @@ typedef int (*threadmanprint_func)(SceUID uid, int verbose);
 void psplinkPrintPrompt(void)
 {
 	SHELL_PRINT_CMD(SHELL_CMD_CWD, "%s", g_context.currdir);
-	SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "");
+	SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "0x%08X", 0);
 }
 
 static SceUID get_module_uid(const char *name)
@@ -1226,8 +1225,6 @@ static int modload_cmd(int argc, char **argv, unsigned int *vRet)
 		else
 		{
 			SHELL_PRINT("Module Load '%s' UID: 0x%08X Name: %s\n", path, modid, info.name);
-			strncpy(g_lastmod, info.name, 31);
-			g_lastmod[31] = 0;
 		}
 		*vRet = modid;
 	}
@@ -1300,8 +1297,6 @@ static int ldstart_cmd(int argc, char **argv, unsigned int *vRet)
 				else
 				{
 					SHELL_PRINT("Load/Start %s UID: 0x%08X Name: %s\n", path, modid, info.name);
-					strncpy(g_lastmod, info.name, 31);
-					g_lastmod[31] = 0;
 				}
 			}
 			else
@@ -3652,11 +3647,11 @@ int shellParseThread(SceSize args, void *argp)
 
 			if(ret == CMD_OK)
 			{
-				SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "%08X", vRet);
+				SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "0x%08X", vRet);
 			}
 			else if(ret == CMD_ERROR)
 			{
-				SHELL_PRINT_CMD(SHELL_CMD_ERROR, "%08X", vRet);
+				SHELL_PRINT_CMD(SHELL_CMD_ERROR, "0x%08X", vRet);
 			}
 			else if(ret == CMD_EXITSHELL)
 			{

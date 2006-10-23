@@ -37,6 +37,7 @@
 #include "disasm.h"
 #include "symbols.h"
 #include "libs.h"
+#include "modload.h"
 
 PSP_MODULE_INFO("PSPLINK", 0x1000, 1, 1);
 
@@ -289,6 +290,8 @@ void initialise(SceSize args, void *argp)
 	}
 
 	g_context.resetonexit = ctx.resetonexit;
+
+	modLoad(g_context.bootpath);
 }
 
 /* Simple thread */

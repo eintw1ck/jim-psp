@@ -61,10 +61,15 @@ struct GlobalContext
 };
 
 struct GlobalContext g_context;
+extern char **environ;
 
 int help_cmd(int argc, char **argv);
 int close_cmd(int argc, char **argv);
 int exit_cmd(int argc, char **argv);
+int env_cmd(int argc, char **argv);
+int set_cmd(int argc, char **argv);
+int unset_cmd(int argc, char **argv);
+int echo_cmd(int argc, char **argv);
 void cli_handler(char *buf);
 struct TabEntry* read_tab_completion(void);
 struct TabEntry
@@ -160,7 +165,7 @@ int execute_line(const char *buf)
 		char redir[PATH_MAX];
 		int  type;
 		int binlen = parse_cli(buf, args, &argc, argv, 16, 0, NULL, &type, redir);
-		if(binlen > 0)
+		if((binlen > 0) && (args[0] != '#'))
 		{
 			if(strchr(argv[0], '.') || strchr(argv[0], '/'))
 			{
@@ -636,6 +641,95 @@ int help_cmd(int argc, char **argv)
 	return 0;
 }
 
+int env_cmd(int argc, char **argv)
+{
+	int i = 0;
+	while(environ[i])
+	{
+		printf("%s\n", environ[i]);
+		i++;
+	}
+
+	return 0;
+}
+
+int set_cmd(int argc, char **argv)
+{
+	char *name;
+	char *value;
+	int i;
+
+	do
+	{
+		name = argv[0];
+		value = strchr(argv[0], '=');
+		if(value)
+		{
+			*value++ = 0;
+		}
+		else
+		{
+			printf("Error, no value specified\n");
+			break;
+		}
+
+		if(argv[0][0] == 0)
+		{
+			printf("Error, no name specified\n");
+			break;
+		}
+
+		if(!isalpha(name[0]))
+		{
+			printf("Error, variable names must start with a letter\n");
+			break;
+		}
+
+		i = 0;
+		while(name[i])
+		{
+			if(!isalnum(name[i]))
+			{
+				printf("Error, variable names must be alphanumeric\n");
+				break;
+			}
+			i++;
+		}
+
+		if(setenv(name, value, 1) < 0)
+		{
+			perror("setenv");
+			break;
+		}
+	}
+	while(0);
+
+	return 0;
+}
+
+int unset_cmd(int argc, char **argv)
+{
+	(void) unsetenv(argv[0]);
+
+	return 0;
+}
+
+int echo_cmd(int argc, char **argv)
+{
+	int i;
+	for(i = 0; i < argc; i++)
+	{
+		printf("%s", argv[i]);
+		if(i < (argc-1))
+		{
+			printf(" ");
+		}
+	}
+	printf("\n");
+
+	return 0;
+}
+
 int process_cmd(const unsigned char *str)
 {
 	if(*str < 128)
@@ -684,6 +778,8 @@ int process_cmd(const unsigned char *str)
 					}
 				}
 			}
+
+			(void) setenv("?", (char*) (str+1), 1);
 			g_context.currcmd[0] = 0;
 			if(g_context.fredir)
 			{
@@ -692,7 +788,6 @@ int process_cmd(const unsigned char *str)
 			}
 
 			/* If end of command then restore prompt */
-			printf("\n");
 			rl_callback_handler_remove();
 			snprintf(prompt, PATH_MAX, "%s> ", g_context.currpath);
 			rl_callback_handler_install(prompt, cli_handler);
@@ -1014,7 +1109,7 @@ void shell(void)
 	fd_set readset;
 	FD_ZERO(&g_context.readsave);
 
-	printf("Opening connection to %s port %d\n", g_context.args.ip, g_context.args.port);
+	fprintf(stderr, "Opening connection to %s port %d\n", g_context.args.ip, g_context.args.port);
 	if((g_context.sock = connect_to(g_context.args.ip, g_context.args.port)) < 0)
 	{
 		return;

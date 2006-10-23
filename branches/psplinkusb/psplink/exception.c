@@ -69,6 +69,11 @@ int psplinkRegisterExceptions(void *def, void *debug, void *ctx)
 /* Get a pointer to a register based on its name */
 u32 *exceptionGetReg(const char *reg)
 {
+	if(g_currex == NULL)
+	{
+		return NULL;
+	}
+
 	if(strcmp(reg, "epc") == 0)
 	{
 		return &g_currex->regs.epc;
@@ -427,7 +432,7 @@ void exceptionVfpuPrint(int ex, int mode)
 	}
 }
 
-int exceptionCheckParseThread(struct PsplinkContext *ctx)
+int exceptionCheckThread(struct PsplinkContext *ctx)
 {
 	SceKernelThreadInfo thread;
 
@@ -435,7 +440,7 @@ int exceptionCheckParseThread(struct PsplinkContext *ctx)
 	thread.size = sizeof(thread);
 	if(!sceKernelReferThreadStatus(ctx->thid, &thread))
 	{
-		if(strcmp(thread.name, "PspLinkParse") == 0)
+		if(strcmp(thread.name, "PspLink") == 0)
 		{
 			/* Setup context to return to longjmp and handle the exception */
 			ctx->regs.epc = (unsigned int) longjmp;
@@ -465,7 +470,7 @@ void psplinkHandleException(struct PsplinkContext *ctx)
 
 	psplinkSetK1(k1);
 
-	intex = exceptionCheckParseThread(ctx);
+	intex = exceptionCheckThread(ctx);
 
 	/* If not our parse thread exceptioning */
 	if(!intex)

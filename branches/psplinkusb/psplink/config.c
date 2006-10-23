@@ -26,7 +26,6 @@
 #include "memoryUID.h"
 #include "psplink.h"
 #include "psplinkcnf.h"
-//#include "parse_args.h"
 #include "util.h"
 #include "sio.h"
 #include "shell.h"
@@ -70,11 +69,6 @@ static void config_baud(struct ConfigContext *ctx, const char *szVal, unsigned i
 	}
 }
 
-static void config_modload(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	(void) load_start_module(szVal, 0, NULL);
-}
-
 static void config_pluser(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
 {
 	ctx->enableuser = iVal;
@@ -84,12 +78,6 @@ static void config_prompt(struct ConfigContext *ctx, const char *szVal, unsigned
 {
 	strncpy(ctx->cliprompt, szVal, sizeof(ctx->cliprompt)-1);
 	ctx->cliprompt[sizeof(ctx->cliprompt)-1] = 0;
-}
-
-static void config_path(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	strncpy(ctx->path, szVal, sizeof(ctx->path)-1);
-	ctx->path[sizeof(ctx->path)-1] = 0;
 }
 
 static void config_resetonexit(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
@@ -114,12 +102,10 @@ static void config_pid(struct ConfigContext *ctx, const char *szVal, unsigned in
 
 struct psplink_config config_names[] = {
 	{ "baud", 1, config_baud },
-	{ "modload", 0, config_modload },
 	{ "pluser", 1, config_pluser },
 	{ "prompt", 0, config_prompt },
 	{ "resetonexit", 1, config_resetonexit },
 	{ "pid", 1, config_pid },
-	{ "path", 0, config_path },
 	{ "disopt", 0, config_disopt },
 	{ "kprintf", 1, config_kprintf },
 	{ NULL, 0, NULL }

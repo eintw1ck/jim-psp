@@ -210,6 +210,10 @@ struct sh_command
 	SHELL_CMD("tonid", NULL, tonid_cmd, 1, "Calculate the NID from a name", "name") \
 	SHELL_CMD("profmode", NULL, profmode_cmd, 0, "Set or display the current profiler mode", "[t|g|o]") \
 	SHELL_CMD("debugreg", NULL, debugreg_cmd, 0, "Set or display the current debug register", "[val]") \
+	SHELL_CMD_PCTERM("env", NULL, env_cmd, 0, "Display the environment settings", "") \
+	SHELL_CMD_PCTERM("set", NULL, set_cmd, 1, "Set an environment variable", "name=value") \
+	SHELL_CMD_PCTERM("unset", NULL, unset_cmd, 1, "Unset an environment variable", "name") \
+	SHELL_CMD_PCTERM("echo", NULL, echo_cmd, 0, "Echo text to the screen", "[args...]") \
 	SHELL_CMD_PSP("tab", NULL, tab_cmd, 1, "Tab Completion", "dir [file]") \
 	SHELL_CMD_PCTERM("help", "?", help_cmd, 0, "Print help about a command", "[category|command]") \
 	SHELL_CMD(NULL, NULL, NULL, 0, NULL, NULL)

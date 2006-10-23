@@ -14,6 +14,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <limits.h>
 #include "parse_args.h"
 
 int hex_to_int(char ch)
@@ -107,38 +110,65 @@ int decode_oct(const char *str, unsigned char *ch)
 	return i;
 }
 
-const char *parse_redir(const char *in, char *filename, int *type)
+void insert_arg(const char **pin, char **pout, int sargc, const char**sargv)
 {
-	while(isspace(*in))
-	{
-		in++;
-	}
+	const char *in = *pin;
+	char *out = *pout;
 
-	if(*in == '>')
+	if(isdigit(*in))
 	{
-		in++;
-		if(*in == '>')
+		char *endp;
+		int val = strtoul(in, &endp, 10);
+		in = endp;
+		if((val < sargc) && (sargv) && (sargv[val]))
 		{
-			in++;
-			*type = REDIR_TYPE_CAT;
+			int len = strlen(sargv[val]);
+			memcpy(out, sargv[val], len);
+			out += len;
+		}
+	}
+	else
+	{
+		char name[PATH_MAX];
+		char *pname = name;
+
+		/* Punctuation, internal variables */
+		if(ispunct(*in))
+		{
+			name[0] = *in++;
+			name[1] = 0;
+		}
+		else if(isalnum(*in))
+		{
+			while(isalnum(*in))
+			{
+				*pname++ = *in++;
+			}
+			*pname = 0;
 		}
 		else
 		{
-			*type = REDIR_TYPE_NEW;
+			*pname = 0;
 		}
-
-		if((*in == '>') || (*in == 0))
+		if(name[0])
 		{
-			fprintf(stderr, "Invalid redirection prefix (no filename)\n");
-			return NULL;
+			char *val = getenv(name);
+			int len;
+			if(val)
+			{
+				len = strlen(val);
+				memcpy(out, val, len);
+				out += len;
+			}
 		}
 	}
 
-	return in;
+	*pout = out;
+	*pin = in;
 }
 
 /* Read a single string from the output, escape characters and quotes, insert $ args */
-int read_string(const char **pin, char **pout, int sargc, const struct SArg *sargv)
+int read_string(const char **pin, char **pout, int sargc, const char **sargv)
 {
 	int in_quote = 0;
 	const char *in = *pin;
@@ -254,7 +284,15 @@ int read_string(const char **pin, char **pout, int sargc, const struct SArg *sar
 			}
 			else
 			{
-				*out++ = *in++;
+				if((*in == '$') && (in_quote != '\''))
+				{
+					in++;
+					insert_arg(&in, &out, sargc, sargv);
+				}
+				else
+				{
+					*out++ = *in++;
+				}
 			}
 		}
 	}
@@ -278,7 +316,7 @@ int read_string(const char **pin, char **pout, int sargc, const struct SArg *sar
 	return len;
 }
 
-int parse_cli(const char *in, char *out, int *argc, char **argv, int max_args, int sargc, const struct SArg *sargv, int *type, char *redir)
+int parse_cli(const char *in, char *out, int *argc, char **argv, int max_args, int sargc, const char **sargv, int *type, char *redir)
 {
 	char *lastout;
 	char *outstart = out;
