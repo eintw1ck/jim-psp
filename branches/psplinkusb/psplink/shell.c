@@ -80,7 +80,7 @@ static SceUID get_module_uid(const char *name)
 	}
 	else
 	{
-		uid = strtoul(name, &endp, 16);
+		uid = strtoul(name, &endp, 0);
 		if(*endp != 0)
 		{
 			SHELL_PRINT("ERROR: Invalid uid %s\n", name);
@@ -108,7 +108,7 @@ static SceUID get_thread_uid(const char *name, ReferFunc pRefer)
 	}
 	else
 	{
-		uid = strtoul(name, &endp, 16);
+		uid = strtoul(name, &endp, 0);
 		if(*endp != 0)
 		{
 			SHELL_PRINT("ERROR: Invalid uid %s\n", name);
@@ -244,32 +244,32 @@ static int print_threadinfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int thlist_cmd(int argc, char **argv)
+static int thlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_Thread, "Thread", print_threadinfo);
 }
 
-static int thsllist_cmd(int argc, char **argv)
+static int thsllist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_SleepThread, "Sleep Thread", print_threadinfo);
 }
 
-static int thdelist_cmd(int argc, char **argv)
+static int thdelist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_DelayThread, "Delay Thread", print_threadinfo);
 }
 
-static int thsulist_cmd(int argc, char **argv)
+static int thsulist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_SuspendThread, "Suspend Thread", print_threadinfo);
 }
 
-static int thdolist_cmd(int argc, char **argv)
+static int thdolist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_DormantThread, "Dormant Thread", print_threadinfo);
 }
 
-static int thinfo_cmd(int argc, char **argv)
+static int thinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Thread", print_threadinfo, (ReferFunc) pspSdkReferThreadStatusByName);
 }
@@ -296,49 +296,49 @@ static int thread_do_cmd(const char *name, const char *type, ReferFunc refer, in
 	return ret;
 }
 
-static int thsusp_cmd(int argc, char **argv)
+static int thsusp_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return thread_do_cmd(argv[0], "suspend", (ReferFunc) pspSdkReferThreadStatusByName, sceKernelSuspendThread);
 }
 
-static int thspuser_cmd(int argc, char **argv)
+static int thspuser_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	sceKernelSuspendAllUserThreads();
 
 	return CMD_OK;
 }
 
-static int thresm_cmd(int argc, char **argv)
+static int thresm_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return thread_do_cmd(argv[0], "resume", (ReferFunc) pspSdkReferThreadStatusByName, sceKernelResumeThread);
 }
 
-static int thwake_cmd(int argc, char **argv)
+static int thwake_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return thread_do_cmd(argv[0], "wakeup", (ReferFunc) pspSdkReferThreadStatusByName, sceKernelWakeupThread);
 }
 
-static int thterm_cmd(int argc, char **argv)
+static int thterm_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return thread_do_cmd(argv[0], "terminate", (ReferFunc) pspSdkReferThreadStatusByName, sceKernelTerminateThread);
 }
 
-static int thdel_cmd(int argc, char **argv)
+static int thdel_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return thread_do_cmd(argv[0], "delete", (ReferFunc) pspSdkReferThreadStatusByName, sceKernelDeleteThread);
 }
 
-static int thtdel_cmd(int argc, char **argv)
+static int thtdel_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return thread_do_cmd(argv[0], "terminate delete", (ReferFunc) pspSdkReferThreadStatusByName, sceKernelTerminateDeleteThread);
 }
 
-static int thctx_cmd(int argc, char **argv)
+static int thctx_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return thread_do_cmd(argv[0], "get context", (ReferFunc) pspSdkReferThreadStatusByName, threadFindContext);
 }
 
-static int thpri_cmd(int argc, char **argv)
+static int thpri_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
@@ -383,12 +383,12 @@ static int print_eventinfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int evlist_cmd(int argc, char **argv)
+static int evlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_EventFlag, "EventFlag", print_eventinfo);
 }
 
-static int evinfo_cmd(int argc, char **argv)
+static int evinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "EventFlag", print_eventinfo, (ReferFunc) pspSdkReferEventFlagStatusByName);
 }
@@ -415,12 +415,12 @@ static int print_semainfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int smlist_cmd(int argc, char **argv)
+static int smlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_Semaphore, "Semaphore", print_semainfo);
 }
 
-static int sminfo_cmd(int argc, char **argv)
+static int sminfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Semaphore", print_semainfo, (ReferFunc) pspSdkReferSemaStatusByName);
 }
@@ -447,12 +447,12 @@ static int print_mboxinfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int mxlist_cmd(int argc, char **argv)
+static int mxlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_Mbox, "Message Box", print_mboxinfo);
 }
 
-static int mxinfo_cmd(int argc, char **argv)
+static int mxinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Message Box", print_mboxinfo, (ReferFunc) pspSdkReferMboxStatusByName);
 }
@@ -478,12 +478,12 @@ static int print_cbinfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int cblist_cmd(int argc, char **argv)
+static int cblist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_Callback, "Callback", print_cbinfo);
 }
 
-static int cbinfo_cmd(int argc, char **argv)
+static int cbinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Callback", print_cbinfo, (ReferFunc) pspSdkReferCallbackStatusByName);
 }
@@ -511,12 +511,12 @@ static int print_vtinfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int vtlist_cmd(int argc, char **argv)
+static int vtlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_VTimer, "VTimer", print_vtinfo);
 }
 
-static int vtinfo_cmd(int argc, char **argv)
+static int vtinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "VTimer", print_vtinfo, (ReferFunc) pspSdkReferVTimerStatusByName);
 }
@@ -542,12 +542,12 @@ static int print_vplinfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int vpllist_cmd(int argc, char **argv)
+static int vpllist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_Vpl, "Vpl", print_vplinfo);
 }
 
-static int vplinfo_cmd(int argc, char **argv)
+static int vplinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Vpl", print_vplinfo, (ReferFunc) pspSdkReferVplStatusByName);
 }
@@ -573,12 +573,12 @@ static int print_fplinfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int fpllist_cmd(int argc, char **argv)
+static int fpllist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_Fpl, "Fpl", print_fplinfo);
 }
 
-static int fplinfo_cmd(int argc, char **argv)
+static int fplinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Fpl", print_fplinfo, (ReferFunc) pspSdkReferFplStatusByName);
 }
@@ -605,12 +605,12 @@ static int print_mppinfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int mpplist_cmd(int argc, char **argv)
+static int mpplist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_Mpipe, "Message Pipe", print_mppinfo);
 }
 
-static int mppinfo_cmd(int argc, char **argv)
+static int mppinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Message Pipe", print_mppinfo, (ReferFunc) pspSdkReferMppStatusByName);
 }
@@ -636,12 +636,12 @@ static int print_thevinfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int thevlist_cmd(int argc, char **argv)
+static int thevlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmanlist_cmd(argc, argv, SCE_KERNEL_TMID_ThreadEventHandler, "Thread Event Handler", print_thevinfo);
 }
 
-static int thevinfo_cmd(int argc, char **argv)
+static int thevinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Thread Event Handler", print_thevinfo, (ReferFunc) pspSdkReferThreadEventHandlerStatusByName);
 }
@@ -677,7 +677,7 @@ int thread_event_handler(int mask, SceUID thid, void *common)
 	return 0;
 }
 
-static int thmon_cmd(int argc, char **argv)
+static int thmon_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID ev;
 	SceUID uid;
@@ -732,7 +732,7 @@ static int thmon_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int thmonoff_cmd(int argc, char **argv)
+static int thmonoff_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	if(g_context.thevent >= 0)
 	{
@@ -743,7 +743,7 @@ static int thmonoff_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int sysstat_cmd(int argc, char **argv)
+static int sysstat_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceKernelSystemStatus stat;
 
@@ -762,7 +762,7 @@ static int sysstat_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int uidlist_cmd(int argc, char **argv)
+static int uidlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	const char *name = NULL;
 
@@ -775,7 +775,7 @@ static int uidlist_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int uidinfo_cmd(int argc, char **argv)
+static int uidinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	uidList *entry;
 	const char *parent = NULL;
@@ -810,7 +810,7 @@ static int uidinfo_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int cop0_cmd(int argc, char **argv)
+static int cop0_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 regs[64];
 	int i;
@@ -866,7 +866,7 @@ static int print_modinfo(SceUID uid, int verbose)
 	return ret;
 }
 
-static int modinfo_cmd(int argc, char **argv)
+static int modinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
@@ -892,7 +892,7 @@ static int modinfo_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int modlist_cmd(int argc, char **argv)
+static int modlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID ids[100];
 	int ret;
@@ -922,7 +922,7 @@ static int modlist_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int modstop_cmd(int argc, char **argv)
+static int modstop_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
@@ -946,7 +946,7 @@ static int modstop_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int modunld_cmd(int argc, char **argv)
+static int modunld_cmd(int argc, char **argv, unsigned int *vRet)
 {
 
 	SceUID uid;
@@ -971,7 +971,7 @@ static int modunld_cmd(int argc, char **argv)
 
 }
 
-static int modstun_cmd(int argc, char **argv)
+static int modstun_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
@@ -996,7 +996,7 @@ static int modstun_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int modstart_cmd(int argc, char **argv)
+static int modstart_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
@@ -1031,7 +1031,7 @@ static int modstart_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int modexp_cmd(int argc, char **argv)
+static int modexp_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
@@ -1056,7 +1056,7 @@ static int modexp_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int modimp_cmd(int argc, char **argv)
+static int modimp_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
@@ -1081,7 +1081,7 @@ static int modimp_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int modfindx_cmd(int argc, char **argv)
+static int modfindx_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
@@ -1177,23 +1177,23 @@ static int apihook_common(int argc, char **argv, int sleep)
 	return ret;
 }
 
-static int apihook_cmd(int argc, char **argv)
+static int apihook_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return apihook_common(argc, argv, 0);
 }
 
-static int apihooks_cmd(int argc, char **argv)
+static int apihooks_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return apihook_common(argc, argv, 1);
 }
 
-static int apihp_cmd(int argc, char **argv)
+static int apihp_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	apiHookGenericPrint();
 	return CMD_OK;
 }
 
-static int apihd_cmd(int argc, char **argv)
+static int apihd_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 id;
 
@@ -1210,7 +1210,7 @@ static int apihd_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int modload_cmd(int argc, char **argv)
+static int modload_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID modid;
 	SceKernelModuleInfo info;
@@ -1229,6 +1229,7 @@ static int modload_cmd(int argc, char **argv)
 			strncpy(g_lastmod, info.name, 31);
 			g_lastmod[31] = 0;
 		}
+		*vRet = modid;
 	}
 	else
 	{
@@ -1238,7 +1239,7 @@ static int modload_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int modexec_cmd(int argc, char **argv)
+static int modexec_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char path[1024];
 	char args[1024];
@@ -1277,7 +1278,7 @@ static int modexec_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int ldstart_cmd(int argc, char **argv)
+static int ldstart_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char path[MAXPATHLEN];
 	SceKernelModuleInfo info;
@@ -1307,6 +1308,7 @@ static int ldstart_cmd(int argc, char **argv)
 			{
 				SHELL_PRINT("Failed to Load/Start module '%s' Error: 0x%08X\n", path, modid);
 			}
+			*vRet = modid;
 
 			ret = CMD_OK;
 		}
@@ -1319,7 +1321,7 @@ static int ldstart_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int kill_cmd(int argc, char **argv)
+static int kill_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
@@ -1378,7 +1380,7 @@ static int kill_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int debug_cmd(int argc, char **argv)
+static int debug_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char path[1024];
 	int  ret = CMD_ERROR;
@@ -1405,7 +1407,7 @@ static int debug_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int calc_cmd(int argc, char **argv)
+static int calc_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 val;
 	char disp;
@@ -1431,6 +1433,7 @@ static int calc_cmd(int argc, char **argv)
 			case 'X': SHELL_PRINT("Result = 0x%08X\n", val);
 					  break;
 		};
+		*vRet = val;
 	}
 	else
 	{
@@ -1440,7 +1443,7 @@ static int calc_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int reset_cmd(int argc, char **argv)
+static int reset_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	if(argc > 0)
 	{
@@ -1543,7 +1546,7 @@ static int list_dir(const char *name)
 	return CMD_OK;
 }
 
-static int ls_cmd(int argc, char **argv)
+static int ls_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char path[1024];
 
@@ -1570,7 +1573,7 @@ static int ls_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int chdir_cmd(int argc, char **argv)
+static int chdir_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char *dir;
 	int ret = CMD_ERROR;
@@ -1594,14 +1597,14 @@ static int chdir_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int pwd_cmd(int argc, char **argv)
+static int pwd_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SHELL_PRINT("%s\n", g_context.currdir);
 
 	return CMD_OK;
 }
 
-static int usbstat_cmd(int argc, char **argv)
+static int usbstat_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 state;
 
@@ -1614,7 +1617,7 @@ static int usbstat_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int rename_cmd(int argc, char **argv)
+static int rename_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char asrc[MAXPATHLEN], adst[MAXPATHLEN];
 	char *src, *dst;
@@ -1636,7 +1639,7 @@ static int rename_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int rm_cmd(int argc, char **argv)
+static int rm_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char *file, afile[MAXPATHLEN];
 	int i;
@@ -1657,7 +1660,7 @@ static int rm_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int mkdir_cmd(int argc, char **argv)
+static int mkdir_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char *file, afile[MAXPATHLEN];
 
@@ -1674,7 +1677,7 @@ static int mkdir_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int rmdir_cmd(int argc, char **argv)
+static int rmdir_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char *file, afile[MAXPATHLEN];
 
@@ -1691,7 +1694,7 @@ static int rmdir_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int cp_cmd(int argc, char **argv)
+static int cp_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	int in, out;
 	int n;
@@ -1759,7 +1762,7 @@ static int cp_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int remap_cmd(int argc, char **argv)
+static int remap_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	int ret;
 
@@ -1774,7 +1777,7 @@ static int remap_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int meminfo_cmd(int argc, char **argv)
+static int meminfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	int i;
 	int pid = 1;
@@ -1813,13 +1816,13 @@ static int meminfo_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int memreg_cmd(int argc, char **argv)
+static int memreg_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	memPrintRegions();
 	return CMD_OK;
 }
 
-static int memblocks_cmd(int argc, char **argv)
+static int memblocks_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	if(argc > 0)
 	{
@@ -1974,7 +1977,7 @@ static void print_memdump(u32 addr, s32 size, int type)
 	}
 }
 
-static int memdump_cmd(int argc, char **argv)
+static int memdump_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	static u32 addr = 0;
 	static int type = MEMDUMP_TYPE_BYTE;
@@ -2035,7 +2038,7 @@ static int memdump_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int savemem_cmd(int argc, char **argv)
+static int savemem_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char path[1024];
 	u32 addr;
@@ -2095,7 +2098,7 @@ static int savemem_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int loadmem_cmd(int argc, char **argv)
+static int loadmem_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char path[1024];
 	u32 addr;
@@ -2173,7 +2176,7 @@ static int loadmem_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int pokew_cmd(int argc, char **argv)
+static int pokew_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 
@@ -2219,7 +2222,7 @@ static int pokew_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int pokeh_cmd(int argc, char **argv)
+static int pokeh_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 
@@ -2265,7 +2268,7 @@ static int pokeh_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int pokeb_cmd(int argc, char **argv)
+static int pokeb_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 
@@ -2310,7 +2313,7 @@ static int pokeb_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int peekw_cmd(int argc, char **argv)
+static int peekw_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 
@@ -2359,7 +2362,7 @@ static int peekw_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int peekh_cmd(int argc, char **argv)
+static int peekh_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 
@@ -2398,7 +2401,7 @@ static int peekh_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int peekb_cmd(int argc, char **argv)
+static int peekb_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 
@@ -2436,7 +2439,7 @@ static int peekb_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int fillb_cmd(int argc, char **argv)
+static int fillb_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	u32 size;
@@ -2461,7 +2464,7 @@ static int fillb_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int fillh_cmd(int argc, char **argv)
+static int fillh_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	u32 size;
@@ -2495,7 +2498,7 @@ static int fillh_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int fillw_cmd(int argc, char **argv)
+static int fillw_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	u32 size;
@@ -2529,7 +2532,7 @@ static int fillw_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int findstr_cmd(int argc, char **argv)
+static int findstr_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	u32 size;
@@ -2562,7 +2565,7 @@ static int findstr_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int findw_cmd(int argc, char **argv)
+static int findw_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	u32 size;
@@ -2611,7 +2614,7 @@ static int findw_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int findh_cmd(int argc, char **argv)
+static int findh_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	u32 size;
@@ -2660,7 +2663,7 @@ static int findh_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int findhex_cmd(int argc, char **argv)
+static int findhex_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	u32 size;
@@ -2721,7 +2724,7 @@ static int findhex_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int copymem_cmd(int argc, char **argv)
+static int copymem_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 src;
 	u32 dest;
@@ -2744,7 +2747,7 @@ static int copymem_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int disasm_cmd(int argc, char **argv)
+static int disasm_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	unsigned int count = 1;
@@ -2780,7 +2783,7 @@ static int disasm_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int memprot_cmd(int argc, char **argv)
+static int memprot_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	if(strcmp(argv[0], "on") == 0)
 	{
@@ -2798,28 +2801,28 @@ static int memprot_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int disset_cmd(int argc, char **argv)
+static int disset_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	disasmSetOpts(argv[0], 1);
 
 	return CMD_OK;
 }
 
-static int disclear_cmd(int argc, char **argv)
+static int disclear_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	disasmSetOpts(argv[0], 0);
 
 	return CMD_OK;
 }
 
-static int disopts_cmd(int argc, char **argv)
+static int disopts_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	disasmPrintOpts();
 
 	return CMD_OK;
 }
 
-static int scrshot_cmd(int argc, char **argv)
+static int scrshot_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char path[1024];
 	SceUID block_id;
@@ -2875,7 +2878,7 @@ static int scrshot_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int dcache_cmd(int argc, char **argv)
+static int dcache_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr = 0;
 	u32 size = 0;
@@ -2933,7 +2936,7 @@ static int dcache_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int icache_cmd(int argc, char **argv)
+static int icache_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr = 0;
 	u32 size = 0;
@@ -2968,7 +2971,7 @@ static int icache_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int modaddr_cmd(int argc, char **argv)
+static int modaddr_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	SceModule *pMod;
@@ -2994,7 +2997,7 @@ static int modaddr_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int exprint_cmd(int argc, char **argv)
+static int exprint_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	int ex = -1;
 
@@ -3007,21 +3010,21 @@ static int exprint_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int exlist_cmd(int argc, char **argv)
+static int exlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	exceptionList();
 
 	return CMD_OK;
 }
 
-static int exctx_cmd(int argc, char **argv)
+static int exctx_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	exceptionSetCtx(atoi(argv[0]));
 
 	return CMD_OK;
 }
 
-static int exprfpu_cmd(int argc, char **argv)
+static int exprfpu_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	int ex = -1;
 
@@ -3034,7 +3037,7 @@ static int exprfpu_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int exprvfpu_cmd(int argc, char **argv)
+static int exprvfpu_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	int ex = -1;
 	int type = VFPU_PRINT_SINGLE;
@@ -3068,7 +3071,7 @@ static int exprvfpu_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int exresume_cmd(int argc, char **argv)
+static int exresume_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	if(argc > 0)
 	{
@@ -3099,7 +3102,7 @@ static int exresume_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int setreg_cmd(int argc, char **argv)
+static int setreg_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	u32 *reg;
@@ -3125,7 +3128,7 @@ static int setreg_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int hwena_cmd(int argc, char **argv)
+static int hwena_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	if(argc > 0)
 	{
@@ -3150,7 +3153,7 @@ static int hwena_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int hwregs_cmd(int argc, char **argv)
+static int hwregs_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	if(argc == 0)
 	{
@@ -3164,7 +3167,7 @@ static int hwregs_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int hwbp_cmd(int argc, char **argv)
+static int hwbp_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	u32 mask = 0;
@@ -3181,7 +3184,7 @@ static int hwbp_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int bpset_cmd(int argc, char **argv)
+static int bpset_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	int ret = CMD_ERROR;
@@ -3206,28 +3209,28 @@ static int bpset_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int bpprint_cmd(int argc, char **argv)
+static int bpprint_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	debugPrintBPS();
 
 	return CMD_OK;
 }
 
-static int step_cmd(int argc, char **argv)
+static int step_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	debugStep(0);
 
 	return CMD_OK;
 }
 
-static int skip_cmd(int argc, char **argv)
+static int skip_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	debugStep(1);
 
 	return CMD_OK;
 }
 
-static int symload_cmd(int argc, char **argv)
+static int symload_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char source[MAXPATHLEN];
 
@@ -3244,21 +3247,21 @@ static int symload_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int symlist_cmd(int argc, char **argv)
+static int symlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	symbolPrintLoadList();
 
 	return CMD_OK;
 }
 
-static int symprint_cmd(int argc, char **argv)
+static int symprint_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	symbolPrintSymbols(argv[0]);
 
 	return CMD_OK;
 }
 
-static int symbyaddr_cmd(int argc, char **argv)
+static int symbyaddr_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	int ret = CMD_ERROR;
@@ -3291,7 +3294,7 @@ static int symbyaddr_cmd(int argc, char **argv)
 	return ret;
 }
 
-static int symbyname_cmd(int argc, char **argv)
+static int symbyname_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	u32 size;
@@ -3310,14 +3313,14 @@ static int symbyname_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int version_cmd(int argc, char **argv)
+static int version_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SHELL_PRINT("PSPLink Version %s\n", PSPLINK_VERSION);
 
 	return CMD_OK;
 }
 
-static int pspver_cmd(int argc, char **argv)
+static int pspver_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	unsigned int ver;
 
@@ -3327,14 +3330,14 @@ static int pspver_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int config_cmd(int argc, char **argv)
+static int config_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	configPrint(g_context.bootpath);
 
 	return CMD_OK;
 }
 
-static int confset_cmd(int argc, char **argv)
+static int confset_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	if(argc > 1)
 	{
@@ -3348,14 +3351,14 @@ static int confset_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int confdel_cmd(int argc, char **argv)
+static int confdel_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	configChange(g_context.bootpath, argv[0], "", CONFIG_MODE_DEL);
 
 	return CMD_OK;
 }
 
-static int power_cmd(int argc, char **argv)
+static int power_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	int batteryLifeTime = 0;
 	char fbuf[128];
@@ -3381,14 +3384,14 @@ static int power_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int poweroff_cmd(int argc, char **argv)
+static int poweroff_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	scePowerRequestStandby();
 
 	return CMD_OK;
 }
 
-static int clock_cmd(int argc, char **argv)
+static int clock_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 val1, val2, val3;
 
@@ -3405,7 +3408,7 @@ static int clock_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int profmode_cmd(int argc, char **argv)
+static int profmode_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 *debug;
 	const char *mode;
@@ -3456,7 +3459,7 @@ static int profmode_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int debugreg_cmd(int argc, char **argv)
+static int debugreg_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 *debug;
 
@@ -3486,20 +3489,20 @@ static int debugreg_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int tty_cmd(int argc, char **argv)
+static int tty_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	g_ttymode = 1;
 	return CMD_OK;
 }
 
-static int tonid_cmd(int argc, char **argv)
+static int tonid_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SHELL_PRINT("Name: %s, Nid: 0x%08X\n", argv[0], libsNameToNid(argv[0]));
 
 	return CMD_OK;
 }
 
-static int tab_cmd(int argc, char **argv)
+static int tab_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char *dir;
 	char path[1024];
@@ -3558,7 +3561,7 @@ static int tab_cmd(int argc, char **argv)
 	return CMD_OK;
 }
 
-static int exit_cmd(int argc, char **argv)
+static int exit_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return CMD_EXITSHELL;
 }
@@ -3595,7 +3598,7 @@ static const struct sh_command* find_command(const char *cmd)
 	return found_cmd;
 }
 
-int shellExecute(int argc, char **argv)
+int shellExecute(int argc, char **argv, unsigned int *vRet)
 {
 	int ret = CMD_OK;
 	char *cmd;
@@ -3611,7 +3614,7 @@ int shellExecute(int argc, char **argv)
 		found_cmd = find_command(cmd);
 		if((found_cmd) && (found_cmd->func) && (found_cmd->min_args <= (argc-1)))
 		{
-			ret = found_cmd->func(argc-1, &argv[1]);
+			ret = found_cmd->func(argc-1, &argv[1], vRet);
 		}
 		else
 		{
@@ -3628,6 +3631,7 @@ int shellParseThread(SceSize args, void *argp)
 	unsigned char cli[MAX_CLI];
 	int argc;
 	char *argv[16];
+	unsigned int vRet;
 
 	usbShellInit();
 
@@ -3636,9 +3640,10 @@ int shellParseThread(SceSize args, void *argp)
 		argc = usbShellReadInput(cli, argv, MAX_CLI, 16);
 		if(argc > 0)
 		{
+			vRet = 0;
 			if(setjmp(g_context.parseenv) == 0)
 			{
-				ret = shellExecute(argc, argv);
+				ret = shellExecute(argc, argv, &vRet);
 			}
 			else
 			{
@@ -3647,11 +3652,11 @@ int shellParseThread(SceSize args, void *argp)
 
 			if(ret == CMD_OK)
 			{
-				SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "");
+				SHELL_PRINT_CMD(SHELL_CMD_SUCCESS, "%08X", vRet);
 			}
 			else if(ret == CMD_ERROR)
 			{
-				SHELL_PRINT_CMD(SHELL_CMD_ERROR, "");
+				SHELL_PRINT_CMD(SHELL_CMD_ERROR, "%08X", vRet);
 			}
 			else if(ret == CMD_EXITSHELL)
 			{

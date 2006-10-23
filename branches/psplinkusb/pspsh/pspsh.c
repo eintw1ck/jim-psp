@@ -3,12 +3,12 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPLINK root for details.
  *
- * pcterm.c - PSPLINK pc terminal
+ * pspsh.c - PSPLINK pc terminal
  *
  * Copyright (c) 2006 James F <tyranid@gmail.com>
  *
- * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/pspsh/pcterm.c $
- * $Id: pcterm.c 2036 2006-10-19 16:14:58Z tyranid $
+ * $HeadURL$
+ * $Id$
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -57,6 +57,7 @@ struct GlobalContext
 	char history_file[PATH_MAX];
 	char currpath[PATH_MAX];
 	char currcmd[PATH_MAX];
+	FILE *fredir;
 };
 
 struct GlobalContext g_context;
@@ -156,7 +157,9 @@ int execute_line(const char *buf)
 
 	if(len > 0)
 	{
-		int binlen = parse_cli(buf, args, &argc, argv, 16);
+		char redir[PATH_MAX];
+		int  type;
+		int binlen = parse_cli(buf, args, &argc, argv, 16, 0, NULL, &type, redir);
 		if(binlen > 0)
 		{
 			if(strchr(argv[0], '.') || strchr(argv[0], '/'))
@@ -183,6 +186,23 @@ int execute_line(const char *buf)
 			/* Remove the handler and prompt */
 			rl_callback_handler_remove();
 			rl_callback_handler_install("", cli_handler);
+			if(type != REDIR_TYPE_NONE)
+			{
+				if(type == REDIR_TYPE_NEW)
+				{
+					g_context.fredir = fopen(redir, "w");
+				}
+				else
+				{
+					g_context.fredir = fopen(redir, "a");
+				}
+
+				if(g_context.fredir == NULL)
+				{
+					fprintf(stderr, "Warning: Could not open file %s\n", redir);
+				}
+			}
+
 			len = fixed_write(g_context.sock, args, binlen);
 			if(len < 0)
 			{
@@ -355,7 +375,7 @@ char *filename_gen(const char *text, int state)
 		char *slash;
 
 		/* Free list if it exists */
-		if(pEntry)
+		while(pEntry)
 		{
 			struct TabEntry *pTemp;
 			pTemp = pEntry->pNext;
@@ -625,8 +645,15 @@ int process_cmd(const unsigned char *str)
 			write(g_context.log, str, strlen((char*) str));
 		}
 
-		printf("%s", str);
-		fflush(stdout);
+		if(g_context.fredir)
+		{
+			fprintf(g_context.fredir, "%s", str);
+		}
+		else
+		{
+			printf("%s", str);
+			fflush(stdout);
+		}
 	}
 	else
 	{
@@ -658,6 +685,11 @@ int process_cmd(const unsigned char *str)
 				}
 			}
 			g_context.currcmd[0] = 0;
+			if(g_context.fredir)
+			{
+				fclose(g_context.fredir);
+				g_context.fredir = NULL;
+			}
 
 			/* If end of command then restore prompt */
 			printf("\n");
@@ -887,7 +919,6 @@ int read_tab(int sock, struct TabEntry *head)
 				}
 				else if(linebuf[0] == SHELL_CMD_TAB)
 				{
-					//printf("Match: %s\n", linebuf+1);
 					tabcurr->pNext = (struct TabEntry*) malloc(sizeof(struct TabEntry));
 					if(tabcurr->pNext != NULL)
 					{
@@ -960,7 +991,6 @@ struct TabEntry* read_tab_completion(void)
 		else if(ret == 0)
 		{
 			/* Timeout */
-			printf("Timeout\n");
 			break;
 		}
 		else

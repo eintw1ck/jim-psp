@@ -48,7 +48,7 @@ struct sh_command
 {
 	const char *name;		/* Normal name of the command */
 	const char *syn;		/* Synonym of the command */
-	int (*func)(int argc, char **argv);		/* Pointer to the command function */
+	int (*func)(int argc, char **argv, unsigned int *vRet);	/* Pointer to the command function */
 	int min_args;
 };
 
