@@ -20,6 +20,7 @@
 #define SHELL_CMD_ERROR     0xFC
 #define SHELL_CMD_CWD 		0xFB
 #define SHELL_CMD_TAB		0xFA
+#define SHELL_CMD_LASTMOD   0xF9
 
 #ifdef _PCTERM
 /* Structure to hold a single command entry */
@@ -69,8 +70,12 @@ struct sh_command
 /* Define all the shell commands so it can be shared between psplink and pcterm */
 #define SHELL_COMMANDS \
 	SHELL_CAT("thread", "Commands to manipulate threads") \
-	SHELL_CMD("thlist", "tl", thlist_cmd, 0, "List the threads in the system", "[v]") \
-	SHELL_CMD("thsllist", NULL, thsllist_cmd, 0, "List the sleeping threads in the system", "[v]") \
+	SHELL_CMD("thlist", "tl", thlist_cmd, 0, \
+			"List the threads in the system. If v is specified as an argument the output will be " \
+			"verbose.", "[v]") \
+	SHELL_CMD("thsllist", NULL, thsllist_cmd, 0, \
+			"List the sleeping threads in the system. If v is specified as an argument the output" \
+			" will be verbose.", "[v]") \
 	SHELL_CMD("thdelist", NULL, thdelist_cmd, 0, "List the delayed threads in the system", "[v]") \
 	SHELL_CMD("thsulist", NULL, thsulist_cmd, 0, "List the suspended threads in the system", "[v]") \
 	SHELL_CMD("thdolist", NULL, thdolist_cmd, 0, "List the dormant threads in the system", "[v]") \

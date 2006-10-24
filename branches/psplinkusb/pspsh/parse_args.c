@@ -110,7 +110,7 @@ int decode_oct(const char *str, unsigned char *ch)
 	return i;
 }
 
-void insert_arg(const char **pin, char **pout, int sargc, const char**sargv)
+void insert_arg(const char **pin, char **pout, int sargc, char**sargv)
 {
 	const char *in = *pin;
 	char *out = *pout;
@@ -168,7 +168,7 @@ void insert_arg(const char **pin, char **pout, int sargc, const char**sargv)
 }
 
 /* Read a single string from the output, escape characters and quotes, insert $ args */
-int read_string(const char **pin, char **pout, int sargc, const char **sargv)
+int read_string(const char **pin, char **pout, int sargc, char **sargv)
 {
 	int in_quote = 0;
 	const char *in = *pin;
@@ -316,7 +316,7 @@ int read_string(const char **pin, char **pout, int sargc, const char **sargv)
 	return len;
 }
 
-int parse_cli(const char *in, char *out, int *argc, char **argv, int max_args, int sargc, const char **sargv, int *type, char *redir)
+int parse_cli(const char *in, char *out, int *argc, char **argv, int max_args, int sargc, char **sargv, int *type, char *redir)
 {
 	char *lastout;
 	char *outstart = out;
@@ -334,6 +334,11 @@ int parse_cli(const char *in, char *out, int *argc, char **argv, int max_args, i
 	while(isspace(*in))
 	{
 		in++;
+	}
+
+	if(*in == 0)
+	{
+		return 0;
 	}
 
 	lastout = out;
@@ -395,7 +400,7 @@ int main(void)
 		int  argc;
 		int binlen;
 
-		binlen = parse_cli(str, out, &argc, argv, 16, 0, NULL, &type, redir);
+		binlen = parse_cli("test me\n", out, &argc, argv, 16, 0, NULL, &type, redir);
 		if(binlen > 0)
 		{
 			int i;

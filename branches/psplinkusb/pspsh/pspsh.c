@@ -41,6 +41,13 @@ struct Args
 	const char *hist;
 	const char *log;
 	unsigned short port;
+	/* Indicates we are in script mode */
+	int script;
+	/* Indicates we passed an exec command on the command line */
+	const char *exec;
+	/* Script arguments */
+	int sargc;
+	char **sargv;
 	int notty;
 };
 
@@ -58,6 +65,9 @@ struct GlobalContext
 	char currpath[PATH_MAX];
 	char currcmd[PATH_MAX];
 	FILE *fredir;
+	FILE *fscript;
+	char **sargv;
+	int  sargc;
 };
 
 struct GlobalContext g_context;
@@ -157,6 +167,7 @@ int execute_line(const char *buf)
 	char *argv[16];
 	int  argc;
 	int len;
+	int ret = 0;
 
 	len = strlen(buf);
 
@@ -164,7 +175,7 @@ int execute_line(const char *buf)
 	{
 		char redir[PATH_MAX];
 		int  type;
-		int binlen = parse_cli(buf, args, &argc, argv, 16, 0, NULL, &type, redir);
+		int binlen = parse_cli(buf, args, &argc, argv, 16, g_context.sargc, g_context.sargv, &type, redir);
 		if((binlen > 0) && (args[0] != '#'))
 		{
 			if(strchr(argv[0], '.') || strchr(argv[0], '/'))
@@ -213,20 +224,177 @@ int execute_line(const char *buf)
 			{
 				close(g_context.sock);
 				g_context.sock = -1;
-				return 0;
+				return -1;
 			}
 			strcpy(g_context.currcmd, args);
+			ret = 1;
 		}
 	}
 
-	return 1;
+	return ret;
+}
+
+void close_script(void)
+{
+	if(g_context.fscript)
+	{
+		fclose(g_context.fscript);
+		g_context.fscript = NULL;
+	}
+
+	if(g_context.sargv)
+	{
+		int i;
+
+		for(i = 0; i < g_context.sargc; i++)
+		{
+			if(g_context.sargv[i])
+			{
+				free(g_context.sargv[i]);
+			}
+		}
+		free(g_context.sargv);
+		g_context.sargv = NULL;
+	}
+
+	g_context.sargc = 0;
+
+	if(g_context.args.script)
+	{
+		g_context.exit = 1;
+	}
+}
+
+int open_script(const char *file, int sargc, char **sargv)
+{
+	int ret = 0;
+	int i;
+
+	do
+	{
+		/* Ensure script is closed */
+		close_script();
+
+		g_context.fscript = fopen(file, "r");
+		if(g_context.fscript == NULL)
+		{
+			fprintf(stderr, "Could not open script file %s\n", file);
+			break;
+		}
+
+		if(sargc > 0)
+		{
+			g_context.sargv = (char**) malloc(sizeof(char*)*sargc);
+			if(g_context.sargv == NULL)
+			{
+				fprintf(stderr, "Could not allocate script arguments\n");
+				break;
+			}
+			for(i = 0; i < sargc; i++)
+			{
+				g_context.sargv[i] = strdup(sargv[i]);
+				if(g_context.sargv[i] == NULL)
+				{
+					fprintf(stderr, "Could not allocate argument string %d\n", i);
+					break;
+				}
+			}
+
+			if(i < sargc)
+			{
+				break;
+			}
+
+			g_context.sargc = sargc;
+		}
+
+		ret = 1;
+	}
+	while(0);
+
+	if(!ret)
+	{
+		close_script();
+	}
+
+	return ret;
+}
+
+int in_script(void)
+{
+	if(g_context.fscript)
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+int execute_script_line(void)
+{
+	char line[1024];
+
+	if(g_context.fscript)
+	{
+		while(fgets(line, sizeof(line), g_context.fscript))
+		{
+			int ret = execute_line(line);
+			if(ret < 0)
+			{
+				return -1;
+			}
+
+			/* Only return if we have sent a line to the PSP */
+			if(ret > 0)
+			{
+				return 1;
+			}
+		}
+
+		/* Only way we get here is if there were no lines to execute */
+		close_script();
+	}
+
+	return 0;
 }
 
 int close_cmd(int argc, char **argv)
 {
-	rl_callback_handler_remove();
-	rl_callback_handler_install("", cli_handler);
+	if(g_context.args.script == 0)
+	{
+		rl_callback_handler_remove();
+		rl_callback_handler_install("", cli_handler);
+	}
 	g_context.exit = 1;
+	return 0;
+}
+
+int execute_script(const char *cmd)
+{
+	char args[4096];
+	char *argv[16];
+	int  argc;
+	int len;
+
+	len = strlen(cmd);
+
+	if(len > 0)
+	{
+		char redir[PATH_MAX];
+		int  type;
+		int binlen = parse_cli(cmd, args, &argc, argv, 16, 0, NULL, &type, redir);
+		if(binlen > 0)
+		{
+			if(open_script(argv[0], argc, argv))
+			{
+				if(execute_script_line() > 0)
+				{
+					return 1;
+				}
+			}
+		}
+	}
+
 	return 0;
 }
 
@@ -238,25 +406,51 @@ int exit_cmd(int argc, char **argv)
 
 void cli_handler(char *buf)
 {
-	if((buf) && (*buf))
+	if(buf)
 	{
-		add_history(rl_line_buffer);
-
-		if(rl_line_buffer[0] == '!')
+		while(isspace(*buf))
 		{
-			if(strncmp(&rl_line_buffer[1], "cd ", 3) == 0)
+			buf++;
+		}
+
+		if(*buf == 0)
+		{
+			return;
+		}
+
+		if(in_script())
+		{
+			/* When a script is running only accept stop */
+			if(strcmp(buf, "stop") == 0)
 			{
-				chdir(&rl_line_buffer[4]);
+				close_script();
+			}
+
+			return;
+		}
+
+		add_history(buf);
+		if(buf[0] == '!')
+		{
+			if(strncmp(&buf[1], "cd ", 3) == 0)
+			{
+				chdir(&buf[4]);
 			}
 			else
 			{
-				system(&rl_line_buffer[1]);
+				system(&buf[1]);
 			}
 			return;
 		}
-		else if(rl_line_buffer[0] == '@')
+		else if(buf[0] == '@')
 		{
 			/* Send to hostfs */
+			return;
+		}
+		else if(buf[0] == '%')
+		{
+			execute_script(&buf[1]);
+			return;
 		}
 
 		execute_line(buf);
@@ -476,7 +670,7 @@ char** shell_completion(const char *text, int start, int end)
 	rl_completion_display_matches_hook = NULL;
 
 	/* Find if this is current in shell or usbhostfs modes */
-	if((*curr_line == '!') || (*curr_line == '@'))
+	if((*curr_line == '!') || (*curr_line == '@') || (*curr_line == '%'))
 	{
 		/* Do normal (local) filename completion */
 		matches = rl_completion_matches(text, rl_filename_completion_function);
@@ -554,6 +748,15 @@ int parse_args(int argc, char **argv, struct Args *args)
 
 	argc -= optind;
 	argv += optind;
+	if(!args->exec && (argc > 0))
+	{
+		if(!open_script(argv[0], argc, argv))
+		{
+			return 0;
+		}
+		args->script = 1;
+		args->notty = 1;
+	}
 
 	return 1;
 }
@@ -561,7 +764,7 @@ int parse_args(int argc, char **argv, struct Args *args)
 void print_help(void)
 {
 	fprintf(stderr, "PSPSH Help\n");
-	fprintf(stderr, "Usage: pspsh [options]\n");
+	fprintf(stderr, "Usage: pspsh [options] [script args...]\n");
 	fprintf(stderr, "Options:\n");
 	fprintf(stderr, "-i ipaddr   : Specify the IP address to connect to\n");
 	fprintf(stderr, "-p port     : Specify the port number\n");
@@ -624,12 +827,14 @@ int help_cmd(int argc, char **argv)
 			}
 			else
 			{
-				printf("%s\t - %s\n", found_cmd->name, found_cmd->desc);
+				printf("Command: %s\t\n", found_cmd->name);
 				if(found_cmd->syn)
 				{
 					printf("Synonym: %s\n", found_cmd->syn);
 				}
 				printf("Usage: %s %s\n", found_cmd->name, found_cmd->help);
+				printf("\n");
+				printf("%s\n", found_cmd->desc);
 			}
 		}
 		else
@@ -746,7 +951,6 @@ int process_cmd(const unsigned char *str)
 		else
 		{
 			printf("%s", str);
-			fflush(stdout);
 		}
 	}
 	else
@@ -777,6 +981,12 @@ int process_cmd(const unsigned char *str)
 						printf("Command %s has no help associated\n", g_context.currcmd);
 					}
 				}
+
+				/* On error stop any executing script */
+				if(in_script())
+				{
+					close_script();
+				}
 			}
 
 			(void) setenv("?", (char*) (str+1), 1);
@@ -786,15 +996,22 @@ int process_cmd(const unsigned char *str)
 				fclose(g_context.fredir);
 				g_context.fredir = NULL;
 			}
+			else
+			{
+				fflush(stdout);
+			}
 
-			/* If end of command then restore prompt */
-			rl_callback_handler_remove();
-			snprintf(prompt, PATH_MAX, "%s> ", g_context.currpath);
-			rl_callback_handler_install(prompt, cli_handler);
+			/* Only restore if there is no pending script and we didn't execute a line */
+			if((execute_script_line() <= 0) && (g_context.args.script == 0))
+			{
+				rl_callback_handler_remove();
+				snprintf(prompt, PATH_MAX, "%s> ", g_context.currpath);
+				rl_callback_handler_install(prompt, cli_handler);
+			}
 		}
 		else if(*str == SHELL_CMD_TAB)
 		{
-			printf("Tab Match: %s\n", str+1);
+			printf("Mismatched Tab Match: %s\n", str+1);
 		}
 	}
 
@@ -1127,11 +1344,15 @@ void shell(void)
 		}
 	}
 
-	init_readline();
-	read_history(g_context.history_file);
-	history_set_pos(history_length);
+	if(!g_context.args.script)
+	{
+		init_readline();
+		read_history(g_context.history_file);
+		history_set_pos(history_length);
 
-	FD_SET(STDIN_FILENO, &g_context.readsave);
+		FD_SET(STDIN_FILENO, &g_context.readsave);
+	}
+
 	/* Change to the current directory, should return our path */
 	execute_line("cd .");
 
@@ -1157,9 +1378,12 @@ void shell(void)
 		}
 		else
 		{
-			if(FD_ISSET(STDIN_FILENO, &readset))
+			if(!g_context.args.script)
 			{
-				rl_callback_read_char();
+				if(FD_ISSET(STDIN_FILENO, &readset))
+				{
+					rl_callback_read_char();
+				}
 			}
 
 			if(FD_ISSET(g_context.sock, &readset))
@@ -1194,7 +1418,10 @@ void shell(void)
 		}
 	}
 
-	write_history(g_context.history_file);
+	if(!g_context.args.script)
+	{
+		write_history(g_context.history_file);
+	}
 	rl_callback_handler_remove();
 }
 
@@ -1218,7 +1445,12 @@ void sig_call(int sig)
 			close(g_context.errsock);
 			g_context.errsock = -1;
 		}
-		rl_callback_handler_remove();
+
+		if(!g_context.args.script)
+		{
+			rl_callback_handler_remove();
+		}
+
 		exit(0);
 	}
 }

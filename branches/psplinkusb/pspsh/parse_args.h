@@ -15,5 +15,5 @@
 #define REDIR_TYPE_NEW 1
 #define REDIR_TYPE_CAT 2
 
-int parse_cli(const char *in, char *out, int *argc, char **argv, int max_args, int sargc, const char **sargv, int *type, char *filename);
+int parse_cli(const char *in, char *out, int *argc, char **argv, int max_args, int sargc, char **sargv, int *type, char *filename);
 const char *parse_redir(const char *in, char *filename, int *type);
