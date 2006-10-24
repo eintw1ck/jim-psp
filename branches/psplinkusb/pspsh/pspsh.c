@@ -68,6 +68,7 @@ struct GlobalContext
 	FILE *fscript;
 	char **sargv;
 	int  sargc;
+	int  lasterr;
 };
 
 struct GlobalContext g_context;
@@ -963,22 +964,26 @@ int process_cmd(const unsigned char *str)
 		{
 			char prompt[PATH_MAX];
 
-			if((g_context.currcmd[0]) && (*str == SHELL_CMD_ERROR))
+			if(*str == SHELL_CMD_ERROR)
 			{
-				const struct sh_command *cmd = find_command(g_context.currcmd);
-				if(cmd == NULL)
+				/* If there was a command then print the help */
+				if(g_context.currcmd[0])
 				{
-					printf("Unknown command %s\n", g_context.currcmd);
-				}
-				else
-				{
-					if(cmd->help)
+					const struct sh_command *cmd = find_command(g_context.currcmd);
+					if(cmd == NULL)
 					{
-						printf("Usage: %s\n", cmd->help);
+						printf("Unknown command %s\n", g_context.currcmd);
 					}
 					else
 					{
-						printf("Command %s has no help associated\n", g_context.currcmd);
+						if(cmd->help)
+						{
+							printf("Usage: %s\n", cmd->help);
+						}
+						else
+						{
+							printf("Command %s has no help associated\n", g_context.currcmd);
+						}
 					}
 				}
 
@@ -987,6 +992,13 @@ int process_cmd(const unsigned char *str)
 				{
 					close_script();
 				}
+
+				/* Set return code */
+				g_context.lasterr = 1;
+			}
+			else
+			{
+				g_context.lasterr = 0;
 			}
 
 			(void) setenv("?", (char*) (str+1), 1);
@@ -1321,7 +1333,7 @@ struct TabEntry* read_tab_completion(void)
 	return head.pNext;
 }
 
-void shell(void)
+int shell(void)
 {
 	fd_set readset;
 	FD_ZERO(&g_context.readsave);
@@ -1329,7 +1341,7 @@ void shell(void)
 	fprintf(stderr, "Opening connection to %s port %d\n", g_context.args.ip, g_context.args.port);
 	if((g_context.sock = connect_to(g_context.args.ip, g_context.args.port)) < 0)
 	{
-		return;
+		return 1;
 	}
 
 	if(g_context.args.notty == 0)
@@ -1423,6 +1435,8 @@ void shell(void)
 		write_history(g_context.history_file);
 	}
 	rl_callback_handler_remove();
+
+	return 0;
 }
 
 void sig_call(int sig)
@@ -1451,7 +1465,7 @@ void sig_call(int sig)
 			rl_callback_handler_remove();
 		}
 
-		exit(0);
+		exit(1);
 	}
 }
 
@@ -1479,6 +1493,8 @@ void build_histfile(void)
 
 int main(int argc, char **argv)
 {
+	int ret = 1;
+
 	memset(&g_context, 0, sizeof(g_context));
 	g_context.sock = -1;
 	g_context.outsock = -1;
@@ -1496,7 +1512,10 @@ int main(int argc, char **argv)
 			}
 		}
 		build_histfile();
-		shell();
+		if(shell() == 0)
+		{
+			ret = g_context.lasterr;
+		}
 		if(g_context.sock >= 0)
 		{
 			close(g_context.sock);
@@ -1519,5 +1538,5 @@ int main(int argc, char **argv)
 		print_help();
 	}
 
-	return 0;
+	return ret;
 }
