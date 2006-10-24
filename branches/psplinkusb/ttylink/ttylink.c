@@ -186,7 +186,7 @@ int read_outsocket(int sock)
 
 	buf[len] = 0;
 
-	printf("%s", buf);
+	fprintf(stdout, "%s", buf);
 
 	return len;
 }
@@ -211,7 +211,7 @@ int read_errsocket(int sock)
 
 	buf[len] = 0;
 
-	printf("%s", buf);
+	fprintf(stderr, "%s", buf);
 
 	return len;
 }
