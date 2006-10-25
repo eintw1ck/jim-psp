@@ -39,12 +39,11 @@ struct Args
 {
 	const char *ip;
 	const char *hist;
-	const char *log;
 	unsigned short port;
 	/* Indicates we are in script mode */
 	int script;
-	/* Indicates we passed an exec command on the command line */
-	const char *exec;
+	/* Holds the current execution line */
+	char exec[1024];
 	/* Script arguments */
 	int sargc;
 	char **sargv;
@@ -60,7 +59,6 @@ struct GlobalContext
 	int sock;
 	int outsock;
 	int errsock;
-	int log;
 	char history_file[PATH_MAX];
 	char currpath[PATH_MAX];
 	char currcmd[PATH_MAX];
@@ -69,6 +67,8 @@ struct GlobalContext
 	char **sargv;
 	int  sargc;
 	int  lasterr;
+	FILE *fstdout;
+	FILE *fstderr;
 };
 
 struct GlobalContext g_context;
@@ -200,9 +200,13 @@ int execute_line(const char *buf)
 				}
 			}
 
-			/* Remove the handler and prompt */
-			rl_callback_handler_remove();
-			rl_callback_handler_install("", cli_handler);
+			if(!g_context.args.script)
+			{
+				/* Remove the handler and prompt */
+				rl_callback_handler_remove();
+				rl_callback_handler_install("", cli_handler);
+			}
+
 			if(type != REDIR_TYPE_NONE)
 			{
 				if(type == REDIR_TYPE_NEW)
@@ -239,7 +243,10 @@ void close_script(void)
 {
 	if(g_context.fscript)
 	{
-		fclose(g_context.fscript);
+		if(g_context.fscript != stdin)
+		{
+			fclose(g_context.fscript);
+		}
 		g_context.fscript = NULL;
 	}
 
@@ -276,11 +283,18 @@ int open_script(const char *file, int sargc, char **sargv)
 		/* Ensure script is closed */
 		close_script();
 
-		g_context.fscript = fopen(file, "r");
-		if(g_context.fscript == NULL)
+		if(strcmp(file, "-") == 0)
 		{
-			fprintf(stderr, "Could not open script file %s\n", file);
-			break;
+			g_context.fscript = stdin;
+		}
+		else
+		{
+			g_context.fscript = fopen(file, "r");
+			if(g_context.fscript == NULL)
+			{
+				fprintf(stderr, "Could not open script file %s\n", file);
+				break;
+			}
 		}
 
 		if(sargc > 0)
@@ -323,6 +337,11 @@ int open_script(const char *file, int sargc, char **sargv)
 
 int in_script(void)
 {
+	if(g_context.args.exec[0])
+	{
+		return 1;
+	}
+
 	if(g_context.fscript)
 	{
 		return 1;
@@ -335,7 +354,25 @@ int execute_script_line(void)
 {
 	char line[1024];
 
-	if(g_context.fscript)
+	if(g_context.args.exec[0])
+	{
+		int ret = execute_line(g_context.args.exec);
+		g_context.args.exec[0] = ' ';
+		g_context.args.exec[1] = 0;
+		if(ret < 0)
+		{
+			return -1;
+		}
+
+		if(ret > 0)
+		{
+			return 1;
+		}
+
+		/* Only way we get here is if there were no lines to execute */
+		close_script();
+	}
+	else if(g_context.fscript)
 	{
 		while(fgets(line, sizeof(line), g_context.fscript))
 		{
@@ -719,7 +756,7 @@ int parse_args(int argc, char **argv, struct Args *args)
 		int ch;
 		int error = 0;
 
-		ch = getopt(argc, argv, "np:h:l:i:");
+		ch = getopt(argc, argv, "np:h:i:e:");
 		if(ch < 0)
 		{
 			break;
@@ -731,11 +768,12 @@ int parse_args(int argc, char **argv, struct Args *args)
 					  break;
 			case 'h': args->hist = optarg;
 					  break;
-			case 'l': args->log = optarg;
-					  break;
 			case 'n': args->notty = 1;
 					  break;
 			case 'i': args->ip = optarg;
+					  break;
+			case 'e': snprintf(args->exec, sizeof(args->exec), "%s", optarg);
+					  args->script = 1;
 					  break;
 			default : error = 1;
 					  break;
@@ -749,7 +787,7 @@ int parse_args(int argc, char **argv, struct Args *args)
 
 	argc -= optind;
 	argv += optind;
-	if(!args->exec && (argc > 0))
+	if(args->exec[0] && (argc > 0))
 	{
 		if(!open_script(argv[0], argc, argv))
 		{
@@ -770,7 +808,7 @@ void print_help(void)
 	fprintf(stderr, "-i ipaddr   : Specify the IP address to connect to\n");
 	fprintf(stderr, "-p port     : Specify the port number\n");
 	fprintf(stderr, "-h history  : Specify the history file (default ~/%s)\n", HISTORY_FILE);
-	fprintf(stderr, "-l logfile  : Write out all shell text to a log file\n");
+	fprintf(stderr, "-e cmd      : Execute a command and exit\n");
 	fprintf(stderr, "-n          : Do not connect up the tty (stdin/stdout/stderr)\n");
 }
 
@@ -797,15 +835,15 @@ int help_cmd(int argc, char **argv)
 
 	if(argc < 1)
 	{
-		printf("Command Categories\n\n");
+		fprintf(stderr, "Command Categories\n\n");
 		for(cmd_loop = 0; g_commands[cmd_loop].name; cmd_loop++)
 		{
 			if(g_commands[cmd_loop].help == NULL)
 			{
-				printf("%-10s - %s\n", g_commands[cmd_loop].name, g_commands[cmd_loop].desc);
+				fprintf(stderr, "%-10s - %s\n", g_commands[cmd_loop].name, g_commands[cmd_loop].desc);
 			}
 		}
-		printf("\nType 'help category' for more information\n");
+		fprintf(stderr, "\nType 'help category' for more information\n");
 	}
 	else
 	{
@@ -817,30 +855,31 @@ int help_cmd(int argc, char **argv)
 			if(found_cmd->help == NULL)
 			{
 				/* Print the commands listed under the separator */
-				printf("Category %s\n\n", found_cmd->name);
+				fprintf(stderr, "Category %s\n\n", found_cmd->name);
 				for(cmd_loop = 1; found_cmd[cmd_loop].name && found_cmd[cmd_loop].help != NULL; cmd_loop++)
 				{
 					if(found_cmd[cmd_loop].desc)
 					{
-						printf("%-10s - %s\n", found_cmd[cmd_loop].name, found_cmd[cmd_loop].desc);
+						fprintf(stderr, "%-10s - %s\n", found_cmd[cmd_loop].name, found_cmd[cmd_loop].desc);
 					}
 				}
 			}
 			else
 			{
-				printf("Command: %s\t\n", found_cmd->name);
+				fprintf(stderr, "Command: %s\t\n", found_cmd->name);
 				if(found_cmd->syn)
 				{
-					printf("Synonym: %s\n", found_cmd->syn);
+					fprintf(stderr, "Synonym: %s\n", found_cmd->syn);
 				}
-				printf("Usage: %s %s\n", found_cmd->name, found_cmd->help);
-				printf("\n");
-				printf("%s\n", found_cmd->desc);
+				fprintf(stderr, "Usage: %s %s\n", found_cmd->name, found_cmd->help);
+				fprintf(stderr, "%s\n\n", found_cmd->desc);
+				fprintf(stderr, "Detail:\n");
+				fprintf(stderr, "%s\n", found_cmd->detail);
 			}
 		}
 		else
 		{
-			printf("Unknown command %s, type help for information\n", argv[0]);
+			fprintf(stderr, "Unknown command %s, type help for information\n", argv[0]);
 		}
 	}
 
@@ -940,11 +979,6 @@ int process_cmd(const unsigned char *str)
 {
 	if(*str < 128)
 	{
-		if(g_context.log >= 0)
-		{
-			write(g_context.log, str, strlen((char*) str));
-		}
-
 		if(g_context.fredir)
 		{
 			fprintf(g_context.fredir, "%s", str);
@@ -972,17 +1006,17 @@ int process_cmd(const unsigned char *str)
 					const struct sh_command *cmd = find_command(g_context.currcmd);
 					if(cmd == NULL)
 					{
-						printf("Unknown command %s\n", g_context.currcmd);
+						fprintf(stderr, "Unknown command %s\n", g_context.currcmd);
 					}
 					else
 					{
 						if(cmd->help)
 						{
-							printf("Usage: %s\n", cmd->help);
+							fprintf(stderr, "Usage: %s\n", cmd->help);
 						}
 						else
 						{
-							printf("Command %s has no help associated\n", g_context.currcmd);
+							fprintf(stderr, "Command %s has no help associated\n", g_context.currcmd);
 						}
 					}
 				}
@@ -1023,7 +1057,7 @@ int process_cmd(const unsigned char *str)
 		}
 		else if(*str == SHELL_CMD_TAB)
 		{
-			printf("Mismatched Tab Match: %s\n", str+1);
+			fprintf(stderr, "Mismatched Tab Match: %s\n", str+1);
 		}
 	}
 
@@ -1106,7 +1140,7 @@ int read_outsocket(int sock)
 
 	buf[len] = 0;
 
-	printf("%s", buf);
+	fprintf(g_context.fstdout, "%s", buf);
 
 	return len;
 }
@@ -1131,7 +1165,7 @@ int read_errsocket(int sock)
 
 	buf[len] = 0;
 
-	printf("%s", buf);
+	fprintf(g_context.fstderr, "%s", buf);
 
 	return len;
 }
@@ -1433,8 +1467,8 @@ int shell(void)
 	if(!g_context.args.script)
 	{
 		write_history(g_context.history_file);
+		rl_callback_handler_remove();
 	}
-	rl_callback_handler_remove();
 
 	return 0;
 }
@@ -1443,7 +1477,7 @@ void sig_call(int sig)
 {
 	if((sig == SIGINT) || (sig == SIGTERM))
 	{
-		printf("Exiting\n");
+		fprintf(stderr, "Exiting\n");
 		if(g_context.sock >= 0)
 		{
 			close(g_context.sock);
@@ -1499,18 +1533,10 @@ int main(int argc, char **argv)
 	g_context.sock = -1;
 	g_context.outsock = -1;
 	g_context.errsock = -1;
-	g_context.log  = -1;
+	g_context.fstdout = stdout;
+	g_context.fstderr = stderr;
 	if(parse_args(argc, argv, &g_context.args))
 	{
-		if(g_context.args.log)
-		{
-			g_context.log = open(g_context.args.log, O_WRONLY | O_CREAT | O_TRUNC, 0660);
-			if(g_context.log < 0)
-			{
-				fprintf(stderr, "Warning: Could not open log file %s (%s)\n", g_context.args.log, 
-						strerror(errno));
-			}
-		}
 		build_histfile();
 		if(shell() == 0)
 		{
@@ -1527,10 +1553,6 @@ int main(int argc, char **argv)
 		if(g_context.errsock >= 0)
 		{
 			close(g_context.errsock);
-		}
-		if(g_context.log >= 0)
-		{
-			close(g_context.log);
 		}
 	}
 	else
