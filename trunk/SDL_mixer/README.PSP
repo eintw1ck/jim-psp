@@ -14,7 +14,8 @@ To configure:
    ./autogen.sh
    LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" \
      ./configure --host psp --with-sdl-prefix=$(psp-config --psp-prefix) \
-     --disable-music-mp3 --prefix=$(psp-config --psp-prefix)
+     --disable-music-mp3 --prefix=$(psp-config --psp-prefix) \
+     --disable-music-libmikmod --enable-music-mod
 
 Then run:
 
