@@ -83,6 +83,8 @@ void cli_handler(char *buf)
 {
 	if((buf) && (*buf))
 	{
+		write(g_context.outsock, buf, strlen(buf));
+		write(g_context.outsock, "\n", 1);
 	}
 }
 
@@ -187,6 +189,7 @@ int read_outsocket(int sock)
 	buf[len] = 0;
 
 	fprintf(stdout, "%s", buf);
+	fflush(stdout);
 
 	return len;
 }
@@ -212,6 +215,7 @@ int read_errsocket(int sock)
 	buf[len] = 0;
 
 	fprintf(stderr, "%s", buf);
+	fflush(stderr);
 
 	return len;
 }

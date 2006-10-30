@@ -1,7 +1,7 @@
 OUTPUT=ttylink
 OBJS=ttylink.o
 
-CFLAGS=-Wall -g -DSERIAL_SUPPORT 
+CFLAGS=-Wall -g 
 LIBS=-lreadline -lcurses
 
 all: ttylink
