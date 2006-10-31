@@ -33,7 +33,7 @@ int get_registry_value(const char *dir, const char *name, unsigned int *val)
 	REGHANDLE h;
 
 	memset(&reg, 0, sizeof(reg));
-	reg.unk1 = 1;
+	reg.regtype = 1;
 	reg.namelen = strlen("/system");
 	reg.unk2 = 1;
 	reg.unk3 = 1;
@@ -70,7 +70,7 @@ int set_registry_value(const char *dir, const char *name, unsigned int val)
 	REGHANDLE h;
 
 	memset(&reg, 0, sizeof(reg));
-	reg.unk1 = 1;
+	reg.regtype = 1;
 	reg.namelen = strlen("/system");
 	reg.unk2 = 1;
 	reg.unk3 = 1;
