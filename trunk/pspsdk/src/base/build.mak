@@ -167,12 +167,12 @@ $(TARGET_LIB): $(OBJS)
 $(PSP_EBOOT_SFO): 
 	$(MKSFO) '$(PSP_EBOOT_TITLE)' $@
 
-$(PSP_EBOOT): $(TARGET).elf $(PSP_EBOOT_SFO)
-	$(STRIP) $(TARGET).elf -o $(TARGET)_strip.elf
+$(PSP_EBOOT): $(FINAL_TARGET) $(PSP_EBOOT_SFO)
+	$(STRIP) $(FINAL_TARGET) -o strip_$(FINAL_TARGET)
 	$(PACK_PBP) EBOOT.PBP $(PSP_EBOOT_SFO) $(PSP_EBOOT_ICON)  \
 		$(PSP_EBOOT_ICON1) $(PSP_EBOOT_UNKPNG) $(PSP_EBOOT_PIC1)  \
-		$(PSP_EBOOT_SND0)  $(TARGET)_strip.elf $(PSP_EBOOT_PSAR)
-	-rm -f $(TARGET)_strip.elf
+		$(PSP_EBOOT_SND0)  strip_$(FINAL_TARGET) $(PSP_EBOOT_PSAR)
+	-rm -f strip_$(FINAL_TARGET)
 
 %.prx: %.elf
 	psp-prxgen $< $@
