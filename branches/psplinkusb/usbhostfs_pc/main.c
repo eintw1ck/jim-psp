@@ -3065,7 +3065,7 @@ void *async_thread(void *arg)
 										data[sizeof(buf)-sizeof(struct AsyncCommand)-1] = 0;
 									}
 
-									parse_shell(&data[1]);
+									parse_shell(&data[0]);
 									continue;
 								}
 							}
@@ -3153,8 +3153,8 @@ int main(int argc, char **argv)
 
 		if(g_daemon)
 		{
-			g_servsocks[MAX_ASYNC_CHANNELS] = make_socket(g_baseport + MAX_ASYNC_CHANNELS);
-			g_clientsocks[MAX_ASYNC_CHANNELS] = -1;
+			g_servsocks[i] = make_socket(g_baseport + MAX_ASYNC_CHANNELS);
+			g_clientsocks[i] = -1;
 		}
 
 		pthread_create(&thid, NULL, async_thread, NULL);

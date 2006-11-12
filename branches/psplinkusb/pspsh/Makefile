@@ -1,5 +1,5 @@
 OUTPUT=pspsh
-OBJS=pspsh.o parse_args.o
+OBJS=pspsh.o parse_args.o pspkerror.o
 
 CFLAGS=-Wall -g -D_PCTERM -I../psplink
 LIBS=-lreadline -lcurses

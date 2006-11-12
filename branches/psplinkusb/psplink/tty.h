@@ -11,9 +11,5 @@
  * $Id$
  */
 
-void ttySetWifiHandler(PspDebugPrintHandler wifiHandler);
-void ttySetConsHandler(PspDebugPrintHandler consHandler);
-void ttySetUsbHandler(PspDebugPrintHandler usbHandler);
-void ttySetSioHandler(PspDebugPrintHandler sioHandler);
-void ttyAddInputData(const char *data, int size);
+void ttySetUsbHandler(PspDebugPrintHandler usbShellHandler, PspDebugPrintHandler usbStdoutHandler, PspDebugPrintHandler usbStderrHandler, PspDebugInputHandler usbStdinHandler);
 void ttyInit(void);

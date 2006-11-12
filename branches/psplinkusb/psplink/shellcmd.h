@@ -225,6 +225,7 @@ struct sh_command
 	SHELL_CMD_PCTERM("set", NULL, set_cmd, 1, "Set an environment variable", "", "name=value") \
 	SHELL_CMD_PCTERM("unset", NULL, unset_cmd, 1, "Unset an environment variable", "", "name") \
 	SHELL_CMD_PCTERM("echo", NULL, echo_cmd, 0, "Echo text to the screen", "", "[args...]") \
+	SHELL_CMD_PCTERM("error", NULL, error_cmd, 1, "Print the name of a known kernel error", "", "no") \
 	SHELL_CMD_PSP("tab", NULL, tab_cmd, 1, "Tab Completion", "", "dir [file]") \
 	SHELL_CMD_PCTERM("help", "?", help_cmd, 0, "Print help about a command", \
 			"If a category is specified print all commands underneath. If a command is specified " \

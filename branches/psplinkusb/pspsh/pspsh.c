@@ -26,6 +26,7 @@
 #include <signal.h>
 #include <shellcmd.h>
 #include "parse_args.h"
+#include "pspkerror.h"
 
 #ifndef SOL_TCP
 #define SOL_TCP 6
@@ -59,6 +60,7 @@ struct GlobalContext
 	int sock;
 	int outsock;
 	int errsock;
+	int fssock;
 	char history_file[PATH_MAX];
 	char currpath[PATH_MAX];
 	char currcmd[PATH_MAX];
@@ -81,6 +83,7 @@ int env_cmd(int argc, char **argv);
 int set_cmd(int argc, char **argv);
 int unset_cmd(int argc, char **argv);
 int echo_cmd(int argc, char **argv);
+int error_cmd(int argc, char **argv);
 void cli_handler(char *buf);
 struct TabEntry* read_tab_completion(void);
 struct TabEntry
@@ -482,7 +485,10 @@ void cli_handler(char *buf)
 		}
 		else if(buf[0] == '@')
 		{
-			/* Send to hostfs */
+			if(g_context.fssock >= 0)
+			{
+				(void) write(g_context.fssock, &buf[1], strlen(&buf[1]));
+			}
 			return;
 		}
 		else if(buf[0] == '%')
@@ -959,6 +965,28 @@ int unset_cmd(int argc, char **argv)
 	return 0;
 }
 
+int error_cmd(int argc, char **argv)
+{
+	unsigned int err;
+	int i;
+
+	err = strtoul(argv[0], NULL, 0);
+	i = 0;
+	while(PspKernelErrorCodes[i].name)
+	{
+		if(err == PspKernelErrorCodes[i].num)
+		{
+			printf("Error: %s\n", PspKernelErrorCodes[i].name);
+			return 0;
+		}
+		i++;
+	}
+
+	printf("Unknown error code 0x%08X\n", err);
+
+	return 0;
+}
+
 int echo_cmd(int argc, char **argv)
 {
 	int i;
@@ -1166,6 +1194,31 @@ int read_errsocket(int sock)
 	buf[len] = 0;
 
 	fprintf(g_context.fstderr, "%s", buf);
+
+	return len;
+}
+
+int read_fssocket(int sock)
+{
+	char buf[1024];
+	int len;
+
+	len = read(sock, buf, sizeof(buf)-1);
+	if(len < 0)
+	{
+		perror("read");
+		return -1;
+	}
+
+	/* EOF */
+	if(len == 0)
+	{
+		return -1;
+	}
+
+	buf[len] = 0;
+
+	fprintf(stderr, "%s", buf);
 
 	return len;
 }
@@ -1390,6 +1443,13 @@ int shell(void)
 		}
 	}
 
+	/*
+	if((g_context.fssock == connect_to(g_context.args.ip, g_context.args.port+8)) < 0)
+	{
+		fprintf(stderr, "Could not connect to fs admin channel\n");
+	}
+	*/
+
 	if(!g_context.args.script)
 	{
 		init_readline();
@@ -1461,6 +1521,17 @@ int shell(void)
 					g_context.errsock = -1;
 				}
 			}
+
+			if((g_context.fssock >= 0) && FD_ISSET(g_context.fssock, &readset))
+			{
+				if(read_fssocket(g_context.fssock) < 0)
+				{
+					FD_CLR(g_context.fssock, &g_context.readsave);
+					close(g_context.fssock);
+					g_context.fssock = -1;
+				}
+			}
+					
 		}
 	}
 
@@ -1492,6 +1563,11 @@ void sig_call(int sig)
 		{
 			close(g_context.errsock);
 			g_context.errsock = -1;
+		}
+		if(g_context.fssock >= 0)
+		{
+			close(g_context.fssock);
+			g_context.fssock = -1;
 		}
 
 		if(!g_context.args.script)
@@ -1533,6 +1609,7 @@ int main(int argc, char **argv)
 	g_context.sock = -1;
 	g_context.outsock = -1;
 	g_context.errsock = -1;
+	g_context.fssock = -1;
 	g_context.fstdout = stdout;
 	g_context.fstderr = stderr;
 	if(parse_args(argc, argv, &g_context.args))
@@ -1553,6 +1630,10 @@ int main(int argc, char **argv)
 		if(g_context.errsock >= 0)
 		{
 			close(g_context.errsock);
+		}
+		if(g_context.fssock >= 0)
+		{
+			close(g_context.fssock);
 		}
 	}
 	else

@@ -19,13 +19,14 @@
 #include <string.h>
 #include <usbhostfs.h>
 #include <usbasync.h>
+#include "tty.h"
 
 #define MAX_CLI 4096
 
-void ttySetUsbHandler(PspDebugPrintHandler usbShellHandler, PspDebugPrintHandler usbStdoutHandler, PspDebugPrintHandler usbStderrHandler);
 void psplinkPrintPrompt(void);
 
 struct AsyncEndpoint g_endp;
+struct AsyncEndpoint g_stdin;
 
 int usbShellPrint(const char *data, int size)
 {
@@ -48,10 +49,30 @@ int usbStderrPrint(const char *data, int size)
 	return size;
 }
 
+int usbStdinRead(char *data, int size)
+{
+	int ret = 0;
+
+	while(1)
+	{
+		ret = usbAsyncRead(ASYNC_STDOUT, (unsigned char*) data, size);
+		if(ret < 0)
+		{
+			sceKernelDelayThread(250000);
+			continue;
+		}
+
+		break;
+	}
+
+	return ret;
+}
+
 int usbShellInit(void)
 {
 	usbAsyncRegister(ASYNC_SHELL, &g_endp);
-	ttySetUsbHandler(usbShellPrint, usbStdoutPrint, usbStderrPrint);
+	usbAsyncRegister(ASYNC_STDOUT, &g_stdin);
+	ttySetUsbHandler(usbShellPrint, usbStdoutPrint, usbStderrPrint, usbStdinRead);
 	usbWaitForConnect();
 	psplinkPrintPrompt();
 

@@ -30,18 +30,10 @@
 
 #define STDIN_BUFSIZE 4096
 
+static PspDebugInputHandler g_usbStdinHandler = NULL;
 static PspDebugPrintHandler g_usbStdoutHandler = NULL;
 static PspDebugPrintHandler g_usbStderrHandler = NULL;
 static PspDebugPrintHandler g_usbShellHandler = NULL;
-
-/* STDIN buffer */
-static char g_stdinbuf[STDIN_BUFSIZE];
-/* Position in STDIN buffer */
-static int g_stdinreadpos = 0;
-static int g_stdinwritepos = 0;
-static int g_stdinsize = 0;
-/* The waiting thread for stdin data */
-static SceUID g_stdinwaitth = -1;
 
 extern struct GlobalContext g_context;
 
@@ -77,65 +69,20 @@ static int shellHandler(const char *data, int size)
 
 static int inputHandler(char *data, int size)
 {
-	int intc;
-	int sizeread = 0;
-	int i;
-
-	while(1)
+	if(g_usbStdinHandler)
 	{
-		intc = pspSdkDisableInterrupts();
-		sizeread = size < g_stdinsize ? size : g_stdinsize;
-		for(i = 0; i < sizeread; i++)
-		{
-			*data++ = g_stdinbuf[g_stdinreadpos++];
-			g_stdinreadpos %= STDIN_BUFSIZE;
-			g_stdinsize--;
-		}
-
-		if(sizeread == 0)
-		{
-			g_stdinwaitth = sceKernelGetThreadId();
-		}
-		pspSdkEnableInterrupts(intc);
-
-		if(sizeread > 0)
-		{
-			break;
-		}
-
-		sceKernelSleepThread();
+		return g_usbStdinHandler(data, size);
 	}
 
-	return sizeread;
+	return 0;
 }
 
-void ttySetUsbHandler(PspDebugPrintHandler usbShellHandler, PspDebugPrintHandler usbStdoutHandler, PspDebugPrintHandler usbStderrHandler)
+void ttySetUsbHandler(PspDebugPrintHandler usbShellHandler, PspDebugPrintHandler usbStdoutHandler, PspDebugPrintHandler usbStderrHandler, PspDebugInputHandler usbStdinHandler)
 {
 	g_usbStdoutHandler = usbStdoutHandler;
 	g_usbStderrHandler = usbStderrHandler;
 	g_usbShellHandler = usbShellHandler;
-}
-
-void ttyAddInputData(const char *data, int size)
-{
-	int intc;
-	int sizeleft;
-
-	intc = pspSdkDisableInterrupts();
-	sizeleft = size < (STDIN_BUFSIZE - g_stdinsize) ? size : (STDIN_BUFSIZE - g_stdinsize);
-	while(sizeleft > 0)
-	{
-		g_stdinbuf[g_stdinwritepos++] = *data++;
-		g_stdinwritepos %= STDIN_BUFSIZE;
-		g_stdinsize++;
-		sizeleft--;
-	}
-	if(g_stdinwaitth >= 0)
-	{
-		sceKernelWakeupThread(g_stdinwaitth);
-		g_stdinwaitth = -1;
-	}
-	pspSdkEnableInterrupts(intc);
+	g_usbStdinHandler = usbStdinHandler;
 }
 
 static int close_func(int fd)
