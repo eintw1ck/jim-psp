@@ -93,7 +93,7 @@ struct sh_command
 	SHELL_CMD("thterm", "tt", thterm_cmd, 1, "Terminate a thread", "", "uid|@name") \
 	SHELL_CMD("thdel", "td", thdel_cmd, 1, "Delete a thread", "", "uid|@name") \
 	SHELL_CMD("thtdel", "tx", thtdel_cmd, 1, "Terminate and delete a thread", "", "uid|@name") \
-	SHELL_CMD("thctx",  "tt", thctx_cmd, 1, "Find and print the full thread context", "", "uid|@name") \
+	SHELL_CMD("thctx",  NULL, thctx_cmd, 1, "Find and print the full thread context", "", "uid|@name") \
 	SHELL_CMD("thpri",  "tp", thpri_cmd, 2, "Change a threads current priority", "", "uid|@name pri") \
 	SHELL_CMD("evlist", "el", evlist_cmd, 0, "List the event flags in the system", "", "[v]") \
 	SHELL_CMD("evinfo", "ei", evinfo_cmd, 1, "Print info about an event flag", "", "uid|@name") \
@@ -128,7 +128,7 @@ struct sh_command
 	SHELL_CMD("modexec","me", modexec_cmd, 1, "LoadExec a module", "", "[@key] path [args]") \
 	SHELL_CMD("modaddr","ma", modaddr_cmd, 1, "Display info about the module at a specified address", "", "addr") \
 	SHELL_CMD("ldstart","ld", ldstart_cmd, 1, "Load and start a module", "", "path [args]") \
-	SHELL_CMD("kill", "k", kill_cmd, 1, "Kill a module and all it's threads", "", "uid|@name") \
+	SHELL_CMD("kill", NULL, kill_cmd, 1, "Kill a module and all it's threads", "", "uid|@name") \
 	SHELL_CMD("debug", "d", debug_cmd, 1, "Start a module under GDB", "", "program.elf [args]") \
 	SHELL_CMD("modexp", "mp", modexp_cmd, 1, "List the exports from a module", "", "uid|@name") \
 	SHELL_CMD("modimp", NULL, modimp_cmd, 1, "List the imports in a module", "", "uid|@name") \
@@ -146,8 +146,8 @@ struct sh_command
 	SHELL_CMD("savemem", "sm", savemem_cmd, 3, "Save memory to a file", "", "addr size path") \
 	SHELL_CMD("loadmem", "lm", loadmem_cmd, 2, "Load memory from a file", "", "addr path [maxsize]") \
 	SHELL_CMD("pokew",   "pw", pokew_cmd, 2, "Poke words into memory", "", "addr val1 [val2..valN]") \
-	SHELL_CMD("pokeh",   "pw", pokeh_cmd, 2, "Poke half words into memory", "", "addr val1 [val2..valN]") \
-	SHELL_CMD("pokeb",   "pw", pokeb_cmd, 2, "Poke bytes into memory", "", "addr val1 [val2..valN]") \
+	SHELL_CMD("pokeh",   "ph", pokeh_cmd, 2, "Poke half words into memory", "", "addr val1 [val2..valN]") \
+	SHELL_CMD("pokeb",   "pb", pokeb_cmd, 2, "Poke bytes into memory", "", "addr val1 [val2..valN]") \
 	SHELL_CMD("peekw",   "kw", peekw_cmd, 1, "Peek the word at address", "", "addr [o|b|x|f]") \
 	SHELL_CMD("peekh",   "kh", peekh_cmd, 1, "Peek the half word at address", "", "addr [o|b|x]") \
 	SHELL_CMD("peekb",   "kb", peekb_cmd, 1, "Peek the byte at address", "", "addr [o|b|x]") \
@@ -180,7 +180,7 @@ struct sh_command
  \
 	SHELL_CAT("debugger", "Debug commands") \
 	SHELL_CMD("exprint", "ep", exprint_cmd, 0, "Print the current exception info", "", "[ex]") \
-	SHELL_CMD("exlist",  "el", exlist_cmd, 0, "List the exception contexts", "", "") \
+	SHELL_CMD("exlist",  "exl", exlist_cmd, 0, "List the exception contexts", "", "") \
 	SHELL_CMD("exctx",   "ec", exctx_cmd, 1, "Set the current exception context", "", "ex") \
 	SHELL_CMD("exresume", "c", exresume_cmd, 0, "Resume from the exception", "", "[addr]") \
 	SHELL_CMD("exprfpu", "ef", exprfpu_cmd, 0, "Print the current FPU registers", "", "[ex]") \

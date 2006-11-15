@@ -1420,12 +1420,12 @@ static int calc_cmd(int argc, char **argv, unsigned int *vRet)
 
 		switch(disp)
 		{
-			case 'D': SHELL_PRINT("Result = %d\n", val);
+			case 'D': SHELL_PRINT("%d\n", val);
 					  break;
-			case 'O': SHELL_PRINT("Result = %o\n", val);
+			case 'O': SHELL_PRINT("%o\n", val);
 					  break;
 			default :
-			case 'X': SHELL_PRINT("Result = 0x%08X\n", val);
+			case 'X': SHELL_PRINT("0x%08X\n", val);
 					  break;
 		};
 		*vRet = val;
@@ -2187,10 +2187,8 @@ static int pokew_cmd(int argc, char **argv, unsigned int *vRet)
 			for(i = 1; i < argc; i++)
 			{
 				u32 data;
-				char *endp;
 
-				data = strtoul(argv[i], &endp, 0);
-				if(*endp == 0)
+				if(memDecode(argv[i], &data))
 				{
 					_sw(data, addr);
 				}
@@ -2233,10 +2231,8 @@ static int pokeh_cmd(int argc, char **argv, unsigned int *vRet)
 			for(i = 1; i < argc; i++)
 			{
 				u32 data;
-				char *endp;
 
-				data = strtoul(argv[i], &endp, 0);
-				if(*endp == 0)
+				if(memDecode(argv[i], &data))
 				{
 					_sh(data, addr);
 				}
@@ -2278,10 +2274,8 @@ static int pokeb_cmd(int argc, char **argv, unsigned int *vRet)
 			for(i = 1; i < argc; i++)
 			{
 				u32 data;
-				char *endp;
 
-				data = strtoul(argv[i], &endp, 0);
-				if(*endp == 0)
+				if(memDecode(argv[i], &data))
 				{
 					_sb(data, addr);
 				}
