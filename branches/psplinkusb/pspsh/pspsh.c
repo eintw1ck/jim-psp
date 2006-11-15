@@ -74,6 +74,7 @@ struct GlobalContext
 };
 
 struct GlobalContext g_context;
+static int g_verbose = 0;
 extern char **environ;
 
 int help_cmd(int argc, char **argv);
@@ -751,18 +752,110 @@ int init_readline(void)
 	return 1;
 }
 
+/* Check if we were symlinked, if so then build an exec command */
+int check_symlink(const char *name, int argc, char **argv, struct Args *args)
+{
+	int ret = 0;
+	const char *cmd;
+	char *curr;
+	int len;
+
+	cmd = strrchr(name, '/');
+	if(!cmd)
+	{
+		cmd = name;
+	}
+	else
+	{
+		cmd++;
+	}
+
+	if((strcmp(cmd, "pspsh")) && (strncmp(cmd, "psp", 3) == 0))
+	{
+		int currlen;
+		cmd += 3;
+
+		curr = args->exec;
+		len = sizeof(args->exec);
+		currlen = snprintf(curr, len, "%s", cmd);
+		if(currlen > 0)
+		{
+			int i;
+
+			args->script = 1;
+			args->notty = 1;
+			len -= currlen;
+			curr += currlen;
+			for(i = 0; i < argc; i++)
+			{
+				currlen = snprintf(curr, len, " '%s'", argv[i]);
+				if(currlen <= 0)
+				{
+					break;
+				}
+				len -= currlen;
+				curr += currlen;
+			}
+		}
+		ret = 1;
+	}
+
+	return ret;
+}
+
+void dump_symlinks(int remove)
+{
+	int cmd_loop;
+
+	printf("#!/bin/sh\n\n");
+
+	for(cmd_loop = 0; g_commands[cmd_loop].name; cmd_loop++)
+	{
+		if(g_commands[cmd_loop].help != NULL)
+		{
+			if(!remove)
+			{
+				printf("ln -s pspsh psp%s\n", g_commands[cmd_loop].name);
+			}
+			else
+			{
+				printf("rm psp%s\n", g_commands[cmd_loop].name);
+			}
+			if(g_commands[cmd_loop].syn)
+			{
+				if(!remove)
+				{
+					printf("ln -s pspsh psp%s\n", g_commands[cmd_loop].syn);
+				}
+				else
+				{
+					printf("rm psp%s\n", g_commands[cmd_loop].syn);
+				}
+			}
+		}
+	}
+}
+
 int parse_args(int argc, char **argv, struct Args *args)
 {
+	const char *name;
 	memset(args, 0, sizeof(*args));
 	args->port = DEFAULT_PORT;
 	args->ip = DEFAULT_IP;
+
+	if(argc == 0)
+	{
+		return 0;
+	}
+
+	name = argv[0];
 
 	while(1)
 	{
 		int ch;
 		int error = 0;
 
-		ch = getopt(argc, argv, "np:h:i:e:");
+		ch = getopt(argc, argv, "nsrp:h:i:e:");
 		if(ch < 0)
 		{
 			break;
@@ -780,6 +873,15 @@ int parse_args(int argc, char **argv, struct Args *args)
 					  break;
 			case 'e': snprintf(args->exec, sizeof(args->exec), "%s", optarg);
 					  args->script = 1;
+					  args->notty = 1;
+					  break;
+			case 's': dump_symlinks(0);
+					  exit(0);
+					  break;
+			case 'r': dump_symlinks(1);
+					  exit(0);
+					  break;
+			case 'v': g_verbose = 1;
 					  break;
 			default : error = 1;
 					  break;
@@ -793,14 +895,18 @@ int parse_args(int argc, char **argv, struct Args *args)
 
 	argc -= optind;
 	argv += optind;
-	if(args->exec[0] && (argc > 0))
+
+	if(!check_symlink(name, argc, argv, args))
 	{
-		if(!open_script(argv[0], argc, argv))
+		if(argc > 0)
 		{
-			return 0;
+			if(!open_script(argv[0], argc, argv))
+			{
+				return 0;
+			}
+			args->script = 1;
+			args->notty = 1;
 		}
-		args->script = 1;
-		args->notty = 1;
 	}
 
 	return 1;
@@ -816,6 +922,7 @@ void print_help(void)
 	fprintf(stderr, "-h history  : Specify the history file (default ~/%s)\n", HISTORY_FILE);
 	fprintf(stderr, "-e cmd      : Execute a command and exit\n");
 	fprintf(stderr, "-n          : Do not connect up the tty (stdin/stdout/stderr)\n");
+	fprintf(stderr, "-v          : Verbose mode\n");
 }
 
 int init_sockaddr(struct sockaddr_in *name, const char *ipaddr, unsigned short port)
@@ -1021,6 +1128,7 @@ int process_cmd(const unsigned char *str)
 		if(*str == SHELL_CMD_CWD)
 		{
 			snprintf(g_context.currpath, PATH_MAX, "%s", str+1);
+			(void) setenv("PSPPWD", g_context.currpath, 1);
 		}
 		else if((*str == SHELL_CMD_SUCCESS) || (*str == SHELL_CMD_ERROR))
 		{
@@ -1425,7 +1533,11 @@ int shell(void)
 	fd_set readset;
 	FD_ZERO(&g_context.readsave);
 
-	fprintf(stderr, "Opening connection to %s port %d\n", g_context.args.ip, g_context.args.port);
+	if(g_verbose)
+	{
+		fprintf(stderr, "Opening connection to %s port %d\n", g_context.args.ip, g_context.args.port);
+	}
+
 	if((g_context.sock = connect_to(g_context.args.ip, g_context.args.port)) < 0)
 	{
 		return 1;
