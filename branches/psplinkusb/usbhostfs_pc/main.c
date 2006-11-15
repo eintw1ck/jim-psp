@@ -96,8 +96,8 @@ struct DirHandle  open_dirs[MAX_DIRS];
 
 static usb_dev_handle *g_hDev = NULL;
 
-static int g_servsocks[MAX_ASYNC_CHANNELS+1];
-static int g_clientsocks[MAX_ASYNC_CHANNELS+1];
+static int g_servsocks[MAX_ASYNC_CHANNELS];
+static int g_clientsocks[MAX_ASYNC_CHANNELS];
 static const char *g_mapfile = NULL;
 static int g_bulkfd = -1;
 
@@ -2433,7 +2433,7 @@ void shutdown_socket(void)
 {
 	int i;
 
-	for(i = 0; i < (MAX_ASYNC_CHANNELS+1); i++)
+	for(i = 0; i < MAX_ASYNC_CHANNELS; i++)
 	{
 		if(g_clientsocks[i] >= 0)
 		{
@@ -2965,7 +2965,7 @@ void *async_thread(void *arg)
 		max_fd = STDIN_FILENO;
 	}
 
-	for(i = 0; i < MAX_ASYNC_CHANNELS+1; i++)
+	for(i = 0; i < MAX_ASYNC_CHANNELS; i++)
 	{
 		if(g_servsocks[i] >= 0)
 		{
@@ -3003,7 +3003,7 @@ void *async_thread(void *arg)
 				}
 			}
 
-			for(i = 0; i < MAX_ASYNC_CHANNELS+1; i++)
+			for(i = 0; i < MAX_ASYNC_CHANNELS; i++)
 			{
 				if(g_servsocks[i] >= 0)
 				{
@@ -3020,10 +3020,10 @@ void *async_thread(void *arg)
 						{
 							printf("Accepting async connection (%d) from %s\n", i, inet_ntoa(client.sin_addr));
 							FD_SET(g_clientsocks[i], &read_save);
-							if((g_daemon) && (i == MAX_ASYNC_CHANNELS))
+							if((g_daemon) && (i == ASYNC_SHELL))
 							{
 								/* Duplicate to stdout for the local shell */
-								dup2(g_clientsocks[MAX_ASYNC_CHANNELS], 1);
+								dup2(g_clientsocks[i], 1);
 							}
 							setsockopt(g_clientsocks[i], SOL_TCP, TCP_NODELAY, &flag, sizeof(int));
 							if(g_clientsocks[i] > max_fd)
@@ -3035,7 +3035,7 @@ void *async_thread(void *arg)
 				}
 			}
 
-			for(i = 0; i < MAX_ASYNC_CHANNELS+1; i++)
+			for(i = 0; i < MAX_ASYNC_CHANNELS; i++)
 			{
 				if(g_clientsocks[i] >= 0)
 				{
@@ -3053,7 +3053,7 @@ void *async_thread(void *arg)
 
 							if(g_daemon)
 							{
-								if(i == MAX_ASYNC_CHANNELS)
+								if((i == ASYNC_SHELL) && (data[0] == '@'))
 								{
 									/* We assume locally it should be able to load everything in one go */
 									if(readbytes < (sizeof(buf)-sizeof(struct AsyncCommand)))
@@ -3065,7 +3065,7 @@ void *async_thread(void *arg)
 										data[sizeof(buf)-sizeof(struct AsyncCommand)-1] = 0;
 									}
 
-									parse_shell(&data[0]);
+									parse_shell(&data[1]);
 									continue;
 								}
 							}
@@ -3079,7 +3079,7 @@ void *async_thread(void *arg)
 						else
 						{
 							FD_CLR(g_clientsocks[i], &read_save);
-							if((g_daemon) && (i == MAX_ASYNC_CHANNELS))
+							if((g_daemon) && (i == ASYNC_SHELL))
 							{
 								dup2(2, 1);
 							}
@@ -3148,12 +3148,6 @@ int main(int argc, char **argv)
 		for(i = 0; i < MAX_ASYNC_CHANNELS; i++)
 		{
 			g_servsocks[i] = make_socket(g_baseport + i);
-			g_clientsocks[i] = -1;
-		}
-
-		if(g_daemon)
-		{
-			g_servsocks[i] = make_socket(g_baseport + MAX_ASYNC_CHANNELS);
 			g_clientsocks[i] = -1;
 		}
 
