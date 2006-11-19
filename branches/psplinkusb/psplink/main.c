@@ -38,6 +38,7 @@
 #include "symbols.h"
 #include "libs.h"
 #include "modload.h"
+#include "decodeaddr.h"
 
 PSP_MODULE_INFO("PSPLINK", 0x1000, 1, 1);
 
@@ -159,41 +160,92 @@ void psplinkStop(void)
 	}
 }
 
+struct SceKernelLoadExecVSHParam 
+{ 
+	SceSize size; 
+	SceSize args; 
+	void * argp; 
+	const char * key; 
+	u32 vshmain_args_size; 
+	void *vshmain_args; 
+	u32 unk3; 
+	u32 unk4; 
+	u32 unk5; 
+}; 
+
+int sceKernelLoadExecVSHMs2(const char *, struct SceKernelLoadExecVSHParam *params);
+
 void psplinkReset(void)
 {
-	struct SceKernelLoadExecParam le;
-	struct SavedContext *save = (struct SavedContext *) SAVED_ADDR;
-	const char *rebootkey = NULL;
+	unsigned int rev;
 
-	save->magic = SAVED_MAGIC;
-	strcpy(save->currdir, g_context.currdir);
-	save->rebootkey = g_context.rebootkey;
-
-	debugDisableHW();
-	psplinkSetK1(0);
-	SHELL_PRINT("Resetting psplink\n");
-	psplinkStop();
-
-	le.size = sizeof(le);
-	le.args = strlen(g_context.bootfile) + 1;
-	le.argp = (char *) g_context.bootfile;
-	switch(g_context.rebootkey)
+	rev = sceKernelDevkitVersion();
+	
+	/* We only support 271 */
+	if(rev == 0x02070110)
 	{
-		case REBOOT_MODE_GAME: rebootkey = "game";
-							   break;
-		case REBOOT_MODE_VSH : rebootkey = "vsh";
-							   break;
-		case REBOOT_MODE_UPDATER : rebootkey = "updater";
+		struct SceKernelLoadExecVSHParam param; 
+		u32 addr;
+
+		if(memDecode("@sceLoadExec@+0x1DBC", &addr))
+		{
+			/* Quick and dirty patch for now ;P */
+			_sw(0x10000011, addr);
+			sceKernelDcacheWritebackInvalidateAll();
+			sceKernelIcacheInvalidateAll();
+		}
+
+		memset(&param, 0, sizeof(param)); 
+		param.size = sizeof(param); 
+		param.args = strlen(g_context.bootfile)+1; 
+		param.argp = (char*) g_context.bootfile; 
+		param.key = "game"; 
+		param.vshmain_args_size = 0; 
+		param.vshmain_args = NULL; 
+
+		debugDisableHW();
+		psplinkSetK1(0);
+		SHELL_PRINT("Resetting psplink\n");
+		psplinkStop();
+
+		sceKernelLoadExecVSHMs2(g_context.bootfile, &param);
+	}
+	else
+	{
+		struct SceKernelLoadExecParam le;
+		struct SavedContext *save = (struct SavedContext *) SAVED_ADDR;
+		const char *rebootkey = NULL;
+
+		save->magic = SAVED_MAGIC;
+		strcpy(save->currdir, g_context.currdir);
+		save->rebootkey = g_context.rebootkey;
+
+		debugDisableHW();
+		psplinkSetK1(0);
+		SHELL_PRINT("Resetting psplink\n");
+		psplinkStop();
+
+		le.size = sizeof(le);
+		le.args = strlen(g_context.bootfile) + 1;
+		le.argp = (char *) g_context.bootfile;
+		switch(g_context.rebootkey)
+		{
+			case REBOOT_MODE_GAME: rebootkey = "game";
 								   break;
-		default: rebootkey = NULL;
-				 break;
+			case REBOOT_MODE_VSH : rebootkey = "vsh";
+								   break;
+			case REBOOT_MODE_UPDATER : rebootkey = "updater";
+									   break;
+			default: rebootkey = NULL;
+					 break;
 
-	};
-	le.key = rebootkey;
+		};
+		le.key = rebootkey;
 
-	sceKernelSuspendAllUserThreads();
+		sceKernelSuspendAllUserThreads();
 
-	sceKernelLoadExec(g_context.bootfile, &le);
+		sceKernelLoadExec(g_context.bootfile, &le);
+	}
 }
 
 void psplinkExitShell(void)
@@ -236,8 +288,8 @@ void initialise(SceSize args, void *argp)
 	const char *init_dir = "host0:/";
 	struct SavedContext *save = (struct SavedContext *) SAVED_ADDR;
 
-	map_firmwarerev();
 	memset(&g_context, 0, sizeof(g_context));
+	map_firmwarerev();
 	exceptionInit();
 	g_context.thevent = -1;
 	parse_sceargs(args, argp);

@@ -3311,10 +3311,11 @@ static int version_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int pspver_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	unsigned int ver;
+	unsigned int rev;
 
-	ver = sceKernelDevkitVersion();
-	SHELL_PRINT("Version: %d.%d\n", (ver >> 24) & 0xFF, (ver >> 16) & 0xFF);
+	rev = sceKernelDevkitVersion();
+
+	SHELL_PRINT("Version: %d.%d (0x%08X)\n", (rev >> 24) & 0xFF, (rev >> 16) & 0xFF, rev);
 
 	return CMD_OK;
 }

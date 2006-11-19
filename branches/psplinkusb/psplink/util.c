@@ -389,8 +389,11 @@ int load_start_module(const char *name, int argc, char **argv)
 
 void map_firmwarerev(void)
 {
+	unsigned int rev;
+
+	rev = sceKernelDevkitVersion();
 	/* Special case for version 1 firmware */
-    if((sceKernelDevkitVersion() & 0xFFFF0000) == 0x01000000)
+    if((rev & 0xFFFF0000) == 0x01000000)
 	{
 		g_QueryModuleInfo = pspSdkQueryModuleInfoV1;
 		g_GetModuleIdList = pspSdkGetModuleIdList;

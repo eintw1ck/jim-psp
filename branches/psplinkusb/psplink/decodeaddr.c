@@ -47,7 +47,7 @@ static struct mem_entry g_memareas[] =
 	{ 0xA8000000, (4 * 1024 * 1024), MEM_ATTRIB_ALL, "Kernel memory (low uncached)", 0 },
 	/* Don't use the following 2 on a 1.5, just crashes the psp */
 	{ 0x88400000, (4 * 1024 * 1024), MEM_ATTRIB_ALL, "Kernel memory (mid v1.0 only)", 1 },
-	{ 0xC8400000, (4 * 1024 * 1024), MEM_ATTRIB_ALL, "Kernel memory (mid v1.0 only uncached)", 1 },
+	{ 0xA8400000, (4 * 1024 * 1024), MEM_ATTRIB_ALL, "Kernel memory (mid v1.0 only uncached)", 1 },
 	{ 0x88800000, (24 * 1024 * 1024), MEM_ATTRIB_ALL, "Kernel memory (high)", 0 },
 	{ 0xA8800000, (24 * 1024 * 1024), MEM_ATTRIB_ALL, "Kernel memory (high uncached)", 0 },
 	{ 0xBFC00000, (1 * 1024 * 1024), MEM_ATTRIB_ALL, "Internal RAM", 0 },
