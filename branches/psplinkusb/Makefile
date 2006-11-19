@@ -10,18 +10,18 @@ all:
 	$(MAKE) -C usbgdb    all
 	$(MAKE) -C bootstrap all
 	$(MAKE) -C bootstrap kxploit
+	$(MAKE) -C boot271 
 
 release: all
 	mkdir -p release/v1.0/psplink
 	mkdir -p release/v1.5
 	mkdir -p release/v1.5_nocorrupt
+	mkdir -p release/v2.71
 	mkdir -p release/pc
 	cp -Rf scripts release/scripts
 	cp bootstrap/EBOOT.PBP release/v1.0/psplink
 	cp psplink/psplink.prx release/v1.0/psplink
 	cp psplink/psplink.ini release/v1.0/psplink
-	cp psplink/psplink.ini.usb release/v1.0/psplink
-	cp psplink/psplink.ini.wifi release/v1.0/psplink
 	cp psplink_user/psplink_user.prx release/v1.0/psplink
 	cp usbhostfs/usbhostfs.prx release/v1.0/psplink
 	cp usbgdb/usbgdb.prx release/v1.0/psplink
@@ -29,13 +29,13 @@ release: all
 	cp -R bootstrap/psplink% release/v1.5
 	cp psplink/psplink.prx release/v1.5/psplink
 	cp psplink/psplink.ini release/v1.5/psplink
-	cp psplink/psplink.ini.usb release/v1.5/psplink
-	cp psplink/psplink.ini.wifi release/v1.5/psplink
 	cp psplink_user/psplink_user.prx release/v1.5/psplink
 	cp usbhostfs/usbhostfs.prx release/v1.5/psplink
 	cp usbgdb/usbgdb.prx release/v1.5/psplink
 	cp -R release/v1.5/psplink release/v1.5_nocorrupt/__SCE__psplink
 	cp -R release/v1.5/psplink% release/v1.5_nocorrupt/%__SCE__psplink
+	cp -R release/v1.0/psplink release/v2.71
+	cp boot271/EBOOT.PBP release/v2.71/psplink
 	cp -Rf pspsh release/pc
 	cp -Rf usbhostfs_pc release/pc
 	cp -Rf windows release/pc
@@ -55,4 +55,5 @@ clean:
 	$(MAKE) -C usbgdb   clean
 	$(MAKE) -C gdbcommon clean
 	$(MAKE) -C bootstrap clean
+	$(MAKE) -C boot271   clean
 	rm -rf release
