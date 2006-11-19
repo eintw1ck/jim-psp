@@ -47,6 +47,8 @@ install: $(MMIO_LIB_FILE) $(MIKMOD_LIB_FILE)
 	@mkdir -p $(INSTALLDIR)/include $(INSTALLDIR)/lib
 	@cp include/mmio.h $(INSTALLDIR)/include
 	@cp include/mikmod.h $(INSTALLDIR)/include
+	@cp include/tdefs.h $(INSTALLDIR)/include
+	@cp include/ptform.h $(INSTALLDIR)/include
 	@cp lib/libmmio.a $(INSTALLDIR)/lib
 	@cp lib/libmikmod.a $(INSTALLDIR)/lib
 	@echo "Done"
