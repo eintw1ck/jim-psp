@@ -11,7 +11,7 @@
 void sceGuViewport(int cx, int cy, int width, int height)
 {
 	sendCommandf(66,(float)(width>>1));
-	sendCommandf(67,(float)(((-height) + ((-height) >> 31))>>1));
+	sendCommandf(67,(float)((-height)>>1));
 	sendCommandf(69,(float)cx);
 	sendCommandf(70,(float)cy);
 }
