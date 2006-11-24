@@ -21,28 +21,61 @@ PSP_MODULE_INFO("PSPLINKLOADER", 0, 1, 1);
 /* Define the thread attribute as 0 so that the main thread does not get converted to user mode */
 PSP_MAIN_THREAD_ATTR(0);
 
-/* Define printf, just to make typing easier */
-#define printf	pspDebugScreenPrintf
+#define MODULE "psplink.prx"
 
-#define PATH "psplink.prx"
-
-int main(int argc, char **argv)
+int _main(SceSize args, void *argp)
 {
-	pspDebugScreenInit();
+	char path[1024];
+	char *slash;
 
-	SceUID mod = sceKernelLoadModule(PATH, 0, NULL);
-	if (mod < 0)
+	do
 	{
-		printf("Error 0x%08X loading module.\n", mod);
-		return 0;
-	}
+		pspDebugScreenInit();
+		strcpy(path, argp);
+		slash = strrchr(path, '/');
+		if(slash == NULL)
+		{
+			pspDebugScreenPrintf("Could not find last slash\n");
+			break;
+		}
+		slash++;
+		*slash = 0;
+		strcat(path, MODULE);
 
-	mod = sceKernelStartModule(mod, strlen(argv[0])+1, argv[0], NULL, NULL);
-	if (mod < 0)
-	{
-		printf("Error 0x%08X starting module.\n", mod);
-		return 0;
+		SceUID mod = sceKernelLoadModule(path, 0, NULL);
+		if (mod < 0)
+		{
+			pspDebugScreenPrintf("Error 0x%08X loading module.\n", mod);
+			break;
+		}
+
+		mod = sceKernelStartModule(mod, args, argp, NULL, NULL);
+		if (mod < 0)
+		{
+			pspDebugScreenPrintf("Error 0x%08X starting module.\n", mod);
+			break;
+		}
+
+		sceKernelSelfStopUnloadModule(1, 0, NULL);
 	}
+	while(0);
+
+	sceKernelDelayThread(2000000);
+	sceKernelExitGame();
+
+	return 0;
+}
+
+int module_start(SceSize args, void *argp)
+{
+	SceUID uid;
+
+	uid = sceKernelCreateThread("PsplinkBoot", _main, 32, 0x10000, 0, 0);
+	if(uid < 0)
+	{
+		return 1;
+	}
+	sceKernelStartThread(uid, args, argp);
 
 	return 0;
 }
