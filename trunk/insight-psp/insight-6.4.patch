@@ -1497,7 +1497,7 @@ diff -burN insight-6.4/opcodes/mips-opc.c insight-psp/opcodes/mips-opc.c
     user to put in nops as necessary.  These are at the end so that the
 diff -burN insight-6.4/tcl/win/tclWin32Dll.c insight-psp/tcl/win/tclWin32Dll.c
 --- insight-6.4/tcl/win/tclWin32Dll.c	2003-01-22 06:40:22.000000000 +1100
-+++ insight-psp/tcl/win/tclWin32Dll.c	2006-11-26 16:33:56.094073600 +1100
++++ insight-psp/tcl/win/tclWin32Dll.c	2006-11-26 18:00:22.822222400 +1100
 @@ -38,8 +38,8 @@
  static int platformId;		/* Running under NT, or 95/98? */
  
@@ -1509,17 +1509,18 @@ diff -burN insight-6.4/tcl/win/tclWin32Dll.c insight-psp/tcl/win/tclWin32Dll.c
  #endif /* HAVE_NO_SEH */
  
  /*
-@@ -393,6 +393,7 @@
+@@ -393,7 +393,7 @@
  }
  #ifdef HAVE_NO_SEH
  static
-+__attribute__ ((used))
- __attribute__ ((cdecl))
+-__attribute__ ((cdecl))
++__attribute__ ((cdecl, used))
  EXCEPTION_DISPOSITION
  _except_checkstackspace_handler(
+     struct _EXCEPTION_RECORD *ExceptionRecord,
 diff -burN insight-6.4/tcl/win/tclWinChan.c insight-psp/tcl/win/tclWinChan.c
 --- insight-6.4/tcl/win/tclWinChan.c	2003-01-22 06:40:22.000000000 +1100
-+++ insight-psp/tcl/win/tclWinChan.c	2006-11-26 16:34:11.456163200 +1100
++++ insight-psp/tcl/win/tclWinChan.c	2006-11-26 18:00:51.743809600 +1100
 @@ -122,8 +122,8 @@
  };
  
@@ -1531,22 +1532,33 @@ diff -burN insight-6.4/tcl/win/tclWinChan.c insight-psp/tcl/win/tclWinChan.c
  #endif /* HAVE_NO_SEH */
  
  
-@@ -1106,6 +1106,7 @@
+@@ -1106,7 +1106,7 @@
  }
  #ifdef HAVE_NO_SEH
  static
-+__attribute__ ((used))
- __attribute__ ((cdecl))
+-__attribute__ ((cdecl))
++__attribute__ ((cdecl, used))
  EXCEPTION_DISPOSITION
  _except_makefilechannel_handler(
+     struct _EXCEPTION_RECORD *ExceptionRecord,
 diff -burN insight-6.4/tcl/win/tclWinFCmd.c insight-psp/tcl/win/tclWinFCmd.c
 --- insight-6.4/tcl/win/tclWinFCmd.c	2003-02-08 06:52:00.000000000 +1100
-+++ insight-psp/tcl/win/tclWinFCmd.c	2006-11-26 16:28:33.129673600 +1100
-@@ -469,6 +469,7 @@
++++ insight-psp/tcl/win/tclWinFCmd.c	2006-11-26 17:59:28.694390400 +1100
+@@ -469,7 +469,7 @@
  }
  #ifdef HAVE_NO_SEH
  static
-+__attribute__ ((used))
- __attribute__ ((cdecl))
+-__attribute__ ((cdecl))
++__attribute__ ((cdecl, used))
  EXCEPTION_DISPOSITION
  _except_dorenamefile_handler(
+     struct _EXCEPTION_RECORD *ExceptionRecord,
+@@ -651,7 +651,7 @@
+ }
+ #ifdef HAVE_NO_SEH
+ static
+-__attribute__ ((cdecl))
++__attribute__ ((cdecl, used))
+ EXCEPTION_DISPOSITION
+ _except_docopyfile_handler(
+     struct _EXCEPTION_RECORD *ExceptionRecord,
