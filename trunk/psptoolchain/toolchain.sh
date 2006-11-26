@@ -36,6 +36,8 @@
    BUILD_GCC=1
    BUILD_NEWLIB=1
    BUILD_PSPSDK=1
+   # By default dont add MS Visual Studio support
+   MSVS_SUPPORT=0
    # By default dont build GDB
    BUILD_GDB=0
    BUILD_INSIGHT=0
@@ -60,6 +62,9 @@
       shift;;
      -p | -pspsdk | --pspsdk)
       BUILD_PSPSDK=1
+      shift;;
+     -m | -msvs | --msvs)
+      MSVS_SUPPORT=1
       shift;;
      -e | -gdb | --gdb)
       BUILD_GDB=1
@@ -196,6 +201,12 @@
     echo -n "Downloading the latest gcc patch... ";
     $SVN cat svn://svn.pspdev.org/psp/trunk/psptoolchain/$GCC.patch > $GCC.patch
     echo "Done!";
+    ## Download the gcc Visual Studio patch
+    if test "$MSVS_SUPPORT" = "1" ; then
+     echo -n "Downloading the Visual Studio gcc patch... ";
+     $SVN cat svn://svn.pspdev.org/psp/trunk/psptoolchain/$GCC-vs.patch > $GCC-vs.patch
+     echo "Done!";
+    fi
    fi
 
    ## Download the newlib source.
@@ -242,6 +253,11 @@
   if test "$BUILD_GCC" = "1" ; then
    rm -Rf $GCC; bzip2 -cd "$SRCDIR/$GCC.tar.bz2" | tar xvf -
    cd $GCC; cat "$SRCDIR/$GCC.patch" | $PATCH || { echo "ERROR PATCHING GCC"; exit; }
+   
+   ## Unpack and patch the gcc source for Visual Studio support.
+   if test "$MSVS_SUPPORT" = "1" ; then
+    cat "$SRCDIR/$GCC-vs.patch" | $PATCH || { echo "ERROR PATCHING GCC FOR VISUAL STUDIO"; exit; }
+   fi
    cd ..
   fi
 
