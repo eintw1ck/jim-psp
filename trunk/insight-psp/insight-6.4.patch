@@ -1,6 +1,6 @@
 diff -burN insight-6.4/bfd/archures.c insight-psp/bfd/archures.c
---- insight-6.4/bfd/archures.c	2005-10-25 18:40:09.000000000 +0100
-+++ insight-psp/bfd/archures.c	2006-02-05 14:40:58.000000000 +0000
+--- insight-6.4/bfd/archures.c	2005-10-26 03:40:09.000000000 +1000
++++ insight-psp/bfd/archures.c	2006-11-26 16:22:47.773075200 +1100
 @@ -154,6 +154,7 @@
  .#define bfd_mach_mips16		16
  .#define bfd_mach_mips5                 5
@@ -10,8 +10,8 @@ diff -burN insight-6.4/bfd/archures.c insight-psp/bfd/archures.c
  .#define bfd_mach_mipsisa32r2           33
  .#define bfd_mach_mipsisa64             64
 diff -burN insight-6.4/bfd/bfd-in2.h insight-psp/bfd/bfd-in2.h
---- insight-6.4/bfd/bfd-in2.h	2005-10-25 18:40:09.000000000 +0100
-+++ insight-psp/bfd/bfd-in2.h	2006-02-05 14:40:58.000000000 +0000
+--- insight-6.4/bfd/bfd-in2.h	2005-10-26 03:40:09.000000000 +1000
++++ insight-psp/bfd/bfd-in2.h	2006-11-26 16:22:47.803118400 +1100
 @@ -1742,6 +1742,7 @@
  #define bfd_mach_mips16                16
  #define bfd_mach_mips5                 5
@@ -21,8 +21,8 @@ diff -burN insight-6.4/bfd/bfd-in2.h insight-psp/bfd/bfd-in2.h
  #define bfd_mach_mipsisa32r2           33
  #define bfd_mach_mipsisa64             64
 diff -burN insight-6.4/bfd/cpu-mips.c insight-psp/bfd/cpu-mips.c
---- insight-6.4/bfd/cpu-mips.c	2005-05-04 16:53:06.000000000 +0100
-+++ insight-psp/bfd/cpu-mips.c	2006-02-05 14:40:58.000000000 +0000
+--- insight-6.4/bfd/cpu-mips.c	2005-05-05 01:53:06.000000000 +1000
++++ insight-psp/bfd/cpu-mips.c	2006-11-26 16:22:47.813132800 +1100
 @@ -86,6 +86,7 @@
    I_mipsisa64,
    I_mipsisa64r2,
@@ -42,8 +42,8 @@ diff -burN insight-6.4/bfd/cpu-mips.c insight-psp/bfd/cpu-mips.c
  
  /* The default architecture is mips:3000, but with a machine number of
 diff -burN insight-6.4/bfd/elfxx-mips.c insight-psp/bfd/elfxx-mips.c
---- insight-6.4/bfd/elfxx-mips.c	2005-10-25 17:19:08.000000000 +0100
-+++ insight-psp/bfd/elfxx-mips.c	2006-02-05 14:40:58.000000000 +0000
+--- insight-6.4/bfd/elfxx-mips.c	2005-10-26 02:19:08.000000000 +1000
++++ insight-psp/bfd/elfxx-mips.c	2006-11-26 16:22:47.853190400 +1100
 @@ -4666,6 +4666,9 @@
      case E_MIPS_MACH_SB1:
        return bfd_mach_mips_sb1;
@@ -74,8 +74,8 @@ diff -burN insight-6.4/bfd/elfxx-mips.c insight-psp/bfd/elfxx-mips.c
    /* MIPS I extensions.  */
    { bfd_mach_mips6000, bfd_mach_mips3000 },
 diff -burN insight-6.4/config.sub insight-psp/config.sub
---- insight-6.4/config.sub	2005-07-14 02:24:56.000000000 +0100
-+++ insight-psp/config.sub	2006-02-05 14:40:58.000000000 +0000
+--- insight-6.4/config.sub	2005-07-14 11:24:56.000000000 +1000
++++ insight-psp/config.sub	2006-11-26 16:22:47.883233600 +1100
 @@ -256,6 +256,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
@@ -104,16 +104,16 @@ diff -burN insight-6.4/config.sub insight-psp/config.sub
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
 diff -burN insight-6.4/include/bin-bugs.h insight-psp/include/bin-bugs.h
---- insight-6.4/include/bin-bugs.h	2004-07-23 16:40:19.000000000 +0100
-+++ insight-psp/include/bin-bugs.h	2006-02-05 14:40:58.000000000 +0000
+--- insight-6.4/include/bin-bugs.h	2004-07-24 01:40:19.000000000 +1000
++++ insight-psp/include/bin-bugs.h	2006-11-26 16:22:47.883233600 +1100
 @@ -1,3 +1,3 @@
  #ifndef REPORT_BUGS_TO
 -#define REPORT_BUGS_TO	"<URL:http://www.sourceware.org/bugzilla/>"
 +#define REPORT_BUGS_TO	"<URL:http://wiki.pspdev.org/psp:toolchain#bugs>"
  #endif
 diff -burN insight-6.4/include/elf/common.h insight-psp/include/elf/common.h
---- insight-6.4/include/elf/common.h	2005-09-30 16:12:52.000000000 +0100
-+++ insight-psp/include/elf/common.h	2006-02-05 14:40:58.000000000 +0000
+--- insight-6.4/include/elf/common.h	2005-10-01 01:12:52.000000000 +1000
++++ insight-psp/include/elf/common.h	2006-11-26 16:22:47.893248000 +1100
 @@ -93,6 +93,7 @@
  #define ET_HIOS		0xFEFF	/* Operating system-specific */
  #define ET_LOPROC	0xFF00	/* Processor-specific */
@@ -123,8 +123,8 @@ diff -burN insight-6.4/include/elf/common.h insight-psp/include/elf/common.h
  /* Values for e_machine, which identifies the architecture.  These numbers
     are officially assigned by registry@caldera.com.  See below for a list of
 diff -burN insight-6.4/include/elf/mips.h insight-psp/include/elf/mips.h
---- insight-6.4/include/elf/mips.h	2005-05-10 11:21:10.000000000 +0100
-+++ insight-psp/include/elf/mips.h	2006-02-05 14:40:58.000000000 +0000
+--- insight-6.4/include/elf/mips.h	2005-05-10 20:21:10.000000000 +1000
++++ insight-psp/include/elf/mips.h	2006-11-26 16:22:47.913276800 +1100
 @@ -212,6 +212,7 @@
  #define E_MIPS_MACH_5400	0x00910000
  #define E_MIPS_MACH_5500	0x00980000
@@ -134,8 +134,8 @@ diff -burN insight-6.4/include/elf/mips.h insight-psp/include/elf/mips.h
  /* Processor specific section indices.  These sections do not actually
     exist.  Symbols with a st_shndx field corresponding to one of these
 diff -burN insight-6.4/include/opcode/mips.h insight-psp/include/opcode/mips.h
---- insight-6.4/include/opcode/mips.h	2005-09-06 19:42:58.000000000 +0100
-+++ insight-psp/include/opcode/mips.h	2006-02-05 14:40:58.000000000 +0000
+--- insight-6.4/include/opcode/mips.h	2005-09-07 04:42:58.000000000 +1000
++++ insight-psp/include/opcode/mips.h	2006-11-26 16:22:47.923291200 +1100
 @@ -203,6 +203,83 @@
  #define MDMX_FMTSEL_VEC_QH	0x15
  #define MDMX_FMTSEL_VEC_OB	0x16
@@ -329,8 +329,8 @@ diff -burN insight-6.4/include/opcode/mips.h insight-psp/include/opcode/mips.h
    M_COP0,
    M_COP1,
 diff -burN insight-6.4/opcodes/mips-dis.c insight-psp/opcodes/mips-dis.c
---- insight-6.4/opcodes/mips-dis.c	2005-09-06 19:46:57.000000000 +0100
-+++ insight-psp/opcodes/mips-dis.c	2006-02-05 14:40:58.000000000 +0000
+--- insight-6.4/opcodes/mips-dis.c	2005-09-07 04:46:57.000000000 +1000
++++ insight-psp/opcodes/mips-dis.c	2006-11-26 16:22:47.953334400 +1100
 @@ -133,6 +133,139 @@
    "c0_taglo",     "c0_taghi",     "c0_errorepc",  "c0_desave",
  };
@@ -887,8 +887,8 @@ diff -burN insight-6.4/opcodes/mips-dis.c insight-psp/opcodes/mips-dis.c
  	  /* xgettext:c-format */
  	  (*info->fprintf_func) (info->stream,
 diff -burN insight-6.4/opcodes/mips-opc.c insight-psp/opcodes/mips-opc.c
---- insight-6.4/opcodes/mips-opc.c	2005-09-06 19:46:57.000000000 +0100
-+++ insight-psp/opcodes/mips-opc.c	2006-02-05 14:41:16.000000000 +0000
+--- insight-6.4/opcodes/mips-opc.c	2005-09-07 04:46:57.000000000 +1000
++++ insight-psp/opcodes/mips-opc.c	2006-11-26 16:22:47.993392000 +1100
 @@ -109,6 +109,7 @@
  #define N5	(INSN_5400 | INSN_5500)
  #define N54	INSN_5400
@@ -1495,3 +1495,58 @@ diff -burN insight-6.4/opcodes/mips-opc.c insight-psp/opcodes/mips-opc.c
  /* No hazard protection on coprocessor instructions--they shouldn't
     change the state of the processor and if they do it's up to the
     user to put in nops as necessary.  These are at the end so that the
+diff -burN insight-6.4/tcl/win/tclWin32Dll.c insight-psp/tcl/win/tclWin32Dll.c
+--- insight-6.4/tcl/win/tclWin32Dll.c	2003-01-22 06:40:22.000000000 +1100
++++ insight-psp/tcl/win/tclWin32Dll.c	2006-11-26 16:33:56.094073600 +1100
+@@ -38,8 +38,8 @@
+ static int platformId;		/* Running under NT, or 95/98? */
+ 
+ #ifdef HAVE_NO_SEH
+-static void *ESP;
+-static void *EBP;
++static __attribute__ ((used)) void *ESP;
++static __attribute__ ((used)) void *EBP;
+ #endif /* HAVE_NO_SEH */
+ 
+ /*
+@@ -393,6 +393,7 @@
+ }
+ #ifdef HAVE_NO_SEH
+ static
++__attribute__ ((used))
+ __attribute__ ((cdecl))
+ EXCEPTION_DISPOSITION
+ _except_checkstackspace_handler(
+diff -burN insight-6.4/tcl/win/tclWinChan.c insight-psp/tcl/win/tclWinChan.c
+--- insight-6.4/tcl/win/tclWinChan.c	2003-01-22 06:40:22.000000000 +1100
++++ insight-psp/tcl/win/tclWinChan.c	2006-11-26 16:34:11.456163200 +1100
+@@ -122,8 +122,8 @@
+ };
+ 
+ #ifdef HAVE_NO_SEH
+-static void *ESP;
+-static void *EBP;
++static __attribute__ ((used)) void *ESP;
++static __attribute__ ((used)) void *EBP;
+ #endif /* HAVE_NO_SEH */
+ 
+ 
+@@ -1106,6 +1106,7 @@
+ }
+ #ifdef HAVE_NO_SEH
+ static
++__attribute__ ((used))
+ __attribute__ ((cdecl))
+ EXCEPTION_DISPOSITION
+ _except_makefilechannel_handler(
+diff -burN insight-6.4/tcl/win/tclWinFCmd.c insight-psp/tcl/win/tclWinFCmd.c
+--- insight-6.4/tcl/win/tclWinFCmd.c	2003-02-08 06:52:00.000000000 +1100
++++ insight-psp/tcl/win/tclWinFCmd.c	2006-11-26 16:28:33.129673600 +1100
+@@ -469,6 +469,7 @@
+ }
+ #ifdef HAVE_NO_SEH
+ static
++__attribute__ ((used))
+ __attribute__ ((cdecl))
+ EXCEPTION_DISPOSITION
+ _except_dorenamefile_handler(
