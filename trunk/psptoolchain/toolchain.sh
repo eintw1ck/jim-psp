@@ -37,10 +37,10 @@
    BUILD_NEWLIB=1
    BUILD_PSPSDK=1
    # By default dont add MS Visual Studio support
-   MSVS_SUPPORT=0
+   MSVS_SUPPORT=1
    # By default dont build GDB
-   BUILD_GDB=0
-   BUILD_INSIGHT=0
+   BUILD_GDB=1
+   BUILD_INSIGHT=1
 
   ## Else...
   else
