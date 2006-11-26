@@ -162,6 +162,10 @@
         echo "ERROR: To build Insight you need to have 'flex' installed."
 		exit
 	 fi
+     if ! test "`yacc --version 2> /dev/null`" ; then
+     echo "ERROR: To build Insight you need to have a yacc parser installed."
+     exit
+	 fi
   fi
 
   ## Check for autoconf and automake
