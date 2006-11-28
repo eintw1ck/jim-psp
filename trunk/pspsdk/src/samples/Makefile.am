@@ -24,6 +24,7 @@ SAMPLES = \
 	gu/logic \
 	gu/morph \
 	gu/morphskin \
+	gu/ortho \
 	gu/reflection \
 	gu/rendertarget \
 	gu/shadowprojection \
