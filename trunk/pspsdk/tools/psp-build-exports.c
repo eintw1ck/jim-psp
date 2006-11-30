@@ -731,7 +731,7 @@ int psp_export_func_nid(char **params)
 int psp_export_func_hash(char **params)
 {
 	unsigned int nid;
-	unsigned char hash[16];
+	unsigned char hash[SHA1_DIGEST_SIZE];
 
 	if(g_currlib == NULL)
 	{
@@ -792,7 +792,7 @@ int psp_export_var_nid(char **params)
 int psp_export_var_hash(char **params)
 {
 	unsigned int nid;
-	unsigned char hash[16];
+	unsigned char hash[SHA1_DIGEST_SIZE];
 
 	if(g_currlib == NULL)
 	{
