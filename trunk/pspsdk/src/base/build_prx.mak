@@ -76,3 +76,5 @@ $(TARGET).elf: $(OBJS)
 
 clean: $(EXTRA_CLEAN)
 	-rm -f $(FINAL_TARGET) $(TARGET).elf $(OBJS)
+
+rebuild: clean all

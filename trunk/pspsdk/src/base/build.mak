@@ -182,3 +182,5 @@ $(PSP_EBOOT): $(FINAL_TARGET) $(PSP_EBOOT_SFO)
 
 clean: 
 	-rm -f $(FINAL_TARGET) $(EXTRA_CLEAN) $(OBJS) $(PSP_EBOOT_SFO) $(PSP_EBOOT) $(EXTRA_TARGETS)
+
+rebuild: clean all
