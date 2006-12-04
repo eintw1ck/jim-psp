@@ -81,7 +81,7 @@ int sceUsbGetDrvState(const char* driverName);
 
 #if 0
 int sceUsbGetDrvList(u32 r4one, u32* r5ret, u32 r6one);
-int sceUsbWaitState(?);
+int sceUsbWaitState(u32 state, s32 waitmode, u32 *timeout);
 int sceUsbWaitCancel(void);
 #endif
 
