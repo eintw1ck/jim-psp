@@ -222,9 +222,9 @@ static int print_threadinfo(SceUID uid, int verbose)
 		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			SHELL_PRINT("Attr: 0x%08X - Status: %d/%s- Entry: %p\n", info.attr, info.status, 
+			SHELL_PRINT("Attr: 0x%08X - Status: %d/%s- Entry: 0x%p\n", info.attr, info.status, 
 					get_thread_status(info.status, status), info.entry);
-			SHELL_PRINT("Stack: %p - StackSize 0x%08X - GP: 0x%08X\n", info.stack, info.stackSize,
+			SHELL_PRINT("Stack: 0x%p - StackSize 0x%08X - GP: 0x%08X\n", info.stack, info.stackSize,
 					(u32) info.gpReg);
 			SHELL_PRINT("InitPri: %d - CurrPri: %d - WaitType %d\n", info.initPriority,
 					info.currentPriority, info.waitType);
@@ -439,7 +439,7 @@ static int print_mboxinfo(SceUID uid, int verbose)
 		{
 			SHELL_PRINT("Attr: 0x%08X - numWaitThreads: 0x%08X - numMessages: 0x%08X\n", info.attr, info.numWaitThreads, 
 					info.numMessages);
-			SHELL_PRINT("firstMessage %p\n", info.firstMessage);
+			SHELL_PRINT("firstMessage 0x%p\n", info.firstMessage);
 		}
 	}
 
@@ -469,7 +469,7 @@ static int print_cbinfo(SceUID uid, int verbose)
 		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			SHELL_PRINT("threadId 0x%08X - callback %p - common %p\n", info.threadId, info.callback, info.common);
+			SHELL_PRINT("threadId 0x%08X - callback 0x%p - common 0x%p\n", info.threadId, info.callback, info.common);
 			SHELL_PRINT("notifyCount %d - notifyArg %d\n", info.notifyCount, info.notifyArg);
 		}
 	}
@@ -502,7 +502,7 @@ static int print_vtinfo(SceUID uid, int verbose)
 		{
 			SHELL_PRINT("active %d - base.hi %d - base.low %d - current.hi %d - current.low %d\n", 
 				   info.active, info.base.hi, info.base.low, info.current.hi, info.current.low);	
-			SHELL_PRINT("schedule.hi %d - schedule.low %d - handler %p - common %p\n", info.schedule.hi,
+			SHELL_PRINT("schedule.hi %d - schedule.low %d - handler 0x%p - common 0x%p\n", info.schedule.hi,
 					info.schedule.low, info.handler, info.common);
 		}
 	}
@@ -627,8 +627,8 @@ static int print_thevinfo(SceUID uid, int verbose)
 		SHELL_PRINT("UID: 0x%08X - Name: %s\n", uid, info.name);
 		if(verbose)
 		{
-			SHELL_PRINT("threadId 0x%08X - mask %02X - handler %p\n", info.threadId, info.mask, info.handler);
-			SHELL_PRINT("common %p\n", info.common);
+			SHELL_PRINT("threadId 0x%08X - mask %02X - handler 0x%p\n", info.threadId, info.mask, info.handler);
+			SHELL_PRINT("common 0x%p\n", info.common);
 		}
 	}
 
@@ -832,7 +832,35 @@ static int cop0_cmd(int argc, char **argv, unsigned int *vRet)
 	return CMD_OK;
 }
 
-static int print_modinfo(SceUID uid, int verbose)
+static void print_modthids(SceUID uid, int verbose, const char *name, int type, int (*print)(SceUID, int))
+{
+	SceUID thids[100];
+	int count;
+
+	count = refer_threads_by_module(type, uid, thids, 100);
+	if(count > 0)
+	{
+		int i;
+		SHELL_PRINT("Module %s (%d)\n", name, count);
+		for(i = 0; i < count; i++)
+		{
+			(void) print(thids[i], verbose);
+			SHELL_PRINT("\n");
+		}
+	}
+}
+
+static void print_modthreads(SceUID uid, int verbose)
+{
+	print_modthids(uid, verbose, "Thread", SCE_KERNEL_TMID_Thread, print_threadinfo);
+}
+
+static void print_modcallbacks(SceUID uid, int verbose)
+{
+	print_modthids(uid, verbose, "Callback", SCE_KERNEL_TMID_Callback, print_cbinfo);
+}
+
+static int print_modinfo(SceUID uid, int verbose, const char *opts)
 {
 	SceKernelModuleInfo info;
 	PspDebugPutChar kp;
@@ -858,6 +886,22 @@ static int print_modinfo(SceUID uid, int verbose)
 				SHELL_PRINT("Segment %d: Addr 0x%08X - Size 0x%08X\n", i, 
 						(u32) info.segmentaddr[i], (u32) info.segmentsize[i]);
 			}
+			SHELL_PRINT("\n");
+		}
+
+		while(*opts)
+		{
+			switch(*opts)
+			{
+				case 't': /* Print threads for this module */
+						  print_modthreads(uid, verbose);
+						  break;
+				case 'c': /* Print callbacks for this module */
+						  print_modcallbacks(uid, verbose);
+						  break;
+				default: break;
+			};
+			opts++;
 		}
 	}
 	sioEnableKprintf(kp);
@@ -869,12 +913,18 @@ static int modinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
+	const char *opts = "";
 
 	uid = get_module_uid(argv[0]);
 
 	if(uid >= 0)
 	{
-		if(print_modinfo(uid, 1) < 0)
+		if(argc > 1)
+		{
+			opts = argv[1];
+		}
+
+		if(print_modinfo(uid, 1, opts) < 0)
 		{
 			SHELL_PRINT("ERROR: Unknown module 0x%08X\n", uid);
 		}
@@ -898,13 +948,21 @@ static int modlist_cmd(int argc, char **argv, unsigned int *vRet)
 	int count;
 	int i;
 	int verbose = 0;
+	const char *opts = "";
 
 	if(argc > 0)
 	{
-		if(strcmp(argv[0], "v") == 0)
+		opts = argv[0];
+		while(*opts)
 		{
-			verbose = 1;
+			if(*opts == 'v')
+			{
+				verbose = 1;
+				break;
+			}
+			opts++;
 		}
+		opts = argv[0];
 	}
 
 	memset(ids, 0, 100 * sizeof(SceUID));
@@ -914,7 +972,7 @@ static int modlist_cmd(int argc, char **argv, unsigned int *vRet)
 		SHELL_PRINT("<Module List (%d modules)>\n", count);
 		for(i = 0; i < count; i++)
 		{
-			print_modinfo(ids[i], verbose);
+			print_modinfo(ids[i], verbose, opts);
 		}
 	}
 
@@ -2848,7 +2906,7 @@ static int scrshot_cmd(int argc, char **argv, unsigned int *vRet)
 	}
 	 
 	block_addr = sceKernelGetBlockHeadAddr(block_id);
-	SHELL_PRINT("frame_addr %p, frame_width %d, pixel_format %d output %s\n", frame_addr, frame_width, pixel_format, path);
+	SHELL_PRINT("frame_addr 0x%p, frame_width %d, pixel_format %d output %s\n", frame_addr, frame_width, pixel_format, path);
 
 	p = (u32) frame_addr;
 	if(p & 0x80000000)
@@ -2964,13 +3022,19 @@ static int modaddr_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	SceModule *pMod;
+	const char *opts = "";
+
+	if(argc > 1)
+	{
+		opts = argv[1];
+	}
 
 	if(memDecode(argv[0], &addr))
 	{
 		pMod = sceKernelFindModuleByAddress(addr);
 		if(pMod != NULL)
 		{
-			print_modinfo(pMod->modid, 1);
+			print_modinfo(pMod->modid, 1, opts);
 		}
 		else
 		{

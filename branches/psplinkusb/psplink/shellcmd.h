@@ -118,15 +118,25 @@ struct sh_command
 	SHELL_CMD("sysstat", NULL, sysstat_cmd, 0, "Print the system status", "", "") \
 	 \
 	SHELL_CAT("module", "Commands to handle modules") \
-	SHELL_CMD("modlist","ml", modlist_cmd, 0, "List the currently loaded modules", "", "[v]") \
-	SHELL_CMD("modinfo","mi", modinfo_cmd, 1, "Print info about a module", "", "uid|@name") \
+	SHELL_CMD("modlist","ml", modlist_cmd, 0, "List the currently loaded modules", \
+			"[opts] is a string of optional arguments\n" \
+			"v - Verbose mode (print all module information)\n" \
+			"t - Print the module's threads\n" \
+			, "[opts]") \
+	SHELL_CMD("modinfo","mi", modinfo_cmd, 1, "Print info about a module", \
+			"[opts] is a string of optional arguments\n" \
+			"t - Print the module's threads\n" \
+			, "uid|@name [opts]") \
 	SHELL_CMD("modstop","ms", modstop_cmd, 1, "Stop a running module", "", "uid|@name") \
 	SHELL_CMD("modunld","mu", modunld_cmd, 1, "Unload a module (must be stopped)", "", "uid|@name") \
 	SHELL_CMD("modstun","mn", modstun_cmd, 1, "Stop and unload a module", "", "uid|@name") \
 	SHELL_CMD("modload","md", modload_cmd, 1, "Load a module", "", "path") \
 	SHELL_CMD("modstart","mt", modstart_cmd, 1, "Start a module", "", "uid|@name [args]") \
 	SHELL_CMD("modexec","me", modexec_cmd, 1, "LoadExec a module", "", "[@key] path [args]") \
-	SHELL_CMD("modaddr","ma", modaddr_cmd, 1, "Display info about the module at a specified address", "", "addr") \
+	SHELL_CMD("modaddr","ma", modaddr_cmd, 1, "Display info about the module at a specified address", \
+			"[opts] is a string of optional arguments\n" \
+			"t - Print the module's threads\n" \
+			, "addr [opts]") \
 	SHELL_CMD("ldstart","ld", ldstart_cmd, 1, "Load and start a module", "", "path [args]") \
 	SHELL_CMD("kill", NULL, kill_cmd, 1, "Kill a module and all it's threads", "", "uid|@name") \
 	SHELL_CMD("debug", "d", debug_cmd, 1, "Start a module under GDB", "", "program.elf [args]") \

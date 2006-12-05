@@ -753,6 +753,74 @@ SceUID refer_module_by_name(const char *name, SceKernelModuleInfo *info)
 	return module_refer(sceKernelFindModuleByName(name), info);
 }
 
+static unsigned int get_thread_addr(SceUID uid)
+{
+	SceKernelThreadInfo info;
+	unsigned int addr = 0;
+
+	memset(&info, 0, sizeof(info));
+	info.size = sizeof(info);
+	if(sceKernelReferThreadStatus(uid, &info) == 0)
+	{
+		addr = (unsigned int) info.entry;
+	}
+
+	return addr;
+}
+
+static unsigned int get_callback_addr(SceUID uid)
+{
+	SceKernelCallbackInfo info;
+	unsigned int addr = 0;
+
+	memset(&info, 0, sizeof(info));
+	info.size = sizeof(info);
+	if(sceKernelReferCallbackStatus(uid, &info) == 0)
+	{
+		addr = (unsigned int) info.callback;
+	}
+
+	return addr;
+}
+
+int refer_threads_by_module(int type, SceUID modid, SceUID *uids, int max)
+{
+	SceUID thids[100];
+	SceKernelModuleInfo modinfo;
+	unsigned int addr;
+	int count;
+	int i;
+	int ret;
+
+	ret = 0;
+	memset(thids, 0, sizeof(thids));
+	if(sceKernelGetThreadmanIdList(type, thids, 100, &count) >= 0)
+	{
+		for(i = 0; i < count; i++)
+		{
+			switch(type)
+			{
+				case SCE_KERNEL_TMID_Thread: addr = get_thread_addr(thids[i]);
+											 break;
+				case SCE_KERNEL_TMID_Callback: addr = get_callback_addr(thids[i]);
+											   break;
+				default: addr = 0;
+						 break;
+			};
+
+			if(refer_module_by_addr(addr, &modinfo) == modid)
+			{
+				if(ret < max)
+				{
+					uids[ret++] = thids[i];
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
 SceUID psplinkReferModuleByName(const char *name, SceKernelModuleInfo *info)
 {
 	int k1;

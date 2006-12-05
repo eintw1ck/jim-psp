@@ -737,12 +737,13 @@ int usbAsyncUnregister(unsigned int chan)
 	return ret;
 }
 
-int usbAsyncRead(unsigned int chan, unsigned char *data, int len)
+int usbAsyncReadWithTimeout(unsigned int chan, unsigned char *data, int len, SceUInt timeout)
 {
 	int ret;
 	int intc;
 	int i;
 	int k1;
+	SceUInt *pTimeout = NULL;
 
 	k1 = psplinkSetK1(0);
 
@@ -751,7 +752,12 @@ int usbAsyncRead(unsigned int chan, unsigned char *data, int len)
 		return -1;
 	}
 
-	ret = sceKernelWaitEventFlag(g_asyncevent, 1 << chan, PSP_EVENT_WAITOR | PSP_EVENT_WAITCLEAR, NULL, NULL);
+	if(timeout >= 0)
+	{
+		pTimeout = &timeout;
+	}
+
+	ret = sceKernelWaitEventFlag(g_asyncevent, 1 << chan, PSP_EVENT_WAITOR | PSP_EVENT_WAITCLEAR, NULL, pTimeout);
 	if(ret < 0)
 	{
 		return -1;
@@ -775,6 +781,11 @@ int usbAsyncRead(unsigned int chan, unsigned char *data, int len)
 	psplinkSetK1(k1);
 
 	return len;
+}
+
+int usbAsyncRead(unsigned int chan, unsigned char *data, int len)
+{
+	return usbAsyncReadWithTimeout(chan, data, len, -1);
 }
 
 void usbAsyncFlush(unsigned int chan)
