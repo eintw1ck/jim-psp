@@ -45,6 +45,8 @@ SAMPLES = \
 	kernel/cwd \
 	kernel/fileio \
 	kernel/messagebox \
+	kernel/registry \
+	kernel/regenum \
 	ms/callback \
 	nand/dumpipl \
 	net/simple \
