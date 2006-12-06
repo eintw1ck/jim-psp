@@ -242,7 +242,7 @@ int sceRtcTickAddMonths(u64* destTick, const u64* srcTick, int numMonths);
 int sceRtcTickAddYears(u64* destTick, const u64* srcTick, int numYears);
 
 int sceRtcSetTime_t(pspTime* date, const time_t time);
-int sceRtcGetTime_t(const pspTime* date, time_t time);
+int sceRtcGetTime_t(const pspTime* date, time_t *time);
 int sceRtcSetDosTime(pspTime* date, u32 dosTime);
 int sceRtcGetDosTime(pspTime* date, u32 dosTime);
 int sceRtcSetWin32FileTime(pspTime* date, u64* win32Time);
