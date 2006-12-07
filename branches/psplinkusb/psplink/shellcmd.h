@@ -82,7 +82,7 @@ struct sh_command
 	SHELL_CMD("thdolist", NULL, thdolist_cmd, 0, "List the dormant threads in the system", \
 		    "If v is specified as an argument the output will be verbose.", "[v]") \
 	SHELL_CMD("thinfo", "ti", thinfo_cmd, 1, "Print info about a thread", \
-			"Prints more detailed information about a thread. uid specifies a numeric unique identifier, " \
+			"Prints more detailed information about a thread. uid specifies a numeric unique identifier, "\
 			"@name is the name of the thread.", "uid|@name") \
 	SHELL_CMD("thsusp", "ts", thsusp_cmd, 1, "Suspend a thread", \
 			"Suspends a thread (so it stops executing). To resume the thread use the `thresm` command. " \
@@ -122,20 +122,25 @@ struct sh_command
 			"[opts] is a string of optional arguments\n" \
 			"v - Verbose mode (print all module information)\n" \
 			"t - Print the module's threads\n" \
+			"c - Print the module's callbacks\n" \
 			, "[opts]") \
 	SHELL_CMD("modinfo","mi", modinfo_cmd, 1, "Print info about a module", \
 			"[opts] is a string of optional arguments\n" \
 			"t - Print the module's threads\n" \
+			"c - Print the module's callbacks\n" \
 			, "uid|@name [opts]") \
 	SHELL_CMD("modstop","ms", modstop_cmd, 1, "Stop a running module", "", "uid|@name") \
 	SHELL_CMD("modunld","mu", modunld_cmd, 1, "Unload a module (must be stopped)", "", "uid|@name") \
 	SHELL_CMD("modstun","mn", modstun_cmd, 1, "Stop and unload a module", "", "uid|@name") \
 	SHELL_CMD("modload","md", modload_cmd, 1, "Load a module", "", "path") \
 	SHELL_CMD("modstart","mt", modstart_cmd, 1, "Start a module", "", "uid|@name [args]") \
-	SHELL_CMD("modexec","me", modexec_cmd, 1, "LoadExec a module", "", "[@key] path [args]") \
+	SHELL_CMD("modexec","me", modexec_cmd, 1, "LoadExec a module", \
+			"@key is the exec key, can be @game, @vsh or @updater" \
+			, "[@key] path [args]") \
 	SHELL_CMD("modaddr","ma", modaddr_cmd, 1, "Display info about the module at a specified address", \
 			"[opts] is a string of optional arguments\n" \
 			"t - Print the module's threads\n" \
+			"c - Print the module's callbacks\n" \
 			, "addr [opts]") \
 	SHELL_CMD("ldstart","ld", ldstart_cmd, 1, "Load and start a module", "", "path [args]") \
 	SHELL_CMD("kill", NULL, kill_cmd, 1, "Kill a module and all it's threads", "", "uid|@name") \
@@ -158,6 +163,7 @@ struct sh_command
 	SHELL_CMD("pokew",   "pw", pokew_cmd, 2, "Poke words into memory", "", "addr val1 [val2..valN]") \
 	SHELL_CMD("pokeh",   "ph", pokeh_cmd, 2, "Poke half words into memory", "", "addr val1 [val2..valN]") \
 	SHELL_CMD("pokeb",   "pb", pokeb_cmd, 2, "Poke bytes into memory", "", "addr val1 [val2..valN]") \
+	SHELL_CMD("pokes",   "ps", pokes_cmd, 2, "Poke a string into memory", "", "addr str") \
 	SHELL_CMD("peekw",   "kw", peekw_cmd, 1, "Peek the word at address", "", "addr [o|b|x|f]") \
 	SHELL_CMD("peekh",   "kh", peekh_cmd, 1, "Peek the half word at address", "", "addr [o|b|x]") \
 	SHELL_CMD("peekb",   "kb", peekb_cmd, 1, "Peek the byte at address", "", "addr [o|b|x]") \
@@ -169,8 +175,14 @@ struct sh_command
 	SHELL_CMD("findhex", "nx", findhex_cmd, 3, "Find an hexstring string", "", "addr size hexstr [mask]") \
 	SHELL_CMD("findw",   "nw", findw_cmd, 3, "Find a list of words", "", "addr size val1 [val2..valN]") \
 	SHELL_CMD("findh",   "nh", findh_cmd, 3, "Find a list of half words", "", "addr size val1 [val2..valN]") \
-	SHELL_CMD("dcache",  "dc", dcache_cmd, 1, "Perform a data cache operation", "", "w|i|wi [addr size]") \
-	SHELL_CMD("icache",  "ic", icache_cmd, 0, "Perform an instruction cache operation", "", "[addr size]") \
+	SHELL_CMD("dcache",  "dc", dcache_cmd, 1, "Perform a data cache operation", \
+			"w  - Writeback the cache\n" \
+			"i  - Invalidate the cache\n" \
+			"wi - Writeback and invalidate the cache\n" \
+			"addr and size is an optional range. If not specified will perform\n" \
+			"the action over the entire cache" \
+			, "w|i|wi [addr size]") \
+	SHELL_CMD("icache",  "ic", icache_cmd, 0, "Invalidate the instruction cache", "", "[addr size]") \
 	SHELL_CMD("disasm",  "di", disasm_cmd, 1, "Disassemble instructions", "", "address [count]") \
 	SHELL_CMD("disopts", NULL, disopts_cmd, 0, "Print the current disassembler options", "", "") \
 	SHELL_CMD("disset", NULL, disset_cmd, 1, "Set some disassembler options", "", "options") \
@@ -208,6 +220,7 @@ struct sh_command
 	SHELL_CMD("symprint", "syp", symprint_cmd, 1, "Print the symbols for a module", "", "modname") \
 	SHELL_CMD("symbyaddr", "sya", symbyaddr_cmd, 1, "Print the symbol at the specified address", "", "addr") \
 	SHELL_CMD("symbyname", "syn", symbyname_cmd, 1, "Print the specified symbol address", "", "module:symname") \
+	SHELL_CMD("call", NULL, call_cmd, 1, "Issue a function call", "", "addr [arg0...arg5]") \
  \
 	SHELL_CAT("misc", "Miscellaneous commands (e.g. USB, exit)") \
 	SHELL_CMD("usbstat", "us", usbstat_cmd, 0, "Display the status of the USB connection", "", "") \

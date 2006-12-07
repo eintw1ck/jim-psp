@@ -62,6 +62,12 @@ static int g_ttymode = 0;
 
 typedef int (*threadmanprint_func)(SceUID uid, int verbose);
 
+struct call_frame 
+{
+	u64 (*func)(u32 a, u32 b, u32 c, u32 d, u32 e, u32 f);
+	unsigned int args[6];
+};
+
 void psplinkPrintPrompt(void)
 {
 	SHELL_PRINT_CMD(SHELL_CMD_CWD, "%s", g_context.currdir);
@@ -2360,6 +2366,31 @@ static int pokeb_cmd(int argc, char **argv, unsigned int *vRet)
 	return CMD_OK;
 }
 
+static int pokes_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	u32 addr;
+
+	if(memDecode(argv[0], &addr))
+	{
+		int size_left;
+		int str_len;
+
+		size_left = memValidate(addr, MEM_ATTRIB_WRITE | MEM_ATTRIB_WORD);
+		str_len = strlen(argv[1]) + 1;
+		if(size_left >= str_len)
+		{
+			strcpy((void*) addr, argv[1]);
+		}
+		else
+		{
+			SHELL_PRINT("Invalid memory address 0x%08X\n", addr);
+			return CMD_ERROR;
+		}
+	}
+
+	return CMD_OK;
+}
+
 static int peekw_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
@@ -3552,6 +3583,69 @@ static int tty_cmd(int argc, char **argv, unsigned int *vRet)
 static int tonid_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SHELL_PRINT("Name: %s, Nid: 0x%08X\n", argv[0], libsNameToNid(argv[0]));
+
+	return CMD_OK;
+}
+
+int call_thread(SceSize args, void *argp)
+{
+	if(args == sizeof(struct call_frame))
+	{
+		struct call_frame *s = (struct call_frame *) argp;
+		u64 ret;
+
+		ret = s->func(s->args[0], s->args[1], s->args[2], s->args[3], s->args[4], s->args[5]);
+		SHELL_PRINT("Return: 0x%08X:0x%08X\n", ret >> 32, ret & 0xFFFFFFFF);
+	}
+
+	sceKernelExitDeleteThread(0);
+
+	return 0;
+}
+
+static int call_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	struct call_frame frame;
+	SceUID uid;
+	SceUInt timeout;
+
+	memset(&frame, 0, sizeof(frame));
+	if(memDecode(argv[0], (u32 *) &frame.func))
+	{
+		int i;
+		for(i = 1; i < argc; i++)
+		{
+			if(!memDecode(argv[i], &frame.args[i-1]))
+			{
+				break;
+			}
+		}
+		if(i != argc)
+		{
+			SHELL_PRINT("Invalid parameter %s\n", argv[i]);
+			return CMD_ERROR;
+		}
+
+		SHELL_PRINT("Func 0x%p ", frame.func);
+		for(i = 0; i < argc-1; i++)
+		{ 
+			SHELL_PRINT("arg%d 0x%08x ", i, frame.args[i]);
+		}
+		SHELL_PRINT("\n");
+
+		uid = sceKernelCreateThread("CallThread", call_thread, 0x18, 0x1000, 0, NULL);
+		if(uid >= 0)
+		{
+			timeout = 1000000;
+			sceKernelStartThread(uid, sizeof(frame), &frame);
+			sceKernelWaitThreadEnd(uid, &timeout);
+		}
+	}
+	else
+	{
+		SHELL_PRINT("Invalid function address %s\n", argv[0]);
+		return CMD_ERROR;
+	}
 
 	return CMD_OK;
 }
