@@ -116,7 +116,7 @@ void print_key(const char *dir)
 	if(sceRegOpenRegistry(&reg, 2, &h) == 0)
 	{
 		REGHANDLE hd;
-		if(!sceRegOpenDir(h, dir, 2, &hd))
+		if(!sceRegOpenCategory(h, dir, 2, &hd))
 		{
 			int num;
 
@@ -150,7 +150,7 @@ void print_key(const char *dir)
 			{
 				printf("Could not get number of keys\n");
 			}
-			sceRegCloseDir(hd);
+			sceRegCloseCategory(hd);
 		}
 		else
 		{
@@ -186,9 +186,9 @@ int check_dir(const char *dir)
 	if(sceRegOpenRegistry(&reg, 2, &h) == 0)
 	{
 		REGHANDLE hd;
-		if(!sceRegOpenDir(h, dir, 2, &hd))
+		if(!sceRegOpenCategory(h, dir, 2, &hd))
 		{
-			sceRegCloseDir(hd);
+			sceRegCloseCategory(hd);
 			ret = 1;
 		}
 		sceRegCloseRegistry(h);

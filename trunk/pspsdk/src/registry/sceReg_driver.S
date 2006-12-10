@@ -21,16 +21,16 @@
 	IMPORT_FUNC	"sceReg_driver",0xDEDA92BF,sceRegRemoveRegistry
 #endif
 #ifdef F_sceReg_driver_0006
-	IMPORT_FUNC	"sceReg_driver",0x1D8A762E,sceReg_driver_1D8A762E
+	IMPORT_FUNC	"sceReg_driver",0x1D8A762E,sceRegOpenCategory
 #endif
 #ifdef F_sceReg_driver_0007
-	IMPORT_FUNC	"sceReg_driver",0x0CAE832B,sceReg_driver_0CAE832B
+	IMPORT_FUNC	"sceReg_driver",0x0CAE832B,sceRegCloseCategory
 #endif
 #ifdef F_sceReg_driver_0008
 	IMPORT_FUNC	"sceReg_driver",0x39461B4D,sceRegFlushRegistry
 #endif
 #ifdef F_sceReg_driver_0009
-	IMPORT_FUNC	"sceReg_driver",0x0D69BF40,sceReg_driver_0D69BF40
+	IMPORT_FUNC	"sceReg_driver",0x0D69BF40,sceRegFlushCategory
 #endif
 #ifdef F_sceReg_driver_0010
 	IMPORT_FUNC	"sceReg_driver",0x57641A81,sceRegCreateKey
@@ -51,7 +51,7 @@
 	IMPORT_FUNC	"sceReg_driver",0x2D211135,sceRegGetKeys
 #endif
 #ifdef F_sceReg_driver_0016
-	IMPORT_FUNC	"sceReg_driver",0x4CA16893,sceReg_driver_4CA16893
+	IMPORT_FUNC	"sceReg_driver",0x4CA16893,sceRegRemoveCategory
 #endif
 #ifdef F_sceReg_driver_0017
 	IMPORT_FUNC	"sceReg_driver",0x3615BC87,sceRegRemoveKey

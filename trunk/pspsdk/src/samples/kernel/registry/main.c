@@ -41,7 +41,7 @@ int get_registry_value(const char *dir, const char *name, unsigned int *val)
 	if(sceRegOpenRegistry(&reg, 2, &h) == 0)
 	{
 		REGHANDLE hd;
-		if(!sceRegOpenDir(h, dir, 2, &hd))
+		if(!sceRegOpenCategory(h, dir, 2, &hd))
 		{
 			REGHANDLE hk;
 			unsigned int type, size;
@@ -51,10 +51,10 @@ int get_registry_value(const char *dir, const char *name, unsigned int *val)
 				if(!sceRegGetKeyValue(hd, hk, val, 4))
 				{
 					ret = 1;
-					sceRegFlushDir(hd);
+					sceRegFlushCategory(hd);
 				}
 			}
-			sceRegCloseDir(hd);
+			sceRegCloseCategory(hd);
 		}
 		sceRegFlushRegistry(h);
 		sceRegCloseRegistry(h);
@@ -78,15 +78,15 @@ int set_registry_value(const char *dir, const char *name, unsigned int val)
 	if(sceRegOpenRegistry(&reg, 2, &h) == 0)
 	{
 		REGHANDLE hd;
-		if(!sceRegOpenDir(h, dir, 2, &hd))
+		if(!sceRegOpenCategory(h, dir, 2, &hd))
 		{
 			if(!sceRegSetKeyValue(hd, name, &val, 4))
 			{
 				printf("Set registry value\n");
 				ret = 1;
-				sceRegFlushDir(hd);
+				sceRegFlushCategory(hd);
 			}
-			sceRegCloseDir(hd);
+			sceRegCloseCategory(hd);
 		}
 		sceRegFlushRegistry(h);
 		sceRegCloseRegistry(h);

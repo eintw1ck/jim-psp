@@ -6472,6 +6472,18 @@
 						<NID>0xC23AC778</NID>
 						<NAME>scePower_driver_C23AC778</NAME>
 					</FUNCTION>
+					<FUNCTION>
+						<NID>0x23C31FFE</NID>
+						<NAME>scePower_driver_23C31FFE</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xFA97A599</NID>
+						<NAME>scePower_driver_FA97A599</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xB3EDD801</NID>
+						<NAME>scePower_driver_B3EDD801</NAME>
+					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
 		</LIBRARIES>
@@ -7876,11 +7888,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1D8A762E</NID>
-						<NAME>sceReg_1D8A762E</NAME>
+						<NAME>sceRegOpenCategory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0CAE832B</NID>
-						<NAME>sceReg_0CAE832B</NAME>
+						<NAME>sceRegCloseCategory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x39461B4D</NID>
@@ -7888,7 +7900,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0D69BF40</NID>
-						<NAME>sceReg_0D69BF40</NAME>
+						<NAME>sceRegFlushCategory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57641A81</NID>
@@ -7916,7 +7928,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4CA16893</NID>
-						<NAME>sceReg_4CA16893</NAME>
+						<NAME>sceRegRemoveCategory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3615BC87</NID>
@@ -7958,11 +7970,11 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x1D8A762E</NID>
-						<NAME>sceReg_driver_1D8A762E</NAME>
+						<NAME>sceRegOpenCategory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0CAE832B</NID>
-						<NAME>sceReg_driver_0CAE832B</NAME>
+						<NAME>sceRegCloseCategory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x39461B4D</NID>
@@ -7970,7 +7982,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x0D69BF40</NID>
-						<NAME>sceReg_driver_0D69BF40</NAME>
+						<NAME>sceRegFlushCategory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x57641A81</NID>
@@ -7998,7 +8010,7 @@
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x4CA16893</NID>
-						<NAME>sceReg_driver_4CA16893</NAME>
+						<NAME>sceRegRemoveCategory</NAME>
 					</FUNCTION>
 					<FUNCTION>
 						<NID>0x3615BC87</NID>
@@ -9430,6 +9442,10 @@
 						<NID>0xA089ECA4</NID>
 						<NAME>sceKernelMemset</NAME>
 					</FUNCTION>
+					<FUNCTION>
+						<NID>0xB2C7AA36</NID>
+						<NAME>sceKernelSetDdrMemoryProtection</NAME>
+					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>
 			<LIBRARY>
@@ -9561,6 +9577,18 @@
 					<FUNCTION>
 						<NID>0x090CCB3F</NID>
 						<NAME>sceKernelPowerTick</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0x3E0271D3</NID>
+						<NAME>sceSuspendForUser_3E0271D3</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xA14F40B2</NID>
+						<NAME>sceSuspendForUser_A14F40B2</NAME>
+					</FUNCTION>
+					<FUNCTION>
+						<NID>0xA569E425</NID>
+						<NAME>sceSuspendForUser_A569E425</NAME>
 					</FUNCTION>
 				</FUNCTIONS>
 			</LIBRARY>

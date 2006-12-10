@@ -18,16 +18,16 @@
 	IMPORT_FUNC	"sceReg",0xDEDA92BF,sceRegRemoveRegistry
 #endif
 #ifdef F_sceReg_0005
-	IMPORT_FUNC	"sceReg",0x1D8A762E,sceReg_1D8A762E
+	IMPORT_FUNC	"sceReg",0x1D8A762E,sceRegOpenCategory
 #endif
 #ifdef F_sceReg_0006
-	IMPORT_FUNC	"sceReg",0x0CAE832B,sceReg_0CAE832B
+	IMPORT_FUNC	"sceReg",0x0CAE832B,sceRegCloseCategory
 #endif
 #ifdef F_sceReg_0007
 	IMPORT_FUNC	"sceReg",0x39461B4D,sceRegFlushRegistry
 #endif
 #ifdef F_sceReg_0008
-	IMPORT_FUNC	"sceReg",0x0D69BF40,sceReg_0D69BF40
+	IMPORT_FUNC	"sceReg",0x0D69BF40,sceRegFlushCategory
 #endif
 #ifdef F_sceReg_0009
 	IMPORT_FUNC	"sceReg",0x57641A81,sceRegCreateKey
@@ -48,7 +48,7 @@
 	IMPORT_FUNC	"sceReg",0x2D211135,sceRegGetKeys
 #endif
 #ifdef F_sceReg_0015
-	IMPORT_FUNC	"sceReg",0x4CA16893,sceReg_4CA16893
+	IMPORT_FUNC	"sceReg",0x4CA16893,sceRegRemoveCategory
 #endif
 #ifdef F_sceReg_0016
 	IMPORT_FUNC	"sceReg",0x3615BC87,sceRegRemoveKey

@@ -95,7 +95,17 @@ int sceRegCloseRegistry(REGHANDLE h);
  *
  * @return 0 on success, < 0 on error
  */
-int sceReg_driver_1D8A762E(REGHANDLE h, const char *name, int mode, REGHANDLE *hd);
+int sceRegOpenCategory(REGHANDLE h, const char *name, int mode, REGHANDLE *hd);
+
+/**
+ * Remove a registry dir
+ *
+ * @param hd - The open registry dir handle
+ * @param name - The name of the key
+ *
+ * @return 0 on success, < 0 on error
+ */
+int sceRegRemoveCategory(REGHANDLE h, const char *name);
 
 /**
  * Close the registry directory
@@ -104,7 +114,7 @@ int sceReg_driver_1D8A762E(REGHANDLE h, const char *name, int mode, REGHANDLE *h
  *
  * @return 0 on success, < 0 on error
  */
-int sceReg_driver_0CAE832B(REGHANDLE hd);
+int sceRegCloseCategory(REGHANDLE hd);
 
 /**
  * Flush the registry directory to disk
@@ -113,58 +123,7 @@ int sceReg_driver_0CAE832B(REGHANDLE hd);
  *
  * @return 0 on success, < 0 on error
  */
-int sceReg_driver_0D69BF40(REGHANDLE hd);
-
-/**
- * Create a new registry dir
- *
- * @param hd - The open registry dir handle
- * @param name - The name of the key
- * @param unk - Pass in 0
- *
- * @return 0 on success, < 0 on error
- */
-int sceReg_driver_4CA16893(REGHANDLE h, const char *name, int unk);
-
-/**
- * Open a registry directory
- *
- * @param h - The open registry handle
- * @param name - The path to the dir to open (e.g. /CONFIG/SYSTEM)
- * @param mode - Open mode (can be 1 or 2, probably read or read/write
- * @param hd - Pointer to a REGHANDLE to receive the registry dir handle
- *
- * @return 0 on success, < 0 on error
- */
-int sceReg_1D8A762E(REGHANDLE h, const char *name, int mode, REGHANDLE *hd);
-
-/**
- * Create a new registry dir
- *
- * @param hd - The open registry dir handle
- * @param name - The name of the key
- *
- * @return 0 on success, < 0 on error
- */
-int sceReg_4CA16893(REGHANDLE h, const char *name);
-
-/**
- * Close the registry directory
- *
- * @param hd - The open registry dir handle
- *
- * @return 0 on success, < 0 on error
- */
-int sceReg_0CAE832B(REGHANDLE hd);
-
-/**
- * Flush the registry directory to disk
- *
- * @param hd - The open registry dir handle
- *
- * @return 0 on success, < 0 on error
- */
-int sceReg_0D69BF40(REGHANDLE hd);
+int sceRegFlushCategory(REGHANDLE hd);
 
 /**
  * Get a key's information
@@ -268,17 +227,6 @@ int sceRegCreateKey(REGHANDLE hd, const char *name, int type, SceSize size);
  * @return 0 on success, < 0 on error
  */
 int sceRegRemoveRegistry(struct RegParam *reg);
-
-/* Not the real names but give an idea of their function */
-#define sceRegDriverOpenDir sceReg_driver_1D8A762E
-#define sceRegDriverFlushDir sceReg_driver_0D69BF40
-#define sceRegDriverCloseDir sceReg_driver_0CAE832B
-#define sceRegDriverCreateDir sceReg_driver_4CA16893
-
-#define sceRegOpenDir sceReg_1D8A762E
-#define sceRegFlushDir sceReg_0D69BF40
-#define sceRegCloseDir sceReg_0CAE832B
-#define sceRegCreateDir sceReg_4CA16893
 
 /*@}*/
 
