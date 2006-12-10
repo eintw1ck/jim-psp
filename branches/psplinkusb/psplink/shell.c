@@ -366,6 +366,47 @@ static int thpri_cmd(int argc, char **argv, unsigned int *vRet)
 	return ret;
 }
 
+static int thcreat_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	const char *name;
+	unsigned int entry;
+	int pri;
+	int stack;
+	unsigned int attr;
+	SceUID uid;
+	int ret;
+
+	name = argv[0];
+	if(!memDecode(argv[1], &entry))
+	{
+		SHELL_PRINT("Invalid entry address %s\n", argv[1]);
+		return CMD_ERROR;
+	}
+
+	pri = strtoul(argv[2], NULL, 0);
+	stack = strtoul(argv[3], NULL, 0);
+	attr = strtoul(argv[4], NULL, 0);
+
+	uid = sceKernelCreateThread(name, (void*) entry, pri, stack, attr, NULL);
+	if(uid < 0)
+	{
+		SHELL_PRINT("Could not create thread 0x%08X\n", uid);
+		return CMD_ERROR;
+	}
+
+	ret = sceKernelStartThread(uid, 0, NULL);
+	if(ret < 0)
+	{
+		SHELL_PRINT("Could not start thread %s 0x%08X\n", name, uid);
+		return CMD_ERROR;
+	}
+
+	SHELL_PRINT("Created/Started thread %s UID:0x%08X\n", name, uid);
+	*vRet = uid;
+
+	return CMD_OK;
+}
+
 static int print_eventinfo(SceUID uid, int verbose)
 {
 	SceKernelEventFlagInfo info;
@@ -396,6 +437,55 @@ static int evlist_cmd(int argc, char **argv, unsigned int *vRet)
 static int evinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "EventFlag", print_eventinfo, (ReferFunc) pspSdkReferEventFlagStatusByName);
+}
+
+static int evdel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	return thread_do_cmd(argv[0], "delete", (ReferFunc) pspSdkReferEventFlagStatusByName, sceKernelDeleteEventFlag);
+}
+
+static int evset_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	SceUID uid;
+	unsigned int bits;
+	int ret;
+
+	uid = get_thread_uid(argv[0], (ReferFunc) pspSdkReferEventFlagStatusByName);
+	if(uid < 0)
+	{
+		return CMD_ERROR;
+	}
+
+	bits = strtoul(argv[1], NULL, 0);
+	ret = sceKernelSetEventFlag(uid, bits);
+	if(ret < 0)
+	{
+		SHELL_PRINT("Error setting EventFlag - 0x%08X\n", ret);
+	}
+
+	return CMD_OK;
+}
+
+static int evclr_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	SceUID uid;
+	unsigned int bits;
+	int ret;
+
+	uid = get_thread_uid(argv[0], (ReferFunc) pspSdkReferEventFlagStatusByName);
+	if(uid < 0)
+	{
+		return CMD_ERROR;
+	}
+
+	bits = strtoul(argv[1], NULL, 0);
+	ret = sceKernelClearEventFlag(uid, ~bits);
+	if(ret < 0)
+	{
+		SHELL_PRINT("Error clearing EventFlag - 0x%08X\n", ret);
+	}
+
+	return CMD_OK;
 }
 
 static int print_semainfo(SceUID uid, int verbose)
@@ -430,6 +520,11 @@ static int sminfo_cmd(int argc, char **argv, unsigned int *vRet)
 	return threadmaninfo_cmd(argc, argv, "Semaphore", print_semainfo, (ReferFunc) pspSdkReferSemaStatusByName);
 }
 
+static int smdel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	return thread_do_cmd(argv[0], "delete", (ReferFunc) pspSdkReferSemaStatusByName, sceKernelDeleteSema);
+}
+
 static int print_mboxinfo(SceUID uid, int verbose)
 {
 	SceKernelMbxInfo info;
@@ -462,6 +557,11 @@ static int mxinfo_cmd(int argc, char **argv, unsigned int *vRet)
 	return threadmaninfo_cmd(argc, argv, "Message Box", print_mboxinfo, (ReferFunc) pspSdkReferMboxStatusByName);
 }
 
+static int mxdel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	return thread_do_cmd(argv[0], "delete", (ReferFunc) pspSdkReferMboxStatusByName, sceKernelDeleteMbx);
+}
+
 static int print_cbinfo(SceUID uid, int verbose)
 {
 	SceKernelCallbackInfo info;
@@ -491,6 +591,11 @@ static int cblist_cmd(int argc, char **argv, unsigned int *vRet)
 static int cbinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Callback", print_cbinfo, (ReferFunc) pspSdkReferCallbackStatusByName);
+}
+
+static int cbdel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	return thread_do_cmd(argv[0], "delete", (ReferFunc) pspSdkReferCallbackStatusByName, sceKernelDeleteCallback);
 }
 
 static int print_vtinfo(SceUID uid, int verbose)
@@ -526,6 +631,11 @@ static int vtinfo_cmd(int argc, char **argv, unsigned int *vRet)
 	return threadmaninfo_cmd(argc, argv, "VTimer", print_vtinfo, (ReferFunc) pspSdkReferVTimerStatusByName);
 }
 
+static int vtdel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	return thread_do_cmd(argv[0], "delete", (ReferFunc) pspSdkReferVTimerStatusByName, sceKernelDeleteVTimer);
+}
+
 static int print_vplinfo(SceUID uid, int verbose)
 {
 	SceKernelVplInfo info;
@@ -557,6 +667,11 @@ static int vplinfo_cmd(int argc, char **argv, unsigned int *vRet)
 	return threadmaninfo_cmd(argc, argv, "Vpl", print_vplinfo, (ReferFunc) pspSdkReferVplStatusByName);
 }
 
+static int vpldel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	return thread_do_cmd(argv[0], "delete", (ReferFunc) pspSdkReferVplStatusByName, sceKernelDeleteVpl);
+}
+
 static int print_fplinfo(SceUID uid, int verbose)
 {
 	SceKernelFplInfo info;
@@ -586,6 +701,11 @@ static int fpllist_cmd(int argc, char **argv, unsigned int *vRet)
 static int fplinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Fpl", print_fplinfo, (ReferFunc) pspSdkReferFplStatusByName);
+}
+
+static int fpldel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	return thread_do_cmd(argv[0], "delete", (ReferFunc) pspSdkReferFplStatusByName, sceKernelDeleteFpl);
 }
 
 static int print_mppinfo(SceUID uid, int verbose)
@@ -620,6 +740,11 @@ static int mppinfo_cmd(int argc, char **argv, unsigned int *vRet)
 	return threadmaninfo_cmd(argc, argv, "Message Pipe", print_mppinfo, (ReferFunc) pspSdkReferMppStatusByName);
 }
 
+static int mppdel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	return thread_do_cmd(argv[0], "delete", (ReferFunc) pspSdkReferMppStatusByName, sceKernelDeleteMsgPipe);
+}
+
 static int print_thevinfo(SceUID uid, int verbose)
 {
 	SceKernelThreadEventHandlerInfo info;
@@ -649,6 +774,11 @@ static int thevlist_cmd(int argc, char **argv, unsigned int *vRet)
 static int thevinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return threadmaninfo_cmd(argc, argv, "Thread Event Handler", print_thevinfo, (ReferFunc) pspSdkReferThreadEventHandlerStatusByName);
+}
+
+static int thevdel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	return thread_do_cmd(argv[0], "delete", (ReferFunc) pspSdkReferThreadEventHandlerStatusByName, sceKernelReleaseThreadEventHandler);
 }
 
 int thread_event_handler(int mask, SceUID thid, void *common)
@@ -1898,6 +2028,72 @@ static int memblocks_cmd(int argc, char **argv, unsigned int *vRet)
 	else
 	{
 		sceKernelSysMemDumpBlock();
+	}
+
+	return CMD_OK;
+}
+
+static int malloc_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	int pid;
+	const char *name;
+	int type;
+	int size;
+	SceUID uid;
+
+	pid = strtoul(argv[0], NULL, 0);
+	name = argv[1];
+	if(argv[2][0] == 'h')
+	{
+		type = PSP_SMEM_High;
+	}
+	else
+	{
+		type = PSP_SMEM_Low;
+	}
+	size = strtoul(argv[3], NULL, 0);
+	uid = sceKernelAllocPartitionMemory(pid, name, type, size, NULL);
+	if(uid < 0)
+	{
+		SHELL_PRINT("Error allocating memory in pid:%d\n", pid);
+		return CMD_ERROR;
+	}
+
+	SHELL_PRINT("Allocated %d bytes in pid:%d (UID:0x%08X, Head:0x%08X)\n", size, pid,
+			uid, (unsigned int) sceKernelGetBlockHeadAddr(uid));
+	*vRet = uid;
+
+	return CMD_OK;
+}
+
+int mfree_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	SceUID uid;
+
+	uid = strtoul(argv[0], NULL, 0);
+	if(sceKernelFreePartitionMemory(uid) < 0)
+	{
+		SHELL_PRINT("Could not free memory block 0x%08X\n", uid);
+	}
+
+	return CMD_OK;
+}
+
+int mhead_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	SceUID uid;
+	void *p;
+
+	uid = strtoul(argv[0], NULL, 0);
+	p = sceKernelGetBlockHeadAddr(uid);
+	if(p == NULL)
+	{
+		SHELL_PRINT("Could not get head of memory block 0x%08X\n", uid);
+	}
+	else
+	{
+		SHELL_PRINT("Head:0x%08X\n", (unsigned int) p);
+		*vRet = (unsigned int) p;
 	}
 
 	return CMD_OK;

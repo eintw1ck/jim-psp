@@ -95,24 +95,36 @@ struct sh_command
 	SHELL_CMD("thtdel", "tx", thtdel_cmd, 1, "Terminate and delete a thread", "", "uid|@name") \
 	SHELL_CMD("thctx",  NULL, thctx_cmd, 1, "Find and print the full thread context", "", "uid|@name") \
 	SHELL_CMD("thpri",  "tp", thpri_cmd, 2, "Change a threads current priority", "", "uid|@name pri") \
+	SHELL_CMD("thcreat", "tc", thcreat_cmd, 5, "Create a new thread", "", "name entry pri stack attr" )\
 	SHELL_CMD("evlist", "el", evlist_cmd, 0, "List the event flags in the system", "", "[v]") \
 	SHELL_CMD("evinfo", "ei", evinfo_cmd, 1, "Print info about an event flag", "", "uid|@name") \
+	SHELL_CMD("evdel", "ed", evdel_cmd, 1, "Delete an event flag", "", "uid|@name") \
+	SHELL_CMD("evset", "es", evset_cmd, 2, "Set event flag bits", "", "uid|@name pattern") \
+	SHELL_CMD("evclr", "ec", evclr_cmd, 2, "Clear event flag bits", "", "uid|@name pattern") \
 	SHELL_CMD("smlist", "sl", smlist_cmd, 0, "List the semaphores in the system", "", "[v]") \
 	SHELL_CMD("sminfo", "si", sminfo_cmd, 1, "Print info about a semaphore", "", "uid|@name") \
+	SHELL_CMD("smdel",  "sd", smdel_cmd, 1, "Delete a semaphore", "", "uid|@name") \
 	SHELL_CMD("mxlist", "xl", mxlist_cmd, 0, "List the message boxes in the system", "", "[v]") \
 	SHELL_CMD("mxinfo", "xi", mxinfo_cmd, 1, "Print info about a message box", "", "uid|@name") \
+	SHELL_CMD("mxdel",  "xd", mxdel_cmd, 1, "Delete a messagebox", "", "uid|@name") \
 	SHELL_CMD("cblist", "cl", cblist_cmd, 0, "List the callbacks in the system", "", "[v]") \
 	SHELL_CMD("cbinfo", "ci", cbinfo_cmd, 1, "Print info about a callback", "", "uid|@name") \
+	SHELL_CMD("cbdel",  "cbd", cbdel_cmd, 1, "Delete a callback", "", "uid|@name") \
 	SHELL_CMD("vtlist", "zl", vtlist_cmd, 0, "List the virtual timers in the system", "", "[v]") \
 	SHELL_CMD("vtinfo", "zi", vtinfo_cmd, 1, "Print info about a virtual timer", "", "uid|@name") \
+	SHELL_CMD("vtdel",  "zd", vtdel_cmd, 1, "Delete a virtual timer", "", "uid|@name") \
 	SHELL_CMD("vpllist","vl", vpllist_cmd, 0, "List the variable pools in the system", "", "[v]") \
 	SHELL_CMD("vplinfo","vi", vplinfo_cmd, 1, "Print info about a variable pool", "", "uid|@name") \
+	SHELL_CMD("vpldel",  "vd", vpldel_cmd, 1, "Delete a variable pool", "", "uid|@name") \
 	SHELL_CMD("fpllist","fl", fpllist_cmd, 0, "List the fixed pools in the system", "", "[v]") \
 	SHELL_CMD("fplinfo","fi", fplinfo_cmd, 1, "Print info about a fixed pool", "", "uid|@name") \
+	SHELL_CMD("fpldel", "fd", fpldel_cmd, 1, "Delete a fixed pool", "", "uid|@name") \
 	SHELL_CMD("mpplist","pl", mpplist_cmd, 0, "List the message pipes in the system", "", "[v]") \
 	SHELL_CMD("mppinfo","pi", mppinfo_cmd, 1, "Print info about a message pipe", "", "uid|@name") \
+	SHELL_CMD("mppdel", "pd", mppdel_cmd, 1, "Delete a message pipe", "", "uid|@name") \
 	SHELL_CMD("thevlist","tel", thevlist_cmd, 0, "List the thread event handlers in the system", "", "[v]") \
 	SHELL_CMD("thevinfo","tei", thevinfo_cmd, 1, "Print info about a thread event handler", "", "uid|@name") \
+	SHELL_CMD("thevdel", "ted", thevdel_cmd, 1, "Delete a thread event", "", "uid|@name") \
 	SHELL_CMD("thmon", "tm", thmon_cmd, 1, "Monitor thread events", "", "u|k|a [csed]") \
 	SHELL_CMD("thmonoff", NULL, thmonoff_cmd, 0, "Disable the thread monitor", "", "") \
 	SHELL_CMD("sysstat", NULL, sysstat_cmd, 0, "Print the system status", "", "") \
@@ -158,6 +170,9 @@ struct sh_command
 	SHELL_CMD("memreg",  "mr", memreg_cmd, 0, "Print available memory regions (for other commands)", "", "") \
 	SHELL_CMD("memdump", "dm", memdump_cmd, 0, "Dump memory to screen", "", "[addr|-] [b|h|w]") \
 	SHELL_CMD("memblocks", "mk", memblocks_cmd, 0, "Dump the sysmem block table", "", "[f|t]") \
+	SHELL_CMD("malloc", NULL, malloc_cmd, 4, "Alloc from a mem partition", "", "pid name l|h size") \
+	SHELL_CMD("mfree", NULL, mfree_cmd, 1, "Free from a mem partition", "", "uid") \
+	SHELL_CMD("mhead", NULL, mhead_cmd, 1, "Get head pointer for a mem allocation", "", "uid") \
 	SHELL_CMD("savemem", "sm", savemem_cmd, 3, "Save memory to a file", "", "addr size path") \
 	SHELL_CMD("loadmem", "lm", loadmem_cmd, 2, "Load memory from a file", "", "addr path [maxsize]") \
 	SHELL_CMD("pokew",   "pw", pokew_cmd, 2, "Poke words into memory", "", "addr val1 [val2..valN]") \
