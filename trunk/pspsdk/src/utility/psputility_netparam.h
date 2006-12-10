@@ -70,6 +70,46 @@ int sceUtilityCheckNetParam(int id);
  */
 int sceUtilityGetNetParam(int conf, int param, netData *data);
 
+/**
+ * Create a new Network Configuration
+ * @note This creates a new configuration at conf and clears 0
+ *
+ * @param conf - Net Configuration number (1 to n)
+ *
+ * @return 0 on success
+ */
+int sceUtilityCreateNetParam(int conf);
+
+/**
+ * Sets a network parameter
+ * @note This sets only to configuration 0
+ *
+ * @param param - Which parameter to set
+ * @param val - Pointer to the the data to set
+ *
+ * @return 0 on success
+ */
+int sceUtilitySetNetParam(int param, const void *val);
+
+/**
+ * Copies a Network Configuration to another
+ *
+ * @param src - Source Net Configuration number (0 to n)
+ * @param src - Destination Net Configuration number (0 to n)
+ *
+ * @return 0 on success
+ */
+int sceUtilityCopyNetParam(int src, int dest);
+
+/**
+ * Deletes a Network Configuration
+ *
+ * @param conf - Net Configuration number (1 to n)
+ *
+ * @return 0 on success
+ */
+int sceUtilityDeleteNetParam(int conf);
+
 #ifdef __cplusplus
 }
 #endif
