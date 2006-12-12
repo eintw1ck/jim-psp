@@ -25,6 +25,7 @@
 #include <pspdisplay.h>
 #include <pspdisplay_kernel.h>
 #include <pspthreadman_kernel.h>
+#include <pspintrman_kernel.h>
 #include <psppower.h>
 #include <stdint.h>
 #include <usbhostfs.h>
@@ -3765,6 +3766,171 @@ static int debugreg_cmd(int argc, char **argv, unsigned int *vRet)
 		{
 			SHELL_PRINT("Debug Register: 0x%08X\n", *debug);
 		}
+	}
+
+	return CMD_OK;
+}
+
+const char* PspInterruptNames[67] = {//67 interrupts
+	0, 0, 0, 0, "GPIO", "ATA_ATAPI", "UmdMan", "MScm0",
+	"Wlan", 0, "Audio", 0, "I2C", 0, "SIRCS_IrDA",
+	"Systimer0", "Systimer1", "Systimer2", "Systimer3",
+	"Thread0", "NAND", "DMACPLUS", "DMA0", "DMA1",
+	"Memlmd", "GE", 0, 0, 0, 0, "Display", "MeCodec", 0,
+	0, 0, 0, "HP_Remote", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "MScm1", "MScm2",
+	0, 0, 0, "Thread1", "Interrupt"
+};
+
+static void print_irq(PspIntrHandlerOptionParam *data, int intno, int sub)
+{
+	const char *name = PspInterruptNames[intno];
+
+	if(name == NULL)
+	{
+		name = "Unknown";
+	}
+
+	if(data->entry)
+	{
+		if(sub >= 0)
+		{
+			SHELL_PRINT("Subintr %d/%d/%s - Calls %d\n", intno, sub, name, data->calls);
+		}
+		else
+		{
+			SHELL_PRINT("Interrupt %d/%s - Calls %d\n", intno, name, data->calls);
+		}
+		SHELL_PRINT("Entry 0x%08X - Common 0x%08X\n", data->entry, data->common);
+		SHELL_PRINT("GP 0x%08X - Intrcode %d\n", data->gp, data->intr_code);
+		SHELL_PRINT("SubCount %d - IntrLevel %d\n", data->sub_count, data->intr_level);
+		SHELL_PRINT("Enabled %d - field_1c 0x%08X\n", data->enabled, data->field_1C);
+		SHELL_PRINT("totalclk_lo 0x%08X - totalclk_hi 0x%08X\n", data->total_clock_lo, data->total_clock_hi);
+		SHELL_PRINT("minclk_lo 0x%08X - minclk_hi 0x%08X\n", data->min_clock_lo, data->min_clock_hi);
+		SHELL_PRINT("maxclk_lo 0x%08X - maxclk_hi 0x%08X\n\n", data->max_clock_lo, data->max_clock_hi);
+	}
+}
+
+static int irqs_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	PspIntrHandlerOptionParam data;
+	int i;
+	
+	if(argc > 0)
+	{
+		int intno;
+		int ret;
+
+		intno = strtoul(argv[0], NULL, 0);
+		memset(&data, 0, sizeof(data));
+		data.size = sizeof(data);
+		ret = QueryIntrHandlerInfo(intno, -1, &data);
+		if(ret == 0)
+		{
+			print_irq(&data, intno, -1);
+			if(data.sub_count > 0)
+			{
+				int subs = data.sub_count;
+				for(i = 0; i < subs; i++)
+				{
+					memset(&data, 0, sizeof(data));
+					data.size = sizeof(data);
+					ret = QueryIntrHandlerInfo(intno, i, &data);
+					if(ret == 0)
+					{
+						print_irq(&data, intno, i);
+					}
+					else
+					{
+						SHELL_PRINT("Arg: %08X\n", ret);
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		for(i = 0; i < 67; i++)
+		{
+			int ret;
+			memset(&data, 0, sizeof(data));
+			data.size = sizeof(data);
+			ret = QueryIntrHandlerInfo(i, -1, &data);
+			print_irq(&data, i, -1);
+		}
+	}
+
+	return CMD_OK;
+}
+
+static int iena_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	int disable = 0;
+	int intno = 0;
+	int subno = -1;
+
+	if(argv[0][0] == 'e')
+	{
+		disable = 0;
+	}
+	else if(argv[0][0] == 'd')
+	{
+		disable = 1;
+	}
+	else
+	{
+		return CMD_ERROR;
+	}
+
+	intno = strtoul(argv[1], NULL, 0);
+	if(argc > 2)
+	{
+		subno = strtoul(argv[2], NULL, 0);
+	}
+
+	if(subno < 0)
+	{
+		if(disable)
+		{
+			sceKernelDisableIntr(intno);
+		}
+		else
+		{
+			sceKernelEnableIntr(intno);
+		}
+	}
+	else
+	{
+		if(disable)
+		{
+			sceKernelDisableSubIntr(intno, subno);
+		}
+		else
+		{
+			sceKernelEnableSubIntr(intno, subno);
+		}
+	}
+	
+	return CMD_OK;
+}
+
+static int irel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	int intno = 0;
+	int subno = -1;
+
+	intno = strtoul(argv[0], NULL, 0);
+	if(argc > 1)
+	{
+		subno = strtoul(argv[1], NULL, 0);
+	}
+	if(subno < 0)
+	{
+		sceKernelReleaseIntrHandler(intno);
+	}
+	else
+	{
+		sceKernelReleaseSubIntrHandler(intno, subno);
 	}
 
 	return CMD_OK;
