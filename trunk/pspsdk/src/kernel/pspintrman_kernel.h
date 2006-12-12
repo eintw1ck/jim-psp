@@ -40,6 +40,15 @@ extern "C" {
 int sceKernelRegisterIntrHandler(int intno, int no, void *handler, void *arg1, void *arg2);
 
 /**
+ * Release an interrupt handler
+ *
+ * @param intno - The interrupt number to release
+ *
+ * @return 0 on success
+ */
+int sceKernelReleaseIntrHandler(int intno);
+
+/**
   * Enable an interrupt.
   * 
   * @param intno - Interrupt to enable.
