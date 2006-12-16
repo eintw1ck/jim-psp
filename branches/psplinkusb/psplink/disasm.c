@@ -120,7 +120,7 @@ struct Instruction inst[] =
 	{ "bne",		0x14000000, 0xFC000000,	"%s, %t, %O"},
 	{ "bnel",		0x54000000, 0xFC000000,	"%s, %t, %O"},
 	{ "break",		0x0000000D, 0xFC00003F,	"%c"},
-	{ "cache",		0xbc000000, 0xfc000000, "%k, %o"},
+	{ "cache",		0xBC000000, 0xFC000000, "%k, %o"},
 	{ "cfc0",		0x40400000, 0xFFE007FF,	"%t, %p"},
 	{ "clo",		0x00000017, 0xFC1F07FF, "%d, %s"},
 	{ "clz",		0x00000016, 0xFC1F07FF, "%d, %s"},
@@ -617,26 +617,6 @@ void disasmSetOpts(const char *opts, int set)
 		}
 	}
 }
-
-/*
-const char *disasmGetOpts(void)
-{
-	static char opts[DISASM_OPT_MAX+1];
-	char *p = opts;
-	int i;
-
-	for(i = 0; i < DISASM_OPT_MAX; i++)
-	{
-		if(*g_disopts[i].value)
-		{
-			*p++ = g_disopts[i].opt;
-		}
-	}
-	*p = 0;
-
-	return opts;
-}
-*/
 
 void disasmPrintOpts(void)
 {

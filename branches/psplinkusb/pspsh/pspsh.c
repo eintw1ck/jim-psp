@@ -85,6 +85,7 @@ int set_cmd(int argc, char **argv);
 int unset_cmd(int argc, char **argv);
 int echo_cmd(int argc, char **argv);
 int error_cmd(int argc, char **argv);
+int strlen_cmd(int argc, char **argv);
 void cli_handler(char *buf);
 struct TabEntry* read_tab_completion(void);
 struct TabEntry
@@ -408,6 +409,16 @@ int close_cmd(int argc, char **argv)
 		rl_callback_handler_install("", cli_handler);
 	}
 	g_context.exit = 1;
+	return 0;
+}
+
+int strlen_cmd(int argc, char **argv)
+{
+	char val[32];
+
+	snprintf(val, sizeof(val), "%d", strlen(argv[0]));
+	setenv("?", val, 1);
+
 	return 0;
 }
 
@@ -986,8 +997,11 @@ int help_cmd(int argc, char **argv)
 				}
 				fprintf(stderr, "Usage: %s %s\n", found_cmd->name, found_cmd->help);
 				fprintf(stderr, "%s\n\n", found_cmd->desc);
-				fprintf(stderr, "Detail:\n");
-				fprintf(stderr, "%s\n", found_cmd->detail);
+				if(found_cmd->detail[0])
+				{
+					fprintf(stderr, "Detail:\n");
+					fprintf(stderr, "%s\n", found_cmd->detail);
+				}
 			}
 		}
 		else
