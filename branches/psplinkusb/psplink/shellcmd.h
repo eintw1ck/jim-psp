@@ -199,6 +199,7 @@ struct sh_command
 			, "w|i|wi [addr size]") \
 	SHELL_CMD("icache",  "ic", icache_cmd, 0, "Invalidate the instruction cache", "", "[addr size]") \
 	SHELL_CMD("disasm",  "di", disasm_cmd, 1, "Disassemble instructions", "", "address [count]") \
+	SHELL_CMD_PCTERM("asm", NULL, asm_cmd, 1, "Assemble instructions to a memory address", "", "addr [inst]") \
 	SHELL_CMD("disopts", NULL, disopts_cmd, 0, "Print the current disassembler options", "", "") \
 	SHELL_CMD("disset", NULL, disset_cmd, 1, "Set some disassembler options", "", "options") \
 	SHELL_CMD("disclear", NULL, disclear_cmd, 1, "Clear some disassembler options", "", "options") \

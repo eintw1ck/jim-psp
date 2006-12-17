@@ -27,6 +27,7 @@
 #include <shellcmd.h>
 #include "parse_args.h"
 #include "pspkerror.h"
+#include "asm.h"
 
 #ifndef SOL_TCP
 #define SOL_TCP 6
@@ -71,6 +72,8 @@ struct GlobalContext
 	int  lasterr;
 	FILE *fstdout;
 	FILE *fstderr;
+	int asmmode;
+	unsigned int asmaddr;
 };
 
 struct GlobalContext g_context;
@@ -80,6 +83,7 @@ extern char **environ;
 int help_cmd(int argc, char **argv);
 int close_cmd(int argc, char **argv);
 int exit_cmd(int argc, char **argv);
+int asm_cmd(int argc, char **argv);
 int env_cmd(int argc, char **argv);
 int set_cmd(int argc, char **argv);
 int unset_cmd(int argc, char **argv);
@@ -197,10 +201,18 @@ int execute_line(const char *buf)
 				const struct sh_command *cmd = find_command(argv[0]);
 				if((cmd) && (cmd->func))
 				{
-					if(!cmd->func(argc-1, argv+1))
+					if(cmd->min_args > (argc-1))
 					{
-						/* If it returns 0 then dont continue with the output */
+						help_cmd(argc, argv);
 						return 0;
+					}
+					else
+					{
+						if(!cmd->func(argc-1, argv+1))
+						{
+							/* If it returns 0 then dont continue with the output */
+							return 0;
+						}
 					}
 				}
 			}
@@ -451,6 +463,48 @@ int execute_script(const char *cmd)
 	return 0;
 }
 
+int asm_cmd(int argc, char **argv)
+{
+	char cmd[1024];
+
+	if(argc > 1)
+	{
+		int i;
+		char *curr;
+
+		curr = cmd;
+		snprintf(cmd, sizeof(cmd), "pokew '%s' ", argv[0]);
+		curr += strlen(cmd);
+		for(i = 1; i < argc; i++)
+		{
+			unsigned int opcode;
+			if(asmAssemble(argv[i], 0, &opcode) == 0)
+			{
+				sprintf(curr, "0x%08X ", opcode);
+				curr += strlen(curr);
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		if(i == argc)
+		{
+			execute_line(cmd);
+		}
+	}
+	else
+	{
+		snprintf(cmd, sizeof(cmd), "calc '%s'", argv[0]);
+		execute_line(cmd);
+		g_context.asmmode = 1;
+		g_context.asmaddr = 0;
+	}
+
+	return 0;
+}
+
 int exit_cmd(int argc, char **argv)
 {
 	g_context.exit = 1;
@@ -468,6 +522,15 @@ void cli_handler(char *buf)
 
 		if(*buf == 0)
 		{
+			if(g_context.asmmode)
+			{
+				char prompt[PATH_MAX];
+				g_context.asmmode = 0;
+				g_context.asmaddr = 0;
+				rl_callback_handler_remove();
+				snprintf(prompt, PATH_MAX, "%s> ", g_context.currpath);
+				rl_callback_handler_install(prompt, cli_handler);
+			}
 			return;
 		}
 
@@ -477,6 +540,20 @@ void cli_handler(char *buf)
 			if(strcmp(buf, "stop") == 0)
 			{
 				close_script();
+			}
+
+			return;
+		}
+
+		if(g_context.asmmode)
+		{
+			char cmd[1024];
+			/* Do assembler */
+			unsigned int opcode;
+			if(asmAssemble(buf, g_context.asmaddr, &opcode) == 0)
+			{
+				sprintf(cmd, "pokew 0x%08X 0x%08X ", g_context.asmaddr, opcode);
+				execute_line(cmd);
 			}
 
 			return;
@@ -1200,8 +1277,27 @@ int process_cmd(const unsigned char *str)
 			/* Only restore if there is no pending script and we didn't execute a line */
 			if((execute_script_line() <= 0) && (g_context.args.script == 0))
 			{
+				if(g_context.asmmode)
+				{
+					if(!g_context.asmaddr)
+					{
+						g_context.asmaddr = strtoul((char*) str+1, NULL, 0);
+					}
+					else
+					{
+						g_context.asmaddr += 4;
+					}
+				}
+
 				rl_callback_handler_remove();
-				snprintf(prompt, PATH_MAX, "%s> ", g_context.currpath);
+				if(g_context.asmmode)
+				{
+					snprintf(prompt, PATH_MAX, "asm:0x%08X> ", g_context.asmaddr);
+				}
+				else
+				{
+					snprintf(prompt, PATH_MAX, "%s> ", g_context.currpath);
+				}
 				rl_callback_handler_install(prompt, cli_handler);
 			}
 		}
