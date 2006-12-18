@@ -20,6 +20,9 @@
 #include "../psplink/version.h"
 #include "psplink_ex.h"
 
+void _apiHook0(void);
+void apiHookRegisterUserDispatch(unsigned int *);
+
 PSP_MODULE_INFO("PSPLINK_USER", 0, 1, 1);
 PSP_MAIN_THREAD_PARAMS(0x20, 64, PSP_THREAD_ATTR_USER);
 PSP_MAIN_THREAD_NAME("PsplinkUser");
@@ -28,6 +31,7 @@ int module_start(int args, void *argp)
 {
 	pspDebugScreenInit();
 	psplinkInitException();
+	apiHookRegisterUserDispatch((unsigned int *) _apiHook0);
 	pspDebugScreenPrintf("PSPLINK User Module v%s\n", PSPLINK_VERSION);
 
 	return 0;

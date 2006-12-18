@@ -36,29 +36,38 @@
 	IMPORT_FUNC  "psplink",0x4ED59445,apiHookByNid
 #endif
 #ifdef F_psplink_0011
-	IMPORT_FUNC  "psplink",0xEFB166B7,debugEnableHW
+	IMPORT_FUNC  "psplink",0x3E371C7A,_apiHookHandle
 #endif
 #ifdef F_psplink_0012
-	IMPORT_FUNC  "psplink",0xDD3E47DE,debugDisableHW
+	IMPORT_FUNC  "psplink",0x4285B6A4,_apiHookReturn
 #endif
 #ifdef F_psplink_0013
-	IMPORT_FUNC  "psplink",0xEF83FB58,debugHWEnabled
+	IMPORT_FUNC  "psplink",0x0A72C44E,apiHookRegisterUserDispatch
 #endif
 #ifdef F_psplink_0014
-	IMPORT_FUNC  "psplink",0xD0A22864,debugGetEnv
+	IMPORT_FUNC  "psplink",0xEFB166B7,debugEnableHW
 #endif
 #ifdef F_psplink_0015
-	IMPORT_FUNC  "psplink",0x4EC6E035,debugSetEnv
+	IMPORT_FUNC  "psplink",0xDD3E47DE,debugDisableHW
 #endif
 #ifdef F_psplink_0016
-	IMPORT_FUNC  "psplink",0x79D1C3FA,sceKernelDcacheWritebackAll
+	IMPORT_FUNC  "psplink",0xEF83FB58,debugHWEnabled
 #endif
 #ifdef F_psplink_0017
-	IMPORT_FUNC  "psplink",0x864A9D72,sceKernelDcacheInvalidateAll
+	IMPORT_FUNC  "psplink",0xD0A22864,debugGetEnv
 #endif
 #ifdef F_psplink_0018
-	IMPORT_FUNC  "psplink",0xB435DEC5,sceKernelDcacheWritebackInvalidateAll
+	IMPORT_FUNC  "psplink",0x4EC6E035,debugSetEnv
 #endif
 #ifdef F_psplink_0019
+	IMPORT_FUNC  "psplink",0x79D1C3FA,sceKernelDcacheWritebackAll
+#endif
+#ifdef F_psplink_0020
+	IMPORT_FUNC  "psplink",0x864A9D72,sceKernelDcacheInvalidateAll
+#endif
+#ifdef F_psplink_0021
+	IMPORT_FUNC  "psplink",0xB435DEC5,sceKernelDcacheWritebackInvalidateAll
+#endif
+#ifdef F_psplink_0022
 	IMPORT_FUNC  "psplink",0x920F104A,sceKernelIcacheInvalidateAll
 #endif
