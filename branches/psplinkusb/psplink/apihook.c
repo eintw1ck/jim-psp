@@ -45,6 +45,7 @@ struct SyscallHeader
 #define PARAM_TYPE_HEX 'x'
 #define PARAM_TYPE_OCT 'o'
 #define PARAM_TYPE_STR 's'
+#define PARAM_TYPE_PTR 'p'
 
 #define RET_TYPE_VOID  'v'
 #define RET_TYPE_HEX32 'x'
@@ -146,6 +147,7 @@ void *_apiHookHandle(int id, u32 *args)
 	if(func)
 	{
 		int i;
+		int j;
 		char str[128];
 		int strleft;
 
@@ -179,6 +181,22 @@ void *_apiHookHandle(int id, u32 *args)
 							  str[strleft] = 0;
 
 							  SHELL_PRINT("\"%s\"\n", str);
+							  break;
+					case PARAM_TYPE_PTR: strleft = memValidate(args[i], MEM_ATTRIB_READ | MEM_ATTRIB_BYTE);
+							  if(strleft == 0)
+							  {
+								  SHELL_PRINT("Invalid pointer 0x%08X\n", args[i]);
+								  break;
+							  }
+
+							  strleft = strleft > 32 ? 32 : strleft;
+
+							  SHELL_PRINT("0x%08X - ", args[i]);
+							  for(j = 0; j < strleft; j++)
+							  {
+								  SHELL_PRINT("0x%02X ", _lb(args[i]+j));
+							  }
+							  SHELL_PRINT("\n");
 							  break;
 					default:  SHELL_PRINT("Unknown parameter type '%c'\n", g_apihooks[id].param[i]);
 							  break;
