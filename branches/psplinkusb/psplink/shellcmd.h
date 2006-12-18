@@ -160,6 +160,7 @@ struct sh_command
 	SHELL_CMD("modexp", "mp", modexp_cmd, 1, "List the exports from a module", "", "uid|@name") \
 	SHELL_CMD("modimp", NULL, modimp_cmd, 1, "List the imports in a module", "", "uid|@name") \
 	SHELL_CMD("modfindx", "mfx", modfindx_cmd, 3, "Find a module's export address", "", "uid|@name library nid|@name") \
+	SHELL_CMD("modfindi", "mfi", modfindi_cmd, 3, "Find a module's import address", "", "uid|@name library nid|@name") \
 	SHELL_CMD("apihook", NULL, apihook_cmd, 4, "Hook a user mode API call", "", "uid|@name library nid|@name ret [param]") \
 	SHELL_CMD("apihooks", NULL, apihooks_cmd, 4, "Hook a user mode API call with sleep", "", "uid|@name library nid|@name ret [param]") \
 	SHELL_CMD("apihp", NULL, apihp_cmd, 0, "Print the user mode API hooks", "", "") \
@@ -219,7 +220,7 @@ struct sh_command
 	SHELL_CAT("debugger", "Debug commands") \
 	SHELL_CMD("exprint", "ep", exprint_cmd, 0, "Print the current exception info", "", "[ex]") \
 	SHELL_CMD("exlist",  "exl", exlist_cmd, 0, "List the exception contexts", "", "") \
-	SHELL_CMD("exctx",   "ec", exctx_cmd, 1, "Set the current exception context", "", "ex") \
+	SHELL_CMD("exctx",   "ecx", exctx_cmd, 1, "Set the current exception context", "", "ex") \
 	SHELL_CMD("exresume", "c", exresume_cmd, 0, "Resume from the exception", "", "[addr]") \
 	SHELL_CMD("exprfpu", "ef", exprfpu_cmd, 0, "Print the current FPU registers", "", "[ex]") \
 	SHELL_CMD("exprvfpu", "ev", exprvfpu_cmd, 0, "Print the current VFPU registers", "", "[s|c|r|m|e] [ex]") \

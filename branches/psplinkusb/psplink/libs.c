@@ -71,6 +71,35 @@ static struct SceLibraryEntryTable *_libsFindLibrary(SceUID uid, const char *lib
 	return NULL;
 }
 
+static struct PspModuleImport *_libsFindImport(SceUID uid, const char *library)
+{
+	SceModule *pMod;
+	void *stubTab;
+	int stubLen;
+
+	pMod = sceKernelFindModuleByUID(uid);
+	if(pMod != NULL)
+	{
+		int i = 0;
+
+		stubTab = pMod->stub_top;
+		stubLen = pMod->stub_size;
+		while(i < stubLen)
+		{
+			struct PspModuleImport *pImp = (struct PspModuleImport *) (stubTab + i);
+
+			if((pImp->name) && (strcmp(pImp->name, library) == 0))
+			{
+				return pImp;
+			}
+
+			i += (pImp->entLen * 4);
+		}
+	}
+
+	return NULL;
+}
+
 void* libsFindExportAddrByNid(SceUID uid, const char *library, u32 nid)
 {
 	struct SceLibraryEntryTable *entry;
@@ -148,6 +177,36 @@ u32 libsFindExportByNid(SceUID uid, const char *library, u32 nid)
 	}
 
 	return *addr;
+}
+
+u32 libsFindImportAddrByNid(SceUID uid, const char *library, u32 nid)
+{
+	struct PspModuleImport *pImp;
+
+	pImp = _libsFindImport(uid, library);
+	if(pImp)
+	{
+		int i;
+
+		for(i = 0; i < pImp->funcCount; i++)
+		{
+			if(pImp->fnids[i] == nid)
+			{
+				return (u32) &pImp->funcs[i*2];
+			}
+		}
+	}
+
+	return 0;
+}
+
+u32 libsFindImportAddrByName(SceUID uid, const char *library, const char *name)
+{
+	u32 nid;
+
+	nid = libsNameToNid(name);
+
+	return libsFindImportAddrByNid(uid, library, nid);
 }
 
 int libsPatchFunction(SceUID uid, const char *library, u32 nid, u16 retval)

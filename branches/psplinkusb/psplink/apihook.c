@@ -32,21 +32,6 @@
 
 /* Define the api hooks */
 void _apiHook0(void);
-void _apiHook1(void);
-void _apiHook2(void);
-void _apiHook3(void);
-void _apiHook4(void);
-void _apiHook5(void);
-void _apiHook6(void);
-void _apiHook7(void);
-void _apiHook8(void);
-void _apiHook9(void);
-void _apiHook10(void);
-void _apiHook11(void);
-void _apiHook12(void);
-void _apiHook13(void);
-void _apiHook14(void);
-void _apiHook15(void);
 
 struct SyscallHeader
 {
@@ -74,33 +59,35 @@ struct ApiHookGeneric
 	char param[APIHOOK_MAXPARAM];
 	/* Return code */
 	char ret;
-	/* Pointer to the real function, if NULL the invalid */
+	/* Pointer to the real function, if NULL then invalid */
 	void *func;
 	/* Pointer to the location in the syscall table */
 	u32  *syscall;
-	/* Pointer to the hook entry function */
-	void *hookfunc;
 	/* Indicates if we should sleep the thread on the syscall */
 	int  sleep;
+	/* Indicates if this is an import hook or not */
+	int  imphook;
 };
 
+static unsigned int *g_userdispatch = NULL;
+
 static struct ApiHookGeneric g_apihooks[APIHOOK_MAXIDS] = {
-	{ "", "", 'v', NULL, NULL, _apiHook0, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook1, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook2, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook3, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook4, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook5, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook6, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook7, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook8, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook9, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook10, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook11, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook12, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook13, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook14, 0 },
-	{ "", "", 'v', NULL, NULL, _apiHook15, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
+	{ "", "", 'v', NULL, NULL, 0, 0 },
 };
 
 void *find_syscall_addr(u32 addr)
@@ -134,6 +121,11 @@ void *find_syscall_addr(u32 addr)
 	}
 
 	return NULL;
+}
+
+void apiHookRegisterUserDispatch(unsigned int *dispatch)
+{
+	g_userdispatch = dispatch;
 }
 
 void *_apiHookHandle(int id, u32 *args)
@@ -250,28 +242,6 @@ void _apiHookReturn(int id, u32* ret)
 	psplinkSetK1(k1);
 }
 
-void apiHookGenericDelete(int id)
-{
-	int intc;
-
-	if((id < 0) || (id >= APIHOOK_MAXIDS))
-	{
-		return;
-	}
-
-	intc = pspSdkDisableInterrupts();
-	/* Restore original function */
-	if(g_apihooks[id].func)
-	{
-		*g_apihooks[id].syscall = (u32) g_apihooks[id].func;
-		g_apihooks[id].func = NULL;
-		sceKernelDcacheWritebackInvalidateRange(g_apihooks[id].syscall, sizeof(void *));
-		sceKernelIcacheInvalidateRange(g_apihooks[id].syscall, sizeof(void *));
-	}
-
-	pspSdkEnableInterrupts(intc);
-}
-
 void apiHookGenericPrint(void)
 {
 	int i;
@@ -280,9 +250,9 @@ void apiHookGenericPrint(void)
 	{
 		if(g_apihooks[i].func)
 		{
-			SHELL_PRINT("Hook %2d: Name %s, Param %.*s, Sleep %d, Syscall 0x%p\n", i,
-					g_apihooks[i].name, APIHOOK_MAXPARAM, g_apihooks[i].param, 
-					g_apihooks[i].sleep, g_apihooks[i].syscall);
+			SHELL_PRINT("Hook %2d: Name %s, Ret %c Param %.*s, Sleep %d, Syscall 0x%p Imp %d\n", i,
+					g_apihooks[i].name, g_apihooks[i].ret, APIHOOK_MAXPARAM, g_apihooks[i].param, 
+					g_apihooks[i].sleep, g_apihooks[i].syscall, g_apihooks[i].imphook);
 		}
 	}
 }
@@ -324,81 +294,166 @@ static void *apiHookAddr(u32 *addr, void *func)
 	return addr;
 }
 
-int apiHookGenericByName(SceUID uid, const char *library, const char *name, char ret, const char *format, int sleep)
+static void* apiHookImport(u32 *addr, void *func)
 {
-	int id;
-	u32 addr;
-	u32 *syscall;
+	int intc;
 
-	id = find_free_hook();
-	if(id < 0)
+	if(!addr)
 	{
-		SHELL_PRINT("No free API hooks left\n");
-		return 0;
+		return NULL;
 	}
 
-	addr = libsFindExportByName(uid, library, name);
-	if(addr)
-	{
-		syscall = find_syscall_addr(addr);
-		if(syscall)
-		{
-			g_apihooks[id].syscall = syscall;
-			g_apihooks[id].func = (void *) addr;
-			g_apihooks[id].ret = ret;
-			g_apihooks[id].sleep = sleep;
-			strncpy(g_apihooks[id].param, format, APIHOOK_MAXPARAM);
-			strncpy(g_apihooks[id].name, name, APIHOOK_MAXNAME);
-			g_apihooks[id].name[APIHOOK_MAXNAME-1] = 0;
-			apiHookAddr(syscall, g_apihooks[id].hookfunc);
+	intc = pspSdkDisableInterrupts();
+	*addr = 0x08000000 | ((u32) func & 0x0FFFFFFF) >> 2;
+	sceKernelDcacheWritebackInvalidateRange(addr, sizeof(addr));
+	sceKernelIcacheInvalidateRange(addr, sizeof(addr));
+	pspSdkEnableInterrupts(intc);
 
-			return 1;
+	return addr;
+}
+
+void apiHookGenericDelete(int id)
+{
+	int intc;
+
+	if((id < 0) || (id >= APIHOOK_MAXIDS))
+	{
+		return;
+	}
+
+	intc = pspSdkDisableInterrupts();
+	/* Restore original function */
+	if(g_apihooks[id].func)
+	{
+		if(g_apihooks[id].imphook)
+		{
+			apiHookImport(g_apihooks[id].syscall, g_apihooks[id].func);
 		}
 		else
 		{
-			SHELL_PRINT("Couldn't find syscall address\n");
+			apiHookAddr(g_apihooks[id].syscall, g_apihooks[id].func);
 		}
-	}
-	else
-	{
-		SHELL_PRINT("Couldn't find export address\n");
+		g_apihooks[id].func = NULL;
 	}
 
-	return 0;
+	pspSdkEnableInterrupts(intc);
+}
+
+
+static int _apiHookGenericCommon(u32 addr, int imphook, const char *library, const char *name, char ret, const char *format, int sleep)
+{
+	int id;
+	u32 *syscall;
+	u32 *target;
+	u32 *hookaddr = (u32*) _apiHook0;
+	int result = 0;
+
+	do
+	{
+		id = find_free_hook();
+		if(id < 0)
+		{
+			SHELL_PRINT("No free API hooks left\n");
+			break;
+		}
+
+		if(!addr)
+		{
+			SHELL_PRINT("Couldn't find export address\n");
+			break;
+		}
+
+		if(imphook)
+		{
+			u32 *p = (u32*) addr;
+			int user;
+
+			user = (addr & 0x80000000) ? 0 : 1;
+			if(user)
+			{
+				if(g_userdispatch == NULL)
+				{
+					SHELL_PRINT("Cannot hook user calls without psplink_user\n");
+					break;
+				}
+				hookaddr = g_userdispatch;
+			}
+
+			if((*p & ~0x03FFFFFF) != 0x08000000)
+			{
+				SHELL_PRINT("Cannot hook syscall imports\n");
+				break;
+			}
+
+			syscall = (void*) addr;
+			target  = (void*) (((*p & 0x03FFFFFF) << 2) | (addr & 0xF0000000));
+		}
+		else
+		{
+			syscall = find_syscall_addr(addr);
+			if(!syscall)
+			{
+				SHELL_PRINT("Couldn't find syscall address\n");
+				break;
+			}
+			target = (void*) addr;
+		}
+
+		g_apihooks[id].syscall = syscall;
+		g_apihooks[id].func = target;
+		g_apihooks[id].ret = ret;
+		g_apihooks[id].sleep = sleep;
+		strncpy(g_apihooks[id].param, format, APIHOOK_MAXPARAM);
+		strncpy(g_apihooks[id].name, name, APIHOOK_MAXNAME);
+		g_apihooks[id].name[APIHOOK_MAXNAME-1] = 0;
+		g_apihooks[id].imphook = imphook;
+		if(imphook)
+		{
+			apiHookImport(syscall, &hookaddr[id*2]);
+		}
+		else
+		{
+			apiHookAddr(syscall, &hookaddr[id*2]);
+		}
+		result = 1;
+	}
+	while(0);
+
+	return result;
+}
+
+int apiHookGenericByName(SceUID uid, const char *library, const char *name, char ret, const char *format, int sleep)
+{
+	u32 addr;
+	int imphook = 0;
+
+	addr = libsFindExportByName(uid, library, name);
+	if(!addr)
+	{
+		/* If not an export try and import */
+		addr = libsFindImportAddrByName(uid, library, name);
+		imphook = 1;
+	}
+
+	return _apiHookGenericCommon(addr, imphook, library, name, ret, format, sleep);
 }
 
 int apiHookGenericByNid(SceUID uid, const char *library, u32 nid, char ret, const char *format, int sleep)
 {
-	int id;
 	u32 addr;
-	u32 *syscall;
-
-	id = find_free_hook();
-	if(id < 0)
-	{
-		SHELL_PRINT("No free API hooks left\n");
-		return 0;
-	}
+	int imphook = 0;
+	char name[APIHOOK_MAXNAME];
 
 	addr = libsFindExportByNid(uid, library, nid);
-	if(addr)
+	if(!addr)
 	{
-		syscall = find_syscall_addr(addr);
-		if(syscall)
-		{
-			g_apihooks[id].syscall = syscall;
-			g_apihooks[id].func = (void *) addr;
-			g_apihooks[id].ret = ret;
-			g_apihooks[id].sleep = sleep;
-			strncpy(g_apihooks[id].param, format, APIHOOK_MAXPARAM);
-			sprintf(g_apihooks[id].name, "Nid:0x%08X", nid);
-			apiHookAddr(syscall, g_apihooks[id].hookfunc);
-
-			return 1;
-		}
+		addr = libsFindImportAddrByNid(uid, library, nid);
+		imphook = 1;
 	}
 
-	return 0;
+	sprintf(name, "Nid:0x%08X", nid);
+
+	return _apiHookGenericCommon(addr, imphook, library, name, ret, format, sleep);
 }
 
 

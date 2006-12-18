@@ -1323,6 +1323,54 @@ static int modfindx_cmd(int argc, char **argv, unsigned int *vRet)
 	return ret;
 }
 
+static int modfindi_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	SceUID uid;
+	int ret = CMD_ERROR;
+	u32 addr = 0;
+
+	uid = get_module_uid(argv[0]);
+	if(uid >= 0)
+	{
+		if(argv[2][0] == '@')
+		{
+			addr = libsFindImportAddrByName(uid, argv[1], &argv[2][1]);
+		}
+		else
+		{
+			char *endp;
+			u32 nid;
+
+			nid = strtoul(argv[2], &endp, 16);
+			if(*endp != 0)
+			{
+				SHELL_PRINT("ERROR: Invalid nid %s\n", argv[2]);
+			}
+			else
+			{
+				addr = libsFindImportAddrByNid(uid, argv[1], nid);
+			}
+		}
+	}
+	else
+	{
+		SHELL_PRINT("ERROR: Invalid argument %s\n", argv[0]);
+	}
+
+	if(addr != 0)
+	{
+		SHELL_PRINT("Library: %s, Imp %s, Addr: 0x%08X\n", argv[1], argv[2], addr);
+
+		ret = CMD_OK;
+	}
+	else
+	{
+		SHELL_PRINT("Couldn't find module import\n");
+	}
+
+	return ret;
+}
+
 static int apihook_common(int argc, char **argv, int sleep)
 {
 	SceUID uid;
