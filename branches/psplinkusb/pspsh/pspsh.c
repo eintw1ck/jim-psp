@@ -909,7 +909,7 @@ void dump_symlinks(int remove)
 			{
 				printf("rm psp%s\n", g_commands[cmd_loop].name);
 			}
-			if(g_commands[cmd_loop].syn)
+			if((g_commands[cmd_loop].syn) && (g_commands[cmd_loop].syn[0] != '?'))
 			{
 				if(!remove)
 				{

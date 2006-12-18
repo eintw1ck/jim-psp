@@ -196,7 +196,7 @@ rm pspep
 rm pspexlist
 rm pspexl
 rm pspexctx
-rm pspec
+rm pspecx
 rm pspexresume
 rm pspc
 rm pspexprfpu
@@ -266,4 +266,3 @@ rm pspecho
 rm psperror
 rm pspstrlen
 rm psphelp
-rm psp?

@@ -196,7 +196,7 @@ ln -s pspsh pspep
 ln -s pspsh pspexlist
 ln -s pspsh pspexl
 ln -s pspsh pspexctx
-ln -s pspsh pspec
+ln -s pspsh pspecx
 ln -s pspsh pspexresume
 ln -s pspsh pspc
 ln -s pspsh pspexprfpu
@@ -266,4 +266,3 @@ ln -s pspsh pspecho
 ln -s pspsh psperror
 ln -s pspsh pspstrlen
 ln -s pspsh psphelp
-ln -s pspsh psp?
