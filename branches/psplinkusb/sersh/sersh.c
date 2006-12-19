@@ -192,13 +192,12 @@ int on_idle(void)
 
 void shell(void)
 {
-	fd_set readset, writeset;
+	fd_set readset;
 
 	printf("Opening %s baud %d\n", g_context.args.ip, g_context.args.realbaud);
 
 	FD_ZERO(&g_context.readsave);
 	FD_SET(STDIN_FILENO, &g_context.readsave);
-	FD_ZERO(&g_context.writesave);
 	if(!on_idle())
 	{
 		return;
@@ -209,8 +208,7 @@ void shell(void)
 		int ret;
 
 		readset = g_context.readsave;
-		writeset = g_context.writesave;
-		ret = select(FD_SETSIZE, &readset, &writeset, NULL, NULL);
+		ret = select(FD_SETSIZE, &readset, NULL, NULL, NULL);
 		if(ret < 0)
 		{
 			if(errno == EINTR)
