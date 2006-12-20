@@ -287,6 +287,7 @@ void initialise(SceSize args, void *argp)
 	struct ConfigContext ctx;
 	const char *init_dir = "host0:/";
 	struct SavedContext *save = (struct SavedContext *) SAVED_ADDR;
+	int (*g_sceUmdActivate)(int, const char *);
 
 	memset(&g_context, 0, sizeof(g_context));
 	map_firmwarerev();
@@ -326,7 +327,13 @@ void initialise(SceSize args, void *argp)
 	}
 
 	sioInit(ctx.baudrate);
-	sceUmdActivate(1, "disc0:");
+
+	g_sceUmdActivate = (void*) libsFindExportByNid(refer_module_by_name("sceUmd_driver", NULL), 
+			"sceUmdUser", 0xC6183D47);
+	if(g_sceUmdActivate)
+	{
+		g_sceUmdActivate(1, "disc0:");
+	}
 
 	/* Hook sceKernelExitGame */
 	apiHookByNid(refer_module_by_name("sceLoadExec", NULL), "LoadExecForUser", 0x05572A5F, exit_reset);
