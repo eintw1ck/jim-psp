@@ -79,7 +79,11 @@ void pspDebugKbDrawKey(int row, int col, int highlight) {
     pspDebugScreenPrintf("%s", commandRow[col]);
   } else {
     pspDebugScreenSetXY(PSP_DEBUG_KB_BOX_X + PSP_DEBUG_KB_OFFSET_X + (PSP_DEBUG_KB_SPACING_X * col), PSP_DEBUG_KB_BOX_Y + (PSP_DEBUG_KB_SPACING_Y * (row + 2)));
+    if (charTable[row][col] == '\0') {
+      pspDebugScreenPrintf(" ");
+    } else {
     pspDebugScreenPrintf("%c", charTable[row][col]);
+  }
   }
 }
 
@@ -99,8 +103,6 @@ void pspDebugKbClearBox() {
 
 void pspDebugKbDrawBox() {
   int i, j;
-
-  pspDebugKbClearBox();
 
   pspDebugScreenSetTextColor(PSP_DEBUG_KB_CHAR_COLOUR);
   pspDebugScreenSetBackColor(PSP_DEBUG_KB_BACK_COLOUR);
@@ -160,9 +162,6 @@ void pspDebugKbInit(char* str) {
   int shifted = 1;
   int inputDelay = 200000;
 
-  // Initialize charTable
-  pspDebugKbShift(&shifted);
-
   sceCtrlSetSamplingCycle(0);
   sceCtrlSetSamplingMode(PSP_CTRL_MODE_DIGITAL);
 
@@ -171,6 +170,11 @@ void pspDebugKbInit(char* str) {
   sceCtrlReadBufferPositive(&lastinput, 1);
 
   unsigned int inputTime = input.TimeStamp;
+
+  pspDebugKbClearBox();
+
+  // Initialize charTable
+  pspDebugKbShift(&shifted);
 
   pspDebugKbDrawBox();
   pspDebugKbDrawKey(row, col, 1);
