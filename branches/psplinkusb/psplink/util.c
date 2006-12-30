@@ -377,7 +377,6 @@ int load_start_module(const char *name, int argc, char **argv)
 	{
 		len = build_args(args, name, argc, argv);
 		modid = sceKernelStartModule(modid, len, (void *) args, &status, NULL);
-		Kprintf("lsm: name '%s' ret %08X\n",name, modid);
 	}
 	else
 	{

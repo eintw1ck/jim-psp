@@ -8,6 +8,10 @@ ifdef BUILD_BIGENDIAN
 CFLAGS += -DBUILD_BIGENDIAN
 endif
 
+ifdef NO_UID_CHECK
+CFLAGS += -DNO_UID_CHECK
+endif
+
 ifdef READLINE_SHELL
 CFLAGS += -DREADLINE_SHELL
 LIBS += -lreadline -lcurses

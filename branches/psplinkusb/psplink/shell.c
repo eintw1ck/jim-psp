@@ -913,7 +913,7 @@ static int uidlist_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int uidinfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	uidList *entry;
+	uidControlBlock *entry;
 	const char *parent = NULL;
 
 	if(argc > 1)
@@ -936,10 +936,10 @@ static int uidinfo_cmd(int argc, char **argv, unsigned int *vRet)
 	if(entry)
 	{
 		printUIDEntry(entry);
-		if(entry->realParent)
+		if(entry->type)
 		{
 			SHELL_PRINT("Parent:\n");
-			printUIDEntry(entry->realParent);
+			printUIDEntry(entry->type);
 		}
 	}
 
@@ -4060,7 +4060,41 @@ static int call_cmd(int argc, char **argv, unsigned int *vRet)
 	return CMD_OK;
 }
 
-static int tab_cmd(int argc, char **argv, unsigned int *vRet)
+static void tab_do_uid(int argc, char **argv)
+{
+	SceUID ids[100];
+	const char *name;
+	int ret;
+	int count;
+	int i;
+	int namelen;
+	PspDebugPutChar kp;
+
+	name = &argv[0][1];
+	namelen = strlen(name);
+
+	kp = sioDisableKprintf();
+	memset(ids, 0, 100 * sizeof(SceUID));
+	ret = g_GetModuleIdList(ids, 100 * sizeof(SceUID), &count);
+	if(ret >= 0)
+	{
+		SceKernelModuleInfo info;
+
+		for(i = 0; i < count; i++)
+		{
+			if(psplinkReferModule(ids[i], &info) == 0)
+			{
+				if(strncmp(info.name, name, namelen) == 0)
+				{
+					SHELL_PRINT_CMD(SHELL_CMD_TAB, "@%s", info.name);
+				}
+			}
+		}
+	}
+	sioEnableKprintf(kp);
+}
+
+static void tab_do_dir(int argc, char **argv)
 {
 	char *dir;
 	char path[1024];
@@ -4114,6 +4148,18 @@ static int tab_cmd(int argc, char **argv, unsigned int *vRet)
 			}
 			sceIoDclose(did);
 		}
+	}
+}
+
+static int tab_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	if(argv[0][0] == '@')
+	{
+		tab_do_uid(argc, argv);
+	}
+	else
+	{
+		tab_do_dir(argc, argv);
 	}
 
 	return CMD_OK;

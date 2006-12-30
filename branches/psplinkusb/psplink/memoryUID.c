@@ -17,14 +17,25 @@
 #include "psplink.h"
 #include "memoryUID.h"
 
-uidList* findUIDObject(SceUID uid, const char *name, const char *parent)
+uidControlBlock* findUIDObject(SceUID uid, const char *name, const char *parent)
 {
-    uidList *entry;
-    uidList *end;
+    uidControlBlock *entry;
+    uidControlBlock *end;
+
+	if(sceKernelDevkitVersion() == 0x01000300)
+	{
+    	entry = (uidControlBlock *) UIDLIST_START_1_0;
+	}
+	else
+	{
+		entry = SysMemForKernel_536AD5E1();
+	}
+	/*
     if(sceKernelDevkitVersion() == 0x01050001)
-    	entry = (uidList *) UIDLIST_START_1_5;
+    	entry = (uidControlBlock *) UIDLIST_START_1_5;
     else
-    	entry = (uidList *) UIDLIST_START_1_0;
+    	entry = (uidControlBlock *) UIDLIST_START_1_0;
+	*/
     entry = entry->parent;
     end = entry;
     entry = entry->nextEntry;
@@ -34,7 +45,7 @@ uidList* findUIDObject(SceUID uid, const char *name, const char *parent)
             return entry;
         if (entry->nextChild != entry) {
             do {
-				uidList *ret = NULL;
+				uidControlBlock *ret = NULL;
                 entry = entry->nextChild;
 				if(name)
 				{
@@ -49,9 +60,9 @@ uidList* findUIDObject(SceUID uid, const char *name, const char *parent)
 
 				if(ret)
 				{
-					if(parent && ret->realParent)
+					if(parent && ret->type)
 					{
-						if(strcmp(parent, ret->realParent->name) == 0)
+						if(strcmp(parent, ret->type->name) == 0)
 						{
 							return ret;
 						}
@@ -62,7 +73,7 @@ uidList* findUIDObject(SceUID uid, const char *name, const char *parent)
 					}
 				}
 
-            } while (entry->nextChild != entry->realParent);
+            } while (entry->nextChild != entry->type);
             entry = entry->nextChild;
         }
         entry = entry->nextEntry;
@@ -72,7 +83,7 @@ uidList* findUIDObject(SceUID uid, const char *name, const char *parent)
 
 SceUID findUIDByName(const char *name)
 {
-	uidList *entry = findUIDObject(0, name, NULL);
+	uidControlBlock *entry = findUIDObject(0, name, NULL);
 	if(entry)
 	{
 		return entry->UID;
@@ -81,7 +92,7 @@ SceUID findUIDByName(const char *name)
 	return -1;
 }
 
-void printUIDEntry(uidList *entry)
+void printUIDEntry(uidControlBlock *entry)
 {
 	if(entry)
 	{
@@ -91,13 +102,25 @@ void printUIDEntry(uidList *entry)
 
 void printUIDList(const char *name)
 {
-    uidList *entry;
-    uidList *end;
+    uidControlBlock *entry;
+    uidControlBlock *end;
 	int cmp = 0;
+
+	if(sceKernelDevkitVersion() == 0x01000300)
+	{
+    	entry = (uidControlBlock *) UIDLIST_START_1_0;
+	}
+	else
+	{
+		entry = SysMemForKernel_536AD5E1();
+	}
+
+	/*
     if(sceKernelDevkitVersion() == 0x01050001)
-    	entry = (uidList *) UIDLIST_START_1_5;
+    	entry = (uidControlBlock *) UIDLIST_START_1_5;
     else
-    	entry = (uidList *) UIDLIST_START_1_0;
+    	entry = (uidControlBlock *) UIDLIST_START_1_0;
+	*/
     entry = entry->parent;
     end = entry;
     entry = entry->nextEntry;
@@ -127,7 +150,7 @@ void printUIDList(const char *name)
 					//printf("(Name): %31s, (UID): 0x%08X, (entry): 0x%p (attr): 0x%X \n", entry->name, entry->UID, entry, entry->attribute);
 					printUIDEntry(entry);
 				}
-			} while (entry->nextChild != entry->realParent);
+			} while (entry->nextChild != entry->type);
 			entry = entry->nextChild;
 		}
 

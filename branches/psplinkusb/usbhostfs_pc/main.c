@@ -37,6 +37,7 @@
 
 #ifdef __CYGWIN__
 #include <sys/vfs.h>
+#define NO_UID_CHECK
 #else
 #include <sys/statvfs.h>
 #endif
@@ -3101,13 +3102,15 @@ int main(int argc, char **argv)
 	int i;
 
 	printf("USBHostFS (c) TyRaNiD 2k6\n");
-#ifndef __CYGWIN__
+
+#ifndef NO_UID_CHECK
 	if(geteuid() != 0)
 	{
 		fprintf(stderr, "Error this application must be run as root or SUID root\n");
 		return 1;
 	}
 #endif
+
 	if(parse_args(argc, argv))
 	{
 		pthread_t thid;

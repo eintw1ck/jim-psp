@@ -778,6 +778,57 @@ char *filename_gen(const char *text, int state)
 	return name;
 }
 
+/* Complete a uid name */
+char *uid_gen(const char *text, int state)
+{
+	static struct TabEntry *pEntry = NULL;
+	char *name;
+
+	name = NULL;
+	if(state == 0)
+	{
+		char cmd[PATH_MAX*2+5];
+		char *curr;
+
+		/* Free list if it exists */
+		while(pEntry)
+		{
+			struct TabEntry *pTemp;
+			pTemp = pEntry->pNext;
+			free(pEntry->name);
+			free(pEntry);
+			pEntry = pTemp->pNext;
+		}
+
+		curr = cmd;
+		strcpy(curr, "tab");
+		curr += strlen(curr)+1;
+		strcpy(curr, text);
+		curr += strlen(curr)+1;
+		*curr++ = 1;
+		write(g_context.sock, cmd, curr-cmd);
+		pEntry = read_tab_completion();
+	}
+
+	if(pEntry)
+	{
+		struct TabEntry *pNext;
+		
+		name = (char*) malloc(strlen(pEntry->name) + 1);
+		if(name)
+		{
+			sprintf(name, "%s", pEntry->name);
+		}
+		pNext = pEntry->pNext;
+		free(pEntry->name);
+		free(pEntry);
+		pEntry = pNext;
+		rl_completion_append_character = ' ';
+	}
+
+	return name;
+}
+
 /* Completion display, get readline to still do most of the work for us */
 void completion_display(char **matches, int num, int max)
 {
@@ -823,7 +874,14 @@ char** shell_completion(const char *text, int start, int end)
 	else
 	{
 		rl_completion_display_matches_hook = completion_display;
-		matches = rl_completion_matches(text, filename_gen);
+		if(text[0] == '@')
+		{
+			matches = rl_completion_matches(text, uid_gen);
+		}
+		else
+		{
+			matches = rl_completion_matches(text, filename_gen);
+		}
 	}
 
 	return matches;
@@ -836,6 +894,8 @@ int init_readline(void)
 	rl_bind_key_in_map(META('k'), cli_skip, emacs_standard_keymap);
 	rl_attempted_completion_function = shell_completion;
 	rl_callback_handler_install("", cli_handler);
+	rl_basic_word_break_characters = "\t\n ";
+	rl_completer_word_break_characters = "\t\n ";
 
 	return 1;
 }

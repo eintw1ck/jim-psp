@@ -13,6 +13,7 @@
 
 #include <pspkernel.h>
 #include <pspsdk.h>
+#include <pspsysmem_kernel.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
