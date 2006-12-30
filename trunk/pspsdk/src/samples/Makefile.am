@@ -45,6 +45,7 @@ SAMPLES = \
 	kernel/threadstatus \
 	kernel/cwd \
 	kernel/fileio \
+	kernel/idstorage \
 	kernel/messagebox \
 	kernel/registry \
 	kernel/regenum \

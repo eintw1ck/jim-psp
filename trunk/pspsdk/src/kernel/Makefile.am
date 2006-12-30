@@ -38,6 +38,8 @@ SYSMEM_OBJS = SysMemForKernel_0000.o SysMemForKernel_0001.o SysMemForKernel_0002
 
 MODULE_OBJS = ModuleMgrForKernel_0000.o ModuleMgrForKernel_0001.o ModuleMgrForKernel_0002.o ModuleMgrForKernel_0003.o ModuleMgrForKernel_0004.o ModuleMgrForKernel_0005.o ModuleMgrForKernel_0006.o ModuleMgrForKernel_0007.o ModuleMgrForKernel_0008.o ModuleMgrForKernel_0009.o ModuleMgrForKernel_0010.o ModuleMgrForKernel_0011.o ModuleMgrForKernel_0012.o ModuleMgrForKernel_0013.o ModuleMgrForKernel_0014.o ModuleMgrForKernel_0015.o ModuleMgrForKernel_0016.o ModuleMgrForKernel_0017.o ModuleMgrForKernel_0018.o ModuleMgrForKernel_0019.o ModuleMgrForKernel_0020.o ModuleMgrForKernel_0021.o ModuleMgrForKernel_0022.o 
 
+IDSTORAGE_OBJS = sceIdStorage_driver_0000.o sceIdStorage_driver_0001.o sceIdStorage_driver_0002.o sceIdStorage_driver_0003.o sceIdStorage_driver_0004.o sceIdStorage_driver_0005.o sceIdStorage_driver_0006.o sceIdStorage_driver_0007.o sceIdStorage_driver_0008.o sceIdStorage_driver_0009.o sceIdStorage_driver_0010.o sceIdStorage_driver_0011.o sceIdStorage_driver_0012.o sceIdStorage_driver_0013.o sceIdStorage_driver_0014.o sceIdStorage_driver_0015.o sceIdStorage_driver_0016.o sceIdStorage_driver_0017.o sceIdStorage_driver_0018.o sceIdStorage_driver_0019.o sceIdStorage_driver_0020.o 
+
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
@@ -53,6 +55,7 @@ libpspkernelinclude_HEADERS =	\
 	pspsysmem_kernel.h    \
 	pspthreadman_kernel.h \
 	pspsyscon.h			\
+	pspidstorage.h		\
 	pspexception.h
 	
 lib_LIBRARIES = libpspkernel.a
@@ -71,11 +74,13 @@ libpspkernel_a_SOURCES =	\
 	SysclibForKernel.S			\
 	LoadExecForKernel.S		\
 	SysMemForKernel.S 		\
-	ModuleMgrForKernel.S	
+	ModuleMgrForKernel.S	\
+	sceIdStorage_driver.S
 
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
 						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS) \
-						$(THREAD_OBJS) $(SYSCLIB_OBJS) $(LOADEXEC_OBJS) $(SYSMEM_OBJS) $(MODULE_OBJS)
+						$(THREAD_OBJS) $(SYSCLIB_OBJS) $(LOADEXEC_OBJS) $(SYSMEM_OBJS) $(MODULE_OBJS) \
+						$(IDSTORAGE_OBJS)
 
 $(EXCEPTION_OBJS): ExceptionManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -117,4 +122,7 @@ $(SYSMEM_OBJS): SysMemForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(MODULE_OBJS): ModuleMgrForKernel.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(IDSTORAGE_OBJS): sceIdStorage_driver.S
 	$(COMPILE) -DF_$* $< -c -o $@
