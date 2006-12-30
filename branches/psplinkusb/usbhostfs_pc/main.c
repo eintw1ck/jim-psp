@@ -255,6 +255,15 @@ usb_dev_handle *open_device(struct usb_bus *busses)
 				{
 					int ret;
 					ret = usb_set_configuration(hDev, 1);
+#ifndef NO_UID_CHECK
+					if((ret < 0) && (errno == EPERM) && geteuid()) {
+						fprintf(stderr,
+							"Permission error while opening the USB device.\n"
+							"Fix device permissions or run as root.\n");
+						usb_close(hDev);
+						exit(1);
+					}
+#endif
 					if(ret == 0)
 					{
 						ret = usb_claim_interface(hDev, 0);
@@ -3102,14 +3111,6 @@ int main(int argc, char **argv)
 	int i;
 
 	printf("USBHostFS (c) TyRaNiD 2k6\n");
-
-#ifndef NO_UID_CHECK
-	if(geteuid() != 0)
-	{
-		fprintf(stderr, "Error this application must be run as root or SUID root\n");
-		return 1;
-	}
-#endif
 
 	if(parse_args(argc, argv))
 	{
