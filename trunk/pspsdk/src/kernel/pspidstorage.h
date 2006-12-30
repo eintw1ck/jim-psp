@@ -5,7 +5,7 @@
  *
  * pspidstorage.h - Interface to sceIdstorage_driver.
  *
- * Copyright (c) 2005 harleyg
+ * Copyright (c) 2006 Harley G. <harleyg@0x89.org>
  *
  * $Id$
  */
