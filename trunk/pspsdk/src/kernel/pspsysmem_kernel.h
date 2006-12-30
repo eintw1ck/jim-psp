@@ -143,6 +143,57 @@ int sceKernelDeleteHeap(SceUID heapid);
 */
 SceSize sceKernelHeapTotalFreeSize(SceUID heapid);
 
+/** Structure of a UID control block */
+struct _uidControlBlock {
+    struct _uidControlBlock *parent;
+    struct _uidControlBlock *nextChild;
+    struct _uidControlBlock *type;   //(0x8)
+    u32 UID;					//(0xC)
+    char *name;					//(0x10)
+	unsigned char unk;
+	unsigned char size;			// Size in words
+    short attribute;
+    struct _uidControlBlock *nextEntry;
+} __attribute__((packed));
+typedef struct _uidControlBlock uidControlBlock;
+
+/**
+ * Get a UID control block
+ *
+ * @param uid - The UID to find
+ * @param block - Pointer to hold the pointer to the block
+ *
+ * @return 0 on success
+ */
+int sceKernelGetUIDcontrolBlock(SceUID uid, uidControlBlock** block);
+
+/**
+ * Get a UID control block on a particular type
+ *
+ * @param uid - The UID to find
+ * @param type - Pointer to the type UID block
+ * @param block - Pointer to hold the pointer to the block
+ *
+ * @return 0 on success
+ */
+int sceKernelGetUIDcontrolBlockWithType(SceUID uid, uidControlBlock* type, uidControlBlock** block);
+
+/**
+ * Get the root of the UID tree (1.5+ only)
+ *
+ * @return Pointer to the UID tree root
+ */
+uidControlBlock* SysMemForKernel_536AD5E1(void);
+
+/**
+ * Delete a UID
+ *
+ * @param uid - The UID to delete
+ *
+ * @return 0 on success
+ */
+int sceKernelDeleteUID(SceUID uid);
+
 #ifdef __cplusplus
 }
 #endif
