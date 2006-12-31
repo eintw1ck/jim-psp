@@ -181,25 +181,29 @@ void psplinkReset(void)
 
 	rev = sceKernelDevkitVersion();
 	
-	/* We only support 271 */
-	if(rev == 0x02070110)
+	/* Support anything above 2.71 */
+	if(rev >= 0x02070110)
 	{
 		struct SceKernelLoadExecVSHParam param; 
-		u32 addr;
-
-		if(memDecode("@sceLoadExec@+0x1DBC", &addr))
-		{
-			/* Quick and dirty patch for now ;P */
-			_sw(0x10000011, addr);
-			sceKernelDcacheWritebackInvalidateAll();
-			sceKernelIcacheInvalidateAll();
-		}
+		const char *rebootkey = NULL;
 
 		memset(&param, 0, sizeof(param)); 
 		param.size = sizeof(param); 
 		param.args = strlen(g_context.bootfile)+1; 
 		param.argp = (char*) g_context.bootfile; 
-		param.key = "game"; 
+		switch(g_context.rebootkey)
+		{
+			case REBOOT_MODE_GAME: rebootkey = "game";
+								   break;
+			case REBOOT_MODE_VSH : rebootkey = "vsh";
+								   break;
+			case REBOOT_MODE_UPDATER : rebootkey = "updater";
+									   break;
+			default: rebootkey = NULL;
+					 break;
+
+		};
+		param.key = rebootkey; 
 		param.vshmain_args_size = 0; 
 		param.vshmain_args = NULL; 
 
