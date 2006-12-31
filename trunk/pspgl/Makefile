@@ -166,7 +166,8 @@ libGLU.a_OBJS = \
 	pspglu.o
 
 libglut.a_OBJS = \
-	glut.o
+	glut.o \
+	glutGetProcAddress.o
 
 all: $(DEPDIR) $(libGL.a_OBJS) $(libGLU.a_OBJS) $(libglut.a_OBJS) libGL.a libGLU.a libglut.a
 
@@ -185,14 +186,20 @@ all: $(DEPDIR) $(libGL.a_OBJS) $(libGLU.a_OBJS) $(libglut.a_OBJS) libGL.a libGLU
 				}'
 
 
-eglGetProcAddress.o: eglGetProcAddress.c pspgl_proctable.h
+eglGetProcAddress.o: eglGetProcAddress.c pspgl_proctable_decls.h pspgl_proctable.h
 
 # Extract all the public GL and EGL API symbols which are extensions (ends with PSP, ARB or EXT)
 # Symbols must be sorted by name so that bsearch can be used to look for them.
 pspgl_proctable.h: $(API_OBJS) Makefile
 	$(ARCH)nm -fp -g --defined-only $(API_OBJS) | sort -k1 | \
-		awk '$$2=="T" && $$1 ~ /^(gl|egl)[A-Z][a-zA-Z]+(PSP|ARB|EXT)/ \
-			{ print "\t{ \"" $$1 "\", (void (*)())"$$1 " }," }' > $@ \
+		awk '$$2=="T" && $$1 ~ /^(gl|egl)[A-Z][a-zA-Z]/ \
+			{ print "\t{ \"" $$1 "\", "$$1 " }," }' > $@ \
+			|| rm -f $@
+
+pspgl_proctable_decls.h: $(API_OBJS) Makefile
+	$(ARCH)nm -fp -g --defined-only $(API_OBJS) | sort -k1 | \
+		awk '$$2=="T" && $$1 ~ /^(gl|egl)[A-Z][a-zA-Z]/ \
+			{ print "extern void " $$1 " (void);" }' > $@ \
 			|| rm -f $@
 
 $(DEPDIR):
