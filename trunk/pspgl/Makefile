@@ -215,7 +215,7 @@ tar: clean
 	( cd .. && tar cvfz pspgl-`date "+%Y-%m-%d"`.tar.gz pspgl --exclude "*.DS_Store" && cd - )
 
 clean:
-	$(RM) -rf *.o *.a $(DEPDIR) pspgl_proctable.h
+	$(RM) -rf *.o *.a $(DEPDIR) pspgl_proctable.h pspgl_proctable_decls.h
 	make -C tools clean
 	make -C tests clean
 	make -C test-q3 clean
