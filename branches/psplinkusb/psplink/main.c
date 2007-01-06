@@ -174,6 +174,7 @@ struct SceKernelLoadExecVSHParam
 }; 
 
 int sceKernelLoadExecVSHMs2(const char *, struct SceKernelLoadExecVSHParam *params);
+int sceKernelExitVSHVSH(struct SceKernelLoadExecVSHParam *params);
 
 void psplinkReset(void)
 {
@@ -254,7 +255,19 @@ void psplinkReset(void)
 
 void psplinkExitShell(void)
 {
-	sceKernelExitGame();
+	unsigned int rev;
+
+	rev = sceKernelDevkitVersion();
+	
+	/* Support anything above 2.71 */
+	if(rev >= 0x02070110)
+	{
+		sceKernelExitVSHVSH(NULL);
+	}
+	else
+	{
+		sceKernelExitGame();
+	}
 }
 
 int psplinkPresent(void)

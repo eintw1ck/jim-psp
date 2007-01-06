@@ -1226,18 +1226,29 @@ int unset_cmd(int argc, char **argv)
 int error_cmd(int argc, char **argv)
 {
 	unsigned int err;
+	unsigned int facility;
 	int i;
 
 	err = strtoul(argv[0], NULL, 0);
-	i = 0;
-	while(PspKernelErrorCodes[i].name)
+	facility = err >> 16;
+
+	if(facility == 0x8002)
 	{
-		if(err == PspKernelErrorCodes[i].num)
+		i = 0;
+		while(PspKernelErrorCodes[i].name)
 		{
-			printf("Error: %s\n", PspKernelErrorCodes[i].name);
-			return 0;
+			if(err == PspKernelErrorCodes[i].num)
+			{
+				printf("Error: %s\n", PspKernelErrorCodes[i].name);
+				return 0;
+			}
+			i++;
 		}
-		i++;
+	}
+	else if(facility == 0x8001)
+	{
+		printf("Error: %s\n", strerror(err & 0xFFFF));
+		return 0;
 	}
 
 	printf("Unknown error code 0x%08X\n", err);
