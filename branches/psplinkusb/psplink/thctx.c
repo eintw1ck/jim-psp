@@ -16,6 +16,7 @@
 #include <psputilsforkernel.h>
 #include <pspmoduleexport.h>
 #include <psploadcore.h>
+#include <pspthreadman_kernel.h>
 #include <pspsdk.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,109 +26,35 @@
 #include "memoryUID.h"
 #include "exception.h"
 
-/* Structues for the thread context taken from florinsasu's post on the forums */
-typedef struct tag_CONTEXT{
-u32   type;            //+000
-u32   gpr[31];         //+004
-u32   fpr[32];         //+080
-u32   fc31;            //+100
-u32   hi;               //+104
-u32   lo;               //+108
-u32   SR;               //+10C
-u32   EPC;            //+110
-u32   field_114;         //+114
-u32   field_118;         //+118
-} CONTEXT; 
-
-typedef struct tag_TCB{
-	void  *link1, *link2;   //+00
-	SceUID   thid;         //+08
-	u32   status;         //+0C
-	u32   currentPriority;//+10
-	u32   wakeupCount;   //+14
-	u32   exitStatus;      //+18
-	u32   waitType;      //+1C
-	void  *waitObject;   //+20
-	u32   unk1[10];      //+24
-	void  *cb_next;      //+4C
-	void  *cb_prev;      //+50
-	u32   unk2[3];      //+54
-	u32   initPriority;   //+60
-	u32   runClocks_lo;   //+64
-	u32   runClocks_hi;   //+68
-	u32   entry;         //+6C
-	u32   stack;         //+70
-	u32   stacksize;      //+74
-	u32   sp;            //+78
-	u32   kstack;         //+7C
-	u32   kstacksize;      //+80
-	u32   unk3;         //+84
-	u32   gpReg;         //+88
-	u32   unk4;         //+8C
-	void  *klts;         //+90
-	u32   unk5[15];      //+94
-	u32   attribute;      //+D0
-	u32   attribute_;      //+D4
-	u32   argSize;      //+D8
-	void  *argBlock;      //+DC
-	u32   unk6[2];      //+E0
-	u32   initPreemptCount;//+E8
-	u32   threadPreemptCount;//+EC
-	u32   releaseCount;   //+F0
-	CONTEXT   *context;      //+F4
-	u32    unk7;         //+F8
-	void   *vfpu_context;   //+FC
-} TCB;
-
-struct ThreadKContext
-{
-	unsigned int status;
-	unsigned int epc;
-	unsigned int sp;
-	unsigned int ra;
-	unsigned int k1;
-	unsigned int unk[3];
-};
- 
-static TCB *find_thread_tcb(SceUID uid)
-{
-	void *pUid;
-	TCB *tcb = NULL;
-
-	pUid = (void *) findObjectByUID(uid);
-	if(pUid)
-	{
-		tcb = (TCB *) (pUid + 0x30);
-	}
-
-	return tcb;
-}
-
 int threadFindContext(SceUID uid)
 {
-	TCB *tcb;
-	TCB tcbCopy;
-	CONTEXT ctxCopy;
+	SceKernelThreadKInfo info;
+	struct SceThreadContext ctxCopy;
+	int found = 0;
 	int intc;
 
+	SHELL_PRINT("Size: %x\n", sizeof(info));
+	memset(&ctxCopy, 0, sizeof(ctxCopy));
+	memset(&info, 0, sizeof(info));
+	info.size = sizeof(info);
+
 	intc = pspSdkDisableInterrupts();
-	tcb = find_thread_tcb(uid);
-
-	if(tcb)
+	if(ThreadManForKernel_2D69D086(uid, &info) == 0)
 	{
-		memcpy(&tcbCopy, tcb, sizeof(tcbCopy));
-		memcpy(&ctxCopy, tcb->context, sizeof(ctxCopy));
+		found = 1;
+		if(info.thContext)
+		{
+			memcpy(&ctxCopy, info.thContext, sizeof(ctxCopy));
+		}
 	}
-
 	pspSdkEnableInterrupts(intc);
 
-	if(tcb)
+	if(found)
 	{
-		SHELL_PRINT("TCB 0x%p\n", tcb);
-		SHELL_PRINT("kstack 0x%08X kstacksize 0x%08X\n", tcbCopy.kstack, tcbCopy.kstacksize);
-		SHELL_PRINT("stack  0x%08X stacksize  0x%08X\n", tcbCopy.stack, tcbCopy.stacksize);
-		SHELL_PRINT("context 0x%p, vfpu 0x%p\n", tcbCopy.context, tcbCopy.vfpu_context);
-		SHELL_PRINT("EPC 0x%08X\n", ctxCopy.EPC);
+		SHELL_PRINT("kstack 0x%08X kstacksize 0x%08X\n", (u32) info.kstack, info.kstackSize);
+		SHELL_PRINT("stack  0x%08X stacksize  0x%08X\n", (u32) info.stack,  info.stackSize);
+		SHELL_PRINT("context 0x%08X, vfpu 0x%08X\n", (u32) info.thContext, (u32) info.vfpuContext);
+		SHELL_PRINT("Context EPC 0x%08X, Real EPC 0x%08X\n", ctxCopy.EPC, info.retAddr);
 		exceptionPrintCPURegs((u32 *) &ctxCopy);
 		return 0;
 	}
@@ -138,6 +65,7 @@ int threadFindContext(SceUID uid)
 /* Get the thread context of a user thread, trys to infer the real address */
 int psplinkFindUserThreadContext(SceUID uid, struct PsplinkContext *ctx)
 {
+#if 0
 	int intc;
 	TCB *tcb;
 	int ret = 1;
@@ -183,4 +111,7 @@ int psplinkFindUserThreadContext(SceUID uid, struct PsplinkContext *ctx)
 	pspSdkEnableInterrupts(intc);
 
 	return ret;
+#endif
+
+	return 0;
 }

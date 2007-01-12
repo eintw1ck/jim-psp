@@ -80,6 +80,7 @@ struct GlobalContext g_context;
 static int g_verbose = 0;
 extern char **environ;
 
+void shutdown_app(void);
 int help_cmd(int argc, char **argv);
 int close_cmd(int argc, char **argv);
 int exit_cmd(int argc, char **argv);
@@ -587,6 +588,11 @@ void cli_handler(char *buf)
 		}
 
 		execute_line(buf);
+	}
+	else
+	{
+		shutdown_app();
+		exit(0);
 	}
 }
 
@@ -1837,37 +1843,42 @@ int shell(void)
 	return 0;
 }
 
+void shutdown_app(void)
+{
+	if(g_context.sock >= 0)
+	{
+		close(g_context.sock);
+		g_context.sock = -1;
+	}
+	if(g_context.outsock >= 0)
+	{
+		close(g_context.outsock);
+		g_context.outsock = -1;
+	}
+	if(g_context.errsock >= 0)
+	{
+		close(g_context.errsock);
+		g_context.errsock = -1;
+	}
+	if(g_context.fssock >= 0)
+	{
+		close(g_context.fssock);
+		g_context.fssock = -1;
+	}
+
+	if(!g_context.args.script)
+	{
+		rl_callback_handler_remove();
+	}
+}
+
 void sig_call(int sig)
 {
 	if((sig == SIGINT) || (sig == SIGTERM))
 	{
 		fprintf(stderr, "Exiting\n");
-		if(g_context.sock >= 0)
-		{
-			close(g_context.sock);
-			g_context.sock = -1;
-		}
-		if(g_context.outsock >= 0)
-		{
-			close(g_context.outsock);
-			g_context.outsock = -1;
-		}
-		if(g_context.errsock >= 0)
-		{
-			close(g_context.errsock);
-			g_context.errsock = -1;
-		}
-		if(g_context.fssock >= 0)
-		{
-			close(g_context.fssock);
-			g_context.fssock = -1;
-		}
 
-		if(!g_context.args.script)
-		{
-			rl_callback_handler_remove();
-		}
-
+		shutdown_app();
 		exit(1);
 	}
 }
@@ -1912,22 +1923,8 @@ int main(int argc, char **argv)
 		{
 			ret = g_context.lasterr;
 		}
-		if(g_context.sock >= 0)
-		{
-			close(g_context.sock);
-		}
-		if(g_context.outsock >= 0)
-		{
-			close(g_context.outsock);
-		}
-		if(g_context.errsock >= 0)
-		{
-			close(g_context.errsock);
-		}
-		if(g_context.fssock >= 0)
-		{
-			close(g_context.fssock);
-		}
+
+		shutdown_app();
 	}
 	else
 	{

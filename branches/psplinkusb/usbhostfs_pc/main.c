@@ -2883,6 +2883,11 @@ void parse_shell(char *buf)
 {
 	int len;
 
+	if(buf == NULL)
+	{
+		exit_app();
+	}
+
 	if((buf) && (*buf))
 	{
 #ifdef READLINE_SHELL

@@ -58,7 +58,8 @@ int main(int argc, char **argv)
 	{
 		char *ext;
 
-		if(sceKernelDevkitVersion() != 0x01000300)
+		/* Only support on 1.5 for now as we know that works */
+		if(sceKernelDevkitVersion() == 0x01050001)
 		{
 			struct DebugEnv env;
 			

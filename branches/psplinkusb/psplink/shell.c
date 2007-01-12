@@ -1041,6 +1041,11 @@ static int print_modinfo(SceUID uid, int verbose, const char *opts)
 			opts++;
 		}
 	}
+	else
+	{
+		SHELL_PRINT("Error querying module 0x%08X\n", ret);
+	}
+
 	sioEnableKprintf(kp);
 
 	return ret;
@@ -3655,7 +3660,7 @@ static int pspver_cmd(int argc, char **argv, unsigned int *vRet)
 
 	rev = sceKernelDevkitVersion();
 
-	SHELL_PRINT("Version: %d.%d (0x%08X)\n", (rev >> 24) & 0xFF, (rev >> 16) & 0xFF, rev);
+	SHELL_PRINT("Version: %d.%d.%d (0x%08X)\n", (rev >> 24) & 0xFF, (rev >> 16) & 0xFF, (rev >> 8) & 0xFF, rev);
 
 	return CMD_OK;
 }
