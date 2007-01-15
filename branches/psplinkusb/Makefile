@@ -1,59 +1,11 @@
 all:
-	$(MAKE) -C libpsplink all
-	$(MAKE) -C libpsplink_driver all
-	$(MAKE) -C libusbhostfs all
-	$(MAKE) -C libusbhostfs_driver all
-	$(MAKE) -C psplink	all
-	$(MAKE) -C psplink_user all
-	$(MAKE) -C gdbcommon all
-	$(MAKE) -C usbhostfs all
-	$(MAKE) -C usbgdb    all
-	$(MAKE) -C bootstrap all
-	$(MAKE) -C bootstrap kxploit
-	$(MAKE) -C boot271 
+	$(MAKE) -f Makefile.psp
+	$(MAKE) -f Makefile.oe
 
-release: all
-	mkdir -p release/v1.0/psplink
-	mkdir -p release/v1.5
-	mkdir -p release/v1.5_nocorrupt
-	mkdir -p release/v2.71
-	mkdir -p release/pc
-	cp -Rf scripts release/scripts
-	cp bootstrap/EBOOT.PBP release/v1.0/psplink
-	cp psplink/psplink.prx release/v1.0/psplink
-	cp psplink/psplink.ini release/v1.0/psplink
-	cp psplink_user/psplink_user.prx release/v1.0/psplink
-	cp usbhostfs/usbhostfs.prx release/v1.0/psplink
-	cp usbgdb/usbgdb.prx release/v1.0/psplink
-	cp -R bootstrap/psplink release/v1.5
-	cp -R bootstrap/psplink% release/v1.5
-	cp psplink/psplink.prx release/v1.5/psplink
-	cp psplink/psplink.ini release/v1.5/psplink
-	cp psplink_user/psplink_user.prx release/v1.5/psplink
-	cp usbhostfs/usbhostfs.prx release/v1.5/psplink
-	cp usbgdb/usbgdb.prx release/v1.5/psplink
-	cp -R release/v1.5/psplink release/v1.5_nocorrupt/__SCE__psplink
-	cp -R release/v1.5/psplink% release/v1.5_nocorrupt/%__SCE__psplink
-	cp -R release/v1.0/psplink release/v2.71
-	cp boot271/EBOOT.PBP release/v2.71/psplink
-	cp -Rf pspsh release/pc
-	cp -Rf usbhostfs_pc release/pc
-	cp -Rf windows release/pc
-	cp usbhostfs/usbhostfs.h release/pc/usbhostfs_pc
-	cp README release
-	cp LICENSE release
-	cp psplink_manual.pdf release
+release:
+	$(MAKE) -f Makefile.psp release
+	$(MAKE) -f Makefile.oe release
 
 clean:
-	$(MAKE) -C libpsplink clean
-	$(MAKE) -C libpsplink_driver clean
-	$(MAKE) -C libusbhostfs clean
-	$(MAKE) -C libusbhostfs_driver clean
-	$(MAKE) -C psplink	clean
-	$(MAKE) -C psplink_user clean
-	$(MAKE) -C usbhostfs clean
-	$(MAKE) -C usbgdb   clean
-	$(MAKE) -C gdbcommon clean
-	$(MAKE) -C bootstrap clean
-	$(MAKE) -C boot271   clean
-	rm -rf release
+	$(MAKE) -f Makefile.psp clean
+	$(MAKE) -f Makefile.oe clean

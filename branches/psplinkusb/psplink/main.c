@@ -178,12 +178,7 @@ int sceKernelExitVSHVSH(struct SceKernelLoadExecVSHParam *params);
 
 void psplinkReset(void)
 {
-	unsigned int rev;
-
-	rev = sceKernelDevkitVersion();
-	
-	/* Support anything above 2.71 */
-	if(rev >= 0x02070110)
+#if _PSP_FW_VERSION >= 200
 	{
 		struct SceKernelLoadExecVSHParam param; 
 		const char *rebootkey = NULL;
@@ -215,7 +210,7 @@ void psplinkReset(void)
 
 		sceKernelLoadExecVSHMs2(g_context.bootfile, &param);
 	}
-	else
+#else
 	{
 		struct SceKernelLoadExecParam le;
 		struct SavedContext *save = (struct SavedContext *) SAVED_ADDR;
@@ -251,23 +246,20 @@ void psplinkReset(void)
 
 		sceKernelLoadExec(g_context.bootfile, &le);
 	}
+#endif
 }
 
 void psplinkExitShell(void)
 {
-	unsigned int rev;
-
-	rev = sceKernelDevkitVersion();
-	
-	/* Support anything above 2.71 */
-	if(rev >= 0x02070110)
+#if _PSP_FW_VERSION >= 200
 	{
 		sceKernelExitVSHVSH(NULL);
 	}
-	else
+#else
 	{
 		sceKernelExitGame();
 	}
+#endif
 }
 
 int psplinkPresent(void)

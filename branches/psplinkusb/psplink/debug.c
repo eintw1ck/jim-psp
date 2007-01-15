@@ -30,6 +30,7 @@ struct BreakPoint
 {
 	unsigned int address;
 	unsigned int oldinst;
+	int oneshot;
 	int active;
 };
 

@@ -228,7 +228,11 @@ struct sh_command
 	SHELL_CMD("hwena",  NULL, hwena_cmd, 0, "Enable or disable the HW debugger", "", "[on|off]") \
 	SHELL_CMD("hwregs", NULL, hwregs_cmd, 0, "Print or change the current HW breakpoint setup (v1.5 only)", "", "[reg=val]...") \
 	SHELL_CMD("hwbp", NULL, hwbp_cmd, 1, "Set a hardware instruction breakpoint", "", "addr [mask]") \
-	SHELL_CMD("bpset", "bp", bpset_cmd, 1, "Set a break point", "", "addr") \
+	SHELL_CMD("bpset", "bp", bpset_cmd, 1, "Set a break point", \
+			"addr is the address at which the breakpoint should be set. opts is a list of options for the "\
+			"breakpoint.\n1 - specifies that this will be a one shot breakpoint, otherwise it will be permanent.", \
+			"h - specifies this is a hardware breakpoint (if available)" \
+			"addr [opts]") \
 	SHELL_CMD("bpprint", "bt", bpprint_cmd, 0, "Print the current breakpoints", "", "") \
 	SHELL_CMD("step", "s", step_cmd, 0, "Step the next instruction", "", "") \
 	SHELL_CMD("skip", "k", skip_cmd, 0, "Skip the next instruction (i.e. jump over jals)", "", "") \
