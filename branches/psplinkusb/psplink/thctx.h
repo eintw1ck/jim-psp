@@ -14,5 +14,6 @@
 #define __THCTX_H__
 
 int threadFindContext(SceUID uid);
+unsigned int thGetCurrentEPC(SceUID uid);
 
 #endif

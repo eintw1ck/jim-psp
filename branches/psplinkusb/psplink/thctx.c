@@ -62,56 +62,71 @@ int threadFindContext(SceUID uid)
 	return -1;
 }
 
+unsigned int thGetCurrentEPC(SceUID uid)
+{
+	SceKernelThreadKInfo info;
+	unsigned int addr = 0;
+
+	memset(&info, 0, sizeof(info));
+	info.size = sizeof(info);
+	if(ThreadManForKernel_2D69D086(uid, &info) == 0)
+	{
+		if(info.retAddr)
+		{
+			addr = (unsigned int) info.retAddr;
+		}
+		else
+		{
+			addr = info.thContext->EPC;
+		}
+	}
+	
+	return addr;
+}
+
 /* Get the thread context of a user thread, trys to infer the real address */
 int psplinkFindUserThreadContext(SceUID uid, struct PsplinkContext *ctx)
 {
-#if 0
+	SceKernelThreadKInfo info;
 	int intc;
-	TCB *tcb;
-	int ret = 1;
+	int ret = 0;
+
+	memset(&info, 0, sizeof(info));
+	info.size = sizeof(info);
 
 	intc = pspSdkDisableInterrupts();
-
-	tcb = find_thread_tcb(uid);
-
-	if(tcb)
+	if(ThreadManForKernel_2D69D086(uid, &info) == 0)
 	{
-		if(tcb->attribute & PSP_THREAD_ATTR_USER)
+		if(info.attr & PSP_THREAD_ATTR_USER)
 		{
-			CONTEXT *th = tcb->context;
-
 			memset(ctx, 0, sizeof(struct PsplinkContext));
 			ctx->thid = uid;
-			memcpy(&ctx->regs.r[1], th->gpr, 31 * sizeof(u32));
-			memcpy(&ctx->regs.fpr[0], th->fpr, 32 * sizeof(float));
-			ctx->regs.hi = th->hi;
-			ctx->regs.lo = th->lo;
-			/* If thread context in kernel mode (i.e. in a syscall) */
-			if(th->gpr[28] & 0x80000000)
-			{
-				struct ThreadKContext *kth;
+			memcpy(&ctx->regs.r[1], info.thContext->gpr, 31 * sizeof(u32));
+			memcpy(&ctx->regs.fpr[0], info.thContext->fpr, 32 * sizeof(float));
+			ctx->regs.hi = info.thContext->hi;
+			ctx->regs.lo = info.thContext->lo;
 
-				kth = (struct ThreadKContext *) (tcb->kstack + tcb->kstacksize - sizeof(struct ThreadKContext));
-				ctx->regs.epc = kth->epc;
-				ctx->regs.status = kth->status;
-				ctx->regs.frame_ptr = kth->sp;
-				ctx->regs.r[29] = kth->sp;
-				ctx->regs.r[31] = kth->ra;
-				ctx->regs.r[27] = kth->k1;
+			if(info.retAddr)
+			{
+				ctx->regs.epc = info.scContext->epc;
+				ctx->regs.status = info.scContext->status;
+				ctx->regs.frame_ptr = info.scContext->sp;
+				ctx->regs.r[29] = info.scContext->sp;
+				ctx->regs.r[31] = info.scContext->ra;
+				ctx->regs.r[27] = info.scContext->k1;
 			}
 			else
 			{
-				ctx->regs.epc = th->EPC;
-				ctx->regs.status = th->SR;
-				ctx->regs.frame_ptr = th->gpr[28];
+				ctx->regs.epc = info.thContext->EPC;
+				ctx->regs.status = info.thContext->SR;
+				ctx->regs.frame_ptr = info.thContext->gpr[28];
 			}
+
+			ret = 1;
 		}
 	}
 
 	pspSdkEnableInterrupts(intc);
 
 	return ret;
-#endif
-
-	return 0;
 }

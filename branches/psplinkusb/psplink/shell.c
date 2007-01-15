@@ -3518,6 +3518,11 @@ static int hwbp_cmd(int argc, char **argv, unsigned int *vRet)
 	return CMD_OK;
 }
 
+static int bpth_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	return thread_do_cmd(argv[0], "break", (ReferFunc) pspSdkReferThreadStatusByName, debugBreakThread);
+}
+
 static int bpset_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;

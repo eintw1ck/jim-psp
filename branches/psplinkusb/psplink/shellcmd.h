@@ -233,6 +233,7 @@ struct sh_command
 			"breakpoint.\n1 - specifies that this will be a one shot breakpoint, otherwise it will be permanent.", \
 			"h - specifies this is a hardware breakpoint (if available)" \
 			"addr [opts]") \
+	SHELL_CMD("bpth", NULL, bpth_cmd, 1, "Break a thread at the first available point", "", "uid|@name") \
 	SHELL_CMD("bpprint", "bt", bpprint_cmd, 0, "Print the current breakpoints", "", "") \
 	SHELL_CMD("step", "s", step_cmd, 0, "Step the next instruction", "", "") \
 	SHELL_CMD("skip", "k", skip_cmd, 0, "Skip the next instruction (i.e. jump over jals)", "", "") \

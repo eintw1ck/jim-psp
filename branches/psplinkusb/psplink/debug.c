@@ -14,6 +14,7 @@
 #include <pspdebug.h>
 #include <pspsysmem_kernel.h>
 #include <psputilsforkernel.h>
+#include <pspsdk.h>
 #include <stdio.h>
 #include <string.h>
 #include "exception.h"
@@ -22,6 +23,7 @@
 #include "disasm.h"
 #include "debug.h"
 #include "decodeaddr.h"
+#include "thctx.h"
 
 #define MAX_BPS 16
 #define SW_BREAK_INST	0x0000000d
@@ -626,4 +628,24 @@ void debugPrintHWRegs(void)
 	{
 		SHELL_PRINT("Not available on v1.0 firmware\n");
 	}
+}
+
+int debugBreakThread(SceUID uid)
+{
+	int intc;
+	unsigned int addr;
+	int ret = -1;
+
+	intc = pspSdkDisableInterrupts();
+	addr = thGetCurrentEPC(uid);
+	if(addr)
+	{
+		if(debugSetBP(addr))
+		{
+			ret = 0;
+		}
+	}
+	pspSdkEnableInterrupts(intc);
+
+	return ret;
 }
