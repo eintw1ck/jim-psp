@@ -34,6 +34,12 @@ CFLAGS   := $(addprefix -I,$(INCDIR)) $(CFLAGS)
 CXXFLAGS := $(CFLAGS) $(CXXFLAGS)
 ASFLAGS  := $(CFLAGS) $(ASFLAGS)
 
+ifeq ($(PSP_FW_VERSION),)
+PSP_FW_VERSION=150
+endif
+
+CFLAGS += -D_PSP_FW_VERSION=$(PSP_FW_VERSION)
+
 ifeq ($(BUILD_PRX),1)
 LDFLAGS  := $(addprefix -L,$(LIBDIR)) -specs=$(PSPSDK)/lib/prxspecs -Wl,-q,-T$(PSPSDK)/lib/linkfile.prx $(LDFLAGS)
 EXTRA_CLEAN += $(TARGET).elf

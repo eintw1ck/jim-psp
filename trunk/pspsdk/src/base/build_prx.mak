@@ -31,6 +31,12 @@ ASFLAGS  := $(CFLAGS) $(ASFLAGS)
 
 LDFLAGS  := $(addprefix -L,$(LIBDIR)) -Wl,-q,-T$(PSPSDK)/lib/linkfile.prx -mno-crt0 -nostartfiles $(LDFLAGS)
 
+ifeq ($(PSP_FW_VERSION),)
+PSP_FW_VERSION=150
+endif
+
+CFLAGS += -D_PSP_FW_VERSION=$(PSP_FW_VERSION)
+
 # Library selection.  By default we link with Newlib's libc.  Allow the
 # user to link with PSPSDK's libc if USE_PSPSDK_LIBC is set to 1.
 
