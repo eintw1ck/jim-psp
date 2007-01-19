@@ -12,6 +12,7 @@ SAMPLES = \
 	debug/debugkb \
 	debug/sio \
 	debug/gdb \
+	gu/beginobject \
 	gu/blend \
 	gu/blit \
 	gu/celshading \
