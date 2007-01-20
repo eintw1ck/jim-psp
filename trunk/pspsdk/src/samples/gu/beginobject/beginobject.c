@@ -39,8 +39,8 @@ typedef struct VERT {
 #define FRAME_SIZE (BUF_WIDTH * SCR_HEIGHT * PIXEL_SIZE)
 #define ZBUF_SIZE (BUF_WIDTH SCR_HEIGHT * 2) /* zbuffer seems to be 16-bit? */
 
-#define TORUS_SLICES 48 // numc
-#define TORUS_ROWS 48 // numt
+#define TORUS_SLICES 24 // numc
+#define TORUS_ROWS 24 // numt
 #define TORUS_RADIUS 1.0f
 #define TORUS_THICKNESS 0.5f
 
@@ -68,6 +68,12 @@ static float __attribute__((aligned(16))) bbox[8][3] = {
 	{  1.0f,  1.0f, -1.0f },
 	{  1.0f,  1.0f,  1.0f }
 };
+
+unsigned int objects = 0;
+
+void gucallback(int id) {
+	objects++;
+}
 
 int main(int argc, char* argv[]) {
 	/* Setup Homebutton Callbacks */
@@ -133,6 +139,7 @@ int main(int argc, char* argv[]) {
 	sceGuShadeModel(GU_SMOOTH);
 	sceGuEnable(GU_CULL_FACE);
 	sceGuEnable(GU_CLIP_PLANES);
+	sceGuSetCallback(GU_CALLBACK_SIGNAL, gucallback);
 	sceGuFinish();
 	sceGuSync(0,0);
 	sceDisplayWaitVblankStart();
@@ -145,9 +152,10 @@ int main(int argc, char* argv[]) {
 	pspDebugScreenInit();
 
 	unsigned int old = 0;
-	unsigned int flags = PSP_CTRL_CROSS;
+	unsigned int flags = PSP_CTRL_CIRCLE | PSP_CTRL_CROSS;
 
 	while(running()) {
+		objects = 0;
 		time += 0.01f;
 
 		sceGuStart(GU_DIRECT,list);
@@ -176,7 +184,7 @@ int main(int argc, char* argv[]) {
 			sceGumTranslate(&t);
 
 			// Draw Bounding Box
-			if(flags & PSP_CTRL_CIRCLE) {
+			if(flags & PSP_CTRL_CIRCLE || 1) {
 				sceGuColor(0xffffffff);
 				sceGumDrawArray(GU_POINTS, GU_VERTEX_32BITF | GU_TRANSFORM_3D, 8, 0, bbox);
 			}
@@ -185,6 +193,8 @@ int main(int argc, char* argv[]) {
 			if(flags & PSP_CTRL_CROSS) {
 				sceGuBeginObject(GU_VERTEX_32BITF, 8, 0, bbox);
 			}
+
+			sceGuSignal(1, GU_BEHAVIOR_SUSPEND);
 
 			sceGumPushMatrix();
 			sceGumRotateX(time * 0.5324f);
@@ -212,11 +222,12 @@ int main(int argc, char* argv[]) {
 		pspDebugScreenSetOffset((int)buffer);
 		pspDebugScreenSetXY(0,0);
 		if(flags & PSP_CTRL_CROSS) {
-			pspDebugScreenPrintf("Use culling");
+			pspDebugScreenPrintf("Use culling. X to toogle. %d objects", objects);
 		} else {
-			pspDebugScreenPrintf("Don't use culling");
+			pspDebugScreenPrintf("Don't use culling. X to toogle. %d objects", objects);
 		}
 
+		sceDisplayWaitVblankStart();
 		buffer = sceGuSwapBuffers();
 
 		sceCtrlReadBufferPositive(&pad, 1);
