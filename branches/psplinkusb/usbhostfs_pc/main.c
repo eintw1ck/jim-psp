@@ -210,11 +210,16 @@ int euid_usb_bulk_write(usb_dev_handle *dev, int ep, char *bytes, int size,
 {
 	int ret;
 
+	V_PRINTF(2, "Bulk Write dev %p, ep 0x%x, bytes %p, size %d, timeout %d\n", 
+			dev, ep, bytes, size, timeout);
+
 	seteuid(0);
 	setegid(0);
 	ret = usb_bulk_write(dev, ep, bytes, size, timeout);
 	seteuid(getuid());
 	setegid(getgid());
+
+	V_PRINTF(2, "Bulk Write returned %d\n", ret);
 
 	return ret;
 }
@@ -224,11 +229,15 @@ int euid_usb_bulk_read(usb_dev_handle *dev, int ep, char *bytes, int size,
 {
 	int ret;
 
+	V_PRINTF(2, "Bulk Read dev %p, ep 0x%x, bytes %p, size %d, timeout %d\n", 
+			dev, ep, bytes, size, timeout);
 	seteuid(0);
 	setegid(0);
 	ret = usb_bulk_read(dev, ep, bytes, size, timeout);
 	seteuid(getuid());
 	setegid(getgid());
+
+	V_PRINTF(2, "Bulk Read returned %d\n", ret);
 
 	return ret;
 }
@@ -2183,6 +2192,10 @@ void do_hostfs(struct HostFsCmd *cmd, int readlen)
 void do_async(struct AsyncCommand *cmd, int readlen)
 {
 	uint8_t *data;
+
+	V_PRINTF(2, "Async Magic: %08X\n", LE32(cmd->magic));
+	V_PRINTF(2, "Async Channel: %08X\n", LE32(cmd->channel));
+	V_PRINTF(2, "Async Extra Len: %d\n", readlen - sizeof(struct AsyncCommand));
 
 	if(readlen > sizeof(struct AsyncCommand))
 	{
