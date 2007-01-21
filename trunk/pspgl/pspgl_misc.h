@@ -147,5 +147,25 @@ extern void __pspgl_assert_fail(const char *expr, const void *retaddr,
 #define assert(x)
 #endif
 
+
+#if 0
+
+#undef malloc
+#undef calloc
+#undef realloc
+#undef free 
+
+#define malloc(size)        __pspgl_calloc(1, size, __FUNCTION__, __LINE__)
+#define calloc(count,size)  __pspgl_calloc(count, size, __FUNCTION__, __LINE__)
+#define realloc(ptr,size)   __pspgl_realloc(ptr, size, __FUNCTION__, __LINE__)
+#define free(ptr)           __pspgl_free(ptr, __FUNCTION__, __LINE__)
+
+extern void* __pspgl_calloc (size_t count, size_t size, const char *function, unsigned int line);
+extern void* __pspgl_realloc (void *ptr, size_t size, const char *function, unsigned int line);
+extern void __pspgl_free (void *ptr, const char *function, unsigned int line);
+
+#endif
+
+
 #endif
 
