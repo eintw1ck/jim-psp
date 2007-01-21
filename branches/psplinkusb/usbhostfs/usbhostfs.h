@@ -356,13 +356,13 @@ struct BulkCommand
 
 #ifndef PC_SIDE
 
-#define MODPRINTF(fmt, ...) Kprintf("%s: " fmt, MODULE_NAME, ## __VA_ARGS__)
-
 #ifdef DEBUG
 #define DEBUG_PRINTF(fmt, ...) Kprintf("%s: " fmt, MODULE_NAME, ## __VA_ARGS__)
 #else
 #define DEBUG_PRINTF(fmt, ...)
 #endif
+
+#define MODPRINTF DEBUG_PRINTF
 
 int32_t usb_connected(void);
 int32_t command_xchg(void *outcmd, int32_t outcmdlen, void *incmd, int32_t incmdlen, const void *outdata, 
