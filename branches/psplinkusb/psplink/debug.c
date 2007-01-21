@@ -300,6 +300,10 @@ int debugSetBP(unsigned int address)
 
 int debugDeleteBp(int i)
 {
+	int intc;
+
+	intc = pspSdkDisableInterrupts();
+
 	if((i >= 0) && (i < MAX_BPS))
 	{
 		if(g_bps[i].active)
@@ -310,6 +314,8 @@ int debugDeleteBp(int i)
 			sceKernelIcacheInvalidateAll();
 		}
 	}
+
+	pspSdkEnableInterrupts(intc);
 
 	return 1;
 }

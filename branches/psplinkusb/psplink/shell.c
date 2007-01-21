@@ -3548,6 +3548,23 @@ static int bpset_cmd(int argc, char **argv, unsigned int *vRet)
 	return ret;
 }
 
+static int bpdel_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	u32 id;
+
+	if(strtoint(argv[0], &id))
+	{
+		debugDeleteBp(id);
+	}
+	else
+	{
+		SHELL_PRINT("Invalid ID for delete\n");
+		return CMD_ERROR;
+	}
+
+	return CMD_OK;
+}
+
 static int bpprint_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	debugPrintBPS();
@@ -3654,7 +3671,7 @@ static int symbyname_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int version_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	SHELL_PRINT("PSPLink Version %s\n", PSPLINK_VERSION);
+	SHELL_PRINT("PSPLink %s\n", PSPLINK_VERSION);
 
 	return CMD_OK;
 }
