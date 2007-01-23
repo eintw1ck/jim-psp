@@ -38,45 +38,9 @@ struct psplink_config
 	void (*handler)(struct ConfigContext *ctx, const char *szVal, unsigned int iVal);
 };
 
-static void config_baud(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	int valid = 0;
-
-	switch(iVal)
-	{
-		case 4800:
-		case 9600:
-		case 19200:
-		case 38400:
-		case 57600:
-		case 115200: valid = 1;
-					 break;
-		default: break;
-	};
-
-	if(valid)
-	{
-		Kprintf("Setting baud to %d\n", iVal);
-		ctx->baudrate = iVal;
-	}
-	else
-	{
-		Kprintf("Invalid baud rate %d\n", iVal);
-		/* Set a default */
-		ctx->baudrate = DEFAULT_BAUDRATE;
-
-	}
-}
-
 static void config_pluser(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
 {
 	ctx->enableuser = iVal;
-}
-
-static void config_prompt(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	strncpy(ctx->cliprompt, szVal, sizeof(ctx->cliprompt)-1);
-	ctx->cliprompt[sizeof(ctx->cliprompt)-1] = 0;
 }
 
 static void config_resetonexit(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
@@ -89,24 +53,16 @@ static void config_disopt(struct ConfigContext *ctx, const char *szVal, unsigned
 	disasmSetOpts(szVal, 1);
 }
 
-static void config_kprintf(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	ctx->kprintf = iVal;
-}
-
 static void config_pid(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
 {
 	ctx->pid = iVal;
 }
 
 struct psplink_config config_names[] = {
-	{ "baud", 1, config_baud },
 	{ "pluser", 1, config_pluser },
-	{ "prompt", 0, config_prompt },
 	{ "resetonexit", 1, config_resetonexit },
 	{ "pid", 1, config_pid },
 	{ "disopt", 0, config_disopt },
-	{ "kprintf", 1, config_kprintf },
 	{ NULL, 0, NULL }
 };
 

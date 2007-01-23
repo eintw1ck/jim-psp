@@ -22,12 +22,8 @@ struct ConfigContext
 {
 	/* Indicates whether to enable the psplink user module */
 	int  enableuser;
-	char cliprompt[128];
 	int  resetonexit;
 	int  pid;
-	int  baudrate;
-	int  usbhost;
-	int  kprintf;
 };
 
 void configLoad(const char *bootpath, struct ConfigContext *ctx);
