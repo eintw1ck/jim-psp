@@ -51,9 +51,4 @@ PSP_EXPORT_FUNC(sceKernelDcacheWritebackInvalidateAll)
 PSP_EXPORT_FUNC(sceKernelIcacheInvalidateAll)
 PSP_EXPORT_END
 
-PSP_EXPORT_START(sdkbridge, 0, 0x4001)
-PSP_EXPORT_FUNC(sceIoAddDrv)
-PSP_EXPORT_FUNC(sceIoDelDrv)
-PSP_EXPORT_END
-
 PSP_END_EXPORTS

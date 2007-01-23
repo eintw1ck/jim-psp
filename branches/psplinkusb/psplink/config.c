@@ -27,7 +27,6 @@
 #include "psplink.h"
 #include "psplinkcnf.h"
 #include "util.h"
-#include "sio.h"
 #include "shell.h"
 #include "disasm.h"
 #include "config.h"

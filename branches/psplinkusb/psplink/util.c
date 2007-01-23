@@ -24,7 +24,6 @@
 #include <usbhostfs.h>
 #include "psplink.h"
 #include "util.h"
-#include "sio.h"
 
 enum UsbStates 
 {
@@ -836,14 +835,13 @@ int psplinkReferModule(SceUID uid, SceKernelModuleInfo *info)
 {
 	int ret;
 	int k1;
-	PspDebugPutChar kp;
 
 	k1 = psplinkSetK1(0);
 
 	memset(info, 0, sizeof(*info));
 	info->size = sizeof(*info);
 
-	kp = sioDisableKprintf();
+	enable_kprintf(0);
 	ret = g_QueryModuleInfo(uid, info);
 	if(ret == 0)
 	{
@@ -853,7 +851,7 @@ int psplinkReferModule(SceUID uid, SceKernelModuleInfo *info)
 	{
 		ret = 0;
 	}
-	sioEnableKprintf(kp);
+	enable_kprintf(1);
 
 	psplinkSetK1(k1);
 
@@ -1153,4 +1151,19 @@ int isdir(const char *path)
 	}
 
 	return 0;
+}
+
+void enable_kprintf(int enable)
+{
+	u32 *pData;
+
+	pData = get_debug_register();
+	if(enable)
+	{
+		*pData |= DEBUG_REG_KPRINTF_ENABLE;
+	}
+	else
+	{
+		*pData &= ~DEBUG_REG_KPRINTF_ENABLE;
+	}
 }

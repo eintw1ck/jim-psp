@@ -20,7 +20,6 @@
 #include "util.h"
 #include "psplink.h"
 #include "debug.h"
-#include "sio.h"
 
 struct PsplinkContext *g_currex = NULL;
 struct PsplinkContext *g_list = NULL;
@@ -214,17 +213,15 @@ void exceptionPrint(int ex)
 		pMod = sceKernelFindModuleByAddress(addr);
 		if(pMod)
 		{
-			PspDebugPutChar kp;
-
 			SHELL_PRINT("Module ID - 0x%08X\n", pMod->modid);
 			memset(&mod, 0, sizeof(mod));
 			mod.size = sizeof(mod);
-			kp = sioDisableKprintf();
+			enable_kprintf(0);
 			if(!g_QueryModuleInfo(pMod->modid, &mod))
 			{
 				SHELL_PRINT("Mod Name  - %s\n", mod.name);
 			}
-			sioEnableKprintf(kp);
+			enable_kprintf(1);
 		}
 
 		SHELL_PRINT("EPC       - 0x%08X\n", ctx->regs.epc);

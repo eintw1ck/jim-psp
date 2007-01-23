@@ -34,7 +34,6 @@
 #include "psplink.h"
 #include "psplinkcnf.h"
 #include "util.h"
-#include "sio.h"
 #include "bitmap.h"
 #include "config.h"
 #include "shell.h"
@@ -1000,10 +999,9 @@ static void print_modcallbacks(SceUID uid, int verbose)
 static int print_modinfo(SceUID uid, int verbose, const char *opts)
 {
 	SceKernelModuleInfo info;
-	PspDebugPutChar kp;
 	int ret;
 
-	kp = sioDisableKprintf();
+	enable_kprintf(0);
 	memset(&info, 0, sizeof(info));
 	info.size = sizeof(info);
 
@@ -1046,7 +1044,7 @@ static int print_modinfo(SceUID uid, int verbose, const char *opts)
 		SHELL_PRINT("Error querying module 0x%08X\n", ret);
 	}
 
-	sioEnableKprintf(kp);
+	enable_kprintf(1);
 
 	return ret;
 }
@@ -4095,12 +4093,10 @@ static void tab_do_uid(int argc, char **argv)
 	int count;
 	int i;
 	int namelen;
-	PspDebugPutChar kp;
-
 	name = &argv[0][1];
 	namelen = strlen(name);
 
-	kp = sioDisableKprintf();
+	enable_kprintf(0);
 	memset(ids, 0, 100 * sizeof(SceUID));
 	ret = g_GetModuleIdList(ids, 100 * sizeof(SceUID), &count);
 	if(ret >= 0)
@@ -4118,7 +4114,7 @@ static void tab_do_uid(int argc, char **argv)
 			}
 		}
 	}
-	sioEnableKprintf(kp);
+	enable_kprintf(1);
 }
 
 static void tab_do_dir(int argc, char **argv)

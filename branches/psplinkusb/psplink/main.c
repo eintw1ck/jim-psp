@@ -28,7 +28,6 @@
 #include "psplinkcnf.h"
 #include "debug.h"
 #include "util.h"
-#include "sio.h"
 #include "shell.h"
 #include "config.h"
 #include "exception.h"
@@ -330,13 +329,6 @@ void initialise(SceSize args, void *argp)
 		sceKernelExitGame();
 	}
 
-	if(ctx.baudrate == 0)
-	{
-		ctx.baudrate = DEFAULT_BAUDRATE;
-	}
-
-	sioInit(ctx.baudrate);
-
 	g_sceUmdActivate = (void*) libsFindExportByNid(refer_module_by_name("sceUmd_driver", NULL), 
 			"sceUmdUser", 0xC6183D47);
 	if(g_sceUmdActivate)
@@ -359,6 +351,7 @@ void initialise(SceSize args, void *argp)
 
 	g_context.resetonexit = ctx.resetonexit;
 
+	enable_kprintf(1);
 	modLoad(g_context.bootpath);
 }
 

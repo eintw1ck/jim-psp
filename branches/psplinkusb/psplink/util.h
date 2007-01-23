@@ -68,6 +68,7 @@ int isdir(const char *path);
 #define DEBUG_REG_THREAD_PROFILER 0x00C00000
 #define DEBUG_REG_PROFILER_MASK   (~DEBUG_REG_THREAD_PROFILER)
 u32 *get_debug_register(void);
+void enable_kprintf(int enable);
 
 #define MODE_GENERIC 0
 #define MODE_EXP 1
