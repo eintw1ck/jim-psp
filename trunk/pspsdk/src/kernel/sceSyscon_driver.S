@@ -183,7 +183,7 @@
 	IMPORT_FUNC	"sceSyscon_driver",0x00E7B6C2,sceSyscon_driver_00E7B6C2
 #endif
 #ifdef F_sceSyscon_driver_0060
-	IMPORT_FUNC	"sceSyscon_driver",0x44439604,sceSyscon_driver_44439604
+	IMPORT_FUNC	"sceSyscon_driver",0x44439604,sceSysconCtrlHRPower
 #endif
 #ifdef F_sceSyscon_driver_0061
 	IMPORT_FUNC	"sceSyscon_driver",0xC8439C57,sceSysconPowerStandby
