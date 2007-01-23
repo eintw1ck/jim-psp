@@ -19,12 +19,26 @@
 #define TYPE_BUTTON_UP   2
 #define TYPE_ANALOG_Y    3
 #define TYPE_ANALOG_X    4
+#define TYPE_SCREEN_CMD  5
+
+#define SCREEN_CMD_OFF   1
+#define SCREEN_CMD_ON    2
+#define SCREEN_CMD_HSIZE 4
 
 struct JoyEvent
 {
 	unsigned int magic;
 	int type;
 	unsigned int value;
+} __attribute__((packed));
+
+struct JoyScrHeader
+{
+	unsigned int magic;
+	int mode; /* 0-3 */
+	unsigned short width;
+	unsigned short height;
+	int pad;
 } __attribute__((packed));
 
 #endif

@@ -31,27 +31,12 @@ static void PutCharDebug(unsigned short *data, unsigned int type)
 	}
 }
 
-int main_thread(SceSize args, void *argp)
+/* Entry point */
+int module_start(SceSize args, void *argp)
 {
 	pspDebugScreenInit();
 	sceKernelRegisterDebugPutchar(PutCharDebug);
 
-	sceKernelSleepThread();
-
-	return 0;
-}
-
-/* Entry point */
-int module_start(SceSize args, void *argp)
-{
-	int thid;
-
-	/* Create a high priority thread */
-	thid = sceKernelCreateThread("UsbKprintf", main_thread, 7, 0x800, 0, NULL);
-	if(thid >= 0)
-	{
-		sceKernelStartThread(thid, args, argp);
-	}
 	return 0;
 }
 

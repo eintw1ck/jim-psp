@@ -25,6 +25,7 @@
 #include <signal.h>
 #include <string.h>
 #include <SDL.h>
+#include <SDL_thread.h>
 #include "../remotejoy.h"
 
 #define DEFAULT_PORT 10004
@@ -32,6 +33,9 @@
 
 #define MAX_AXES_NUM 32767
 #define DIGITAL_TOL   10000
+
+#define PSP_SCREEN_W  480
+#define PSP_SCREEN_H  272
 
 #if defined BUILD_BIGENDIAN || defined _BIG_ENDIAN
 uint16_t swap16(uint16_t i)
@@ -164,6 +168,11 @@ struct GlobalContext
 };
 
 struct GlobalContext g_context;
+
+static unsigned char g_screenbuf1[PSP_SCREEN_W * PSP_SCREEN_H * 4];
+//static unsigned char g_screenbuf2[PSP_SCREEN_W * PSP_SCREEN_H * 4];
+
+//static struct JoyScrHeader g_scrhead1, g_scrhead2;
 
 #define VERBOSE (g_context.args.verbose)
 
@@ -461,13 +470,31 @@ int send_event(int sock, int type, unsigned int value)
 	return 1;
 }
 
+int read_thread(void *p)
+{
+	int *sock = (int *) p;
+	SDL_Event event;
+
+	event.type = SDL_USEREVENT;
+	event.user.code = *sock;
+	event.user.data1 = NULL;
+	event.user.data2 = NULL;
+
+	SDL_PushEvent(&event);
+
+	return 0;
+}
+
 void mainloop(void)
 {
 	SDL_Joystick *stick = NULL;
 	SDL_Surface *screen = NULL;
+	SDL_Surface *buffer = NULL;
+	SDL_Thread *thread = NULL;
 	int sdl_init = 0;
 	int sock = -1;
 	unsigned int button_state = 0;
+	unsigned int color = 0xFF;
 
 	do
 	{
@@ -477,46 +504,55 @@ void mainloop(void)
 			break;
 		}
 
-		screen = SDL_SetVideoMode(400, 200, 32, SDL_SWSURFACE);
+		screen = SDL_SetVideoMode(PSP_SCREEN_W, PSP_SCREEN_H, 32, SDL_SWSURFACE);
 		if(screen == NULL)
 		{
 			break;
 		}
 
-		SDL_WM_SetCaption("RemoteJoySDL - Press any key to exit", NULL);
+		buffer = SDL_CreateRGBSurfaceFrom(g_screenbuf1, PSP_SCREEN_W, PSP_SCREEN_H, 32, PSP_SCREEN_W*4, 0x000000FF, 
+				0x0000FF00, 0x00FF0000, 0xFF00000);
+		if(buffer == NULL)
+		{
+			break;
+		}
+		SDL_WM_SetCaption("RemoteJoySDL - Press any ESC key to exit", NULL);
 
 		sdl_init = 1;
 
-		if(SDL_NumJoysticks() <= 0)
+		if(SDL_NumJoysticks() > 0)
 		{
-			fprintf(stderr, "No joysticks available\n");
-			break;
-		}
+			stick = SDL_JoystickOpen(0);
+			if(!stick)
+			{
+				break;
+			}
 
-		stick = SDL_JoystickOpen(0);
-		if(!stick)
-		{
-			break;
-		}
+			if(!get_joyinfo(stick))
+			{
+				break;
+			}
 
-		if(!get_joyinfo(stick))
-		{
-			break;
-		}
+			if(VERBOSE)
+			{
+				printf("name: %s, axes: %d, buttons: %d\n", g_context.name,
+						g_context.axes, g_context.buttons);
+			}
 
-		if(VERBOSE)
-		{
-			printf("name: %s, axes: %d, buttons: %d\n", g_context.name,
-					g_context.axes, g_context.buttons);
-		}
-
-		if(!build_map(g_context.args.mapfile, g_context.buttons))
-		{
-			break;
+			if(!build_map(g_context.args.mapfile, g_context.buttons))
+			{
+					break;
+			}
 		}
 
 		sock = connect_to(g_context.args.ip, g_context.args.port);
 		if(sock < 0)
+		{
+			break;
+		}
+
+		thread = SDL_CreateThread(read_thread, (void*) &sock);
+		if(thread == NULL)
 		{
 			break;
 		}
@@ -530,9 +566,75 @@ void mainloop(void)
 				break;
 			}
 
-			if((event.type == SDL_KEYDOWN) || (event.type == SDL_QUIT))
+			memset(g_screenbuf1, color, sizeof(g_screenbuf1));
+			color = (color - 1) & 0xFF;
+
+			SDL_BlitSurface(buffer, NULL, screen, NULL);
+			SDL_UpdateRect(screen, 0, 0, 480, 272);
+
+			if(event.type == SDL_USEREVENT)
 			{
-				printf("Key pressed\n");
+			}
+
+			if((event.type == SDL_KEYDOWN) || (event.type == SDL_KEYUP))
+			{
+				unsigned int bitmap;
+				SDL_KeyboardEvent *key = (SDL_KeyboardEvent *) &event;
+
+				if(key->keysym.sym == SDLK_ESCAPE)
+				{
+					break;
+				}
+
+				switch(key->keysym.sym)
+				{
+					case SDLK_LEFT: bitmap = PSP_CTRL_LEFT;
+									break;
+					case SDLK_RIGHT: bitmap = PSP_CTRL_RIGHT;
+									 break;
+					case SDLK_UP: bitmap = PSP_CTRL_UP;
+								  break;
+					case SDLK_DOWN: bitmap = PSP_CTRL_DOWN;
+									break;
+					case SDLK_a: bitmap = PSP_CTRL_SQUARE;
+								 break;
+					case SDLK_s: bitmap = PSP_CTRL_TRIANGLE;
+								 break;
+					case SDLK_z: bitmap = PSP_CTRL_CROSS;
+								 break;
+					case SDLK_x: bitmap = PSP_CTRL_CIRCLE;
+								 break;
+					case SDLK_q: bitmap = PSP_CTRL_LTRIGGER;
+								 break;
+					case SDLK_w: bitmap = PSP_CTRL_RTRIGGER;
+								 break;
+					case SDLK_RETURN: bitmap = PSP_CTRL_START;
+									 break;
+					case SDLK_SPACE: bitmap = PSP_CTRL_SELECT;
+									 break;
+					default: break;
+				};
+
+				if(event.type == SDL_KEYDOWN)
+				{
+					button_state |= bitmap;
+					if(!send_event(sock, TYPE_BUTTON_DOWN, bitmap))
+					{
+						break;
+					}
+				}
+				else
+				{
+					button_state &= ~bitmap;
+					if(!send_event(sock, TYPE_BUTTON_UP, bitmap))
+					{
+						break;
+					}
+				}
+			}
+			   
+			if(event.type == SDL_QUIT)
+			{
 				break;
 			}
 
@@ -693,6 +795,17 @@ void mainloop(void)
 	if(stick)
 	{
 		SDL_JoystickClose(stick);
+	}
+
+	if(buffer)
+	{
+		SDL_FreeSurface(buffer);
+		buffer = NULL;
+	}
+
+	if(thread)
+	{
+		SDL_KillThread(thread);
 	}
 
 	if(sdl_init)

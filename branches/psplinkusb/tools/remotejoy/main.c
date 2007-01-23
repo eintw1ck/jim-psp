@@ -131,6 +131,21 @@ int peek_buffer_negative(SceCtrlData *pad_data, int count)
 	return ret;
 }
 
+void do_screen_cmd(unsigned int value)
+{
+	switch(value)
+	{
+		case SCREEN_CMD_ON:
+			break;
+		case SCREEN_CMD_OFF:
+			break;
+		case SCREEN_CMD_HSIZE:
+			break;
+		default:
+			break;
+	};
+}
+
 int main_thread(SceSize args, void *argp)
 {
 	SceModule *pMod;
@@ -218,6 +233,8 @@ int main_thread(SceSize args, void *argp)
 								break;
 			case TYPE_ANALOG_X: g_currjoy.Lx = joyevent.value;
 								break;
+			case TYPE_SCREEN_CMD: do_screen_cmd(joyevent.value);
+								  break;
 			default: break;
 		};
 		pspSdkEnableInterrupts(intc);
