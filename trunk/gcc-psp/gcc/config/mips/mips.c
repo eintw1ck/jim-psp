@@ -572,12 +572,16 @@ const char *mips_arch_string;   /* for -march=<xxx> */
 const char *mips_tune_string;   /* for -mtune=<xxx> */
 const char *mips_isa_string;	/* for -mips{1,2,3,4} */
 const char *mips_abi_string;	/* for -mabi={32,n32,64,eabi} */
+const char *mips_preferred_stack_boundary_string;
 
 /* Whether we are generating mips16 hard float code.  In mips16 mode
    we always set TARGET_SOFT_FLOAT; this variable is nonzero if
    -msoft-float was not specified by the user, which means that we
    should arrange to call mips32 hard floating point code.  */
 int mips16_hard_float;
+
+unsigned int mips_preferred_stack_boundary;
+unsigned int mips_preferred_stack_align;
 
 const char *mips_cache_flush_func = CACHE_FLUSH_FUNC;
 
@@ -4559,6 +4563,22 @@ override_options (void)
       mips_split_p[SYMBOL_GOTOFF_LOADGP] = true;
       mips_hi_relocs[SYMBOL_GOTOFF_LOADGP] = "%hi(%neg(%gp_rel(";
       mips_lo_relocs[SYMBOL_GOTOFF_LOADGP] = "%lo(%neg(%gp_rel(";
+    }
+
+  /* Validate -mpreferred-stack-boundary= value, or provide default.
+     The default of 128-bit is for newABI else 64-bit.  */
+  mips_preferred_stack_boundary = (TARGET_NEWABI ? 128 : 64);
+  mips_preferred_stack_align = (TARGET_NEWABI ? 16 : 8);
+  if (mips_preferred_stack_boundary_string)
+    {
+      i = atoi (mips_preferred_stack_boundary_string);
+      if (i < 2 || i > 12)
+	error ("-mpreferred-stack-boundary=%d is not between 2 and 12", i);
+      else
+        {
+          mips_preferred_stack_align = (1 << i);
+          mips_preferred_stack_boundary = mips_preferred_stack_align * 8;
+        }
     }
 
   /* Default to working around R4000 errata only if the processor

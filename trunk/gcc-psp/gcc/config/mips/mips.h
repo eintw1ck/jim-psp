@@ -801,6 +801,8 @@ extern const struct mips_cpu_info *mips_tune_info;
       N_("Specify cache flush function"), 0},				\
   { "fix-vr4130", &mips_fix_vr4130_string,				\
       N_("Work around VR4130 mflo/mfhi errata"), 0},			\
+  { "preferred-stack-boundary=", &mips_preferred_stack_boundary_string, \
+      N_("Attempt to keep stack aligned to this power of 2"), 0},       \
 }
 
 /* This is meant to be redefined in the host dependent files.  */
@@ -2184,7 +2186,7 @@ extern enum reg_class mips_char_to_class[256];
    `current_function_outgoing_args_size'.  */
 #define OUTGOING_REG_PARM_STACK_SPACE
 
-#define STACK_BOUNDARY (TARGET_NEWABI ? 128 : 64)
+#define STACK_BOUNDARY (mips_preferred_stack_boundary)
 
 #define RETURN_POPS_ARGS(FUNDECL,FUNTYPE,SIZE) 0
 
@@ -2340,7 +2342,7 @@ typedef struct mips_args {
 /* Treat LOC as a byte offset from the stack pointer and round it up
    to the next fully-aligned offset.  */
 #define MIPS_STACK_ALIGN(LOC) \
-  (TARGET_NEWABI ? ((LOC) + 15) & -16 : ((LOC) + 7) & -8)
+  ((LOC) + (mips_preferred_stack_align - 1) & -(mips_preferred_stack_align))
 
 
 /* Implement `va_start' for varargs and stdarg.  */
@@ -3039,3 +3041,7 @@ while (0)
 	" TEXT_SECTION_ASM_OP);
 #endif
 #endif
+
+extern unsigned int mips_preferred_stack_boundary;
+extern unsigned int mips_preferred_stack_align;
+extern const char *mips_preferred_stack_boundary_string;
