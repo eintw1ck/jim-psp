@@ -50,6 +50,7 @@ SAMPLES = \
 	kernel/messagebox \
 	kernel/registry \
 	kernel/regenum \
+	kernel/systimer \
 	ms/callback \
 	nand/dumpipl \
 	net/simple \

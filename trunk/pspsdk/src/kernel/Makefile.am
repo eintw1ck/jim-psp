@@ -40,6 +40,8 @@ MODULE_OBJS = ModuleMgrForKernel_0000.o ModuleMgrForKernel_0001.o ModuleMgrForKe
 
 IDSTORAGE_OBJS = sceIdStorage_driver_0000.o sceIdStorage_driver_0001.o sceIdStorage_driver_0002.o sceIdStorage_driver_0003.o sceIdStorage_driver_0004.o sceIdStorage_driver_0005.o sceIdStorage_driver_0006.o sceIdStorage_driver_0007.o sceIdStorage_driver_0008.o sceIdStorage_driver_0009.o sceIdStorage_driver_0010.o sceIdStorage_driver_0011.o sceIdStorage_driver_0012.o sceIdStorage_driver_0013.o sceIdStorage_driver_0014.o sceIdStorage_driver_0015.o sceIdStorage_driver_0016.o sceIdStorage_driver_0017.o sceIdStorage_driver_0018.o sceIdStorage_driver_0019.o sceIdStorage_driver_0020.o 
 
+SYSTIMER_OBJS = SysTimerForKernel_0000.o SysTimerForKernel_0001.o SysTimerForKernel_0002.o SysTimerForKernel_0003.o SysTimerForKernel_0004.o SysTimerForKernel_0005.o SysTimerForKernel_0006.o SysTimerForKernel_0007.o SysTimerForKernel_0008.o SysTimerForKernel_0009.o 
+
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
@@ -52,6 +54,7 @@ libpspkernelinclude_HEADERS =	\
 	pspkdebug.h			\
 	pspintrman_kernel.h  \
 	pspmodulemgr_kernel.h \
+	pspsystimer.h		\
 	pspsysmem_kernel.h    \
 	pspthreadman_kernel.h \
 	pspsyscon.h			\
@@ -74,13 +77,14 @@ libpspkernel_a_SOURCES =	\
 	SysclibForKernel.S			\
 	LoadExecForKernel.S		\
 	SysMemForKernel.S 		\
+	SysTimerForKernel.S 	\
 	ModuleMgrForKernel.S	\
 	sceIdStorage_driver.S
 
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
 						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS) \
 						$(THREAD_OBJS) $(SYSCLIB_OBJS) $(LOADEXEC_OBJS) $(SYSMEM_OBJS) $(MODULE_OBJS) \
-						$(IDSTORAGE_OBJS)
+						$(IDSTORAGE_OBJS) $(SYSTIMER_OBJS)
 
 $(EXCEPTION_OBJS): ExceptionManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -125,4 +129,7 @@ $(MODULE_OBJS): ModuleMgrForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(IDSTORAGE_OBJS): sceIdStorage_driver.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(SYSTIMER_OBJS): SysTimerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
