@@ -33,7 +33,6 @@
 #include "exception.h"
 #include "apihook.h"
 #include "tty.h"
-#include "disasm.h"
 #include "symbols.h"
 #include "libs.h"
 #include "modload.h"
@@ -303,7 +302,7 @@ void initialise(SceSize args, void *argp)
 	g_context.thevent = -1;
 	parse_sceargs(args, argp);
 	configLoad(g_context.bootpath, &ctx);
-	disasmSetSymResolver(symbolFindNameByAddressEx);
+	//disasmSetSymResolver(symbolFindNameByAddressEx);
 
 	if(ctx.pid)
 	{
@@ -351,6 +350,7 @@ void initialise(SceSize args, void *argp)
 
 	g_context.resetonexit = ctx.resetonexit;
 
+	sceKernelRegisterDebugPutchar(NULL);
 	enable_kprintf(1);
 	modLoad(g_context.bootpath);
 }
