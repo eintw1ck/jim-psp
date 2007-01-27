@@ -12,6 +12,7 @@
 
 #include <pspkernel.h>
 #include <pspdebug.h>
+#include <pspsyscon.h>
 
 /* Define some important parameters, not really sure on names. Probably doesn't matter */
 #define PSP_UART4_FIFO 0xBE500000
@@ -28,7 +29,6 @@ static int g_enablekprintf = 0;
 /* Some function prototypes we will need */
 int sceHprmEnd(void);
 int sceSysregUartIoEnable(int uart);
-int sceSyscon_driver_44439604(int power);
 extern u32 sceKernelRemoveByDebugSection;
 
 void pspDebugSioPutchar(int ch)
@@ -123,7 +123,7 @@ void pspDebugSioInit(void)
 	/* Enable UART 4 */
 	sceSysregUartIoEnable(4);
 	/* Enable remote control power */
-	sceSyscon_driver_44439604(1);
+	sceSysconCtrlHRPower(1);
 	/* Delay thread for a but */
 	sceKernelDelayThread(2000000);
 }

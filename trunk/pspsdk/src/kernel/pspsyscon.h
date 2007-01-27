@@ -49,6 +49,15 @@ void sceSysconResetDevice(int unk1, int unk2);
  */
 int sceSysconCtrlLED(int SceLED, int state);
 
+/**
+ * Control the remote control power
+ *
+ * @param power - 1 is on, 0 is off
+ * 
+ * @return < 0 on error
+ */
+int sceSysconCtrlHRPower(int power);
+
 /*@}*/
 
 #ifdef __cplusplus
