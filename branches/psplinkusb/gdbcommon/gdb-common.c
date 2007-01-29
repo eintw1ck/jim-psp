@@ -28,7 +28,6 @@ int GdbTrapEntry(struct PsplinkContext *ctx)
 	SceKernelThreadInfo info;
 	struct ExceptionMsg msg;
 	u32 bits;
-	//int intc;
 
 	memset(&msg, 0, sizeof(msg));
 	memset(&info, 0, sizeof(info));
@@ -69,7 +68,6 @@ void GdbMain(void)
 {
 	int firstrun = 1;
 	u32 bits;
-	//struct ExceptionMsg *msg;
 
 	while(1)
 	{

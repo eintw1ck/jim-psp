@@ -704,6 +704,7 @@ static void handle_query(char *str)
 	};
 }
 
+#if _PSP_FW_VERSION == 150
 void handle_hwbp(char *str, int set)
 {
 	char *ptr;
@@ -817,6 +818,7 @@ void handle_hwbp(char *str, int set)
 		strcpy(output,"E01");
 	}
 }
+#endif
 
 int GdbHandleException (struct PsplinkContext *ctx)
 {
@@ -1008,11 +1010,13 @@ int GdbHandleException (struct PsplinkContext *ctx)
 		case 'q': handle_query(&input[1]);
 				  break;
 
+#if _PSP_FW_VERSION == 150
 		case 'Z': handle_hwbp(&input[1], 1);
 				  break;
 
 		case 'z': handle_hwbp(&input[1], 0);
 				  break;
+#endif
 
 		/*
 		 * kill the program; let us try to restart the machine

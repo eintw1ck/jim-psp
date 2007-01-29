@@ -58,6 +58,7 @@ int psplinkReferModule(SceUID uid, SceKernelModuleInfo *info);
 int isInit(void);
 int putDebugChar(unsigned char ch);
 int getDebugChar(unsigned char *ch);
+int peekDebugChar(unsigned char *ch);
 int  writeDebugData(void *data, int len);
 void start_server(void);
 void stop_server(void);

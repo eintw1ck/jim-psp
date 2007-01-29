@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 		char *ext;
 
 		/* Only support on 1.5 for now as we know that works */
-		if(sceKernelDevkitVersion() == 0x01050001)
+#if _PSP_FW_VERSION == 150
 		{
 			struct DebugEnv env;
 			
@@ -69,6 +69,7 @@ int main(int argc, char **argv)
 			debugSetEnv(&env);
 			g_context.hw = 1;
 		}
+#endif
 
 		ext = strrchr(argv[1], '.');
 		if(ext)
