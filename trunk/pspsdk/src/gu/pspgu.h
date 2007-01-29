@@ -1311,9 +1311,22 @@ void sceGuViewport(int cx, int cy, int width, int height);
 **/
 void sceGuDrawBezier(int vtype, int ucount, int vcount, const void* indices, const void* vertices);
 
-void sceGuPatchDivide(unsigned int a0, unsigned int a1);
+/**
+  * Set dividing for patches (beziers and splines)
+  *
+  * @param ulevel - Number of division on u direction
+  * @param vlevel - Number of division on v direction
+**/
+void sceGuPatchDivide(unsigned int ulevel, unsigned int vlevel);
+
 void sceGuPatchFrontFace(unsigned int a0);
-void sceGuPatchPrim(unsigned int a0);
+
+/**
+  * Set primitive for patches (beziers and splines)
+  *
+  * @param prim - Desired primitive type (GU_POINTS | GU_LINE_STRIP | GU_TRIANGLE_STRIP)
+**/
+void sceGuPatchPrim(int prim);
 
 void sceGuDrawSpline(int vtype, int ucount, int vcount, int uedge, int vedge, const void* indices, const void* vertices);
 
