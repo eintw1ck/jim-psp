@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2006 James F <tyranid@gmail.com>
  *
- * $HeadURL$
- * $Id$
+ * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/psplink/disasm.h $
+ * $Id: disasm.h 2021 2006-10-12 22:22:21Z tyranid $
  */
 #ifndef __DISASM_H__
 #define __DISASM_H__

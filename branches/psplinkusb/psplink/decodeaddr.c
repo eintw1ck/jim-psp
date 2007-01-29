@@ -21,7 +21,7 @@
 #include "decodeaddr.h"
 #include "exception.h"
 #include "util.h"
-#include "symbols.h"
+//#include "symbols.h"
 #include "libs.h"
 
 /* Indicates that memory protection is on */
@@ -421,6 +421,7 @@ static int parse_line(char *line, unsigned int *val)
 		}
 		else if(*line == '?') /* Symbol name */
 		{
+#if 0
 			char *endp;
 			int getsize = 0;
 			unsigned int size;
@@ -454,6 +455,7 @@ static int parse_line(char *line, unsigned int *val)
 			}
 
 			line = endp+1;
+#endif
 		}
 		else if(*line == '(')
 		{

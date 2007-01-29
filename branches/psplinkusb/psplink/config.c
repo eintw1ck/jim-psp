@@ -28,7 +28,6 @@
 #include "psplinkcnf.h"
 #include "util.h"
 #include "shell.h"
-#include "disasm.h"
 #include "config.h"
 
 struct psplink_config
@@ -48,10 +47,12 @@ static void config_resetonexit(struct ConfigContext *ctx, const char *szVal, uns
 	ctx->resetonexit = iVal;
 }
 
+/*
 static void config_disopt(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
 {
 	disasmSetOpts(szVal, 1);
 }
+*/
 
 static void config_pid(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
 {
@@ -62,7 +63,7 @@ struct psplink_config config_names[] = {
 	{ "pluser", 1, config_pluser },
 	{ "resetonexit", 1, config_resetonexit },
 	{ "pid", 1, config_pid },
-	{ "disopt", 0, config_disopt },
+//	{ "disopt", 0, config_disopt },
 	{ NULL, 0, NULL }
 };
 

@@ -41,10 +41,9 @@
 #include "exception.h"
 #include "decodeaddr.h"
 #include "debug.h"
-#include "symbols.h"
+//#include "symbols.h"
 #include "libs.h"
 #include "thctx.h"
-#include "disasm.h"
 #include "apihook.h"
 #include "tty.h"
 #include "shellcmd.h"
@@ -54,9 +53,6 @@
 #define MAX_CLI            4096
 
 extern struct GlobalContext g_context;
-
-/* Indicates we are in tty mode */
-static int g_ttymode = 0;
 
 #define COMMAND_EVENT_DONE 1
 
@@ -1723,7 +1719,7 @@ static int list_dir(const char *name)
 			int ploop;
 			p = buffer;
 
-			if(dir.d_stat.st_attr & FIO_SO_IFDIR)
+			if(FIO_SO_ISDIR(dir.d_stat.st_attr) || FIO_S_ISDIR(dir.d_stat.st_mode))
 			{
 				*p++ = 'd';
 			}
@@ -3101,7 +3097,8 @@ static int disasm_cmd(int argc, char **argv, unsigned int *vRet)
 
 		for(i = 0; i < count; i++)
 		{
-			SHELL_PRINT("%s\n", disasmInstruction(_lw(addr), addr, NULL, NULL));
+			//SHELL_PRINT("%s\n", disasmInstruction(_lw(addr), addr, NULL, NULL));
+			SHELL_PRINT_CMD(SHELL_CMD_DISASM, "0x%08X:0x%08X", addr, _lw(addr));
 			addr += 4;
 		}
 	}
@@ -3123,27 +3120,6 @@ static int memprot_cmd(int argc, char **argv, unsigned int *vRet)
 	{
 		return CMD_ERROR;
 	}
-
-	return CMD_OK;
-}
-
-static int disset_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	disasmSetOpts(argv[0], 1);
-
-	return CMD_OK;
-}
-
-static int disclear_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	disasmSetOpts(argv[0], 0);
-
-	return CMD_OK;
-}
-
-static int disopts_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	disasmPrintOpts();
 
 	return CMD_OK;
 }
@@ -3586,6 +3562,7 @@ static int skip_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int symload_cmd(int argc, char **argv, unsigned int *vRet)
 {
+	/*
 	char source[MAXPATHLEN];
 
 	if( !handlepath(g_context.currdir, argv[0], source, TYPE_FILE, 1) )
@@ -3598,25 +3575,27 @@ static int symload_cmd(int argc, char **argv, unsigned int *vRet)
 		return CMD_ERROR;
 	}
 
+	*/
 	return CMD_OK;
 }
 
 static int symlist_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	symbolPrintLoadList();
+	//symbolPrintLoadList();
 
 	return CMD_OK;
 }
 
 static int symprint_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	symbolPrintSymbols(argv[0]);
+	//symbolPrintSymbols(argv[0]);
 
 	return CMD_OK;
 }
 
 static int symbyaddr_cmd(int argc, char **argv, unsigned int *vRet)
 {
+	/*
 	u32 addr;
 	int ret = CMD_ERROR;
 
@@ -3644,12 +3623,15 @@ static int symbyaddr_cmd(int argc, char **argv, unsigned int *vRet)
 			SHELL_PRINT("Error could not find symbol at address 0x%08X\n", addr);
 		}
 	}
+	*/
 
-	return ret;
+	//return ret;
+	return CMD_OK;
 }
 
 static int symbyname_cmd(int argc, char **argv, unsigned int *vRet)
 {
+	/*
 	u32 addr;
 	u32 size;
 
@@ -3663,6 +3645,7 @@ static int symbyname_cmd(int argc, char **argv, unsigned int *vRet)
 		SHELL_PRINT("Could not find symbol %s\n", argv[0]);
 		return CMD_ERROR;
 	}
+	*/
 
 	return CMD_OK;
 }
@@ -4009,12 +3992,6 @@ static int irel_cmd(int argc, char **argv, unsigned int *vRet)
 	return CMD_OK;
 }
 
-static int tty_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	g_ttymode = 1;
-	return CMD_OK;
-}
-
 static int tonid_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SHELL_PRINT("Name: %s, Nid: 0x%08X\n", argv[0], libsNameToNid(argv[0]));
@@ -4158,7 +4135,7 @@ static void tab_do_dir(int argc, char **argv)
 				{
 					if(strncmp(entry.d_name, name, namelen) == 0)
 					{
-						if(entry.d_stat.st_attr & FIO_SO_IFDIR)
+						if(FIO_SO_ISDIR(entry.d_stat.st_attr) || FIO_S_ISDIR(entry.d_stat.st_mode))
 						{
 							SHELL_PRINT_CMD(SHELL_CMD_TAB, "%s/", entry.d_name);
 						}

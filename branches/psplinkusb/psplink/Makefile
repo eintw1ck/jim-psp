@@ -1,5 +1,5 @@
 TARGET = psplink
-OBJS = main.o shell.o config.o bitmap.o tty.o disasm.o decodeaddr.o memoryUID.o kmode.o exception.o psplinkcnf.o util.o debug.o symbols.o libs.o apihook.o thctx.o stdio.o usbshell.o modload.o  exports.o
+OBJS = main.o shell.o config.o bitmap.o tty.o decodeaddr.o memoryUID.o kmode.o exception.o psplinkcnf.o util.o debug.o libs.o apihook.o thctx.o stdio.o usbshell.o modload.o  exports.o
 
 # Use the kernel's small inbuilt libc
 USE_KERNEL_LIBC = 1
@@ -20,4 +20,4 @@ LIBS = -lpspusb_driver -lpspusbstor -lpspumd -lusbhostfs_driver
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build_prx.mak
 
-LIBS += -lpsphprm_driver -lpsppower_driver -lpspdisplay_driver
+LIBS += -lpsppower_driver -lpspdisplay_driver

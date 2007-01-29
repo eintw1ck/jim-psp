@@ -10,8 +10,8 @@
  * $HeadURL$
  * $Id$
  */
-#ifndef __DISASM_H__
-#define __DISASM_H__
+#ifndef __ASM_H__
+#define __ASM_H__
 
 int asmAssemble(const char *str, unsigned int PC, unsigned int *inst);
 

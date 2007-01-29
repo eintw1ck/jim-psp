@@ -110,7 +110,7 @@ struct Instruction
 #define ADDR_TYPE_26   2
 #define ADDR_TYPE_REG  3
 
-static const char *regName[32] =
+const char *regName[32] =
 {
     "zr", "at", "v0", "v1", "a0", "a1", "a2", "a3",
     "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", 

@@ -1144,7 +1144,7 @@ int isdir(const char *path)
 
 	if(sceIoGetstat(localpath, &stat) == 0)
 	{
-		if(stat.st_attr & FIO_SO_IFDIR)
+		if(FIO_SO_ISDIR(stat.st_attr) || FIO_S_ISDIR(stat.st_mode))
 		{
 			return 1;
 		}

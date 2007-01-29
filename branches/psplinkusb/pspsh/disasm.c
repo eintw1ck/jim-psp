@@ -7,12 +7,11 @@
  *
  * Copyright (c) 2006 James F <tyranid@gmail.com>
  *
- * $HeadURL$
- * $Id$
+ * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/psplink/disasm.c $
+ * $Id: disasm.c 2102 2006-12-16 17:47:51Z tyranid $
  */
 #include <stdio.h>
 #include <string.h>
-#include "psplink.h"
 #include "disasm.h"
 
 /* Format codes
@@ -75,7 +74,7 @@ struct Instruction
 	const char *fmt;
 };
 
-struct Instruction macro[] = 
+static struct Instruction macro[] = 
 {
 	/* Macro instructions */
 	{ "nop",		0x00000000, 0xFFFFFFFF, "" 			},
@@ -94,7 +93,7 @@ struct Instruction macro[] =
 	{ "jalr",		0x0000F809, 0xFC1FFFFF,	"%J"},
 };
 
-struct Instruction inst[] = 
+static struct Instruction inst[] = 
 {
 	/* MIPS instructions */
 	{ "add",		0x00000020, 0xFC0007FF, "%d, %s, %t"},
@@ -613,7 +612,7 @@ void disasmSetOpts(const char *opts, int set)
 		}
 		if(i == DISASM_OPT_MAX)
 		{
-			SHELL_PRINT("Unknown disassembler option '%c'\n", ch);
+			printf("Unknown disassembler option '%c'\n", ch);
 		}
 	}
 }
@@ -622,10 +621,10 @@ void disasmPrintOpts(void)
 {
 	int i;
 
-	SHELL_PRINT("Disassembler Options:\n");
+	printf("Disassembler Options:\n");
 	for(i = 0; i < DISASM_OPT_MAX; i++)
 	{
-		SHELL_PRINT("%c : %-3s - %s \n", g_disopts[i].opt, *g_disopts[i].value ? "on" : "off", 
+		printf("%c : %-3s - %s \n", g_disopts[i].opt, *g_disopts[i].value ? "on" : "off", 
 				g_disopts[i].name);
 	}
 }

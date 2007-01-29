@@ -21,6 +21,7 @@
 #define SHELL_CMD_CWD 		0xFB
 #define SHELL_CMD_TAB		0xFA
 #define SHELL_CMD_LASTMOD   0xF9
+#define SHELL_CMD_DISASM    0xF8
 
 #ifdef _PCTERM
 /* Structure to hold a single command entry */
@@ -201,9 +202,9 @@ struct sh_command
 	SHELL_CMD("icache",  "ic", icache_cmd, 0, "Invalidate the instruction cache", "", "[addr size]") \
 	SHELL_CMD("disasm",  "di", disasm_cmd, 1, "Disassemble instructions", "", "address [count]") \
 	SHELL_CMD_PCTERM("asm", NULL, asm_cmd, 1, "Assemble instructions to a memory address", "", "addr [inst]") \
-	SHELL_CMD("disopts", NULL, disopts_cmd, 0, "Print the current disassembler options", "", "") \
-	SHELL_CMD("disset", NULL, disset_cmd, 1, "Set some disassembler options", "", "options") \
-	SHELL_CMD("disclear", NULL, disclear_cmd, 1, "Clear some disassembler options", "", "options") \
+	SHELL_CMD_PCTERM("disopts", NULL, disopts_cmd, 0, "Print the current disassembler options", "", "") \
+	SHELL_CMD_PCTERM("disset", NULL, disset_cmd, 1, "Set some disassembler options", "", "options") \
+	SHELL_CMD_PCTERM("disclear", NULL, disclear_cmd, 1, "Clear some disassembler options", "", "options") \
 	SHELL_CMD("memprot", NULL, memprot_cmd, 1, "Set memory protection on or off", "", "on|off") \
 	 \
 	SHELL_CAT("fileio", "Commands to handle file io") \
@@ -263,7 +264,9 @@ struct sh_command
 	SHELL_CMD("power", NULL, power_cmd, 0, "Print power information", "", "") \
 	SHELL_CMD("poweroff", NULL, poweroff_cmd, 0, "Power off the PSP", "", "") \
 	SHELL_CMD("clock", NULL, clock_cmd, 3, "Set the clock frequencies", "", "cpu ram bus") \
-	SHELL_CMD("tty", NULL, tty_cmd, 0, "Enter TTY mode. All input goes to stdin", "", "") \
+	SHELL_CMD_PCTERM("tty", NULL, tty_cmd, 0, "Enter TTY mode.", \
+			"In this mode all input goes to stdin on the PSP.\nTo exit tty mode type ~. at " \
+			"the start of the line.", "") \
 	SHELL_CMD("tonid", NULL, tonid_cmd, 1, "Calculate the NID from a name", "", "name") \
 	SHELL_CMD("profmode", NULL, profmode_cmd, 0, "Set or display the current profiler mode", "", "[t|g|o]") \
 	SHELL_CMD("debugreg", NULL, debugreg_cmd, 0, "Set or display the current debug register", "", "[val]") \

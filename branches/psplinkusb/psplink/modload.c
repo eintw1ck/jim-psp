@@ -34,6 +34,7 @@ void modLoad(const char *bootpath)
 
 	strcpy(ini_path, bootpath);
 	strcat(ini_path, "modload.ini");
+
 	if(openfile(ini_path, &fmod))
 	{
 		while(fdgets(&fmod, buf, sizeof(buf)))

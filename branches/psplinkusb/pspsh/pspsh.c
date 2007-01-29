@@ -27,6 +27,7 @@
 #include <shellcmd.h>
 #include "parse_args.h"
 #include "pspkerror.h"
+#include "disasm.h"
 #include "asm.h"
 
 #ifndef SOL_TCP
@@ -74,6 +75,7 @@ struct GlobalContext
 	FILE *fstderr;
 	int asmmode;
 	unsigned int asmaddr;
+	int ttymode;
 };
 
 struct GlobalContext g_context;
@@ -91,6 +93,10 @@ int unset_cmd(int argc, char **argv);
 int echo_cmd(int argc, char **argv);
 int error_cmd(int argc, char **argv);
 int strlen_cmd(int argc, char **argv);
+int disset_cmd(int argc, char **argv);
+int disclear_cmd(int argc, char **argv);
+int disopts_cmd(int argc, char **argv);
+int tty_cmd(int argc, char **argv);
 void cli_handler(char *buf);
 struct TabEntry* read_tab_completion(void);
 struct TabEntry
@@ -435,6 +441,36 @@ int strlen_cmd(int argc, char **argv)
 	return 0;
 }
 
+int disset_cmd(int argc, char **argv)
+{
+	disasmSetOpts(argv[0], 1);
+
+	return 0;
+}
+
+int disclear_cmd(int argc, char **argv)
+{
+	disasmSetOpts(argv[0], 0);
+
+	return 0;
+}
+
+int disopts_cmd(int argc, char **argv)
+{
+	disasmPrintOpts();
+
+	return 0;
+}
+
+int tty_cmd(int argc, char **argv)
+{
+	g_context.ttymode = 1;
+	rl_callback_handler_remove();
+	rl_callback_handler_install("", cli_handler);
+
+	return 0;
+}
+
 int execute_script(const char *cmd)
 {
 	char args[4096];
@@ -516,6 +552,28 @@ void cli_handler(char *buf)
 {
 	if(buf)
 	{
+		if(g_context.ttymode)
+		{
+			if(strncmp(buf, "~.", 2) == 0)
+			{
+				char prompt[PATH_MAX];
+
+				g_context.ttymode = 0;
+				rl_callback_handler_remove();
+				snprintf(prompt, PATH_MAX, "%s> ", g_context.currpath);
+				rl_callback_handler_install(prompt, cli_handler);
+			}
+			else if(g_context.outsock >= 0)
+			{
+				char b[1024];
+
+				snprintf(b, sizeof(b), "%s\n", buf);
+				write(g_context.outsock, b, strlen(b));
+			}
+
+			return;
+		}
+
 		while(isspace(*buf))
 		{
 			buf++;
@@ -1374,6 +1432,7 @@ int process_cmd(const unsigned char *str)
 				else
 				{
 					snprintf(prompt, PATH_MAX, "%s> ", g_context.currpath);
+					g_context.ttymode = 0;
 				}
 				rl_callback_handler_install(prompt, cli_handler);
 			}
@@ -1381,6 +1440,24 @@ int process_cmd(const unsigned char *str)
 		else if(*str == SHELL_CMD_TAB)
 		{
 			fprintf(stderr, "Mismatched Tab Match: %s\n", str+1);
+		}
+		else if(*str == SHELL_CMD_DISASM)
+		{
+			unsigned int addr;
+			unsigned int opcode;
+			char *endp;
+
+			str++;
+			addr = strtoul((char*) str, &endp, 16);
+			if(*endp != ':')
+			{
+				fprintf(stderr, "Invalid disasm command %s\n", str);
+			}
+			else
+			{
+				opcode = strtoul(endp+1, NULL, 16);
+				printf("%s\n", disasmInstruction(opcode, addr, NULL, NULL));
+			}
 		}
 	}
 
@@ -1464,6 +1541,7 @@ int read_outsocket(int sock)
 	buf[len] = 0;
 
 	fprintf(g_context.fstdout, "%s", buf);
+	fflush(g_context.fstdout);
 
 	return len;
 }
@@ -1489,6 +1567,7 @@ int read_errsocket(int sock)
 	buf[len] = 0;
 
 	fprintf(g_context.fstderr, "%s", buf);
+	fflush(g_context.fstderr);
 
 	return len;
 }

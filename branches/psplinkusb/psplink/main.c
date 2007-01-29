@@ -22,6 +22,7 @@
 #include <psputilsforkernel.h>
 #include <pspsysmem_kernel.h>
 #include <pspthreadman_kernel.h>
+#include <psploadexec_kernel.h>
 #include <usbhostfs.h>
 #include "memoryUID.h"
 #include "psplink.h"
@@ -33,7 +34,6 @@
 #include "exception.h"
 #include "apihook.h"
 #include "tty.h"
-#include "symbols.h"
 #include "libs.h"
 #include "modload.h"
 #include "decodeaddr.h"
@@ -157,22 +157,6 @@ void psplinkStop(void)
 		sceKernelReleaseThreadEventHandler(g_context.thevent);
 	}
 }
-
-struct SceKernelLoadExecVSHParam 
-{ 
-	SceSize size; 
-	SceSize args; 
-	void * argp; 
-	const char * key; 
-	u32 vshmain_args_size; 
-	void *vshmain_args; 
-	u32 unk3; 
-	u32 unk4; 
-	u32 unk5; 
-}; 
-
-int sceKernelLoadExecVSHMs2(const char *, struct SceKernelLoadExecVSHParam *params);
-int sceKernelExitVSHVSH(struct SceKernelLoadExecVSHParam *params);
 
 void psplinkReset(void)
 {
@@ -302,7 +286,6 @@ void initialise(SceSize args, void *argp)
 	g_context.thevent = -1;
 	parse_sceargs(args, argp);
 	configLoad(g_context.bootpath, &ctx);
-	//disasmSetSymResolver(symbolFindNameByAddressEx);
 
 	if(ctx.pid)
 	{

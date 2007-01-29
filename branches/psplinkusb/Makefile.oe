@@ -8,7 +8,7 @@ all:
 	$(MAKE) -C gdbcommon all PSP_FW_VERSION=271
 	$(MAKE) -C usbhostfs all PSP_FW_VERSION=271
 	$(MAKE) -C usbgdb    all PSP_FW_VERSION=271
-	$(MAKE) -C boot271   all PSP_FW_VERSION=271
+	$(MAKE) -C boot271   release PSP_FW_VERSION=271
 
 release: clean all
 	mkdir -p release_oe/

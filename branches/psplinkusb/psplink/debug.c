@@ -20,7 +20,7 @@
 #include "exception.h"
 #include "util.h"
 #include "psplink.h"
-#include "disasm.h"
+#include "shellcmd.h"
 #include "debug.h"
 #include "decodeaddr.h"
 #include "thctx.h"
@@ -359,7 +359,7 @@ int debugHandleException(PsplinkRegBlock *pRegs)
 	unsigned int address;
 	struct BreakPoint *pBp;
 	int ret = 0;
-	unsigned int regmask;
+	//unsigned int regmask;
 
 	address = pRegs->epc;
 
@@ -387,18 +387,21 @@ int debugHandleException(PsplinkRegBlock *pRegs)
 
 		sceKernelDcacheWritebackInvalidateAll();
 		sceKernelIcacheInvalidateAll();
-		SHELL_PRINT("%s\n", disasmInstruction(_lw(address), address, &pRegs->r[0], &regmask));
-		if(regmask)
-		{
-			int i;
-			for(i = 1; i < 32; i++)
-			{
-				if(regmask & (1 << i))
-				{
-					SHELL_PRINT("$%s = 0x%08X\n", regName[i], pRegs->r[i]);
-				}
-			}
-		}
+
+		SHELL_PRINT_CMD(SHELL_CMD_DISASM, "0x%08X:0x%08X", address, _lw(address));
+
+		//SHELL_PRINT("%s\n", disasmInstruction(_lw(address), address, &pRegs->r[0], &regmask));
+		//if(regmask)
+		//{
+		//	int i;
+		//	for(i = 1; i < 32; i++)
+		//	{
+		//		if(regmask & (1 << i))
+		//		{
+		//			SHELL_PRINT("$%s = 0x%08X\n", regName[i], pRegs->r[i]);
+		//		}
+		//	}
+		//}
 
 		ret = 1;
 	}
