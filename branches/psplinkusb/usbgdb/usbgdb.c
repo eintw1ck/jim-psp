@@ -48,6 +48,23 @@ int getDebugChar(unsigned char *ch)
 	return ret;
 }
 
+int peekDebugChar(unsigned char *ch)
+{
+	int ret = 0;
+	int intc;
+
+	*ch = 0;
+	intc = pspSdkDisableInterrupts();
+	if(g_endp.size > 0)
+	{
+		*ch = g_endp.buffer[g_endp.read_pos];
+		ret = 1;
+	}
+	pspSdkEnableInterrupts(intc);
+
+	return ret;
+}
+
 int writeDebugData(void *data, int len)
 {
 	return usbAsyncWrite(ASYNC_GDB, data, len);
