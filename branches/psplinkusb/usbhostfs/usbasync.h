@@ -68,7 +68,7 @@ int     usbAsyncUnregister(unsigned int chan);
 int     usbAsyncWrite(unsigned int chan, const void *data, int len);
 
 /**
-  * Write data to the specified async channel
+  * Read data from the specified async channel
   * 
   * @param chan - The channel to read from
   * @param data - The data block to read into
@@ -79,10 +79,37 @@ int     usbAsyncWrite(unsigned int chan, const void *data, int len);
 int     usbAsyncRead(unsigned int chan, unsigned char *data, int len);
 
 /**
+  * Read data from the specified async channel with a timeout
+  * 
+  * @param chan - The channel to read from
+  * @param data - The data block to read into
+  * @param len -  The length of the data to read
+  * @param timeout - The timeout, if < 0 then dont timeout, otherwise number
+  * of microseconds
+  * 
+  * @return The number of bytes read, < 0 on error
+  */
+int     usbAsyncReadWithTimeout(unsigned int chan, unsigned char *data, int len, int timeout);
+
+/**
   * Flush the read buffer of an async channel
   * 
   * @param chan - The channel to flush
   */
 void    usbAsyncFlush(unsigned int chan);
+
+/**
+ * Lock the USB bus (normally to ensure no threads are using it)
+ *
+ * @return < 0 on error
+ */
+int 	usbLockBus(void);
+
+/**
+ * Unlock the USB bus 
+ *
+ * @return < 0 on error
+ */
+int 	usbUnlockBus(void);
 
 #endif

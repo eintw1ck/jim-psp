@@ -539,6 +539,30 @@ int command_xchg(void *outcmd, int outcmdlen, void *incmd, int incmdlen, const v
 	return ret;
 }
 
+int usbLockBus(void)
+{
+	int k1;
+	int err;
+
+	k1 = psplinkSetK1(0);
+	err = sceKernelWaitSema(g_mainsema, 1, NULL);
+	psplinkSetK1(k1);
+
+	return err;
+}
+
+int usbUnlockBus(void)
+{
+	int k1;
+	int err;
+
+	k1 = psplinkSetK1(0);
+	err = sceKernelSignalSema(g_mainsema, 1);
+	psplinkSetK1(k1);
+
+	return err;
+}
+
 /* Send an async write */
 int send_async(void *data, int len)
 {
@@ -737,7 +761,7 @@ int usbAsyncUnregister(unsigned int chan)
 	return ret;
 }
 
-int usbAsyncReadWithTimeout(unsigned int chan, unsigned char *data, int len, SceUInt timeout)
+int usbAsyncReadWithTimeout(unsigned int chan, unsigned char *data, int len, int timeout)
 {
 	int ret;
 	int intc;
@@ -754,7 +778,7 @@ int usbAsyncReadWithTimeout(unsigned int chan, unsigned char *data, int len, Sce
 
 	if(timeout >= 0)
 	{
-		pTimeout = &timeout;
+		pTimeout = (SceUInt*) &timeout;
 	}
 
 	ret = sceKernelWaitEventFlag(g_asyncevent, 1 << chan, PSP_EVENT_WAITOR | PSP_EVENT_WAITCLEAR, NULL, pTimeout);
