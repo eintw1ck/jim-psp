@@ -33,6 +33,8 @@ release: all
 	cp -R release/v1.5/psplink release/v1.5_nocorrupt/__SCE__psplink
 	cp -R release/v1.5/psplink% release/v1.5_nocorrupt/%__SCE__psplink
 	cp -Rf pspsh release/pc
+	mkdir release/pc/psplink
+	cp psplink/shellcmd.h release/pc/psplink
 	cp -Rf usbhostfs_pc release/pc
 	cp -Rf windows release/pc
 	cp usbhostfs/usbhostfs.h release/pc/usbhostfs_pc

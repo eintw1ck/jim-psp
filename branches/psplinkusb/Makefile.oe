@@ -22,6 +22,8 @@ release: clean all
 	cp usbgdb/usbgdb.prx release_oe/psplink
 	cp boot271/EBOOT.PBP release_oe/psplink
 	cp -Rf pspsh release_oe/pc
+	mkdir release_oe/pc/psplink
+	cp psplink/shellcmd.h release_oe/pc/psplink
 	cp -Rf usbhostfs_pc release_oe/pc
 	cp -Rf windows release_oe/pc
 	cp usbhostfs/usbhostfs.h release_oe/pc/usbhostfs_pc

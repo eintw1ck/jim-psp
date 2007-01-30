@@ -190,6 +190,8 @@ void psplinkReset(void)
 		SHELL_PRINT("Resetting psplink\n");
 		psplinkStop();
 
+		sceKernelSuspendAllUserThreads();
+
 		sceKernelLoadExecVSHMs2(g_context.bootfile, &param);
 	}
 #else
