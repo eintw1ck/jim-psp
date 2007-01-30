@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * psploadcore.h - Interface to LoadCoreForKernel.
+ * psploadexec_kernel.h - Interface to LoadExecForKernel.
  *
  * Copyright (c) 2007 - DA (Taken from the 303oe SDK)
  *
@@ -48,6 +48,7 @@ struct SceKernelLoadExecVSHParam {
     u32 unk5;
 }; 
 
+#if _PSP_FW_VERSION < 200
 /**
  * Executes a new executable from a buffer.
  *
@@ -58,6 +59,7 @@ struct SceKernelLoadExecVSHParam {
  * @returns < 0 on some errors. 
 */
 int sceKernelLoadExecBufferPlain(SceSize bufsize, void *buf, struct SceKernelLoadExecParam *param);
+#endif
 
 /**
  * Restart the vsh.
