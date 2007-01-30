@@ -8,12 +8,12 @@
 
 #include "guInternal.h"
 
-void sceGuPatchPrim(unsigned int a0)
+void sceGuPatchPrim(int prim)
 {
-	switch(a0)
+	switch(prim)
 	{
-		case 0: sendCommandi(55,2); break;
-		case 2: sendCommandi(55,1); break;
-		case 4: sendCommandi(55,0); break;
+		case GU_POINTS: sendCommandi(55,2); break;
+		case GU_LINE_STRIP: sendCommandi(55,1); break;
+		case GU_TRIANGLE_STRIP: sendCommandi(55,0); break;
 	}
 }

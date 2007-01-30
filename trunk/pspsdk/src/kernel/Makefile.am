@@ -48,6 +48,7 @@ libpspkernelinclude_HEADERS =	\
 	pspiofilemgr_kernel.h	\
 	pspkernel.h		\
 	psploadcore.h		\
+	psploadexec_kernel.h \
 	pspstdio_kernel.h	\
 	pspsysreg.h		\
 	psputilsforkernel.h \
