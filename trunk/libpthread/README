@@ -1,0 +1,27 @@
+pthread Library by Raf (rafpsp<at>gmail<dot>com)
+--------------------------------------------------
+
+This is a very simple pthread library implementation (/wrapper). It only features
+the most basic functions. Any enhancements are most welcome.
+As it is now, it is sufficient to satisfy Links2 pthread requirements.
+
+To make, run:
+-------------------------------
+
+user$> make all
+
+To install, as root run:
+-------------------------------
+
+root$> make install
+
+
+History:
+-------------------------------
+2006-04-04, raf: Starting a simple pthread library.
+2006-05-08, raf: Changed default thread stack size from (almost) 4KB to 8KB.
+		 Also, now threads delete themselves correctly when exiting. (in other words, leak corrected).
+		 Added option to set pthread attributes: stacksize/scope(sytem(kernel)/process(user))/priority
+2006-05-24, danzel: Modified pthread to work with c++ programs.
+2007-01-31, raf: Released to pspdev repository.
+
