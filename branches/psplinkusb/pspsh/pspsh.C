@@ -953,9 +953,11 @@ char** shell_completion(const char *text, int start, int end)
 
 int init_readline(void)
 {
+#if RL_READLINE_VERSION >= 0x500
 	rl_bind_key_in_map(META('r'), cli_reset, emacs_standard_keymap);
 	rl_bind_key_in_map(META('s'), cli_step, emacs_standard_keymap);
 	rl_bind_key_in_map(META('k'), cli_skip, emacs_standard_keymap);
+#endif
 	rl_attempted_completion_function = shell_completion;
 	rl_callback_handler_install("", cli_handler);
 	rl_basic_word_break_characters = "\t\n ";

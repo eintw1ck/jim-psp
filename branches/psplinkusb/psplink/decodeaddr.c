@@ -419,44 +419,6 @@ static int parse_line(char *line, unsigned int *val)
 
 			line = endp+1;
 		}
-		else if(*line == '?') /* Symbol name */
-		{
-#if 0
-			char *endp;
-			int getsize = 0;
-			unsigned int size;
-			line++;
-
-			endp = strchr(line, '?');
-			if(endp == NULL)
-			{
-				SHELL_PRINT("Error, no matching '?' for symbol name\n");
-				return 0;
-			}
-
-			*endp = 0;
-
-			/* ` indicates we want to get the size not the address */
-			/* Of course we cant then start with a `, oh well ;P */
-			if(line[0] == '`')
-			{
-				line++;
-				getsize = 1;
-			}
-			temp = symbolFindByName(line, &size);
-			if(temp == 0)
-			{
-				SHELL_PRINT("Error, could not find symbol %s\n", line);
-				return 0;
-			}
-			if(getsize)
-			{
-				temp = size;
-			}
-
-			line = endp+1;
-#endif
-		}
 		else if(*line == '(')
 		{
 			/* Scan for end of brackets, NUL terminate and pass along */
