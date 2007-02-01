@@ -197,7 +197,6 @@ void shell(void)
 	printf("Opening %s baud %d\n", g_context.args.ip, g_context.args.realbaud);
 
 	FD_ZERO(&g_context.readsave);
-	FD_SET(STDIN_FILENO, &g_context.readsave);
 	if(!on_idle())
 	{
 		return;
@@ -232,6 +231,7 @@ void shell(void)
 				{
 					close(g_context.sock);
 					g_context.sock = -1;
+					g_context.exit = 1;
 				}
 			}
 		}
