@@ -37,6 +37,7 @@ SAMPLES = \
 	gu/splinesurface \
 	gu/sprite \
 	gu/text \
+	gu/timing \
 	gu/vertex \
 	gu/zbufferfog \
 	ir/sircs \

@@ -130,6 +130,12 @@ extern "C" {
 #define GU_PSM_DXT3		(9) /* Texture */
 #define GU_PSM_DXT5		(10) /* Texture */
 
+/* Spline Mode */
+#define GU_FILL_FILL	(0)
+#define GU_OPEN_FILL	(1)
+#define GU_FILL_OPEN	(2)
+#define GU_OPEN_OPEN	(3)
+
 /* Shading Model */
 #define GU_FLAT			(0)
 #define GU_SMOOTH		(1)
