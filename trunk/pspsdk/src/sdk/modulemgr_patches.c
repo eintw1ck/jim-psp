@@ -121,6 +121,7 @@ int pspSdkInstallNoPlainModuleCheckPatch(void)
 #define LOAD_MODULE_KERN_PATCH 0x0000d821 /* move $k1, $0 */
 
 extern u32 sceKernelLoadModuleWithApitype;
+void sceKernelIcacheInvalidateAll();
 
 int pspSdkInstallKernelLoadModulePatch(void)
 {

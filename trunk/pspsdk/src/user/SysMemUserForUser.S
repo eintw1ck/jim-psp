@@ -23,3 +23,6 @@
 #ifdef F_SysMemUserForUser_0006
 	IMPORT_FUNC	"SysMemUserForUser",0x3FC9AE6A,sceKernelDevkitVersion
 #endif
+#ifdef F_SysMemUserForUser_0007
+	IMPORT_FUNC	"SysMemUserForUser",0x13A5ABEF,sceKernelPrintf
+#endif

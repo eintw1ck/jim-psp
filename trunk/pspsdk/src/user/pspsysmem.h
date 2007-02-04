@@ -103,6 +103,18 @@ SceSize sceKernelMaxFreeMemSize(void);
  */
 int sceKernelDevkitVersion(void);
 
+#if _PSP_FW_VERSION >= 150
+
+/**
+ * Kernel printf function.
+ *
+ * @param format - The format string.
+ * @param ... - Arguments for the format string.
+ */
+void sceKernelPrintf(const char *format, ...) __attribute__((format(printf, 1, 2)));
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif

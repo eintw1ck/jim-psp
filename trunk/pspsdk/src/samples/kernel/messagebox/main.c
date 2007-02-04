@@ -30,7 +30,7 @@ static SceUID myMessagebox;
 
 /* Structure for the messages */
 typedef struct _MyMessage {
-	struct _MyMessage *link;  /* For internal use by the kernel */
+	SceKernelMsgPacket header; /* For internal use by the kernel */
 	char text[8];             /* Anything we would like to have */
 } MyMessage;
 
@@ -75,9 +75,9 @@ static int SubThread(SceSize args, void *argp)
 	SceKernelMbxInfo info;
 
 	/* For simplicily, we statically allocate some messages */
-	static MyMessage one   = { 0, "One" };
-	static MyMessage two   = { 0, "Two" };
-	static MyMessage three = { 0, "Three" };
+	static MyMessage one   = { {0}, "One" };
+	static MyMessage two   = { {0}, "Two" };
+	static MyMessage three = { {0}, "Three" };
 
 	sceKernelDelayThread(100000);
 	printf("SUB: started\n");
@@ -86,19 +86,19 @@ static int SubThread(SceSize args, void *argp)
 
 	/* Send a message */
 	printf("SUB: Posting 1\n");
-	sceKernelSendMbx(myMessagebox, &one);
+	sceKernelSendMbx(myMessagebox, &one.header);
 
 	/* Send another message after some delay,
 	   to demonstrate the timeout feature */
 	sceKernelDelayThread(1000000);
 	printf("SUB: Posting 2\n");
-	sceKernelSendMbx(myMessagebox, &two);
+	sceKernelSendMbx(myMessagebox, &two.header);
 
 	/* Again, send another message after some delay,
 	   this time to demonstrate the polling feature */
 	sceKernelDelayThread(1000000);
 	printf("SUB: Posting 3\n");
-	sceKernelSendMbx(myMessagebox, &three);
+	sceKernelSendMbx(myMessagebox, &three.header);
 
 	/* Wait for the main task to start blocking again,
 	   and then check the messagebox status */

@@ -746,6 +746,18 @@ typedef struct SceKernelMbxInfo {
 } SceKernelMbxInfo;
 
 /**
+ * Header for a message box packet
+ */
+typedef struct SceKernelMsgPacket {
+	/** Pointer to next msg (used by the kernel) */
+	struct SceKernelMsgPacket *next;
+	/** Priority ? */
+	SceUChar    msgPriority;
+	SceUChar    dummy[3];
+	/** After this can be any user defined data */
+} SceKernelMsgPacket;
+
+/**
  * Creates a new messagebox
  *
  * @par Example:
@@ -774,15 +786,20 @@ int sceKernelDeleteMbx(SceUID mbxid);
  *
  * @par Example:
  * @code
+ * struct MyMessage {
+ * 	SceKernelMsgPacket header;
+ * 	char text[8];
+ * };
+ *
+ * struct MyMessage msg = { {0}, "Hello" };
  * // Send the message
- * sceKernelSendMbx(mbxid, "Hello");
+ * sceKernelSendMbx(mbxid, (void*) &msg);
  * @endcode
  *
  * @param mbxid - The mbx id returned from sceKernelCreateMbx
  * @param message - A message to be forwarded to the receiver.
- *                  The first word in the message will be used
- *                  by the kernel to link messages together,
- *                  but the rest is used defined.
+ * 					The start of the message should be the 
+ * 					::SceKernelMsgPacket structure, the rest
  *
  * @return < 0 On error.
  */

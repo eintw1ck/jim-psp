@@ -63,4 +63,4 @@ pspSdkEnableInterrupts:
 	jr		$ra
 	nop
 
-	.end pspSdkDisableInterrupts
+	.end pspSdkEnableInterrupts
