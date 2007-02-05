@@ -241,7 +241,7 @@ Index: openssl/Makefile
 +CC= psp-gcc
  #CFLAG= -DL_ENDIAN -DTERMIO -O3 -fomit-frame-pointer -m486 -Wall -Wuninitialized -DSHA1_ASM -DMD5_ASM -DRMD160_ASM
 -CFLAG= -DOPENSSL_NO_KRB5 -O
-+CFLAG= -DZLIB -DOPENSSL_THREADS -DOPENSSL_NO_KRB5 -DOPENSSL_NO_ASM -DPSP -DNO_CHMOD -DL_ENDIAN -DNO_STRINGS_H -DNO_SYSLOG -DNO_SYS_UN_H -DOPENSSL_SYS_PSP -O2 -G0 -I/usr/local/pspdev/psp/sdk/include
++CFLAG= -mno-explicit-relocs -DZLIB -DOPENSSL_THREADS -DOPENSSL_NO_KRB5 -DOPENSSL_NO_ASM -DPSP -DNO_CHMOD -DL_ENDIAN -DNO_STRINGS_H -DNO_SYSLOG -DNO_SYS_UN_H -DOPENSSL_SYS_PSP -O2 -G0 -I/usr/local/pspdev/psp/sdk/include
  DEPFLAG= 
  PEX_LIBS= 
 -EX_LIBS= 
@@ -418,7 +418,7 @@ Index: openssl/Configure
  "tandem-c89","c89:-Ww -D__TANDEM -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED=1 -D_TANDEM_SOURCE -DB_ENDIAN::(unknown):::THIRTY_TWO_BIT:::",
  
 +##### PSP
-+"psp", "psp-gcc:-DPSP -DNO_CHMOD -DL_ENDIAN -DNO_STRINGS_H -DNO_SYSLOG -DNO_SYS_UN_H -DOPENSSL_SYS_PSP -O2 -G0 -I$pspdev/psp/sdk/include::(unknown)::-lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk -lc -lpspnet -lpspnet_inet -lpspnet_apctl -lpspnet_resolver -lpsputility -lpspuser -liberty -lpspsdk -lpspnet -lpspaudio -lpspgu -lpspge -lpsphprm -lpspkernel -L$pspdev/psp/lib -L$pspdev/psp/sdk/lib:LL:::",
++"psp", "psp-gcc:-mno-explicit-relocs -DPSP -DNO_CHMOD -DL_ENDIAN -DNO_STRINGS_H -DNO_SYSLOG -DNO_SYS_UN_H -DOPENSSL_SYS_PSP -O2 -G0 -I$pspdev/psp/sdk/include::(unknown)::-lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk -lc -lpspnet -lpspnet_inet -lpspnet_apctl -lpspnet_resolver -lpsputility -lpspuser -liberty -lpspsdk -lpspnet -lpspaudio -lpspgu -lpspge -lpsphprm -lpspkernel -L$pspdev/psp/lib -L$pspdev/psp/sdk/lib:LL:::",
 +#-DOPENSSL_NO_SOCK 
  );
  
@@ -458,4 +458,4 @@ Index: openssl/Makefile.psp
 +	make -f Makefile
 +
 +install:
-+	echo "As root, run make install"
++	@echo "As root, run make install"
