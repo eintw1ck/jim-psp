@@ -744,25 +744,39 @@ void disasmSetSymbols(SymbolMap *syms)
 	g_syms = syms;
 }
 
-void disasmSetOpts(const char *opts, int set)
+void disasmSetOpts(const char *opts)
 {
+	/* Initial mode is set */
+	int set = 1;
+
 	while(*opts)
 	{
 		char ch;
 		int i;
 
 		ch = *opts++;
-		for(i = 0; i < DISASM_OPT_MAX; i++)
+		if(ch == '+')
 		{
-			if(ch == g_disopts[i].opt)
-			{
-				*g_disopts[i].value = set;
-				break;
-			}
+			set = 1;
 		}
-		if(i == DISASM_OPT_MAX)
+		else if(ch == '-')
 		{
-			printf("Unknown disassembler option '%c'\n", ch);
+			set = 0;
+		}
+		else 
+		{
+			for(i = 0; i < DISASM_OPT_MAX; i++)
+			{
+				if(ch == g_disopts[i].opt)
+				{
+					*g_disopts[i].value = set;
+					break;
+				}
+			}
+			if(i == DISASM_OPT_MAX)
+			{
+				printf("Unknown disassembler option '%c'\n", ch);
+			}
 		}
 	}
 }

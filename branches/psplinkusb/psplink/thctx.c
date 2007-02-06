@@ -33,7 +33,6 @@ int threadFindContext(SceUID uid)
 	int found = 0;
 	int intc;
 
-	SHELL_PRINT("Size: %x\n", sizeof(info));
 	memset(&ctxCopy, 0, sizeof(ctxCopy));
 	memset(&info, 0, sizeof(info));
 	info.size = sizeof(info);

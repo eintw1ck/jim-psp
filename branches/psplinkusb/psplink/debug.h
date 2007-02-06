@@ -13,36 +13,67 @@
 #ifndef __DEBUGINC_H__
 #define __DEBUGINC_H__
 
-#include "../psplink_user/psplink_ex.h"
+#include <pspkernel.h>
+#include "exception.h"
 
-struct DebugEnv
+#define DEBUG_MAX_BPS 32
+
+enum DebugBreakpointFlags
 {
-	unsigned int flags;
-	unsigned int DRCNTL;
-	unsigned int IBC;
-	unsigned int DBC;
-	unsigned int IBA;
-	unsigned int IBAM;
-	unsigned int DBA;
-	unsigned int DBAM;
-	unsigned int DBD;
-	unsigned int DBDM;
+	/* Indicates this breakpoint is active */
+	DEBUG_BP_ACTIVE     = 1,
+	/* Indicates once this breakpoint is hit we remove it */
+	DEBUG_BP_ONESHOT    = 2,
+	/* Indicates this is a hardware breakpoint */
+	DEBUG_BP_HARDWARE   = 4,
+	/* Indicates this breakpoint is current disabled by the user */
+	DEBUG_BP_DISABLED  = 8,
+	/* Used as a visual flag to indicate this breakpoint is a step */
+	DEBUG_BP_STEP       = 16,
+	/* Indicates this breakpoint should be reneabled on the next exception */
+	DEBUG_BP_NEXT_REENABLE = 32,
 };
 
+struct Breakpoint
+{
+	/* Address of breakpoint */
+	unsigned int addr;
+	/* Original instruction at addr */
+	unsigned int inst;
+	/* Flags */
+	unsigned int flags;
+	/* Are we waiting for a specific thread id ? */
+	SceUID thid;
+	/* Link to the corresponding step breakpoint */
+	struct Breakpoint* step;
+};
 
-void debugPrintBPS(void);
-int debugDeleteBp(int i);
-int debugSetBP(unsigned int address);
-void debugStep(int skip);
-int debugHandleException(PsplinkRegBlock *pRegs);
-void debugPrintHWRegs(void);
-void debugEnableHW(void);
-void debugDisableHW(void);
-int debugHWEnabled(void);
-int debugGetEnv(struct DebugEnv *env);
-int debugSetEnv(struct DebugEnv *env);
-void debugSetHWRegs(int argc, char **argv);
-void debugSetHWBreak(unsigned int addr, unsigned int mask);
+typedef struct _DebugEventHandler
+{
+	union {
+		int size;
+		struct _DebugEventHandler *pNext;
+	};
+	unsigned int membase;
+	unsigned int memtop;
+	SceUID mbox;
+} DebugEventHandler;
+
+int debugRegisterEventHandler(DebugEventHandler *handler);
+int debugUnregisterEventHandler(DebugEventHandler *handler);
+int debugWaitDebugEvent(DebugEventHandler *handler, struct PsplinkContext **ctx, SceUInt *timeout);
+void debugPrintBPs(void);
+struct Breakpoint* debugFindBPByIndex(int i);
+int debugDeleteBP(unsigned int addr);
+int debugDisableBP(unsigned int addr, int next);
+int debugEnableBP(unsigned int addr);
+struct Breakpoint *debugSetBP(unsigned int address, unsigned int flags, SceUID thid);
 int debugBreakThread(SceUID uid);
+void debugDisableHW();
+
+/* For internal use only */
+void debugStep(struct PsplinkContext *ctx, int skip);
+void debugClearException(struct PsplinkContext *ctx);
+int debugHandleException(struct PsplinkContext *ctx);
 
 #endif

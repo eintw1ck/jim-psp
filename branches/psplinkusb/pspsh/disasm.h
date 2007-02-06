@@ -69,7 +69,7 @@ void disasmSetSymAddr(int symaddr);
 /* Enable instruction macros */
 void disasmSetMacro(int macro);
 void disasmSetPrintReal(int printreal);
-void disasmSetOpts(const char *opts, int set);
+void disasmSetOpts(const char *opts);
 const char *disasmGetOpts(void);
 void disasmPrintOpts(void);
 const char *disasmInstruction(unsigned int opcode, unsigned int PC, unsigned int *realregs, unsigned int *regmask, int noaddr);

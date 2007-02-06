@@ -154,7 +154,7 @@ static int deref_addr(unsigned int *val, int deref)
 		size = memValidate(*val, MEM_ATTRIB_READ | MEM_ATTRIB_WORD);
 		if(size < sizeof(unsigned int *))
 		{
-			SHELL_PRINT("Error, invalid memory address when dereferencing %08X\n", *val);
+			SHELL_PRINT("Error, invalid memory address when dereferencing 0x%08X\n", *val);
 			return 0;
 		}
 

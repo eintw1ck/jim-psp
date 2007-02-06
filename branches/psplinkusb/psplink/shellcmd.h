@@ -202,9 +202,7 @@ struct sh_command
 	SHELL_CMD("icache",  "ic", icache_cmd, 0, "Invalidate the instruction cache", "", "[addr size]") \
 	SHELL_CMD("disasm",  "di", disasm_cmd, 1, "Disassemble instructions", "", "address [count]") \
 	SHELL_CMD_PCTERM("asm", NULL, asm_cmd, 1, "Assemble instructions to a memory address", "", "addr [inst]") \
-	SHELL_CMD_PCTERM("disopts", NULL, disopts_cmd, 0, "Print the current disassembler options", "", "") \
-	SHELL_CMD_PCTERM("disset", NULL, disset_cmd, 1, "Set some disassembler options", "", "options") \
-	SHELL_CMD_PCTERM("disclear", NULL, disclear_cmd, 1, "Clear some disassembler options", "", "options") \
+	SHELL_CMD_PCTERM("disopts", NULL, disopts_cmd, 0, "Print/set/clear the current disassembler options", "", "[+opts|-opts]") \
 	SHELL_CMD("memprot", NULL, memprot_cmd, 1, "Set memory protection on or off", "", "on|off") \
 	 \
 	SHELL_CAT("fileio", "Commands to handle file io") \
@@ -226,9 +224,6 @@ struct sh_command
 	SHELL_CMD("exprfpu", "ef", exprfpu_cmd, 0, "Print the current FPU registers", "", "[ex]") \
 	SHELL_CMD("exprvfpu", "ev", exprvfpu_cmd, 0, "Print the current VFPU registers", "", "[s|c|r|m|e] [ex]") \
 	SHELL_CMD("setreg", "str", setreg_cmd, 2, "Set the value of an exception register", "", "$reg value") \
-	SHELL_CMD("hwena",  NULL, hwena_cmd, 0, "Enable or disable the HW debugger", "", "[on|off]") \
-	SHELL_CMD("hwregs", NULL, hwregs_cmd, 0, "Print or change the current HW breakpoint setup (v1.5 only)", "", "[reg=val]...") \
-	SHELL_CMD("hwbp", NULL, hwbp_cmd, 1, "Set a hardware instruction breakpoint", "", "addr [mask]") \
 	SHELL_CMD("bpset", "bp", bpset_cmd, 1, "Set a break point", \
 			"addr is the address at which the breakpoint should be set. opts is a list of options for the "\
 			"breakpoint.\n1 - specifies that this will be a one shot breakpoint, otherwise it will be permanent.", \

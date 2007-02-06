@@ -23,7 +23,11 @@
 
 struct PsplinkContext *g_currex = NULL;
 struct PsplinkContext *g_list = NULL;
+struct PsplinkContext g_psplinkContext[PSPLINK_MAX_CONTEXT] __attribute__((aligned(16)));
 extern struct GlobalContext g_context;
+
+void psplinkDefaultExHandler(void);
+void psplinkDebugExHandler(void);
 
 #define MAT_NUM(x) ((x) / 16)
 #define COL_NUM(x) (((x) / 4) & 3)
@@ -169,22 +173,14 @@ static const char *exception_cause(struct PsplinkContext *pCtx)
 }
 
 /* Print the current exception */
-void exceptionPrint(int ex)
+void exceptionPrint(struct PsplinkContext *ctx)
 {
 	SceModule *pMod;
 	SceKernelModuleInfo mod;
 	SceKernelThreadInfo thread;
 	u32 addr;
-	struct PsplinkContext *ctx = NULL;
 
-	if((ex >= 0) && (ex < PSPLINK_MAX_CONTEXT))
-	{
-		if((g_list) && (g_list[ex].valid))
-		{
-			ctx = &g_list[ex];
-		}
-	}
-	else
+	if(ctx == NULL)
 	{
 		ctx = g_currex;
 	}
@@ -282,18 +278,9 @@ void exceptionPrintFPURegs(float *pFpu, unsigned int fsr, unsigned int fir)
 	SHELL_PRINT("fsr: %08X   - fir %08X\n", fsr, fir);
 }
 
-void exceptionFpuPrint(int ex)
+void exceptionFpuPrint(struct PsplinkContext *ctx)
 {
-	struct PsplinkContext *ctx = NULL;
-
-	if((ex >= 0) && (ex < PSPLINK_MAX_CONTEXT))
-	{
-		if((g_list) && (g_list[ex].valid))
-		{
-			ctx = &g_list[ex];
-		}
-	}
-	else
+	if(ctx == NULL)
 	{
 		ctx = g_currex;
 	}
@@ -396,18 +383,9 @@ void exceptionPrintVFPURegs(float *pFpu, int mode)
 	}
 }
 
-void exceptionVfpuPrint(int ex, int mode)
+void exceptionVfpuPrint(struct PsplinkContext *ctx, int mode)
 {
-	struct PsplinkContext *ctx = NULL;
-
-	if((ex >= 0) && (ex < PSPLINK_MAX_CONTEXT))
-	{
-		if((g_list) && (g_list[ex].valid))
-		{
-			ctx = &g_list[ex];
-		}
-	}
-	else
+	if(ctx == NULL)
 	{
 		ctx = g_currex;
 	}
@@ -429,60 +407,79 @@ void exceptionVfpuPrint(int ex, int mode)
 	}
 }
 
-int exceptionCheckThread(struct PsplinkContext *ctx)
+struct PsplinkContext* psplinkTrap(struct PsplinkContext *ctx)
 {
-	SceKernelThreadInfo thread;
+	int skip = 0;
 
-	memset(&thread, 0, sizeof(thread));
-	thread.size = sizeof(thread);
-	if(!sceKernelReferThreadStatus(ctx->thid, &thread))
+	/* Only set if we are not already messing with a context */
+	if(g_currex == NULL)
 	{
-		if(strcmp(thread.name, "PspLink") == 0)
-		{
-			/* Setup context to return to longjmp and handle the exception */
-			ctx->regs.epc = (unsigned int) longjmp;
-			ctx->regs.r[4] = (unsigned int) g_context.parseenv;
-			ctx->regs.r[5] = 1;
-			return 1;
-		}
+		g_currex = ctx;
 	}
 
-	return 0;
-}
-
-void psplinkHandleException(struct PsplinkContext *ctx)
-{
-	u32 k1;
-	int intex;
-
-	k1 = psplinkSetK1(0);
-
-	g_currex = ctx;
-
-	/* If this was not an exception caused by us then just dump the registers to screen */
-	if(!debugHandleException(&g_currex->regs))
+	if(sceKernelIsIntrContext())
 	{
-		exceptionPrint(-1);
+		Kprintf("Can't debug interrupt contexts (ATM)\n");
+		for(;;) { ; }
+	}
+	else
+	{
+		ctx->thid = sceKernelGetThreadId();
+	}
+	/* Handle debug case, check whether we are in an interrupt context etc. */
+	/* Also disable the current breakpoint if we hit it */
+
+	debugClearException(ctx);
+
+	/* Enable interrupts now */
+	asm __volatile__ ( 
+			"mfc0	$v0, $12\n"
+			"ori	$v0, $v0, 1\n"
+			"mtc0	$v0, $12\n"
+			"nop\n"
+			);
+
+	debugHandleException(ctx);
+
+	if(ctx->cont == PSP_EXCEPTION_EXIT)
+	{
+		sceKernelExitDeleteThread(0);
 	}
 
-	psplinkSetK1(k1);
+	/* Disable interrupts now */
+	asm __volatile__ ( 
+			"mtic $0, $0\n"
+			"nop\n"
+			"nop\n"
+			);
 
-	intex = exceptionCheckThread(ctx);
-
-	/* If not our parse thread exceptioning */
-	if(!intex)
+	switch(ctx->cont)
 	{
-		/* Sleep thread */
-		sceKernelSleepThread();
-	}
-}
+		case PSP_EXCEPTION_SKIP: skip = 1;
+		case PSP_EXCEPTION_STEP: debugStep(ctx, skip);
+								 break;
+		default: break;
+	};
 
-void exceptionResume(void)
-{
-	if(g_currex)
+	if(g_currex == ctx)
 	{
-		sceKernelWakeupThread(g_currex->thid);
 		g_currex = NULL;
+	}
+
+	return ctx;
+}
+
+void exceptionResume(struct PsplinkContext *ctx, int cont)
+{
+	if(ctx == NULL)
+	{
+		ctx = g_currex;
+	}
+
+	if(ctx)
+	{
+		ctx->cont = cont;
+		sceKernelWakeupThread(ctx->thid);
 	}
 }
 
@@ -499,4 +496,14 @@ void exceptionSetCtx(int ex)
 
 void exceptionInit(void)
 {
+	int i;
+	memset(g_psplinkContext, 0, sizeof(g_psplinkContext));
+
+	for(i = 0; i < (PSPLINK_MAX_CONTEXT-1); i++)
+	{
+		g_psplinkContext[i].pNext = &g_psplinkContext[i+1];
+	}
+
+	psplinkRegisterExceptions((void *) psplinkDefaultExHandler, 
+			(void *) psplinkDebugExHandler, g_psplinkContext);
 }

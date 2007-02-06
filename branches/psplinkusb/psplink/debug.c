@@ -25,20 +25,106 @@
 #include "decodeaddr.h"
 #include "thctx.h"
 
-#define MAX_BPS 16
 #define SW_BREAK_INST	0x0000000d
 
-struct BreakPoint
+extern struct GlobalContext g_context;
+
+struct HwDebugEnv
 {
-	unsigned int address;
-	unsigned int oldinst;
-	int oneshot;
-	int active;
+	unsigned int flags;
+	unsigned int DRCNTL;
+	unsigned int IBC;
+	unsigned int DBC;
+	unsigned int IBA;
+	unsigned int IBAM;
+	unsigned int DBA;
+	unsigned int DBAM;
+	unsigned int DBD;
+	unsigned int DBDM;
 };
 
-static struct BreakPoint g_bps[MAX_BPS];
-static struct BreakPoint g_stepbp[2];
+int debugGetEnv(struct HwDebugEnv *env);
+
+typedef struct _DebugEvent
+{
+	SceKernelMsgPacket header;
+	struct PsplinkContext *ctx;
+} DebugEvent;
+
+
+static struct Breakpoint g_bps[DEBUG_MAX_BPS];
+static struct _DebugEventHandler* g_eventhead;
 extern const char *regName[32];
+
+int debugRegisterEventHandler(DebugEventHandler *handler)
+{
+	int intc;
+
+	if(!handler || (handler->size != sizeof(DebugEventHandler)) || (handler->mbox < 0))
+	{
+		return -1;
+	}
+
+	if(handler->membase > handler->memtop)
+	{
+		return -1;
+	}
+
+	intc = pspSdkDisableInterrupts();
+	handler->pNext = g_eventhead;
+	g_eventhead = handler;
+	pspSdkEnableInterrupts(intc);
+
+	return 0;
+}
+
+int debugUnregisterEventHandler(DebugEventHandler *handler)
+{
+	DebugEventHandler *ev;
+	int intc;
+
+	intc = pspSdkDisableInterrupts();
+	if(g_eventhead == handler)
+	{
+		g_eventhead = g_eventhead->pNext;
+	}
+	else
+	{
+		ev = g_eventhead;
+		while(ev && (ev->pNext != handler))
+		{
+			ev = ev->pNext;
+		}
+		if(ev)
+		{
+			ev->pNext = ev->pNext->pNext;
+		}
+	}
+	pspSdkEnableInterrupts(intc);
+
+	return 0;
+}
+
+int debugWaitDebugEvent(DebugEventHandler *handler, struct PsplinkContext **ctx, SceUInt *timeout)
+{
+	int ret;
+	DebugEvent *ev;
+	void *p;
+
+	if(!handler || !ctx)
+	{
+		return -1;
+	}
+
+	ret = sceKernelReceiveMbx(handler->mbox, &p, timeout);
+	if(ret == 0)
+	{
+		ev = (DebugEvent*) p;
+		*ctx = ev->ctx;
+	}
+
+	return ret;
+}
 
 /* Define some opcode stuff for the stepping function */
 #define BEQ_OPCODE		0x4
@@ -80,7 +166,7 @@ extern const char *regName[32];
 #define BCXTL_OPCODE	0x103
 
 /* Generic step command , if skip then will try to skip over jals */
-static void step_generic(PsplinkRegBlock *regs, int skip)
+static void step_generic(struct PsplinkContext *ctx, int skip)
 {
 	u32 opcode;
 	u32 epc;
@@ -89,7 +175,7 @@ static void step_generic(PsplinkRegBlock *regs, int skip)
 	int cond   = 0;
 	int link   = 0;
 
-	epc = regs->epc;
+	epc = ctx->regs.epc;
 	targetpc = epc + 4;
 
 	opcode = _lw(epc);
@@ -155,16 +241,11 @@ static void step_generic(PsplinkRegBlock *regs, int skip)
 													 u32 rs;
 
 													 rs = (opcode >> 21) & 0x1f;
-													 targetpc = regs->r[rs];
+													 targetpc = ctx->regs.r[rs];
 													 branch = 1;
 													 cond = 0;
 												 }
 												 break;
-												 /*
-								 case SYSCALL_OPCODE:
-												 targetpc = regs->r[31];
-												 break;
-												 */
 							 };
 						 }
 						 break;
@@ -194,61 +275,52 @@ static void step_generic(PsplinkRegBlock *regs, int skip)
 
 	if(link && skip)
 	{
-		g_stepbp[1].address = epc + 8;
-		g_stepbp[1].oldinst = _lw(epc + 8);
-		g_stepbp[1].active = 1;
-		_sw(SW_BREAK_INST, epc + 8);
+		debugSetBP(epc+8, DEBUG_BP_ONESHOT | DEBUG_BP_STEP, ctx->thid);
 	}
 	else if(branch)
 	{
-		g_stepbp[0].address = targetpc;
-		g_stepbp[0].oldinst = _lw(targetpc);
-		g_stepbp[0].active = 1;
-		_sw(SW_BREAK_INST, targetpc);
+		struct Breakpoint *bp1;
+		struct Breakpoint *bp2;
+
+		bp1 = debugSetBP(targetpc, DEBUG_BP_ONESHOT | DEBUG_BP_STEP, ctx->thid);
 			
 		if((cond) && (targetpc != (epc + 8)))
 		{
-			g_stepbp[1].address = epc + 8;
-			g_stepbp[1].oldinst = _lw(epc + 8);
-			g_stepbp[1].active = 1;
-			_sw(SW_BREAK_INST, epc + 8);
+
+			bp2 = debugSetBP(targetpc, DEBUG_BP_ONESHOT | DEBUG_BP_STEP, ctx->thid);
+			if(bp1)
+			{
+				bp1->step = bp2;
+			}
+			if(bp2)
+			{
+				bp2->step = bp1;
+			}
 		}
-
 	}
 	else
 	{
-		g_stepbp[0].address = targetpc;
-		g_stepbp[0].active = 1;
-		g_stepbp[0].oldinst = _lw(targetpc);
-		_sw(SW_BREAK_INST, targetpc);
+		debugSetBP(targetpc, DEBUG_BP_ONESHOT | DEBUG_BP_STEP, ctx->thid);
 	}
 }
 
-void debugStep(int skip)
+void debugStep(struct PsplinkContext *ctx, int skip)
 {
-	if(g_currex)
-	{
-		step_generic(&g_currex->regs, skip);
-		sceKernelDcacheWritebackInvalidateAll();
-		sceKernelIcacheInvalidateAll();
-		exceptionResume();
-	}
-	else
-	{
-		SHELL_PRINT("Error, not in an exception\n");
-	}
+	step_generic(ctx, skip);
+	sceKernelDcacheWritebackInvalidateAll();
+	sceKernelIcacheInvalidateAll();
 }
 
-static struct BreakPoint *find_bp(unsigned int address)
+static struct Breakpoint *find_bp(unsigned int address)
 {
 	int i;
 
 	/* Mask out top nibble so we match whether we end up in kmem,
 	 * user mem or cached mem */
 	address &= 0x0FFFFFFF;
-	for(i = 0; i < MAX_BPS; i++)
+	for(i = 0; i < DEBUG_MAX_BPS; i++)
 	{
-		if((g_bps[i].active) && ((g_bps[i].address & 0x0FFFFFFF) == address))
+		if((g_bps[i].flags & DEBUG_BP_ACTIVE) && ((g_bps[i].addr & 0x0FFFFFFF) == address))
 		{
 			return &g_bps[i];
 		}
@@ -257,12 +329,12 @@ static struct BreakPoint *find_bp(unsigned int address)
 	return NULL;
 }
 
-static struct BreakPoint *find_freebp(void)
+static struct Breakpoint *find_freebp(void)
 {
 	int i;
-	for(i = 0; i < MAX_BPS; i++)
+	for(i = 0; i < DEBUG_MAX_BPS; i++)
 	{
-		if(!g_bps[i].active)
+		if((g_bps[i].flags & DEBUG_BP_ACTIVE) == 0)
 		{
 			return &g_bps[i];
 		}
@@ -271,23 +343,26 @@ static struct BreakPoint *find_freebp(void)
 	return NULL;
 }
 
-int debugSetBP(unsigned int address)
+struct Breakpoint* debugSetBP(unsigned int address, unsigned int flags, SceUID thid)
 {
 	if(find_bp(address) == NULL)
 	{
-		struct BreakPoint *pBp;
+		struct Breakpoint *pBp = NULL;
 
 		pBp = find_freebp();
 		if(pBp != NULL)
 		{
-			pBp->oldinst = _lw(address);
+			/* Should handle HW case */
+			memset(pBp, 0, sizeof(struct Breakpoint));
+			pBp->inst = _lw(address);
 			_sw(SW_BREAK_INST, address);
-			pBp->address = address;
-			pBp->active = 1;
+			pBp->addr = address;
+			pBp->flags = DEBUG_BP_ACTIVE | flags;
+			pBp->thid = thid;
 			sceKernelDcacheWritebackInvalidateAll();
 			sceKernelIcacheInvalidateAll();
 
-			return 1;
+			return pBp;
 		}
 		else
 		{
@@ -295,101 +370,248 @@ int debugSetBP(unsigned int address)
 		}
 	}
 
-	return 0;
+	return NULL;
 }
 
-int debugDeleteBp(int i)
+struct Breakpoint* debugFindBPByIndex(int i)
 {
-	int intc;
-
-	intc = pspSdkDisableInterrupts();
-
-	if((i >= 0) && (i < MAX_BPS))
+	if((i >= 0) && (i < DEBUG_MAX_BPS))
 	{
-		if(g_bps[i].active)
+		if(g_bps[i].flags & DEBUG_BP_ACTIVE)
 		{
-			_sw(g_bps[i].oldinst, g_bps[i].address);
-			g_bps[i].active = 0;
-			sceKernelDcacheWritebackInvalidateAll();
-			sceKernelIcacheInvalidateAll();
+			return &g_bps[i];
 		}
 	}
 
+	return NULL;
+}
+
+int debugDeleteBP(unsigned int addr)
+{
+	int ret = 0;
+	int intc;
+	struct Breakpoint *pBp;
+
+	intc = pspSdkDisableInterrupts();
+	pBp = find_bp(addr);
+	if(pBp)
+	{
+		_sw(pBp->inst, pBp->addr);
+		pBp->flags = 0;
+		sceKernelDcacheWritebackInvalidateAll();
+		sceKernelIcacheInvalidateAll();
+		ret = 1;
+	}
 	pspSdkEnableInterrupts(intc);
 
 	return 1;
 }
 
-void debugPrintBPS(void)
+int debugDisableBP(unsigned int addr, int next)
+{
+	int ret = 0;
+	int intc;
+	struct Breakpoint *pBp;
+
+	intc = pspSdkDisableInterrupts();
+	pBp = find_bp(addr);
+	if(pBp)
+	{
+		_sw(pBp->inst, pBp->addr);
+		pBp->flags |= DEBUG_BP_DISABLED;
+		if(next)
+		{
+			pBp->flags |= DEBUG_BP_NEXT_REENABLE;
+		}
+		sceKernelDcacheWritebackInvalidateAll();
+		sceKernelIcacheInvalidateAll();
+		ret = 1;
+	}
+	pspSdkEnableInterrupts(intc);
+
+	return ret;
+}
+
+int debugEnableBP(unsigned int addr)
+{
+	int ret = 0;
+	int intc;
+	struct Breakpoint *pBp;
+
+	intc = pspSdkDisableInterrupts();
+	pBp = find_bp(addr);
+	if(pBp)
+	{
+		_sw(SW_BREAK_INST, pBp->addr);
+		pBp->flags &= ~(DEBUG_BP_DISABLED | DEBUG_BP_NEXT_REENABLE);
+		sceKernelDcacheWritebackInvalidateAll();
+		sceKernelIcacheInvalidateAll();
+		ret = 1;
+	}
+	pspSdkEnableInterrupts(intc);
+
+	return ret;
+}
+
+void debugPrintBPs(void)
 {
 	int i;
 
 	SHELL_PRINT("Breakpoint List:\n");
-	for(i = 0; i < MAX_BPS; i++)
+	for(i = 0; i < DEBUG_MAX_BPS; i++)
 	{
-		if(g_bps[i].active)
+		if(g_bps[i].flags & DEBUG_BP_ACTIVE)
 		{
-			SHELL_PRINT("%-2d: Address %08X - Old Instruction %08X\n", i, g_bps[i].address, g_bps[i].oldinst);
+			SHELL_PRINT("%-2d: Addr:0x%08X Inst:0x%08X Flags:%c%c%c\n", i, g_bps[i].addr, g_bps[i].inst, 
+					g_bps[i].flags & DEBUG_BP_ONESHOT ? 'O' : '-', g_bps[i].flags & DEBUG_BP_HARDWARE ? 'H' : '-',
+					g_bps[i].flags & DEBUG_BP_DISABLED ? 'D' : '-');
 		}
 	}
 }
 
-int check_bp(unsigned int address)
+void debugClearException(struct PsplinkContext *ctx)
 {
-	if((g_stepbp[0].active) && (g_stepbp[0].address == address))
+	unsigned int address;
+	struct Breakpoint *pBp;
+
+	if(ctx->regs.type == PSPLINK_EXTYPE_DEBUG)
 	{
-		return 1;
+		struct HwDebugEnv env;
+
+		if(!debugGetEnv(&env))
+		{
+			ctx->drcntl = env.DRCNTL;
+		}
 	}
 
-	if((g_stepbp[1].active) && (g_stepbp[1].address == address))
-	{
-		return 1;
-	}
+	address = ctx->regs.epc;
 
-	if(find_bp(address))
+	/* Adjust for delay slot */
+	if(ctx->regs.cause & 0x80000000)
 	{
-		return 1;
+		address += 4;
+	}
+	ctx->error = 1;
+
+	pBp = find_bp(address);
+	if((pBp != NULL) && ((pBp->flags & DEBUG_BP_DISABLED) == 0))
+	{
+		if(pBp->flags & DEBUG_BP_ONESHOT)
+		{
+			struct Breakpoint *step;
+	
+			step = pBp->step;
+			debugDeleteBP(pBp->addr);
+
+			if(step)
+			{
+				debugDeleteBP(step->addr);
+			}
+		}
+
+		ctx->error = 0;
+		sceKernelDcacheWritebackInvalidateAll();
+		sceKernelIcacheInvalidateAll();
+	}
+}
+
+int debugCheckThread(struct PsplinkContext *ctx, unsigned int *addr)
+{
+	SceKernelThreadInfo thread;
+
+	memset(&thread, 0, sizeof(thread));
+	thread.size = sizeof(thread);
+	if(!sceKernelReferThreadStatus(ctx->thid, &thread))
+	{
+		*addr = (unsigned int) thread.entry;
+
+		if(strcmp(thread.name, "PspLink") == 0)
+		{
+			/* Indicate we are in the psplink parse thread */
+			return 1;
+		}
 	}
 
 	return 0;
 }
 
-int debugHandleException(PsplinkRegBlock *pRegs)
+int debugBreakThread(SceUID uid)
 {
-	unsigned int address;
-	struct BreakPoint *pBp;
-	int ret = 0;
+	int intc;
+	unsigned int addr;
+	int ret = -1;
 
-	address = pRegs->epc;
-
-	if(check_bp(address))
+	intc = pspSdkDisableInterrupts();
+	addr = thGetCurrentEPC(uid);
+	if(addr)
 	{
-		/* Recover step break points */
-		if(g_stepbp[0].active)
+		if(debugSetBP(addr, DEBUG_BP_ONESHOT, uid))
 		{
-			_sw(g_stepbp[0].oldinst, g_stepbp[0].address);
-			g_stepbp[0].active = 0;
+			ret = 0;
 		}
+	}
+	pspSdkEnableInterrupts(intc);
 
-		if(g_stepbp[1].active)
+	return ret;
+}
+
+int debugHandleException(struct PsplinkContext *ctx)
+{
+	int ret = 0;
+	unsigned int addr;
+	int initex;
+	struct _DebugEventHandler *ev;
+
+	/* Should have an indication that this was a step */
+	/* This is where we need to loop around our debug handlers and post messages */
+	initex = debugCheckThread(ctx, &addr);
+
+	/* Even if the exception happened in the psplink thread then at least see if any debuggers
+	 * are interested in us (so we _could_ debug outselves at some point) */
+	ctx->cont = PSP_EXCEPTION_NOT_HANDLED;
+
+	ev = g_eventhead;
+	while(ev)
+	{
+		DebugEvent post;
+		
+		if((addr >= ev->membase) && (addr <= ev->memtop))
 		{
-			_sw(g_stepbp[1].oldinst, g_stepbp[1].address);
-			g_stepbp[1].active = 0;
+			memset(&post, 0, sizeof(post));
+			post.ctx = ctx;
+			if(sceKernelSendMbx(ev->mbox, &post) == 0)
+			{
+				sceKernelSleepThread();
+				if(ctx->cont != PSP_EXCEPTION_NOT_HANDLED)
+				{
+					break;
+				}
+			}
 		}
+		ev = ev->pNext;
+	}
 
-		pBp = find_bp(address);
-		if(pBp != NULL)
+	if(ctx->cont == PSP_EXCEPTION_NOT_HANDLED)
+	{
+		if(ctx->error)
 		{
-			_sw(pBp->oldinst, pBp->address);
-			pBp->active = 0;
+			exceptionPrint(ctx);
 		}
+		SHELL_PRINT_CMD(SHELL_CMD_DISASM, "0x%08X:0x%08X", ctx->regs.epc, _lw(ctx->regs.epc));
 
-		sceKernelDcacheWritebackInvalidateAll();
-		sceKernelIcacheInvalidateAll();
-
-		SHELL_PRINT_CMD(SHELL_CMD_DISASM, "0x%08X:0x%08X", address, _lw(address));
-
-		ret = 1;
+		/* If this was not our parse thread */
+		if(!initex)
+		{
+			sceKernelSleepThread();
+		}
+		else
+		{
+			/* Setup return context for our thread */
+			ctx->regs.epc = (unsigned int) longjmp;
+			ctx->regs.r[4] = (unsigned int) g_context.parseenv;
+			ctx->regs.r[5] = 1;
+			ctx->cont = PSP_EXCEPTION_CONTINUE;
+		}
 	}
 
 	return ret;
@@ -429,9 +651,9 @@ int debugHWEnabled(void)
 	return ret;
 }
 
-static struct DebugEnv *debug_get_env(void)
+static struct HwDebugEnv *debug_get_env(void)
 {
-	struct DebugEnv *pEnv = NULL;
+	struct HwDebugEnv *pEnv = NULL;
 
 	if(debugHWEnabled())
 	{
@@ -462,28 +684,28 @@ static void debug_set_env(void)
 	}
 }
 
-int debugGetEnv(struct DebugEnv *env)
+int debugGetEnv(struct HwDebugEnv *env)
 {
-	struct DebugEnv *pEnv;
+	struct HwDebugEnv *pEnv;
 
 	pEnv = debug_get_env();
 	if(pEnv)
 	{
-		memcpy(env, pEnv, sizeof(struct DebugEnv));
+		memcpy(env, pEnv, sizeof(struct HwDebugEnv));
 		return 0;
 	}
 
 	return 1;
 }
 
-int debugSetEnv(struct DebugEnv *env)
+int debugSetEnv(struct HwDebugEnv *env)
 {
-	struct DebugEnv *pEnv;
+	struct HwDebugEnv *pEnv;
 
 	pEnv = debug_get_env();
 	if(pEnv)
 	{
-		memcpy(pEnv, env, sizeof(struct DebugEnv));
+		memcpy(pEnv, env, sizeof(struct HwDebugEnv));
 		debug_set_env();
 		return 0;
 	}
@@ -491,9 +713,11 @@ int debugSetEnv(struct DebugEnv *env)
 	return 1;
 }
 
+/*
+
 void debugSetHWBreak(unsigned int addr, unsigned int mask)
 {
-	struct DebugEnv *pEnv;
+	struct HwDebugEnv *pEnv;
 	pEnv = debug_get_env();
 	if(pEnv == NULL)
 	{
@@ -519,7 +743,7 @@ void debugSetHWBreak(unsigned int addr, unsigned int mask)
 void debugSetHWRegs(int argc, char **argv)
 {
 	int i;
-	struct DebugEnv *pEnv;
+	struct HwDebugEnv *pEnv;
 
 	pEnv = debug_get_env();
 	if(pEnv == NULL)
@@ -598,7 +822,7 @@ void debugPrintHWRegs(void)
 {
 	if(!g_isv1)
 	{
-		struct DebugEnv *pEnv;
+		struct HwDebugEnv *pEnv;
 
 		pEnv = debug_get_env();
 		if(pEnv)
@@ -624,23 +848,5 @@ void debugPrintHWRegs(void)
 		SHELL_PRINT("Not available on v1.0 firmware\n");
 	}
 }
+*/
 
-int debugBreakThread(SceUID uid)
-{
-	int intc;
-	unsigned int addr;
-	int ret = -1;
-
-	intc = pspSdkDisableInterrupts();
-	addr = thGetCurrentEPC(uid);
-	if(addr)
-	{
-		if(debugSetBP(addr))
-		{
-			ret = 0;
-		}
-	}
-	pspSdkEnableInterrupts(intc);
-
-	return ret;
-}

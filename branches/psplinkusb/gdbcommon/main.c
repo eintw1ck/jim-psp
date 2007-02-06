@@ -18,7 +18,6 @@
 #include <string.h>
 #include <unistd.h>
 #include "gdb-common.h"
-#include "../psplink_user/psplink_user.h"
 #include "../psplink/debug.h"
 
 PSP_MODULE_INFO(GDB_MODULE_NAME, 0, 1, 1);

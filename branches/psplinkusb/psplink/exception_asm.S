@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2005 James F <tyranid@gmail.com>
  *
- * $HeadURL$
- * $Id$
+ * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/psplink_user/exception_asm.S $
+ * $Id: exception_asm.S 1913 2006-05-21 17:26:57Z tyranid $
  */
 
 	.set noreorder
@@ -117,28 +117,16 @@
 #define REG_COP0_14  (REG_COP0_13 + 4)
 #define REG_PRID     (REG_COP0_14 + 4)
 #define REG_TYPE     (REG_PRID + 4)
-#define REG_VFPU    (REG_TYPE + 4)
+#define REG_VFPU    (REG_TYPE + 8)
 
 	.extern g_psplinkContext
 	.extern psplinkTrap
-
-	.global psplinkResumeFromException
-	.ent    psplinkResumeFromException
-psplinkResumeFromException:
-
-	break
-
-	.end    psplinkResumeFromException
 
 	.global psplinkDefaultExHandler
 	.ent    psplinkDefaultExHandler
 psplinkDefaultExHandler:
 
 	nop
-	nop
-	la		$v1, psplinkResumeFromException
-	mfc0    $v0, EPC
-	beq     $v0, $v1, _psplinkExceptionResume
 	nop
 # Set exception type to NORMAL
 	la		$v1, _psplinkExType
@@ -293,67 +281,112 @@ psplinkExceptionHandler:
 	beq		$a0, $0, 3f
 	nop
 
-# Store VFPU registers
-	usv.q	C000, REG_VFPU($v0)
-	usv.q	C010, REG_VFPU+16($v0)
-	usv.q	C020, REG_VFPU+32($v0)
-	usv.q	C030, REG_VFPU+48($v0)
-	usv.q	C100, REG_VFPU+64($v0)
-	usv.q	C110, REG_VFPU+80($v0)
-	usv.q	C120, REG_VFPU+96($v0)
-	usv.q	C130, REG_VFPU+112($v0)
-	usv.q	C200, REG_VFPU+128($v0)
-	usv.q	C210, REG_VFPU+144($v0)
-	usv.q	C220, REG_VFPU+160($v0)
-	usv.q	C230, REG_VFPU+176($v0)
-	usv.q	C300, REG_VFPU+192($v0)
-	usv.q	C310, REG_VFPU+208($v0)
-	usv.q	C320, REG_VFPU+224($v0)
-	usv.q	C330, REG_VFPU+240($v0)
-	usv.q	C400, REG_VFPU+256($v0)
-	usv.q	C410, REG_VFPU+272($v0)
-	usv.q	C420, REG_VFPU+288($v0)
-	usv.q	C430, REG_VFPU+304($v0)
-	usv.q	C500, REG_VFPU+320($v0)
-	usv.q	C510, REG_VFPU+336($v0)
-	usv.q	C520, REG_VFPU+352($v0)
-	usv.q	C530, REG_VFPU+368($v0)
-	usv.q	C600, REG_VFPU+384($v0)
-	usv.q	C610, REG_VFPU+400($v0)
-	usv.q	C620, REG_VFPU+416($v0)
-	usv.q	C630, REG_VFPU+432($v0)
-	usv.q	C700, REG_VFPU+448($v0)
-	usv.q	C710, REG_VFPU+464($v0)
-	usv.q	C720, REG_VFPU+480($v0)
-	usv.q	C730, REG_VFPU+496($v0)
+# Store VFPU registers (memory should be aligned)
+	sv.q	C000, REG_VFPU($v0)
+	sv.q	C010, REG_VFPU+16($v0)
+	sv.q	C020, REG_VFPU+32($v0)
+	sv.q	C030, REG_VFPU+48($v0)
+	sv.q	C100, REG_VFPU+64($v0)
+	sv.q	C110, REG_VFPU+80($v0)
+	sv.q	C120, REG_VFPU+96($v0)
+	sv.q	C130, REG_VFPU+112($v0)
+	sv.q	C200, REG_VFPU+128($v0)
+	sv.q	C210, REG_VFPU+144($v0)
+	sv.q	C220, REG_VFPU+160($v0)
+	sv.q	C230, REG_VFPU+176($v0)
+	sv.q	C300, REG_VFPU+192($v0)
+	sv.q	C310, REG_VFPU+208($v0)
+	sv.q	C320, REG_VFPU+224($v0)
+	sv.q	C330, REG_VFPU+240($v0)
+	sv.q	C400, REG_VFPU+256($v0)
+	sv.q	C410, REG_VFPU+272($v0)
+	sv.q	C420, REG_VFPU+288($v0)
+	sv.q	C430, REG_VFPU+304($v0)
+	sv.q	C500, REG_VFPU+320($v0)
+	sv.q	C510, REG_VFPU+336($v0)
+	sv.q	C520, REG_VFPU+352($v0)
+	sv.q	C530, REG_VFPU+368($v0)
+	sv.q	C600, REG_VFPU+384($v0)
+	sv.q	C610, REG_VFPU+400($v0)
+	sv.q	C620, REG_VFPU+416($v0)
+	sv.q	C630, REG_VFPU+432($v0)
+	sv.q	C700, REG_VFPU+448($v0)
+	sv.q	C710, REG_VFPU+464($v0)
+	sv.q	C720, REG_VFPU+480($v0)
+	sv.q	C730, REG_VFPU+496($v0)
 
 # Jump target for ignore cop2
 3:
 	sw			$sp, REG_FP($v0)
 	addiu		$v0, $v0, -8
 
-
 4:
+# Transition this thread into kernel mode if necessary
+# Get status reg and SP.user
+	cfc0	$t0, $2
+	cfc0 	$t3, $15
+	andi	$t2, $t0, 0x18
+
+# If coming from kernel mode then leave stack as is
+	movz	$t3, $sp, $t2
+
+# Create bodged SCCONTEXT, doesn't really matter too much as 
+# We will restore the regs correctly anyway ;)
+	addiu	$t3, $t3, -32
+
+	sw		$t0, 0($t3)
+	cfc0	$t0, $0
+	sw		$t0, 4($t3)
+	sw		$sp, 8($t3)
+	sw		$ra, 0xC($t3)
+	sw		$k1, 0x10($t3)
+	sw		$zero, 0x14($t3)
+	sw		$zero, 0x18($t3)
+	sw		$zero, 0x1C($t3)
+
+# Setup TCB
+	cfc0	$t0, $16
+	beqz	$t0, 5f
+	move	$sp, $t3
+
+	lw		$t1, 0($t0)
+	sw		$t1, 0x1C($sp)
+	sw		$sp, 0($t0)
+
+5:
+	cfc0	$t0, $2
+# Don't enable interrupts yet
+	li		$t1, 0xFFFFFFE4
+	and		$t0, $t0, $t1
+	nop
+	nop
+	mtc0	$t0, $12
+	nop
+
+# Assume we always came from kernel mode to placate the kernel
+	move	$k1, $0
+
+# Jump to entry
+	jal		psplinkTrap
 	move	$a0, $v0
-	la		$v0, psplinkTrap
-	mtc0	$v0, EPC 
-	nop
-	nop
-	eret
-	nop
-	nop
 
-	.end psplinkExceptionHandler
-
-	.ent _psplinkExceptionResume
-
-_psplinkExceptionResume:
-
-	move	$v0, $a0
+# psplinkTrap returns the context block to restart
+# Restore context
 	sw		$0, 0($v0)
 	addiu	$v0, $v0, 8
-
+# Restore exception mode and restore registers
 	lw		$v1,  REG_STATUS($v0)
+	mtc0	$v1,  $12
+	nop
+
+# Restore TCB
+	cfc0	$t0, $16
+	beqz	$t0, 6f
+	nop
+
+	lw		$t1, 0x1C($sp)
+	sw		$t1, 0($t0)
+6:
 
 # Check if cop2 is enabled and skip if not
 	lui		$a0, 0x4000
@@ -362,38 +395,38 @@ _psplinkExceptionResume:
 	nop
 
 # Restore VFPU registers
-	ulv.q	C000, REG_VFPU($v0)
-	ulv.q	C010, REG_VFPU+16($v0)
-	ulv.q	C020, REG_VFPU+32($v0)
-	ulv.q	C030, REG_VFPU+48($v0)
-	ulv.q	C100, REG_VFPU+64($v0)
-	ulv.q	C110, REG_VFPU+80($v0)
-	ulv.q	C120, REG_VFPU+96($v0)
-	ulv.q	C130, REG_VFPU+112($v0)
-	ulv.q	C200, REG_VFPU+128($v0)
-	ulv.q	C210, REG_VFPU+144($v0)
-	ulv.q	C220, REG_VFPU+160($v0)
-	ulv.q	C230, REG_VFPU+176($v0)
-	ulv.q	C300, REG_VFPU+192($v0)
-	ulv.q	C310, REG_VFPU+208($v0)
-	ulv.q	C320, REG_VFPU+224($v0)
-	ulv.q	C330, REG_VFPU+240($v0)
-	ulv.q	C400, REG_VFPU+256($v0)
-	ulv.q	C410, REG_VFPU+272($v0)
-	ulv.q	C420, REG_VFPU+288($v0)
-	ulv.q	C430, REG_VFPU+304($v0)
-	ulv.q	C500, REG_VFPU+320($v0)
-	ulv.q	C510, REG_VFPU+336($v0)
-	ulv.q	C520, REG_VFPU+352($v0)
-	ulv.q	C530, REG_VFPU+368($v0)
-	ulv.q	C600, REG_VFPU+384($v0)
-	ulv.q	C610, REG_VFPU+400($v0)
-	ulv.q	C620, REG_VFPU+416($v0)
-	ulv.q	C630, REG_VFPU+432($v0)
-	ulv.q	C700, REG_VFPU+448($v0)
-	ulv.q	C710, REG_VFPU+464($v0)
-	ulv.q	C720, REG_VFPU+480($v0)
-	ulv.q	C730, REG_VFPU+496($v0)
+	lv.q	C000, REG_VFPU($v0)
+	lv.q	C010, REG_VFPU+16($v0)
+	lv.q	C020, REG_VFPU+32($v0)
+	lv.q	C030, REG_VFPU+48($v0)
+	lv.q	C100, REG_VFPU+64($v0)
+	lv.q	C110, REG_VFPU+80($v0)
+	lv.q	C120, REG_VFPU+96($v0)
+	lv.q	C130, REG_VFPU+112($v0)
+	lv.q	C200, REG_VFPU+128($v0)
+	lv.q	C210, REG_VFPU+144($v0)
+	lv.q	C220, REG_VFPU+160($v0)
+	lv.q	C230, REG_VFPU+176($v0)
+	lv.q	C300, REG_VFPU+192($v0)
+	lv.q	C310, REG_VFPU+208($v0)
+	lv.q	C320, REG_VFPU+224($v0)
+	lv.q	C330, REG_VFPU+240($v0)
+	lv.q	C400, REG_VFPU+256($v0)
+	lv.q	C410, REG_VFPU+272($v0)
+	lv.q	C420, REG_VFPU+288($v0)
+	lv.q	C430, REG_VFPU+304($v0)
+	lv.q	C500, REG_VFPU+320($v0)
+	lv.q	C510, REG_VFPU+336($v0)
+	lv.q	C520, REG_VFPU+352($v0)
+	lv.q	C530, REG_VFPU+368($v0)
+	lv.q	C600, REG_VFPU+384($v0)
+	lv.q	C610, REG_VFPU+400($v0)
+	lv.q	C620, REG_VFPU+416($v0)
+	lv.q	C630, REG_VFPU+432($v0)
+	lv.q	C700, REG_VFPU+448($v0)
+	lv.q	C710, REG_VFPU+464($v0)
+	lv.q	C720, REG_VFPU+480($v0)
+	lv.q	C730, REG_VFPU+496($v0)
 
 1:
 
@@ -482,14 +515,11 @@ _psplinkExceptionResume:
 	lw		$1, REG_GPR_1($v0)
 	lw		$2, REG_GPR_2($v0)
 
-# When resuming debug exceptions take the value of status and make a decision
-# whether to resume in user or kernel modes
-
 	nop
 	nop
 	eret
 
-	.end	_psplinkExceptionResume
+	.end psplinkExceptionHandler
 
 	.data
 

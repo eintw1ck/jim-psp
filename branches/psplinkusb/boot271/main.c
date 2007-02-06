@@ -14,6 +14,7 @@
 #include <pspkernel.h>
 #include <pspdebug.h>
 #include <string.h>
+#include "../psplink/version.h"
 
 /* Define the module info section, note the 0x1000 flag to enable start in kernel mode */
 PSP_MODULE_INFO("PSPLINKLOADER", 0, 1, 1);
@@ -31,6 +32,7 @@ int _main(SceSize args, void *argp)
 	do
 	{
 		pspDebugScreenInit();
+		pspDebugScreenPrintf("PSPLink Bootstrap TyRaNiD (c) 2k7 Version %s\n", PSPLINK_VERSION);
 		strcpy(path, argp);
 		slash = strrchr(path, '/');
 		if(slash == NULL)

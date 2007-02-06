@@ -2335,7 +2335,7 @@ static int memdump_cmd(int argc, char **argv, unsigned int *vRet)
 	}
 	else
 	{
-		SHELL_PRINT("Invalid memory address %x\n", addr);
+		SHELL_PRINT("Invalid memory address 0x%08X\n", addr);
 	}
 
 	return CMD_OK;
@@ -3097,7 +3097,6 @@ static int disasm_cmd(int argc, char **argv, unsigned int *vRet)
 
 		for(i = 0; i < count; i++)
 		{
-			//SHELL_PRINT("%s\n", disasmInstruction(_lw(addr), addr, NULL, NULL));
 			SHELL_PRINT_CMD(SHELL_CMD_DISASM, "0x%08X:0x%08X", addr, _lw(addr));
 			addr += 4;
 		}
@@ -3307,13 +3306,7 @@ static int modaddr_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int exprint_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	int ex = -1;
-
-	if(argc > 0)
-	{
-		ex = atoi(argv[0]);
-	}
-	exceptionPrint(ex);
+	exceptionPrint(NULL);
 
 	return CMD_OK;
 }
@@ -3334,20 +3327,13 @@ static int exctx_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int exprfpu_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	int ex = -1;
-
-	if(argc > 0)
-	{
-		ex = atoi(argv[0]);
-	}
-	exceptionFpuPrint(ex);
+	exceptionFpuPrint(NULL);
 
 	return CMD_OK;
 }
 
 static int exprvfpu_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	int ex = -1;
 	int type = VFPU_PRINT_SINGLE;
 
 	if(argc > 0)
@@ -3368,13 +3354,7 @@ static int exprvfpu_cmd(int argc, char **argv, unsigned int *vRet)
 		}
 	}
 
-	if(argc > 1)
-	{
-		ex = atoi(argv[1]);
-	}
-
-
-	exceptionVfpuPrint(ex, type);
+	exceptionVfpuPrint(NULL, type);
 
 	return CMD_OK;
 }
@@ -3405,7 +3385,7 @@ static int exresume_cmd(int argc, char **argv, unsigned int *vRet)
 		}
 	}
 
-	exceptionResume();
+	exceptionResume(NULL, PSP_EXCEPTION_CONTINUE);
 
 	return CMD_OK;
 }
@@ -3436,62 +3416,6 @@ static int setreg_cmd(int argc, char **argv, unsigned int *vRet)
 	return CMD_OK;
 }
 
-static int hwena_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	if(argc > 0)
-	{
-		if(strcmp(argv[0], "on") == 0)
-		{
-			debugEnableHW();
-		}
-		else if(strcmp(argv[0], "off") == 0)
-		{
-			debugDisableHW();
-		}
-		else
-		{
-			return CMD_ERROR;
-		}
-	}
-	else
-	{
-		SHELL_PRINT("Debug HW: %s\n", debugHWEnabled() ? "on" : "off" );
-	}
-
-	return CMD_OK;
-}
-
-static int hwregs_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	if(argc == 0)
-	{
-		debugPrintHWRegs();
-	}
-	else
-	{
-		debugSetHWRegs(argc, argv);
-	}
-
-	return CMD_OK;
-}
-
-static int hwbp_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	u32 addr;
-	u32 mask = 0;
-
-	if(memDecode(argv[0], &addr))
-	{
-		debugSetHWBreak(addr, mask);
-	}
-	else
-	{
-		return CMD_ERROR;
-	}
-
-	return CMD_OK;
-}
-
 static int bpth_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return thread_do_cmd(argv[0], "break", (ReferFunc) pspSdkReferThreadStatusByName, debugBreakThread);
@@ -3501,6 +3425,25 @@ static int bpset_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 addr;
 	int ret = CMD_ERROR;
+	unsigned int flags = 0;
+
+	if(argc > 1)
+	{
+		int i = 0;
+		while(argv[1][i])
+		{
+			if(argv[1][i] == '1')
+			{
+				flags |= DEBUG_BP_ONESHOT;
+			}
+			else if(argv[1][i] == 'h')
+			{
+				flags |= DEBUG_BP_HARDWARE;
+			}
+
+			i++;
+		}
+	}
 
 	if(memDecode(argv[0], &addr))
 	{
@@ -3510,7 +3453,7 @@ static int bpset_cmd(int argc, char **argv, unsigned int *vRet)
 		size_left = memValidate(addr, MEM_ATTRIB_WRITE | MEM_ATTRIB_WORD | MEM_ATTRIB_EXEC);
 		if(size_left >= sizeof(u32))
 		{
-			debugSetBP(addr);
+			debugSetBP(addr, flags, 0);
 			ret = CMD_OK;
 		}
 		else
@@ -3525,10 +3468,19 @@ static int bpset_cmd(int argc, char **argv, unsigned int *vRet)
 static int bpdel_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	u32 id;
+	struct Breakpoint *bp;
 
 	if(strtoint(argv[0], &id))
 	{
-		debugDeleteBp(id);
+		bp = debugFindBPByIndex(id);
+		if(bp)
+		{
+			debugDeleteBP(bp->addr);
+		}
+		else
+		{
+			debugDeleteBP(id);
+		}
 	}
 	else
 	{
@@ -3541,21 +3493,21 @@ static int bpdel_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int bpprint_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	debugPrintBPS();
+	debugPrintBPs();
 
 	return CMD_OK;
 }
 
 static int step_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	debugStep(0);
+	exceptionResume(NULL, PSP_EXCEPTION_STEP);
 
 	return CMD_OK;
 }
 
 static int skip_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	debugStep(1);
+	exceptionResume(NULL, PSP_EXCEPTION_SKIP);
 
 	return CMD_OK;
 }

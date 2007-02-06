@@ -13,10 +13,4 @@
 #ifndef __PSPLINK_USER_H__
 #define __PSPLINK_USER_H__
 
-#include "psplink_ex.h"
-
-typedef int (*GdbHandler)(struct PsplinkContext *ctx);
-
-void psplinkUserRegisterGdbHandler(GdbHandler gdbhandler);
-
 #endif
