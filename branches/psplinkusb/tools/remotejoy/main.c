@@ -156,31 +156,31 @@ int main_thread(SceSize args, void *argp)
 	if(pMod == NULL)
 	{
 		printf("Could not get controller module\n");
-		sceKernelTerminateDeleteThread(0);
+		sceKernelExitDeleteThread(0);
 	}
 
 	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlReadBufferPositive", read_buffer_positive) == 0)
 	{
 		printf("Could not hook controller function\n");
-		sceKernelTerminateDeleteThread(0);
+		sceKernelExitDeleteThread(0);
 	}
 
 	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlPeekBufferPositive", peek_buffer_positive) == 0)
 	{
 		printf("Could not hook controller function\n");
-		sceKernelTerminateDeleteThread(0);
+		sceKernelExitDeleteThread(0);
 	}
 
 	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlReadBufferNegative", peek_buffer_negative) == 0)
 	{
 		printf("Could not hook controller function\n");
-		sceKernelTerminateDeleteThread(0);
+		sceKernelExitDeleteThread(0);
 	}
 
 	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlPeekBufferNegative", peek_buffer_negative) == 0)
 	{
 		printf("Could not hook controller function\n");
-		sceKernelTerminateDeleteThread(0);
+		sceKernelExitDeleteThread(0);
 	}
 
 	pMod = sceKernelFindModuleByName("sceVshBridge_Driver");
@@ -197,7 +197,7 @@ int main_thread(SceSize args, void *argp)
 	if(usbAsyncRegister(ASYNC_JOY, &g_endp) < 0)
 	{
 		printf("Could not register remotejoy provider\n");
-		sceKernelTerminateDeleteThread(0);
+		sceKernelExitDeleteThread(0);
 	}
 
 	usbWaitForConnect();
