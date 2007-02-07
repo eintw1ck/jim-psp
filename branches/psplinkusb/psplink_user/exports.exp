@@ -9,8 +9,4 @@ PSP_EXPORT_FUNC(module_stop)
 PSP_EXPORT_VAR(module_info)
 PSP_EXPORT_END
 
-PSP_EXPORT_START(psplinkUser, 0, 0x0001)
-PSP_EXPORT_FUNC(pspDebugScreenPrintf)
-PSP_EXPORT_END
-
 PSP_END_EXPORTS
