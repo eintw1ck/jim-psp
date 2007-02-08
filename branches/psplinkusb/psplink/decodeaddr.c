@@ -21,7 +21,6 @@
 #include "decodeaddr.h"
 #include "exception.h"
 #include "util.h"
-//#include "symbols.h"
 #include "libs.h"
 
 /* Indicates that memory protection is on */

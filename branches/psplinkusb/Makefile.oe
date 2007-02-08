@@ -5,9 +5,8 @@ all:
 	$(MAKE) -C libusbhostfs_driver all
 	$(MAKE) -C psplink all PSP_FW_VERSION=271
 	$(MAKE) -C psplink_user all PSP_FW_VERSION=271
-#	$(MAKE) -C gdbcommon all PSP_FW_VERSION=271
 	$(MAKE) -C usbhostfs all PSP_FW_VERSION=271
-#	$(MAKE) -C usbgdb    all PSP_FW_VERSION=271
+	$(MAKE) -C usbgdb    all PSP_FW_VERSION=271
 	$(MAKE) -C boot271   release PSP_FW_VERSION=271
 
 release: clean all
@@ -19,7 +18,7 @@ release: clean all
 	cp psplink/psplink.ini release_oe/psplink
 	cp psplink_user/psplink_user.prx release_oe/psplink
 	cp usbhostfs/usbhostfs.prx release_oe/psplink
-#	cp usbgdb/usbgdb.prx release_oe/psplink
+	cp usbgdb/usbgdb.prx release_oe/psplink
 	cp boot271/EBOOT.PBP release_oe/psplink
 	cp -Rf pspsh release_oe/pc
 	mkdir release_oe/pc/psplink
@@ -39,7 +38,6 @@ clean:
 	$(MAKE) -C psplink	clean
 	$(MAKE) -C psplink_user clean
 	$(MAKE) -C usbhostfs clean
-#	$(MAKE) -C usbgdb   clean
-#	$(MAKE) -C gdbcommon clean
+	$(MAKE) -C usbgdb   clean
 	$(MAKE) -C boot271   clean
 	rm -rf release_oe

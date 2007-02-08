@@ -84,11 +84,16 @@ unsigned int thGetCurrentEPC(SceUID uid)
 }
 
 /* Get the thread context of a user thread, trys to infer the real address */
-int psplinkFindUserThreadContext(SceUID uid, struct PsplinkContext *ctx)
+int psplinkGetFullThreadContext(SceUID uid, struct PsplinkContext *ctx)
 {
 	SceKernelThreadKInfo info;
 	int intc;
 	int ret = 0;
+
+	if(ctx == NULL)
+	{
+		return 0;
+	}
 
 	memset(&info, 0, sizeof(info));
 	info.size = sizeof(info);
@@ -96,33 +101,30 @@ int psplinkFindUserThreadContext(SceUID uid, struct PsplinkContext *ctx)
 	intc = pspSdkDisableInterrupts();
 	if(ThreadManForKernel_2D69D086(uid, &info) == 0)
 	{
-		if(info.attr & PSP_THREAD_ATTR_USER)
+		memset(ctx, 0, sizeof(struct PsplinkContext));
+		ctx->thid = uid;
+		memcpy(&ctx->regs.r[1], info.thContext->gpr, 31 * sizeof(u32));
+		memcpy(&ctx->regs.fpr[0], info.thContext->fpr, 32 * sizeof(float));
+		ctx->regs.hi = info.thContext->hi;
+		ctx->regs.lo = info.thContext->lo;
+
+		if(info.retAddr)
 		{
-			memset(ctx, 0, sizeof(struct PsplinkContext));
-			ctx->thid = uid;
-			memcpy(&ctx->regs.r[1], info.thContext->gpr, 31 * sizeof(u32));
-			memcpy(&ctx->regs.fpr[0], info.thContext->fpr, 32 * sizeof(float));
-			ctx->regs.hi = info.thContext->hi;
-			ctx->regs.lo = info.thContext->lo;
-
-			if(info.retAddr)
-			{
-				ctx->regs.epc = info.scContext->epc;
-				ctx->regs.status = info.scContext->status;
-				ctx->regs.frame_ptr = info.scContext->sp;
-				ctx->regs.r[29] = info.scContext->sp;
-				ctx->regs.r[31] = info.scContext->ra;
-				ctx->regs.r[27] = info.scContext->k1;
-			}
-			else
-			{
-				ctx->regs.epc = info.thContext->EPC;
-				ctx->regs.status = info.thContext->SR;
-				ctx->regs.frame_ptr = info.thContext->gpr[28];
-			}
-
-			ret = 1;
+			ctx->regs.epc = info.scContext->epc;
+			ctx->regs.status = info.scContext->status;
+			ctx->regs.frame_ptr = info.scContext->sp;
+			ctx->regs.r[29] = info.scContext->sp;
+			ctx->regs.r[31] = info.scContext->ra;
+			ctx->regs.r[27] = info.scContext->k1;
 		}
+		else
+		{
+			ctx->regs.epc = info.thContext->EPC;
+			ctx->regs.status = info.thContext->SR;
+			ctx->regs.frame_ptr = info.thContext->gpr[28];
+		}
+
+		ret = 1;
 	}
 
 	pspSdkEnableInterrupts(intc);

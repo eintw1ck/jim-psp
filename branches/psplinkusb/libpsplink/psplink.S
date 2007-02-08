@@ -2,6 +2,9 @@
 
 #include "pspimport.s"
 
+// Build files
+// psplink_0000.o psplink_0001.o psplink_0002.o psplink_0003.o psplink_0004.o psplink_0005.o psplink_0006.o psplink_0007.o psplink_0008.o psplink_0009.o psplink_0010.o 
+
 #ifdef F_psplink_0000
 	IMPORT_START "psplink",0x40090000
 #endif

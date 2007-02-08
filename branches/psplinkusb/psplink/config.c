@@ -47,13 +47,6 @@ static void config_resetonexit(struct ConfigContext *ctx, const char *szVal, uns
 	ctx->resetonexit = iVal;
 }
 
-/*
-static void config_disopt(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
-{
-	disasmSetOpts(szVal, 1);
-}
-*/
-
 static void config_pid(struct ConfigContext *ctx, const char *szVal, unsigned int iVal)
 {
 	ctx->pid = iVal;
@@ -63,7 +56,6 @@ struct psplink_config config_names[] = {
 	{ "pluser", 1, config_pluser },
 	{ "resetonexit", 1, config_resetonexit },
 	{ "pid", 1, config_pid },
-//	{ "disopt", 0, config_disopt },
 	{ NULL, 0, NULL }
 };
 

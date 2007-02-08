@@ -349,10 +349,14 @@ struct Breakpoint* debugSetBP(unsigned int address, unsigned int flags, SceUID t
 	{
 		struct Breakpoint *pBp = NULL;
 
+		if(flags & DEBUG_BP_HARDWARE)
+		{
+			return NULL;
+		}
+
 		pBp = find_freebp();
 		if(pBp != NULL)
 		{
-			/* Should handle HW case */
 			memset(pBp, 0, sizeof(struct Breakpoint));
 			pBp->inst = _lw(address);
 			_sw(SW_BREAK_INST, address);
@@ -396,15 +400,18 @@ int debugDeleteBP(unsigned int addr)
 	pBp = find_bp(addr);
 	if(pBp)
 	{
-		_sw(pBp->inst, pBp->addr);
-		pBp->flags = 0;
-		sceKernelDcacheWritebackInvalidateAll();
-		sceKernelIcacheInvalidateAll();
-		ret = 1;
+		if((pBp->flags & DEBUG_BP_HARDWARE) == 0)
+		{
+			_sw(pBp->inst, pBp->addr);
+			pBp->flags = 0;
+			sceKernelDcacheWritebackInvalidateAll();
+			sceKernelIcacheInvalidateAll();
+			ret = 1;
+		}
 	}
 	pspSdkEnableInterrupts(intc);
 
-	return 1;
+	return ret;
 }
 
 int debugDisableBP(unsigned int addr, int next)
@@ -417,15 +424,18 @@ int debugDisableBP(unsigned int addr, int next)
 	pBp = find_bp(addr);
 	if(pBp)
 	{
-		_sw(pBp->inst, pBp->addr);
-		pBp->flags |= DEBUG_BP_DISABLED;
-		if(next)
+		if((pBp->flags & DEBUG_BP_HARDWARE) == 0)
 		{
-			pBp->flags |= DEBUG_BP_NEXT_REENABLE;
+			_sw(pBp->inst, pBp->addr);
+			pBp->flags |= DEBUG_BP_DISABLED;
+			if(next)
+			{
+				pBp->flags |= DEBUG_BP_NEXT_REENABLE;
+			}
+			sceKernelDcacheWritebackInvalidateAll();
+			sceKernelIcacheInvalidateAll();
+			ret = 1;
 		}
-		sceKernelDcacheWritebackInvalidateAll();
-		sceKernelIcacheInvalidateAll();
-		ret = 1;
 	}
 	pspSdkEnableInterrupts(intc);
 
@@ -442,11 +452,14 @@ int debugEnableBP(unsigned int addr)
 	pBp = find_bp(addr);
 	if(pBp)
 	{
-		_sw(SW_BREAK_INST, pBp->addr);
-		pBp->flags &= ~(DEBUG_BP_DISABLED | DEBUG_BP_NEXT_REENABLE);
-		sceKernelDcacheWritebackInvalidateAll();
-		sceKernelIcacheInvalidateAll();
-		ret = 1;
+		if((pBp->flags & DEBUG_BP_HARDWARE) == 0)
+		{
+			_sw(SW_BREAK_INST, pBp->addr);
+			pBp->flags &= ~(DEBUG_BP_DISABLED | DEBUG_BP_NEXT_REENABLE);
+			sceKernelDcacheWritebackInvalidateAll();
+			sceKernelIcacheInvalidateAll();
+			ret = 1;
+		}
 	}
 	pspSdkEnableInterrupts(intc);
 
@@ -597,7 +610,11 @@ int debugHandleException(struct PsplinkContext *ctx)
 		{
 			exceptionPrint(ctx);
 		}
-		SHELL_PRINT_CMD(SHELL_CMD_DISASM, "0x%08X:0x%08X", ctx->regs.epc, _lw(ctx->regs.epc));
+
+		if(((ctx->regs.epc & 3) == 0) && (memValidate(ctx->regs.epc, MEM_ATTRIB_READ | MEM_ATTRIB_WORD)))
+		{
+			SHELL_PRINT_CMD(SHELL_CMD_DISASM, "0x%08X:0x%08X", ctx->regs.epc, _lw(ctx->regs.epc));
+		}
 
 		/* If this was not our parse thread */
 		if(!initex)

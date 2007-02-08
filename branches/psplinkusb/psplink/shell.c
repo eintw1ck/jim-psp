@@ -41,7 +41,6 @@
 #include "exception.h"
 #include "decodeaddr.h"
 #include "debug.h"
-//#include "symbols.h"
 #include "libs.h"
 #include "thctx.h"
 #include "apihook.h"
@@ -969,7 +968,7 @@ static void print_modthids(SceUID uid, int verbose, const char *name, int type, 
 	SceUID thids[100];
 	int count;
 
-	count = refer_threads_by_module(type, uid, thids, 100);
+	count = psplinkReferThreadsByModule(type, uid, thids, 100);
 	if(count > 0)
 	{
 		int i;
@@ -1569,8 +1568,6 @@ static int kill_cmd(int argc, char **argv, unsigned int *vRet)
 		if(uid >= 0)
 		{
 			SceUID thids[100];
-			SceKernelThreadInfo info;
-			SceKernelModuleInfo modinfo;
 			int count;
 			int i;
 			int status;
@@ -1584,23 +1581,11 @@ static int kill_cmd(int argc, char **argv, unsigned int *vRet)
 			}
 
 			SHELL_PRINT("Stop status %08X\n", status);
-			memset(thids, 0, sizeof(thids));
-			if(sceKernelGetThreadmanIdList(SCE_KERNEL_TMID_Thread, thids, 100, &count) >= 0)
-			{
-				for(i = 0; i < count; i++)
-				{
-					memset(&info, 0, sizeof(info));
-					info.size = sizeof(info);
-					if(sceKernelReferThreadStatus(thids[i], &info) < 0)
-					{
-						continue;
-					}
 
-					if(refer_module_by_addr((u32) info.entry, &modinfo) == uid)
-					{
-						sceKernelTerminateDeleteThread(thids[i]);
-					}
-				}
+			count = psplinkReferThreadsByModule(SCE_KERNEL_TMID_Thread, uid, thids, 100);
+			for(i = 0; i < count; i++)
+			{
+				sceKernelTerminateDeleteThread(thids[i]);
 			}
 
 			if(sceKernelUnloadModule(uid) < 0)
@@ -3395,7 +3380,7 @@ static int setreg_cmd(int argc, char **argv, unsigned int *vRet)
 	u32 addr;
 	u32 *reg;
 
-	if(memDecode(argv[0], &addr))
+	if(memDecode(argv[1], &addr))
 	{
 		if(argv[0][0] != '$')
 		{
@@ -3508,96 +3493,6 @@ static int step_cmd(int argc, char **argv, unsigned int *vRet)
 static int skip_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	exceptionResume(NULL, PSP_EXCEPTION_SKIP);
-
-	return CMD_OK;
-}
-
-static int symload_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	/*
-	char source[MAXPATHLEN];
-
-	if( !handlepath(g_context.currdir, argv[0], source, TYPE_FILE, 1) )
-	{
-		return CMD_ERROR;
-	}
-
-	if(!symbolLoadSymbols(source))
-	{
-		return CMD_ERROR;
-	}
-
-	*/
-	return CMD_OK;
-}
-
-static int symlist_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	//symbolPrintLoadList();
-
-	return CMD_OK;
-}
-
-static int symprint_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	//symbolPrintSymbols(argv[0]);
-
-	return CMD_OK;
-}
-
-static int symbyaddr_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	/*
-	u32 addr;
-	int ret = CMD_ERROR;
-
-	if(memDecode(argv[0], &addr))
-	{
-		const struct SymfileEntry *pEntry;
-		unsigned int baseaddr;
-
-		pEntry = symbolFindByAddress(addr, &baseaddr);
-		if(pEntry)
-		{
-			if((baseaddr + pEntry->addr) < addr)
-			{
-				SHELL_PRINT("%s+0x%x\n", pEntry->name, addr - (baseaddr + pEntry->addr));
-			}
-			else
-			{
-				SHELL_PRINT("%s\n", pEntry->name);
-			}
-
-			ret = CMD_OK;
-		}
-		else
-		{
-			SHELL_PRINT("Error could not find symbol at address 0x%08X\n", addr);
-		}
-	}
-	*/
-
-	//return ret;
-	return CMD_OK;
-}
-
-static int symbyname_cmd(int argc, char **argv, unsigned int *vRet)
-{
-	/*
-	u32 addr;
-	u32 size;
-
-	addr = symbolFindByName(argv[0], &size);
-	if(addr > 0)
-	{
-		SHELL_PRINT("%s = 0x%08X size %d\n", argv[0], addr, size);
-	}
-	else
-	{
-		SHELL_PRINT("Could not find symbol %s\n", argv[0]);
-		return CMD_ERROR;
-	}
-	*/
 
 	return CMD_OK;
 }

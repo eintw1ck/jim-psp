@@ -58,7 +58,7 @@ int memcmp_mask(void *data1, void *data2, void *mask, int len);
 int decode_hexstr(const char *str, unsigned char *data, int max);
 SceUID refer_module_by_addr(unsigned int addr, SceKernelModuleInfo *info);
 SceUID refer_module_by_name(const char *name, SceKernelModuleInfo *info);
-int refer_threads_by_module(int type, SceUID modid, SceUID *uids, int max);
+int psplinkReferThreadsByModule(int type, SceUID modid, SceUID *uids, int max);
 int psplinkReferModule(SceUID uid, SceKernelModuleInfo *info);
 SceUID psplinkReferModuleByName(const char *name, SceKernelModuleInfo *info);
 int isdir(const char *path);

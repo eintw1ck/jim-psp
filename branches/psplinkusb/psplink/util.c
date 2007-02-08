@@ -781,7 +781,7 @@ static unsigned int get_callback_addr(SceUID uid)
 	return addr;
 }
 
-int refer_threads_by_module(int type, SceUID modid, SceUID *uids, int max)
+int psplinkReferThreadsByModule(int type, SceUID modid, SceUID *uids, int max)
 {
 	SceUID thids[100];
 	SceKernelModuleInfo modinfo;

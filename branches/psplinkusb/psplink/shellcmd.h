@@ -234,11 +234,6 @@ struct sh_command
 	SHELL_CMD("bpprint", "bt", bpprint_cmd, 0, "Print the current breakpoints", "", "") \
 	SHELL_CMD("step", "s", step_cmd, 0, "Step the next instruction", "", "") \
 	SHELL_CMD("skip", "k", skip_cmd, 0, "Skip the next instruction (i.e. jump over jals)", "", "") \
-	SHELL_CMD("symload", "syl", symload_cmd, 1, "Load a symbol file", "", "file.sym") \
-	SHELL_CMD("symlist", "syt", symlist_cmd, 0, "List the loaded symbols", "", "") \
-	SHELL_CMD("symprint", "syp", symprint_cmd, 1, "Print the symbols for a module", "", "modname") \
-	SHELL_CMD("symbyaddr", "sya", symbyaddr_cmd, 1, "Print the symbol at the specified address", "", "addr") \
-	SHELL_CMD("symbyname", "syn", symbyname_cmd, 1, "Print the specified symbol address", "", "module:symname") \
 	SHELL_CMD("call", NULL, call_cmd, 1, "Issue a function call", "", "addr [arg0...arg5]") \
  \
 	SHELL_CAT("misc", "Miscellaneous commands (e.g. USB, exit)") \
