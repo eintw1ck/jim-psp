@@ -1,6 +1,6 @@
-diff -burN insight-6.4/bfd/archures.c insight-psp/bfd/archures.c
---- insight-6.4/bfd/archures.c	2005-10-25 18:40:09.000000000 +0100
-+++ insight-psp/bfd/archures.c	2006-02-05 14:40:58.000000000 +0000
+diff -burN gdb-6.4/bfd/archures.c gdb-psp/bfd/archures.c
+--- gdb-6.4/bfd/archures.c	2005-10-25 18:40:09.000000000 +0100
++++ gdb-psp/bfd/archures.c	2007-02-08 20:06:04.000000000 +0000
 @@ -154,6 +154,7 @@
  .#define bfd_mach_mips16		16
  .#define bfd_mach_mips5                 5
@@ -9,9 +9,9 @@ diff -burN insight-6.4/bfd/archures.c insight-psp/bfd/archures.c
  .#define bfd_mach_mipsisa32             32
  .#define bfd_mach_mipsisa32r2           33
  .#define bfd_mach_mipsisa64             64
-diff -burN insight-6.4/bfd/bfd-in2.h insight-psp/bfd/bfd-in2.h
---- insight-6.4/bfd/bfd-in2.h	2005-10-25 18:40:09.000000000 +0100
-+++ insight-psp/bfd/bfd-in2.h	2006-02-05 14:40:58.000000000 +0000
+diff -burN gdb-6.4/bfd/bfd-in2.h gdb-psp/bfd/bfd-in2.h
+--- gdb-6.4/bfd/bfd-in2.h	2005-10-25 18:40:09.000000000 +0100
++++ gdb-psp/bfd/bfd-in2.h	2007-02-08 20:06:04.000000000 +0000
 @@ -1742,6 +1742,7 @@
  #define bfd_mach_mips16                16
  #define bfd_mach_mips5                 5
@@ -20,9 +20,9 @@ diff -burN insight-6.4/bfd/bfd-in2.h insight-psp/bfd/bfd-in2.h
  #define bfd_mach_mipsisa32             32
  #define bfd_mach_mipsisa32r2           33
  #define bfd_mach_mipsisa64             64
-diff -burN insight-6.4/bfd/cpu-mips.c insight-psp/bfd/cpu-mips.c
---- insight-6.4/bfd/cpu-mips.c	2005-05-04 16:53:06.000000000 +0100
-+++ insight-psp/bfd/cpu-mips.c	2006-02-05 14:40:58.000000000 +0000
+diff -burN gdb-6.4/bfd/cpu-mips.c gdb-psp/bfd/cpu-mips.c
+--- gdb-6.4/bfd/cpu-mips.c	2005-05-04 16:53:06.000000000 +0100
++++ gdb-psp/bfd/cpu-mips.c	2007-02-08 20:06:04.000000000 +0000
 @@ -86,6 +86,7 @@
    I_mipsisa64,
    I_mipsisa64r2,
@@ -41,9 +41,9 @@ diff -burN insight-6.4/bfd/cpu-mips.c insight-psp/bfd/cpu-mips.c
  };
  
  /* The default architecture is mips:3000, but with a machine number of
-diff -burN insight-6.4/bfd/elfxx-mips.c insight-psp/bfd/elfxx-mips.c
---- insight-6.4/bfd/elfxx-mips.c	2005-10-25 17:19:08.000000000 +0100
-+++ insight-psp/bfd/elfxx-mips.c	2006-02-05 14:40:58.000000000 +0000
+diff -burN gdb-6.4/bfd/elfxx-mips.c gdb-psp/bfd/elfxx-mips.c
+--- gdb-6.4/bfd/elfxx-mips.c	2005-10-25 17:19:08.000000000 +0100
++++ gdb-psp/bfd/elfxx-mips.c	2007-02-08 20:06:04.000000000 +0000
 @@ -4666,6 +4666,9 @@
      case E_MIPS_MACH_SB1:
        return bfd_mach_mips_sb1;
@@ -73,9 +73,9 @@ diff -burN insight-6.4/bfd/elfxx-mips.c insight-psp/bfd/elfxx-mips.c
  
    /* MIPS I extensions.  */
    { bfd_mach_mips6000, bfd_mach_mips3000 },
-diff -burN insight-6.4/config.sub insight-psp/config.sub
---- insight-6.4/config.sub	2005-07-14 02:24:56.000000000 +0100
-+++ insight-psp/config.sub	2006-02-05 14:40:58.000000000 +0000
+diff -burN gdb-6.4/config.sub gdb-psp/config.sub
+--- gdb-6.4/config.sub	2005-07-14 02:24:56.000000000 +0100
++++ gdb-psp/config.sub	2007-02-08 20:06:04.000000000 +0000
 @@ -256,6 +256,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
@@ -103,17 +103,50 @@ diff -burN insight-6.4/config.sub insight-psp/config.sub
  	mips3*-*)
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
-diff -burN insight-6.4/include/bin-bugs.h insight-psp/include/bin-bugs.h
---- insight-6.4/include/bin-bugs.h	2004-07-23 16:40:19.000000000 +0100
-+++ insight-psp/include/bin-bugs.h	2006-02-05 14:40:58.000000000 +0000
+diff -burN gdb-6.4/gdb/remote.c gdb-psp/gdb/remote.c
+--- gdb-6.4/gdb/remote.c	2005-07-20 03:56:43.000000000 +0100
++++ gdb-psp/gdb/remote.c	2007-02-08 20:06:12.000000000 +0000
+@@ -1953,6 +1953,7 @@
+   int lose;
+   CORE_ADDR text_addr, data_addr, bss_addr;
+   struct section_offsets *offs;
++  int i;
+ 
+   putpkt ("qOffsets");
+ 
+@@ -2014,6 +2015,13 @@
+   memcpy (offs, symfile_objfile->section_offsets,
+ 	  SIZEOF_N_SECTION_OFFSETS (symfile_objfile->num_sections));
+ 
++  /* GDB is stupid, lets fix up all sections to the same address not just a few :P */
++
++  for(i = 0; i < symfile_objfile->num_sections; i++)
++  {
++	  offs->offsets[i] = text_addr;
++  }
++#if 0
+   offs->offsets[SECT_OFF_TEXT (symfile_objfile)] = text_addr;
+ 
+   /* This is a temporary kludge to force data and bss to use the same offsets
+@@ -2022,6 +2030,7 @@
+ 
+   offs->offsets[SECT_OFF_DATA (symfile_objfile)] = data_addr;
+   offs->offsets[SECT_OFF_BSS (symfile_objfile)] = data_addr;
++#endif
+ 
+   objfile_relocate (symfile_objfile, offs);
+ }
+diff -burN gdb-6.4/include/bin-bugs.h gdb-psp/include/bin-bugs.h
+--- gdb-6.4/include/bin-bugs.h	2004-07-23 16:40:19.000000000 +0100
++++ gdb-psp/include/bin-bugs.h	2007-02-08 20:06:04.000000000 +0000
 @@ -1,3 +1,3 @@
  #ifndef REPORT_BUGS_TO
 -#define REPORT_BUGS_TO	"<URL:http://www.sourceware.org/bugzilla/>"
 +#define REPORT_BUGS_TO	"<URL:http://wiki.pspdev.org/psp:toolchain#bugs>"
  #endif
-diff -burN insight-6.4/include/elf/common.h insight-psp/include/elf/common.h
---- insight-6.4/include/elf/common.h	2005-09-30 16:12:52.000000000 +0100
-+++ insight-psp/include/elf/common.h	2006-02-05 14:40:58.000000000 +0000
+diff -burN gdb-6.4/include/elf/common.h gdb-psp/include/elf/common.h
+--- gdb-6.4/include/elf/common.h	2005-09-30 16:12:52.000000000 +0100
++++ gdb-psp/include/elf/common.h	2007-02-08 20:06:04.000000000 +0000
 @@ -93,6 +93,7 @@
  #define ET_HIOS		0xFEFF	/* Operating system-specific */
  #define ET_LOPROC	0xFF00	/* Processor-specific */
@@ -122,9 +155,9 @@ diff -burN insight-6.4/include/elf/common.h insight-psp/include/elf/common.h
  
  /* Values for e_machine, which identifies the architecture.  These numbers
     are officially assigned by registry@caldera.com.  See below for a list of
-diff -burN insight-6.4/include/elf/mips.h insight-psp/include/elf/mips.h
---- insight-6.4/include/elf/mips.h	2005-05-10 11:21:10.000000000 +0100
-+++ insight-psp/include/elf/mips.h	2006-02-05 14:40:58.000000000 +0000
+diff -burN gdb-6.4/include/elf/mips.h gdb-psp/include/elf/mips.h
+--- gdb-6.4/include/elf/mips.h	2005-05-10 11:21:10.000000000 +0100
++++ gdb-psp/include/elf/mips.h	2007-02-08 20:06:04.000000000 +0000
 @@ -212,6 +212,7 @@
  #define E_MIPS_MACH_5400	0x00910000
  #define E_MIPS_MACH_5500	0x00980000
@@ -133,9 +166,9 @@ diff -burN insight-6.4/include/elf/mips.h insight-psp/include/elf/mips.h
  
  /* Processor specific section indices.  These sections do not actually
     exist.  Symbols with a st_shndx field corresponding to one of these
-diff -burN insight-6.4/include/opcode/mips.h insight-psp/include/opcode/mips.h
---- insight-6.4/include/opcode/mips.h	2005-09-06 19:42:58.000000000 +0100
-+++ insight-psp/include/opcode/mips.h	2006-02-05 14:40:58.000000000 +0000
+diff -burN gdb-6.4/include/opcode/mips.h gdb-psp/include/opcode/mips.h
+--- gdb-6.4/include/opcode/mips.h	2005-09-06 19:42:58.000000000 +0100
++++ gdb-psp/include/opcode/mips.h	2007-02-08 20:06:04.000000000 +0000
 @@ -203,6 +203,83 @@
  #define MDMX_FMTSEL_VEC_QH	0x15
  #define MDMX_FMTSEL_VEC_OB	0x16
@@ -328,9 +361,9 @@ diff -burN insight-6.4/include/opcode/mips.h insight-psp/include/opcode/mips.h
    M_XOR_I,
    M_COP0,
    M_COP1,
-diff -burN insight-6.4/opcodes/mips-dis.c insight-psp/opcodes/mips-dis.c
---- insight-6.4/opcodes/mips-dis.c	2005-09-06 19:46:57.000000000 +0100
-+++ insight-psp/opcodes/mips-dis.c	2006-02-05 14:40:58.000000000 +0000
+diff -burN gdb-6.4/opcodes/mips-dis.c gdb-psp/opcodes/mips-dis.c
+--- gdb-6.4/opcodes/mips-dis.c	2005-09-06 19:46:57.000000000 +0100
++++ gdb-psp/opcodes/mips-dis.c	2007-02-08 20:06:04.000000000 +0000
 @@ -133,6 +133,139 @@
    "c0_taglo",     "c0_taghi",     "c0_errorepc",  "c0_desave",
  };
@@ -886,9 +919,9 @@ diff -burN insight-6.4/opcodes/mips-dis.c insight-psp/opcodes/mips-dis.c
  	default:
  	  /* xgettext:c-format */
  	  (*info->fprintf_func) (info->stream,
-diff -burN insight-6.4/opcodes/mips-opc.c insight-psp/opcodes/mips-opc.c
---- insight-6.4/opcodes/mips-opc.c	2005-09-06 19:46:57.000000000 +0100
-+++ insight-psp/opcodes/mips-opc.c	2006-02-05 14:41:16.000000000 +0000
+diff -burN gdb-6.4/opcodes/mips-opc.c gdb-psp/opcodes/mips-opc.c
+--- gdb-6.4/opcodes/mips-opc.c	2005-09-06 19:46:57.000000000 +0100
++++ gdb-psp/opcodes/mips-opc.c	2007-02-08 20:06:04.000000000 +0000
 @@ -109,6 +109,7 @@
  #define N5	(INSN_5400 | INSN_5500)
  #define N54	INSN_5400
