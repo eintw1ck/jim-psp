@@ -171,7 +171,7 @@ int main_thread(SceSize args, void *argp)
 		sceKernelExitDeleteThread(0);
 	}
 
-	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlReadBufferNegative", peek_buffer_negative) == 0)
+	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlReadBufferNegative", read_buffer_negative) == 0)
 	{
 		printf("Could not hook controller function\n");
 		sceKernelExitDeleteThread(0);
