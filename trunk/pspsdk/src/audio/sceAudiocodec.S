@@ -6,7 +6,7 @@
 	IMPORT_START	"sceAudiocodec",0x40090000
 #endif
 #ifdef F_sceAudiocodec_0001
-	IMPORT_FUNC	"sceAudiocodec",0x9D3F790C,sceAudiocodeCheckNeedMem
+	IMPORT_FUNC	"sceAudiocodec",0x9D3F790C,sceAudiocodecCheckNeedMem
 #endif
 #ifdef F_sceAudiocodec_0002
 	IMPORT_FUNC	"sceAudiocodec",0x5B37EB1D,sceAudiocodecInit
