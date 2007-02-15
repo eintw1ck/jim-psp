@@ -100,7 +100,6 @@ static usb_dev_handle *g_hDev = NULL;
 static int g_servsocks[MAX_ASYNC_CHANNELS];
 static int g_clientsocks[MAX_ASYNC_CHANNELS];
 static const char *g_mapfile = NULL;
-static int g_bulkfd = -1;
 
 pthread_mutex_t g_drivemtx = PTHREAD_MUTEX_INITIALIZER;
 struct HostDrive g_drives[MAX_HOSTDRIVES];
@@ -636,11 +635,6 @@ int open_file(int drive, const char *path, unsigned int mode, unsigned int mask)
 				open_files[fd].opened = 1;
 				open_files[fd].mode = mode;
 				open_files[fd].name = strdup(fullpath);
-				if(mode & HOSTFS_BULK_OPEN)
-				{
-					V_PRINTF(1, "Opened in bulk mode (%d)\n", fd);
-					g_bulkfd = fd;
-				}
 			}
 			else
 			{
@@ -1179,10 +1173,6 @@ int handle_close(struct usb_dev_handle *hDev, struct HostFsCloseCmd *cmd, int cm
 			}
 
 			open_files[fid].opened = 0;
-			if(fid == g_bulkfd)
-			{
-				g_bulkfd = -1;
-			}
 			if(open_files[fid].name)
 			{
 				free(open_files[fid].name);
@@ -2217,11 +2207,13 @@ void do_bulk(struct BulkCommand *cmd, int readlen)
 	static char block[HOSTFS_BULK_MAXWRITE];
 	int  read = 0;
 	int  len = 0;
+	unsigned int chan = 0;
 	int  ret = -1;
 
+	chan = LE32(cmd->channel);
 	len = LE32(cmd->size);
 
-	V_PRINTF(2, "Bulk write command length: %d\n", len);
+	V_PRINTF(2, "Bulk write command length: %d channel %d\n", len, chan);
 
 	while(read < len)
 	{
@@ -2239,20 +2231,9 @@ void do_bulk(struct BulkCommand *cmd, int readlen)
 
 	if(read >= len)
 	{
-		if((g_bulkfd >= 0) && (g_bulkfd < MAX_FILES))
+		if((chan < MAX_ASYNC_CHANNELS) && (g_clientsocks[chan] >= 0))
 		{
-			if(open_files[g_bulkfd].opened)
-			{
-				fixed_write(g_bulkfd, block, len);
-			}
-			else
-			{
-				fprintf(stderr, "Error fid not open %d\n", g_bulkfd);
-			}
-		}
-		else
-		{
-			fprintf(stderr, "Error invalid fid %d\n", g_bulkfd);
+			fixed_write(g_clientsocks[chan], block, len);
 		}
 	}
 }

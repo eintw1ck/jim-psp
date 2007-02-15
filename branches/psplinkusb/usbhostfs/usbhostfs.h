@@ -32,8 +32,6 @@
 
 #define HOSTFS_BULK_MAXWRITE  (1024*1024)
 
-#define HOSTFS_BULK_OPEN      (1 << 24)
-
 #define DEVCTL_GET_INFO       0x02425818
 
 struct DevctlGetInfo
@@ -351,6 +349,7 @@ struct AsyncCommand
 struct BulkCommand
 {
 	uint32_t magic;
+	uint32_t channel;
 	uint32_t size;
 } __attribute__((packed));
 

@@ -876,7 +876,7 @@ int usbAsyncWrite(unsigned int chan, const void *data, int len)
 	return ret;
 }
 
-int usbWriteBulkData(const void *data, int len)
+int usbWriteBulkData(int chan, const void *data, int len)
 {
 	int ret = -1;
 	int err;
@@ -900,6 +900,7 @@ int usbWriteBulkData(const void *data, int len)
 		}
 
 		cmd.magic = BULK_MAGIC;
+		cmd.channel = chan;
 		cmd.size = len;
 
 		/* TODO: Set timeout on semaphore */

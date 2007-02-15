@@ -99,6 +99,17 @@ int     usbAsyncReadWithTimeout(unsigned int chan, unsigned char *data, int len,
 void    usbAsyncFlush(unsigned int chan);
 
 /**
+ * Write a large transfer to an async channel
+ *
+ * @param chan - The channel to write to
+ * @param data - Pointer to the data to write (should be 16byte aligned)
+ * @param size - Size of data set to write
+ *
+ * @return the number of bytes written, < 0 on error
+ */
+int usbWriteBulkData(int chan, const void *data, int len);
+
+/**
  * Lock the USB bus (normally to ensure no threads are using it)
  *
  * @return < 0 on error
