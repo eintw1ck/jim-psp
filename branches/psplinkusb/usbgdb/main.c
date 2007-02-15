@@ -315,6 +315,7 @@ int main_thread(SceSize args, void *argp)
 		}
 	}
 
+	debugUnregisterEventHandler(&g_handler);
 	sceKernelExitDeleteThread(0);
 
 	return 0;

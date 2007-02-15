@@ -461,7 +461,7 @@ void handle_bp(char *str, int set)
 						strcpy(output, "EO3");
 					}
 				}
-				break;  /* We dont support inbuilt software breaks */
+				break; 
 			default:  break;
 		};
 	} 
@@ -596,6 +596,7 @@ int GdbHandleException (struct PsplinkContext *ctx)
 		case 'D':
 			putpacket((unsigned char *) output);
 			ctx->cont = PSP_EXCEPTION_CONTINUE;
+			ret = 0;
 			goto restart;
 			break;
 
