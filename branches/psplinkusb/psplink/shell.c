@@ -3438,8 +3438,14 @@ static int bpset_cmd(int argc, char **argv, unsigned int *vRet)
 		size_left = memValidate(addr, MEM_ATTRIB_WRITE | MEM_ATTRIB_WORD | MEM_ATTRIB_EXEC);
 		if(size_left >= sizeof(u32))
 		{
-			debugSetBP(addr, flags, 0);
-			ret = CMD_OK;
+			if(debugSetBP(addr, flags, 0))
+			{
+				ret = CMD_OK;
+			}
+			else
+			{
+				SHELL_PRINT("Could not set breakpoint\n");
+			}
 		}
 		else
 		{
@@ -3455,7 +3461,7 @@ static int bpdel_cmd(int argc, char **argv, unsigned int *vRet)
 	u32 id;
 	struct Breakpoint *bp;
 
-	if(strtoint(argv[0], &id))
+	if(memDecode(argv[0], &id))
 	{
 		bp = debugFindBPByIndex(id);
 		if(bp)
@@ -3476,9 +3482,68 @@ static int bpdel_cmd(int argc, char **argv, unsigned int *vRet)
 	return CMD_OK;
 }
 
+static int bpdis_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	u32 id;
+	struct Breakpoint *bp;
+
+	if(memDecode(argv[0], &id))
+	{
+		bp = debugFindBPByIndex(id);
+		if(bp)
+		{
+			debugDisableBP(bp->addr);
+		}
+		else
+		{
+			debugDisableBP(id);
+		}
+	}
+	else
+	{
+		SHELL_PRINT("Invalid ID for delete\n");
+		return CMD_ERROR;
+	}
+
+	return CMD_OK;
+}
+
+static int bpena_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	u32 id;
+	struct Breakpoint *bp;
+
+	if(memDecode(argv[0], &id))
+	{
+		bp = debugFindBPByIndex(id);
+		if(bp)
+		{
+			debugEnableBP(bp->addr);
+		}
+		else
+		{
+			debugEnableBP(id);
+		}
+	}
+	else
+	{
+		SHELL_PRINT("Invalid ID for delete\n");
+		return CMD_ERROR;
+	}
+
+	return CMD_OK;
+}
+
 static int bpprint_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	debugPrintBPs();
+
+	return CMD_OK;
+}
+
+static int hwprint_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	debugPrintHWRegs();
 
 	return CMD_OK;
 }

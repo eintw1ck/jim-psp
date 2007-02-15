@@ -60,15 +60,6 @@ static const char *codeTxt[32] =
 const char codeFpu[6] = { 'I', 'U', 'O', 'Z', 'V', 'E' };
 const char codeDebug[7] = { 'X', 'S', 'B', '?', '?', 'I', 'D' };
 
-int psplinkRegisterExceptions(void *def, void *debug, void *ctx)
-{
-	g_list = ctx;
-	sceKernelRegisterDefaultExceptionHandler(def);
-	sceKernelRegisterPriorityExceptionHandler(24, 1, debug);
-
-	return 0;
-}
-
 /* Get a pointer to a register based on its name */
 u32 *exceptionGetReg(const char *reg)
 {
@@ -504,6 +495,6 @@ void exceptionInit(void)
 		g_psplinkContext[i].pNext = &g_psplinkContext[i+1];
 	}
 
-	psplinkRegisterExceptions((void *) psplinkDefaultExHandler, 
-			(void *) psplinkDebugExHandler, g_psplinkContext);
+	g_list = g_psplinkContext;
+	sceKernelRegisterDefaultExceptionHandler((void*) psplinkDefaultExHandler);
 }

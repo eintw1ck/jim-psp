@@ -41,7 +41,7 @@ struct HwDebugEnv
 	unsigned int DBAM;
 	unsigned int DBD;
 	unsigned int DBDM;
-};
+} psplinkHwContext;
 
 int debugGetEnv(struct HwDebugEnv *env);
 
@@ -55,6 +55,8 @@ typedef struct _DebugEvent
 static struct Breakpoint g_bps[DEBUG_MAX_BPS];
 static struct _DebugEventHandler* g_eventhead;
 extern const char *regName[32];
+
+static void debug_set_hwbreak(unsigned int addr);
 
 int debugRegisterEventHandler(DebugEventHandler *handler)
 {
@@ -286,8 +288,7 @@ static void step_generic(struct PsplinkContext *ctx, int skip)
 			
 		if((cond) && (targetpc != (epc + 8)))
 		{
-
-			bp2 = debugSetBP(targetpc, DEBUG_BP_ONESHOT | DEBUG_BP_STEP, ctx->thid);
+			bp2 = debugSetBP(epc+8, DEBUG_BP_ONESHOT | DEBUG_BP_STEP, ctx->thid);
 			if(bp1)
 			{
 				bp1->step = bp2;
@@ -329,6 +330,21 @@ static struct Breakpoint *find_bp(unsigned int address)
 	return NULL;
 }
 
+static struct Breakpoint *find_hwbp(void)
+{
+	int i;
+
+	for(i = 0; i < DEBUG_MAX_BPS; i++)
+	{
+		if((g_bps[i].flags & DEBUG_BP_ACTIVE) && (g_bps[i].flags & DEBUG_BP_HARDWARE))
+		{
+			return &g_bps[i];
+		}
+	}
+
+	return NULL;
+}
+
 static struct Breakpoint *find_freebp(void)
 {
 	int i;
@@ -351,7 +367,11 @@ struct Breakpoint* debugSetBP(unsigned int address, unsigned int flags, SceUID t
 
 		if(flags & DEBUG_BP_HARDWARE)
 		{
-			return NULL;
+			/* Check for existing hardware breakpoint */
+			if(find_hwbp())
+			{
+				return NULL;
+			}
 		}
 
 		pBp = find_freebp();
@@ -359,7 +379,16 @@ struct Breakpoint* debugSetBP(unsigned int address, unsigned int flags, SceUID t
 		{
 			memset(pBp, 0, sizeof(struct Breakpoint));
 			pBp->inst = _lw(address);
-			_sw(SW_BREAK_INST, address);
+
+			if(flags & DEBUG_BP_HARDWARE)
+			{
+				debug_set_hwbreak(address);
+			}
+			else
+			{
+				_sw(SW_BREAK_INST, address);
+			}
+
 			pBp->addr = address;
 			pBp->flags = DEBUG_BP_ACTIVE | flags;
 			pBp->thid = thid;
@@ -403,18 +432,23 @@ int debugDeleteBP(unsigned int addr)
 		if((pBp->flags & DEBUG_BP_HARDWARE) == 0)
 		{
 			_sw(pBp->inst, pBp->addr);
-			pBp->flags = 0;
-			sceKernelDcacheWritebackInvalidateAll();
-			sceKernelIcacheInvalidateAll();
-			ret = 1;
 		}
+		else
+		{
+			debug_set_hwbreak(0);
+		}
+
+		pBp->flags = 0;
+		sceKernelDcacheWritebackInvalidateAll();
+		sceKernelIcacheInvalidateAll();
+		ret = 1;
 	}
 	pspSdkEnableInterrupts(intc);
 
 	return ret;
 }
 
-int debugDisableBP(unsigned int addr, int next)
+int debugDisableBP(unsigned int addr)
 {
 	int ret = 0;
 	int intc;
@@ -427,15 +461,16 @@ int debugDisableBP(unsigned int addr, int next)
 		if((pBp->flags & DEBUG_BP_HARDWARE) == 0)
 		{
 			_sw(pBp->inst, pBp->addr);
-			pBp->flags |= DEBUG_BP_DISABLED;
-			if(next)
-			{
-				pBp->flags |= DEBUG_BP_NEXT_REENABLE;
-			}
-			sceKernelDcacheWritebackInvalidateAll();
-			sceKernelIcacheInvalidateAll();
-			ret = 1;
 		}
+		else
+		{
+			debug_set_hwbreak(0);
+		}
+
+		pBp->flags |= DEBUG_BP_DISABLED;
+		sceKernelDcacheWritebackInvalidateAll();
+		sceKernelIcacheInvalidateAll();
+		ret = 1;
 	}
 	pspSdkEnableInterrupts(intc);
 
@@ -455,11 +490,16 @@ int debugEnableBP(unsigned int addr)
 		if((pBp->flags & DEBUG_BP_HARDWARE) == 0)
 		{
 			_sw(SW_BREAK_INST, pBp->addr);
-			pBp->flags &= ~(DEBUG_BP_DISABLED | DEBUG_BP_NEXT_REENABLE);
-			sceKernelDcacheWritebackInvalidateAll();
-			sceKernelIcacheInvalidateAll();
-			ret = 1;
 		}
+		else
+		{
+			debug_set_hwbreak(pBp->addr);
+		}
+
+		pBp->flags &= ~(DEBUG_BP_DISABLED | DEBUG_BP_NEXT_REENABLE);
+		sceKernelDcacheWritebackInvalidateAll();
+		sceKernelIcacheInvalidateAll();
+		ret = 1;
 	}
 	pspSdkEnableInterrupts(intc);
 
@@ -489,12 +529,7 @@ void debugClearException(struct PsplinkContext *ctx)
 
 	if(ctx->regs.type == PSPLINK_EXTYPE_DEBUG)
 	{
-		struct HwDebugEnv env;
-
-		if(!debugGetEnv(&env))
-		{
-			ctx->drcntl = env.DRCNTL;
-		}
+		ctx->drcntl = psplinkHwContext.DRCNTL;
 	}
 
 	address = ctx->regs.epc;
@@ -668,84 +703,60 @@ int debugHWEnabled(void)
 	return ret;
 }
 
-static struct HwDebugEnv *debug_get_env(void)
+static void debug_get_env(void)
 {
-	struct HwDebugEnv *pEnv = NULL;
-
-	if(debugHWEnabled())
-	{
-		asm(
-				"cfc0  %0, $28\n"
-				"li    $t0, 0x1\n"
-				"sw    $t0, 0(%0)\n"
-				"dbreak\n"
-				"nop\n"
-				: "=r"(pEnv)
-		   );
-	}
-
-	return pEnv;
+	psplinkHwContext.flags = 1;
+	asm(
+		"dbreak\n"
+		"nop\n"
+	   );
 }
 
 static void debug_set_env(void)
 {
-	if(debugHWEnabled())
-	{
-		asm(
-				"cfc0  $t1, $28\n"
-				"li    $t0, 0x2\n"
-				"sw    $t0, 0($t1)\n"
-				"dbreak\n"
-				"nop\n"
-		   );
-	}
+	psplinkHwContext.flags = 2;
+	asm(
+		"dbreak\n"
+		"nop\n"
+	   );
 }
 
-int debugGetEnv(struct HwDebugEnv *env)
+extern u32 psplinkHwDebugTrap;
+extern u32 psplinkHwDebugTrapEnd;
+void psplinkHwDebugMain(void);
+
+void debugHwInit(void)
 {
-	struct HwDebugEnv *pEnv;
-
-	pEnv = debug_get_env();
-	if(pEnv)
+	u32* p = &psplinkHwDebugTrap;
+	u32 base = 0xbfc01000;
+	while(p < &psplinkHwDebugTrapEnd)
 	{
-		memcpy(env, pEnv, sizeof(struct HwDebugEnv));
-		return 0;
+		_sw(*p, base);
+		base += 4;
+		p++;
 	}
-
-	return 1;
+	sceKernelDcacheWritebackInvalidateAll();
+	sceKernelIcacheInvalidateAll();
+	asm __volatile__ (
+			"ctc0	%0, $10\n"
+			: : "r"(psplinkHwDebugMain)
+			);
+	debugEnableHW();
+	memset(&psplinkHwContext, 0, sizeof(psplinkHwContext));
+	debug_set_env();
 }
 
-int debugSetEnv(struct HwDebugEnv *env)
+static void debug_set_hwbreak(unsigned int addr)
 {
-	struct HwDebugEnv *pEnv;
-
-	pEnv = debug_get_env();
-	if(pEnv)
-	{
-		memcpy(pEnv, env, sizeof(struct HwDebugEnv));
-		debug_set_env();
-		return 0;
-	}
-
-	return 1;
-}
-
-/*
-
-void debugSetHWBreak(unsigned int addr, unsigned int mask)
-{
-	struct HwDebugEnv *pEnv;
-	pEnv = debug_get_env();
-	if(pEnv == NULL)
-	{
-		return;
-	}
+	struct HwDebugEnv *pEnv = &psplinkHwContext;
+	
+	debug_get_env();
 
 	if(addr)
 	{
 		pEnv->IBC = 0x12;
 		pEnv->IBA = addr;
-		pEnv->IBAM = mask;
+		pEnv->IBAM = 0;
 	}
 	else
 	{
@@ -756,6 +767,8 @@ void debugSetHWBreak(unsigned int addr, unsigned int mask)
 	
 	debug_set_env();
 }
+
+/*
 
 void debugSetHWRegs(int argc, char **argv)
 {
@@ -835,35 +848,21 @@ void debugSetHWRegs(int argc, char **argv)
 	}
 }
 
-void debugPrintHWRegs(void)
-{
-	if(!g_isv1)
-	{
-		struct HwDebugEnv *pEnv;
-
-		pEnv = debug_get_env();
-		if(pEnv)
-		{
-			SHELL_PRINT("<HW Debug Registers>\n");
-			SHELL_PRINT("%-6s: 0x%08X\n", "DRCNTL", pEnv->DRCNTL);
-			SHELL_PRINT("%-6s: 0x%08X\n", "IBC", pEnv->IBC);
-			SHELL_PRINT("%-6s: 0x%08X\n", "DBC", pEnv->DBC);
-			SHELL_PRINT("%-6s: 0x%08X\n", "IBA", pEnv->IBA);
-			SHELL_PRINT("%-6s: 0x%08X\n", "IBAM", pEnv->IBAM);
-			SHELL_PRINT("%-6s: 0x%08X\n", "DBA", pEnv->DBA);
-			SHELL_PRINT("%-6s: 0x%08X\n", "DBAM", pEnv->DBAM);
-			SHELL_PRINT("%-6s: 0x%08X\n", "DBD", pEnv->DBD);
-			SHELL_PRINT("%-6s: 0x%08X\n", "DBDM", pEnv->DBDM);
-		}
-		else
-		{
-			SHELL_PRINT("HW Debugger not enabled\n");
-		}
-	}
-	else
-	{
-		SHELL_PRINT("Not available on v1.0 firmware\n");
-	}
-}
 */
 
+void debugPrintHWRegs(void)
+{
+	struct HwDebugEnv *pEnv = &psplinkHwContext;
+
+	debug_get_env();
+	SHELL_PRINT("<HW Debug Registers>\n");
+	SHELL_PRINT("%-6s: 0x%08X\n", "DRCNTL", pEnv->DRCNTL);
+	SHELL_PRINT("%-6s: 0x%08X\n", "IBC", pEnv->IBC);
+	SHELL_PRINT("%-6s: 0x%08X\n", "DBC", pEnv->DBC);
+	SHELL_PRINT("%-6s: 0x%08X\n", "IBA", pEnv->IBA);
+	SHELL_PRINT("%-6s: 0x%08X\n", "IBAM", pEnv->IBAM);
+	SHELL_PRINT("%-6s: 0x%08X\n", "DBA", pEnv->DBA);
+	SHELL_PRINT("%-6s: 0x%08X\n", "DBAM", pEnv->DBAM);
+	SHELL_PRINT("%-6s: 0x%08X\n", "DBD", pEnv->DBD);
+	SHELL_PRINT("%-6s: 0x%08X\n", "DBDM", pEnv->DBDM);
+}

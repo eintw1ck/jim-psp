@@ -225,13 +225,16 @@ struct sh_command
 	SHELL_CMD("exprvfpu", "ev", exprvfpu_cmd, 0, "Print the current VFPU registers", "", "[s|c|r|m|e] [ex]") \
 	SHELL_CMD("setreg", "str", setreg_cmd, 2, "Set the value of an exception register", "", "$reg value") \
 	SHELL_CMD("bpset", "bp", bpset_cmd, 1, "Set a break point", \
-			"addr is the address at which the breakpoint should be set. opts is a list of options for the "\
-			"breakpoint.\n1 - specifies that this will be a one shot breakpoint, otherwise it will be permanent.", \
-			"h - specifies this is a hardware breakpoint (if available)" \
+			"addr is the address at which the breakpoint should be set.\nOpts is a list of options for the "\
+			"breakpoint.\n1 - specifies that this will be a one shot breakpoint\n" \
+			"h - specifies this is a hardware breakpoint (if available)\n", \
 			"addr [opts]") \
-	SHELL_CMD("bpdel", "bd", bpdel_cmd, 1, "Delete a breakpoint", "", "num") \
+	SHELL_CMD("bpdel", "bc", bpdel_cmd, 1, "Delete a breakpoint", "", "num|addr") \
+	SHELL_CMD("bpdis", "bd", bpdis_cmd, 1, "Disable a breakpoint", "", "num|addr") \
+	SHELL_CMD("bpena", "be", bpena_cmd, 1, "Enable a breakpoint", "", "num|addr") \
 	SHELL_CMD("bpth", NULL, bpth_cmd, 1, "Break a thread at the first available point", "", "uid|@name") \
 	SHELL_CMD("bpprint", "bt", bpprint_cmd, 0, "Print the current breakpoints", "", "") \
+	SHELL_CMD("hwprint", NULL, hwprint_cmd, 0, "Print the hardware debugger registers", "", "") \
 	SHELL_CMD("step", "s", step_cmd, 0, "Step the next instruction", "", "") \
 	SHELL_CMD("skip", "k", skip_cmd, 0, "Skip the next instruction (i.e. jump over jals)", "", "") \
 	SHELL_CMD("call", NULL, call_cmd, 1, "Issue a function call", "", "addr [arg0...arg5]") \

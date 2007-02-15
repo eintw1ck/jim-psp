@@ -337,6 +337,7 @@ void initialise(SceSize args, void *argp)
 
 	sceKernelRegisterDebugPutchar(NULL);
 	enable_kprintf(1);
+	debugHwInit();
 	modLoad(g_context.bootpath);
 }
 

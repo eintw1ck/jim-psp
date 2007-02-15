@@ -65,7 +65,7 @@ int debugWaitDebugEvent(DebugEventHandler *handler, struct PsplinkContext **ctx,
 void debugPrintBPs(void);
 struct Breakpoint* debugFindBPByIndex(int i);
 int debugDeleteBP(unsigned int addr);
-int debugDisableBP(unsigned int addr, int next);
+int debugDisableBP(unsigned int addr);
 int debugEnableBP(unsigned int addr);
 struct Breakpoint *debugSetBP(unsigned int address, unsigned int flags, SceUID thid);
 int debugBreakThread(SceUID uid);
@@ -75,5 +75,7 @@ void debugDisableHW();
 void debugStep(struct PsplinkContext *ctx, int skip);
 void debugClearException(struct PsplinkContext *ctx);
 int debugHandleException(struct PsplinkContext *ctx);
+void debugHwInit(void);
+void debugPrintHWRegs(void);
 
 #endif

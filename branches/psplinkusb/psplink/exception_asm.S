@@ -139,8 +139,6 @@ psplinkDefaultExHandler:
 	.global psplinkDebugExHandler
 	.ent    psplinkDebugExHandler
 psplinkDebugExHandler:
-	nop
-	nop
 # Set exception type to DEBUG
 	la		$v1, _psplinkExType
 	li		$v0, 1
@@ -520,6 +518,113 @@ psplinkExceptionHandler:
 	eret
 
 	.end psplinkExceptionHandler
+
+	.global psplinkHwDebugTrap
+	.global psplinkHwDebugTrapEnd
+	.ent    psplinkHwDebugTrap
+psplinkHwDebugTrap:
+	ctc0	$v0, $26
+	cfc0	$v0, $10
+	jr		$v0
+	nop
+psplinkHwDebugTrapEnd:
+	.end 	psplinkHwDebugTrap
+
+	.global psplinkHwDebugMain
+	.ent	psplinkHwDebugMain
+psplinkHwDebugMain:
+	ctc0	$v1, $27
+	la		$v1, psplinkHwContext
+	lw		$v0, 0($v1)
+	andi	$v0, $v0, 1
+	bnez	$v0, get_context
+	nop
+	la		$v1, psplinkHwContext
+	lw		$v0, 0($v1)
+	andi	$v0, $v0, 2
+	bnez	$v0, set_context
+	nop
+
+	mfdr	$v0, $0
+	li		$v1, 0xFFFFFFDF
+	and		$v0, $v0, $v1
+	la		$v1, psplinkHwContext
+	sw		$v0, 4($v1)
+	mtdr	$v0, $0
+
+	cfc0	$v0, $26
+	cfc0	$v1, $27
+	ctc0	$v0, $4
+	ctc0	$v1, $5
+	mfdr	$v0, $1
+	ctc0	$v0, $0
+	la		$v1, psplinkDebugExHandler
+	mtdr	$v1, $1
+	mfc0	$v0, Cause
+	ctc0	$v0, $3
+	mfc0	$v0, Status
+	li		$v1, 2
+	or		$v0, $v0, $v1
+	ctc0	$v0, $2
+	mtc0	$v0, Status
+	dret
+	nop
+
+get_context:
+	mfdr	$v0, $1
+	addiu	$v0, $v0, 4
+	mtdr	$v0, $1
+	sw		$zero, 0($v1)
+	mfdr	$v0, $0
+	sw		$v0, 4($v1)
+	mfdr	$v0, $4
+	sw		$v0, 8($v1)
+	mfdr 	$v0, $5
+	sw		$v0, 0xC($v1)
+	mfdr 	$v0, $8
+	sw		$v0, 0x10($v1)
+	mfdr	$v0, $9
+	sw		$v0, 0x14($v1)
+	mfdr	$v0, $12
+	sw		$v0, 0x18($v1)
+	mfdr	$v0, $13
+	sw		$v0, 0x1C($v1)
+	mfdr	$v0, $14
+	sw		$v0, 0x20($v1)
+	mfdr	$v0, $15
+	sw		$v0, 0x24($v1)
+	cfc0	$v0, $26
+	cfc0	$v1, $27
+	dret
+	nop
+
+set_context:
+	mfdr	$v0, $1
+	addiu	$v0, $v0, 4
+	mtdr	$v0, $1
+
+	lw		$v0, 8($v1)
+	mtdr	$v0, $4
+	lw		$v0, 0xC($v1)
+	mtdr 	$v0, $5
+	lw		$v0, 0x10($v1)
+	mtdr 	$v0, $8
+	lw		$v0, 0x14($v1)
+	mtdr	$v0, $9
+	lw		$v0, 0x18($v1)
+	mtdr	$v0, $12
+	lw		$v0, 0x1C($v1)
+	mtdr	$v0, $13
+	lw		$v0, 0x20($v1)
+	mtdr	$v0, $14
+	lw		$v0, 0x24($v1)
+	mtdr	$v0, $15
+	cfc0	$v0, $26
+	cfc0	$v1, $27
+	dret
+	nop
+
+	.end	psplinkHwDebugMain
 
 	.data
 

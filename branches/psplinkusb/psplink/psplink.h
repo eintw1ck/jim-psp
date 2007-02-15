@@ -56,7 +56,6 @@ void psplinkStop(void);
 u32  psplinkSetK1(u32 k1);
 void psplinkGetCop0(u32 *regs);
 int psplinkParseComamnd(char *command);
-int psplinkRegisterExceptions(void *def, void *debug, void *ctx);
 void psplinkExitShell(void);
 SceUID load_gdb(const char *bootpath, int argc, char **argv);
 
