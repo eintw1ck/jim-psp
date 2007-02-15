@@ -44,6 +44,22 @@ int sceDisplay_driver_5B5AEFAD(int pri, void **topaddr, int *bufferwidth, int *p
 #define sceDisplaySetFrameBufferInternal sceDisplay_driver_63E22A26
 #define sceDisplayGetFrameBufferInternal sceDisplay_driver_5B5AEFAD
 
+/**
+ * Set Display brightness to a particular level
+ *
+ * @param level - Level of the brightness. it goes from 0 (black screen) to 100 (max brightness)
+ * @param unk1 - Unknown can be 0 or 1 (pass 0)
+ */
+void sceDisplaySetBrightness(int level,int unk1);
+
+/**
+ * Get current display brightness
+ *
+ * @param level - Pointer to int to receive the current brightness level (0-100)
+ * @param unk1 - Pointer to int, receives unknonwn, it's 1 or 0
+ */
+void sceDisplayGetBrightness(int *level,int *unk1);
+
 #ifdef __cplusplus
 }
 #endif
