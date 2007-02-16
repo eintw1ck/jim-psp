@@ -56,7 +56,7 @@ void sceDisplaySetBrightness(int level,int unk1);
  * Get current display brightness
  *
  * @param level - Pointer to int to receive the current brightness level (0-100)
- * @param unk1 - Pointer to int, receives unknonwn, it's 1 or 0
+ * @param unk1 - Pointer to int, receives unknown, it's 1 or 0
  */
 void sceDisplayGetBrightness(int *level,int *unk1);
 

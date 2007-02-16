@@ -51,10 +51,10 @@
 	IMPORT_FUNC	"sceDisplay_driver",0xAC14F1FF,sceDisplayGetForegroundLevel
 #endif
 #ifdef F_sceDisplay_driver_0016
-	IMPORT_FUNC	"sceDisplay_driver",0x9E3C6DC6,sceDisplay_driver_9E3C6DC6
+	IMPORT_FUNC	"sceDisplay_driver",0x9E3C6DC6,sceDisplaySetBrightness
 #endif
 #ifdef F_sceDisplay_driver_0017
-	IMPORT_FUNC	"sceDisplay_driver",0x31C4BAA8,sceDisplay_driver_31C4BAA8
+	IMPORT_FUNC	"sceDisplay_driver",0x31C4BAA8,sceDisplayGetBrightness
 #endif
 #ifdef F_sceDisplay_driver_0018
 	IMPORT_FUNC	"sceDisplay_driver",0x9C6EAAD7,sceDisplayGetVcount
