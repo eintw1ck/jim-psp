@@ -441,22 +441,6 @@ int strlen_cmd(int argc, char **argv)
 	return 0;
 }
 
-/*
-int disset_cmd(int argc, char **argv)
-{
-	disasmSetOpts(argv[0], 1);
-
-	return 0;
-}
-
-int disclear_cmd(int argc, char **argv)
-{
-	disasmSetOpts(argv[0], 0);
-
-	return 0;
-}
-*/
-
 int disopts_cmd(int argc, char **argv)
 {
 	if(argc == 0)
