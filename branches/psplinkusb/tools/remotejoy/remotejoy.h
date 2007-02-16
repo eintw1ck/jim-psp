@@ -21,9 +21,12 @@
 #define TYPE_ANALOG_X    4
 #define TYPE_SCREEN_CMD  5
 
-#define SCREEN_CMD_OFF   1
-#define SCREEN_CMD_ON    2
-#define SCREEN_CMD_HSIZE 4
+/* Screen commands */
+#define SCREEN_CMD_ACTIVE 1
+#define SCREEN_CMD_HSIZE  2
+#define SCREEN_CMD_16BIT  4
+#define SCREEN_CMD_DROPRATE(x) ((x)<<24)
+#define SCREEN_CMD_GETDROPRATE(x) ((x)>>24)
 
 struct JoyEvent
 {
@@ -36,8 +39,7 @@ struct JoyScrHeader
 {
 	unsigned int magic;
 	int mode; /* 0-3 */
-	unsigned short width;
-	unsigned short height;
+	int size;
 	int pad;
 } __attribute__((packed));
 

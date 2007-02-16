@@ -1,5 +1,5 @@
 TARGET = remotejoy
-OBJS = main.o exports.o
+OBJS = main.o kmode.o exports.o
 
 # Use the kernel's small inbuilt libc
 USE_KERNEL_LIBC = 1
@@ -13,9 +13,14 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
 LDFLAGS = -L../../libpsplink_driver -L../../libusbhostfs_driver
 
+ifdef BUILD_PLUGIN
+CFLAGS += -DBUILD_PLUGIN
+OBJS += libs.o apihook.o 
+endif
+
 LIBDIR =
 
-LIBS = -lpsppower_driver -lpsplink_driver -lusbhostfs_driver
+LIBS = -lpsppower_driver -lpsplink_driver -lusbhostfs_driver -lpspdisplay_driver -lpspusb_driver
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build_prx.mak

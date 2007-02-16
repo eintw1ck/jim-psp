@@ -37,6 +37,11 @@
 #define PSP_SCREEN_W  480
 #define PSP_SCREEN_H  272
 
+#define EVENT_ENABLE_SCREEN   1
+#define EVENT_RENDER_FRAME_1  2
+#define EVENT_RENDER_FRAME_2  3
+#define EVENT_DISABLE_SCREEN  4
+
 #if defined BUILD_BIGENDIAN || defined _BIG_ENDIAN
 uint16_t swap16(uint16_t i)
 {
@@ -148,9 +153,9 @@ struct Args
 	unsigned short port;
 	const char *dev;
 	const char *mapfile;
-	const char *buildmap;
 	int verbose;
-	int daemon;
+	int video;
+	int fullscreen;
 };
 
 struct GlobalContext
@@ -165,14 +170,31 @@ struct GlobalContext
 	int digital;
 	int analog;
 	int tol;
+	int scron;
 };
 
 struct GlobalContext g_context;
 
-static unsigned char g_screenbuf1[PSP_SCREEN_W * PSP_SCREEN_H * 4];
-//static unsigned char g_screenbuf2[PSP_SCREEN_W * PSP_SCREEN_H * 4];
+//#define HEAP_ALLOC(var,size) lzo_align_t __LZO_MMODEL var [ ((size) + (sizeof(lzo_align_t) - 1)) / sizeof(lzo_align_t) ]
 
-//static struct JoyScrHeader g_scrhead1, g_scrhead2;
+//static HEAP_ALLOC(wrkmem,LZO1X_1_MEM_COMPRESS);
+
+	/*
+static unsigned char g_output[1024*1024];
+lzo_uint in_len;
+lzo_uint out_len;
+*/
+
+struct ScreenBuffer
+{
+	unsigned char buf[PSP_SCREEN_W * PSP_SCREEN_H * 4];
+	struct JoyScrHeader head;
+	/* Mutex? */
+};
+
+static struct ScreenBuffer g_buffers[2];
+
+/* Should have a mutex on each screen */
 
 #define VERBOSE (g_context.args.verbose)
 
@@ -214,7 +236,7 @@ int parse_args(int argc, char **argv, struct Args *args)
 		int ch;
 		int error = 0;
 
-		ch = getopt(argc, argv, "vdp:i:m:b:");
+		ch = getopt(argc, argv, "vfdp:i:m:");
 
 		if(ch < 0)
 		{
@@ -229,11 +251,11 @@ int parse_args(int argc, char **argv, struct Args *args)
 					  break;
 			case 'm': args->mapfile = optarg;
 					  break;
-			case 'b': args->buildmap = optarg;
-					  break;
-			case 'd': args->daemon = 1;
-					  break;
 			case 'v': args->verbose = 1;
+					  break;
+			case 'd': args->video = 1;
+					  break;
+			case 'f': args->fullscreen = 1;
 					  break;
 			default : error = 1;
 					  break;
@@ -259,6 +281,8 @@ void print_help(void)
 	fprintf(stderr, "-p port     : Specify the port number\n");
 	fprintf(stderr, "-i ip       : Specify the ip address (default %s)\n", DEFAULT_IP);
 	fprintf(stderr, "-m mapfile  : Specify a file to map joystick buttons to the PSP\n");
+	fprintf(stderr, "-d          : Auto enable display support\n");
+	fprintf(stderr, "-f          : Full screen mode\n");
 	fprintf(stderr, "-v          : Verbose mode\n");
 }
 
@@ -470,31 +494,219 @@ int send_event(int sock, int type, unsigned int value)
 	return 1;
 }
 
-int read_thread(void *p)
+void post_event(int no)
 {
-	int *sock = (int *) p;
 	SDL_Event event;
 
 	event.type = SDL_USEREVENT;
-	event.user.code = *sock;
+	event.user.code = no;
 	event.user.data1 = NULL;
 	event.user.data2 = NULL;
 
 	SDL_PushEvent(&event);
+}
+
+int flush_socket(int sock)
+{
+	/* If we encounter some horrible error which means we are desynced
+	 * then send a video off packet to remotejoy, wait around for a second sucking up
+	 * any more data from the socket and then reenable */
 
 	return 0;
+}
+
+int read_thread(void *p)
+{
+	int err = 0;
+	int frame = 0;
+	fd_set saveset, readset;
+	int count;
+	int sock = *(int *) p;
+	struct JoyScrHeader head;
+
+	FD_ZERO(&saveset);
+	FD_SET(sock, &saveset);
+
+	while(!err)
+	{
+		readset = saveset;
+
+		count = select(FD_SETSIZE, &readset, NULL, NULL, NULL);
+
+		if(count > 0)
+		{
+			int ret;
+			int mode;
+			int size;
+
+			if(FD_ISSET(sock, &readset))
+			{
+				ret = read(sock, &head, sizeof(head));
+				if((ret != sizeof(head)) || (LE32(head.magic) != JOY_MAGIC))
+				{
+					fprintf(stderr, "Error in socket %d, magic %08X\n", ret, head.magic);
+					flush_socket(sock);
+					//continue;
+					break;
+				}
+
+				mode = LE32(head.mode);
+				size = LE32(head.size);
+				g_buffers[frame].head.mode = mode;
+				g_buffers[frame].head.size = size;
+				//printf("%d-%d-%d\n", mode, width, height);
+
+				if(mode < 0)
+				{
+					if(g_context.args.video)
+					{
+						post_event(EVENT_ENABLE_SCREEN);
+					}
+					else
+					{
+						g_context.scron = 0;
+					}
+				}
+				else if(mode > 3)
+				{
+					/* Flush socket */
+					flush_socket(sock);
+				}
+				else
+				{
+					/* Try and read in screen */
+					/* If we do not get a full frame read and we timeout in quater second or so then
+					 * reset sync as it probably means the rest isn't coming */
+					int loc = 0;
+
+					//fprintf(stderr, "Size %d\n", size);
+					while(1)
+					{
+						readset = saveset;
+
+						/* Should have a time out */
+						count = select(FD_SETSIZE, &readset, NULL, NULL, NULL);
+						if(count > 0)
+						{
+							ret = read(sock, &(g_buffers[frame].buf[loc]), size-loc);
+							if(ret < 0)
+							{
+								if(errno != EINTR)
+								{
+									perror("read:");
+									err = 1;
+									break;
+								}
+							}
+							else if(ret == 0)
+							{
+								fprintf(stderr, "EOF\n");
+								break;
+							}
+
+							//fprintf(stderr, "Read %d\n", loc);
+							loc += ret;
+							if(loc == size)
+							{
+								break;
+							}
+						}
+						else if(count < 0)
+						{
+							if(errno != EINTR)
+							{
+								perror("select:");
+								err = 1;
+								break;
+							}
+						}
+					}
+
+					if(!err)
+					{
+						if(frame)
+						{
+							post_event(EVENT_RENDER_FRAME_2);
+						}
+						else
+						{
+							post_event(EVENT_RENDER_FRAME_1);
+						}
+						frame ^= 1;
+					}
+				}
+			}
+		}
+		else if(count < 0)
+		{
+			if(errno != EINTR)
+			{
+				perror("select:");
+				err = 1;
+			}
+		}
+	}
+
+	return 0;
+}
+
+SDL_Surface *create_surface(void *buf, int mode)
+{
+	unsigned int rmask, bmask, gmask, amask;
+	int bpp;
+
+	printf("Set Mode: %d\n", mode);
+	switch(mode)
+	{
+		case 3: rmask = 0x000000FF;
+				gmask = 0x0000FF00;
+				bmask = 0x00FF0000;
+				amask = 0;
+				bpp = 32;
+				break;
+		case 2: rmask = 0x000F;
+				gmask = 0x00F0;
+				bmask = 0x0F00;
+				amask = 0;
+				bpp = 16;
+				break;
+		case 1: rmask = 0x1F;
+				gmask = 0x1F << 5;
+				bmask = 0x1F << 10;
+				amask = 0;
+				bpp = 16;
+				break;
+		case 0: rmask = 0x1F;
+				gmask = 0x3F << 5;
+				bmask = 0x1F << 11;
+				amask = 0;
+				bpp = 16;
+				break;
+		default: return NULL;
+	};
+
+	return SDL_CreateRGBSurfaceFrom(buf, PSP_SCREEN_W, PSP_SCREEN_H, bpp, PSP_SCREEN_W*(bpp/8), 
+			rmask, gmask, bmask, amask);	
 }
 
 void mainloop(void)
 {
 	SDL_Joystick *stick = NULL;
 	SDL_Surface *screen = NULL;
-	SDL_Surface *buffer = NULL;
+	SDL_Surface *buf1 = NULL;
+	SDL_Surface *buf2 = NULL;
 	SDL_Thread *thread = NULL;
+	int currw, currh;
 	int sdl_init = 0;
 	int sock = -1;
 	unsigned int button_state = 0;
-	unsigned int color = 0xFF;
+	int currmode[2] = { 3, 3 };
+	int flags = SDL_HWSURFACE;
+
+	if(g_context.args.fullscreen)
+	{
+		flags |= SDL_FULLSCREEN;
+	}
 
 	do
 	{
@@ -504,18 +716,29 @@ void mainloop(void)
 			break;
 		}
 
-		screen = SDL_SetVideoMode(PSP_SCREEN_W, PSP_SCREEN_H, 32, SDL_SWSURFACE);
+		currw = PSP_SCREEN_W;
+		currh = PSP_SCREEN_H;
+		screen = SDL_SetVideoMode(PSP_SCREEN_W, PSP_SCREEN_H, 0, flags);
 		if(screen == NULL)
 		{
 			break;
 		}
 
-		buffer = SDL_CreateRGBSurfaceFrom(g_screenbuf1, PSP_SCREEN_W, PSP_SCREEN_H, 32, PSP_SCREEN_W*4, 0x000000FF, 
-				0x0000FF00, 0x00FF0000, 0xFF00000);
-		if(buffer == NULL)
+		SDL_ShowCursor(SDL_DISABLE);
+
+		/* Pre-build buffer, we might change these later */
+		buf1 = create_surface(g_buffers[0].buf, 3);
+		if(buf1 == NULL)
 		{
 			break;
 		}
+
+		buf2 = create_surface(g_buffers[1].buf, 3);
+		if(buf2 == NULL)
+		{
+			break;
+		}
+
 		SDL_WM_SetCaption("RemoteJoySDL - Press any ESC key to exit", NULL);
 
 		sdl_init = 1;
@@ -566,14 +789,60 @@ void mainloop(void)
 				break;
 			}
 
-			memset(g_screenbuf1, color, sizeof(g_screenbuf1));
-			color = (color - 1) & 0xFF;
-
-			SDL_BlitSurface(buffer, NULL, screen, NULL);
-			SDL_UpdateRect(screen, 0, 0, 480, 272);
+			if(event.type == SDL_VIDEORESIZE)
+			{
+				SDL_FreeSurface(screen);
+				screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 0, SDL_SWSURFACE | SDL_RESIZABLE);
+				currw = event.resize.w;
+				currh = event.resize.h;
+			}
 
 			if(event.type == SDL_USEREVENT)
 			{
+				switch(event.user.code)
+				{
+					case EVENT_ENABLE_SCREEN:
+						send_event(sock, TYPE_SCREEN_CMD, SCREEN_CMD_ACTIVE);
+						g_context.scron = 1;
+						break;
+					case EVENT_DISABLE_SCREEN:
+						send_event(sock, TYPE_SCREEN_CMD, 0);
+						g_context.scron = 0;
+						break;
+					case EVENT_RENDER_FRAME_1:
+						if(currmode[0] != g_buffers[0].head.mode)
+						{
+							SDL_FreeSurface(buf1);
+							buf1 = create_surface(g_buffers[0].buf, g_buffers[0].head.mode);
+							currmode[0] = g_buffers[0].head.mode;
+						}
+						SDL_BlitSurface(buf1, NULL, screen, NULL);
+						SDL_UpdateRect(screen, 0, 0, currw, currh);
+						/*
+    if(lzo1_1_compress(g_buffers[0].buf,g_buffers[0].head.size ,g_output,&out_len,wrkmem) == LZO_E_OK)
+        pritf("compressed %lu bytes into %lu bytes\n",
+            (unsigned long) in_len, (unsigned long) out_len);
+			*/
+						break;
+					case EVENT_RENDER_FRAME_2:
+						if(currmode[1] != g_buffers[1].head.mode)
+						{
+							SDL_FreeSurface(buf2);
+							buf2 = create_surface(g_buffers[1].buf, g_buffers[1].head.mode);
+							currmode[1] = g_buffers[1].head.mode;
+						}
+						SDL_BlitSurface(buf2, NULL, screen, NULL);
+						SDL_UpdateRect(screen, 0, 0, currw, currh);
+							/*
+    if(lzo1x_1_compress(g_buffers[1].buf,g_buffers[1].head.size ,g_output,&out_len,wrkmem) == LZO_E_OK)
+        printf("compressed %lu bytes into %lu bytes\n",
+            (unsigned long) in_len, (unsigned long) out_len);
+			*/
+						break;
+					default:
+						fprintf(stderr, "Error, invalid event type\n");
+				};
+				continue;
 			}
 
 			if((event.type == SDL_KEYDOWN) || (event.type == SDL_KEYUP))
@@ -584,6 +853,35 @@ void mainloop(void)
 				if(key->keysym.sym == SDLK_ESCAPE)
 				{
 					break;
+				}
+
+				if(key->keysym.sym == SDLK_F8)
+				{
+					if(event.type == SDL_KEYDOWN)
+					{
+						SDL_WM_ToggleFullScreen(screen);
+					}
+
+					continue;
+				}
+
+				if(key->keysym.sym == SDLK_F5)
+				{
+					if(event.type == SDL_KEYDOWN)
+					{
+						if(g_context.scron)
+						{
+							send_event(sock, TYPE_SCREEN_CMD, 0);
+							g_context.scron = 0;
+						}
+						else
+						{
+							send_event(sock, TYPE_SCREEN_CMD, SCREEN_CMD_ACTIVE);
+							g_context.scron = 1;
+						}
+					}
+
+					continue;
 				}
 
 				switch(key->keysym.sym)
@@ -797,10 +1095,16 @@ void mainloop(void)
 		SDL_JoystickClose(stick);
 	}
 
-	if(buffer)
+	if(buf1)
 	{
-		SDL_FreeSurface(buffer);
-		buffer = NULL;
+		SDL_FreeSurface(buf1);
+		buf1 = NULL;
+	}
+
+	if(buf2)
+	{
+		SDL_FreeSurface(buf2);
+		buf2 = NULL;
 	}
 
 	if(thread)
