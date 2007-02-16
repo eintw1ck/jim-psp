@@ -1,7 +1,0 @@
-RemoteJoy Plugin v1.0 (c) TyRaNiD 2007
-
-This is a version of remotejoy which doesn't require psplink to operate.
-
-To use copy this and usbhostfs.prx to your plugins dir and enable them.
-If you want to use it in pops mode you also need to take a copy of usb.prx
-from the firmware and enable that as an extra plugin module.
