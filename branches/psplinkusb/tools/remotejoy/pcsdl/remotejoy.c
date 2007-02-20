@@ -160,6 +160,7 @@ struct Args
 	int droprate;
 	int fullcolour;
 	int halfsize;
+	int showfps;
 };
 
 struct GlobalContext
@@ -187,6 +188,9 @@ struct ScreenBuffer
 };
 
 static struct ScreenBuffer g_buffers[2];
+
+void init_font(void);
+void print_text(SDL_Surface *screen, int x, int y, const char *fmt, ...);
 
 /* Should have a mutex on each screen */
 
@@ -230,7 +234,7 @@ int parse_args(int argc, char **argv, struct Args *args)
 		int ch;
 		int error = 0;
 
-		ch = getopt(argc, argv, "vfchldp:i:m:r:");
+		ch = getopt(argc, argv, "vsfchldp:i:m:r:");
 
 		if(ch < 0)
 		{
@@ -254,6 +258,8 @@ int parse_args(int argc, char **argv, struct Args *args)
 			case 'c': args->fullcolour = 1;
 					  break;
 			case 'l': args->halfsize = 1;
+					  break;
+			case 's': args->showfps = 1;
 					  break;
 			case 'r': args->droprate = atoi(optarg);
 					  if((args->droprate < 0) || (args->droprate > 59))
@@ -292,6 +298,7 @@ void print_help(void)
 	fprintf(stderr, "-r drop     : Frame Skip, 0 (auto), 1 (1/2), 2 (1/3), 3(1/4) etc.\n");
 	fprintf(stderr, "-c          : Full colour mode\n");
 	fprintf(stderr, "-l          : Half size mode (both X and Y)\n");
+	fprintf(stderr, "-s          : Show fps\n");
 	fprintf(stderr, "-v          : Verbose mode\n");
 }
 
@@ -524,6 +531,34 @@ int flush_socket(int sock)
 	return 0;
 }
 
+void update_fps(SDL_Surface *screen)
+{
+#define FRAME_VALUES 32
+	static Uint32 times[FRAME_VALUES];
+	static Uint32 lastticks = 0;
+	static int index = 0;
+	Uint32 ticks;
+	int i;
+	double fps;
+
+	ticks = SDL_GetTicks();
+	times[index] = ticks - lastticks;
+	index = (index + 1) % FRAME_VALUES;
+	lastticks = ticks;
+
+	fps = 0.0;
+	for(i = 0; i < FRAME_VALUES; i++)
+	{
+		fps += (double) times[i];
+	}
+	fps /= (double) FRAME_VALUES;
+	/* Fps is now average frame time */
+	fps = 1000.0 / fps;
+	/* Now frame frequency in Hz */
+
+	print_text(screen, 0, 0, "Fps: %.2f", fps);
+}
+
 int read_thread(void *p)
 {
 	int err = 0;
@@ -751,6 +786,7 @@ void mainloop(void)
 	int currmode[2] = { 3, 3 };
 	int flags = SDL_HWSURFACE;
 	int pspflags = 0;
+	int showfps = 0;
 
 	if(g_context.args.fullscreen)
 	{
@@ -771,6 +807,8 @@ void mainloop(void)
 	{
 		pspflags |= SCREEN_CMD_DROPRATE(g_context.args.droprate);
 	}
+
+	showfps = g_context.args.showfps;
 
 	do
 	{
@@ -793,6 +831,7 @@ void mainloop(void)
 		{
 			break;
 		}
+		init_font();
 
 		SDL_ShowCursor(SDL_DISABLE);
 
@@ -887,6 +926,10 @@ void mainloop(void)
 							currmode[0] = g_buffers[0].head.mode;
 						}
 						SDL_BlitSurface(buf1, NULL, screen, NULL);
+						if(showfps)
+						{
+							update_fps(screen);
+						}
 						SDL_UpdateRect(screen, 0, 0, currw, currh);
 						break;
 					case EVENT_RENDER_FRAME_2:
@@ -897,6 +940,10 @@ void mainloop(void)
 							currmode[1] = g_buffers[1].head.mode;
 						}
 						SDL_BlitSurface(buf2, NULL, screen, NULL);
+						if(showfps)
+						{
+							update_fps(screen);
+						}
 						SDL_UpdateRect(screen, 0, 0, currw, currh);
 						break;
 					default:
@@ -980,6 +1027,14 @@ void mainloop(void)
 					}
 
 					continue;
+				}
+
+				if(key->keysym.sym == SDLK_F9)
+				{
+					if(event.type == SDL_KEYDOWN)
+					{
+						showfps ^= 1;
+					}
 				}
 
 				if(key->keysym.sym == SDLK_F10)
