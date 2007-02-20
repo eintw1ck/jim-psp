@@ -1,7 +1,7 @@
 OUTPUT=remotejoy
 OBJS=remotejoy.o
 
-CFLAGS=-Wall -g $(shell sdl-config --cflags)
+CFLAGS=-O2 -Wall -g $(shell sdl-config --cflags)
 
 all: remotejoy
 

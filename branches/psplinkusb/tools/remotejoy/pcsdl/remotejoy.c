@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <sys/select.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -156,6 +157,9 @@ struct Args
 	int verbose;
 	int video;
 	int fullscreen;
+	int droprate;
+	int fullcolour;
+	int halfsize;
 };
 
 struct GlobalContext
@@ -174,16 +178,6 @@ struct GlobalContext
 };
 
 struct GlobalContext g_context;
-
-//#define HEAP_ALLOC(var,size) lzo_align_t __LZO_MMODEL var [ ((size) + (sizeof(lzo_align_t) - 1)) / sizeof(lzo_align_t) ]
-
-//static HEAP_ALLOC(wrkmem,LZO1X_1_MEM_COMPRESS);
-
-	/*
-static unsigned char g_output[1024*1024];
-lzo_uint in_len;
-lzo_uint out_len;
-*/
 
 struct ScreenBuffer
 {
@@ -236,7 +230,7 @@ int parse_args(int argc, char **argv, struct Args *args)
 		int ch;
 		int error = 0;
 
-		ch = getopt(argc, argv, "vfdp:i:m:");
+		ch = getopt(argc, argv, "vfchldp:i:m:r:");
 
 		if(ch < 0)
 		{
@@ -257,6 +251,18 @@ int parse_args(int argc, char **argv, struct Args *args)
 					  break;
 			case 'f': args->fullscreen = 1;
 					  break;
+			case 'c': args->fullcolour = 1;
+					  break;
+			case 'l': args->halfsize = 1;
+					  break;
+			case 'r': args->droprate = atoi(optarg);
+					  if((args->droprate < 0) || (args->droprate > 59))
+					  {
+						  fprintf(stderr, "Invalid drop rate (0 <= r < 60)\n");
+						  error = 1;
+					  }
+					  break;
+			case 'h': 
 			default : error = 1;
 					  break;
 		};
@@ -283,6 +289,9 @@ void print_help(void)
 	fprintf(stderr, "-m mapfile  : Specify a file to map joystick buttons to the PSP\n");
 	fprintf(stderr, "-d          : Auto enable display support\n");
 	fprintf(stderr, "-f          : Full screen mode\n");
+	fprintf(stderr, "-r drop     : Frame Skip, 0 (auto), 1 (1/2), 2 (1/3), 3(1/4) etc.\n");
+	fprintf(stderr, "-c          : Full colour mode\n");
+	fprintf(stderr, "-l          : Half size mode (both X and Y)\n");
 	fprintf(stderr, "-v          : Verbose mode\n");
 }
 
@@ -546,7 +555,6 @@ int read_thread(void *p)
 				{
 					fprintf(stderr, "Error in socket %d, magic %08X\n", ret, head.magic);
 					flush_socket(sock);
-					//continue;
 					break;
 				}
 
@@ -554,7 +562,6 @@ int read_thread(void *p)
 				size = LE32(head.size);
 				g_buffers[frame].head.mode = mode;
 				g_buffers[frame].head.size = size;
-				//printf("%d-%d-%d\n", mode, width, height);
 
 				if(mode < 0)
 				{
@@ -653,9 +660,19 @@ int read_thread(void *p)
 SDL_Surface *create_surface(void *buf, int mode)
 {
 	unsigned int rmask, bmask, gmask, amask;
+	int currw, currh;
 	int bpp;
 
-	printf("Set Mode: %d\n", mode);
+	currw = PSP_SCREEN_W;
+	currh = PSP_SCREEN_H;
+	if(g_context.args.halfsize)
+	{
+		currw >>= 1;
+		currh >>= 1;
+	}
+
+	printf("Mode %d\n", mode);
+
 	switch(mode)
 	{
 		case 3: rmask = 0x000000FF;
@@ -685,8 +702,39 @@ SDL_Surface *create_surface(void *buf, int mode)
 		default: return NULL;
 	};
 
-	return SDL_CreateRGBSurfaceFrom(buf, PSP_SCREEN_W, PSP_SCREEN_H, bpp, PSP_SCREEN_W*(bpp/8), 
+	return SDL_CreateRGBSurfaceFrom(buf, currw, currh, bpp, currw*(bpp/8), 
 			rmask, gmask, bmask, amask);	
+}
+
+void save_screenshot(SDL_Surface *surface)
+{
+	int i;
+	char path[PATH_MAX];
+	struct stat s;
+
+	/* If we cant find one in the next 1000 then dont bother */
+	for(i = 0; i < 1000; i++)
+	{
+		snprintf(path, PATH_MAX, "scrshot%03d.bmp", i);
+		if(stat(path, &s) < 0)
+		{
+			break;
+		}
+	}
+
+	if(i == 1000)
+	{
+		return;
+	}
+
+	if(SDL_SaveBMP(surface, path) == 0)
+	{
+		printf("Saved screenshot to %s\n", path);
+	}
+	else
+	{
+		printf("Error saving screenshot\n");
+	}
 }
 
 void mainloop(void)
@@ -702,10 +750,26 @@ void mainloop(void)
 	unsigned int button_state = 0;
 	int currmode[2] = { 3, 3 };
 	int flags = SDL_HWSURFACE;
+	int pspflags = 0;
 
 	if(g_context.args.fullscreen)
 	{
 		flags |= SDL_FULLSCREEN;
+	}
+
+	if(g_context.args.fullcolour)
+	{
+		pspflags = SCREEN_CMD_FULLCOLOR;
+	}
+
+	if(g_context.args.halfsize)
+	{
+		pspflags |= SCREEN_CMD_HSIZE;
+	}
+
+	if(g_context.args.droprate)
+	{
+		pspflags |= SCREEN_CMD_DROPRATE(g_context.args.droprate);
 	}
 
 	do
@@ -718,7 +782,13 @@ void mainloop(void)
 
 		currw = PSP_SCREEN_W;
 		currh = PSP_SCREEN_H;
-		screen = SDL_SetVideoMode(PSP_SCREEN_W, PSP_SCREEN_H, 0, flags);
+		if(g_context.args.halfsize)
+		{
+			currw >>= 1;
+			currh >>= 1;
+		}
+
+		screen = SDL_SetVideoMode(currw, currh, 0, flags);
 		if(screen == NULL)
 		{
 			break;
@@ -792,7 +862,7 @@ void mainloop(void)
 			if(event.type == SDL_VIDEORESIZE)
 			{
 				SDL_FreeSurface(screen);
-				screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 0, SDL_SWSURFACE | SDL_RESIZABLE);
+				screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 0, flags);
 				currw = event.resize.w;
 				currh = event.resize.h;
 			}
@@ -802,7 +872,7 @@ void mainloop(void)
 				switch(event.user.code)
 				{
 					case EVENT_ENABLE_SCREEN:
-						send_event(sock, TYPE_SCREEN_CMD, SCREEN_CMD_ACTIVE);
+						send_event(sock, TYPE_SCREEN_CMD, SCREEN_CMD_ACTIVE | pspflags);
 						g_context.scron = 1;
 						break;
 					case EVENT_DISABLE_SCREEN:
@@ -818,11 +888,6 @@ void mainloop(void)
 						}
 						SDL_BlitSurface(buf1, NULL, screen, NULL);
 						SDL_UpdateRect(screen, 0, 0, currw, currh);
-						/*
-    if(lzo1_1_compress(g_buffers[0].buf,g_buffers[0].head.size ,g_output,&out_len,wrkmem) == LZO_E_OK)
-        pritf("compressed %lu bytes into %lu bytes\n",
-            (unsigned long) in_len, (unsigned long) out_len);
-			*/
 						break;
 					case EVENT_RENDER_FRAME_2:
 						if(currmode[1] != g_buffers[1].head.mode)
@@ -833,11 +898,6 @@ void mainloop(void)
 						}
 						SDL_BlitSurface(buf2, NULL, screen, NULL);
 						SDL_UpdateRect(screen, 0, 0, currw, currh);
-							/*
-    if(lzo1x_1_compress(g_buffers[1].buf,g_buffers[1].head.size ,g_output,&out_len,wrkmem) == LZO_E_OK)
-        printf("compressed %lu bytes into %lu bytes\n",
-            (unsigned long) in_len, (unsigned long) out_len);
-			*/
 						break;
 					default:
 						fprintf(stderr, "Error, invalid event type\n");
@@ -847,7 +907,7 @@ void mainloop(void)
 
 			if((event.type == SDL_KEYDOWN) || (event.type == SDL_KEYUP))
 			{
-				unsigned int bitmap;
+				unsigned int bitmap = 0;
 				SDL_KeyboardEvent *key = (SDL_KeyboardEvent *) &event;
 
 				if(key->keysym.sym == SDLK_ESCAPE)
@@ -865,23 +925,69 @@ void mainloop(void)
 					continue;
 				}
 
+				if(key->keysym.sym == SDLK_F3)
+				{
+					if(event.type == SDL_KEYDOWN)
+					{
+						printf("Switch FullColour Mode\n");
+						pspflags ^= SCREEN_CMD_FULLCOLOR;
+						send_event(sock, TYPE_SCREEN_CMD, SCREEN_CMD_ACTIVE | pspflags);
+						g_context.scron = 1;
+						g_context.args.fullcolour ^= 1;
+					}
+				}
+
+				if(key->keysym.sym == SDLK_F4)
+				{
+					if(event.type == SDL_KEYDOWN)
+					{
+						printf("Switch Halfsize Mode\n");
+						currw = PSP_SCREEN_W;
+						currh = PSP_SCREEN_H;
+						if((pspflags & SCREEN_CMD_HSIZE) == 0)
+						{
+							currw >>= 1;
+							currh >>= 1;
+						}
+						pspflags ^= SCREEN_CMD_HSIZE;
+						SDL_FreeSurface(screen);
+						screen = SDL_SetVideoMode(currw, currh, 0, flags);
+						send_event(sock, TYPE_SCREEN_CMD, SCREEN_CMD_ACTIVE | pspflags);
+						g_context.scron = 1;
+						g_context.args.halfsize ^= 1;
+						/* Force change of buffers */
+						currmode[0] = -1;
+						currmode[1] = -1;
+					}
+				}
+
 				if(key->keysym.sym == SDLK_F5)
 				{
 					if(event.type == SDL_KEYDOWN)
 					{
 						if(g_context.scron)
 						{
+							printf("Disable Screen\n");
 							send_event(sock, TYPE_SCREEN_CMD, 0);
 							g_context.scron = 0;
 						}
 						else
 						{
-							send_event(sock, TYPE_SCREEN_CMD, SCREEN_CMD_ACTIVE);
+							printf("Enable Screen\n");
+							send_event(sock, TYPE_SCREEN_CMD, SCREEN_CMD_ACTIVE | pspflags);
 							g_context.scron = 1;
 						}
 					}
 
 					continue;
+				}
+
+				if(key->keysym.sym == SDLK_F10)
+				{
+					if(event.type == SDL_KEYDOWN)
+					{
+						save_screenshot(screen);
+					}
 				}
 
 				switch(key->keysym.sym)

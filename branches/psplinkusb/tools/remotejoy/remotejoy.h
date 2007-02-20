@@ -24,7 +24,7 @@
 /* Screen commands */
 #define SCREEN_CMD_ACTIVE 1
 #define SCREEN_CMD_HSIZE  2
-#define SCREEN_CMD_16BIT  4
+#define SCREEN_CMD_FULLCOLOR  4
 #define SCREEN_CMD_DROPRATE(x) ((x)<<24)
 #define SCREEN_CMD_GETDROPRATE(x) ((x)>>24)
 
@@ -40,7 +40,7 @@ struct JoyScrHeader
 	unsigned int magic;
 	int mode; /* 0-3 */
 	int size;
-	int pad;
+	int ref;
 } __attribute__((packed));
 
 #endif

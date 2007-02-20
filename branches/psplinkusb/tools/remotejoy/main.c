@@ -23,7 +23,6 @@
 #include <string.h>
 #include <usbasync.h>
 #include <apihook.h>
-//#include "minilzo.h"
 #include "remotejoy.h"
 
 PSP_MODULE_INFO("RemoteJoy", PSP_MODULE_KERNEL, 1, 1);
@@ -43,6 +42,10 @@ SceUID g_scrsema = -1;
 SceUID g_screvent = -1;
 char  *g_scrptr = NULL;
 int   g_enabled = 0;
+int   g_droprate = 0;
+int   g_halfsize = 0;
+int   g_fullcolour = 0;
+unsigned int g_lastframe = 0;
 
 int scePowerVolatileMemLock(int, char**, int*);
 unsigned int psplinkSetK1(unsigned int k1);
@@ -182,22 +185,6 @@ int copy_32bpp_vfpu(void *topaddr)
 	return 480*272*2;
 }
 
-/*
-
-	char *wrkmem = (char*) 0x08700000;
-	int res;
-	lzo_uint out_len;
-	
-	res = lzo1x_1_compress(topaddr, 512*272*4, (unsigned char*) (g_scrptr + sizeof(struct JoyScrHeader)), &out_len, wrkmem);
-	if(res != LZO_E_OK)
-	{
-		printf("Error compressing %d\n", res);
-		return 0;
-	}
-
-	return out_len;
-*/
-
 int copy_16bpp_raw(void *topaddr)
 {
 	unsigned short *u;
@@ -224,33 +211,58 @@ int copy_16bpp_vfpu(void *topaddr)
 	return 480*272*2;
 }
 
-	/*
-	char *wrkmem = (char*) 0x08700000;
-	int res;
-	lzo_uint out_len;
-	
-	res = lzo1x_1_compress(topaddr, 512*272*2, (unsigned char*) (g_scrptr + sizeof(struct JoyScrHeader)), &out_len, wrkmem);
-	if(res != LZO_E_OK)
-	{
-		printf("Error compressing %d\n", res);
-		return 0;
-	}
-
-	return out_len;
-	*/
-
 int (*copy_32bpp)(void *topaddr) = copy_32bpp_vfpu;
 int (*copy_16bpp)(void *topaddr) = copy_16bpp_vfpu;
+
+void reduce_16bpp(u16 *addr)
+{
+	int x, y;
+	u16 *addrout = addr;
+
+	for(y = 272; y > 0; y -= 2)
+	{
+		for(x = 480; x > 0; x -= 2)
+		{
+			*addrout++ = *addr;
+			addr += 2;
+		}
+		addr += 480;
+	}
+}
+
+void reduce_32bpp(u32 *addr)
+{
+	int x, y;
+	u32 *addrout = addr;
+
+	for(y = 272; y > 0; y -= 2)
+	{
+		for(x = 480; x > 0; x -= 2)
+		{
+			*addrout++ = *addr;
+			addr += 2;
+		}
+		addr += 480;
+	}
+}
 
 void set_frame_buf(void *topaddr, int bufferwidth, int pixelformat, int sync)
 {
 	unsigned int k1;
 
 	k1 = psplinkSetK1(0);
-	if((topaddr) && (sceKernelPollSema(g_scrsema, 1) == 0))
+	if(g_lastframe == 0)
 	{
-		/* We dont wait for this to complete, probably stupid ;) */
-		sceKernelSetEventFlag(g_screvent, 1);
+		if((topaddr) && (sceKernelPollSema(g_scrsema, 1) == 0))
+		{
+			/* We dont wait for this to complete, probably stupid ;) */
+			sceKernelSetEventFlag(g_screvent, 1);
+			g_lastframe = g_droprate;
+		}
+	}
+	else
+	{
+		g_lastframe--;
 	}
 
 	sceDisplaySetFrameBuf(topaddr, bufferwidth, pixelformat, sync);
@@ -271,6 +283,7 @@ inline int build_frame(void)
 		head = (struct JoyScrHeader*) g_scrptr;
 		head->magic = JOY_MAGIC;
 		head->mode = pixelformat;
+		head->ref  = sceDisplayGetVcount();
 
 		switch(pixelformat)
 		{
@@ -286,6 +299,18 @@ inline int build_frame(void)
 
 		if(head->size > 0)
 		{
+			if(g_halfsize)
+			{
+				if(g_fullcolour && (pixelformat == 3))
+				{
+					reduce_32bpp((u32*) (g_scrptr + sizeof(struct JoyScrHeader)));
+				}
+				else
+				{
+					reduce_16bpp((u16*) (g_scrptr + sizeof(struct JoyScrHeader)));
+				}
+				head->size >>= 2;
+			}
 			return 1;
 		}
 	}
@@ -349,23 +374,22 @@ int screen_thread(SceSize args, void *argp)
 		if(status & 1)
 		{
 #ifdef ENABLE_TIMING
-			unsigned int start, end;
-			static long long avg = 0;
-			static int count = 0;
+			unsigned int fstart, fmid, fend;
 
-			asm __volatile__  ( "mfc0  %0, $9\n" : "=r"(start) );
+			asm __volatile__  ( "mfc0  %0, $9\n" : "=r"(fstart) );
 #endif
 			if(build_frame())
 			{
+#ifdef ENABLE_TIMING
+				asm __volatile__  ( "mfc0  %0, $9\n" : "=r"(fmid) );
+#endif
 				head = (struct JoyScrHeader*) g_scrptr;
 				size = head->size;
 
 				usbWriteBulkData(ASYNC_JOY, g_scrptr, sizeof(struct JoyScrHeader) + size);
 #ifdef ENABLE_TIMING
-				asm __volatile__  ( "mfc0  %0, $9\n" : "=r"(end) );
-				count++;
-				avg += (end-start);
-				printf("Time: 0x%08X avg:0x%08X\n", end-start, (unsigned int) avg/count);
+				asm __volatile__  ( "mfc0  %0, $9\n" : "=r"(fend) );
+				printf("Total: 0x%08X Frame: 0x%08X Usb: 0x%08X\n", fend - fstart, fmid-fstart, fend-fmid);
 #endif
 			}
 			sceKernelSignalSema(g_scrsema, 1);
@@ -382,6 +406,28 @@ int screen_thread(SceSize args, void *argp)
 
 void do_screen_cmd(unsigned int value)
 {
+	if(value & SCREEN_CMD_FULLCOLOR)
+	{
+		copy_32bpp = copy_32bpp_raw;
+		g_fullcolour = 1;
+	}
+	else
+	{
+		copy_32bpp = copy_32bpp_vfpu;
+		g_fullcolour = 0;
+	}
+
+	if(value & SCREEN_CMD_HSIZE)
+	{
+		g_halfsize = 1;
+	}
+	else
+	{
+		g_halfsize = 0;
+	}
+
+	g_droprate = SCREEN_CMD_GETDROPRATE(value);
+
 	if(value & SCREEN_CMD_ACTIVE)
 	{
 		/* Create a thread */
@@ -432,7 +478,7 @@ void send_screen_probe(void)
 	head.magic = JOY_MAGIC;
 	head.mode = -1;
 	head.size = 0;
-	head.pad = 0;
+	head.ref = 0;
 
 	usbAsyncWrite(ASYNC_JOY, &head, sizeof(head));
 }
