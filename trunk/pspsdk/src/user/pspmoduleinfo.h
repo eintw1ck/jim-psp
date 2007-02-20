@@ -64,6 +64,7 @@ enum PspModuleInfoAttr
 	"__lib_stub_bottom:\n"                                          \
 	"    .word 0\n"                                                 \
 	"    .set pop\n"                                                \
+	"    .text\n"													\
 	);                                                              \
 	extern char __lib_ent_top[], __lib_ent_bottom[];                \
 	extern char __lib_stub_top[], __lib_stub_bottom[];              \
@@ -96,6 +97,7 @@ enum PspModuleInfoAttr
 	"__lib_stub_bottom:\n"                                          \
 	"    .word 0\n"                                                 \
 	"    .set pop\n"                                                \
+	"    .text\n"													\
 	);                                                              \
 	extern char __lib_ent_top[], __lib_ent_bottom[];                \
 	extern char __lib_stub_top[], __lib_stub_bottom[];              \

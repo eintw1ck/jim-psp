@@ -52,6 +52,7 @@ SAMPLES = \
 	kernel/registry \
 	kernel/regenum \
 	kernel/systimer \
+	kernel/sysevent \
 	ms/callback \
 	nand/dumpipl \
 	net/simple \

@@ -42,6 +42,8 @@ IDSTORAGE_OBJS = sceIdStorage_driver_0000.o sceIdStorage_driver_0001.o sceIdStor
 
 SYSTIMER_OBJS = SysTimerForKernel_0000.o SysTimerForKernel_0001.o SysTimerForKernel_0002.o SysTimerForKernel_0003.o SysTimerForKernel_0004.o SysTimerForKernel_0005.o SysTimerForKernel_0006.o SysTimerForKernel_0007.o SysTimerForKernel_0008.o SysTimerForKernel_0009.o 
 
+SYSEVENT_OBJS = sceSysEventForKernel_0000.o sceSysEventForKernel_0001.o sceSysEventForKernel_0002.o sceSysEventForKernel_0003.o sceSysEventForKernel_0004.o sceSysEventForKernel_0005.o 
+
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
@@ -59,6 +61,7 @@ libpspkernelinclude_HEADERS =	\
 	pspsysmem_kernel.h    \
 	pspthreadman_kernel.h \
 	pspsyscon.h			\
+	pspsysevent.h		\
 	pspidstorage.h		\
 	pspexception.h
 	
@@ -79,13 +82,14 @@ libpspkernel_a_SOURCES =	\
 	LoadExecForKernel.S		\
 	SysMemForKernel.S 		\
 	SysTimerForKernel.S 	\
+	sceSysEventForKernel.S \
 	ModuleMgrForKernel.S	\
 	sceIdStorage_driver.S
 
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
 						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS) \
 						$(THREAD_OBJS) $(SYSCLIB_OBJS) $(LOADEXEC_OBJS) $(SYSMEM_OBJS) $(MODULE_OBJS) \
-						$(IDSTORAGE_OBJS) $(SYSTIMER_OBJS)
+						$(IDSTORAGE_OBJS) $(SYSTIMER_OBJS) $(SYSEVENT_OBJS)
 
 $(EXCEPTION_OBJS): ExceptionManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -133,4 +137,7 @@ $(IDSTORAGE_OBJS): sceIdStorage_driver.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(SYSTIMER_OBJS): SysTimerForKernel.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(SYSEVENT_OBJS): sceSysEventForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
