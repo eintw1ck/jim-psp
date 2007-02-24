@@ -18,6 +18,7 @@
 #include <psppower.h>
 #include <pspdisplay.h>
 #include <pspdisplay_kernel.h>
+#include <psputilsforkernel.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,6 +36,9 @@ PSP_MODULE_INFO("RemoteJoy", PSP_MODULE_KERNEL, 1, 1);
 #include <pspusb.h>
 #endif
 
+//#define DEBUG_PRINTF(x, ...) printf(x, ## __VA_ARGS__)
+#define DEBUG_PRINTF(x, ...)
+
 SceCtrlData g_currjoy;
 struct AsyncEndpoint g_endp;
 SceUID g_scrthid = -1;
@@ -49,6 +53,7 @@ unsigned int g_lastframe = 0;
 
 int scePowerVolatileMemLock(int, char**, int*);
 unsigned int psplinkSetK1(unsigned int k1);
+extern u32 sceKernelSetDdrMemoryProtection;
 
 #define ASYNC_JOY ASYNC_USER
 #define ABS(x) ((x) < 0 ? -x : x)
@@ -333,20 +338,32 @@ int screen_thread(SceSize args, void *argp)
 	g_scrsema = sceKernelCreateSema("ScreenSema", 0, 1, 1, NULL);
 	if(g_scrsema < 0)
 	{
-		printf("Could not create sema 0x%08X\n", g_scrsema);
+		DEBUG_PRINTF("Could not create sema 0x%08X\n", g_scrsema);
 		sceKernelExitDeleteThread(0);
+	}
+
+	if(sceKernelDevkitVersion() >= 0x01050001)
+	{
+		u32* p = &sceKernelSetDdrMemoryProtection;
+		u32 baseaddr;
+
+		baseaddr = 0x80000000 |	((*p & 0x03FFFFFF) << 2);
+		_sw(0x03E00008, baseaddr);
+		_sw(0x00001021, baseaddr+4);
+		sceKernelDcacheWritebackInvalidateRange((void*) baseaddr, 8);
+		sceKernelIcacheInvalidateRange((void*) baseaddr, 8);
 	}
 
 	pMod = sceKernelFindModuleByName("sceDisplay_Service");
 	if(pMod == NULL)
 	{
-		printf("Could not get display module\n");
+		DEBUG_PRINTF("Could not get display module\n");
 		sceKernelExitDeleteThread(0);
 	}
 
 	if(apiHookByName(pMod->modid, "sceDisplay", "sceDisplaySetFrameBuf", set_frame_buf) == 0)
 	{
-		printf("Could not hook set frame buf function\n");
+		DEBUG_PRINTF("Could not hook set frame buf function\n");
 		sceKernelExitDeleteThread(0);
 	}
 
@@ -378,6 +395,7 @@ int screen_thread(SceSize args, void *argp)
 
 			asm __volatile__  ( "mfc0  %0, $9\n" : "=r"(fstart) );
 #endif
+			_sw(0xFFFFFFFF, 0xBC00000C);
 			if(build_frame())
 			{
 #ifdef ENABLE_TIMING
@@ -389,7 +407,7 @@ int screen_thread(SceSize args, void *argp)
 				usbWriteBulkData(ASYNC_JOY, g_scrptr, sizeof(struct JoyScrHeader) + size);
 #ifdef ENABLE_TIMING
 				asm __volatile__  ( "mfc0  %0, $9\n" : "=r"(fend) );
-				printf("Total: 0x%08X Frame: 0x%08X Usb: 0x%08X\n", fend - fstart, fmid-fstart, fend-fmid);
+				DEBUG_PRINTF("Total: 0x%08X Frame: 0x%08X Usb: 0x%08X\n", fend - fstart, fmid-fstart, fend-fmid);
 #endif
 			}
 			sceKernelSignalSema(g_scrsema, 1);
@@ -436,7 +454,7 @@ void do_screen_cmd(unsigned int value)
 			g_screvent = sceKernelCreateEventFlag("ScreenEvent", 0, 0, NULL);
 			if(g_screvent < 0)
 			{
-				printf("Could not create event 0x%08X\n", g_screvent);
+				DEBUG_PRINTF("Could not create event 0x%08X\n", g_screvent);
 				return;
 			}
 
@@ -510,31 +528,31 @@ int main_thread(SceSize args, void *argp)
 	pMod = sceKernelFindModuleByName("sceController_Service");
 	if(pMod == NULL)
 	{
-		printf("Could not get controller module\n");
+		DEBUG_PRINTF("Could not get controller module\n");
 		sceKernelExitDeleteThread(0);
 	}
 
 	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlReadBufferPositive", read_buffer_positive) == 0)
 	{
-		printf("Could not hook controller function\n");
+		DEBUG_PRINTF("Could not hook controller function\n");
 		sceKernelExitDeleteThread(0);
 	}
 
 	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlPeekBufferPositive", peek_buffer_positive) == 0)
 	{
-		printf("Could not hook controller function\n");
+		DEBUG_PRINTF("Could not hook controller function\n");
 		sceKernelExitDeleteThread(0);
 	}
 
 	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlReadBufferNegative", read_buffer_negative) == 0)
 	{
-		printf("Could not hook controller function\n");
+		DEBUG_PRINTF("Could not hook controller function\n");
 		sceKernelExitDeleteThread(0);
 	}
 
 	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlPeekBufferNegative", peek_buffer_negative) == 0)
 	{
-		printf("Could not hook controller function\n");
+		DEBUG_PRINTF("Could not hook controller function\n");
 		sceKernelExitDeleteThread(0);
 	}
 
@@ -548,13 +566,13 @@ int main_thread(SceSize args, void *argp)
 	{
 		if(apiHookByName(pMod->modid, "sceVshBridge","vshCtrlReadBufferPositive", read_buffer_positive) == 0)
 		{
-			printf("Could not hook controller function\n");
+			DEBUG_PRINTF("Could not hook controller function\n");
 		}
 	}
 
 	if(usbAsyncRegister(ASYNC_JOY, &g_endp) < 0)
 	{
-		printf("Could not register remotejoy provider\n");
+		DEBUG_PRINTF("Could not register remotejoy provider\n");
 		sceKernelExitDeleteThread(0);
 	}
 
@@ -577,7 +595,7 @@ int main_thread(SceSize args, void *argp)
 			}
 			else
 			{
-				printf("Invalid read size %d\n", len);
+				DEBUG_PRINTF("Invalid read size %d\n", len);
 				usbAsyncFlush(ASYNC_JOY);
 			}
 			continue;

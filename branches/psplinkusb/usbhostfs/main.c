@@ -458,6 +458,38 @@ int write_data(const void *data, int size)
 	return writelen;
 }
 
+int write_data_large(const void *data, int size)
+{
+	int ret;
+	u32 result;
+
+	if((u32) data & 63)
+	{
+		return -1;
+	}
+
+	set_bulkin_req((char *) data, size);
+	ret = sceKernelWaitEventFlag(g_transevent, USB_TRANSEVENT_BULKIN_DONE, PSP_EVENT_WAITOR | PSP_EVENT_WAITCLEAR, &result, NULL);
+	if(ret == 0)
+	{
+		if((g_bulkin_req.retcode == 0) && (g_bulkin_req.recvsize > 0))
+		{
+		}
+		else
+		{
+			MODPRINTF("Error in BULKIN request %d\n", g_bulkin_req.retcode);
+			return -1;
+		}
+	}
+	else
+	{
+		MODPRINTF("Error waiting for BULKIN %08X\n", ret);
+		return -1;
+	}
+
+	return size;
+}
+
 /* Exchange a HOSTFS command with the PC host */
 int command_xchg(void *outcmd, int outcmdlen, void *incmd, int incmdlen, const void *outdata, 
 		int outlen, void *indata, int inlen)
@@ -921,7 +953,8 @@ int usbWriteBulkData(int chan, const void *data, int len)
 				break;
 			}
 
-			err = write_data(data, len);
+			//err = write_data(data, len);
+			err = write_data_large(data, len);
 			if(err != len)
 			{
 				MODPRINTF("Error writing bulk data %d\n", err);
