@@ -37,8 +37,8 @@ void pspDebugProfilerClear(void)
 	/* Don't clear the enable register */
 	for(i = 1; i < PROFILER_REG_COUNT; i++)
 	{
-		_sw(0, addr);
 		addr += 4;
+		_sw(0, addr);
 	}
 }
 
@@ -73,7 +73,8 @@ void pspDebugProfilerPrint(void)
 	pspDebugScreenPrintf("enable         : %10u\n", regs.enable);
 	pspDebugScreenPrintf("systemck       : %10u [cycles]\n", regs.systemck);
 	pspDebugScreenPrintf("cpu ck         : %10u [cycles]\n", regs.cpuck);
-	pspDebugScreenPrintf("stall          : %10u [cycles]\n", regs.stall);
+	pspDebugScreenPrintf("stall          : %10u [cycles]\n", regs.internal + regs.memory +
+			regs.copz + regs.vfpu);
 	pspDebugScreenPrintf("+(internal)    : %10u [cycles]\n", regs.internal);
 	pspDebugScreenPrintf("+--(memory)    : %10u [cycles]\n", regs.memory);
 	pspDebugScreenPrintf("+----(COPz)    : %10u [cycles]\n", regs.copz);

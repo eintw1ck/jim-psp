@@ -249,7 +249,6 @@ typedef struct _PspDebugProfilerRegs
 	volatile u32 enable;
 	volatile u32 systemck;
 	volatile u32 cpuck;
-	volatile u32 stall;
 	volatile u32 internal;
 	volatile u32 memory;
 	volatile u32 copz;
