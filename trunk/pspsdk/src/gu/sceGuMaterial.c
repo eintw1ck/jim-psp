@@ -11,7 +11,10 @@
 void sceGuMaterial(int mode, int color)
 {
 	if (mode & 0x01)
+	{
 		sendCommandi(85, color & 0xffffff);
+		sendCommandi(88, color >> 24);
+	}
 
 	if (mode & 0x02)
 		sendCommandi(86, color & 0xffffff);
