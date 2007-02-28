@@ -323,20 +323,37 @@ void sceGumLoadMatrix(const ScePspFMatrix4* m)
 #ifdef F_sceGumLookAt_vfpu
 void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* up)
 {
-	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
-	gumLoadIdentity(t);
-	gumLookAt(t,eye,center,up);
-
 	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
 
-	__asm__ volatile (
-		"lv.q C000.q,  0 + %0\n"
-		"lv.q C010.q, 16 + %0\n"
-		"lv.q C020.q, 32 + %0\n"
-		"lv.q C030.q, 48 + %0\n"
-		"vmmul.q M100, M300, M000\n"
-		"vmmov.q M300, M100\n"
-	: : "m"(*t) );
+    __asm__ volatile (
+        "vmidt.q M100\n"
+        // load eye, center, up vectors
+        "ulv.q    C000, %0\n"
+        "ulv.q    C010, %1\n"
+        "ulv.q    C020, %2\n"
+ 
+        // forward = center - eye
+        "vsub.t  R102, C010, C000\n"
+ 
+         // normalize forward
+        "vdot.t  S033, R102, R102\n"
+        "vrcp.s  S033, S033\n"
+        "vscl.t  R102, R102, S033\n"
+ 
+         // side = forward cross up
+        "vcrsp.t R100, R102, C020\n"
+        "vdot.t  S033, R100, R100\n"
+        "vrcp.s  S003, S033\n"
+        "vscl.t  R100, R100, S033\n"
+ 
+         // lup = side cross forward
+        "vcrsp.t R101, R100, R102\n"
+        "vneg.t  R102, R102\n"
+ 
+        "vmidt.q M200\n"
+        "vneg.t  C230, C000\n"
+	"vmmul.q M300, M100, M200\n"
+    : : "m"(*eye), "m"(*center), "m"(*up));
 
 	gum_current_matrix_update = 1;
 }
@@ -391,29 +408,27 @@ void sceGumMultMatrix(const ScePspFMatrix4* m)
 #ifdef F_sceGumOrtho_vfpu
 void sceGumOrtho(float left, float right, float bottom, float top, float near, float far)
 {
-	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
-	float dx = right-left, dy = top-bottom, dz = far-near;
-
-	memset(t,0,sizeof(ScePspFMatrix4));
-
-	t->x.x = 2.0f / dx;
-	t->w.x = -(right + left) / dx;
-	t->y.y = 2.0f / dy;
-	t->w.y = -(top + bottom) / dy;
-	t->z.z = -2.0f / dz;
-	t->w.z = -(far + near) / dz;
-	t->w.w = 1.0f;
-
 	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
 
-	__asm__ volatile (
-		"ulv.q C000,  0 + %0\n"
-		"ulv.q C010, 16 + %0\n"
-		"ulv.q C020, 32 + %0\n"
-		"ulv.q C030, 48 + %0\n"
-		"vmmul.q M100, M300, M000\n"
-		"vmmov.q M300, M100\n"
-	: : "m"(*t));
+    __asm__ volatile (
+        "vmidt.q M100\n"                        // set M100 to identity
+        "mtv     %1, S000\n"                    // C000 = [right, ?,      ?,  ]
+        "mtv     %3, S001\n"                    // C000 = [right, top,    ?,  ]
+        "mtv     %5, S002\n"                    // C000 = [right, top,    far ]
+        "mtv     %0, S010\n"                    // C010 = [left,  ?,      ?,  ]
+        "mtv     %2, S011\n"                    // C010 = [left,  bottom, ?,  ]
+        "mtv     %4, S012\n"                    // C010 = [left,  bottom, near]
+        "vsub.t  C020, C000, C010\n"            // C020 = [  dx,   dy,   dz]
+        "vrcp.t  C020, C020\n"                  // C020 = [1/dx, 1/dy, 1/dz]
+        "vmul.s  S100, S100[2], S020\n"         // S100 = m->x.x = 2.0 / dx
+        "vmul.s  S111, S111[2], S021\n"         // S110 = m->y.y = 2.0 / dy
+        "vmul.s  S122, S122[2], S022[-x]\n"     // S122 = m->z.z = -2.0 / dz
+        "vsub.t  C130, C000[-x,-y,-z], C010\n"  // C130 = m->w[x, y, z] = [-(right+left), -(top+bottom), -(far+near)]
+                                                // we do vsub here since -(a+b) => (-1*a) + (-1*b) => -a - b
+        "vmul.t  C130, C130, C020\n"            // C130 = [-(right+left)/dx, -(top+bottom)/dy, -(far+near)/dz]
+	"vmmul.q M000, M300, M100\n"
+	"vmmov.q M300, M000\n"
+    : : "r"(left), "r"(right), "r"(bottom), "r"(top), "r"(near), "r"(far));
 
 	gum_current_matrix_update = 1;
 }
@@ -422,29 +437,33 @@ void sceGumOrtho(float left, float right, float bottom, float top, float near, f
 #ifdef F_sceGumPerspective_vfpu
 void sceGumPerspective(float fovy, float aspect, float near, float far)
 {
-	float angle = (fovy / 2) * (GU_PI/180.0f);
-	float cotangent = cosf(angle) / sinf(angle);
-	float delta_z = near-far;
-	ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
-
-	memset(t,0,sizeof(ScePspFMatrix4));
-	t->x.x = cotangent / aspect;
-	t->y.y = cotangent;
-	t->z.z = (far + near) / delta_z; // -(far + near) / delta_z
-	t->w.z = 2.0f * (far * near) / delta_z; // -2 * (far * near) / delta_z
-	t->z.w = -1.0f;
-	t->w.w = 0.0f;
-
 	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
 
 	__asm__ volatile (
-		"ulv.q C000,  0 + %0\n"
-		"ulv.q C010, 16 + %0\n"
-		"ulv.q C020, 32 + %0\n"
-		"ulv.q C030, 48 + %0\n"
-		"vmmul.q M100, M300, M000\n"
-		"vmmov.q M300, M100\n"
-	: : "m"(*t));
+        "vmzero.q M100\n"                   // set M100 to all zeros
+        "mtv     %0, S000\n"                // S000 = fovy
+        "viim.s  S001, 90\n"                // S002 = 90.0f
+        "vrcp.s  S001, S001\n"              // S002 = 1/90
+        "vmul.s  S000, S000, S000[1/2]\n"   // S000 = fovy * 0.5 = fovy/2
+        "vmul.s  S000, S000, S001\n"        // S000 = (fovy/2)/90
+        "vrot.p  C002, S000, [c, s]\n"      // S002 = cos(angle), S003 = sin(angle)
+        "vdiv.s  S100, S002, S003\n"        // S100 = m->x.x = cotangent = cos(angle)/sin(angle)
+        "mtv     %2, S001\n"                // S001 = near
+        "mtv     %3, S002\n"                // S002 = far
+        "vsub.s  S003, S001, S002\n"        // S003 = deltaz = near-far
+        "vrcp.s  S003, S003\n"              // S003 = 1/deltaz
+        "mtv     %1, S000\n"                // S000 = aspect
+        "vmov.s  S111, S100\n"              // S111 = m->y.y = cotangent
+        "vdiv.s  S100, S100, S000\n"        // S100 = m->x.x = cotangent / aspect
+        "vadd.s  S122, S001, S002\n"        // S122 = m->z.z = far + near
+        "vmul.s  S122, S122, S003\n"        // S122 = m->z.z = (far+near)/deltaz
+        "vmul.s  S132, S001, S002\n"        // S132 = m->w.z = far * near
+        "vmul.s  S132, S132, S132[2]\n"     // S132 = m->w.z = 2 * (far*near)
+        "vmul.s  S132, S132, S003\n"        // S132 = m->w.z = 2 * (far*near) / deltaz
+        "vsub.s  S123, S123, S123[1]\n"     // S123 = m->z.w = -1.0
+	"vmmul.q M000, M300, M100\n"
+        "vmmov.q M300, M000\n"
+    : : "r"(fovy),"r"(aspect),"r"(near),"r"(far));
 
 	gum_current_matrix_update = 1;
 }
