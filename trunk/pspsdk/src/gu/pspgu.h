@@ -74,9 +74,6 @@ extern "C" {
 #define GU_TEXTURE_BITS		GU_TEXTURE_SHIFT(3)
 
 #define GU_COLOR_SHIFT(n)	((n)<<2)
-#define GU_COLOR_RES1		GU_COLOR_SHIFT(1)
-#define GU_COLOR_RES2		GU_COLOR_SHIFT(2)
-#define GU_COLOR_RES3		GU_COLOR_SHIFT(3)
 #define GU_COLOR_5650		GU_COLOR_SHIFT(4)
 #define GU_COLOR_5551		GU_COLOR_SHIFT(5)
 #define GU_COLOR_4444		GU_COLOR_SHIFT(6)
@@ -432,7 +429,7 @@ void* sceGuSetCallback(int signal, void (*callback)(int));
   *   - GU_BEHAVIOR_SUSPEND - Stops display list execution until callback function finished
   *   - GU_BEHAVIOR_CONTINUE - Do not stop display list execution during callback
   *
-  * @param signal - Signal index to trigger
+  * @param signal - Signal to trigger
   * @param behavior - Behavior type
 **/
 void sceGuSignal(int signal, int behavior);
@@ -491,11 +488,26 @@ void sceGuStart(int cid, void* list);
   * execute. Otherwise, only the terminating action is written to the list, depending on
   * context-type.
   *
+  * The finish-callback will get a zero as argument when using this function.
+  *
   * This also restores control back to whatever context that was active prior to this call.
   *
   * @returns Size of finished display list
 **/
 int sceGuFinish(void);
+
+/**
+  * Finish current display list and go back to the parent context, sending argument id for
+  * the finish callback.
+  *
+  * If the context is GU_DIRECT, the stall-address is updated so that the entire list will
+  * execute. Otherwise, only the terminating action is written to the list, depending on
+  * context-type.
+  *
+  * @param id - Finish callback id (16-bit)
+  * @returns Size of finished display list
+**/
+int sceGuFinishId(unsigned int id);
 
 /**
   * Call previously generated display-list

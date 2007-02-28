@@ -93,6 +93,7 @@ Dec Hex Name        Description
                         16-23: Signal index to trigger
 
 15  0F  FINISH      Complete rendering
+			0-15: Finish signal argument
 
 16  10  BASE        Base Address Register
                         16-20: 4 most significant bits for address (28 bits total)
@@ -674,31 +675,31 @@ Dec Hex Name        Description
                         0-7: Width = 2^TW
                         8-15: Height = 2^TH
 
-185 B9  TSIZE0      Texture Size Level 1
+185 B9  TSIZE1      Texture Size Level 1
                         0-7: Width = 2^TW
                         8-15: Height = 2^TH
 
-186 BA  TSIZE0      Texture Size Level 2
+186 BA  TSIZE2      Texture Size Level 2
                         0-7: Width = 2^TW
                         8-15: Height = 2^TH
 
-187 BB  TSIZE0      Texture Size Level 3
+187 BB  TSIZE3      Texture Size Level 3
                         0-7: Width = 2^TW
                         8-15: Height = 2^TH
 
-188 BC  TSIZE0      Texture Size Level 4
+188 BC  TSIZE4      Texture Size Level 4
                         0-7: Width = 2^TW
                         8-15: Height = 2^TH
 
-189 BD  TSIZE0      Texture Size Level 5
+189 BD  TSIZE5      Texture Size Level 5
                         0-7: Width = 2^TW
                         8-15: Height = 2^TH
 
-190 BE  TSIZE0      Texture Size Level 6
+190 BE  TSIZE6      Texture Size Level 6
                         0-7: Width = 2^TW
                         8-15: Height = 2^TH
 
-191 BF  TSIZE0      Texture Size Level 7
+191 BF  TSIZE7      Texture Size Level 7
                         0-7: Width = 2^TW
                         8-15: Height = 2^TH
 
