@@ -1,0 +1,25 @@
+0.0.4:
+    added a small ascii example
+    added "install" target that will copy all libraries, headers and samples to $(PSPSDK)
+    added baudrate change - no idea if this works
+    added some docs
+    fixed buggy maptable handling (about 4 memory corrution bugs)
+    updated vt100 send map (sending single chars, e.g. ^M didn't work at all)
+    fixed palmuw + map - thx whazilla
+    Win32: added intellisense support to vc2005 prj file (defaults to C:\devkitPro\)
+    Win32: framework enhanced
+           
+0.0.3:
+    added pspIrKeybOutputMode() the output can now be
+        - raw
+        - scan code
+        - ascii (compatible with PSP-SDK debug)
+        - vt100
+0.0.2: 
+    added "Palm Universal Keyboard" (thx to keycodes from TyoPad)
+    return codes for keyboard ini
+    added scePowerTick to the missing keyboards
+    fixed keymaps
+    
+0.0.1: 
+    initial release
