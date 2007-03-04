@@ -323,39 +323,22 @@ void sceGumLoadMatrix(const ScePspFMatrix4* m)
 #ifdef F_sceGumLookAt_vfpu
 void sceGumLookAt(ScePspFVector3* eye, ScePspFVector3* center, ScePspFVector3* up)
 {
-	pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
+   ScePspFMatrix4* t = GUM_ALIGNED_MATRIX();
+   gumLoadIdentity(t);
+   gumLookAt(t,eye,center,up);
+   
+   pspvfpu_use_matrices(gum_vfpucontext, VMAT3, VMAT0 | VMAT1);
 
-    __asm__ volatile (
-        "vmidt.q M100\n"
-        // load eye, center, up vectors
-        "ulv.q    C000, %0\n"
-        "ulv.q    C010, %1\n"
-        "ulv.q    C020, %2\n"
- 
-        // forward = center - eye
-        "vsub.t  R102, C010, C000\n"
- 
-         // normalize forward
-        "vdot.t  S033, R102, R102\n"
-        "vrcp.s  S033, S033\n"
-        "vscl.t  R102, R102, S033\n"
- 
-         // side = forward cross up
-        "vcrsp.t R100, R102, C020\n"
-        "vdot.t  S033, R100, R100\n"
-        "vrcp.s  S003, S033\n"
-        "vscl.t  R100, R100, S033\n"
- 
-         // lup = side cross forward
-        "vcrsp.t R101, R100, R102\n"
-        "vneg.t  R102, R102\n"
- 
-        "vmidt.q M200\n"
-        "vneg.t  C230, C000\n"
-	"vmmul.q M300, M100, M200\n"
-    : : "m"(*eye), "m"(*center), "m"(*up));
+   __asm__ volatile (
+         "lv.q C000.q, 0 + %0\n"
+         "lv.q C010.q, 16 + %0\n"
+         "lv.q C020.q, 32 + %0\n"
+         "lv.q C030.q, 48 + %0\n"
+         "vmmul.q M100, M300, M000\n"
+         "vmmov.q M300, M100\n"
+   : : "m"(*t) );
 
-	gum_current_matrix_update = 1;
+   gum_current_matrix_update = 1;
 }
 #endif
 
