@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="irkeybtest"
-	ProjectGUID="{122B5B99-DCDF-4FE5-9760-B354AE2894CA}"
-	RootNamespace="irkeybtest"
+	Name="libpspirkeybprx"
+	ProjectGUID="{F0475124-D12F-497C-842A-E9386ED75ED3}"
+	RootNamespace="libpspirkeybprx"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -121,8 +121,12 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\main.c"
+				RelativePath=".\IRKEYB.S"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -131,29 +135,25 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 		</Filter>
-		<File
-			RelativePath="..\ChangeLog"
+		<Filter
+			Name="include"
 			>
-		</File>
+			<File
+				RelativePath=".\include\pspirkeybprx.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+				</FileConfiguration>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\Makefile"
 			>
-		</File>
-		<File
-			RelativePath="..\README"
-			>
-		</File>
-		<File
-			RelativePath="..\README.ADDING.KEYBOARDS"
-			>
-		</File>
-		<File
-			RelativePath="..\run.cmd"
-			>
-		</File>
-		<File
-			RelativePath="..\TODO"
-			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+			</FileConfiguration>
 		</File>
 	</Files>
 	<Globals>

@@ -123,6 +123,9 @@ typedef struct SIrKeybScanCodeData
     unsigned char raw;
 } SIrKeybScanCodeData;
 
+/* we hide this functions when we use the prx mode */
+#ifndef __PSPIRKEYB_HIDE_LIB_FUNCTIONS
+
 /**
  * Initalizes the keyboard from a ini file.
  *
@@ -194,6 +197,8 @@ int pspIrKeybReadinput(void* buffer, int *length);
 int pspIrKeybFinish(void);
 
 /*@}*/
+
+#endif /*__PSPIRKEYB_HIDE_LIB_FUNCTIONS */
 
 #ifdef __cplusplus
 }

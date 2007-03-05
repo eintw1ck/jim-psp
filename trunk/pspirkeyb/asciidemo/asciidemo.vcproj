@@ -24,8 +24,8 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="set DEVKITPRO_PATH=C:\devkitPro&#x0D;&#x0A;&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\msys\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\devkitPSP\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\insight\bin;%PATH%&#x0D;&#x0A;&#x0D;&#x0A;make 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/&apos;"
-				ReBuildCommandLine="set DEVKITPRO_PATH=C:\devkitPro&#x0D;&#x0A;&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\msys\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\devkitPSP\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\insight\bin;%PATH%&#x0D;&#x0A;&#x0D;&#x0A;make clean&#x0D;&#x0A;make 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/&apos;"
+				BuildCommandLine="set DEVKITPRO_PATH=C:\devkitPro&#x0D;&#x0A;&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\msys\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\devkitPSP\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\insight\bin;%PATH%&#x0D;&#x0A;&#x0D;&#x0A;make 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/&apos; | sed -e &apos;s/\(.[a-zA-Z]\+\):\(.*\):/\1: error \2 :/&apos;"
+				ReBuildCommandLine="set DEVKITPRO_PATH=C:\devkitPro&#x0D;&#x0A;&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\msys\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\devkitPSP\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\insight\bin;%PATH%&#x0D;&#x0A;&#x0D;&#x0A;make clean&#x0D;&#x0A;make 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/&apos; | sed -e &apos;s/\(.[a-zA-Z]\+\):\(.*\):/\1: error \2 :/&apos;"
 				CleanCommandLine="set DEVKITPRO_PATH=C:\devkitPro&#x0D;&#x0A;&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\msys\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\devkitPSP\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\insight\bin;%PATH%&#x0D;&#x0A;&#x0D;&#x0A;make clean"
 				Output=""
 				PreprocessorDefinitions=""

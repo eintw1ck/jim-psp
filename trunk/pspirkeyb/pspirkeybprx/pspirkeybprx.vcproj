@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="irkeybtest"
-	ProjectGUID="{122B5B99-DCDF-4FE5-9760-B354AE2894CA}"
-	RootNamespace="irkeybtest"
+	Name="pspirkeybprx"
+	ProjectGUID="{2B5961FC-8343-46D1-9E56-B1E74468C9D3}"
+	RootNamespace="pspirkeybprx"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -24,8 +24,8 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="set DEVKITPRO_PATH=C:\devkitPro&#x0D;&#x0A;&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\msys\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\devkitPSP\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\insight\bin;%PATH%&#x0D;&#x0A;&#x0D;&#x0A;make 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/&apos; | sed -e &apos;s/\(.[a-zA-Z]\+\):\(.*\):/\1: error \2 :/&apos;"
-				ReBuildCommandLine="set DEVKITPRO_PATH=C:\devkitPro&#x0D;&#x0A;&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\msys\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\devkitPSP\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\insight\bin;%PATH%&#x0D;&#x0A;&#x0D;&#x0A;make clean&#x0D;&#x0A;make 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/&apos; | sed -e &apos;s/\(.[a-zA-Z]\+\):\(.*\):/\1: error \2 :/&apos;"
+				BuildCommandLine="set DEVKITPRO_PATH=C:\devkitPro&#x0D;&#x0A;&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\msys\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\devkitPSP\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\insight\bin;%PATH%&#x0D;&#x0A;&#x0D;&#x0A;make exp_symbols 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/&apos; | sed -e &apos;s/\(.[a-zA-Z]\+\):\(.*\):/\1: error \2 :/&apos;"
+				ReBuildCommandLine="set DEVKITPRO_PATH=C:\devkitPro&#x0D;&#x0A;&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\msys\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\devkitPSP\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\insight\bin;%PATH%&#x0D;&#x0A;&#x0D;&#x0A;make clean&#x0D;&#x0A;make exp_symbols 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/&apos; | sed -e &apos;s/\(.[a-zA-Z]\+\):\(.*\):/\1: error \2 :/&apos;"
 				CleanCommandLine="set DEVKITPRO_PATH=C:\devkitPro&#x0D;&#x0A;&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\msys\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\devkitPSP\bin;%PATH%&#x0D;&#x0A;set PATH=%DEVKITPRO_PATH%\insight\bin;%PATH%&#x0D;&#x0A;&#x0D;&#x0A;make clean"
 				Output=""
 				PreprocessorDefinitions=""
@@ -131,28 +131,18 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
+		</Filter>
 		<File
-			RelativePath="..\ChangeLog"
+			RelativePath=".\exports.exp"
 			>
 		</File>
 		<File
 			RelativePath=".\Makefile"
-			>
-		</File>
-		<File
-			RelativePath="..\README"
-			>
-		</File>
-		<File
-			RelativePath="..\README.ADDING.KEYBOARDS"
-			>
-		</File>
-		<File
-			RelativePath="..\run.cmd"
-			>
-		</File>
-		<File
-			RelativePath="..\TODO"
 			>
 		</File>
 	</Files>

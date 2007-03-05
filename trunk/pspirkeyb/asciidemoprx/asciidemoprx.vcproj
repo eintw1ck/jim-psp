@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="irkeybtest"
-	ProjectGUID="{122B5B99-DCDF-4FE5-9760-B354AE2894CA}"
-	RootNamespace="irkeybtest"
+	Name="asciidemoprx"
+	ProjectGUID="{7A7EA79D-E289-410C-9B0A-8E2F360B1072}"
+	RootNamespace="asciidemoprx"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -132,27 +132,11 @@
 			>
 		</Filter>
 		<File
-			RelativePath="..\ChangeLog"
-			>
-		</File>
-		<File
 			RelativePath=".\Makefile"
 			>
 		</File>
 		<File
-			RelativePath="..\README"
-			>
-		</File>
-		<File
-			RelativePath="..\README.ADDING.KEYBOARDS"
-			>
-		</File>
-		<File
-			RelativePath="..\run.cmd"
-			>
-		</File>
-		<File
-			RelativePath="..\TODO"
+			RelativePath=".\Makefile.sdk"
 			>
 		</File>
 	</Files>

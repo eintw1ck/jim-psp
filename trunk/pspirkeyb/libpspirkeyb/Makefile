@@ -2,7 +2,7 @@ TARGET_LIB = libpspirkeyb.a
 OBJS = iniparser.o pspirkeyb.o maptable.o novaetsmap.o keymap.o rawkeys.o vt100output.o
 
 INCDIR = ./include
-CFLAGS = -O2 -G0 -Wall -g
+CFLAGS = -O2 -G0 -Wall
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
 
