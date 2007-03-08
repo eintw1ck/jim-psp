@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2006 James F <tyranid@gmail.com>
  *
- * $HeadURL$
- * $Id$
+ * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/usbhostfs_pc/main.c $
+ * $Id: main.c 2177 2007-02-15 17:28:02Z tyranid $
  */
 
 #include <stdio.h>
@@ -3110,6 +3110,7 @@ int main(int argc, char **argv)
 	int i;
 
 	printf("USBHostFS (c) TyRaNiD 2k6\n");
+	printf("Built %s %s - $Revision$\n", __DATE__, __TIME__);
 
 	if(parse_args(argc, argv))
 	{

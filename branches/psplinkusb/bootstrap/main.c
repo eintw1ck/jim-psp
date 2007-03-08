@@ -25,11 +25,6 @@ PSP_MAIN_THREAD_ATTR(0);
 /* Define printf, just to make typing easier */
 #define printf	pspDebugScreenPrintf
 
-#define MAX_ARGS 16
-
-char *g_argv[MAX_ARGS];
-int  g_argc = 0;
-
 SceUID load_module(const char *path, int flags, int type)
 {
 	SceKernelLMOption option;
@@ -53,50 +48,9 @@ SceUID load_module(const char *path, int flags, int type)
 	return sceKernelLoadModule(path, flags, type > 0 ? &option : NULL);
 }
 
-void parse_args(SceSize args, void *argp)
-{
-	int  loc = 0;
-	char *ptr = argp;
-
-	while(loc < args)
-	{
-		g_argv[g_argc] = &ptr[loc];
-		loc += strlen(&ptr[loc]) + 1;
-		g_argc++;
-		if(g_argc == (MAX_ARGS-1))
-		{
-			break;
-		}
-	}
-	g_argv[g_argc] = NULL;
-}
-
-int build_args(char *args, const char *bootfile, SceUID thid, const char *execfile, int argc, char **argv)
-{
-	int loc = 0;
-	int i;
-
-	strcpy(args, bootfile);
-	loc += strlen(bootfile) + 1;
-	sprintf(&args[loc], "%08X", thid);
-	loc += strlen(&args[loc]) + 1;
-	if(execfile != NULL)
-	{
-		strcpy(&args[loc], execfile);
-		loc += strlen(execfile) + 1;
-		for(i = 0; i < argc; i++)
-		{
-			strcpy(&args[loc], argv[i]);
-			loc += strlen(argv[i]) + 1;
-		}
-	}
-
-	return loc;
-}
-
 int main_thread(SceSize args, void *argp)
 {
-	char prx_args[512];
+	char *argv0;
 	char prx_path[256];
 	char *path;
 	SceUID modid;
@@ -109,12 +63,12 @@ int main_thread(SceSize args, void *argp)
 	pspSdkInstallNoPlainModuleCheckPatch();
 	pspSdkInstallKernelLoadModulePatch();
 
-	parse_args(args, argp);
-	path = strrchr(g_argv[0], '/');
+	argv0 = (char*) argp;
+	path = strrchr(argv0, '/');
 	if(path != NULL)
 	{
-		memcpy(prx_path, g_argv[0], path - g_argv[0] + 1);
-		prx_path[path - g_argv[0] + 1] = 0;
+		memcpy(prx_path, argv0, path - argv0 + 1);
+		prx_path[path - argv0 + 1] = 0;
 		strcat(prx_path, "psplink.prx");
 	}
 	else
@@ -128,13 +82,10 @@ int main_thread(SceSize args, void *argp)
 	modid = load_module(prx_path, 0, 0);
 	if(modid >= 0)
 	{
-		int size;
 		int status;
 
 		printf("Starting psplink module\n");
-		size = build_args(prx_args, g_argv[0], sceKernelGetThreadId(), g_argv[1], g_argc-2, &g_argv[2]);
-
-		ret = sceKernelStartModule(modid, size, prx_args, &status, NULL);
+		ret = sceKernelStartModule(modid, args, argp, &status, NULL);
 		printf("Done\n");
 	}
 	else

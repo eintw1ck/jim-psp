@@ -4077,6 +4077,69 @@ static int tab_cmd(int argc, char **argv, unsigned int *vRet)
 	return CMD_OK;
 }
 
+static void print_sym_info(SceUID uid)
+{
+	SceKernelModuleInfo info;
+	int ret;
+	u8 digest[20];
+	char hash[41];
+	int i;
+
+	enable_kprintf(0);
+	memset(&info, 0, sizeof(info));
+	info.size = sizeof(info);
+
+	ret = g_QueryModuleInfo(uid, &info);
+	if(ret >= 0)
+	{
+		sceKernelUtilsSha1Digest((void*) info.text_addr, info.text_size, digest);
+		for(i = 0; i < 20; i++)
+		{
+			sprintf(&hash[i*2], "%02X", digest[i]);
+		}
+		SHELL_PRINT_CMD(SHELL_CMD_SYMLOAD, "%s%08X%s", hash, info.text_addr, info.name);
+	}
+	enable_kprintf(1);
+
+}
+
+static int symload_cmd(int argc, char **argv, unsigned int *vRet)
+{
+	SceUID ids[100];
+	SceUID uid;
+	int ret;
+	int count;
+	int i;
+
+	if(argc > 0)
+	{
+
+		uid = get_module_uid(argv[0]);
+		if(uid >= 0)
+		{
+			print_sym_info(uid);
+		}
+		else
+		{
+			return CMD_ERROR;
+		}
+	}
+	else
+	{
+		memset(ids, 0, 100 * sizeof(SceUID));
+		ret = g_GetModuleIdList(ids, 100 * sizeof(SceUID), &count);
+		if(ret >= 0)
+		{
+			for(i = 0; i < count; i++)
+			{
+				print_sym_info(ids[i]);
+			}
+		}
+	}
+
+	return CMD_OK;
+}
+
 static int exit_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	return CMD_EXITSHELL;

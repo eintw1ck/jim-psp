@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2006 James F <tyranid@gmail.com>
  *
- * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/pspsh/asm.c $
- * $Id: asm.c 2157 2007-01-29 22:50:26Z tyranid $
+ * $HeadURL$
+ * $Id$
  */
 #include <stdio.h>
 #include <string.h>

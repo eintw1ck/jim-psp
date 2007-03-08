@@ -44,9 +44,6 @@ PSP_MODULE_INFO("PSPLINK", 0x1000, 1, 1);
 
 struct GlobalContext g_context;
 
-/* The thread ID of the loader */
-static int g_loaderthid = 0;
-
 void save_execargs(int argc, char **argv);
 
 int unload_loader(void)
@@ -76,44 +73,24 @@ int unload_loader(void)
 	return 0;
 }
 
-void parse_sceargs(SceSize args, void *argp)
+void parse_sceargs(SceSize args, void *argp, int *argc, char **argv)
 {
 	int  loc = 0;
 	char *ptr = argp;
-	int argc = 0;
-	char *argv[MAX_ARGS];
 
+	*argc = 0;
 	while(loc < args)
 	{
-		argv[argc] = &ptr[loc];
+		argv[*argc] = &ptr[loc];
 		loc += strlen(&ptr[loc]) + 1;
-		argc++;
-		if(argc == (MAX_ARGS-1))
+		(*argc)++;
+		if(*argc == (MAX_ARGS-1))
 		{
 			break;
 		}
 	}
 
-	argv[argc] = NULL;
-	g_loaderthid = 0;
-
-	if(argc > 0)
-	{
-		char *lastdir;
-
-		g_context.bootfile = argv[0];
-		lastdir = strrchr(argv[0], '/');
-		if(lastdir != NULL)
-		{
-			memcpy(g_context.bootpath, argv[0], lastdir - argv[0] + 1);
-		}
-	}
-
-	if(argc > 1)
-	{
-		char *endp;
-		g_loaderthid = strtoul(argv[1], &endp, 16);
-	}
+	argv[*argc] = NULL;
 }
 
 void load_psplink_user(const char *bootpath)
@@ -164,11 +141,19 @@ void psplinkReset(void)
 	{
 		struct SceKernelLoadExecVSHParam param; 
 		const char *rebootkey = NULL;
+		char argp[256];
+		int  args;
 
+		args = 0;
+		strcpy(argp, g_context.bootfile);
+		args += strlen(g_context.bootfile)+1;
+		strcpy(&argp[args], g_context.currdir);
+		args += strlen(g_context.currdir)+1;
+		
 		memset(&param, 0, sizeof(param)); 
 		param.size = sizeof(param); 
-		param.args = strlen(g_context.bootfile)+1; 
-		param.argp = (char*) g_context.bootfile; 
+		param.args = args;
+		param.argp = argp;
 		switch(g_context.rebootkey)
 		{
 			case REBOOT_MODE_GAME: rebootkey = "game";
@@ -279,14 +264,28 @@ void initialise(SceSize args, void *argp)
 {
 	struct ConfigContext ctx;
 	const char *init_dir = "host0:/";
-	struct SavedContext *save = (struct SavedContext *) SAVED_ADDR;
 	int (*g_sceUmdActivate)(int, const char *);
+	int argc;
+	char *argv[MAX_ARGS];
 
 	memset(&g_context, 0, sizeof(g_context));
 	map_firmwarerev();
 	exceptionInit();
 	g_context.thevent = -1;
-	parse_sceargs(args, argp);
+	parse_sceargs(args, argp, &argc, argv);
+
+	if(argc > 0)
+	{
+		char *lastdir;
+
+		g_context.bootfile = argv[0];
+		lastdir = strrchr(argv[0], '/');
+		if(lastdir != NULL)
+		{
+			memcpy(g_context.bootpath, argv[0], lastdir - argv[0] + 1);
+		}
+	}
+
 	configLoad(g_context.bootpath, &ctx);
 
 	if(ctx.pid)
@@ -301,12 +300,22 @@ void initialise(SceSize args, void *argp)
 	ttyInit();
 	init_usbhost(g_context.bootpath);
 
-	if(save->magic == SAVED_MAGIC)
+#if _PSP_FW_VERSION >= 200
+	if(argc > 1)
 	{
-		init_dir = save->currdir;
-		save->magic = 0;
-		g_context.rebootkey = save->rebootkey;
+		init_dir = argv[1];
 	}
+#else
+	{
+		struct SavedContext *save = (struct SavedContext *) SAVED_ADDR;
+		if(save->magic == SAVED_MAGIC)
+		{
+			init_dir = save->currdir;
+			save->magic = 0;
+			g_context.rebootkey = save->rebootkey;
+		}
+	}
+#endif
 
 	if(shellInit(init_dir) < 0)
 	{
@@ -323,7 +332,6 @@ void initialise(SceSize args, void *argp)
 	/* Hook sceKernelExitGame */
 	apiHookByNid(refer_module_by_name("sceLoadExec", NULL), "LoadExecForUser", 0x05572A5F, exit_reset);
 
-	sceKernelWaitThreadEnd(g_loaderthid, NULL);
 	unload_loader();
 
 	psplinkPatchException();

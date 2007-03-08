@@ -1,9 +1,15 @@
-/***************************************************************
- * PRXTool : Utility for PSP executables.
- * (c) TyRaNiD 2k6
+/*
+ * PSPLINK
+ * -----------------------------------------------------------------------
+ * Licensed under the BSD license, see LICENSE in PSPLINK root for details.
  *
- * disasm.C - Implementation of a MIPS disassembler
- ***************************************************************/
+ * disasm.c - PSPLINK pc terminal simple MIPS disassembler
+ *
+ * Copyright (c) 2006 James F <tyranid@gmail.com>
+ *
+ * $HeadURL$
+ * $Id$
+ */
 
 #include <stdio.h>
 #include <string.h>

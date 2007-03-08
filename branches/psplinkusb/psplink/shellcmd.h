@@ -22,6 +22,7 @@
 #define SHELL_CMD_TAB		0xFA
 #define SHELL_CMD_LASTMOD   0xF9
 #define SHELL_CMD_DISASM    0xF8
+#define SHELL_CMD_SYMLOAD   0xF7
 
 #ifdef _PCTERM
 /* Structure to hold a single command entry */
@@ -273,6 +274,12 @@ struct sh_command
 	SHELL_CMD_PCTERM("error", NULL, error_cmd, 1, "Print the name of a known kernel error", "", "no") \
 	SHELL_CMD_PCTERM("strlen", NULL, strlen_cmd, 1, "Get length of a string", "", "str") \
 	SHELL_CMD_PSP("tab", NULL, tab_cmd, 1, "Tab Completion", "", "dir [file]") \
+	SHELL_CMD_SHARED("symload", NULL, symload_cmd, 0, "Load a symbol set", \
+			"Load a set of symbols. Can either specify a module name or" \
+			"a local path to an ELF file. If no argument is supplied it will" \
+			"issue load commands for all current modules. PSP symbol location is " \
+			"specified with the PSP_SYMBOL_PATH environment variable.",\
+		   	"symload [@module|file]") \
 	SHELL_CMD_PCTERM("help", "?", help_cmd, 0, "Print help about a command", \
 			"If a category is specified print all commands underneath. If a command is specified " \
 			"prints specific help.", "[category|command]") \

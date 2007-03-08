@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2006 James F <tyranid@gmail.com>
  *
- * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/pspsh/pspsh.c $
- * $Id: pspsh.c 2157 2007-01-29 22:50:26Z tyranid $
+ * $HeadURL$
+ * $Id$
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -97,6 +97,7 @@ int disset_cmd(int argc, char **argv);
 int disclear_cmd(int argc, char **argv);
 int disopts_cmd(int argc, char **argv);
 int tty_cmd(int argc, char **argv);
+int symload_cmd(int argc, char **argv);
 void cli_handler(char *buf);
 struct TabEntry* read_tab_completion(void);
 struct TabEntry
@@ -530,6 +531,22 @@ int asm_cmd(int argc, char **argv)
 		execute_line(cmd);
 		g_context.asmmode = 1;
 		g_context.asmaddr = 0;
+	}
+
+	return 0;
+}
+
+int symload_cmd(int argc, char **argv)
+{
+	/* If no args or this is for a module name then issue direct */
+	if((argc == 0) || (argv[0][0] == '@'))
+	{
+		return 1;
+	}
+	else
+	{
+		/* This is probably a file, try and open it, if successful issue a symload command
+		 * with the appropriate module name to fixup the address */
 	}
 
 	return 0;
@@ -1121,7 +1138,8 @@ int parse_args(int argc, char **argv, struct Args *args)
 
 void print_help(void)
 {
-	fprintf(stderr, "PSPSH Help\n");
+	fprintf(stderr, "PSPSH Help (c) TyRaNiD\n");
+	fprintf(stderr, "Built %s %s - $Revision$\n", __DATE__, __TIME__);
 	fprintf(stderr, "Usage: pspsh [options] [script args...]\n");
 	fprintf(stderr, "Options:\n");
 	fprintf(stderr, "-i ipaddr   : Specify the IP address to connect to\n");
@@ -1452,6 +1470,23 @@ int process_cmd(const unsigned char *str)
 			{
 				opcode = strtoul(endp+1, NULL, 16);
 				printf("%s\n", disasmInstruction(opcode, addr, NULL, NULL, 0));
+			}
+		}
+		else if(*str == SHELL_CMD_SYMLOAD)
+		{
+			char sha1[41];
+			char addr[9];
+			const char *name;
+
+			str++;
+			if(strlen((const char*) str) > (40+8))
+			{
+				memcpy(sha1, str, 40);
+				sha1[40] = 0;
+				memcpy(addr, &str[40], 8);
+				addr[8] = 0;
+				name = (const char*) &str[40+8];
+				printf("Symbol Load - Name %32s, Address 0x%s, SHA1 %s\n", name, addr, sha1);
 			}
 		}
 	}

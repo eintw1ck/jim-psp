@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2005 James F <tyranid@gmail.com>
  *
- * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/psplink/parse_args.c $
- * $Id: parse_args.c 2026 2006-10-14 13:09:48Z tyranid $
+ * $HeadURL$
+ * $Id$
  */
 
 #include <stdio.h>
