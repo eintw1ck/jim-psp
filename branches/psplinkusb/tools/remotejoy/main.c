@@ -36,6 +36,8 @@ PSP_MODULE_INFO("RemoteJoy", PSP_MODULE_KERNEL, 1, 1);
 #include <pspusb.h>
 #endif
 
+#define SCREEN_WAIT_TIMEOUT (100*1000)
+
 //#define DEBUG_PRINTF(x, ...) printf(x, ## __VA_ARGS__)
 #define DEBUG_PRINTF(x, ...)
 
@@ -282,7 +284,13 @@ inline int build_frame(void)
 	int pixelformat;
 	int sync;
 	
-	sceDisplayGetFrameBuf(&topaddr, &bufferwidth, &pixelformat, &sync);
+	/* Get the top level frame buffer, else get the normal frame buffer */
+	sceDisplayGetFrameBufferInternal(0, &topaddr, &bufferwidth, &pixelformat, &sync);
+	if(topaddr == NULL)
+	{
+		sceDisplayGetFrameBufferInternal(2, &topaddr, &bufferwidth, &pixelformat, &sync);
+	}
+
 	if(topaddr)
 	{
 		head = (struct JoyScrHeader*) g_scrptr;
@@ -381,14 +389,16 @@ int screen_thread(SceSize args, void *argp)
 	{
 		int ret;
 		unsigned int status;
+		SceUInt timeout;
 
-		ret = sceKernelWaitEventFlag(g_screvent, 3, PSP_EVENT_WAITOR | PSP_EVENT_WAITCLEAR, &status, NULL);
-		if(ret < 0)
+		timeout = SCREEN_WAIT_TIMEOUT;
+		ret = sceKernelWaitEventFlag(g_screvent, 3, PSP_EVENT_WAITOR | PSP_EVENT_WAITCLEAR, &status, &timeout);
+		if((ret < 0) && (ret != SCE_KERNEL_ERROR_WAIT_TIMEOUT))
 		{
 			sceKernelExitDeleteThread(0);
 		}
 
-		if(status & 1)
+		if((status & 1) || (ret == SCE_KERNEL_ERROR_WAIT_TIMEOUT))
 		{
 #ifdef ENABLE_TIMING
 			unsigned int fstart, fmid, fend;
@@ -410,7 +420,11 @@ int screen_thread(SceSize args, void *argp)
 				DEBUG_PRINTF("Total: 0x%08X Frame: 0x%08X Usb: 0x%08X\n", fend - fstart, fmid-fstart, fend-fmid);
 #endif
 			}
-			sceKernelSignalSema(g_scrsema, 1);
+
+			if(ret != SCE_KERNEL_ERROR_WAIT_TIMEOUT)
+			{
+				sceKernelSignalSema(g_scrsema, 1);
+			}
 		}
 
 		if(status & 2)
