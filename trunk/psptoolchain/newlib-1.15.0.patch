@@ -7106,7 +7106,7 @@ diff -burN newlib-1.15.0/newlib/libc/sys/psp/netdb.c newlib-psp/newlib/libc/sys/
 +struct hostent *gethostbyaddr(const void *addr, int len, int type)
 +{
 +	static struct hostent ent;
-+    static char * aliases[1] = NULL;
++    static char * aliases[1] = { NULL };
 +	char buf[1024];
 +	static char sname[MAX_NAME] = "";
 +	static struct in_addr saddr = { 0 };
