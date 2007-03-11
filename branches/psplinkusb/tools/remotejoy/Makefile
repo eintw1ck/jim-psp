@@ -12,15 +12,18 @@ CFLAGS = -Os -G0 -Wall -fno-builtin-printf -I../../usbhostfs -I../../psplink
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
 LDFLAGS = -L../../libpsplink_driver -L../../libusbhostfs_driver
+LIBS = -lpsppower_driver -lusbhostfs_driver -lpspdisplay_driver
 
 ifdef BUILD_PLUGIN
 CFLAGS += -DBUILD_PLUGIN
-OBJS += libs.o apihook.o 
+#OBJS += libs.o apihook.o
+LIBS += -lpspusb_driver
+else
+LIBS += -lpsplink_driver
 endif
 
 LIBDIR =
 
-LIBS = -lpsppower_driver -lpsplink_driver -lusbhostfs_driver -lpspdisplay_driver -lpspusb_driver
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build_prx.mak

@@ -15,6 +15,7 @@
 #include <pspkdebug.h>
 #include <pspsdk.h>
 #include <pspctrl.h>
+#include <pspctrl_kernel.h>
 #include <psppower.h>
 #include <pspdisplay.h>
 #include <pspdisplay_kernel.h>
@@ -56,9 +57,12 @@ unsigned int g_lastframe = 0;
 int scePowerVolatileMemLock(int, char**, int*);
 unsigned int psplinkSetK1(unsigned int k1);
 extern u32 sceKernelSetDdrMemoryProtection;
+int (*g_ctrl_common)(SceCtrlData *, int count, int type);
 
 #define ASYNC_JOY ASYNC_USER
 #define ABS(x) ((x) < 0 ? -x : x)
+
+#define GET_JUMP_TARGET(x) (0x80000000 | (((x) & 0x03FFFFFF) << 2))
 
 int map_axis(int real, int new)
 {
@@ -77,21 +81,47 @@ int map_axis(int real, int new)
 	}
 }
 
+unsigned int calc_mask(void)
+{
+	int i;
+	unsigned int mask = 0;
+
+	for(i = 0; i < 32; i++)
+	{
+		if(sceCtrlGetButtonMask(1 << i) == 1)
+		{
+			mask |= (1 << i);
+		}
+	}
+
+	return mask;
+}
+
 void add_values(SceCtrlData *pad_data, int count, int neg)
 {
 	int i;
 	int intc;
+	unsigned int buttons;
+	int k1;
 
 	intc = pspSdkDisableInterrupts();
+
+	buttons = g_currjoy.Buttons;
+	asm __volatile__ ( "move %0, $k1" : "=r"(k1) );
+	if(k1)
+	{
+		buttons &= ~calc_mask();
+	}
+
 	for(i = 0; i < count; i++)
 	{
 		if(neg)
 		{
-			pad_data[i].Buttons &= ~g_currjoy.Buttons;
+			pad_data[i].Buttons &= ~buttons;
 		}
 		else
 		{
-			pad_data[i].Buttons |= g_currjoy.Buttons;
+			pad_data[i].Buttons |= buttons;
 		}
 
 		pad_data[i].Lx = map_axis(pad_data[i].Lx, g_currjoy.Lx);
@@ -100,64 +130,41 @@ void add_values(SceCtrlData *pad_data, int count, int neg)
 	pspSdkEnableInterrupts(intc);
 }
 
-int read_buffer_positive(SceCtrlData *pad_data, int count)
+int ctrl_hook_func(SceCtrlData *pad_data, int count, int type)
 {
 	int ret;
 
-	ret = sceCtrlReadBufferPositive(pad_data, count);
+	ret = g_ctrl_common(pad_data, count, type);
 	if(ret <= 0)
 	{
 		return ret;
 	}
 
-	add_values(pad_data, ret, 0);
+	add_values(pad_data, ret, type & 1);
 
 	return ret;
 }
 
-int peek_buffer_positive(SceCtrlData *pad_data, int count)
+int hook_ctrl_function(unsigned int* jump)
 {
-	int ret;
+	unsigned int target;
+	unsigned int func;
+	int inst;
 
-	ret = sceCtrlPeekBufferPositive(pad_data, count);
-	if(ret <= 0)
+	target = GET_JUMP_TARGET(*jump);
+	inst = _lw(target+8);
+	if((inst & ~0x03FFFFFF) != 0x0C000000)
 	{
-		return ret;
+		return 1;
 	}
 
-	add_values(pad_data, ret, 0);
+	g_ctrl_common = (void*) GET_JUMP_TARGET(inst);
 
-	return ret;
-}
+	func = (unsigned int) ctrl_hook_func;
+	func = (func & 0x0FFFFFFF) >> 2;
+	_sw(0x0C000000 | func, target+8);
 
-int read_buffer_negative(SceCtrlData *pad_data, int count)
-{
-	int ret;
-
-	ret = sceCtrlReadBufferNegative(pad_data, count);
-	if(ret <= 0)
-	{
-		return ret;
-	}
-
-	add_values(pad_data, ret, 1);
-
-	return ret;
-}
-
-int peek_buffer_negative(SceCtrlData *pad_data, int count)
-{
-	int ret;
-
-	ret = sceCtrlPeekBufferNegative(pad_data, count);
-	if(ret <= 0)
-	{
-		return ret;
-	}
-
-	add_values(pad_data, ret, 1);
-
-	return ret;
+	return 0;
 }
 
 void copy16to16(void *in, void *out);
@@ -271,9 +278,9 @@ void set_frame_buf(void *topaddr, int bufferwidth, int pixelformat, int sync)
 	{
 		g_lastframe--;
 	}
-
-	sceDisplaySetFrameBuf(topaddr, bufferwidth, pixelformat, sync);
 	psplinkSetK1(k1);
+
+	sceDisplaySetFrameBufferInternal(2, topaddr, bufferwidth, pixelformat, sync);
 }
 
 inline int build_frame(void)
@@ -333,9 +340,11 @@ inline int build_frame(void)
 
 int screen_thread(SceSize args, void *argp)
 {
-	SceModule *pMod;
 	struct JoyScrHeader *head;
 	int size;
+	u32* p;
+	u32 baseaddr;
+	u32 func;
 
 	/* Should actually hook the memory correctly :/ */
 
@@ -352,28 +361,25 @@ int screen_thread(SceSize args, void *argp)
 
 	if(sceKernelDevkitVersion() >= 0x01050001)
 	{
-		u32* p = &sceKernelSetDdrMemoryProtection;
-		u32 baseaddr;
+		p = &sceKernelSetDdrMemoryProtection;
 
-		baseaddr = 0x80000000 |	((*p & 0x03FFFFFF) << 2);
+		baseaddr = GET_JUMP_TARGET(*p);
 		_sw(0x03E00008, baseaddr);
 		_sw(0x00001021, baseaddr+4);
 		sceKernelDcacheWritebackInvalidateRange((void*) baseaddr, 8);
 		sceKernelIcacheInvalidateRange((void*) baseaddr, 8);
 	}
 
-	pMod = sceKernelFindModuleByName("sceDisplay_Service");
-	if(pMod == NULL)
-	{
-		DEBUG_PRINTF("Could not get display module\n");
-		sceKernelExitDeleteThread(0);
-	}
+	p = (u32*) sceDisplaySetFrameBuf;
 
-	if(apiHookByName(pMod->modid, "sceDisplay", "sceDisplaySetFrameBuf", set_frame_buf) == 0)
-	{
-		DEBUG_PRINTF("Could not hook set frame buf function\n");
-		sceKernelExitDeleteThread(0);
-	}
+	baseaddr = GET_JUMP_TARGET(*p);
+	func = (unsigned int) set_frame_buf;
+	func = (func & 0x0FFFFFFF) >> 2;
+	_sw(0x08000000 | func, baseaddr);
+	_sw(0, baseaddr+4);
+
+	sceKernelDcacheWritebackInvalidateAll();
+	sceKernelIcacheInvalidateAll();
 
 	/* Display current frame */
 
@@ -517,7 +523,6 @@ void send_screen_probe(void)
 
 int main_thread(SceSize args, void *argp)
 {
-	SceModule *pMod;
 	struct JoyEvent joyevent;
 	int intc;
 
@@ -539,50 +544,16 @@ int main_thread(SceSize args, void *argp)
 	retVal = sceUsbActivate(HOSTFSDRIVER_PID);
 #endif
 
-	pMod = sceKernelFindModuleByName("sceController_Service");
-	if(pMod == NULL)
+	if(hook_ctrl_function((unsigned int*) sceCtrlReadBufferPositive) || 
+		hook_ctrl_function((unsigned int*) sceCtrlPeekBufferPositive) ||
+		hook_ctrl_function((unsigned int*) sceCtrlReadBufferNegative) ||
+		hook_ctrl_function((unsigned int*) sceCtrlPeekBufferNegative))
 	{
-		DEBUG_PRINTF("Could not get controller module\n");
+		DEBUG_PRINTF("Could not hook controller functions\n");
 		sceKernelExitDeleteThread(0);
 	}
-
-	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlReadBufferPositive", read_buffer_positive) == 0)
-	{
-		DEBUG_PRINTF("Could not hook controller function\n");
-		sceKernelExitDeleteThread(0);
-	}
-
-	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlPeekBufferPositive", peek_buffer_positive) == 0)
-	{
-		DEBUG_PRINTF("Could not hook controller function\n");
-		sceKernelExitDeleteThread(0);
-	}
-
-	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlReadBufferNegative", read_buffer_negative) == 0)
-	{
-		DEBUG_PRINTF("Could not hook controller function\n");
-		sceKernelExitDeleteThread(0);
-	}
-
-	if(apiHookByName(pMod->modid, "sceCtrl", "sceCtrlPeekBufferNegative", peek_buffer_negative) == 0)
-	{
-		DEBUG_PRINTF("Could not hook controller function\n");
-		sceKernelExitDeleteThread(0);
-	}
-
-#ifdef BUILD_PLUGIN
-	sceKernelDelayThread(1000000);
-#endif
-	pMod = sceKernelFindModuleByName("sceVshBridge_Driver");
-
-	/* Ignore if we dont find vshbridge */
-	if(pMod)
-	{
-		if(apiHookByName(pMod->modid, "sceVshBridge","vshCtrlReadBufferPositive", read_buffer_positive) == 0)
-		{
-			DEBUG_PRINTF("Could not hook controller function\n");
-		}
-	}
+	sceKernelDcacheWritebackInvalidateAll();
+	sceKernelIcacheInvalidateAll();
 
 	if(usbAsyncRegister(ASYNC_JOY, &g_endp) < 0)
 	{

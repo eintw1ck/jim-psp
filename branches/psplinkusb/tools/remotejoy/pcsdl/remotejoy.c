@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2006 James F <tyranid@gmail.com>
  *
- * $HeadURL$
- * $Id$
+ * $HeadURL: svn://svn.pspdev.org/psp/branches/psplinkusb/tools/remotejoy/pcsdl/remotejoy.c $
+ * $Id: remotejoy.c 2187 2007-02-20 19:28:00Z tyranid $
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -111,10 +111,14 @@ enum PspCtrlButtons
 	PSP_CTRL_SQUARE     = 0x008000,
 	/** Home button. */
 	PSP_CTRL_HOME       = 0x010000,
-	/** Hold button. */
-	PSP_CTRL_HOLD       = 0x020000,
 	/** Music Note button. */
 	PSP_CTRL_NOTE       = 0x800000,
+	/** Screen button. */
+	PSP_CTRL_SCREEN     = 0x400000,
+	/** Volume up button. */
+	PSP_CTRL_VOLUP      = 0x100000,
+	/** Volume down button. */
+	PSP_CTRL_VOLDOWN    = 0x200000,
 };
 
 enum PspButtons
@@ -131,18 +135,26 @@ enum PspButtons
 	PSP_BUTTON_DOWN = 9,
 	PSP_BUTTON_LEFT = 10,
 	PSP_BUTTON_RIGHT = 11,
+	PSP_BUTTON_HOME  = 12,
+	PSP_BUTTON_NOTE  = 13,
+	PSP_BUTTON_SCREEN = 14,
+	PSP_BUTTON_VOLUP  = 15,
+	PSP_BUTTON_VOLDOWN = 16,
+	PSP_BUTTON_MAX   = 17
 };
 
-unsigned int g_bitmap[12] = {
+unsigned int g_bitmap[PSP_BUTTON_MAX] = {
 	PSP_CTRL_CROSS, PSP_CTRL_CIRCLE, PSP_CTRL_TRIANGLE, PSP_CTRL_SQUARE,
 	PSP_CTRL_LTRIGGER, PSP_CTRL_RTRIGGER, PSP_CTRL_START, PSP_CTRL_SELECT,
-	PSP_CTRL_UP, PSP_CTRL_DOWN, PSP_CTRL_LEFT, PSP_CTRL_RIGHT, 
+	PSP_CTRL_UP, PSP_CTRL_DOWN, PSP_CTRL_LEFT, PSP_CTRL_RIGHT, PSP_CTRL_HOME,
+	PSP_CTRL_NOTE, PSP_CTRL_SCREEN, PSP_CTRL_VOLUP, PSP_CTRL_VOLDOWN
 };
 
-const char *map_names[12] = {
+const char *map_names[PSP_BUTTON_MAX] = {
 	"cross", "circle", "triangle", "square",
 	"ltrig", "rtrig", "start", "select",
-	"up", "down", "left", "right",
+	"up", "down", "left", "right", "home", 
+	"note", "screen", "volup", "voldown"
 };
 
 /* Maps the buttons on the joystick to the buttons on the PSP controller */
@@ -405,6 +417,7 @@ int build_map(const char *mapfile, int buttons)
 	FILE *fp;
 
 	g_context.analog = -1;
+	g_context.digital = -1;
 	g_context.tol = DIGITAL_TOL;
 
 	g_buttmap = (unsigned int *) malloc(buttons * sizeof(unsigned int));
@@ -452,7 +465,7 @@ int build_map(const char *mapfile, int buttons)
 			}
 
 			butt = atoi(val);
-			for(i = 0; i < 12; i++)
+			for(i = 0; i < PSP_BUTTON_MAX; i++)
 			{
 				if(strcasecmp(map_names[i], tok) == 0)
 				{
@@ -461,7 +474,7 @@ int build_map(const char *mapfile, int buttons)
 				}
 			}
 
-			if(i == 12)
+			if(i == PSP_BUTTON_MAX)
 			{
 				if(strcasecmp("analog", tok) == 0)
 				{
@@ -706,34 +719,41 @@ SDL_Surface *create_surface(void *buf, int mode)
 		currh >>= 1;
 	}
 
-	printf("Mode %d\n", mode);
+	if(VERBOSE)
+	{
+		printf("Mode %d\n", mode);
+	}
 
 	switch(mode)
 	{
-		case 3: rmask = 0x000000FF;
-				gmask = 0x0000FF00;
-				bmask = 0x00FF0000;
-				amask = 0;
-				bpp = 32;
-				break;
-		case 2: rmask = 0x000F;
-				gmask = 0x00F0;
-				bmask = 0x0F00;
-				amask = 0;
-				bpp = 16;
-				break;
-		case 1: rmask = 0x1F;
-				gmask = 0x1F << 5;
-				bmask = 0x1F << 10;
-				amask = 0;
-				bpp = 16;
-				break;
-		case 0: rmask = 0x1F;
-				gmask = 0x3F << 5;
-				bmask = 0x1F << 11;
-				amask = 0;
-				bpp = 16;
-				break;
+		case 3: 
+			rmask = LE32(0x000000FF);
+			gmask = LE32(0x0000FF00);
+			bmask = LE32(0x00FF0000);
+			amask = 0;
+			bpp = 32;
+			break;
+		case 2: 
+			rmask = LE16(0x000F);
+			gmask = LE16(0x00F0);
+			bmask = LE16(0x0F00);
+			amask = 0;
+			bpp = 16;
+			break;
+		case 1: 
+			rmask = LE16(0x1F);
+			gmask = LE16(0x1F << 5);
+			bmask = LE16(0x1F << 10);
+			amask = 0;
+			bpp = 16;
+			break;
+		case 0: 
+			rmask = LE16(0x1F);
+			gmask = LE16(0x3F << 5);
+			bmask = LE16(0x1F << 11);
+			amask = 0;
+			bpp = 16;
+			break;
 		default: return NULL;
 	};
 
@@ -976,7 +996,10 @@ void mainloop(void)
 				{
 					if(event.type == SDL_KEYDOWN)
 					{
-						printf("Switch FullColour Mode\n");
+						if(VERBOSE)
+						{
+							printf("Switch FullColour Mode\n");
+						}
 						pspflags ^= SCREEN_CMD_FULLCOLOR;
 						send_event(sock, TYPE_SCREEN_CMD, SCREEN_CMD_ACTIVE | pspflags);
 						g_context.scron = 1;
@@ -988,7 +1011,10 @@ void mainloop(void)
 				{
 					if(event.type == SDL_KEYDOWN)
 					{
-						printf("Switch Halfsize Mode\n");
+						if(VERBOSE)
+						{
+							printf("Switch Halfsize Mode\n");
+						}
 						currw = PSP_SCREEN_W;
 						currh = PSP_SCREEN_H;
 						if((pspflags & SCREEN_CMD_HSIZE) == 0)
@@ -1014,13 +1040,19 @@ void mainloop(void)
 					{
 						if(g_context.scron)
 						{
-							printf("Disable Screen\n");
+							if(VERBOSE)
+							{
+								printf("Disable Screen\n");
+							}
 							send_event(sock, TYPE_SCREEN_CMD, 0);
 							g_context.scron = 0;
 						}
 						else
 						{
-							printf("Enable Screen\n");
+							if(VERBOSE)
+							{
+								printf("Enable Screen\n");
+							}
 							send_event(sock, TYPE_SCREEN_CMD, SCREEN_CMD_ACTIVE | pspflags);
 							g_context.scron = 1;
 						}
@@ -1071,6 +1103,16 @@ void mainloop(void)
 									 break;
 					case SDLK_SPACE: bitmap = PSP_CTRL_SELECT;
 									 break;
+					case SDLK_y: bitmap = PSP_CTRL_HOME;
+								 break;
+					case SDLK_u: bitmap = PSP_CTRL_VOLDOWN;
+								 break;
+					case SDLK_i: bitmap = PSP_CTRL_VOLUP;
+								 break;
+					case SDLK_o: bitmap = PSP_CTRL_SCREEN;
+								 break;
+					case SDLK_p: bitmap = PSP_CTRL_NOTE;
+								 break;
 					default: break;
 				};
 
@@ -1293,7 +1335,8 @@ void mainloop(void)
 
 int main(int argc, char **argv)
 {
-	printf("Remote Joy SDL for PSP (c) TyRaNiD 2k6\n");
+	fprintf(stderr, "Remote Joy SDL for PSP (c) TyRaNiD 2k6\n");
+	fprintf(stderr, "Built %s %s - $Revision$\n", __DATE__, __TIME__);
 	memset(&g_context, 0, sizeof(g_context));
 	if(parse_args(argc, argv, &g_context.args))
 	{
