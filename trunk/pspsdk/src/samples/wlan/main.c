@@ -55,7 +55,7 @@ int SetupCallbacks(void)
 /* main routine */
 int main(int argc, char *argv[])
 {
-    char sVal[7];
+    u8 sVal[8];
     int retVal;
     
     //init screen and callbacks

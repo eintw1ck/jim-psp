@@ -33,10 +33,11 @@ int sceWlanGetSwitchState(void);
 /**
  * Get the Ethernet Address of the wlan controller
  *
- * @param etherAddr - pointer to a buffer of chars with at least length 7
+ * @param etherAddr - pointer to a buffer of u8 (NOTE: it only writes to 6 bytes, but 
+ * requests 8 so pass it 8 bytes just in case)
  * @return 0 on success, < 0 on error
  */
-int sceWlanGetEtherAddr(char *etherAddr);
+int sceWlanGetEtherAddr(u8 *etherAddr);
 
 /**
  * Attach to the wlan device
