@@ -111,17 +111,20 @@ char *find_pspdev_path(char *name)
 	/* Check if name is an absolute path, if so our job is done */
 #ifdef __MINGW32__
 
-	char *ptr = name;
-	
-	char temp = name[0];
+	char *writableName = malloc(strlen(name) + 2);
+	char *ptr = writableName;
+	char temp;
+
 	*(ptr++) = '/';
-	*(ptr++) = temp;
-	while (*(ptr)) {
-		temp = *(ptr);
-		if (temp == '\\') *(ptr) = '/';
-		ptr++;
+
+	while (*(name)) {
+		temp = *(name++);
+		if (temp == '\\') temp = '/';
+		*(ptr++) = temp;
 	}
 
+	*(ptr) = '\0';
+	name = writableName;
 #endif
 	if(name[0] == DIR_SEP)
 	{
@@ -173,7 +176,7 @@ char *find_pspdev_path(char *name)
 						break;
 					}
 					
-					curr_tok = strtok(NULL, ":");
+					curr_tok = strtok(NULL, PATH_SEP);
 				}
 			}
 			else
@@ -184,6 +187,7 @@ char *find_pspdev_path(char *name)
 	}
 
 	normalize_path(path);
+	char *result = NULL;
 
 	if(found)
 	{
@@ -199,7 +203,7 @@ char *find_pspdev_path(char *name)
 			{
 				/* Oki valid path add a NUL */
 				path[path_len - suffix_len] = 0;
-				return path;
+				result = path;
 			}
 			else
 			{
@@ -213,7 +217,11 @@ char *find_pspdev_path(char *name)
 
 	}
 
-	return NULL;
+#ifdef __MINGW32__
+	free(writableName);
+#endif
+
+	return result;
 }
 
 void print_path(char *name)
