@@ -162,15 +162,17 @@ float scePowerGetBusClockFrequencyFloat(void);
 /**
  * Set Clock Frequencies
  *
- * NOTE: Please use scePowerSetBusClockFrequency and
- * scePowerSetCpuClockFrequency instead of this function
- * for clock <= 222 and bus <= 111.
- *
+ * @param pllfreq - pll frequency, valid from 19-333
  * @param cpufreq - cpu frequency, valid from 1-333
- * @param ramfreq - ram frequency, valid from 1-333
- * @param busfreq - bus frequency, valid from 1-166
+ * @param busfreq - bus frequency, valid from 1-167
+ * 
+ * and:
+ * 
+ * cpufreq <= pllfreq
+ * busfreq*2 <= pllfreq
+ *
  */
-int scePowerSetClockFrequency(int cpufreq, int ramfreq, int busfreq);
+int scePowerSetClockFrequency(int pllfreq, int cpufreq, int busfreq);
 
 /**
  * Lock power switch
