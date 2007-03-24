@@ -37,6 +37,9 @@ int pthread_create(pthread_t *thread_id, const pthread_attr_t *attributes, threa
 		case PTHREAD_SCOPE_SYSTEM:
 			attr = 0;
 			break;
+		case PTHREAD_SCOPE_PROCESS_VFPU:
+			attr = PSP_THREAD_ATTR_VFPU;
+			break;
 		case PTHREAD_SCOPE_PROCESS:
 		default:
 			attr = PSP_THREAD_ATTR_USER;

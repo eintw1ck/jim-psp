@@ -27,6 +27,7 @@
 	
 	#define PTHREAD_SCOPE_SYSTEM  10 /* Kernel */
 	#define PTHREAD_SCOPE_PROCESS 20 /* User */
+	#define PTHREAD_SCOPE_PROCESS_VFPU 30 /* VFPU App */
 	#define SCHED_OTHER			  0
 	#define PTHREAD_STACK_MIN	  8*1024    /* 8KB   */
 	#define PTHREAD_STACK_DEFAULT 128*1024  /* 128KB */
