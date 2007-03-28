@@ -53,6 +53,8 @@ enum PspIrKeyboards
     PSP_IRKBD_TYPE_NOVAETS_KIS2     = 19,
     /** Palm Universal Wireless Keyboard */
     PSP_IRKBD_TYPE_PALM_UW          = 20,
+    /** hama palm keyboard*/
+    PSP_IRKBD_TYPE_HAMA             = 21
 };
 
 /**

@@ -71,7 +71,7 @@ void keymap_decode( int outputmode, unsigned char raw, unsigned char pressed, un
             break;
         case PSP_IRKBD_OUTPUT_MODE_SCANCODE:
         case PSP_IRKBD_OUTPUT_MODE_ASCII:
-        case PSP_IRKBD_OUTPUT_MODE_VT100:            
+        case PSP_IRKBD_OUTPUT_MODE_VT100:
             keymap_decode_maptable( outputmode, raw, pressed, buffer, length );
             break;
         default:
@@ -97,7 +97,7 @@ static void keymap_decode_maptable( int outputmode, unsigned char raw, unsigned 
 /* decodes with modifiers and maptable recursion */
 static void keymap_decode_maptable_rec( int depth, int outputmode, unsigned char raw, unsigned char pressed, unsigned char * buffer, int *length )
 {
-    unsigned char normal, shift=0, alt=0, ctrl=0, compose, meta, numlock, is_rawcode;
+    unsigned char normal, shift=0, alt=0, ctrl=0, caps, compose, meta, numlock, is_rawcode;
     struct ModifierState oldModifierState;
     struct Maptable *map = NULL;
 
@@ -118,22 +118,30 @@ static void keymap_decode_maptable_rec( int depth, int outputmode, unsigned char
     compose = g_modifierState.compose;
     meta = g_modifierState.meta;
     numlock = g_modifierState.numlock;
+		caps = g_modifierState.capslock;
 
 #ifdef DEBUG_MODIFIERS
     dump_modifier( &g_modifierState );
 #endif
 
-    /* special shift key when in capslock mode */
-    if( g_modifierState.capslock )
+    /* capslock handling - note that it is only like shift for alphas */
+    if( caps )
     {
-        if( g_modifierState.shift )
-            shift = STATE_NONE;
-        else
-            shift = g_modifierState.capslock;
-    } else {
-        shift = g_modifierState.shift;
-    }
- 
+			if ((raw >= KEY_A) && (raw <= KEY_Z))
+			{
+				if (shift)
+				{
+					/* no caps for shift+capslock */
+					shift = STATE_NONE;
+				}
+				else
+				{
+					/* force caps by pretending shift */
+					shift = STATE_DOWN;
+				}
+			}
+		}
+
     /* check if we have a maptable */
     map = maptable_entry( raw );
     if( map == NULL )
@@ -195,17 +203,17 @@ static void decoded_to_buffer( int outputmode, unsigned char *data, int size, un
 
     if( outputmode == PSP_IRKBD_OUTPUT_MODE_RAW ) {
         SIrKeybRawCodeData * rawData;
-        
+
         buffer += (*length);
 
         *length += sizeof(SIrKeybRawCodeData);
         rawData = (SIrKeybRawCodeData*) buffer;
-        
+
         rawData->raw = *data;
         rawData->pressed = pressed;
-        
-    } 
-    else if( outputmode == PSP_IRKBD_OUTPUT_MODE_SCANCODE ) 
+
+    }
+    else if( outputmode == PSP_IRKBD_OUTPUT_MODE_SCANCODE )
     {
         SIrKeybScanCodeData *scanData;
 
@@ -213,14 +221,14 @@ static void decoded_to_buffer( int outputmode, unsigned char *data, int size, un
 
         *length += sizeof(SIrKeybScanCodeData);
         scanData = (SIrKeybScanCodeData*) buffer;
-        
+
         scanData->raw = *data;
         scanData->shift = shift;
         scanData->ctrl = ctrl;
         scanData->alt = alt;
         scanData->pressed = pressed;
-    } 
-    else if ( outputmode == PSP_IRKBD_OUTPUT_MODE_ASCII && size == 1 && pressed  ) 
+    }
+    else if ( outputmode == PSP_IRKBD_OUTPUT_MODE_ASCII && size == 1 && pressed  )
     {
         /* we only support PSP sdk current charset - no backspace etc. */
         switch( *data )
@@ -247,8 +255,8 @@ static void decoded_to_buffer( int outputmode, unsigned char *data, int size, un
             memcpy(buffer, buf, len );
             (*length) += len;
         }
-    } 
-    else if( outputmode == PSP_IRKBD_OUTPUT_MODE_VT100 && size == 1 && pressed ) 
+    }
+    else if( outputmode == PSP_IRKBD_OUTPUT_MODE_VT100 && size == 1 && pressed )
     {
         vt100_output_map( data, size, is_rawcode, shift, ctrl, alt, pressed, buffer, length );
     }
@@ -268,7 +276,7 @@ static void decoded_to_buffer_with_map( int outputmode, unsigned char raw, struc
     {
         /* we don't need the map in scancode mode */
         SIrKeybScanCodeData *scanData;
-   
+
         buffer += (*length);
 
         *length += sizeof(SIrKeybScanCodeData);
@@ -301,7 +309,7 @@ static void decoded_to_buffer_with_map( int outputmode, unsigned char raw, struc
             if( entry->length > 0 ) {
                 vt100_output_map( entry->map, entry->length, is_rawcode, shift, ctrl, alt, pressed, buffer, length );
             } else {
-                
+
                 /* we have no entry here - so use the raw code */
                 is_rawcode = 1;
                 vt100_output_map( &raw, sizeof( unsigned char), is_rawcode, shift, ctrl, alt, pressed, buffer, length );
@@ -427,5 +435,5 @@ static void dump_modifier( struct ModifierState *state )
 
     if( buffer[0] != '\0' )
         printf( "modifiers: %s\n", buffer );
-} 
+}
 #endif

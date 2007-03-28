@@ -22,7 +22,7 @@
 #include "pspirkeyb.h"
 
 //#define printf pspDebugScreenPrintf
- 
+
 #define KEY_PRESSED	    1
 #define KEY_RELEASED	0
 
@@ -40,13 +40,14 @@
 /* typedef for callback */
 typedef int (*keyboard_input)(unsigned char* buffer, int *length);
 
+
 static int g_keyboard = PSP_IRKBD_TYPE_NONE;
 static int g_baudrate = B0;
 static int g_irdafd   = -1;
 static int g_kernelmode = 0;
 static int g_outputmode = PSP_IRKBD_OUTPUT_MODE_ASCII;
 static keyboard_input g_keyboard_input_CB = NULL;
-
+static int lastkeypressed = 0;
 /* initalize the keyboard with a given type and mapfile */
 static int pspIrKeybSetKeyboard(int keyboard, const char* mapfile);
 
@@ -64,11 +65,11 @@ static int compaq_microkbd(unsigned char* buffer, int *length);
 static int targus_infrared(unsigned char* buffer, int *length);
 static int benqgamepad(unsigned char* buffer, int *length);
 static int palmuw(unsigned char* buffer, int *length);
-
+static int hama(unsigned char* buffer, int *length);
 static int pspIrdaSetBaud( int baudrate );
 
 int pspIrKeybInit(const char* inifile, int kernelmode)
-{ 
+{
     const char *defaultfile = DEFAULT_INI_FILE;
     dictionary * ini;
     int keyboard=PSP_IRKBD_TYPE_NONE;
@@ -245,44 +246,48 @@ static int pspIrKeybSetKeyboard(int keyboard, const char* mapfile)
             g_keyboard_input_CB = palmuw;
             g_baudrate = B9600;
             break;
+        case PSP_IRKBD_TYPE_HAMA:
+            g_keyboard_input_CB = hama;
+            g_baudrate = B9600;
+            break;
         default:
             return PSP_IRKBD_RESULT_UNKNOW_KEYBOARD;
     }
 
     g_keyboard = keyboard;
     ret = maptable_load_map( mapfile );
-        
+
 	return ret;
 }
 
-#define PSP_UART5_DIV1 0xBE540024 
-#define PSP_UART5_DIV2 0xBE540028 
-#define PSP_UART5_CTRL 0xBE54002C 
-#define PSP_UART_CLK   96000000 
+#define PSP_UART5_DIV1 0xBE540024
+#define PSP_UART5_DIV2 0xBE540028
+#define PSP_UART5_CTRL 0xBE54002C
+#define PSP_UART_CLK   96000000
 
 /* idea taken from : */
 /* http://forums.ps2dev.org/viewtopic.php?t=7192&highlight=irda+baud */
-/* don't know if it works... */ 
+/* don't know if it works... */
 static int pspIrdaSetBaud( int baud )
 {
-    int div1, div2; 
+    int div1, div2;
 
     /* this only works in kernel mode - but setting to "default" rate is ok*/
     if( baud == B9600 && !g_kernelmode )
         return PSP_IRKBD_RESULT_OK;
 
-    /* rate set using the rough formula div1 = (PSP_UART_CLK / baud) >> 6 and 
-     * div2 = (PSP_UART_CLK / baud) & 0x3F 
-     * The uart4 driver actually uses a slightly different formula for div 2 (it        
-     * adds 32 before doing the AND, but it doesn't seem to make a difference 
-     */ 
-    div1 = PSP_UART_CLK / baud; 
-    div2 = div1 & 0x3F; 
-    div1 >>= 6; 
+    /* rate set using the rough formula div1 = (PSP_UART_CLK / baud) >> 6 and
+     * div2 = (PSP_UART_CLK / baud) & 0x3F
+     * The uart4 driver actually uses a slightly different formula for div 2 (it
+     * adds 32 before doing the AND, but it doesn't seem to make a difference
+     */
+    div1 = PSP_UART_CLK / baud;
+    div2 = div1 & 0x3F;
+    div1 >>= 6;
 
-    _sw(div1, PSP_UART5_DIV1); 
-    _sw(div2, PSP_UART5_DIV2); 
-    _sw(0x60, PSP_UART5_CTRL); 
+    _sw(div1, PSP_UART5_DIV1);
+    _sw(div2, PSP_UART5_DIV2);
+    _sw(0x60, PSP_UART5_CTRL);
 
     return PSP_IRKBD_RESULT_OK;
 }
@@ -298,7 +303,7 @@ static int novaets_kis2(unsigned char* buffer, int *length)
 	/* Read 2 bytes */
 	if( sceIoRead(g_irdafd, buf, 2) != 2 )
 		return -1;
-    
+
     /* resume display */
     scePowerTick(0);
 
@@ -307,7 +312,7 @@ static int novaets_kis2(unsigned char* buffer, int *length)
         return -1;
 
     raw = novaets_kis2_keycode_table[row][col];
- 
+
     keymap_decode( g_outputmode, raw, pressed, buffer, length );
 
     if( !ismod && pressed )
@@ -422,7 +427,7 @@ static int freedom_keyboard(unsigned char* buffer, int *length)
 
 	key =  buf[0];
 	//keyboard sends n when pressing a key
-	// and n+63 when releasing the key 
+	// and n+63 when releasing the key
 	key_down = ( key < 63 );
 	if (!key_down)
 		key = (key-63)&0x3F; // convert key code for key up
@@ -610,8 +615,8 @@ static int flexis(unsigned char* buffer, int *length)
                 return (-1);
             //if (debug)
 			//	fprintf(stderr, "got %d\n", buf[1]);
-            
-            keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_PRESSED, buffer, length );            
+
+            keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_PRESSED, buffer, length );
             keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_RELEASED, buffer, length );
 		}
     } else { /* release of key from Set 2 */
@@ -688,7 +693,7 @@ static int micro_foldaway(unsigned char* buffer, int *length)
 		if (checkkey > 0 && checkkey <= 4) {
 			buf[0] = micro_foldaway_normal[159 - buf[0]];
             keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_RELEASED, buffer, length );
-		} else if (buf[0] == 133 && lastkey > 0) {            
+		} else if (buf[0] == 133 && lastkey > 0) {
             keymap_decode( g_outputmode, lastkey, KEY_RELEASED, buffer, length );
 			lastkey = 0;
 		}
@@ -721,7 +726,7 @@ static int micro_datapad(unsigned char* buffer, int *length)
 
     if( sceIoRead(g_irdafd, buf, 1) != 1 )
         return (-1);
-    
+
     /* resume display */
     scePowerTick(0);
 
@@ -769,7 +774,7 @@ static int compaq_microkbd(unsigned char* buffer, int *length)
 
     /* resume display */
     scePowerTick(0);
-    
+
 	//if (debug)
 	//	fprintf(stderr, "got %d %d (0x%x 0x%x)\n", buf[0], buf[1], buf[0], buf[1]);
 	if (buf[0] & 0x80) { /* release */
@@ -863,18 +868,23 @@ static int palmuw(unsigned char* buffer, int *length)
             if (i == 3)buf[i]=buf1;
             if (i == 4)buf[i]=buf1;
             if (i == 5)buf[i]=buf1;
-            i++;  
+            i++;
         }
+				else
+				{
+					// avoid tight loops
+					sceKernelDelayThread(1000);
+				}
         z++;
     }
- 
+
     /* resume display */
     scePowerTick(0);
 
     //printf( "0%c - %d\n", buf[0], buf[0] );
     //printf( "1%c - %d\n", buf[1], buf[1] );
     //printf( "5%c - %d\n", buf[5], buf[5] );
-    
+
     if( buf[0] != 0xff || buf[1] != 0xc0 || buf[5] != 0xc1 )
         return (-1);
 
@@ -902,5 +912,98 @@ static int palmuw(unsigned char* buffer, int *length)
         keymap_decode( g_outputmode, palmuw_normal[keycode], KEY_RELEASED, buffer, length );
 	}
 
+    return 0;
+}
+static int hama(unsigned char* buffer, int *length)
+{
+	int repeat = 0 ;
+
+    unsigned char keycode=0;
+    unsigned int  key_down=0;
+    int i = 0,z = 0;
+    unsigned char buf1;
+    unsigned char buf[6] = {0,0,0,0,0,0};
+    while (i < 5  || z < 5)
+    {
+        int len = sceIoRead(g_irdafd, &buf1, 1);
+        if (len == -1)
+            return (-1);
+        if (len == 1)
+        {
+            if (buf1 == 0xc0)
+            {
+                i=0;
+                z=0;
+                buf[i]=buf1;
+            }
+
+            if (i == 1)
+                buf[i]=buf1;
+
+            if (i == 2)
+                buf[i]=buf1;
+
+            if (i == 3)
+                buf[i]=buf1;
+
+            if (i == 4)
+                buf[i]=buf1;
+
+            if (i == 5)
+                buf[i]=buf1;
+
+            i++;
+        }
+        z++;
+    }
+
+
+    /* resume display */
+    scePowerTick(0);
+
+//  printf( "0 - %d\n", buf[0] );
+//  printf( "1  - %d\n",  buf[1] );
+//  printf( "2  - %d\n",  buf[2] );
+//  printf( "3  - %d\n",  buf[3] );
+//  printf( "4  - %d\n",  buf[4] );
+//  printf( "5  - %d\n",  buf[5] );
+
+    /* 3rd pos is the key we need */
+    keycode = buf[1];
+    //    lastkey = keycode;
+    if( keycode < 72 )
+        key_down = 1;
+    else if (keycode < 144)
+        keycode-=72;
+
+    if ( key_down )
+    {
+        //if (debug)
+        //fprintf(stdout,"press %d\n", keycode);
+        keymap_decode( g_outputmode, hama_keymap[keycode], KEY_PRESSED, buffer, length );
+        lastkeypressed =  keycode;
+        repeat = 0;
+
+    }
+   else  if  (keycode < 144)
+    {
+        //if (debug)
+        //fprintf(stdout,"press %d\n", keycode);
+        keymap_decode( g_outputmode, hama_keymap[keycode], KEY_RELEASED, buffer, length );
+        if (lastkeypressed == keycode){
+        lastkeypressed =  150;   //tried to match my pc keyboard  behavior
+        }
+        repeat = 0;
+    }
+    else
+    {
+        repeat++;
+        if (repeat >4 )    //eat the repeat code to delay successive key presses if key is still pressed
+        {
+            //if (debug)
+            //fprintf(stdout,"press %d\n", keycode);
+            keymap_decode( g_outputmode, hama_keymap[lastkeypressed], KEY_PRESSED, buffer, length );
+        }
+    }
     return 0;
 }
