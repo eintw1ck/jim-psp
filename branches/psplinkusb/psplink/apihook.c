@@ -487,6 +487,17 @@ u32 apiHookByName(SceUID uid, const char *library, const char *name, void *func)
 			addr = 0;
 		}
 	}
+	else
+	{
+		addr = libsFindImportAddrByName(uid, library, name);
+		if(addr)
+		{
+			if(!apiHookImport((u32*) addr, func))
+			{
+				addr = 0;
+			}
+		}
+	}
 
 	return addr;
 }
@@ -501,6 +512,17 @@ u32 apiHookByNid(SceUID uid, const char *library, u32 nid, void *func)
 		if(!apiHookAddr(find_syscall_addr(addr), func))
 		{
 			addr = 0;
+		}
+	}
+	else
+	{
+		addr = libsFindImportAddrByNid(uid, library, nid);
+		if(addr)
+		{
+			if(!apiHookImport((u32*) addr, func))
+			{
+				addr = 0;
+			}
 		}
 	}
 

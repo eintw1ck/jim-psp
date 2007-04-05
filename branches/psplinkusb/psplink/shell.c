@@ -2994,7 +2994,7 @@ static int findhex_cmd(int argc, char **argv, unsigned int *vRet)
 
 		if(argc > 3)
 		{
-			masksize = decode_hexstr(argv[4], mask_d, sizeof(mask_d));
+			masksize = decode_hexstr(argv[3], mask_d, sizeof(mask_d));
 			if(masksize == 0)
 			{
 				SHELL_PRINT("Error in mask string\n");

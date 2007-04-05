@@ -63,6 +63,8 @@ const char codeDebug[7] = { 'X', 'S', 'B', '?', '?', 'I', 'D' };
 /* Get a pointer to a register based on its name */
 u32 *exceptionGetReg(const char *reg)
 {
+	static unsigned int modaddr = 0;
+
 	if(g_currex == NULL)
 	{
 		return NULL;
@@ -75,6 +77,27 @@ u32 *exceptionGetReg(const char *reg)
 	else if(strcmp(reg, "fsr") == 0)
 	{
 		return &g_currex->regs.fsr;
+	}
+	else if(strcmp(reg, "mod") == 0)
+	{
+		SceModule *pMod;
+		SceKernelModuleInfo mod;
+
+		modaddr = 0;
+		pMod = sceKernelFindModuleByAddress(g_currex->regs.epc);
+		if(pMod)
+		{
+			memset(&mod, 0, sizeof(mod));
+			mod.size = sizeof(mod);
+			enable_kprintf(0);
+			if(!g_QueryModuleInfo(pMod->modid, &mod))
+			{
+				modaddr = mod.text_addr;
+			}
+			enable_kprintf(1);
+		}
+
+		return &modaddr;
 	}
 	else 
 	{
