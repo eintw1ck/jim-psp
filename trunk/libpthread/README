@@ -1,5 +1,6 @@
-pthread Library by Raf (rafpsp<at>gmail<dot>com)
---------------------------------------------------
+libpthreadlite: Lite Pthread Library 
+by Raf (rafpsp<at>gmail<dot>com)
+--------------------------------------
 
 This is a very simple pthread library implementation (/wrapper). It only features
 the most basic functions. Any enhancements are most welcome.
@@ -24,4 +25,4 @@ History:
 		 Added option to set pthread attributes: stacksize/scope(sytem(kernel)/process(user))/priority
 2006-05-24, danzel: Modified pthread to work with c++ programs.
 2007-01-31, raf: Released to pspdev repository.
-
+2007-04-16, raf: Renamed to libpthreadlite. In case a "proper" pthread library is to be implemented.

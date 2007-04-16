@@ -1,5 +1,5 @@
-TARGET_LIB = libpthread.a
-OBJS = pthread.o
+TARGET_LIB = libpthreadlite.a
+OBJS = pthreadlite.o
 
 INCDIR = 
 CFLAGS = $(GLOBAL_CFLAGS) -O2 -Wall -g
