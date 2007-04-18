@@ -12,6 +12,8 @@
 #ifndef __LIBATRAC3_H__
 #define __LIBATRAC3_H__
 
+#include <psptypes.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -53,6 +55,28 @@ int sceAtracDecodeData(int atracID, u16 *outSamples, int *outN, int *outEnd, int
  *
 */
 int sceAtracGetRemainFrame(int atracID, int *outRemainFrame);
+
+/**
+ *
+ * @param atracID - the atrac ID
+ * @param writePointer - Pointer to where to read the atrac data
+ * @param availableBytes - Number of bytes available at the writePointer location
+ * @param readOffset - Offset where to seek into the atrac file before reading
+ *
+ * @returns < 0 on error, otherwise 0
+ *
+*/
+
+int sceAtracGetStreamDataInfo(int atracID, u8** writePointer, u32* availableBytes, u32* readOffset);
+
+/**
+ *
+ * @param atracID - the atrac ID
+ * @param bytesToAdd - Number of bytes read into location given by sceAtracGetStreamDataInfo().
+ *
+ * @returns < 0 on error, otherwise 0
+*/
+int sceAtracAddStreamData(int atracID, unsigned int bytesToAdd);
 
 /**
  * Gets the bitrate.
