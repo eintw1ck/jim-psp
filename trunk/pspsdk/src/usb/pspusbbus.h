@@ -12,6 +12,10 @@
 #ifndef __PSPUSBBUS_H__
 #define __PSPUSBBUS_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** USB driver interface */
 struct UsbInterface
 {
@@ -296,5 +300,9 @@ int sceUsbbdReqSend(struct UsbdDeviceReq *req);
  * @return 0 on success, < 0 on error
  */
 int sceUsbbdReqRecv(struct UsbdDeviceReq *req);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

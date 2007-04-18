@@ -15,6 +15,10 @@
 
 #include <psptypes.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Allocate the extra 4megs of RAM
  *
@@ -44,5 +48,9 @@ int sceKernelVolatileMemTryLock(int unk, void **ptr, int *size);
  * @return 0 on success
  */
 int sceKernelVolatileMemUnlock(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
