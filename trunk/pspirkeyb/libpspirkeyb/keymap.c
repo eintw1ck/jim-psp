@@ -127,7 +127,9 @@ static void keymap_decode_maptable_rec( int depth, int outputmode, unsigned char
     /* capslock handling - note that it is only like shift for alphas */
     if( caps )
     {
-			if ((raw >= KEY_A) && (raw <= KEY_Z))
+      if (((raw >= KEY_Q) && (raw <= KEY_P)) ||
+					((raw >= KEY_A) && (raw <= KEY_L)) ||
+					((raw >= KEY_Z) && (raw <= KEY_M)))
 			{
 				if (shift)
 				{
