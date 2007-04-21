@@ -110,3 +110,22 @@
 #ifdef F_sceRtc_0035
 	IMPORT_FUNC	"sceRtc",0x28E1E988,sceRtcParseRFC3339
 #endif
+#ifdef F_sceRtc_0036
+	IMPORT_FUNC	"sceRtc",0x011F03C1,sceRtcGetAccumulativeTime
+#endif
+#ifdef F_sceRtc_0037
+	IMPORT_FUNC	"sceRtc",0x1909C99B,sceRtcSetTime64_t
+#endif
+#ifdef F_sceRtc_0038
+	IMPORT_FUNC	"sceRtc",0x203CEB0D,sceRtcGetLastReincarnatedTime
+#endif
+#ifdef F_sceRtc_0039
+	IMPORT_FUNC	"sceRtc",0x62685E98,sceRtcGetLastAdjustedTime
+#endif
+#ifdef F_sceRtc_0040
+	IMPORT_FUNC	"sceRtc",0xDFBC5F16,sceRtcParseDateTime
+#endif
+#ifdef F_sceRtc_0041
+	IMPORT_FUNC	"sceRtc",0xE1C93E47,sceRtcGetTime64_t
+#endif
+
