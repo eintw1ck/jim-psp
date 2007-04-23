@@ -1,5 +1,5 @@
 release: all
-	mksfo 'PSPLINKUSB' PARAM.SFO
+	mksfo 'PSPLink v3.0 OE' PARAM.SFO
 	pack-pbp EBOOT.PBP PARAM.SFO psplink.png NULL NULL NULL NULL psplink_boot.prx NULL
 
 TARGET = psplink_boot
