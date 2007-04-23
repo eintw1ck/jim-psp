@@ -110,11 +110,13 @@ int decode_oct(const char *str, unsigned char *ch)
 	return i;
 }
 
+/* Insert an arg or environment variable */
 void insert_arg(const char **pin, char **pout, int sargc, char**sargv)
 {
 	const char *in = *pin;
 	char *out = *pout;
 
+	/* If an argument */
 	if(isdigit(*in))
 	{
 		char *endp;
@@ -132,23 +134,38 @@ void insert_arg(const char **pin, char **pout, int sargc, char**sargv)
 		char name[PATH_MAX];
 		char *pname = name;
 
+		if(*in == '(') /* Alpha numeric variables $(name) */
+		{
+			in++;
+			while((*in != 0) && (*in != ')'))
+			{
+				*pname++ = *in++;
+			}
+
+			if(*in != ')')
+			{
+				/* Error, escape with an empty string */
+				fprintf(stderr, "Warning: No matching ')' for variable\n");
+				name[0] = 0;
+			}
+			else
+			{
+				in++;
+			}
+
+			*pname = 0;
+		}
 		/* Punctuation, internal variables */
-		if(ispunct(*in))
+		else if(ispunct(*in))
 		{
 			name[0] = *in++;
 			name[1] = 0;
 		}
-		else if(isalnum(*in))
-		{
-			while(isalnum(*in))
-			{
-				*pname++ = *in++;
-			}
-			*pname = 0;
-		}
 		else
 		{
-			*pname = 0;
+			/* Just restore the dollar sign */
+			name[0] = 0;
+			*out++ = '$';
 		}
 		if(name[0])
 		{
