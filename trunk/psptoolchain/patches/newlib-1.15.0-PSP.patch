@@ -7420,7 +7420,7 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/netinet/tcp.h newlib-1.15.0/ne
 diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/libc/sys/psp/pipe.c
 --- orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c	1969-12-31 20:00:00.000000000 -0400
 +++ newlib-1.15.0/newlib/libc/sys/psp/pipe.c	2007-05-29 15:02:51.000000000 -0300
-@@ -0,0 +1,276 @@
+@@ -0,0 +1,285 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -7551,6 +7551,10 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 +			len = size;
 +		}
 +	}
++	else if (size == 0) {
++		errno = EAGAIN;
++		return -1;
++	}
 +	else {
 +		errno = EBADF;
 +		return -1;
@@ -7595,6 +7599,10 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 +	
 +	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 +
++#if 0
++	/* we should block until there is some data (or maybe for enough data),
++	* peeking the msg size should be only for nonblocking reads
++	*/
 +	size = __psp_pipe_peekmsgsize(fd);
 +	if (size > 0) {
 +		if (size < len) {
@@ -7605,6 +7613,7 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 +		errno = EBADF;
 +		return -1;
 +	}
++#endif
 +
 +	/**
 +	* Receive a message from a pipe
@@ -7700,7 +7709,7 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig
 --- orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig	1969-12-31 20:00:00.000000000 -0400
 +++ newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig	2007-05-29 15:00:50.000000000 -0300
-@@ -0,0 +1,271 @@
+@@ -0,0 +1,280 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -7831,6 +7840,10 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 +			len = size;
 +		}
 +	}
++	else if (size == 0) {
++		errno = EAGAIN;
++		return -1;
++	}
 +	else {
 +		errno = EBADF;
 +		return -1;
@@ -7875,6 +7888,10 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 +	
 +	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 +
++#if 0
++	/* we should block until there is some data (or maybe for enough data),
++	* peeking the msg size should be only for nonblocking reads
++	*/
 +	size = __psp_pipe_peekmsgsize(fd);
 +	if (size > 0) {
 +		if (size < len) {
@@ -7885,6 +7902,7 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 +		errno = EBADF;
 +		return -1;
 +	}
++#endif
 +
 +	/**
 +	* Receive a message from a pipe
