@@ -7420,7 +7420,7 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/netinet/tcp.h newlib-1.15.0/ne
 diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/libc/sys/psp/pipe.c
 --- orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c	1969-12-31 20:00:00.000000000 -0400
 +++ newlib-1.15.0/newlib/libc/sys/psp/pipe.c	2007-05-29 15:02:51.000000000 -0300
-@@ -0,0 +1,285 @@
+@@ -0,0 +1,311 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -7429,6 +7429,10 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 + * pipe.c - Socket wrappers to provide similar functions to normal unix
 + *
 + * Copyright (c) 2006 Rafael Cabezas <rafpsp@gmail.com>
++ *
++ * - 20070630 Alper Akcan "anhanguera" <distchx@yahoo.com>
++ *            [non]blocking read/write() fix
++ *            illegal size fix for read/write()
 + * 
 + */
 +#include <stdio.h>
@@ -7572,7 +7576,7 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 +	*
 +	* @return 0 on success, < 0 on error
 +	*/
-+    ret = sceKernelTryReceiveMsgPipe(sceuid, buf, len, 0, 0);
++	ret = sceKernelTryReceiveMsgPipe(sceuid, buf, len, 0, 0);
 +	
 +	if (ret == 0) {/* Success - Data */
 +		return len;
@@ -7601,8 +7605,8 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 +
 +#if 0
 +	/* we should block until there is some data (or maybe for enough data),
-+	* peeking the msg size should be only for nonblocking reads
-+	*/
++	 * peeking the msg size should be only for nonblocking reads
++	 */
 +	size = __psp_pipe_peekmsgsize(fd);
 +	if (size > 0) {
 +		if (size < len) {
@@ -7614,6 +7618,13 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 +		return -1;
 +	}
 +#endif
++	/* if len is greater than PIPE_BUF then, MsgPipe functions returns
++	 * SCE_KERNEL_ERROR_ILLEGAL_SIZE, but it should read at least
++	 * PIPE_BUF bytes, and return the number of bytes read.
++	 */
++	if (len > PIPE_BUF) {
++		len = PIPE_BUF;
++	}
 +
 +	/**
 +	* Receive a message from a pipe
@@ -7650,6 +7661,14 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 +	
 +	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 +
++	/* if len is greater than PIPE_BUF then, MsgPipe functions returns
++	 * SCE_KERNEL_ERROR_ILLEGAL_SIZE, but it should write at least
++	 * PIPE_BUF bytes, and return the number of bytes written.
++	 */
++	if (len > PIPE_BUF) {
++		len = PIPE_BUF;
++	}
++
 +	/**
 +	* Send a message to a pipe
 +	*
@@ -7664,7 +7683,6 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 +	*/
 +	cbuf = (char *)buf;
 +	ret = sceKernelSendMsgPipe(sceuid, cbuf, len, 0, NULL, NULL);
-+	
 +	if (ret == 0) {/* Success - Data */
 +		return len;
 +	}
@@ -7685,6 +7703,14 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 +	}
 +	
 +	sceuid = __psp_descriptormap[fd]->sce_descriptor;
++
++	/* if len is greater than PIPE_BUF then, MsgPipe functions returns
++	 * SCE_KERNEL_ERROR_ILLEGAL_SIZE, but it should write at least
++	 * PIPE_BUF bytes, and return the number of bytes written.
++	 */
++	if (len > PIPE_BUF) {
++		len = PIPE_BUF;
++	}
 +
 +	cbuf = (char *)buf;
 +	ret = sceKernelTrySendMsgPipe(sceuid, cbuf, len, 0, 0);
@@ -7709,7 +7735,7 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c newlib-1.15.0/newlib/li
 diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig
 --- orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig	1969-12-31 20:00:00.000000000 -0400
 +++ newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig	2007-05-29 15:00:50.000000000 -0300
-@@ -0,0 +1,280 @@
+@@ -0,0 +1,305 @@
 +/*
 + * PSP Software Development Kit - http://www.pspdev.org
 + * -----------------------------------------------------------------------
@@ -7718,6 +7744,10 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 + * pipe.c - Socket wrappers to provide similar functions to normal unix
 + *
 + * Copyright (c) 2006 Rafael Cabezas <rafpsp@gmail.com>
++ *
++ * - 20070630 Alper Akcan "anhanguera" <distchx@yahoo.com>
++ *            [non]blocking read/write() fix
++ *            illegal size fix for read/write()
 + * 
 + */
 +#include <stdio.h>
@@ -7861,7 +7891,7 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 +	*
 +	* @return 0 on success, < 0 on error
 +	*/
-+    ret = sceKernelTryReceiveMsgPipe(sceuid, buf, len, 0, 0);
++	ret = sceKernelTryReceiveMsgPipe(sceuid, buf, len, 0, 0);
 +	
 +	if (ret == 0) {/* Success - Data */
 +		return len;
@@ -7890,8 +7920,8 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 +
 +#if 0
 +	/* we should block until there is some data (or maybe for enough data),
-+	* peeking the msg size should be only for nonblocking reads
-+	*/
++	 * peeking the msg size should be only for nonblocking reads
++	 */
 +	size = __psp_pipe_peekmsgsize(fd);
 +	if (size > 0) {
 +		if (size < len) {
@@ -7903,6 +7933,13 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 +		return -1;
 +	}
 +#endif
++	/* if len is greater than PIPE_BUF then, MsgPipe functions returns
++	 * SCE_KERNEL_ERROR_ILLEGAL_SIZE, but it should read at least
++	 * PIPE_BUF bytes, and return the number of bytes read.
++	 */
++	if (len > PIPE_BUF) {
++		len = PIPE_BUF;
++	}
 +
 +	/**
 +	* Receive a message from a pipe
@@ -7939,6 +7976,14 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 +	
 +	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 +
++	/* if len is greater than PIPE_BUF then, MsgPipe functions returns
++	 * SCE_KERNEL_ERROR_ILLEGAL_SIZE, but it should write at least
++	 * PIPE_BUF bytes, and return the number of bytes written.
++	 */
++	if (len > PIPE_BUF) {
++		len = PIPE_BUF;
++	}
++
 +	/**
 +	* Send a message to a pipe
 +	*
@@ -7953,7 +7998,6 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 +	*/
 +	cbuf = (char *)buf;
 +	ret = sceKernelSendMsgPipe(sceuid, cbuf, len, 0, NULL, NULL);
-+	
 +	if (ret == 0) {/* Success - Data */
 +		return len;
 +	}
@@ -7975,6 +8019,14 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 +	
 +	sceuid = __psp_descriptormap[fd]->sce_descriptor;
 +
++	/* if len is greater than PIPE_BUF then, MsgPipe functions returns
++	 * SCE_KERNEL_ERROR_ILLEGAL_SIZE, but it should write at least
++	 * PIPE_BUF bytes, and return the number of bytes written.
++	 */
++	if (len > PIPE_BUF) {
++		len = PIPE_BUF;
++	}
++
 +	cbuf = (char *)buf;
 +	ret = sceKernelTrySendMsgPipe(sceuid, cbuf, len, 0, 0);
 +	
@@ -7989,7 +8041,6 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pipe.c.orig newlib-1.15.0/newl
 +		return __psp_set_errno(ret);
 +	}
 +}
-+
 diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/pspcwd.c newlib-1.15.0/newlib/libc/sys/psp/pspcwd.c
 --- orig.newlib-1.15.0/newlib/libc/sys/psp/pspcwd.c	1969-12-31 20:00:00.000000000 -0400
 +++ newlib-1.15.0/newlib/libc/sys/psp/pspcwd.c	2007-05-29 15:00:50.000000000 -0300
