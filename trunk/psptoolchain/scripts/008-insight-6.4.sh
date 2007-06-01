@@ -2,9 +2,7 @@
 # insight-6.4.sh by Dan Peori (danpeori@oopo.net)
 
  ## Download the source code.
- if test ! -f "insight-6.4.tar.bz2"; then
-  wget ftp://sourceware.org/pub/insight/releases/insight-6.4.tar.bz2 || { exit 1; }
- fi
+ wget --continue ftp://sourceware.org/pub/insight/releases/insight-6.4.tar.bz2 || { exit 1; }
 
  ## Unpack the source code.
  rm -Rf insight-6.4 && tar xfvj insight-6.4.tar.bz2 || { exit 1; }
@@ -19,4 +17,4 @@
  ../configure --prefix="$PSPDEV" --target="psp" --disable-nls || { exit 1; }
 
  ## Compile and install.
- make clean && make -j 2 && make install || { exit 1; }
+ make clean && make -j 2 && make install && make clean || { exit 1; }

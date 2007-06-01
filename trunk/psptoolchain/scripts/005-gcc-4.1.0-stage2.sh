@@ -2,9 +2,7 @@
 # gcc-4.1.0-stage2.sh by Dan Peori (danpeori@oopo.net)
 
  ## Download the source code.
- if test ! -f "gcc-4.1.0.tar.bz2"; then
-  wget ftp://ftp.gnu.org/pub/gnu/gcc/gcc-4.1.0/gcc-4.1.0.tar.bz2 || { exit 1; }
- fi
+ wget --continue ftp://ftp.gnu.org/pub/gnu/gcc/gcc-4.1.0/gcc-4.1.0.tar.bz2 || { exit 1; }
 
  ## Unpack the source code.
  rm -Rf gcc-4.1.0 && tar xfvj gcc-4.1.0.tar.bz2 || { exit 1; }
