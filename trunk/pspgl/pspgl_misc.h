@@ -3,8 +3,7 @@
 
 #include <sys/types.h>
 
-typedef unsigned uint32_t;
-
+typedef unsigned long uint32_t;
 
 /* Return a pointer to uncached address space.  The pointer and size
    must both be a multiple CACHELINE_SIZE.  */
