@@ -13,7 +13,7 @@ LIBS= -lpspgum -lpspgu -lm
 EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = GUFont Sample by McZonk
 
-PSPSDK=/usr/local/pspdev/psp/sdk
+PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
 
 font.c : font.raw
