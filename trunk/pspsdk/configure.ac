@@ -81,6 +81,7 @@ AC_CONFIG_FILES([Makefile
                  src/atrac3/Makefile
                  src/audio/Makefile
                  src/base/Makefile
+                 src/base/linkfile.prx
                  src/ctrl/Makefile
                  src/debug/Makefile
                  src/display/Makefile
@@ -96,7 +97,7 @@ AC_CONFIG_FILES([Makefile
                  src/net/Makefile
                  src/power/Makefile
                  src/prof/Makefile
-				 src/registry/Makefile
+                 src/registry/Makefile
                  src/rtc/Makefile
                  src/sircs/Makefile
                  src/sdk/Makefile
