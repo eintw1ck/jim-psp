@@ -2,6 +2,7 @@ PSPSDK=$(shell psp-config --pspsdk-path)
 PSPDIR=$(shell psp-config --psp-prefix)
 
 OBJS = example.o
+CFLAGS = -G0
 
 
 LIBS = $(PSPDIR)/lib/libmikmod.a $(PSPDIR)/lib/libmmio.a -lpspaudiolib -lpspaudio
@@ -24,8 +25,6 @@ install: libs
 	@cp include/* $(PSPDIR)/include
 	@cp lib/*  $(PSPDIR)/lib
 	@echo "Done"
-
-	
 
 .PHONY: clean
 clean:
