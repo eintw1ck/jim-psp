@@ -1,20 +1,117 @@
-Index: openssl/tools/c_rehash
-===================================================================
---- openssl/tools/c_rehash	(revision 1121)
-+++ openssl/tools/c_rehash	(revision 1133)
-@@ -6,7 +6,7 @@
+diff -purN openssl-0.9.7j.orig/Configure openssl-0.9.7j/Configure
+--- openssl-0.9.7j.orig/Configure	2006-04-24 09:32:55.000000000 -0400
++++ openssl-0.9.7j/Configure	2007-06-06 02:54:39.000000000 -0400
+@@ -122,6 +122,8 @@ my $alpha_asm="::::::::";
  
- my $openssl;
+ #config-string	$cc : $cflags : $unistd : $thread_cflag : $sys_id : $lflags : $bn_ops : $bn_obj : $des_obj : $bf_obj : $md5_obj : $sha1_obj : $cast_obj : $rc4_obj : $rmd160_obj : $rc5_obj : $dso_scheme : $shared_target : $shared_cflag : $shared_ldflag : $shared_extension : $ranlib : $arflags
  
--my $dir = "/usr/local/ssl";
-+my $dir = "/usr/local/pspdev/psp/ssl";
++my $pspdev=$ENV{'PSPDEV'};
++
+ my %table=(
+ # File 'TABLE' (created by 'make TABLE') contains the data from this list,
+ # formatted for better readability.
+@@ -587,6 +589,9 @@ my %table=(
+ ##### Compaq Non-Stop Kernel (Tandem)
+ "tandem-c89","c89:-Ww -D__TANDEM -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED=1 -D_TANDEM_SOURCE -DB_ENDIAN::(unknown):::THIRTY_TWO_BIT:::",
  
- if(defined $ENV{OPENSSL}) {
- 	$openssl = $ENV{OPENSSL};
-Index: openssl/apps/s_client.c
-===================================================================
---- openssl/apps/s_client.c	(revision 1121)
-+++ openssl/apps/s_client.c	(revision 1133)
++##### PSP
++"psp", "psp-gcc:-mno-explicit-relocs -DPSP -DNO_CHMOD -DL_ENDIAN -DNO_STRINGS_H -DNO_SYSLOG -DNO_SYS_UN_H -DOPENSSL_SYS_PSP -O2 -G0 -I$pspdev/psp/sdk/include::(unknown)::-lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk -lc -lpspnet -lpspnet_inet -lpspnet_apctl -lpspnet_resolver -lpsputility -lpspuser -liberty -lpspsdk -lpspnet -lpspaudio -lpspgu -lpspge -lpsphprm -lpspkernel -L$pspdev/psp/lib -L$pspdev/psp/sdk/lib:LL:::",
++#-DOPENSSL_NO_SOCK 
+ );
+ 
+ my @WinTargets=qw(VC-NT VC-CE VC-WIN32 VC-WIN16 VC-W31-16 VC-W31-32 VC-MSDOS
+@@ -976,6 +981,7 @@ $default_ranlib= &which("ranlib") or $de
+ $perl=$ENV{'PERL'} or $perl=&which("perl5") or $perl=&which("perl")
+   or $perl="perl";
+ 
++
+ chop $openssldir if $openssldir =~ /\/$/;
+ chop $prefix if $prefix =~ /\/$/;
+ 
+diff -purN openssl-0.9.7j.orig/INSTALL.PSP openssl-0.9.7j/INSTALL.PSP
+--- openssl-0.9.7j.orig/INSTALL.PSP	1969-12-31 19:00:00.000000000 -0500
++++ openssl-0.9.7j/INSTALL.PSP	2007-06-06 02:54:39.000000000 -0400
+@@ -0,0 +1,11 @@
++OpenSSL PSP Port by Raf.
++------------------------
++
++To configure and compile, run:
++
++user$> make -f Makefile.psp prepare all
++
++To install, as root run:
++
++root$> make install
++
+diff -purN openssl-0.9.7j.orig/Makefile openssl-0.9.7j/Makefile
+--- openssl-0.9.7j.orig/Makefile	2006-05-04 09:15:47.000000000 -0400
++++ openssl-0.9.7j/Makefile	2007-06-06 03:14:10.000000000 -0400
+@@ -3,6 +3,8 @@
+ ##
+ ## Makefile for OpenSSL
+ ##
++PSPDEV=$(shell psp-config --psp-prefix)
++PSPSDK=$(shell psp-config --pspsdk-path)
+ 
+ VERSION=0.9.7j
+ MAJOR=0
+@@ -12,9 +14,9 @@ SHLIB_VERSION_HISTORY=
+ SHLIB_MAJOR=0
+ SHLIB_MINOR=9.7
+ SHLIB_EXT=
+-PLATFORM=dist
+-OPTIONS= no-krb5
+-CONFIGURE_ARGS=dist
++PLATFORM=psp
++OPTIONS=--prefix=$(PSPDEV) threads zlib no-shared no-asm no-krb5
++CONFIGURE_ARGS=psp --prefix=$(PSPDEV) threads zlib no-shared no-asm
+ SHLIB_TARGET=
+ 
+ # HERE indicates where this Makefile lives.  This can be used to indicate
+@@ -26,10 +28,10 @@ HERE=.
+ # for, say, /usr/ and yet have everything installed to /tmp/somedir/usr/.
+ # Normally it is left empty.
+ INSTALL_PREFIX=
+-INSTALLTOP=/usr/local/ssl
++INSTALLTOP=$(PSPDEV)
+ 
+ # Do not edit this manually. Use Configure --openssldir=DIR do change this!
+-OPENSSLDIR=/usr/local/ssl
++OPENSSLDIR=$(PSPDEV)/ssl
+ 
+ # NO_IDEA - Define to build without the IDEA algorithm
+ # NO_RC4  - Define to build without the RC4 algorithm
+@@ -59,12 +61,12 @@ OPENSSLDIR=/usr/local/ssl
+ # equal 4.
+ # PKCS1_CHECK - pkcs1 tests.
+ 
+-CC= cc
++CC= psp-gcc
+ #CFLAG= -DL_ENDIAN -DTERMIO -O3 -fomit-frame-pointer -m486 -Wall -Wuninitialized -DSHA1_ASM -DMD5_ASM -DRMD160_ASM
+-CFLAG= -DOPENSSL_NO_KRB5 -O
++CFLAG= -mno-explicit-relocs -DZLIB -DOPENSSL_THREADS -DOPENSSL_NO_KRB5 -DOPENSSL_NO_ASM -DPSP -DNO_CHMOD -DL_ENDIAN -DNO_STRINGS_H -DNO_SYSLOG -DNO_SYS_UN_H -DOPENSSL_SYS_PSP -O2 -G0 -I$(PSPSDK)/include
+ DEPFLAG= 
+ PEX_LIBS= 
+-EX_LIBS= 
++EX_LIBS= -lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk -lc -lpspnet -lpspnet_inet -lpspnet_apctl -lpspnet_resolver -lpsputility -lpspuser -liberty -lpspsdk -lpspnet -lpspaudio -lpspgu -lpspge -lpsphprm -lpspkernel -L$(PSPDEV)/lib -L$(PSPSDK)/lib -lz
+ EXE_EXT= 
+ ARFLAGS= 
+ AR=ar $(ARFLAGS) r
+diff -purN openssl-0.9.7j.orig/Makefile.psp openssl-0.9.7j/Makefile.psp
+--- openssl-0.9.7j.orig/Makefile.psp	1969-12-31 19:00:00.000000000 -0500
++++ openssl-0.9.7j/Makefile.psp	2007-06-06 02:54:39.000000000 -0400
+@@ -0,0 +1,8 @@
++prepare:
++	chmod u+x configure_psp.sh && ./configure_psp.sh
++
++all:
++	make -f Makefile
++
++install:
++	@echo "As root, run make install"
+diff -purN openssl-0.9.7j.orig/apps/s_client.c openssl-0.9.7j/apps/s_client.c
+--- openssl-0.9.7j.orig/apps/s_client.c	2005-02-19 05:17:25.000000000 -0500
++++ openssl-0.9.7j/apps/s_client.c	2007-06-06 02:54:39.000000000 -0400
 @@ -117,6 +117,9 @@
  #ifdef OPENSSL_NO_STDIO
  #define APPS_WIN16
@@ -25,10 +122,74 @@ Index: openssl/apps/s_client.c
  
  /* With IPv6, it looks like Digital has mixed up the proper order of
     recursive header file inclusion, resulting in the compiler complaining
-Index: openssl/apps/speed.c
-===================================================================
---- openssl/apps/speed.c	(revision 1121)
-+++ openssl/apps/speed.c	(revision 1133)
+diff -purN openssl-0.9.7j.orig/apps/s_server.c openssl-0.9.7j/apps/s_server.c
+--- openssl-0.9.7j.orig/apps/s_server.c	2003-09-27 17:56:12.000000000 -0400
++++ openssl-0.9.7j/apps/s_server.c	2007-06-06 02:54:39.000000000 -0400
+@@ -119,6 +119,9 @@
+ #ifdef OPENSSL_NO_STDIO
+ #define APPS_WIN16
+ #endif
++#ifdef OPENSSL_SYS_PSP
++#include <sys/fd_set.h>
++#endif
+ 
+ /* With IPv6, it looks like Digital has mixed up the proper order of
+    recursive header file inclusion, resulting in the compiler complaining
+diff -purN openssl-0.9.7j.orig/apps/s_socket.c openssl-0.9.7j/apps/s_socket.c
+--- openssl-0.9.7j.orig/apps/s_socket.c	2005-01-04 05:21:54.000000000 -0500
++++ openssl-0.9.7j/apps/s_socket.c	2007-06-06 02:54:39.000000000 -0400
+@@ -479,6 +479,12 @@ err:
+ 	return(0);
+ 	}
+ 
++#ifdef OPENSSL_SYS_PSP
++int extract_port(char *str, short *port_ptr)
++{
++return -1;
++}
++#else
+ int extract_port(char *str, short *port_ptr)
+ 	{
+ 	int i;
+@@ -499,6 +505,7 @@ int extract_port(char *str, short *port_
+ 		}
+ 	return(1);
+ 	}
++#endif
+ 
+ #define GHBN_NUM	4
+ static struct ghbn_cache_st
+diff -purN openssl-0.9.7j.orig/apps/s_time.c openssl-0.9.7j/apps/s_time.c
+--- openssl-0.9.7j.orig/apps/s_time.c	2003-12-27 09:40:55.000000000 -0500
++++ openssl-0.9.7j/apps/s_time.c	2007-06-06 02:54:39.000000000 -0400
+@@ -66,6 +66,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef OPENSSL_SYS_PSP
++#include <sys/fd_set.h>
++#endif
+ 
+ #define USE_SOCKETS
+ #include "apps.h"
+@@ -370,6 +373,14 @@ bad:
+ #define START	0
+ #define STOP	1
+ 
++#ifdef OPENSSL_SYS_PSP
++clock_t _times(struct tms *buf)
++{
++	buf->tms_utime = sceKernelLibcClock();
++	return sceKernelLibcClock();
++}
++#endif
++
+ static double tm_Time_F(int s)
+ 	{
+ 	static double ret;
+diff -purN openssl-0.9.7j.orig/apps/speed.c openssl-0.9.7j/apps/speed.c
+--- openssl-0.9.7j.orig/apps/speed.c	2005-05-15 21:26:01.000000000 -0400
++++ openssl-0.9.7j/apps/speed.c	2007-06-06 02:54:39.000000000 -0400
 @@ -189,6 +189,9 @@
  
  /* The following if from times(3) man page.  It may need to be changed */
@@ -51,7 +212,7 @@ Index: openssl/apps/speed.c
  # define HAVE_FORK 1
  #endif
  
-@@ -239,6 +243,10 @@
+@@ -239,6 +243,10 @@ static int lengths[SIZE_NUM]={16,64,256,
  static double rsa_results[RSA_NUM][2];
  static double dsa_results[DSA_NUM][2];
  
@@ -62,7 +223,7 @@ Index: openssl/apps/speed.c
  #ifdef SIGALRM
  #if defined(__STDC__) || defined(sgi) || defined(_AIX)
  #define SIGRETTYPE void
-@@ -345,6 +353,22 @@
+@@ -345,6 +353,22 @@ static double Time_F(int s)
  			return((ret < 0.001)?0.001:ret);
  			}
                  }
@@ -85,95 +246,9 @@ Index: openssl/apps/speed.c
  # elif defined(TIMEB)
  		{
  		static struct timeb tstart,tend;
-Index: openssl/apps/s_server.c
-===================================================================
---- openssl/apps/s_server.c	(revision 1121)
-+++ openssl/apps/s_server.c	(revision 1133)
-@@ -119,6 +119,9 @@
- #ifdef OPENSSL_NO_STDIO
- #define APPS_WIN16
- #endif
-+#ifdef OPENSSL_SYS_PSP
-+#include <sys/fd_set.h>
-+#endif
- 
- /* With IPv6, it looks like Digital has mixed up the proper order of
-    recursive header file inclusion, resulting in the compiler complaining
-Index: openssl/apps/s_socket.c
-===================================================================
---- openssl/apps/s_socket.c	(revision 1121)
-+++ openssl/apps/s_socket.c	(revision 1133)
-@@ -479,7 +479,13 @@
- 	return(0);
- 	}
- 
-+#ifdef OPENSSL_SYS_PSP
- int extract_port(char *str, short *port_ptr)
-+{
-+return -1;
-+}
-+#else
-+int extract_port(char *str, short *port_ptr)
- 	{
- 	int i;
- 	struct servent *s;
-@@ -499,6 +505,7 @@
- 		}
- 	return(1);
- 	}
-+#endif
- 
- #define GHBN_NUM	4
- static struct ghbn_cache_st
-Index: openssl/apps/s_time.c
-===================================================================
---- openssl/apps/s_time.c	(revision 1121)
-+++ openssl/apps/s_time.c	(revision 1133)
-@@ -66,6 +66,9 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-+#ifdef OPENSSL_SYS_PSP
-+#include <sys/fd_set.h>
-+#endif
- 
- #define USE_SOCKETS
- #include "apps.h"
-@@ -370,6 +373,14 @@
- #define START	0
- #define STOP	1
- 
-+#ifdef OPENSSL_SYS_PSP
-+clock_t _times(struct tms *buf)
-+{
-+	buf->tms_utime = sceKernelLibcClock();
-+	return sceKernelLibcClock();
-+}
-+#endif
-+
- static double tm_Time_F(int s)
- 	{
- 	static double ret;
-Index: openssl/INSTALL.PSP
-===================================================================
---- openssl/INSTALL.PSP	(revision 0)
-+++ openssl/INSTALL.PSP	(revision 1133)
-@@ -0,0 +1,11 @@
-+OpenSSL PSP Port by Raf.
-+------------------------
-+
-+To configure and compile, run:
-+
-+user$> make -f Makefile.psp prepare all
-+
-+To install, as root run:
-+
-+root$> make install
-+
-Index: openssl/configure_psp.sh
-===================================================================
---- openssl/configure_psp.sh	(revision 0)
-+++ openssl/configure_psp.sh	(revision 1133)
+diff -purN openssl-0.9.7j.orig/configure_psp.sh openssl-0.9.7j/configure_psp.sh
+--- openssl-0.9.7j.orig/configure_psp.sh	1969-12-31 19:00:00.000000000 -0500
++++ openssl-0.9.7j/configure_psp.sh	2007-06-06 02:54:39.000000000 -0400
 @@ -0,0 +1,20 @@
 +#!/bin/sh
 +export SHAREDLIB_DIR="../.."
@@ -195,64 +270,78 @@ Index: openssl/configure_psp.sh
 +echo "Done."
 +
 +
-
-Property changes on: openssl/configure_psp.sh
-___________________________________________________________________
-Name: svn:eol-style
-   + native
-Name: svn:executable
-   + *
-
-Index: openssl/Makefile
-===================================================================
---- openssl/Makefile	(revision 1121)
-+++ openssl/Makefile	(revision 1133)
-@@ -12,9 +12,9 @@
- SHLIB_MAJOR=0
- SHLIB_MINOR=9.7
- SHLIB_EXT=
--PLATFORM=dist
--OPTIONS= no-krb5
--CONFIGURE_ARGS=dist
-+PLATFORM=psp
-+OPTIONS=--prefix=/usr/local/pspdev/psp threads zlib no-shared no-asm no-krb5
-+CONFIGURE_ARGS=psp --prefix=/usr/local/pspdev/psp threads zlib no-shared no-asm
- SHLIB_TARGET=
- 
- # HERE indicates where this Makefile lives.  This can be used to indicate
-@@ -26,10 +26,10 @@
- # for, say, /usr/ and yet have everything installed to /tmp/somedir/usr/.
- # Normally it is left empty.
+diff -purN openssl-0.9.7j.orig/crypto/Makefile openssl-0.9.7j/crypto/Makefile
+--- openssl-0.9.7j.orig/crypto/Makefile	2006-02-03 20:50:06.000000000 -0500
++++ openssl-0.9.7j/crypto/Makefile	2007-06-06 03:14:10.000000000 -0400
+@@ -9,7 +9,7 @@ INCLUDE=	-I. -I$(TOP) -I../include
+ INCLUDES=	-I.. -I../.. -I../../include
+ CFLAG=		-g
  INSTALL_PREFIX=
--INSTALLTOP=/usr/local/ssl
-+INSTALLTOP=/usr/local/pspdev/psp
+-OPENSSLDIR=     /usr/local/ssl
++OPENSSLDIR=     $(shell psp-config --psp-prefix)/ssl
+ INSTALLTOP=	/usr/local/ssl
+ MAKEDEPPROG=	makedepend
+ MAKEDEPEND=	$(TOP)/util/domd $(TOP) -MD $(MAKEDEPPROG)
+@@ -19,9 +19,11 @@ AR=		ar r
  
- # Do not edit this manually. Use Configure --openssldir=DIR do change this!
--OPENSSLDIR=/usr/local/ssl
-+OPENSSLDIR=/usr/local/pspdev/psp/ssl
+ PEX_LIBS=
+ EX_LIBS=
+- 
+-CFLAGS= $(INCLUDE) $(CFLAG)
  
- # NO_IDEA - Define to build without the IDEA algorithm
- # NO_RC4  - Define to build without the RC4 algorithm
-@@ -59,12 +59,12 @@
- # equal 4.
- # PKCS1_CHECK - pkcs1 tests.
++CFLAGS= $(INCLUDE) $(CFLAG) -DOPENSSLDIR="$(OPENSSLDIR)"
++
++foo:
++	echo -- $(CFLAGS)
  
--CC= cc
-+CC= psp-gcc
- #CFLAG= -DL_ENDIAN -DTERMIO -O3 -fomit-frame-pointer -m486 -Wall -Wuninitialized -DSHA1_ASM -DMD5_ASM -DRMD160_ASM
--CFLAG= -DOPENSSL_NO_KRB5 -O
-+CFLAG= -mno-explicit-relocs -DZLIB -DOPENSSL_THREADS -DOPENSSL_NO_KRB5 -DOPENSSL_NO_ASM -DPSP -DNO_CHMOD -DL_ENDIAN -DNO_STRINGS_H -DNO_SYSLOG -DNO_SYS_UN_H -DOPENSSL_SYS_PSP -O2 -G0 -I/usr/local/pspdev/psp/sdk/include
- DEPFLAG= 
- PEX_LIBS= 
--EX_LIBS= 
-+EX_LIBS= -lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk -lc -lpspnet -lpspnet_inet -lpspnet_apctl -lpspnet_resolver -lpsputility -lpspuser -liberty -lpspsdk -lpspnet -lpspaudio -lpspgu -lpspge -lpsphprm -lpspkernel -L/usr/local/pspdev/psp/lib -L/usr/local/pspdev/psp/sdk/lib -lz
- EXE_EXT= 
- ARFLAGS= 
- AR=ar $(ARFLAGS) r
-Index: openssl/crypto/opensslconf.h
-===================================================================
---- openssl/crypto/opensslconf.h	(revision 1121)
-+++ openssl/crypto/opensslconf.h	(revision 1133)
+ LIBS=
+ 
+diff -purN openssl-0.9.7j.orig/crypto/bio/b_sock.c openssl-0.9.7j/crypto/bio/b_sock.c
+--- openssl-0.9.7j.orig/crypto/bio/b_sock.c	2003-12-27 09:40:49.000000000 -0500
++++ openssl-0.9.7j/crypto/bio/b_sock.c	2007-06-06 02:54:39.000000000 -0400
+@@ -159,8 +159,11 @@ int BIO_get_host_ip(const char *str, uns
+ int BIO_get_port(const char *str, unsigned short *port_ptr)
+ 	{
+ 	int i;
++#ifdef OPENSSL_SYS_PSP
++	char *s = NULL;
++#else
+ 	struct servent *s;
+-
++#endif
+ 	if (str == NULL)
+ 		{
+ 		BIOerr(BIO_F_BIO_GET_PORT,BIO_R_NO_PORT_DEFINED);
+@@ -171,6 +174,9 @@ int BIO_get_port(const char *str, unsign
+ 		*port_ptr=(unsigned short)i;
+ 	else
+ 		{
++#ifdef OPENSSL_SYS_PSP
++		s = NULL;
++#else
+ 		CRYPTO_w_lock(CRYPTO_LOCK_GETSERVBYNAME);
+ 		/* Note: under VMS with SOCKETSHR, it seems like the first
+ 		 * parameter is 'char *', instead of 'const char *'
+@@ -183,6 +189,7 @@ int BIO_get_port(const char *str, unsign
+ 		if(s != NULL)
+ 			*port_ptr=ntohs((unsigned short)s->s_port);
+ 		CRYPTO_w_unlock(CRYPTO_LOCK_GETSERVBYNAME);
++#endif
+ 		if(s == NULL)
+ 			{
+ 			if (strcmp(str,"http") == 0)
+@@ -490,7 +497,7 @@ void BIO_sock_cleanup(void)
+ #endif
+ 	}
+ 
+-#if !defined(OPENSSL_SYS_VMS) || __VMS_VER >= 70000000
++#if !defined(OPENSSL_SYS_VMS) && !defined(OPENSSL_SYS_PSP) || __VMS_VER >= 70000000
+ 
+ int BIO_socket_ioctl(int fd, long type, void *arg)
+ 	{
+diff -purN openssl-0.9.7j.orig/crypto/opensslconf.h openssl-0.9.7j/crypto/opensslconf.h
+--- openssl-0.9.7j.orig/crypto/opensslconf.h	2006-05-04 09:15:47.000000000 -0400
++++ openssl-0.9.7j/crypto/opensslconf.h	2007-06-06 03:14:10.000000000 -0400
 @@ -9,6 +9,12 @@
  #endif
  
@@ -266,63 +355,9 @@ Index: openssl/crypto/opensslconf.h
  
  /* The OPENSSL_NO_* macros are also defined as NO_* if the application
     asks for it.  This is a transient feature that is provided for those
-@@ -27,7 +33,7 @@
- 
- #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
- #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
--#define OPENSSLDIR "/usr/local/ssl"
-+#define OPENSSLDIR "/usr/local/pspdev/psp/ssl"
- #endif
- #endif
- 
-Index: openssl/crypto/bio/b_sock.c
-===================================================================
---- openssl/crypto/bio/b_sock.c	(revision 1121)
-+++ openssl/crypto/bio/b_sock.c	(revision 1133)
-@@ -159,8 +159,11 @@
- int BIO_get_port(const char *str, unsigned short *port_ptr)
- 	{
- 	int i;
-+#ifdef OPENSSL_SYS_PSP
-+	char *s = NULL;
-+#else
- 	struct servent *s;
--
-+#endif
- 	if (str == NULL)
- 		{
- 		BIOerr(BIO_F_BIO_GET_PORT,BIO_R_NO_PORT_DEFINED);
-@@ -171,6 +174,9 @@
- 		*port_ptr=(unsigned short)i;
- 	else
- 		{
-+#ifdef OPENSSL_SYS_PSP
-+		s = NULL;
-+#else
- 		CRYPTO_w_lock(CRYPTO_LOCK_GETSERVBYNAME);
- 		/* Note: under VMS with SOCKETSHR, it seems like the first
- 		 * parameter is 'char *', instead of 'const char *'
-@@ -183,6 +189,7 @@
- 		if(s != NULL)
- 			*port_ptr=ntohs((unsigned short)s->s_port);
- 		CRYPTO_w_unlock(CRYPTO_LOCK_GETSERVBYNAME);
-+#endif
- 		if(s == NULL)
- 			{
- 			if (strcmp(str,"http") == 0)
-@@ -490,7 +497,7 @@
- #endif
- 	}
- 
--#if !defined(OPENSSL_SYS_VMS) || __VMS_VER >= 70000000
-+#if !defined(OPENSSL_SYS_VMS) && !defined(OPENSSL_SYS_PSP) || __VMS_VER >= 70000000
- 
- int BIO_socket_ioctl(int fd, long type, void *arg)
- 	{
-Index: openssl/crypto/rand/rand_egd.c
-===================================================================
---- openssl/crypto/rand/rand_egd.c	(revision 1121)
-+++ openssl/crypto/rand/rand_egd.c	(revision 1133)
+diff -purN openssl-0.9.7j.orig/crypto/rand/rand_egd.c openssl-0.9.7j/crypto/rand/rand_egd.c
+--- openssl-0.9.7j.orig/crypto/rand/rand_egd.c	2005-02-19 05:17:26.000000000 -0500
++++ openssl-0.9.7j/crypto/rand/rand_egd.c	2007-06-06 02:54:39.000000000 -0400
 @@ -95,7 +95,7 @@
   *   RAND_egd() is a wrapper for RAND_egd_bytes() with numbytes=255.
   */
@@ -332,10 +367,9 @@ Index: openssl/crypto/rand/rand_egd.c
  int RAND_query_egd_bytes(const char *path, unsigned char *buf, int bytes)
  	{
  	return(-1);
-Index: openssl/crypto/rand/rand_unix.c
-===================================================================
---- openssl/crypto/rand/rand_unix.c	(revision 1121)
-+++ openssl/crypto/rand/rand_unix.c	(revision 1133)
+diff -purN openssl-0.9.7j.orig/crypto/rand/rand_unix.c openssl-0.9.7j/crypto/rand/rand_unix.c
+--- openssl-0.9.7j.orig/crypto/rand/rand_unix.c	2005-01-14 11:19:47.000000000 -0500
++++ openssl-0.9.7j/crypto/rand/rand_unix.c	2007-06-06 02:54:39.000000000 -0400
 @@ -115,13 +115,16 @@
  #include <openssl/rand.h>
  #include "rand_lcl.h"
@@ -354,7 +388,7 @@ Index: openssl/crypto/rand/rand_unix.c
  #include <unistd.h>
  #include <time.h>
  
-@@ -257,8 +260,10 @@
+@@ -257,8 +260,10 @@ int RAND_poll(void)
  	/* put in some default random data, we need more than just this */
  	l=curr_pid;
  	RAND_add(&l,sizeof(l),0);
@@ -365,23 +399,9 @@ Index: openssl/crypto/rand/rand_unix.c
  
  	l=time(NULL);
  	RAND_add(&l,sizeof(l),0);
-Index: openssl/crypto/uid.c
-===================================================================
---- openssl/crypto/uid.c	(revision 1121)
-+++ openssl/crypto/uid.c	(revision 1133)
-@@ -65,7 +65,7 @@
- 	return issetugid();
- 	}
- 
--#elif defined(OPENSSL_SYS_WIN32) || defined(OPENSSL_SYS_VXWORKS)
-+#elif defined(OPENSSL_SYS_WIN32) || defined(OPENSSL_SYS_VXWORKS) || defined(OPENSSL_SYS_PSP)
- 
- int OPENSSL_issetugid(void)
- 	{
-Index: openssl/crypto/ui/ui_openssl.c
-===================================================================
---- openssl/crypto/ui/ui_openssl.c	(revision 1121)
-+++ openssl/crypto/ui/ui_openssl.c	(revision 1133)
+diff -purN openssl-0.9.7j.orig/crypto/ui/ui_openssl.c openssl-0.9.7j/crypto/ui/ui_openssl.c
+--- openssl-0.9.7j.orig/crypto/ui/ui_openssl.c	2003-01-13 08:15:19.000000000 -0500
++++ openssl-0.9.7j/crypto/ui/ui_openssl.c	2007-06-06 02:54:39.000000000 -0400
 @@ -193,7 +193,7 @@
  # define SGTTY
  #endif
@@ -391,7 +411,7 @@ Index: openssl/crypto/ui/ui_openssl.c
  #undef TERMIOS
  #undef TERMIO
  #undef SGTTY
-@@ -275,7 +275,7 @@
+@@ -275,7 +275,7 @@ static long tty_orig[3], tty_new[3]; /* 
  static long status;
  static unsigned short channel = 0;
  #else
@@ -400,42 +420,59 @@ Index: openssl/crypto/ui/ui_openssl.c
  static TTY_STRUCT tty_orig,tty_new;
  #endif
  #endif
-Index: openssl/Configure
-===================================================================
---- openssl/Configure	(revision 1121)
-+++ openssl/Configure	(revision 1133)
-@@ -122,6 +122,8 @@
+diff -purN openssl-0.9.7j.orig/crypto/uid.c openssl-0.9.7j/crypto/uid.c
+--- openssl-0.9.7j.orig/crypto/uid.c	2002-10-09 09:41:11.000000000 -0400
++++ openssl-0.9.7j/crypto/uid.c	2007-06-06 02:54:39.000000000 -0400
+@@ -65,7 +65,7 @@ int OPENSSL_issetugid(void)
+ 	return issetugid();
+ 	}
  
- #config-string	$cc : $cflags : $unistd : $thread_cflag : $sys_id : $lflags : $bn_ops : $bn_obj : $des_obj : $bf_obj : $md5_obj : $sha1_obj : $cast_obj : $rc4_obj : $rmd160_obj : $rc5_obj : $dso_scheme : $shared_target : $shared_cflag : $shared_ldflag : $shared_extension : $ranlib : $arflags
+-#elif defined(OPENSSL_SYS_WIN32) || defined(OPENSSL_SYS_VXWORKS)
++#elif defined(OPENSSL_SYS_WIN32) || defined(OPENSSL_SYS_VXWORKS) || defined(OPENSSL_SYS_PSP)
  
-+my $pspdev=$ENV{'PSPDEV'};
-+
- my %table=(
- # File 'TABLE' (created by 'make TABLE') contains the data from this list,
- # formatted for better readability.
-@@ -587,6 +589,9 @@
- ##### Compaq Non-Stop Kernel (Tandem)
- "tandem-c89","c89:-Ww -D__TANDEM -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED=1 -D_TANDEM_SOURCE -DB_ENDIAN::(unknown):::THIRTY_TWO_BIT:::",
+ int OPENSSL_issetugid(void)
+ 	{
+diff -purN openssl-0.9.7j.orig/include/openssl/opensslconf.h openssl-0.9.7j/include/openssl/opensslconf.h
+--- openssl-0.9.7j.orig/include/openssl/opensslconf.h	2006-05-04 09:15:47.000000000 -0400
++++ openssl-0.9.7j/include/openssl/opensslconf.h	2007-06-06 03:14:10.000000000 -0400
+@@ -9,6 +9,12 @@
+ #endif
  
-+##### PSP
-+"psp", "psp-gcc:-mno-explicit-relocs -DPSP -DNO_CHMOD -DL_ENDIAN -DNO_STRINGS_H -DNO_SYSLOG -DNO_SYS_UN_H -DOPENSSL_SYS_PSP -O2 -G0 -I$pspdev/psp/sdk/include::(unknown)::-lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk -lc -lpspnet -lpspnet_inet -lpspnet_apctl -lpspnet_resolver -lpsputility -lpspuser -liberty -lpspsdk -lpspnet -lpspaudio -lpspgu -lpspge -lpsphprm -lpspkernel -L$pspdev/psp/lib -L$pspdev/psp/sdk/lib:LL:::",
-+#-DOPENSSL_NO_SOCK 
- );
+ #endif /* OPENSSL_DOING_MAKEDEPEND */
++#ifndef OPENSSL_THREADS
++# define OPENSSL_THREADS
++#endif
++#ifndef OPENSSL_NO_ASM
++# define OPENSSL_NO_ASM
++#endif
  
- my @WinTargets=qw(VC-NT VC-CE VC-WIN32 VC-WIN16 VC-W31-16 VC-W31-32 VC-MSDOS
-@@ -976,6 +981,7 @@
- $perl=$ENV{'PERL'} or $perl=&which("perl5") or $perl=&which("perl")
-   or $perl="perl";
- 
-+
- chop $openssldir if $openssldir =~ /\/$/;
- chop $prefix if $prefix =~ /\/$/;
- 
-Index: openssl/ssl/ssl_cert.c
-===================================================================
---- openssl/ssl/ssl_cert.c	(revision 1121)
-+++ openssl/ssl/ssl_cert.c	(revision 1133)
-@@ -746,6 +746,10 @@
+ /* The OPENSSL_NO_* macros are also defined as NO_* if the application
+    asks for it.  This is a transient feature that is provided for those
+diff -purN openssl-0.9.7j.orig/include/openssl/opensslconf.h.rej openssl-0.9.7j/include/openssl/opensslconf.h.rej
+--- openssl-0.9.7j.orig/include/openssl/opensslconf.h.rej	1969-12-31 19:00:00.000000000 -0500
++++ openssl-0.9.7j/include/openssl/opensslconf.h.rej	2007-06-06 03:14:17.000000000 -0400
+@@ -0,0 +1,17 @@
++***************
++*** 33,39 ****
++  
++  #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
++  #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
++- #define OPENSSLDIR "/usr/local/pspdev/psp/ssl"
++  #endif
++  #endif
++  
++--- 33,39 ----
++  
++  #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
++  #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
+++ #define OPENSSLDIR "/usr/local/ssl"
++  #endif
++  #endif
++  
+diff -purN openssl-0.9.7j.orig/ssl/ssl_cert.c openssl-0.9.7j/ssl/ssl_cert.c
+--- openssl-0.9.7j.orig/ssl/ssl_cert.c	2005-06-01 04:36:38.000000000 -0400
++++ openssl-0.9.7j/ssl/ssl_cert.c	2007-06-06 02:54:39.000000000 -0400
+@@ -746,6 +746,10 @@ err:
  #ifndef OPENSSL_SYS_VMS		/* XXXX This may be fixed in the future */
  #ifndef OPENSSL_SYS_MACINTOSH_CLASSIC /* XXXXX: Better scheme needed! */
  
@@ -446,16 +483,16 @@ Index: openssl/ssl/ssl_cert.c
  int SSL_add_dir_cert_subjects_to_stack(STACK_OF(X509_NAME) *stack,
  				       const char *dir)
  	{
-Index: openssl/Makefile.psp
-===================================================================
---- openssl/Makefile.psp	(revision 0)
-+++ openssl/Makefile.psp	(revision 1133)
-@@ -0,0 +1,8 @@
-+prepare:
-+	chmod u+x configure_psp.sh && ./configure_psp.sh
-+
-+all:
-+	make -f Makefile
-+
-+install:
-+	@echo "As root, run make install"
+diff -purN openssl-0.9.7j.orig/tools/c_rehash openssl-0.9.7j/tools/c_rehash
+--- openssl-0.9.7j.orig/tools/c_rehash	2006-05-04 09:15:54.000000000 -0400
++++ openssl-0.9.7j/tools/c_rehash	2007-06-06 03:14:17.000000000 -0400
+@@ -6,7 +6,8 @@
+ 
+ my $openssl;
+ 
+-my $dir = "/usr/local/ssl";
++chomp (my $psp_prefix = `psp-config --psp-prefix`);
++my $dir = "$psp_prefix/ssl";
+ 
+ if(defined $ENV{OPENSSL}) {
+ 	$openssl = $ENV{OPENSSL};
