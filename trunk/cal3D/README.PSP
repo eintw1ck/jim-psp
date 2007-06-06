@@ -1,13 +1,11 @@
 This is a port of cal3D-0.11 for the PSP.  The original 
 version is available from gna.org/projects/cal3d.
 
-To configure the source, and assuming your pspdev 
-environment is in "/usr/local/pspdev/" which is the 
-default setting for the psptoolchain, enter (on ONE line):
+To configure the source, enter (on ONE line):
 
-  LDFLAGS="-L/usr/local/pspdev/psp/lib -L/usr/local/pspdev/psp/sdk/lib" \
+  LDFLAGS="-L$(psp-config --psp-prefix)/lib -L$(psp-config --pspsdk-path)/lib" \
   LIBS="-lpsplibc -lpspuser" \
-  ./configure --host=psp --disable-shared --prefix=/usr/local/pspdev/psp
+  ./configure --host=psp --disable-shared --prefix=$(psp-config --psp-prefix)
 
 
 Then, to build and install the cal3d library:
