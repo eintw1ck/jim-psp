@@ -42,7 +42,7 @@ int sceNetAdhocTerm( void );
  *
  * @return The ID of the PDP object (< 0 on error)
  */
-int sceNetAdhocPdpCreate(char *mac, int port, unsigned int unk2, int unk3);
+int sceNetAdhocPdpCreate(unsigned char *mac, unsigned short port, unsigned int unk2, int unk3);
 
 /**
  * Delete a PDP object.
@@ -67,7 +67,7 @@ int sceNetAdhocPdpDelete(int id, int unk1);
  *
  * @return Bytes sent, < 0 on error
  */
-int sceNetAdhocPdpSend(int id, char *destMacAddr, int16 port, void *data, unsigned int len, int unk6, int unk7);
+int sceNetAdhocPdpSend(int id, unsigned char *destMacAddr, unsigned short port, void *data, unsigned int len, int unk6, int unk7); 
 
 /**
  * Receive a PDP packet
@@ -82,7 +82,7 @@ int sceNetAdhocPdpSend(int id, char *destMacAddr, int16 port, void *data, unsign
  *
  * @return Number of bytes received, < 0 on error.
  */
-int sceNetAdhocPdpRecv(int id, char *srcMacAddr, int *port, void *data, void *dataLength, int unk6, int unk7);
+int sceNetAdhocPdpRecv(int id, unsigned char *srcMacAddr, unsigned short *port, void *data, void *dataLength, int unk6, int unk7);
 
 /**
  * PDP status structure
@@ -94,9 +94,9 @@ typedef struct pdpStatStruct
 	/** pdp ID */
 	int pdpId;
 	/** MAC address */
-	char mac[6];
+	unsigned char mac[6];
 	/** Port */
-	int16 port;
+	unsigned short port;
 	/** Bytes received */
 	unsigned int rcvdData;
 } pdpStatStruct;
@@ -109,8 +109,7 @@ typedef struct pdpStatStruct
  *
  * @return 0 on success, < 0 on error
  */
-int sceNetAdhocGetPdpStat(int *size,  	
-				  pdpStatStruct *stat);
+int sceNetAdhocGetPdpStat(int *size, pdpStatStruct *stat);
 
 #ifdef __cplusplus
 }
