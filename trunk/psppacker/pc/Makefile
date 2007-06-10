@@ -10,7 +10,7 @@ $(OUTPUT): $(OUTPUT).c
 	$(LINK.c) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 %.h: ../pspstub/%.elf
-	bin2c $^ $@ pspstub
+	../bin2c/bin2c $^ $@ pspstub
 
 clean:
 	rm -f $(OUTPUT) pspstub.h

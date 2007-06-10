@@ -242,7 +242,7 @@ int output_elf(const struct Config *cnf)
 		ret = 0;
 
 		printf("Compressed file, unpacked %d, packed %d (%0.2f%%)\n",
-				unpacked_size, (stub_size+data_size+sizeof(ph)),
+				unpacked_size, (int)(stub_size+data_size+sizeof(ph)),
 				100.0f * (float)(stub_size+data_size+sizeof(ph)) / (float)unpacked_size);
 	}
 	while(0);
