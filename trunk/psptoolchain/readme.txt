@@ -13,7 +13,7 @@
 
  1) Set up your environment by installing the following software:
 
-  autoconf, automake, bison, flex, gcc, make, ncurses, patch, subversion, terminfo, wget
+  autoconf, automake, bison, flex, gcc, make, ncurses, patch, subversion, texinfo, wget
 
  2) Add the following to your login script:
 
