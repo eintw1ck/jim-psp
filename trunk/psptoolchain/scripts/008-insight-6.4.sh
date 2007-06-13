@@ -1,6 +1,6 @@
 #!/bin/sh
 # insight-6.4.sh by Dan Peori (danpeori@oopo.net)
-
+exit;
  ## Download the source code.
  wget --continue ftp://sourceware.org/pub/insight/releases/insight-6.4.tar.bz2 || { exit 1; }
 
