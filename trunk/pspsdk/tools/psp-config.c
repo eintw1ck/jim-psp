@@ -11,7 +11,9 @@
 #define PSPDEV_ENV "PSPDEV"
 #define PATH_ENV "PATH"
 
+#ifndef MAX_PATH
 #define MAX_PATH 256
+#endif
 
 /***** Might need to change these for different platforms */
 #define PATH_SEP ":"
@@ -109,13 +111,12 @@ char *find_pspdev_path(char *name)
 	int found = 0;
 
 	/* Check if name is an absolute path, if so our job is done */
+
 #ifdef __MINGW32__
 
 	char *writableName = malloc(strlen(name) + 2);
 	char *ptr = writableName;
 	char temp;
-
-	*(ptr++) = '/';
 
 	while (*(name)) {
 		temp = *(name++);
@@ -126,7 +127,12 @@ char *find_pspdev_path(char *name)
 	*(ptr) = '\0';
 	name = writableName;
 #endif
-	if(name[0] == DIR_SEP)
+
+	if(name[0] == DIR_SEP 
+#ifdef __MINGW32__
+	   || name[1] == ':' 
+#endif
+		)
 	{
 		/* Absolute path */
 		strncpy(path, name, MAX_PATH);
