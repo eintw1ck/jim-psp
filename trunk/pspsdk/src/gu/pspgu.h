@@ -168,6 +168,11 @@ extern "C" {
 #define GU_TEXTURE_MATRIX	(1)
 #define GU_ENVIRONMENT_MAP	(2)
 
+/* Texture Level Mode */
+#define GU_TEXTURE_AUTO		(0)
+#define GU_TEXTURE_CONST	(1)
+#define GU_TEXTURE_SLOPE	(2)
+
 /* Texture Projection Map Mode */
 #define GU_POSITION		(0)
 #define GU_UV			(1)
@@ -261,6 +266,11 @@ extern "C" {
 /* List Queue */
 #define GU_TAIL			(0)
 #define GU_HEAD			(1)
+
+/* Sync behavior */
+#define GU_SYNC_FINISH	(0)
+#define GU_SYNC_SIGNAL	(1)
+#define GU_SYNC_DONE	(2)
 
 /* Signals */
 #define GU_CALLBACK_SIGNAL	(1)
@@ -538,7 +548,7 @@ int sceGuCheckList(void);
   *   - GU_TAIL - Place list last in the queue, so it executes in-order
   *   - GU_HEAD - Place list first in queue so that it executes as soon as possible
   *
-  * @param mode - Wether to place the list first or last in queue
+  * @param mode - Whether to place the list first or last in queue
   * @param list - List to send
   * @param context - Temporary storage for the GE context
 **/
@@ -559,11 +569,20 @@ void* sceGuSwapBuffers(void);
   * sceGuSync(0,0);
   * @endcode
   *
-  * @param mode - Unknown meaning, pass 0 for now
-  * @param a1 - Unknown meaning, pass 0 for now
+  * Available modes are:
+  *   - GU_SYNC_WAIT
+  *   - GU_SYNC_NOWAIT
+  *
+  * Available what are:
+  *   - GU_SYNC_FINISH - Wait until the last sceGuFinish command is reached
+  *   - GU_SYNC_SIGNAL - Wait until the last (?) signal is executed
+  *   - GU_SYNC_DONE - Wait until all commands currently in list are executed
+  *
+  * @param mode - Whether to wait or not
+  * @param what - What to sync to
   * @returns Unknown at this time
 **/
-int sceGuSync(int mode, int a1);
+int sceGuSync(int mode, int what);
 
 /**
   * Draw array of vertices forming primitives
@@ -1160,7 +1179,19 @@ void sceGuTexFunc(int tfx, int tcc);
   * @param tbp - Texture buffer pointer (16 byte aligned)
 **/
 void sceGuTexImage(int mipmap, int width, int height, int tbw, const void* tbp);
-void sceGuTexLevelMode(unsigned int a0, float f12);
+
+/**
+  * Set texture-level mode (mipmapping)
+  *
+  * Available modes are:
+  *   - GU_TEXTURE_AUTO
+  *   - GU_TEXTURE_CONST
+  *   - GU_TEXTURE_SLOPE
+  *
+  * @param mode - Which mode to use
+  * @param bias - Which mipmap bias to use
+**/
+void sceGuTexLevelMode(unsigned int mode, float bias);
 
 /**
   * Set the texture-mapping mode
@@ -1270,11 +1301,11 @@ void sceGuClutLoad(int num_blocks, const void* cbp);
   *   - GU_PSM_8888
   *
   * @param cpsm - Which pixel format to use for the palette
-  * @param a1 - Unknown, set to 0
-  * @param a2 - Unknown, set to 0
+  * @param shift - Shifts color index by that many bits to the right
+  * @param mask - Masks the color index with this bitmask after the shift (0-0xFF)
   * @param a3 - Unknown, set to 0
 **/
-void sceGuClutMode(unsigned int cpsm, unsigned int a1, unsigned int a2, unsigned int a3);
+void sceGuClutMode(unsigned int cpsm, unsigned int shift, unsigned int mask, unsigned int a3);
 
 /**
   * Set virtual coordinate offset

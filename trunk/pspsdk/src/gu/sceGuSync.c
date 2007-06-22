@@ -11,11 +11,11 @@
 #include <pspkernel.h>
 #include <pspge.h>
 
-int sceGuSync(int mode, int a1)
+int sceGuSync(int mode, int what)
 {
 	switch (mode)
 	{
-		case 0: return sceGeDrawSync(a1); break;
+		case 0: return sceGeDrawSync(what); break;
 		case 3: return sceGeDrawSync(ge_list_executed[0]);
 		case 4: return sceGeDrawSync(ge_list_executed[1]);
 		default: case 1: case 2: return 0;

@@ -10,9 +10,9 @@
 
 #include <math.h>
 
-void sceGuTexLevelMode(unsigned int a0, float f12)
+void sceGuTexLevelMode(unsigned int mode, float bias)
 {
-	int offset = (int)truncf(f12 * 16.0f);
+	int offset = (int)truncf(bias * 16.0f);
 
 	// mip map bias?
 	if (offset >= 128)
@@ -20,5 +20,5 @@ void sceGuTexLevelMode(unsigned int a0, float f12)
 	else if (offset < -128)
 		offset = -128;
 
-	sendCommandi(200,(((unsigned int)(offset)) << 16) | a0);
+	sendCommandi(200,(((unsigned int)(offset)) << 16) | mode);
 }

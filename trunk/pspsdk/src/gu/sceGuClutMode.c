@@ -8,8 +8,8 @@
 
 #include "guInternal.h"
 
-void sceGuClutMode(unsigned int cpsm, unsigned int a1, unsigned int a2, unsigned int a3)
+void sceGuClutMode(unsigned int cpsm, unsigned int shift, unsigned int mask, unsigned int a3)
 {
-	unsigned int argument = (cpsm) | (a1 << 2) | (a2 << 8) | (a3 << 16);
+	unsigned int argument = (cpsm) | (shift << 2) | (mask << 8) | (a3 << 16);
 	sendCommandi(197,argument);
 }
