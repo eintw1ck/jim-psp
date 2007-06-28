@@ -363,8 +363,8 @@ struct BulkCommand
 
 #define MODPRINTF DEBUG_PRINTF
 
-int32_t usb_connected(void);
-int32_t command_xchg(void *outcmd, int32_t outcmdlen, void *incmd, int32_t incmdlen, const void *outdata, 
+int usb_connected(void);
+int command_xchg(void *outcmd, int32_t outcmdlen, void *incmd, int32_t incmdlen, const void *outdata, 
 		int32_t outlen, void *indata, int32_t inlen);
 int32_t hostfs_init(void);
 void hostfs_term(void);
