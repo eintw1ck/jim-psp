@@ -366,7 +366,7 @@ struct BulkCommand
 int usb_connected(void);
 int command_xchg(void *outcmd, int outcmdlen, void *incmd, int incmdlen, const void *outdata, 
 		int outlen, void *indata, int inlen);
-int32_t hostfs_init(void);
+int hostfs_init(void);
 void hostfs_term(void);
 #endif
 
