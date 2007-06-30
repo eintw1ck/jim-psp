@@ -2,8 +2,7 @@
 #define __pspgl_misc_h__
 
 #include <sys/types.h>
-
-typedef unsigned long uint32_t;
+#include <stdint.h>
 
 /* Return a pointer to uncached address space.  The pointer and size
    must both be a multiple CACHELINE_SIZE.  */
@@ -159,11 +158,11 @@ extern void __pspgl_assert_fail(const char *expr, const void *retaddr,
 #define realloc(ptr,size)   __pspgl_realloc(ptr, size, __FUNCTION__, __LINE__)
 #define free(ptr)           __pspgl_free(ptr, __FUNCTION__, __LINE__)
 
+#endif
+
 extern void* __pspgl_calloc (size_t count, size_t size, const char *function, unsigned int line);
 extern void* __pspgl_realloc (void *ptr, size_t size, const char *function, unsigned int line);
 extern void __pspgl_free (void *ptr, const char *function, unsigned int line);
-
-#endif
 
 
 #endif
