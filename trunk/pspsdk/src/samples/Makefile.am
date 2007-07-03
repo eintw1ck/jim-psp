@@ -71,6 +71,7 @@ SAMPLES = \
 	template/lib_template \
 	usb/storage \
 	utility/netconf \
+	utility/netdialog \
 	utility/msgdialog \
 	utility/systemparam \
 	me/basic \
