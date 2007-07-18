@@ -37,6 +37,15 @@ enum PspDisplaySetBufSync {
 	PSP_DISPLAY_SETBUF_NEXTFRAME = 1
 };
 
+
+enum PspDisplayErrorCodes
+{
+   SCE_DISPLAY_ERROR_OK    = 0,   
+   SCE_DISPLAY_ERROR_POINTER    = 0x80000103,   
+   SCE_DISPLAY_ERROR_ARGUMENT   = 0x80000107   
+};
+
+
 /**
  * Set display mode
  *
@@ -68,10 +77,12 @@ int sceDisplayGetMode(int *pmode, int *pwidth, int *pheight);
  *
  * @param topaddr - address of start of framebuffer
  * @param bufferwidth - buffer width (must be power of 2)
- * @param pixelformat - One of ::PspDisplayPixelFormats.
+ * @param pixelformat - One of ::PspDisplayPixelFormats. (only succeeds with PSP_DISPLAY_PIXEL_FORMAT_8888)
  * @param sync - One of ::PspDisplaySetBufSync
+ *
+ * @return 0 on success
  */
-void sceDisplaySetFrameBuf(void *topaddr, int bufferwidth, int pixelformat, int sync);
+int sceDisplaySetFrameBuf(void *topaddr, int bufferwidth, int pixelformat, int sync);
 
 /**
  * Get Display Framebuffer information
@@ -79,9 +90,11 @@ void sceDisplaySetFrameBuf(void *topaddr, int bufferwidth, int pixelformat, int 
  * @param topaddr - pointer to void* to receive address of start of framebuffer
  * @param bufferwidth - pointer to int to receive buffer width (must be power of 2)
  * @param pixelformat - pointer to int to receive one of ::PspDisplayPixelFormats.
- * @param unk1 - pointer to int, receives unknown, always 1? (vblank sync?)
+ * @param sync - One of ::PspDisplaySetBufSync
+ *
+ * @return 0 on success
  */
-int sceDisplayGetFrameBuf(void **topaddr, int *bufferwidth, int *pixelformat, int *unk1);
+int sceDisplayGetFrameBuf(void **topaddr, int *bufferwidth, int *pixelformat, int sync);
 
 /**
  * Number of vertical blank pulses up to now
