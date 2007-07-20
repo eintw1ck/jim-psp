@@ -6,6 +6,7 @@
  * pspmpeg.h - Prototypes for the sceMpeg library
  *
  * Copyright (c) 2006 Sorin P. C. <magik@hypermagik.com>
+ * Copyright (c) 2007 Alexander Berl <raphael@fx-world.org>
  *
  * $Id$
  */
@@ -61,27 +62,33 @@ typedef struct SceMpegRingbuffer
 
 typedef struct SceMpegAu
 {
-    /** unknown */
-	SceUInt32			iUnk0;
-    /** presentation timestamp? */
-	SceInt32 			iTimestamp;
-    /** unknown */
-	SceUInt32			iUnk1;
-    /** unknown */
-	SceUInt32			iUnk2;
-    /** unknown */
-	SceUInt32			iUnk3;
-    /** unknown */
-	SceUInt32			iUnk4;
+    /** presentation timestamp MSB */
+	SceUInt32			iPtsMSB;
+    /** presentation timestamp LSB */
+	SceUInt32			iPts;
+    /** decode timestamp MSB */
+	SceUInt32			iDtsMSB;
+    /** decode timestamp LSB */
+	SceUInt32			iDts;
+    /** Es buffer handle */
+	SceUInt32			iEsBuffer;
+    /** Au size */
+	SceUInt32			iAuSize;
 
 } SceMpegAu;
+
+#define SCE_MPEG_AVC_FORMAT_DEFAULT -1
+#define SCE_MPEG_AVC_FORMAT_5650 0
+#define SCE_MPEG_AVC_FORMAT_5551 1
+#define SCE_MPEG_AVC_FORMAT_4444 2
+#define SCE_MPEG_AVC_FORMAT_8888 3
 
 typedef struct SceMpegAvcMode
 {
 	/** unknown, set to -1 */
 	SceInt32			iUnk0;
-	/** unknonw, set to 3 */
-	SceInt32			iUnk1;
+	/** Decode pixelformat */
+	SceInt32			iPixelFormat;
 
 } SceMpegAvcMode;
 
@@ -275,6 +282,8 @@ SceInt32 sceMpegGetAvcAu(SceMpeg* Mpeg, SceMpegStream* pStream, SceMpegAu* pAu, 
 /**
  * sceMpegAvcDecodeMode
  *
+ * @param Mpeg - SceMpeg handle
+ * @param pMode - pointer to SceMpegAvcMode struct defining the decode mode (pixelformat)
  * @returns 0 if success.
  */
 SceInt32 sceMpegAvcDecodeMode(SceMpeg* Mpeg, SceMpegAvcMode* pMode);

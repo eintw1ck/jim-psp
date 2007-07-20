@@ -7,6 +7,8 @@
  *
  * Copyright (c) 2005 Adresd
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
+ * Copyright (c) 2007 cooleyes
+ * Copyright (c) 2007 Alexander Berl <raphael@fx-world.org>
  *
  * $Id$
  */
@@ -36,6 +38,13 @@ enum PspAudioFormats {
     PSP_AUDIO_FORMAT_STEREO = 0,
     /** Channel is set to mono output. */
     PSP_AUDIO_FORMAT_MONO   = 0x10
+};
+
+enum PspAudioFrequencies {
+    /** Sampling frequency set to 44100Hz. */
+    PSP_AUDIO_FREQ_44K = 44100,
+    /** Sampling frequency set to 48000Hz. */
+    PSP_AUDIO_FREQ_48K = 48000
 };
 
 /** The minimum number of samples that can be allocated to a channel. */
@@ -114,6 +123,14 @@ int sceAudioChangeChannelConfig(int channel, int format);
   */
 int sceAudioChangeChannelVolume(int channel, int leftvol, int rightvol);
 
+/**
+  * Set audio sampling frequency
+  *
+  * @param frequency - Sampling frequency to set audio output to - either 44100 or 48000.
+  *
+  * @returns 0 on success, an error if less than 0.
+  */
+int sceAudioSetFrequency(int frequency);
 /*@}*/
 
 #ifdef __cplusplus

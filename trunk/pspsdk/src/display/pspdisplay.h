@@ -8,6 +8,7 @@
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ * Copyright (c) 2007 Alexander Berl <raphael@fx-world.org>
  *
  * $Id$
  */
@@ -77,7 +78,7 @@ int sceDisplayGetMode(int *pmode, int *pwidth, int *pheight);
  *
  * @param topaddr - address of start of framebuffer
  * @param bufferwidth - buffer width (must be power of 2)
- * @param pixelformat - One of ::PspDisplayPixelFormats. (only succeeds with PSP_DISPLAY_PIXEL_FORMAT_8888)
+ * @param pixelformat - One of ::PspDisplayPixelFormats.
  * @param sync - One of ::PspDisplaySetBufSync
  *
  * @return 0 on success
