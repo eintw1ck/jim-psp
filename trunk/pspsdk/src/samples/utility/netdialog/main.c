@@ -193,10 +193,10 @@ int netDialog()
 	data.size = sizeof(data);
 	data.language = PSP_SYSTEMPARAM_LANGUAGE_ENGLISH;
 	data.buttonSwap = PSP_UTILITY_ACCEPT_CROSS;
-	data.unknown[0] = 17;
-	data.unknown[1] = 19;
-	data.unknown[2] = 18;
-	data.unknown[3] = 16;
+	data.graphicsThread = 17;
+	data.unknown = 19;
+	data.fontThread = 18;
+	data.soundThread = 16;
 	data.action = PSP_NETCONF_ACTION_CONNECTAP;
 
 	sceUtilityNetconfInitStart(&data);

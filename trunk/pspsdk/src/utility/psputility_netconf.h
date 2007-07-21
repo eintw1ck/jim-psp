@@ -26,16 +26,21 @@ enum pspUtilityNetconfActions {
 };
 
 enum pspUtilityNetconfStatus {
-	PSP_NETCONF_STATUS_INIT = 1,
+	PSP_NETCONF_STATUS_NONE,
+	PSP_NETCONF_STATUS_INIT,
 	PSP_NETCONF_STATUS_RUNNING,
-	PSP_NETCONF_STATUS_FINISHED
+	PSP_NETCONF_STATUS_FINISHED,
+	PSP_NETCONF_STATUS_SHUTDOWN
 };
 
 typedef struct _pspUtilityNetconfData {
 	u32 size;
 	int language;
 	int buttonSwap;
-	int unknown[4];
+	int graphicsThread; // graphics thread priority
+	int unknown; // some other thread priority?
+	int fontThread; // font (?) thread priority (ScePafThread)
+	int soundThread; // sound thread priority
 	int result;
 	int unknown2[4];
 	int action; //one of pspUtilityNetconfActions
