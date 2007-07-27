@@ -85,7 +85,7 @@ fb_open(PSD psd)
 	return NULL;
     }
 
-    psd->addr = (void *)(0x40000000 | sceGeEdramGetAddr());
+    psd->addr = (void *)(0x40000000 | (unsigned int)sceGeEdramGetAddr());
 
     return psd;	/* success*/
 }
