@@ -40,13 +40,6 @@ enum PspAudioFormats {
     PSP_AUDIO_FORMAT_MONO   = 0x10
 };
 
-enum PspAudioFrequencies {
-    /** Sampling frequency set to 44100Hz. */
-    PSP_AUDIO_FREQ_44K = 44100,
-    /** Sampling frequency set to 48000Hz. */
-    PSP_AUDIO_FREQ_48K = 48000
-};
-
 /** The minimum number of samples that can be allocated to a channel. */
 #define PSP_AUDIO_SAMPLE_MIN    64
 /** The maximum number of samples that can be allocated to a channel. */
@@ -123,14 +116,6 @@ int sceAudioChangeChannelConfig(int channel, int format);
   */
 int sceAudioChangeChannelVolume(int channel, int leftvol, int rightvol);
 
-/**
-  * Set audio sampling frequency
-  *
-  * @param frequency - Sampling frequency to set audio output to - either 44100 or 48000.
-  *
-  * @returns 0 on success, an error if less than 0.
-  */
-int sceAudioSetFrequency(int frequency);
 /*@}*/
 
 #ifdef __cplusplus
