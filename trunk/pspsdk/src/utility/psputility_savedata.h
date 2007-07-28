@@ -44,16 +44,7 @@ typedef struct PspUtilitySavedataFileData {
   */
 typedef struct SceUtilitySavedataParam
 {
-	/** Size of the structure */
-	SceSize size;
-
-	int language;
-
-	int buttonSwap;
-
-	int unknown[4];
-	int result;
-	int unknown2[4];
+	pspUtilityDialogCommon base;
 
 	/** mode: 0 to load, 1 to save */
 	int mode;

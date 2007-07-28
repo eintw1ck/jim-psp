@@ -192,29 +192,29 @@ static void DrawStuff(void)
 
 /* Utility dialog functions */
 
-static void ConfigureDialog(SceUtilityMsgDialogParams *dialog, size_t dialog_size)
+static void ConfigureDialog(pspUtilityMsgDialogParams *dialog, size_t dialog_size)
 {
     memset(dialog, 0, dialog_size);
 
-    dialog->size = dialog_size;
+    dialog->base.size = dialog_size;
     sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_LANGUAGE,
-				&dialog->language); // Prompt language
+				&dialog->base.language); // Prompt language
     sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID_INT_UNKNOWN,
-				&dialog->buttonSwap); // X/O button swap
+				&dialog->base.buttonSwap); // X/O button swap
 
-    dialog->unknown[0] = 0x11;	// ???
-    dialog->unknown[1] = 0x13;
-    dialog->unknown[2] = 0x12;
-    dialog->unknown[3] = 0x10;
+    dialog->base.graphicsThread = 0x11;
+    dialog->base.unknown = 0x13;
+    dialog->base.fontThread = 0x12;
+    dialog->base.soundThread = 0x10;
 }
 
 static void ShowErrorDialog(const unsigned int error)
 {
-    SceUtilityMsgDialogParams dialog;
+    pspUtilityMsgDialogParams dialog;
 
     ConfigureDialog(&dialog, sizeof(dialog));
-    dialog.unknown[10] = 0;
-    dialog.unknown[11] = error;
+    dialog.unknown2[1] = 0;
+    dialog.unknown2[2] = error;
 
     sceUtilityMsgDialogInitStart(&dialog);
 
@@ -224,15 +224,15 @@ static void ShowErrorDialog(const unsigned int error)
 	
 	switch(sceUtilityMsgDialogGetStatus()) {
 	    
-	case 2:
+	case PSP_UTILITY_DIALOG_VISIBLE:
 	    sceUtilityMsgDialogUpdate(2);
 	    break;
 	    
-	case 3:
+	case PSP_UTILITY_DIALOG_QUIT:
 	    sceUtilityMsgDialogShutdownStart();
 	    break;
 	    
-	case 0:
+	case PSP_UTILITY_DIALOG_NONE:
 	    return;
 	    
 	}
@@ -244,10 +244,10 @@ static void ShowErrorDialog(const unsigned int error)
 
 static void ShowMessageDialog(const char *message)
 {
-    SceUtilityMsgDialogParams dialog;
+    pspUtilityMsgDialogParams dialog;
 
     ConfigureDialog(&dialog, sizeof(dialog));
-    dialog.unknown[10] = 1;
+    dialog.unknown2[1] = 1;
     strcpy(dialog.message, message);
 
     sceUtilityMsgDialogInitStart(&dialog);
@@ -255,9 +255,9 @@ static void ShowMessageDialog(const char *message)
     for(;;) {
 
 	DrawStuff();
-	
+
 	switch(sceUtilityMsgDialogGetStatus()) {
-	    
+
 	case 2:
 	    sceUtilityMsgDialogUpdate(2);
 	    break;

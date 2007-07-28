@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- *  psputility_dialogs.h - Definitions and Functions for Dialogs
+ *  psputility_msdialog.h - Definitions and Functions for Dialogs
  *                         section of the pspUtility library
  *
  * Copyright (c) 2005 Marcus Comstedt <marcus@mc.pp.se>
@@ -17,29 +17,17 @@
 extern "C" {
 #endif
 
-#include <psptypes.h>
-
-/** Structure to hold the parameters for a message dialog
-  */
-typedef struct _SceUtilityMsgDialogParams {
-    /** Size of the structure */
-    SceSize     size;
-
-    /** Language for predefined guide texts */
-    int		language;
-
-    /** Set to 1 for X/O button swap (US model) */
-    int         buttonSwap;
-
-    /** ? */
-    int		unknown[4];
-    int		returnValue;
-    int		unknown2[7];
+/**
+ * Structure to hold the parameters for a message dialog
+**/
+typedef struct _SceUtilityMsgDialogParams
+{
+    pspUtilityDialogCommon base;
+    int unknown2[3];
     /** The message to display (may contain embedded linefeeds) */
-    char	message[512];
+    char message[512];
 
-} SceUtilityMsgDialogParams;
-
+} pspUtilityMsgDialogParams;
 
 /**
  * Create a message dialog
@@ -47,7 +35,7 @@ typedef struct _SceUtilityMsgDialogParams {
  * @param params - dialog parameters
  * @returns 0 on success
  */
-int sceUtilityMsgDialogInitStart(SceUtilityMsgDialogParams *params);
+int sceUtilityMsgDialogInitStart(pspUtilityMsgDialogParams *params);
 
 /**
  * Remove a message dialog currently active.  After calling this

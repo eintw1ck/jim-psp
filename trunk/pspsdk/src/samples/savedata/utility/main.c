@@ -77,12 +77,12 @@ int SetupCallbacks(void)
 void initSavedata(SceUtilitySavedataParam * savedata, int mode)
 {
 	memset(savedata, 0, sizeof(SceUtilitySavedataParam));
-	savedata->size = sizeof(SceUtilitySavedataParam);
+	savedata->base.size = sizeof(SceUtilitySavedataParam);
 
-	savedata->unknown[0] = 0x11;
-	savedata->unknown[1] = 0x13;
-	savedata->unknown[2] = 0x12;
-	savedata->unknown[3] = 0x10;
+	savedata->base.graphicsThread = 0x11;
+	savedata->base.unknown = 0x13;
+	savedata->base.fontThread = 0x12;
+	savedata->base.soundThread = 0x10;
 	savedata->unknown13 = 1;
 	savedata->mode = mode;		/* mode: 0 = load, 1 = save */
 

@@ -190,13 +190,13 @@ int netDialog()
    	pspUtilityNetconfData data;
 
 	memset(&data, 0, sizeof(data));
-	data.size = sizeof(data);
-	data.language = PSP_SYSTEMPARAM_LANGUAGE_ENGLISH;
-	data.buttonSwap = PSP_UTILITY_ACCEPT_CROSS;
-	data.graphicsThread = 17;
-	data.unknown = 19;
-	data.fontThread = 18;
-	data.soundThread = 16;
+	data.base.size = sizeof(data);
+	data.base.language = PSP_SYSTEMPARAM_LANGUAGE_ENGLISH;
+	data.base.buttonSwap = PSP_UTILITY_ACCEPT_CROSS;
+	data.base.graphicsThread = 17;
+	data.base.unknown = 19;
+	data.base.fontThread = 18;
+	data.base.soundThread = 16;
 	data.action = PSP_NETCONF_ACTION_CONNECTAP;
 
 	sceUtilityNetconfInitStart(&data);
@@ -207,14 +207,14 @@ int netDialog()
 
 		switch(sceUtilityNetconfGetStatus())
 		{
-			case PSP_NETCONF_STATUS_INIT:
+			case PSP_UTILITY_DIALOG_NONE:
 				break;
 
-			case PSP_NETCONF_STATUS_RUNNING:
+			case PSP_UTILITY_DIALOG_VISIBLE:
 				sceUtilityNetconfUpdate(1);
 				break;
 
-			case PSP_NETCONF_STATUS_FINISHED:
+			case PSP_UTILITY_DIALOG_QUIT:
 				sceUtilityNetconfShutdownStart();
 				break;
 

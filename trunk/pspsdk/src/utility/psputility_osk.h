@@ -20,18 +20,6 @@ extern "C" {
 #include <psptypes.h>
 
 /**
- * Return-values for sceUtilityOskGetStatus()
-**/
-typedef enum
-{
-	PSP_OSK_NONE = 0, /**< No keyboard is currently active. */
-	PSP_OSK_INIT, /**< The keyboard is currently being initialized. */
-	PSP_OSK_VISIBLE, /**< The keyboard is visible and ready for use. */
-	PSP_OSK_QUIT, /**< The keyboard has been canceled and should be shut down. */
-	PSP_OSK_FINISHED /**< The keyboard has successfully shut down. */
-} SceOskState;
-
-/**
  *
 **/
 typedef struct _SceUtilityOskData
@@ -56,18 +44,7 @@ typedef struct _SceUtilityOskData
 **/
 typedef struct _SceUtilityOskParams
 {
-	unsigned int size;
-	int language;
-	int buttonswap;
-	int unk_12; // set 17
-	int unk_16; // set 19
-	int unk_20; // set 18
-	int unk_24; // set 16
-	int rc;
-	int unk_32;
-	int unk_36;
-	int unk_40;
-	int unk_44;
+	pspUtilityDialogCommon base;
 	int unk_48; // set 1, if 0 nothing happens, if 2 crash ...
 	SceUtilityOskData* data;
 	int unk_56;
@@ -87,7 +64,7 @@ int sceUtilityOskInitStart(SceUtilityOskParams* params);
 
 /**
  * Remove a currently active keyboard. After calling this function you must
- * poll sceUtilityOskGetStatus() until it returns PSP_OSK_FINISHED.
+ * poll sceUtilityOskGetStatus() until it returns PSP_UTILITY_DIALOG_FINISHED.
 **/
 int sceUtilityOskShutdownStart(void);
 
@@ -101,7 +78,7 @@ int sceUtilityOskUpdate(int n);
 /**
  * Get the status of a on-screen keyboard currently active.
  *
- * @returns the current status of the keyboard. See SceOskState for details.
+ * @returns the current status of the keyboard. See pspUtilityDialogState for details.
 **/
 int sceUtilityOskGetStatus(void);
 

@@ -19,32 +19,19 @@ extern "C" {
 
 #include <psptypes.h>
 
-enum pspUtilityNetconfActions {
+enum pspUtilityNetconfActions
+{
 	PSP_NETCONF_ACTION_CONNECTAP,
 	PSP_NETCONF_ACTION_DISPLAYSTATUS,
 	PSP_NETCONF_ACTION_CONNECT_ADHOC
 };
 
-enum pspUtilityNetconfStatus {
-	PSP_NETCONF_STATUS_NONE,
-	PSP_NETCONF_STATUS_INIT,
-	PSP_NETCONF_STATUS_RUNNING,
-	PSP_NETCONF_STATUS_FINISHED,
-	PSP_NETCONF_STATUS_SHUTDOWN
-};
-
-typedef struct _pspUtilityNetconfData {
-	u32 size;
-	int language;
-	int buttonSwap;
-	int graphicsThread; // graphics thread priority
-	int unknown; // some other thread priority?
-	int fontThread; // font (?) thread priority (ScePafThread)
-	int soundThread; // sound thread priority
-	int result;
-	int unknown2[4];
-	int action; //one of pspUtilityNetconfActions
+typedef struct _pspUtilityNetconfData
+{
+	pspUtilityDialogCommon base;
+	int action; /** One of pspUtilityNetconfActions */
 	u32 unknown3;
+	
 } pspUtilityNetconfData;
 
 /**
@@ -73,7 +60,7 @@ int sceUtilityNetconfUpdate (int unknown);
 /**
  * Get the status of a running Network Configuration Dialog
  *
- * @return one of pspUtilityNetconfStatus on success, < 0 on error
+ * @return one of pspUtilityDialogState on success, < 0 on error
  */
 int sceUtilityNetconfGetStatus (void);
 
