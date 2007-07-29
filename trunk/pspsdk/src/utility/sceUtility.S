@@ -113,3 +113,9 @@
 #ifdef F_sceUtility_0036
 	IMPORT_FUNC	"sceUtility",0x64d50c56,sceUtilityUnloadNetModule
 #endif
+#ifdef F_sceUtility_0037
+	IMPORT_FUNC	"sceUtility",0xC629AF26,sceUtilityLoadAvModule
+#endif
+#ifdef F_sceUtility_0038
+	IMPORT_FUNC	"sceUtility",0xF7D8D092,sceUtilityUnloadAvModule
+#endif

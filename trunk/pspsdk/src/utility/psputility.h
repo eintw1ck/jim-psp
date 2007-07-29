@@ -33,6 +33,7 @@ typedef struct
 #include <psputility_sysparam.h>
 #include <psputility_osk.h>
 #include <psputility_netmodules.h>
+#include <psputility_avmodules.h>
 
 #define PSP_UTILITY_ACCEPT_CIRCLE 0
 #define PSP_UTILITY_ACCEPT_CROSS  1
