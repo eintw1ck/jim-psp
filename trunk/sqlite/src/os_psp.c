@@ -497,17 +497,12 @@ int pspUnlock( OsFile *id, int locktype ){
 ** is no longer needed.
 */
 char *sqlite3PspFullPathname( const char *zRelative ){
-	char curDir [SQLITE_PSP_FULLPATH_SIZE+1];
-	getcwd(curDir,SQLITE_PSP_FULLPATH_SIZE);
-	char * zAbsolute = sqlite3OsMalloc (SQLITE_PSP_FULLPATH_SIZE+1);
-	if((zRelative[0]=='.') && (zRelative[1]=='/'))
-	{
-		sprintf(zAbsolute,"%s/%s", curDir, &(zRelative[2]));
-	}
-	else
-	{
-		sprintf(zAbsolute,"%s/%s", curDir, zRelative);
-	}
+	/* Don't need to convert cause the relative path is
+	 * handle by the PSP's os
+	 */
+	char *zAbsolute;
+	zAbsolute=sqlite3OsMalloc( strlen(zRelative)+1 );
+	strcpy(zAbsolute, zRelative);
 	return zAbsolute;
 }
 
