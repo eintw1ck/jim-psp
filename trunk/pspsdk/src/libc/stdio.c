@@ -1164,7 +1164,9 @@ int puts(const char *s)
 */
 int remove(const char *s)
 {
-  return (0);
+	int ret = sceIoRemove(s);
+
+	return (ret);
 }
 #endif
 
@@ -1183,9 +1185,9 @@ int remove(const char *s)
 */
 int rename(const char *name, const char *newname)
 {
-  int ret = 0;
-  
-  return (ret);
+	int ret = sceIoRename(name, newname);
+	
+	return (ret);
 }
 #endif
 
