@@ -23,8 +23,8 @@
 
 //#define printf pspDebugScreenPrintf
 
-#define KEY_PRESSED	    1
-#define KEY_RELEASED	0
+#define KEY_PRESSED        1
+#define KEY_RELEASED    0
 
 /* baudrates - currently only 9600 = default is suppored! */
 #define B0      0
@@ -150,7 +150,7 @@ int pspIrKeybReadinput(void* buffer, int *length)
     {
         /* open irda */
         g_irdafd = sceIoOpen(IRDA_DEVICE, PSP_O_RDWR, 0);
-	    if (g_irdafd < 0) {
+        if (g_irdafd < 0) {
             return PSP_IRKBD_RESULT_FAILED;
         }
 
@@ -166,10 +166,10 @@ int pspIrKeybReadinput(void* buffer, int *length)
 int pspIrKeybFinish(void)
 {
     if (g_irdafd < 0)
-	    return PSP_IRKBD_RESULT_OK;
+        return PSP_IRKBD_RESULT_OK;
 
-	/* Close irda */
-	sceIoClose(g_irdafd);
+    /* Close irda */
+    sceIoClose(g_irdafd);
     g_irdafd = -1;
     g_baudrate = B0;
     g_keyboard = PSP_IRKBD_TYPE_NONE;
@@ -195,43 +195,43 @@ static int pspIrKeybSetKeyboard(int keyboard, const char* mapfile)
     switch( keyboard )
     {
         case PSP_IRKBD_TYPE_TARGUSIR:
-		    g_keyboard_input_CB = targus_infrared;
+            g_keyboard_input_CB = targus_infrared;
             g_baudrate = B9600;
             break;
         case PSP_IRKBD_TYPE_COMPAQ_MICROKBD:
-		    g_keyboard_input_CB = compaq_microkbd;
+            g_keyboard_input_CB = compaq_microkbd;
             g_baudrate = B4800;
             break;
         case PSP_IRKBD_TYPE_MICRO_DATAPAD:
-		    g_keyboard_input_CB = micro_datapad;
+            g_keyboard_input_CB = micro_datapad;
             g_baudrate = B9600;
             break;
         case PSP_IRKBD_TYPE_FREEDOM:
-		    g_keyboard_input_CB = freedom_keyboard;
+            g_keyboard_input_CB = freedom_keyboard;
             g_baudrate = B9600;
             break;
         case PSP_IRKBD_TYPE_MICRO_FOLDAWAY:
-		    g_keyboard_input_CB = micro_foldaway;
+            g_keyboard_input_CB = micro_foldaway;
             g_baudrate = B9600;
             break;
         case PSP_IRKBD_TYPE_FOLDABLE:
-		    g_keyboard_input_CB = compaq_foldable;
+            g_keyboard_input_CB = compaq_foldable;
             g_baudrate = B4800;
             break;
         case PSP_IRKBD_TYPE_BELKINIR:
-		    g_keyboard_input_CB = belkin_infrared;
+            g_keyboard_input_CB = belkin_infrared;
             g_baudrate = B9600;
             break;
         case PSP_IRKBD_TYPE_BENQ_GAMEPAD:
-		    g_keyboard_input_CB = benqgamepad;
+            g_keyboard_input_CB = benqgamepad;
             g_baudrate = B4800;
             break;
         case PSP_IRKBD_TYPE_HPSLIM:
-		    g_keyboard_input_CB = hpslim;
+            g_keyboard_input_CB = hpslim;
             g_baudrate = B4800;
             break;
         case PSP_IRKBD_TYPE_SNAPNTYPE:
-		    g_keyboard_input_CB = snapntype;
+            g_keyboard_input_CB = snapntype;
             g_baudrate = B2400;
             break;
         case PSP_IRKBD_TYPE_NOVAETS_KIS2:
@@ -257,7 +257,7 @@ static int pspIrKeybSetKeyboard(int keyboard, const char* mapfile)
     g_keyboard = keyboard;
     ret = maptable_load_map( mapfile );
 
-	return ret;
+    return ret;
 }
 
 #define PSP_UART5_DIV1 0xBE540024
@@ -300,9 +300,9 @@ static int novaets_kis2(unsigned char* buffer, int *length)
     int row, col, ismod;
     unsigned char raw, pressed;
 
-	/* Read 2 bytes */
-	if( sceIoRead(g_irdafd, buf, 2) != 2 )
-		return -1;
+    /* Read 2 bytes */
+    if( sceIoRead(g_irdafd, buf, 2) != 2 )
+        return -1;
 
     /* resume display */
     scePowerTick(0);
@@ -338,43 +338,43 @@ static int compaq_foldable(unsigned char* buffer, int *length)
     /* resume display */
     scePowerTick(0);
 
-	// fprintf(stderr, "0x%02x 0x%02x 0x%02x | ", buf[0], buf[1], ~buf[0]);
-	if (buf[0] == (unsigned char)~buf[1]) {
-		//if (debug) fprintf(stderr, "press: %d ", buf[0]);
-		if (buf[0] == 0x02) {
-			fn=1;
-			return 0;
-		}
-		if (fn)
-			buf[0] = foldable_function[buf[0]];
-		else
-			buf[0] = foldable_normal[buf[0]];
-		//if (debug)
-		//	fprintf(stderr,"= 0x%02x\n", buf[0]);
-		if (buf[0] > 0)
+    // fprintf(stderr, "0x%02x 0x%02x 0x%02x | ", buf[0], buf[1], ~buf[0]);
+    if (buf[0] == (unsigned char)~buf[1]) {
+        //if (debug) fprintf(stderr, "press: %d ", buf[0]);
+        if (buf[0] == 0x02) {
+            fn=1;
+            return 0;
+        }
+        if (fn)
+            buf[0] = foldable_function[buf[0]];
+        else
+            buf[0] = foldable_normal[buf[0]];
+        //if (debug)
+        //    fprintf(stderr,"= 0x%02x\n", buf[0]);
+        if (buf[0] > 0)
         {
             keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_PRESSED, buffer, length );
             return 0;
         }
-	} else if (((unsigned char)buf[0] & (unsigned char)~0x80) == (unsigned char)~buf[1]) {
-		//if (debug)
-		//	fprintf(stderr, "rel. : %d ", buf[0] & ~0x80);
-		if ((buf[0] & ~0x80) == 0x02) {
-			fn = 0;
-			return 0;
-		}
-		if (fn)
-			buf[0] = foldable_function[(unsigned char)buf[0] & (unsigned char)~0x80];
-		else
-			buf[0] = foldable_normal[(unsigned char)buf[0] & (unsigned char)~0x80];
-		//if (debug)
-		//	fprintf(stderr,"= 0x%02x\n", buf[0]);
-		if (buf[0] > 0)
+    } else if (((unsigned char)buf[0] & (unsigned char)~0x80) == (unsigned char)~buf[1]) {
+        //if (debug)
+        //    fprintf(stderr, "rel. : %d ", buf[0] & ~0x80);
+        if ((buf[0] & ~0x80) == 0x02) {
+            fn = 0;
+            return 0;
+        }
+        if (fn)
+            buf[0] = foldable_function[(unsigned char)buf[0] & (unsigned char)~0x80];
+        else
+            buf[0] = foldable_normal[(unsigned char)buf[0] & (unsigned char)~0x80];
+        //if (debug)
+        //    fprintf(stderr,"= 0x%02x\n", buf[0]);
+        if (buf[0] > 0)
         {
              keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_RELEASED, buffer, length );
              return 0;
         }
-	}
+    }
 
     return 0;
 }
@@ -392,22 +392,22 @@ static int belkin_infrared(unsigned char* buffer, int *length)
     /* resume display */
     scePowerTick(0);
 
-	key = buf[1] & 0x7f;
+    key = buf[1] & 0x7f;
     key_down = !(buf[1] & 0x80);
     keycode = belkin_irda_normal[key];
-	
-    //if (debug)
-	//	fprintf(stderr, "0x%02x 0x%02x 0x%02x\n", buf[0], buf[1], key);
 
-   	if ( key_down ) {
-   	    //if (debug)
-   	    //fprintf(stderr,"press %d\n", keycode);
+    //if (debug)
+    //    fprintf(stderr, "0x%02x 0x%02x 0x%02x\n", buf[0], buf[1], key);
+
+       if ( key_down ) {
+           //if (debug)
+           //fprintf(stderr,"press %d\n", keycode);
         keymap_decode( g_outputmode, (unsigned short)keycode, KEY_PRESSED, buffer, length );
-	} else {
-   	    //if (debug)
-   	    //fprintf(stderr,"release %d\n", keycode);
+    } else {
+           //if (debug)
+           //fprintf(stderr,"release %d\n", keycode);
         keymap_decode( g_outputmode, (unsigned short)keycode, KEY_RELEASED, buffer, length );
-	}
+    }
 
     return 0;
 }
@@ -425,24 +425,24 @@ static int freedom_keyboard(unsigned char* buffer, int *length)
     /* resume display */
     scePowerTick(0);
 
-	key =  buf[0];
-	//keyboard sends n when pressing a key
-	// and n+63 when releasing the key
-	key_down = ( key < 63 );
-	if (!key_down)
-		key = (key-63)&0x3F; // convert key code for key up
+    key =  buf[0];
+    //keyboard sends n when pressing a key
+    // and n+63 when releasing the key
+    key_down = ( key < 63 );
+    if (!key_down)
+        key = (key-63)&0x3F; // convert key code for key up
     keycode = freedom_kbd[key];
-	//if (debug)
-	//fprintf(stdout, "0x%02x 0x%02x\n", buf[0], keycode);
-   	if ( key_down ) {
-	    //if (debug)
-	    //fprintf(stdout,"press %d\n", keycode);
+    //if (debug)
+    //fprintf(stdout, "0x%02x 0x%02x\n", buf[0], keycode);
+       if ( key_down ) {
+        //if (debug)
+        //fprintf(stdout,"press %d\n", keycode);
         keymap_decode( g_outputmode, (unsigned short)keycode, KEY_PRESSED, buffer, length );
-	} else {
-   	    //if (debug)
-   	    //fprintf(stderr,"release %d\n", keycode);
+    } else {
+           //if (debug)
+           //fprintf(stderr,"release %d\n", keycode);
         keymap_decode( g_outputmode, (unsigned short)keycode, KEY_RELEASED, buffer, length );
-	}
+    }
 
     return 0;
 }
@@ -460,42 +460,42 @@ static int snapntype(unsigned char* buffer, int *length)
     scePowerTick(0);
 
     //if (debug)
-	//	fprintf(stderr, "got %d\n", buf[0]);
-	if (buf[0] & 0x80) { /* release */
+    //    fprintf(stderr, "got %d\n", buf[0]);
+    if (buf[0] & 0x80) { /* release */
         if( sceIoRead(g_irdafd, buf+1, 1)  != 1  )
             return (-1);
-		buf[0] = buf[0] & 0x7f;
-		if (buf[0] == 27) {
-			symb = 0;
-			return 0;
-		}
-		if (symb)
-			buf[0] = snapntype_symbol[buf[0]];
-		else
-			buf[0] = snapntype_normal[buf[0]];
-		//if (debug)
-		//	fprintf(stderr, " release %d\n", buf[0]);
-		if (buf[0] != 0)
+        buf[0] = buf[0] & 0x7f;
+        if (buf[0] == 27) {
+            symb = 0;
+            return 0;
+        }
+        if (symb)
+            buf[0] = snapntype_symbol[buf[0]];
+        else
+            buf[0] = snapntype_normal[buf[0]];
+        //if (debug)
+        //    fprintf(stderr, " release %d\n", buf[0]);
+        if (buf[0] != 0)
         {
             keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_RELEASED, buffer, length );
             return 0;
         }
-	} else { /* press */
-		if (buf[0] == 27) {
-			symb=1;
-			return 0;
-		}
-		if (symb)
-			buf[0] = snapntype_symbol[buf[0]];
-		else
-			buf[0] = snapntype_normal[buf[0]];
-		//if (debug)
-		//	fprintf(stderr, " press %d\n", buf[0]);
-		if (buf[0] != 0)
+    } else { /* press */
+        if (buf[0] == 27) {
+            symb=1;
+            return 0;
+        }
+        if (symb)
+            buf[0] = snapntype_symbol[buf[0]];
+        else
+            buf[0] = snapntype_normal[buf[0]];
+        //if (debug)
+        //    fprintf(stderr, " press %d\n", buf[0]);
+        if (buf[0] != 0)
         {
             keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_PRESSED, buffer, length );
         }
-	}
+    }
 
     return 0;
 }
@@ -515,67 +515,67 @@ static int hpslim(unsigned char* buffer, int *length)
     /* resume display */
     scePowerTick(0);
 
-	//if (debug)
-	//	fprintf(stderr, "got %d 0x%x\n", cin,cin);
-	if (cin & 0x80) { /* release */
-		cin &= 0x7f;
-		switch (cin) {
-			case MKBD_HPS_FNKEY: 	/* Fn key release */
-				symb = 0;
-				return 0;
-			case KEY_LEFTSHIFT:
-			case KEY_RIGHTSHIFT:
-				shft = 0;
-				break;
-		}
-		if (symb)
-			cnew = hpslim_symbol[cin];
-		else {
-			/* if numlock, convert QWERTYUIOP to 1-9,0 */
-			if (numlck && cin >= KEY_Q && cin <= KEY_P)
-				cnew = cin + KEY_1 - KEY_Q;
-			else
-				cnew = hpslim_normal[cin];
-		}
-		//if (debug)
-		//	fprintf(stderr, " release cnew=%d 0x%x\n", cnew,cnew);
-		if (cnew != 0) {
+    //if (debug)
+    //    fprintf(stderr, "got %d 0x%x\n", cin,cin);
+    if (cin & 0x80) { /* release */
+        cin &= 0x7f;
+        switch (cin) {
+            case MKBD_HPS_FNKEY:     /* Fn key release */
+                symb = 0;
+                return 0;
+            case KEY_LEFTSHIFT:
+            case KEY_RIGHTSHIFT:
+                shft = 0;
+                break;
+        }
+        if (symb)
+            cnew = hpslim_symbol[cin];
+        else {
+            /* if numlock, convert QWERTYUIOP to 1-9,0 */
+            if (numlck && cin >= KEY_Q && cin <= KEY_P)
+                cnew = cin + KEY_1 - KEY_Q;
+            else
+                cnew = hpslim_normal[cin];
+        }
+        //if (debug)
+        //    fprintf(stderr, " release cnew=%d 0x%x\n", cnew,cnew);
+        if (cnew != 0) {
             keymap_decode( g_outputmode, (unsigned short)cnew, KEY_RELEASED, buffer, length );
-		    if (symshft)
+            if (symshft)
                 keymap_decode( g_outputmode, (unsigned short)KEY_RIGHTSHIFT, KEY_RELEASED, buffer, length );
-			symshft = 0;
-			// toggle numlck on release
-			if (cnew == KEY_NUMLOCK) numlck = !numlck;
-		}
-	} else { /* press */
-		switch (cin) {
-			case MKBD_HPS_FNKEY: 	/* Fn key press */
-				symb = 1;
-				return 0;
-			case KEY_LEFTSHIFT:
-			case KEY_RIGHTSHIFT:
-				shft = 1;
-				break;
-		}
-		if (symb) {
-			/* if shift needed to get correct char */
-			symshft =  hpslim_symshft[cin] && !shft;
-			cnew = hpslim_symbol[cin];
-		} else {
-			/* if numlock, convert QWERTYUIOP to 1-9,0 */
-			if (numlck && cin >= KEY_Q && cin <= KEY_P)
-				cnew = cin + KEY_1 - KEY_Q;
-			else
-				cnew = hpslim_normal[cin];
-		}
-		//if (debug)
-		//	fprintf(stderr, " press cnew=%d 0x%x\n", cnew,cnew);
-		if (cnew != 0) {
-			if (symshft)
+            symshft = 0;
+            // toggle numlck on release
+            if (cnew == KEY_NUMLOCK) numlck = !numlck;
+        }
+    } else { /* press */
+        switch (cin) {
+            case MKBD_HPS_FNKEY:     /* Fn key press */
+                symb = 1;
+                return 0;
+            case KEY_LEFTSHIFT:
+            case KEY_RIGHTSHIFT:
+                shft = 1;
+                break;
+        }
+        if (symb) {
+            /* if shift needed to get correct char */
+            symshft =  hpslim_symshft[cin] && !shft;
+            cnew = hpslim_symbol[cin];
+        } else {
+            /* if numlock, convert QWERTYUIOP to 1-9,0 */
+            if (numlck && cin >= KEY_Q && cin <= KEY_P)
+                cnew = cin + KEY_1 - KEY_Q;
+            else
+                cnew = hpslim_normal[cin];
+        }
+        //if (debug)
+        //    fprintf(stderr, " press cnew=%d 0x%x\n", cnew,cnew);
+        if (cnew != 0) {
+            if (symshft)
                 keymap_decode( g_outputmode, (unsigned short)KEY_RIGHTSHIFT, KEY_PRESSED, buffer, length );
             keymap_decode( g_outputmode, (unsigned short)cnew, KEY_PRESSED, buffer, length );
-		}
-	}
+        }
+    }
 
     return 0;
 }
@@ -592,43 +592,43 @@ static int flexis(unsigned char* buffer, int *length)
     /* resume display */
     scePowerTick(0);
 
-	//if (debug)
-	//  fprintf(stderr, "got %d\n", buf[0]);
-		
-	if (buf[0] & 0x80) { /* key press */
-		buf[0] = buf[0] & 0x7f;
-	
-		if (symb)
-			buf[0] = flexis_fx100_function[buf[0]];
-		else
-			buf[0] = flexis_fx100_normal[buf[0]];
-		
-		/* FIXME: function key */
-		/* FIXME: this code is a little broken, it should check scancode not keycode for set 1/2 */
-		
-		if (buf[0] == KEY_LEFTSHIFT || buf[0] == KEY_RIGHTSHIFT ||
-				buf[0] == KEY_LEFTCTRL || buf[0] == KEY_RIGHTCTRL ||
-				buf[0] == KEY_LEFTALT || buf[0] == KEY_RIGHTALT ) {
+    //if (debug)
+    //  fprintf(stderr, "got %d\n", buf[0]);
+
+    if (buf[0] & 0x80) { /* key press */
+        buf[0] = buf[0] & 0x7f;
+
+        if (symb)
+            buf[0] = flexis_fx100_function[buf[0]];
+        else
+            buf[0] = flexis_fx100_normal[buf[0]];
+
+        /* FIXME: function key */
+        /* FIXME: this code is a little broken, it should check scancode not keycode for set 1/2 */
+
+        if (buf[0] == KEY_LEFTSHIFT || buf[0] == KEY_RIGHTSHIFT ||
+                buf[0] == KEY_LEFTCTRL || buf[0] == KEY_RIGHTCTRL ||
+                buf[0] == KEY_LEFTALT || buf[0] == KEY_RIGHTALT ) {
             keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_PRESSED, buffer, length );
-		} else {
+        } else {
             if( sceIoRead(g_irdafd, buf+1, 1) != 1 )
                 return (-1);
             //if (debug)
-			//	fprintf(stderr, "got %d\n", buf[1]);
+            //    fprintf(stderr, "got %d\n", buf[1]);
 
             keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_PRESSED, buffer, length );
             keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_RELEASED, buffer, length );
-		}
+        }
     } else { /* release of key from Set 2 */
-		if (symb)
-			buf[0] = flexis_fx100_function[buf[0]];
-		else
-			buf[0] = flexis_fx100_normal[buf[0]];
-		if (buf[0] != 0)
+        if (symb)
+            buf[0] = flexis_fx100_function[buf[0]];
+        else
+            buf[0] = flexis_fx100_normal[buf[0]];
+        if (buf[0] != 0)
             keymap_decode( g_outputmode, (unsigned short)buf[0], KEY_RELEASED, buffer, length );
-	}
+    }
 
-	return 0;
+    return 0;
 }
 
 static int benqgamepad(unsigned char* buffer, int *length)
@@ -643,33 +643,33 @@ static int benqgamepad(unsigned char* buffer, int *length)
     /* resume display */
     scePowerTick(0);
 
-	if (buf[0] & 0x80) { /* release */
-		//if (debug)
-		//	fprintf(stderr, "release: %d %d\n", buf[0], buf[1]);
-		buf[0] = buf[0] & 0x7f;
-		for (i=0; i<10; i++) {
-			if (benq_gamepad_map[i][0] == buf[0]) {
-				keycode = benq_gamepad_map[i][1];
-				break;
-			}
-		}
-		if (keycode != 0)
+    if (buf[0] & 0x80) { /* release */
+        //if (debug)
+        //    fprintf(stderr, "release: %d %d\n", buf[0], buf[1]);
+        buf[0] = buf[0] & 0x7f;
+        for (i=0; i<10; i++) {
+            if (benq_gamepad_map[i][0] == buf[0]) {
+                keycode = benq_gamepad_map[i][1];
+                break;
+            }
+        }
+        if (keycode != 0)
             keymap_decode( g_outputmode, (unsigned short)keycode, KEY_RELEASED, buffer, length );
-		
-	} else {
-		//if (debug)
-		//	fprintf(stderr, "press: %d %d\n", buf[0], buf[1]);
-		for (i=0; i<10; i++) {
-			if (benq_gamepad_map[i][0] == buf[0]) {
-				keycode = benq_gamepad_map[i][1];
-				break;
-			}
-		}
-		if (keycode != 0)
-            keymap_decode( g_outputmode, (unsigned short)keycode, KEY_PRESSED, buffer, length );
-	}
 
-	return 0;
+    } else {
+        //if (debug)
+        //    fprintf(stderr, "press: %d %d\n", buf[0], buf[1]);
+        for (i=0; i<10; i++) {
+            if (benq_gamepad_map[i][0] == buf[0]) {
+                keycode = benq_gamepad_map[i][1];
+                break;
+            }
+        }
+        if (keycode != 0)
+            keymap_decode( g_outputmode, (unsigned short)keycode, KEY_PRESSED, buffer, length );
+    }
+
+    return 0;
 }
 
 
@@ -686,36 +686,36 @@ static int micro_foldaway(unsigned char* buffer, int *length)
     /* resume display */
     scePowerTick(0);
 
-	//if (debug)
-	//	fprintf(stderr, "got: %d\n", buf[0]);
-	if (buf[0] & 0x80) { /* possible release */
-		checkkey = (159 - buf[0]);
-		if (checkkey > 0 && checkkey <= 4) {
-			buf[0] = micro_foldaway_normal[159 - buf[0]];
+    //if (debug)
+    //    fprintf(stderr, "got: %d\n", buf[0]);
+    if (buf[0] & 0x80) { /* possible release */
+        checkkey = (159 - buf[0]);
+        if (checkkey > 0 && checkkey <= 4) {
+            buf[0] = micro_foldaway_normal[159 - buf[0]];
             keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_RELEASED, buffer, length );
-		} else if (buf[0] == 133 && lastkey > 0) {
+        } else if (buf[0] == 133 && lastkey > 0) {
             keymap_decode( g_outputmode, lastkey, KEY_RELEASED, buffer, length );
-			lastkey = 0;
-		}
-		/* Eat repeated code */
+            lastkey = 0;
+        }
+        /* Eat repeated code */
         if( sceIoRead(g_irdafd, buf, 1) != 1 )
             return (-1);
         return 0;
-	} else {
-		checkkey = buf[0];
-/*		if (symb)
-			buf[0] = micro_foldaway_function[buf[0]];
-		else*/
-			buf[0] = micro_foldaway_normal[buf[0]];
+    } else {
+        checkkey = buf[0];
+/*        if (symb)
+            buf[0] = micro_foldaway_function[buf[0]];
+        else*/
+            buf[0] = micro_foldaway_normal[buf[0]];
 
-		if (buf[0] != 0) {
-			if (checkkey > 4)
-				lastkey = buf[0];  /* Not a modifier, record key */
+        if (buf[0] != 0) {
+            if (checkkey > 4)
+                lastkey = buf[0];  /* Not a modifier, record key */
             keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_PRESSED, buffer, length );
         }
-	}
+    }
 
-	return 0;
+    return 0;
 }
 
 static int micro_datapad(unsigned char* buffer, int *length)
@@ -731,33 +731,33 @@ static int micro_datapad(unsigned char* buffer, int *length)
     scePowerTick(0);
 
     //if (debug)
-	//fprintf(stderr, "got: %d\n", buf[0]);
-	if (buf[0] & 0x80) { /* possible release */
-		checkkey = (159 - buf[0]);
-		if (checkkey > 0 && checkkey <= 4) {
-			buf[0] = micro_foldaway_normal[159 - buf[0]];
+    //fprintf(stderr, "got: %d\n", buf[0]);
+    if (buf[0] & 0x80) { /* possible release */
+        checkkey = (159 - buf[0]);
+        if (checkkey > 0 && checkkey <= 4) {
+            buf[0] = micro_foldaway_normal[159 - buf[0]];
             keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_RELEASED, buffer, length );
-		} else if (buf[0] == 133 && lastkey > 0) {
+        } else if (buf[0] == 133 && lastkey > 0) {
             keymap_decode( g_outputmode, lastkey, KEY_RELEASED, buffer, length );
-			lastkey = 0;
-		}
-		/* Eat repeated code */
+            lastkey = 0;
+        }
+        /* Eat repeated code */
         if( sceIoRead(g_irdafd, buf, 1) != 1 )
             return (-1);
         return 0;
-	} else {
-		checkkey = buf[0];
-/*		if (symb)
-			buf[0]=micro_datapad_function[buf[0]];
-		else*/
-		    buf[0] = micro_datapad_normal[buf[0]];
+    } else {
+        checkkey = buf[0];
+/*        if (symb)
+            buf[0]=micro_datapad_function[buf[0]];
+        else*/
+            buf[0] = micro_datapad_normal[buf[0]];
 
-		if (buf[0] != 0) {
-			if (checkkey > 4)
-				lastkey = buf[0];  /* Not a modifier, record key */
+        if (buf[0] != 0) {
+            if (checkkey > 4)
+                lastkey = buf[0];  /* Not a modifier, record key */
             keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_PRESSED, buffer, length );
-		}
-	}
+        }
+    }
 
     return 0;
 }
@@ -775,37 +775,37 @@ static int compaq_microkbd(unsigned char* buffer, int *length)
     /* resume display */
     scePowerTick(0);
 
-	//if (debug)
-	//	fprintf(stderr, "got %d %d (0x%x 0x%x)\n", buf[0], buf[1], buf[0], buf[1]);
-	if (buf[0] & 0x80) { /* release */
-		buf[0] &= 0x7f;
-		if (buf[0] == 2) {
-			symb = 0;
-			return 0;
-		}
-		if (symb)
-			cnew = compaq_function[buf[0]];
-		else
-			cnew = compaq_normal[buf[0]];
-	
-		//if (debug)
-		//	fprintf(stderr, " release cnew=%d (0x%x)\n", cnew, cnew);
-		if (cnew != 0)
+    //if (debug)
+    //    fprintf(stderr, "got %d %d (0x%x 0x%x)\n", buf[0], buf[1], buf[0], buf[1]);
+    if (buf[0] & 0x80) { /* release */
+        buf[0] &= 0x7f;
+        if (buf[0] == 2) {
+            symb = 0;
+            return 0;
+        }
+        if (symb)
+            cnew = compaq_function[buf[0]];
+        else
+            cnew = compaq_normal[buf[0]];
+
+        //if (debug)
+        //    fprintf(stderr, " release cnew=%d (0x%x)\n", cnew, cnew);
+        if (cnew != 0)
             keymap_decode( g_outputmode, (unsigned short) cnew, KEY_RELEASED, buffer, length );
-	} else { /* press */
-		if (buf[0] == 2) {
-			symb = 1;
-			return 0;
-		}
-		if (symb)
-			cnew = compaq_function[buf[0]];
-		else
-			cnew = compaq_normal[buf[0]];
-		//if (debug)
-		//	fprintf(stderr, " press cnew=%d (0x%x)\n", cnew, cnew);
-		if (cnew != 0)
+    } else { /* press */
+        if (buf[0] == 2) {
+            symb = 1;
+            return 0;
+        }
+        if (symb)
+            cnew = compaq_function[buf[0]];
+        else
+            cnew = compaq_normal[buf[0]];
+        //if (debug)
+        //    fprintf(stderr, " press cnew=%d (0x%x)\n", cnew, cnew);
+        if (cnew != 0)
             keymap_decode( g_outputmode, (unsigned short) cnew, KEY_PRESSED, buffer, length );
-	}
+    }
 
     return 0;
 }
@@ -823,22 +823,22 @@ static int targus_infrared(unsigned char* buffer, int *length)
     /* resume display */
     scePowerTick(0);
 
-	key             =   buf & 0x7f;
+    key             =   buf & 0x7f;
     key_down        = !(buf & 0x80);
     /* keycode         = targus_irda_normal[key]; */
-	keycode = key;
-	//if (debug)
-	//	fprintf(stderr, "0x%02x 0x%02x\n", buf, key);
+    keycode = key;
+    //if (debug)
+    //    fprintf(stderr, "0x%02x 0x%02x\n", buf, key);
 
-   	if ( key_down ) {
-   	    //if (debug)
-   	    //fprintf(stderr,"press %d\n", keycode);
+       if ( key_down ) {
+           //if (debug)
+           //fprintf(stderr,"press %d\n", keycode);
         keymap_decode( g_outputmode, (unsigned short) keycode, KEY_PRESSED, buffer, length );
-	} else {
-   	    //if (debug)
-   	    //fprintf(stderr,"release %d\n", keycode);
+    } else {
+           //if (debug)
+           //fprintf(stderr,"release %d\n", keycode);
         keymap_decode( g_outputmode, (unsigned short) keycode, KEY_RELEASED, buffer, length );
-	}
+    }
 
     return 0;
 }
@@ -847,36 +847,33 @@ static int palmuw(unsigned char* buffer, int *length)
 {
     unsigned char keycode=0;
     unsigned int  key_down=0;
-    int i = 0, z = 0;
     unsigned char buf1;
-    unsigned char buf[6] = {0,0,0,0,0,0};
+    int len;
+    static int pi = 0;
+    static unsigned char pbuf[6] = {0,0,0,0,0,0};
 
-    while (i < 6  || z < 6) {
-        int len = sceIoRead(g_irdafd, &buf1, 1);
-        if (len == -1)return (-1);
-        if (len == 1) {
-            if (buf1 == 0xff){
-                i=0;z=0;
-                buf[i]=buf1;
-            }
-            if (i == 1){
-                buf[i]=buf1;
-                if ( buf[i] != 0xc0)
-                    return (-1);
-            }
-            if (i == 2){buf[i]=buf1;}
-            if (i == 3)buf[i]=buf1;
-            if (i == 4)buf[i]=buf1;
-            if (i == 5)buf[i]=buf1;
-            i++;
+loop:
+    len = sceIoRead(g_irdafd, &buf1, 1);
+    if (len <= 0)
+        return -1;
+    // must be 1... can't be anything else at this point
+    if (pi == 0)
+    {
+        // wait on 0xff
+        if (buf1 == 0xff)
+        {
+            pbuf[0] = 0xff;
+            pi++;
         }
-				else
-				{
-					// avoid tight loops
-					sceKernelDelayThread(1000);
-				}
-        z++;
+        goto loop;
     }
+
+    pbuf[pi] = buf1;
+    pi++;
+    if (pi < 6)
+        goto loop;
+
+    pi = 0;
 
     /* resume display */
     scePowerTick(0);
@@ -885,38 +882,38 @@ static int palmuw(unsigned char* buffer, int *length)
     //printf( "1%c - %d\n", buf[1], buf[1] );
     //printf( "5%c - %d\n", buf[5], buf[5] );
 
-    if( buf[0] != 0xff || buf[1] != 0xc0 || buf[5] != 0xc1 )
-        return (-1);
+    if( pbuf[0] != 0xff || pbuf[1] != 0xc0 || pbuf[5] != 0xc1 )
+        return -1;
 
     //printf( "2%c - %d\n", buf[2], buf[2] );
     //printf( "3%c - %d\n", buf[3], buf[3] );
 
-    if( ( buf[2] + buf[3] ) != 0xff )
-        return (-1);
+    if( ( pbuf[2] + pbuf[3] ) != 0xff )
+        return -1;
 
     /* 3rd pos is the key we need */
-    keycode = buf[2];
+    keycode = pbuf[2];
 
-    if( keycode < 103 )
+    if( keycode < 128 )
         key_down = 1;
     else
-        keycode-=128;
+        keycode -= 128;
 
     if ( key_down ) {
-	    //if (debug)
-	    //fprintf(stdout,"press %d\n", keycode);
+        //if (debug)
+            //fprintf(stdout,"press %d\n", keycode);
         keymap_decode( g_outputmode, palmuw_normal[keycode], KEY_PRESSED, buffer, length );
-	} else {
-   	    //if (debug)
-   	    //fprintf(stderr,"release %d\n", keycode);
+    } else {
+        //if (debug)
+            //fprintf(stderr,"release %d\n", keycode);
         keymap_decode( g_outputmode, palmuw_normal[keycode], KEY_RELEASED, buffer, length );
-	}
+    }
 
     return 0;
 }
 static int hama(unsigned char* buffer, int *length)
 {
-	int repeat = 0 ;
+    int repeat = 0 ;
 
     unsigned char keycode=0;
     unsigned int  key_down=0;
