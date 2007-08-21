@@ -38,8 +38,6 @@ static char rcsid =
 #include "SDL_thread.h"
 #include <psphprm.h>
 
-#define PSPIRKEYB
-
 #ifdef PSPIRKEYB
 #include <pspirkeyb.h>
 #include <pspirkeyb_rawkeys.h>

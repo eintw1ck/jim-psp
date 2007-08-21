@@ -1903,8 +1903,16 @@ CheckPSPSDK()
     # Compile SDL with -G0 to disable the $gp register.
     CFLAGS="$CFLAGS -G0 -I\"${pspsdk_path}/include\""
     SYSTEM_LIBS="$SYSTEM_LIBS -L${pspsdk_path}/lib -lpspdebug -lpspgu -lpspctrl"
-    SYSTEM_LIBS="$SYSTEM_LIBS -lpspirkeyb -lpsppower -lpspge -lpspdisplay -lpsphprm -lpspsdk -lpsprtc"
+    SYSTEM_LIBS="$SYSTEM_LIBS -lpspge -lpspdisplay -lpsphprm -lpspsdk -lpsprtc"
     SYSTEM_LIBS="$SYSTEM_LIBS -lpspaudio -lc -lpspuser -lpsputility -lpspkernel -lpspnet_inet"
+
+    AC_ARG_ENABLE(pspirkeyb,
+		  [  --enable-pspirkeyb      use external keyboard via libpspirkeyb [default=no]],
+                  , enable_pspirkeyb=no)
+    if test x$enable_pspirkeyb = xyes ; then
+	CFLAGS="$CFLAGS -DPSPIRKEYB"
+	SYSTEM_LIBS="$SYSTEM_LIBS -lpspirkeyb -lpsppower"
+    fi
 }
 
 case "$target" in
