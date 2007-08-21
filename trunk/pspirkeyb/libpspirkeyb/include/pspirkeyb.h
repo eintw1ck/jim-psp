@@ -39,6 +39,8 @@ enum PspIrKeyboards
     PSP_IRKBD_TYPE_FLEXIS           =  9,
     /** Benq G250 gamepad */
     PSP_IRKBD_TYPE_BENQ_GAMEPAD     = 10,
+    /** Micro Innovations Pocketop keyboard */
+    PSP_IRKBD_TYPE_MICRO_INNOVATIONS= 11,
     /** Micro Innovations Foldaway keyboard */
     PSP_IRKBD_TYPE_MICRO_FOLDAWAY   = 12,
     /** Micro Innovations Datapad */

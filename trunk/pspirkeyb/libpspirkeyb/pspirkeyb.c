@@ -59,6 +59,7 @@ static int novaets_kis2(unsigned char* buffer, int *length);
 static int snapntype(unsigned char* buffer, int *length);
 static int hpslim(unsigned char* buffer, int *length);
 static int flexis(unsigned char* buffer, int *length);
+static int micro_innovations(unsigned char* buffer, int *length);
 static int micro_foldaway(unsigned char* buffer, int *length);
 static int micro_datapad(unsigned char* buffer, int *length);
 static int compaq_microkbd(unsigned char* buffer, int *length);
@@ -208,6 +209,10 @@ static int pspIrKeybSetKeyboard(int keyboard, const char* mapfile)
             break;
         case PSP_IRKBD_TYPE_FREEDOM:
             g_keyboard_input_CB = freedom_keyboard;
+            g_baudrate = B9600;
+            break;
+        case PSP_IRKBD_TYPE_MICRO_INNOVATIONS:
+	    g_keyboard_input_CB = micro_innovations;
             g_baudrate = B9600;
             break;
         case PSP_IRKBD_TYPE_MICRO_FOLDAWAY:
@@ -672,6 +677,94 @@ static int benqgamepad(unsigned char* buffer, int *length)
     return 0;
 }
 
+static int micro_innovations(unsigned char* buffer, int *length)
+{
+    unsigned char buf[16];
+    static char fkey_num = 0;
+    static char fkey_punct = 0;
+    static char fkey_func = 0;
+    static int  key_count = 0;
+
+    if( sceIoRead(g_irdafd, buf, 1) != 1 )
+        return (-1);
+
+    /* resume display */
+    scePowerTick(0);
+
+	//if (debug)
+		//fprintf(stderr, "got: %d\n", buf[0]);
+    if (buf[0] & 0x80) { /* possible release */
+	key_count--;
+	    
+	buf[0] &= 0x7f;
+	    
+	if (buf[0] == 110)
+	    fkey_num = 0;
+	else if (buf[0] == 118)
+	    fkey_punct = 0;
+	else if (buf[0] == 60)
+	    fkey_func = 0;
+	else {
+	    if (fkey_punct) {
+		int shift;
+		unsigned short scan;
+		scan  = micro_innovations_punct[buf[0]] & 0x7f;
+		shift = micro_innovations_punct[buf[0]] & FKEY_SHIFT;
+        	keymap_decode( g_outputmode, scan, KEY_RELEASED, buffer, length );
+		if (shift)
+        	    keymap_decode( g_outputmode, (unsigned short) KEY_LEFTSHIFT, KEY_RELEASED, buffer, length );
+	    } else if (fkey_num) {
+		buf[0] = micro_innovations_num[buf[0]];
+        	keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_RELEASED, buffer, length );
+	    } else if (fkey_func) {
+		buf[0] = micro_innovations_func[buf[0]];
+        	keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_RELEASED, buffer, length );
+	    } else {
+		buf[0] = micro_innovations_normal[buf[0]];
+        	keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_RELEASED, buffer, length );
+	    }
+	}
+	
+	if (key_count == 0)
+	    /* Eat last repeated code */
+    	    if( sceIoRead(g_irdafd, buf, 1) != 1 )
+        	return (-1);
+        return 0;
+    } else {
+	if (buf[0] != 0) {
+	    key_count++;
+	    
+	    if (buf[0] == 110)
+		fkey_num = 1;
+	    else if (buf[0] == 118)
+		fkey_punct = 1;
+	    else if (buf[0] == 60)
+		fkey_func = 1;
+	    else {
+		if (fkey_punct) {
+		    int shift;
+		    unsigned short scan;
+		    scan  = micro_innovations_punct[buf[0]] & 0x7f;
+		    shift = micro_innovations_punct[buf[0]] & FKEY_SHIFT;
+		    if (shift)
+        		keymap_decode( g_outputmode, (unsigned short) KEY_LEFTSHIFT, KEY_PRESSED, buffer, length );
+        	    keymap_decode( g_outputmode, scan, KEY_PRESSED, buffer, length );
+		} else if (fkey_num) {
+		    buf[0] = micro_innovations_num[buf[0]];
+        	    keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_PRESSED, buffer, length );
+		} else if (fkey_func) {
+		    buf[0] = micro_innovations_func[buf[0]];
+        	    keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_PRESSED, buffer, length );
+		} else {
+		    buf[0] = micro_innovations_normal[buf[0]];
+        	    keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_PRESSED, buffer, length );
+		}
+	    }
+        }
+    }
+
+    return 0;
+}
 
 static int micro_foldaway(unsigned char* buffer, int *length)
 {

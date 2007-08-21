@@ -320,7 +320,7 @@ static unsigned short palmuw_normal[128] = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  };
 
 #endif
-#if 0
+
 /***********************************************************************************
  * Micro Innovations IR keyboard
  *
@@ -330,37 +330,84 @@ static unsigned short palmuw_normal[128] = {
  * Key up sends one byte:    KEY | 0x80
  * Last key up repeats key up
  ***********************************************************************************/
+static unsigned char micro_innovations_normal[128] = {
+/* 0 */	0, KEY_Q, 0, KEY_Z, 0, 0, 0, KEY_A,
+/* 8 */	0, KEY_W, 0, KEY_X, 0, 0, 0, KEY_S,
+/* 16*/	0, KEY_E, 0, KEY_C, 0, 0, 0, KEY_D,
+/* 24*/	0, KEY_R, 0, KEY_V, 0, 0, 0, KEY_F,
+/* 32*/	0, KEY_T, 0, KEY_B, 0, 0, 0, KEY_G,
+/* 40*/	0, KEY_Y, 0, KEY_SPACE, 0, 0, 0, KEY_H,
+/* 48*/	0, KEY_U, KEY_J, KEY_N, KEY_SPACE, 0, 0, 0,
+/* 56*/	0, KEY_I, KEY_K, KEY_M, 0, 0, 0, 0,
+/* 64*/	KEY_F11, KEY_O, KEY_L, KEY_COMMA, KEY_LEFT, 0, 0, 0,
+/* 72*/	KEY_F12, KEY_P, KEY_SEMICOLON, KEY_DOT, KEY_DOWN, 0, 0, 0,
+/* 80*/	KEY_F13, KEY_MINUS, KEY_APOSTROPHE, KEY_UP, KEY_RIGHT, 0, 0, 0,
+/* 88*/	KEY_F14, KEY_BACKSPACE, KEY_ENTER, KEY_DELETE, 0, 0, 0, 0,
+/* 96*/	0, 0, 0, 0, 0, KEY_LEFTSHIFT, KEY_LEFTALT, 0,
+/*104*/	0, KEY_TAB, 0, 0, 0, KEY_LEFTCTRL, 0, 0,
+/*112*/	0, 0, 0, 0, 0, KEY_LEFTMETA, 0, KEY_CAPSLOCK,
+/*120*/	0, 0, 0, 0, 0, KEY_RIGHTSHIFT, 0, 0
+};
 
- static unsigned char microinnovations_normal[128] = {
-        0, 16, 0, 44, 0, 0, 0, 30, 0, 17, 0, 45, 0, 0, 0, 31,
-        0, 18, 0, 46, 0, 0, 0, 32, 0, 19, 0, 47, 0, 0, 0, 33,
-        0, 20, 0, 48, 0, 0, 0, 34, 0, 21, 0, 57, 0, 0, 0, 35,
-        0, 22, 36, 49, 57, 0, 0, 0, 0, 23, 37, 50, 128, 0, 0, 0,
-        122, 24, 38, 51, 105, 0, 0, 0, 123, 25, 39, 52, 108, 0, 0, 0,
-        125, 12, 40, 103, 106, 0, 0, 0, 90, 14, 28, 111, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 42, 56, 0, 0, 15, 0, 0, 0, 29, 69, 0,
-        0, 0, 0, 0, 0, 87, 100, 58, 0, 0, 0, 0, 0, 54, 0, 0,  };
+static unsigned char micro_innovations_num[128] = {
+/* 0 */	0, KEY_1, 0, KEY_Z, 0, 0, 0, KEY_A,
+/* 8 */	0, KEY_2, 0, KEY_X, 0, 0, 0, KEY_S,
+/* 16*/	0, KEY_3, 0, KEY_C, 0, 0, 0, KEY_D,
+/* 24*/	0, KEY_4, 0, KEY_V, 0, 0, 0, KEY_F,
+/* 32*/	0, KEY_5, 0, KEY_B, 0, 0, 0, KEY_G,
+/* 40*/	0, KEY_6, 0, KEY_SPACE, 0, 0, 0, KEY_H,
+/* 48*/	0, KEY_7, KEY_4, KEY_N, KEY_SPACE, 0, 0, 0,
+/* 56*/	0, KEY_8, KEY_5, KEY_1, KEY_0, 0, 0, 0,
+/* 64*/	KEY_F11, KEY_9, KEY_6, KEY_2, KEY_DOT, 0, 0, 0,
+/* 72*/	KEY_F12, KEY_0, KEY_KPASTERISK, KEY_3, KEY_KPPLUS, 0, 0, 0,
+/* 80*/	KEY_F13, KEY_KPSLASH, KEY_APOSTROPHE, KEY_KPMINUS, KEY_EQUAL, 0, 0, 0,
+/* 88*/	KEY_F14, KEY_BACKSPACE, KEY_ENTER, KEY_DELETE, 0, 0, 0, 0,
+/* 96*/	0, 0, 0, 0, 0, KEY_LEFTSHIFT, KEY_LEFTALT, 0,
+/*104*/	0, KEY_TAB, 0, 0, 0, KEY_LEFTCTRL, 0, 0,
+/*112*/	0, 0, 0, 0, 0, KEY_NUMLOCK, 0, KEY_CAPSLOCK,
+/*120*/	0, 0, 0, 0, 0, KEY_RIGHTSHIFT, 0, 0
+};
 
-static  unsigned char microinnovations_function[128] = {
-        0, 59, 0, 117, 0, 0, 0, 92, 0, 60, 0, 126, 0, 0, 0, 93,
-        0, 61, 0, 127, 0, 0, 0, 111, 0, 62, 0, 113, 0, 0, 0, 94,
-        0, 63, 0, 124, 0, 0, 0, 95, 0, 64, 0, 0, 0, 0, 0, 99,
-        0, 65, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0,
-        88, 67, 0, 0, 102, 0, 0, 0, 85, 68, 0, 0, 109, 0, 0, 0,
-        89, 0, 0, 104, 107, 0, 0, 0, 119, 91, 116, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  };
+/* Send shift before key */
+#define FKEY_SHIFT 0x8000
 
- static unsigned char microinnovations_numlock[128] = {
-        0, 79, 0, 0, 0, 0, 0, 0, 0, 80, 0, 0, 0, 0, 0, 0,
-        0, 81, 0, 0, 0, 0, 0, 0, 0, 75, 0, 0, 0, 0, 0, 0,
-        0, 76, 0, 0, 0, 0, 0, 0, 0, 77, 0, 0, 0, 0, 0, 0,
-        0, 71, 75, 0, 0, 0, 0, 0, 0, 72, 76, 79, 82, 0, 0, 0,
-        0, 73, 77, 80, 83, 0, 0, 0, 0, 82, 55, 81, 78, 0, 0, 0,
-        0, 98, 0, 74, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  };
-#endif
+static unsigned short micro_innovations_punct[128] = {
+/* 0 */	0, KEY_1 | FKEY_SHIFT, 0, KEY_Z, 0, 0, 0, KEY_GRAVE,
+/* 8 */	0, KEY_2 | FKEY_SHIFT, 0, KEY_X, 0, 0, 0, KEY_GRAVE | FKEY_SHIFT,
+/* 16*/	0, KEY_3 | FKEY_SHIFT, 0, KEY_C, 0, 0, 0, KEY_SLASH,
+/* 24*/	0, KEY_4 | FKEY_SHIFT, 0, KEY_V, 0, 0, 0, KEY_SLASH | FKEY_SHIFT,
+/* 32*/	0, KEY_5 | FKEY_SHIFT, 0, KEY_B, 0, 0, 0, KEY_LEFTBRACE,
+/* 40*/	0, KEY_6 | FKEY_SHIFT, 0, KEY_SPACE, 0, 0, 0, KEY_RIGHTBRACE,
+/* 48*/	0, KEY_7 | FKEY_SHIFT, KEY_LEFTBRACE | FKEY_SHIFT, KEY_N, KEY_SPACE, 0, 0, 0,
+/* 56*/	0, KEY_8 | FKEY_SHIFT, KEY_RIGHTBRACE | FKEY_SHIFT, KEY_M, 0, 0, 0, 0,
+/* 64*/	KEY_F11, KEY_9 | FKEY_SHIFT, KEY_BACKSLASH, KEY_COMMA, KEY_LEFT, 0, 0, 0,
+/* 72*/	KEY_F12, KEY_0 | FKEY_SHIFT, KEY_BACKSLASH | FKEY_SHIFT, KEY_DOT, KEY_DOWN, 0, 0, 0,
+/* 80*/	KEY_F13, KEY_EQUAL | FKEY_SHIFT, KEY_EQUAL, KEY_UP, KEY_RIGHT, 0, 0, 0,
+/* 88*/	KEY_F14, KEY_BACKSPACE, KEY_ENTER, KEY_DELETE, 0, 0, 0, 0,
+/* 96*/	0, 0, 0, 0, 0, KEY_LEFTSHIFT, KEY_LEFTALT, 0,
+/*104*/	0, KEY_TAB, 0, 0, 0, KEY_LEFTCTRL, 0, 0,
+/*112*/	0, 0, 0, 0, 0, KEY_LEFTMETA, 0, KEY_CAPSLOCK,
+/*120*/	0, 0, 0, 0, 0, KEY_RIGHTSHIFT, 0, 0
+};
+
+static unsigned char micro_innovations_func[128] = {
+/* 0 */	0, KEY_F1, 0, KEY_Z, 0, 0, 0, KEY_A,
+/* 8 */	0, KEY_F2, 0, KEY_X, 0, 0, 0, KEY_S,
+/* 16*/	0, KEY_F3, 0, KEY_C, 0, 0, 0, KEY_D,
+/* 24*/	0, KEY_F4, 0, KEY_V, 0, 0, 0, KEY_F,
+/* 32*/	0, KEY_F5, 0, KEY_B, 0, 0, 0, KEY_G,
+/* 40*/	0, KEY_F6, 0, KEY_SPACE, 0, 0, 0, KEY_H,
+/* 48*/	0, KEY_F7, KEY_J, KEY_N, KEY_SPACE, 0, 0, 0,
+/* 56*/	0, KEY_F8, KEY_K, KEY_M, 0, 0, 0, 0,
+/* 64*/	KEY_F11, KEY_F9, KEY_L, KEY_COMMA, KEY_HOME, 0, 0, 0,
+/* 72*/	KEY_F12, KEY_F10, KEY_SEMICOLON, KEY_DOT, KEY_PAGEDOWN, 0, 0, 0,
+/* 80*/	KEY_F13, KEY_MINUS, KEY_APOSTROPHE, KEY_PAGEUP, KEY_END, 0, 0, 0,
+/* 88*/	KEY_F14, KEY_BACKSPACE, KEY_ENTER, KEY_INSERT, 0, 0, 0, 0,
+/* 96*/	0, 0, 0, 0, 0, KEY_LEFTSHIFT, KEY_LEFTALT, 0,
+/*104*/	0, KEY_ESC, 0, 0, 0, KEY_LEFTCTRL, 0, 0,
+/*112*/	0, 0, 0, 0, 0, KEY_LEFTMETA, 0, KEY_CAPSLOCK,
+/*120*/	0, 0, 0, 0, 0, KEY_RIGHTSHIFT, 0, 0
+};
 
 /***********************************************************************************
  * Micro Innovations Foldaway keyboard
