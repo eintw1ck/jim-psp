@@ -85,7 +85,7 @@ install-lib:
 	cd src && $(MAKE) install-libLTLIBRARIES
 
 # Run ldconfig after installing the library:
-install-hook:
+install-data-hook:
 	-ldconfig
 
 # Grab the test programs for the distribution:
