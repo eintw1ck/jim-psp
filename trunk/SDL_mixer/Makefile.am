@@ -66,10 +66,10 @@ libSDL_mixer_la_LDFLAGS = 	\
 	-export-symbols-regex Mix_.*
 libSDL_mixer_la_LIBADD = $(MIKMOD_LIB) $(TIMIDITY_LIB) $(NATIVE_MIDI_LIB) @SYSTEM_LIBS@ @SDL_LIBS@
 
-noinst_PROGRAMS = playwave playmus
+noinst_PROGRAMS = # playwave playmus
 
-playwave_LDADD = libSDL_mixer.la @SDL_LIBS@
-playmus_LDADD = libSDL_mixer.la @SDL_LIBS@
+#playwave_LDADD = libSDL_mixer.la @SDL_LIBS@
+#playmus_LDADD = libSDL_mixer.la @SDL_LIBS@
 
 # Rule to build tar-gzipped distribution package
 $(PACKAGE)-$(VERSION).tar.gz: distcheck
