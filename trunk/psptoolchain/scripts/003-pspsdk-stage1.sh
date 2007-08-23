@@ -3,7 +3,7 @@
 
  ## Download the source code.
  if test ! -d "pspsdk"; then
-  svn export svn://svn.pspdev.org/psp/trunk/pspsdk || { exit 1; }
+  svn checkout svn://svn.pspdev.org/psp/trunk/pspsdk || { exit 1; }
  else
   svn update pspsdk || { exit 1; }
  fi
