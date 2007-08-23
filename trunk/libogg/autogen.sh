@@ -11,8 +11,13 @@ test -z "$srcdir" && srcdir=.
 cd "$srcdir"
 DIE=0
 
-echo "checking for autoconf... "
-(autoconf --version) < /dev/null > /dev/null 2>&1 || {
+AUTOCONF=autoconf
+AUTOMAKE=automake
+ACLOCAL=aclocal
+AUTOHEADER=autoheader
+
+echo "checking for $AUTOCONF... "
+($AUTOCONF --version) < /dev/null > /dev/null 2>&1 || {
         echo
         echo "You must have autoconf installed to compile $package."
         echo "Download the appropriate package for your distribution,"
@@ -20,56 +25,15 @@ echo "checking for autoconf... "
         DIE=1
 }
 
-VERSIONGREP="sed -e s/.*[^0-9\.]\([0-9]\.[0-9]\).*/\1/"
-VERSIONMKINT="sed -e s/[^0-9]//"
-                                                                                
-# do we need automake?
-if test -r Makefile.am; then
-  AM_NEEDED=`fgrep AUTOMAKE_OPTIONS Makefile.am | $VERSIONGREP`
-  if test -z $AM_NEEDED; then
-    echo -n "checking for automake... "
-    AUTOMAKE=automake
-    ACLOCAL=aclocal
-    if ($AUTOMAKE --version < /dev/null > /dev/null 2>&1); then
-      echo "no"
-      AUTOMAKE=
-    else
-      echo "yes"
-    fi
-  else
-    echo -n "checking for automake $AM_NEEDED or later... "
-    for am in automake-$AM_NEEDED automake$AM_NEEDED automake; do
-      ($am --version < /dev/null > /dev/null 2>&1) || continue
-      ver=`$am --version < /dev/null | head -n 1 | $VERSIONGREP | $VERSIONMKINT`
-      verneeded=`echo $AM_NEEDED | $VERSIONMKINT`
-      if test $ver -ge $verneeded; then
-        AUTOMAKE=$am
-        echo $AUTOMAKE
-        break
-      fi
-    done
-    test -z $AUTOMAKE &&  echo "no"
-    echo -n "checking for aclocal $AM_NEEDED or later... "
-    for ac in aclocal-$AM_NEEDED aclocal$AM_NEEDED aclocal; do
-      ($ac --version < /dev/null > /dev/null 2>&1) || continue
-      ver=`$ac --version < /dev/null | head -n 1 | $VERSIONGREP | $VERSIONMKINT`
-      verneeded=`echo $AM_NEEDED | $VERSIONMKINT`
-      if test $ver -ge $verneeded; then
-        ACLOCAL=$ac
-        echo $ACLOCAL
-        break
-      fi
-    done
-    test -z $ACLOCAL && echo "no"
-  fi
-  test -z $AUTOMAKE || test -z $ACLOCAL && {
+echo "checking for $AUTOMAKE... "
+($AUTOMAKE --version) < /dev/null > /dev/null 2>&1 || {
         echo
         echo "You must have automake installed to compile $package."
-        echo "Download the appropriate package for your distribution,"
-        echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
-        exit 1
-  }
-fi
+        echo "Download the appropriate package for your system,"
+        echo "or get the source from one of the GNU ftp sites"
+        echo "listed in http://www.gnu.org/order/ftp.html"
+        DIE=1
+}
 
 echo -n "checking for libtool... "
 for LIBTOOLIZE in libtoolize glibtoolize nope; do
@@ -105,12 +69,12 @@ echo "  $ACLOCAL $ACLOCAL_FLAGS"
 $ACLOCAL $ACLOCAL_FLAGS || exit 1
 echo "  $LIBTOOLIZE --automake"
 $LIBTOOLIZE --automake || exit 1
-echo "  autoheader"
-autoheader || exit 1
+echo "  $AUTOHEADER"
+$AUTOHEADER || exit 1
 echo "  $AUTOMAKE --add-missing $AUTOMAKE_FLAGS"
 $AUTOMAKE --add-missing $AUTOMAKE_FLAGS || exit 1
-echo "  autoconf"
-autoconf || exit 1
+echo "  $AUTOCONF"
+$AUTOCONF || exit 1
 
 cd $olddir
 $srcdir/configure --enable-maintainer-mode "$@" && echo
