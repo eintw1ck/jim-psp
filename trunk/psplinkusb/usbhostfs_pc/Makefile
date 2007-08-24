@@ -4,6 +4,8 @@ LIBS=-lusb -lpthread
 CFLAGS=-Wall -ggdb -I../usbhostfs -DPC_SIDE -D_FILE_OFFSET_BITS=64 -I. -O2
 LDFLAGS=-L.
 
+PREFIX=$(shell psp-config --pspdev-path 2> /dev/null)
+
 ifdef BUILD_BIGENDIAN
 CFLAGS += -DBUILD_BIGENDIAN
 endif
@@ -25,8 +27,13 @@ endif
 
 all: $(OUTPUT)
 
-clean:
-	rm -f $(OUTPUT) *.o
-
 $(OUTPUT): $(OBJS)
 	$(LINK.c) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+install: $(OUTPUT)
+	@echo "Installing $(OUTPUT)..."
+	@if ( test $(PREFIX) ); then { mkdir -p $(PREFIX)/bin && cp $(OUTPUT) $(PREFIX)/bin; } else { echo "Error: psp-config not found!"; exit 1; } fi
+	@echo "Done!"
+
+clean:
+	rm -f $(OUTPUT) *.o
