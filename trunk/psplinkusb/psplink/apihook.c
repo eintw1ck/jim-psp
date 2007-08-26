@@ -63,7 +63,7 @@ struct ApiHookGeneric
 	/* Pointer to the real function, if NULL then invalid */
 	void *func;
 	/* Pointer to the location in the syscall table */
-	u32  *syscall;
+	unsigned int  *syscall;
 	/* Indicates if we should sleep the thread on the syscall */
 	int  sleep;
 	/* Indicates if this is an import hook or not */
@@ -91,10 +91,10 @@ static struct ApiHookGeneric g_apihooks[APIHOOK_MAXIDS] = {
 	{ "", "", 'v', NULL, NULL, 0, 0 },
 };
 
-void *find_syscall_addr(u32 addr)
+void *find_syscall_addr(unsigned int addr)
 {
 	struct SyscallHeader *head;
-	u32 *syscalls;
+	unsigned int *syscalls;
 	void **ptr;
 	int size;
 	int i;
@@ -110,8 +110,8 @@ void *find_syscall_addr(u32 addr)
 	}
 
 	head = (struct SyscallHeader *) *ptr;
-	syscalls = (u32*) (*ptr + 0x10);
-	size = (head->size - 0x10) / sizeof(u32);
+	syscalls = (unsigned int*) (*ptr + 0x10);
+	size = (head->size - 0x10) / sizeof(unsigned int);
 
 	for(i = 0; i < size; i++)
 	{
@@ -129,7 +129,7 @@ void apiHookRegisterUserDispatch(unsigned int *dispatch)
 	g_userdispatch = dispatch;
 }
 
-void *_apiHookHandle(int id, u32 *args)
+void *_apiHookHandle(int id, unsigned int *args)
 {
 	int intc;
 	void *func = NULL;
@@ -220,7 +220,7 @@ void *_apiHookHandle(int id, u32 *args)
 	return func;
 }
 
-void _apiHookReturn(int id, u32* ret)
+void _apiHookReturn(int id, unsigned int* ret)
 {
 	int intc;
 	void *func = NULL;
@@ -294,7 +294,7 @@ static int find_free_hook(void)
 	return -1;
 }
 
-static void *apiHookAddr(u32 *addr, void *func)
+static void *apiHookAddr(unsigned int *addr, void *func)
 {
 	int intc;
 
@@ -304,7 +304,7 @@ static void *apiHookAddr(u32 *addr, void *func)
 	}
 
 	intc = pspSdkDisableInterrupts();
-	*addr = (u32) func;
+	*addr = (unsigned int) func;
 	sceKernelDcacheWritebackInvalidateRange(addr, sizeof(addr));
 	sceKernelIcacheInvalidateRange(addr, sizeof(addr));
 	pspSdkEnableInterrupts(intc);
@@ -312,7 +312,7 @@ static void *apiHookAddr(u32 *addr, void *func)
 	return addr;
 }
 
-static void* apiHookImport(u32 *addr, void *func)
+static void* apiHookImport(unsigned int *addr, void *func)
 {
 	int intc;
 
@@ -322,7 +322,7 @@ static void* apiHookImport(u32 *addr, void *func)
 	}
 
 	intc = pspSdkDisableInterrupts();
-	*addr = 0x08000000 | ((u32) func & 0x0FFFFFFF) >> 2;
+	*addr = 0x08000000 | ((unsigned int) func & 0x0FFFFFFF) >> 2;
 	sceKernelDcacheWritebackInvalidateRange(addr, sizeof(addr));
 	sceKernelIcacheInvalidateRange(addr, sizeof(addr));
 	pspSdkEnableInterrupts(intc);
@@ -358,12 +358,12 @@ void apiHookGenericDelete(int id)
 }
 
 
-static int _apiHookGenericCommon(u32 addr, int imphook, const char *library, const char *name, char ret, const char *format, int sleep)
+static int _apiHookGenericCommon(unsigned int addr, int imphook, const char *library, const char *name, char ret, const char *format, int sleep)
 {
 	int id;
-	u32 *syscall;
-	u32 *target;
-	u32 *hookaddr = (u32*) _apiHook0;
+	unsigned int *syscall;
+	unsigned int *target;
+	unsigned int *hookaddr = (unsigned int*) _apiHook0;
 	int result = 0;
 
 	do
@@ -383,7 +383,7 @@ static int _apiHookGenericCommon(u32 addr, int imphook, const char *library, con
 
 		if(imphook)
 		{
-			u32 *p = (u32*) addr;
+			unsigned int *p = (unsigned int*) addr;
 			int user;
 
 			user = (addr & 0x80000000) ? 0 : 1;
@@ -442,7 +442,7 @@ static int _apiHookGenericCommon(u32 addr, int imphook, const char *library, con
 
 int apiHookGenericByName(SceUID uid, const char *library, const char *name, char ret, const char *format, int sleep)
 {
-	u32 addr;
+	unsigned int addr;
 	int imphook = 0;
 
 	addr = libsFindExportByName(uid, library, name);
@@ -456,9 +456,9 @@ int apiHookGenericByName(SceUID uid, const char *library, const char *name, char
 	return _apiHookGenericCommon(addr, imphook, library, name, ret, format, sleep);
 }
 
-int apiHookGenericByNid(SceUID uid, const char *library, u32 nid, char ret, const char *format, int sleep)
+int apiHookGenericByNid(SceUID uid, const char *library, unsigned int nid, char ret, const char *format, int sleep)
 {
-	u32 addr;
+	unsigned int addr;
 	int imphook = 0;
 	char name[APIHOOK_MAXNAME];
 
@@ -475,9 +475,9 @@ int apiHookGenericByNid(SceUID uid, const char *library, u32 nid, char ret, cons
 }
 
 
-u32 apiHookByName(SceUID uid, const char *library, const char *name, void *func)
+unsigned int apiHookByName(SceUID uid, const char *library, const char *name, void *func)
 {
-	u32 addr;
+	unsigned int addr;
 
 	addr = libsFindExportByName(uid, library, name);
 	if(addr)
@@ -492,7 +492,7 @@ u32 apiHookByName(SceUID uid, const char *library, const char *name, void *func)
 		addr = libsFindImportAddrByName(uid, library, name);
 		if(addr)
 		{
-			if(!apiHookImport((u32*) addr, func))
+			if(!apiHookImport((unsigned int*) addr, func))
 			{
 				addr = 0;
 			}
@@ -502,9 +502,9 @@ u32 apiHookByName(SceUID uid, const char *library, const char *name, void *func)
 	return addr;
 }
 
-u32 apiHookByNid(SceUID uid, const char *library, u32 nid, void *func)
+unsigned int apiHookByNid(SceUID uid, const char *library, unsigned int nid, void *func)
 {
-	u32 addr;
+	unsigned int addr;
 
 	addr = libsFindExportByNid(uid, library, nid);
 	if(addr)
@@ -519,7 +519,7 @@ u32 apiHookByNid(SceUID uid, const char *library, u32 nid, void *func)
 		addr = libsFindImportAddrByNid(uid, library, nid);
 		if(addr)
 		{
-			if(!apiHookImport((u32*) addr, func))
+			if(!apiHookImport((unsigned int*) addr, func))
 			{
 				addr = 0;
 			}

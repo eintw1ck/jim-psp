@@ -15,13 +15,13 @@
 
 int libsPrintEntries(SceUID uid);
 int libsPrintImports(SceUID uid);
-u32 libsFindExportByName(SceUID uid, const char *library, const char *name);
-u32 libsFindExportByNid(SceUID uid, const char *library, u32 nid);
+unsigned int libsFindExportByName(SceUID uid, const char *library, const char *name);
+unsigned int libsFindExportByNid(SceUID uid, const char *library, unsigned int nid);
 void* libsFindExportAddrByName(SceUID uid, const char *library, const char *name);
-void* libsFindExportAddrByNid(SceUID uid, const char *library, u32 nid);
-int libsPatchFunction(SceUID uid, const char *library, u32 nid, u16 retval);
-u32 libsNameToNid(const char *name);
-u32 libsFindImportAddrByName(SceUID uid, const char *library, const char *name);
-u32 libsFindImportAddrByNid(SceUID uid, const char *library, u32 nid);
+void* libsFindExportAddrByNid(SceUID uid, const char *library, unsigned int nid);
+int libsPatchFunction(SceUID uid, const char *library, unsigned int nid, u16 retval);
+unsigned int libsNameToNid(const char *name);
+unsigned int libsFindImportAddrByName(SceUID uid, const char *library, const char *name);
+unsigned int libsFindImportAddrByNid(SceUID uid, const char *library, unsigned int nid);
 
 #endif

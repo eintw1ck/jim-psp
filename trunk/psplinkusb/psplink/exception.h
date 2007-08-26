@@ -19,42 +19,42 @@
 /** Structure to hold the register data associated with an exception */
 typedef struct _PsplinkRegBlock
 {
-	u32 frame[6];
+	unsigned int frame[6];
 	/** Array of the 32 GPRs */
-	u32 r[32];
+	unsigned int r[32];
 	/** The status register */
-	u32 status;
+	unsigned int status;
 	/** lo */
-	u32 lo;
-	u32 hi;
-	u32 badvaddr;
-	u32 cause;
-	u32 epc;
+	unsigned int lo;
+	unsigned int hi;
+	unsigned int badvaddr;
+	unsigned int cause;
+	unsigned int epc;
 	float fpr[32];
-	u32 fsr;
-	u32 fir;
-	u32 frame_ptr;
-	u32 unused;
+	unsigned int fsr;
+	unsigned int fir;
+	unsigned int frame_ptr;
+	unsigned int unused;
 	/* Unused on PSP */
-	u32 index;
-	u32 random;
-	u32 entrylo0;
-	u32 entrylo1;
-	u32 context;
-	u32 pagemask;
-	u32 wired;
-	u32 cop0_7;
-	u32 cop0_8;
-	u32 cop0_9;
-	u32 entryhi;
-	u32 cop0_11;
-	u32 cop0_12;
-	u32 cop0_13;
-	u32 cop0_14;
+	unsigned int index;
+	unsigned int random;
+	unsigned int entrylo0;
+	unsigned int entrylo1;
+	unsigned int context;
+	unsigned int pagemask;
+	unsigned int wired;
+	unsigned int cop0_7;
+	unsigned int cop0_8;
+	unsigned int cop0_9;
+	unsigned int entryhi;
+	unsigned int cop0_11;
+	unsigned int cop0_12;
+	unsigned int cop0_13;
+	unsigned int cop0_14;
 	/* PRId should still be okay */
-	u32 prid;
+	unsigned int prid;
 	/* Type of exception (normal or debug) */
-	u32 type;
+	unsigned int type;
 	/* Pad vfpu to 128bit boundary */
 	int pad;
 	float vfpu[128];
@@ -86,10 +86,10 @@ void exceptionInit(void);
 void exceptionPrint(struct PsplinkContext *ctx);
 void exceptionFpuPrint(struct PsplinkContext *ctx);
 void exceptionVfpuPrint(struct PsplinkContext *ctx, int mode);
-u32 *exceptionGetReg(const char *reg);
+unsigned int *exceptionGetReg(const char *reg);
 void exceptionResume(struct PsplinkContext *ctx, int cont);
 void exceptionPrintFPURegs(float *pFpu, unsigned int fsr, unsigned int fir);
-void exceptionPrintCPURegs(u32 *pRegs);
+void exceptionPrintCPURegs(unsigned int *pRegs);
 void exceptionList(void);
 void exceptionSetCtx(int ex);
 

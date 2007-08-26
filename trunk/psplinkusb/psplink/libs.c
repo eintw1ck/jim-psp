@@ -31,10 +31,10 @@ struct PspModuleImport
 	unsigned char entLen;
 	unsigned char varCount;
 	unsigned short funcCount;
-	u32 *fnids;
-	u32 *funcs;
-	u32 *vnids;
-	u32 *vars;
+	unsigned int *fnids;
+	unsigned int *funcs;
+	unsigned int *vnids;
+	unsigned int *vars;
 } __attribute__((packed));
 
 static struct SceLibraryEntryTable *_libsFindLibrary(SceUID uid, const char *library)
@@ -100,10 +100,10 @@ static struct PspModuleImport *_libsFindImport(SceUID uid, const char *library)
 	return NULL;
 }
 
-void* libsFindExportAddrByNid(SceUID uid, const char *library, u32 nid)
+void* libsFindExportAddrByNid(SceUID uid, const char *library, unsigned int nid)
 {
 	struct SceLibraryEntryTable *entry;
-	u32 *addr = NULL;
+	unsigned int *addr = NULL;
 
 	entry = _libsFindLibrary(uid, library);
 	if(entry)
@@ -130,10 +130,10 @@ void* libsFindExportAddrByNid(SceUID uid, const char *library, u32 nid)
 	return addr;
 }
 
-u32 libsNameToNid(const char *name)
+unsigned int libsNameToNid(const char *name)
 {
 	u8 digest[20];
-	u32 nid;
+	unsigned int nid;
 
 	if(sceKernelUtilsSha1Digest((u8 *) name, strlen(name), digest) >= 0)
 	{
@@ -146,16 +146,16 @@ u32 libsNameToNid(const char *name)
 
 void* libsFindExportAddrByName(SceUID uid, const char *library, const char *name)
 {
-	u32 nid;
+	unsigned int nid;
 
 	nid = libsNameToNid(name);
 
 	return libsFindExportAddrByNid(uid, library, nid);
 }
 
-u32 libsFindExportByName(SceUID uid, const char *library, const char *name)
+unsigned int libsFindExportByName(SceUID uid, const char *library, const char *name)
 {
-	u32 *addr;
+	unsigned int *addr;
 
 	addr = libsFindExportAddrByName(uid, library, name);
 	if(!addr)
@@ -166,9 +166,9 @@ u32 libsFindExportByName(SceUID uid, const char *library, const char *name)
 	return *addr;
 }
 
-u32 libsFindExportByNid(SceUID uid, const char *library, u32 nid)
+unsigned int libsFindExportByNid(SceUID uid, const char *library, unsigned int nid)
 {
-	u32 *addr;
+	unsigned int *addr;
 
 	addr = libsFindExportAddrByNid(uid, library, nid);
 	if(!addr)
@@ -179,7 +179,7 @@ u32 libsFindExportByNid(SceUID uid, const char *library, u32 nid)
 	return *addr;
 }
 
-u32 libsFindImportAddrByNid(SceUID uid, const char *library, u32 nid)
+unsigned int libsFindImportAddrByNid(SceUID uid, const char *library, unsigned int nid)
 {
 	struct PspModuleImport *pImp;
 
@@ -192,7 +192,7 @@ u32 libsFindImportAddrByNid(SceUID uid, const char *library, u32 nid)
 		{
 			if(pImp->fnids[i] == nid)
 			{
-				return (u32) &pImp->funcs[i*2];
+				return (unsigned int) &pImp->funcs[i*2];
 			}
 		}
 	}
@@ -200,27 +200,27 @@ u32 libsFindImportAddrByNid(SceUID uid, const char *library, u32 nid)
 	return 0;
 }
 
-u32 libsFindImportAddrByName(SceUID uid, const char *library, const char *name)
+unsigned int libsFindImportAddrByName(SceUID uid, const char *library, const char *name)
 {
-	u32 nid;
+	unsigned int nid;
 
 	nid = libsNameToNid(name);
 
 	return libsFindImportAddrByNid(uid, library, nid);
 }
 
-int libsPatchFunction(SceUID uid, const char *library, u32 nid, u16 retval)
+int libsPatchFunction(SceUID uid, const char *library, unsigned int nid, u16 retval)
 {
-	u32* addr;
+	unsigned int* addr;
 	int intc;
 	int ret = 0;
 
 	intc = pspSdkDisableInterrupts();
-	addr = (u32 *) libsFindExportByNid(uid, library, nid);
+	addr = (unsigned int *) libsFindExportByNid(uid, library, nid);
 	if(addr)
 	{
 		addr[0] = 0x03E00008;
-		addr[1] = 0x24020000 | (u32) retval;
+		addr[1] = 0x24020000 | (unsigned int) retval;
 		sceKernelDcacheWritebackInvalidateRange(addr, 8);
 		sceKernelIcacheInvalidateRange(addr, 8);
 		ret = 1;
@@ -264,7 +264,7 @@ int libsPrintImports(SceUID uid)
 				for(count = 0; count < pImp->funcCount; count++)
 				{
 					SHELL_PRINT("Entry %-3d: UID 0x%08X, Function 0x%08X\n", count+1, pImp->fnids[count], 
-							(u32) &pImp->funcs[count*2]);
+							(unsigned int) &pImp->funcs[count*2]);
 				}
 			}
 
@@ -274,7 +274,7 @@ int libsPrintImports(SceUID uid)
 				for(count = 0; count < pImp->varCount; count++)
 				{
 					SHELL_PRINT("Entry %-3d: UID 0x%08X, Variable 0x%08X\n", count+1, pImp->vnids[count], 
-							(u32) &pImp->vars[count*2]);
+							(unsigned int) &pImp->vars[count*2]);
 				}
 			}
 			SHELL_PRINT("\n");

@@ -53,8 +53,8 @@ int fdprintf(int fd, const char *fmt, ...);
 
 void psplinkReset(void);
 void psplinkStop(void);
-u32  psplinkSetK1(u32 k1);
-void psplinkGetCop0(u32 *regs);
+unsigned int  psplinkSetK1(unsigned int k1);
+void psplinkGetCop0(unsigned int *regs);
 int psplinkParseComamnd(char *command);
 void psplinkExitShell(void);
 SceUID load_gdb(const char *bootpath, int argc, char **argv);

@@ -28,9 +28,9 @@ static int g_protoff = 0;
 
 struct mem_entry
 {
-	u32 addr;
+	unsigned int addr;
 	s32 size;
-	u32 attrib;
+	unsigned int attrib;
 	const char *desc;
 	int v1only;
 };
@@ -228,7 +228,7 @@ static int get_modaddr(char *name, unsigned int *val)
 		pcomma++;
 		if((pcomma[0] == '0') && (pcomma[1] == 'x'))
 		{
-			u32 nid;
+			unsigned int nid;
 			nid = strtoul(pcomma, NULL, 16);
 			*val = libsFindExportByNid(uid, pcolon, nid);
 		}
@@ -307,11 +307,11 @@ static int get_threadaddr(char *name, unsigned int *val)
 
 	if(pcolon == NULL)
 	{
-		*val = (u32) info.entry;
+		*val = (unsigned int) info.entry;
 	}
 	else if(strcmp(pcolon, "stack") == 0)
 	{
-		*val = (u32) info.stack;
+		*val = (unsigned int) info.stack;
 	}
 	else if(strcmp(pcolon, "sstack") == 0)
 	{
@@ -358,7 +358,7 @@ static int parse_line(char *line, unsigned int *val)
 		{
 			char buf[16];
 			int pos;
-			u32 *reg;
+			unsigned int *reg;
 
 			pos = 0;
 			line++;
@@ -595,7 +595,7 @@ static int parse_line(char *line, unsigned int *val)
 	return 1;
 }
 
-int memDecode(const char *line, u32 *val)
+int memDecode(const char *line, unsigned int *val)
 {
 	char line_buf[1024];
 
@@ -605,7 +605,7 @@ int memDecode(const char *line, u32 *val)
 	return parse_line(line_buf, val);
 }
 
-int memValidate(u32 addr, u32 attrib)
+int memValidate(unsigned int addr, unsigned int attrib)
 {
 	const struct mem_entry *entry;
 	int size_left = 0;
@@ -614,7 +614,7 @@ int memValidate(u32 addr, u32 attrib)
 
 	while(entry->size != 0)
 	{
-		if((addr >= entry->addr) && (addr < (entry->addr + (u32) entry->size)))
+		if((addr >= entry->addr) && (addr < (entry->addr + (unsigned int) entry->size)))
 		{
 			/* Only pass through areas with valid attributes (e.g. write or execute) */
 			if((entry->attrib & attrib) == attrib)

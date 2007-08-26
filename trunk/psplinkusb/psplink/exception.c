@@ -61,7 +61,7 @@ const char codeFpu[6] = { 'I', 'U', 'O', 'Z', 'V', 'E' };
 const char codeDebug[7] = { 'X', 'S', 'B', '?', '?', 'I', 'D' };
 
 /* Get a pointer to a register based on its name */
-u32 *exceptionGetReg(const char *reg)
+unsigned int *exceptionGetReg(const char *reg)
 {
 	static unsigned int modaddr = 0;
 
@@ -117,7 +117,7 @@ u32 *exceptionGetReg(const char *reg)
 
 /* Print the cpu registers, pointer should contain a dummy entry
  * for zero as it is relatively addressed */
-void exceptionPrintCPURegs(u32 *pRegs)
+void exceptionPrintCPURegs(unsigned int *pRegs)
 {
 	int i;
 
@@ -141,7 +141,7 @@ static const char *exception_cause(struct PsplinkContext *pCtx)
 		if(((pCtx->regs.cause >> 2) & 31) == FPU_EXCEPTION)
 		{
 			int i;
-			u32 fpu;
+			unsigned int fpu;
 			char *end;
 
 			strcpy(excause, codeTxt[(pCtx->regs.cause >> 2) & 31]);
@@ -192,7 +192,7 @@ void exceptionPrint(struct PsplinkContext *ctx)
 	SceModule *pMod;
 	SceKernelModuleInfo mod;
 	SceKernelThreadInfo thread;
-	u32 addr;
+	unsigned int addr;
 
 	if(ctx == NULL)
 	{

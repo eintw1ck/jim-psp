@@ -244,14 +244,14 @@ int RegisterExceptionDummy(void)
 /* Patch out the exception handler setup call for apps which come after us ;P */
 int psplinkPatchException(void)
 {
-	u32 *addr;
+	unsigned int *addr;
 	int intc;
 
 	intc = pspSdkDisableInterrupts();
 	addr = libsFindExportAddrByNid(refer_module_by_name("sceExceptionManager", NULL), "ExceptionManagerForKernel", 0x565C0B0E);
 	if(addr)
 	{
-		*addr = (u32) RegisterExceptionDummy;
+		*addr = (unsigned int) RegisterExceptionDummy;
 		sceKernelDcacheWritebackInvalidateRange(addr, 4);
 		sceKernelIcacheInvalidateRange(addr, 4);
 	}

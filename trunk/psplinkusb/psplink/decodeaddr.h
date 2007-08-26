@@ -23,8 +23,8 @@
 #define MEM_ATTRIB_DBL   (1 << 6)
 #define MEM_ATTRIB_ALL	 0xFFFFFFFF
 
-int memDecode(const char *line, u32 *val);
-int memValidate(u32 addr, u32 attrib);
+int memDecode(const char *line, unsigned int *val);
+int memValidate(unsigned int addr, unsigned int attrib);
 void memPrintRegions(void);
 void memSetProtoff(int protoff);
 

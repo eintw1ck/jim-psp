@@ -42,7 +42,7 @@ extern struct GlobalContext g_context;
 int (*g_QueryModuleInfo)(SceUID modid, SceKernelModuleInfo *info) = NULL;
 int (*g_GetModuleIdList)(SceUID *readbuf, int readbufsize, int *idcount) = NULL;
 
-extern u32 sceKernelRemoveByDebugSection;
+extern unsigned int sceKernelRemoveByDebugSection;
 
 int g_isv1 = 0;
 
@@ -634,10 +634,10 @@ void strip_whitesp(char *s)
 	}
 }
 
-int strtoint(const char *str, u32 *i)
+int strtoint(const char *str, unsigned int *i)
 {
 	char *endp;
-	u32 val;
+	unsigned int val;
 
 	val = strtoul(str, &endp, 0);
 	if(*endp != 0)
@@ -1107,15 +1107,15 @@ void f_cvt(float val, char *buf, int bufsize, int precision, int mode)
 	return;
 }
 
-u32 *get_debug_register(void)
+unsigned int *get_debug_register(void)
 {
-	u32 *pData;
-	u32 ptr;
+	unsigned int *pData;
+	unsigned int ptr;
 
-	pData = (u32 *) (0x80000000 | ((sceKernelRemoveByDebugSection & 0x03FFFFFF) << 2));
+	pData = (unsigned int *) (0x80000000 | ((sceKernelRemoveByDebugSection & 0x03FFFFFF) << 2));
 	ptr = ((pData[0] & 0xFFFF) << 16) + (short) (pData[2] & 0xFFFF);
 
-	return (u32 *) ptr;
+	return (unsigned int *) ptr;
 }
 
 int isdir(const char *path)
@@ -1155,7 +1155,7 @@ int isdir(const char *path)
 
 void enable_kprintf(int enable)
 {
-	u32 *pData;
+	unsigned int *pData;
 
 	pData = get_debug_register();
 	if(enable)

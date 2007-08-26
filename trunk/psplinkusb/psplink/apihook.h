@@ -13,10 +13,10 @@
 #ifndef __APIHOOK_H__
 #define __APIHOOK_H__
 
-u32 apiHookByName(SceUID uid, const char *library, const char *name, void *func);
-u32 apiHookByNid(SceUID uid, const char *library, u32 nid, void *func);
+unsigned int apiHookByName(SceUID uid, const char *library, const char *name, void *func);
+unsigned int apiHookByNid(SceUID uid, const char *library, unsigned int nid, void *func);
 int apiHookGenericByName(SceUID uid, const char *library, const char *name, char ret, const char *format, int sleep);
-int apiHookGenericByNid(SceUID uid, const char *library, u32 nid, char ret, const char *format, int sleep);
+int apiHookGenericByNid(SceUID uid, const char *library, unsigned int nid, char ret, const char *format, int sleep);
 void apiHookGenericDelete(int id);
 void apiHookGenericPrint(void);
 

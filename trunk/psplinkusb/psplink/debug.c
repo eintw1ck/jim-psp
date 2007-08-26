@@ -170,9 +170,9 @@ int debugWaitDebugEvent(DebugEventHandler *handler, struct PsplinkContext **ctx,
 /* Generic step command , if skip then will try to skip over jals */
 static void step_generic(struct PsplinkContext *ctx, int skip)
 {
-	u32 opcode;
-	u32 epc;
-	u32 targetpc;
+	unsigned int opcode;
+	unsigned int epc;
+	unsigned int targetpc;
 	int branch = 0;
 	int cond   = 0;
 	int link   = 0;
@@ -225,7 +225,7 @@ static void step_generic(struct PsplinkContext *ctx, int skip)
 							break;
 		case JAL_OPCODE:	link = 1;
 		case J_OPCODE: {
-							 u32 ofs;
+							 unsigned int ofs;
 							 
 							 ofs = opcode & 0x3ffffff;
 							 targetpc = (ofs << 2) | (targetpc & 0xf0000000);
@@ -240,7 +240,7 @@ static void step_generic(struct PsplinkContext *ctx, int skip)
 								 case JALR_OPCODE: link = 1;
 								 case JR_OPCODE:
 												 {
-													 u32 rs;
+													 unsigned int rs;
 
 													 rs = (opcode >> 21) & 0x1f;
 													 targetpc = ctx->regs.r[rs];
@@ -721,14 +721,14 @@ static void debug_set_env(void)
 	   );
 }
 
-extern u32 psplinkHwDebugTrap;
-extern u32 psplinkHwDebugTrapEnd;
+extern unsigned int psplinkHwDebugTrap;
+extern unsigned int psplinkHwDebugTrapEnd;
 void psplinkHwDebugMain(void);
 
 void debugHwInit(void)
 {
-	u32* p = &psplinkHwDebugTrap;
-	u32 base = 0xbfc01000;
+	unsigned int* p = &psplinkHwDebugTrap;
+	unsigned int base = 0xbfc01000;
 	while(p < &psplinkHwDebugTrapEnd)
 	{
 		_sw(*p, base);
@@ -788,7 +788,7 @@ void debugSetHWRegs(int argc, char **argv)
 		pEquals = strchr(argv[i], '=');
 		if(pEquals)
 		{
-			u32 val;
+			unsigned int val;
 			*pEquals = 0;
 			pEquals++;
 			if(memDecode(pEquals, &val))

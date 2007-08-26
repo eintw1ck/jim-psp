@@ -50,11 +50,11 @@ int threadFindContext(SceUID uid)
 
 	if(found)
 	{
-		SHELL_PRINT("kstack 0x%08X kstacksize 0x%08X\n", (u32) info.kstack, info.kstackSize);
-		SHELL_PRINT("stack  0x%08X stacksize  0x%08X\n", (u32) info.stack,  info.stackSize);
-		SHELL_PRINT("context 0x%08X, vfpu 0x%08X\n", (u32) info.thContext, (u32) info.vfpuContext);
+		SHELL_PRINT("kstack 0x%08X kstacksize 0x%08X\n", (unsigned int) info.kstack, info.kstackSize);
+		SHELL_PRINT("stack  0x%08X stacksize  0x%08X\n", (unsigned int) info.stack,  info.stackSize);
+		SHELL_PRINT("context 0x%08X, vfpu 0x%08X\n", (unsigned int) info.thContext, (unsigned int) info.vfpuContext);
 		SHELL_PRINT("Context EPC 0x%08X, Real EPC 0x%08X\n", ctxCopy.EPC, info.retAddr);
-		exceptionPrintCPURegs((u32 *) &ctxCopy);
+		exceptionPrintCPURegs((unsigned int *) &ctxCopy);
 		return 0;
 	}
 
@@ -103,7 +103,7 @@ int psplinkGetFullThreadContext(SceUID uid, struct PsplinkContext *ctx)
 	{
 		memset(ctx, 0, sizeof(struct PsplinkContext));
 		ctx->thid = uid;
-		memcpy(&ctx->regs.r[1], info.thContext->gpr, 31 * sizeof(u32));
+		memcpy(&ctx->regs.r[1], info.thContext->gpr, 31 * sizeof(unsigned int));
 		memcpy(&ctx->regs.fpr[0], info.thContext->fpr, 32 * sizeof(float));
 		ctx->regs.hi = info.thContext->hi;
 		ctx->regs.lo = info.thContext->lo;

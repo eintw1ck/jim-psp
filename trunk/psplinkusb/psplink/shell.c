@@ -59,7 +59,7 @@ typedef int (*threadmanprint_func)(SceUID uid, int verbose);
 
 struct call_frame 
 {
-	u64 (*func)(u32 a, u32 b, u32 c, u32 d, u32 e, u32 f);
+	u64 (*func)(unsigned int a, unsigned int b, unsigned int c, unsigned int d, unsigned int e, unsigned int f);
 	unsigned int args[6];
 };
 
@@ -226,7 +226,7 @@ static int print_threadinfo(SceUID uid, int verbose)
 			SHELL_PRINT("Attr: 0x%08X - Status: %d/%s- Entry: 0x%p\n", info.attr, info.status, 
 					get_thread_status(info.status, status), info.entry);
 			SHELL_PRINT("Stack: 0x%p - StackSize 0x%08X - GP: 0x%08X\n", info.stack, info.stackSize,
-					(u32) info.gpReg);
+					(unsigned int) info.gpReg);
 			SHELL_PRINT("InitPri: %d - CurrPri: %d - WaitType %d\n", info.initPriority,
 					info.currentPriority, info.waitType);
 			SHELL_PRINT("WaitId: 0x%08X - WakeupCount: %d - ExitStatus: 0x%08X\n", info.waitId,
@@ -343,7 +343,7 @@ static int thpri_cmd(int argc, char **argv, unsigned int *vRet)
 	SceUID uid;
 	int ret = CMD_ERROR;
 	int err;
-	u32 pri;
+	unsigned int pri;
 
 	uid = get_thread_uid(argv[0], (ReferFunc) pspSdkReferThreadStatusByName);
 
@@ -942,7 +942,7 @@ static int uidinfo_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int cop0_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 regs[64];
+	unsigned int regs[64];
 	int i;
 
 	psplinkGetCop0(regs);
@@ -1014,7 +1014,7 @@ static int print_modinfo(SceUID uid, int verbose, const char *opts)
 			for(i = 0; (i < info.nsegment) && (i < 4); i++)
 			{
 				SHELL_PRINT("Segment %d: Addr 0x%08X - Size 0x%08X\n", i, 
-						(u32) info.segmentaddr[i], (u32) info.segmentsize[i]);
+						(unsigned int) info.segmentaddr[i], (unsigned int) info.segmentsize[i]);
 			}
 			SHELL_PRINT("\n");
 		}
@@ -1277,7 +1277,7 @@ static int modfindx_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
-	u32 addr = 0;
+	unsigned int addr = 0;
 
 	uid = get_module_uid(argv[0]);
 	if(uid >= 0)
@@ -1289,7 +1289,7 @@ static int modfindx_cmd(int argc, char **argv, unsigned int *vRet)
 		else
 		{
 			char *endp;
-			u32 nid;
+			unsigned int nid;
 
 			nid = strtoul(argv[2], &endp, 16);
 			if(*endp != 0)
@@ -1325,7 +1325,7 @@ static int modfindi_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	SceUID uid;
 	int ret = CMD_ERROR;
-	u32 addr = 0;
+	unsigned int addr = 0;
 
 	uid = get_module_uid(argv[0]);
 	if(uid >= 0)
@@ -1337,7 +1337,7 @@ static int modfindi_cmd(int argc, char **argv, unsigned int *vRet)
 		else
 		{
 			char *endp;
-			u32 nid;
+			unsigned int nid;
 
 			nid = strtoul(argv[2], &endp, 16);
 			if(*endp != 0)
@@ -1393,7 +1393,7 @@ static int apihook_common(int argc, char **argv, int sleep)
 		else
 		{
 			char *endp;
-			u32 nid;
+			unsigned int nid;
 
 			nid = strtoul(argv[2], &endp, 16);
 			if(*endp != 0)
@@ -1435,7 +1435,7 @@ static int apihp_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int apihd_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 id;
+	unsigned int id;
 
 	if(strtoint(argv[0], &id))
 	{
@@ -1631,7 +1631,7 @@ static int debug_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int calc_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 val;
+	unsigned int val;
 	char disp;
 
 	if(memDecode(argv[0], &val))
@@ -1828,7 +1828,7 @@ static int pwd_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int usbstat_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 state;
+	unsigned int state;
 
 	state = sceUsbGetState();
 	SHELL_PRINT("USB Status:\n");
@@ -2139,7 +2139,7 @@ int mhead_cmd(int argc, char **argv, unsigned int *vRet)
 #define MEMDUMP_TYPE_WORD 3
 
 /* Print a row of a memory dump, up to row_size */
-static void print_row(const u32* row, s32 row_size, u32 addr, int type)
+static void print_row(const unsigned int* row, s32 row_size, unsigned int addr, int type)
 {
 	char buffer[128];
 	char *p = buffer;
@@ -2223,10 +2223,10 @@ static void print_row(const u32* row, s32 row_size, u32 addr, int type)
 }
 
 /* Print a memory dump to SIO */
-static void print_memdump(u32 addr, s32 size, int type)
+static void print_memdump(unsigned int addr, s32 size, int type)
 {
 	int size_left;
-	u32 row[16];
+	unsigned int row[16];
 	int row_size;
 	u8 *p_addr = (u8 *) addr;
 
@@ -2256,7 +2256,7 @@ static void print_memdump(u32 addr, s32 size, int type)
 		if(row_size == 16)
 		{
 			// draw row
-			print_row(row, row_size, (u32) p_addr, type);
+			print_row(row, row_size, (unsigned int) p_addr, type);
 			p_addr += 16;
 			row_size = 0;
 		}
@@ -2267,7 +2267,7 @@ static void print_memdump(u32 addr, s32 size, int type)
 
 static int memdump_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	static u32 addr = 0;
+	static unsigned int addr = 0;
 	static int type = MEMDUMP_TYPE_BYTE;
 	s32 size_left;
 
@@ -2329,7 +2329,7 @@ static int memdump_cmd(int argc, char **argv, unsigned int *vRet)
 static int savemem_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char path[1024];
-	u32 addr;
+	unsigned int addr;
 	int size;
 	int written;
 	char *endp;
@@ -2389,7 +2389,7 @@ static int savemem_cmd(int argc, char **argv, unsigned int *vRet)
 static int loadmem_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	char path[1024];
-	u32 addr;
+	unsigned int addr;
 	int maxsize = -1;
 	char *endp;
 
@@ -2466,7 +2466,7 @@ static int loadmem_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int pokew_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
+	unsigned int addr;
 
 	if(memDecode(argv[0], &addr))
 	{
@@ -2475,11 +2475,11 @@ static int pokew_cmd(int argc, char **argv, unsigned int *vRet)
 
 		addr &= ~3;
 		size_left = memValidate(addr, MEM_ATTRIB_WRITE | MEM_ATTRIB_WORD);
-		if(size_left >= sizeof(u32))
+		if(size_left >= sizeof(unsigned int))
 		{
 			for(i = 1; i < argc; i++)
 			{
-				u32 data;
+				unsigned int data;
 
 				if(memDecode(argv[i], &data))
 				{
@@ -2510,7 +2510,7 @@ static int pokew_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int pokeh_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
+	unsigned int addr;
 
 	if(memDecode(argv[0], &addr))
 	{
@@ -2523,7 +2523,7 @@ static int pokeh_cmd(int argc, char **argv, unsigned int *vRet)
 		{
 			for(i = 1; i < argc; i++)
 			{
-				u32 data;
+				unsigned int data;
 
 				if(memDecode(argv[i], &data))
 				{
@@ -2554,7 +2554,7 @@ static int pokeh_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int pokeb_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
+	unsigned int addr;
 
 	if(memDecode(argv[0], &addr))
 	{
@@ -2566,7 +2566,7 @@ static int pokeb_cmd(int argc, char **argv, unsigned int *vRet)
 		{
 			for(i = 1; i < argc; i++)
 			{
-				u32 data;
+				unsigned int data;
 
 				if(memDecode(argv[i], &data))
 				{
@@ -2597,7 +2597,7 @@ static int pokeb_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int pokes_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
+	unsigned int addr;
 
 	if(memDecode(argv[0], &addr))
 	{
@@ -2622,7 +2622,7 @@ static int pokes_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int peekw_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
+	unsigned int addr;
 
 	if(memDecode(argv[0], &addr))
 	{
@@ -2636,7 +2636,7 @@ static int peekw_cmd(int argc, char **argv, unsigned int *vRet)
 
 		addr &= ~3;
 		size_left = memValidate(addr, MEM_ATTRIB_READ | MEM_ATTRIB_WORD);
-		if(size_left >= sizeof(u32))
+		if(size_left >= sizeof(unsigned int))
 		{
 			switch(fmt)
 			{
@@ -2671,7 +2671,7 @@ static int peekw_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int peekh_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
+	unsigned int addr;
 
 	if(memDecode(argv[0], &addr))
 	{
@@ -2710,7 +2710,7 @@ static int peekh_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int peekb_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
+	unsigned int addr;
 
 	if(memDecode(argv[0], &addr))
 	{
@@ -2748,13 +2748,13 @@ static int peekb_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int fillb_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
-	u32 size;
+	unsigned int addr;
+	unsigned int size;
 
 	if(memDecode(argv[0], &addr) && memDecode(argv[1], &size))
 	{
-		u32 size_left;
-		u32 val;
+		unsigned int size_left;
+		unsigned int val;
 
 		size_left = memValidate(addr, MEM_ATTRIB_WRITE | MEM_ATTRIB_BYTE);
 		size = size > size_left ? size_left : size;
@@ -2773,13 +2773,13 @@ static int fillb_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int fillh_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
-	u32 size;
+	unsigned int addr;
+	unsigned int size;
 
 	if(memDecode(argv[0], &addr) && memDecode(argv[1], &size))
 	{
-		u32 size_left;
-		u32 val;
+		unsigned int size_left;
+		unsigned int val;
 		int i;
 		u16 *ptr;
 
@@ -2807,15 +2807,15 @@ static int fillh_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int fillw_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
-	u32 size;
+	unsigned int addr;
+	unsigned int size;
 
 	if(memDecode(argv[0], &addr) && memDecode(argv[1], &size))
 	{
-		u32 size_left;
-		u32 val;
+		unsigned int size_left;
+		unsigned int val;
 		int i;
-		u32 *ptr;
+		unsigned int *ptr;
 
 		addr &= ~3;
 
@@ -2828,11 +2828,11 @@ static int fillw_cmd(int argc, char **argv, unsigned int *vRet)
 			return CMD_ERROR;
 		}
 
-		ptr = (u32*) addr;
+		ptr = (unsigned int*) addr;
 
 		for(i = 0; i < (size / 4); i++)
 		{
-			ptr[i] = (u32) val;
+			ptr[i] = (unsigned int) val;
 		}
 	}
 
@@ -2841,12 +2841,12 @@ static int fillw_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int findstr_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
-	u32 size;
+	unsigned int addr;
+	unsigned int size;
 
 	if(memDecode(argv[0], &addr) && memDecode(argv[1], &size))
 	{
-		u32 size_left;
+		unsigned int size_left;
 		int searchlen;
 		void *curr, *found;
 
@@ -2874,12 +2874,12 @@ static int findstr_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int findw_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
-	u32 size;
+	unsigned int addr;
+	unsigned int size;
 
 	if(memDecode(argv[0], &addr) && memDecode(argv[1], &size))
 	{
-		u32 size_left;
+		unsigned int size_left;
 		int searchlen;
 		void *curr, *found;
 		uint8_t search[128];
@@ -2888,7 +2888,7 @@ static int findw_cmd(int argc, char **argv, unsigned int *vRet)
 		searchlen = 0;
 		for(i = 2; i < argc; i++)
 		{
-			u32 val;
+			unsigned int val;
 
 			if(strtoint(argv[i], &val) == 0)
 			{
@@ -2923,12 +2923,12 @@ static int findw_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int findh_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
-	u32 size;
+	unsigned int addr;
+	unsigned int size;
 
 	if(memDecode(argv[0], &addr) && memDecode(argv[1], &size))
 	{
-		u32 size_left;
+		unsigned int size_left;
 		int searchlen;
 		void *curr, *found;
 		uint8_t search[128];
@@ -2937,7 +2937,7 @@ static int findh_cmd(int argc, char **argv, unsigned int *vRet)
 		searchlen = 0;
 		for(i = 2; i < argc; i++)
 		{
-			u32 val;
+			unsigned int val;
 
 			if(strtoint(argv[i], &val) == 0)
 			{
@@ -2972,8 +2972,8 @@ static int findh_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int findhex_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
-	u32 size;
+	unsigned int addr;
+	unsigned int size;
 	uint8_t hex[128];
 	uint8_t *mask = NULL;
 	uint8_t mask_d[128];
@@ -2982,7 +2982,7 @@ static int findhex_cmd(int argc, char **argv, unsigned int *vRet)
 
 	if(memDecode(argv[0], &addr) && memDecode(argv[1], &size))
 	{
-		u32 size_left;
+		unsigned int size_left;
 		void *curr, *found;
 
 		hexsize = decode_hexstr(argv[2], hex, sizeof(hex));
@@ -3033,15 +3033,15 @@ static int findhex_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int copymem_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 src;
-	u32 dest;
-	u32 size;
+	unsigned int src;
+	unsigned int dest;
+	unsigned int size;
 
 	if((memDecode(argv[0], &src)) && (memDecode(argv[1], &dest)) && memDecode(argv[2], &size))
 	{
-		u32 size_left;
-		u32 srcsize;
-		u32 destsize;
+		unsigned int size_left;
+		unsigned int srcsize;
+		unsigned int destsize;
 
 		srcsize = memValidate(src, MEM_ATTRIB_WRITE | MEM_ATTRIB_BYTE);
 		destsize = memValidate(dest, MEM_ATTRIB_WRITE | MEM_ATTRIB_BYTE);
@@ -3056,7 +3056,7 @@ static int copymem_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int disasm_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
+	unsigned int addr;
 	unsigned int count = 1;
 	int i;
 
@@ -3118,7 +3118,7 @@ static int scrshot_cmd(int argc, char **argv, unsigned int *vRet)
 	int pixel_format;
 	int sync = 1;
 	int pri = 2;
-	u32 p;
+	unsigned int p;
 
 	if(argc > 1)
 	{
@@ -3131,7 +3131,7 @@ static int scrshot_cmd(int argc, char **argv, unsigned int *vRet)
 		return CMD_ERROR;
 	}
 
-	if((sceDisplayGetFrameBufferInternal(pri, &frame_addr, &frame_width, &pixel_format, &sync) < 0) || (frame_addr == NULL))
+	if((sceDisplayGetFrameBufferInternal(pri, &frame_addr, &frame_width, &pixel_format, sync) < 0) || (frame_addr == NULL))
 	{
 		SHELL_PRINT("Invalid frame address\n");
 		return CMD_ERROR;
@@ -3147,7 +3147,7 @@ static int scrshot_cmd(int argc, char **argv, unsigned int *vRet)
 	block_addr = sceKernelGetBlockHeadAddr(block_id);
 	SHELL_PRINT("frame_addr 0x%p, frame_width %d, pixel_format %d output %s\n", frame_addr, frame_width, pixel_format, path);
 
-	p = (u32) frame_addr;
+	p = (unsigned int) frame_addr;
 	if(p & 0x80000000)
 	{
 		p |= 0xA0000000;
@@ -3166,8 +3166,8 @@ static int scrshot_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int dcache_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr = 0;
-	u32 size = 0;
+	unsigned int addr = 0;
+	unsigned int size = 0;
 	void (*cacheall)(void);
 	void (*cacherange)(const void *addr, unsigned int size);
 
@@ -3224,8 +3224,8 @@ static int dcache_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int icache_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr = 0;
-	u32 size = 0;
+	unsigned int addr = 0;
+	unsigned int size = 0;
 
 	if(argc == 1)
 	{
@@ -3259,7 +3259,7 @@ static int icache_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int modaddr_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
+	unsigned int addr;
 	SceModule *pMod;
 	const char *opts = "";
 
@@ -3348,11 +3348,11 @@ static int exresume_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	if(argc > 0)
 	{
-		u32 addr;
+		unsigned int addr;
 
 		if(memDecode(argv[0], &addr))
 		{
-			u32 *epc;
+			unsigned int *epc;
 
 			epc = exceptionGetReg("epc");
 			if(epc != NULL)
@@ -3377,8 +3377,8 @@ static int exresume_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int setreg_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
-	u32 *reg;
+	unsigned int addr;
+	unsigned int *reg;
 
 	if(memDecode(argv[1], &addr))
 	{
@@ -3408,7 +3408,7 @@ static int bpth_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int bpset_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 addr;
+	unsigned int addr;
 	int ret = CMD_ERROR;
 	unsigned int flags = 0;
 
@@ -3436,7 +3436,7 @@ static int bpset_cmd(int argc, char **argv, unsigned int *vRet)
 
 		addr &= ~3;
 		size_left = memValidate(addr, MEM_ATTRIB_WRITE | MEM_ATTRIB_WORD | MEM_ATTRIB_EXEC);
-		if(size_left >= sizeof(u32))
+		if(size_left >= sizeof(unsigned int))
 		{
 			if(debugSetBP(addr, flags, 0))
 			{
@@ -3458,7 +3458,7 @@ static int bpset_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int bpdel_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 id;
+	unsigned int id;
 	struct Breakpoint *bp;
 
 	if(memDecode(argv[0], &id))
@@ -3484,7 +3484,7 @@ static int bpdel_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int bpdis_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 id;
+	unsigned int id;
 	struct Breakpoint *bp;
 
 	if(memDecode(argv[0], &id))
@@ -3510,7 +3510,7 @@ static int bpdis_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int bpena_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 id;
+	unsigned int id;
 	struct Breakpoint *bp;
 
 	if(memDecode(argv[0], &id))
@@ -3643,7 +3643,7 @@ static int poweroff_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int clock_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 val1, val2, val3;
+	unsigned int val1, val2, val3;
 
 	if((strtoint(argv[0], &val1)) && (strtoint(argv[1], &val2)) && (strtoint(argv[2], &val3)))
 	{
@@ -3660,7 +3660,7 @@ static int clock_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int profmode_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 *debug;
+	unsigned int *debug;
 	const char *mode;
 
 	debug = get_debug_register();
@@ -3711,14 +3711,14 @@ static int profmode_cmd(int argc, char **argv, unsigned int *vRet)
 
 static int debugreg_cmd(int argc, char **argv, unsigned int *vRet)
 {
-	u32 *debug;
+	unsigned int *debug;
 
 	debug = get_debug_register();
 	if(debug)
 	{
 		if(argc > 0)
 		{
-			u32 val;
+			unsigned int val;
 
 			if(strtoint(argv[0], &val))
 			{
@@ -3934,7 +3934,7 @@ static int call_cmd(int argc, char **argv, unsigned int *vRet)
 	SceUInt timeout;
 
 	memset(&frame, 0, sizeof(frame));
-	if(memDecode(argv[0], (u32 *) &frame.func))
+	if(memDecode(argv[0], (void*) &frame.func))
 	{
 		int i;
 		for(i = 1; i < argc; i++)
@@ -4081,9 +4081,6 @@ static void print_sym_info(SceUID uid)
 {
 	SceKernelModuleInfo info;
 	int ret;
-	u8 digest[20];
-	char hash[41];
-	int i;
 
 	enable_kprintf(0);
 	memset(&info, 0, sizeof(info));
@@ -4092,12 +4089,7 @@ static void print_sym_info(SceUID uid)
 	ret = g_QueryModuleInfo(uid, &info);
 	if(ret >= 0)
 	{
-		sceKernelUtilsSha1Digest((void*) info.text_addr, info.text_size, digest);
-		for(i = 0; i < 20; i++)
-		{
-			sprintf(&hash[i*2], "%02X", digest[i]);
-		}
-		SHELL_PRINT_CMD(SHELL_CMD_SYMLOAD, "%s%08X%s", hash, info.text_addr, info.name);
+		SHELL_PRINT_CMD(SHELL_CMD_SYMLOAD, "%08X%08X%s", info.text_addr, sceKernelDevkitVersion(), info.name);
 	}
 	enable_kprintf(1);
 

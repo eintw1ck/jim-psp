@@ -52,7 +52,7 @@ int closefile(PspFile *pFile);
 int fdgetc(PspFile *pFile);
 int fdgets(PspFile *pFile, char *buf, int size);
 void strip_whitesp(char *s);
-int strtoint(const char *str, u32 *i);
+int strtoint(const char *str, unsigned int *i);
 void* memmem_mask(void *data, void *mask, int len, void *search, int slen);
 int memcmp_mask(void *data1, void *data2, void *mask, int len);
 int decode_hexstr(const char *str, unsigned char *data, int max);
@@ -67,7 +67,7 @@ int isdir(const char *path);
 #define DEBUG_REG_GLOBAL_PROFILER 0x00800000
 #define DEBUG_REG_THREAD_PROFILER 0x00C00000
 #define DEBUG_REG_PROFILER_MASK   (~DEBUG_REG_THREAD_PROFILER)
-u32 *get_debug_register(void);
+unsigned int *get_debug_register(void);
 void enable_kprintf(int enable);
 
 #define MODE_GENERIC 0
