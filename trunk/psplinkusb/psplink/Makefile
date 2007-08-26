@@ -1,5 +1,5 @@
 TARGET = psplink
-OBJS = main.o shell.o config.o bitmap.o tty.o decodeaddr.o memoryUID.o kmode.o exception.o exception_asm.o psplinkcnf.o util.o debug.o libs.o apihook.o thctx.o stdio.o usbshell.o modload.o fdprintf.o exports.o
+OBJS = main.o shell.o config.o bitmap.o tty.o decodeaddr.o memoryUID.o kmode.o exception.o exception_asm.o psplinkcnf.o util.o debug.o libs.o apihook.o thctx.o stdio.o usbshell.o modload.o exports.o
 
 # Use the kernel's small inbuilt libc
 USE_KERNEL_LIBC = 1

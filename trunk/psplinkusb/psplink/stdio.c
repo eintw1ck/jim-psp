@@ -18,7 +18,6 @@
 #include <pspdebug.h>
 #include <pspstdio.h>
 
-int g_shellfd = -1;
 static int g_initialised = 0;
 static PspDebugInputHandler g_stdin_handler = NULL;
 static PspDebugPrintHandler g_stdout_handler = NULL;
@@ -44,7 +43,7 @@ static int io_exit(PspIoDrvArg *arg)
 static int io_open(PspIoDrvFileArg *arg, char *file, int mode, SceMode mask)
 {
 	if((arg->fs_num != STDIN_FILENO) && (arg->fs_num != STDOUT_FILENO) 
-			&& (arg->fs_num != STDERR_FILENO) && (arg->fs_num != SHELL_FILENO))
+			&& (arg->fs_num != STDERR_FILENO))
 	{
 		return SCE_KERNEL_ERROR_NOFILE;
 	}
@@ -78,10 +77,6 @@ static int io_write(PspIoDrvFileArg *arg, const char *data, int len)
 	else if((arg->fs_num == STDERR_FILENO) && (g_stderr_handler != NULL))
 	{
 		ret = g_stderr_handler(data, len);
-	}
-	else if((arg->fs_num == SHELL_FILENO) && (g_shell_handler != NULL))
-	{
-		ret = g_shell_handler(data, len);
 	}
 	(void) sceKernelSignalSema(g_out_sema, 1);
 
@@ -155,13 +150,6 @@ int stdioTtyInit(void)
 
 	ret = sceKernelStderrReopen("tty2:", PSP_O_WRONLY, 0777);
 	if(ret < 0)
-	{
-		return ret;
-	}
-
-	/* Open a new file descriptor for just shell output */
-	g_shellfd = sceIoOpen("tty3:", PSP_O_WRONLY, 0777);
-	if(g_shellfd < 0)
 	{
 		return ret;
 	}

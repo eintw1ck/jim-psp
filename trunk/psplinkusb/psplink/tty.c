@@ -33,7 +33,6 @@
 static PspDebugInputHandler g_usbStdinHandler = NULL;
 static PspDebugPrintHandler g_usbStdoutHandler = NULL;
 static PspDebugPrintHandler g_usbStderrHandler = NULL;
-static PspDebugPrintHandler g_usbShellHandler = NULL;
 
 extern struct GlobalContext g_context;
 
@@ -57,16 +56,6 @@ static int stderrHandler(const char *data, int size)
 	return size;
 }
 
-static int shellHandler(const char *data, int size)
-{
-	if(g_usbShellHandler)
-	{
-		g_usbShellHandler(data, size);
-	}
-
-	return size;
-}
-
 static int inputHandler(char *data, int size)
 {
 	if(g_usbStdinHandler)
@@ -77,11 +66,10 @@ static int inputHandler(char *data, int size)
 	return 0;
 }
 
-void ttySetUsbHandler(PspDebugPrintHandler usbShellHandler, PspDebugPrintHandler usbStdoutHandler, PspDebugPrintHandler usbStderrHandler, PspDebugInputHandler usbStdinHandler)
+void ttySetUsbHandler(PspDebugPrintHandler usbStdoutHandler, PspDebugPrintHandler usbStderrHandler, PspDebugInputHandler usbStdinHandler)
 {
 	g_usbStdoutHandler = usbStdoutHandler;
 	g_usbStderrHandler = usbStderrHandler;
-	g_usbShellHandler = usbShellHandler;
 	g_usbStdinHandler = usbStdinHandler;
 }
 
@@ -89,7 +77,7 @@ static int close_func(int fd)
 {
 	int ret = SCE_KERNEL_ERROR_FILEERR;
 
-	if((fd > 2) && (fd != g_shellfd))
+	if(fd > 2)
 	{
 		ret = sceIoClose(fd);
 	}
@@ -109,7 +97,6 @@ void ttyInit(void)
 
 	stdioInstallStdoutHandler(stdoutHandler);
 	stdioInstallStderrHandler(stderrHandler);
-	stdioInstallShellHandler(shellHandler);
 	stdioInstallStdinHandler(inputHandler);
 	/* Install a patch to prevent a naughty app from closing stdout */
 	uid = refer_module_by_name("sceIOFileManager", NULL);

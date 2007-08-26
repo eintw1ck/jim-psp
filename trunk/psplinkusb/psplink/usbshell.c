@@ -14,6 +14,7 @@
 #include <pspdebug.h>
 #include <pspkdebug.h>
 #include <pspsdk.h>
+#include <pspsysclib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,18 +23,19 @@
 #include "tty.h"
 
 #define MAX_CLI 4096
+#define CTX_BUF_SIZE 128
+
+struct prnt_ctx 
+{
+	unsigned short fd;
+	unsigned short len;
+	unsigned char buf[CTX_BUF_SIZE];
+};
 
 void psplinkPrintPrompt(void);
 
 struct AsyncEndpoint g_endp;
 struct AsyncEndpoint g_stdin;
-
-int usbShellPrint(const char *data, int size)
-{
-	usbAsyncWrite(ASYNC_SHELL, data, size);
-
-	return size;
-}
 
 int usbStdoutPrint(const char *data, int size)
 {
@@ -72,7 +74,7 @@ int usbShellInit(void)
 {
 	usbAsyncRegister(ASYNC_SHELL, &g_endp);
 	usbAsyncRegister(ASYNC_STDOUT, &g_stdin);
-	ttySetUsbHandler(usbShellPrint, usbStdoutPrint, usbStderrPrint, usbStdinRead);
+	ttySetUsbHandler(usbStdoutPrint, usbStderrPrint, usbStdinRead);
 	usbWaitForConnect();
 	psplinkPrintPrompt();
 
@@ -116,4 +118,47 @@ int usbShellReadInput(unsigned char *cli, char **argv, int max_cli, int max_arg)
 	}
 
 	return argc;
+}
+
+static void cb(struct prnt_ctx *ctx, int type)
+{
+	if(type == 0x200) 
+	{
+		ctx->len = 0;
+	}
+	else if(type == 0x201)
+	{ 
+		usbAsyncWrite(ASYNC_SHELL, ctx->buf, ctx->len);
+		ctx->len = 0;
+	}
+	else
+	{
+		if(type == '\n')
+		{
+			cb(ctx, '\r');
+		}
+		
+		ctx->buf[ctx->len++] = type;
+		if(ctx->len == CTX_BUF_SIZE)
+		{
+			usbAsyncWrite(ASYNC_SHELL, ctx->buf, ctx->len);
+			ctx->len = 0;
+		}
+	}
+}
+
+int shprintf(const char *fmt, ...)
+{
+	struct prnt_ctx ctx;
+	va_list opt;
+
+	ctx.len = 0;
+
+	va_start(opt, fmt);
+
+	prnt((prnt_callback) cb, (void*) &ctx, fmt, opt);
+
+	va_end(opt);
+
+	return 0;
 }
