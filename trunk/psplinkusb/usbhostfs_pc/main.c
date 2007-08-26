@@ -2489,6 +2489,7 @@ int make_socket(unsigned short port)
 
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 
+	memset(&name, 0, sizeof(name));
 	name.sin_family = AF_INET;
 	name.sin_port = htons(port);
 	if(g_globalbind)
