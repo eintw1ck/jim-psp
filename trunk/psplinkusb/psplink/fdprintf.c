@@ -22,6 +22,8 @@ struct prnt_ctx
 	unsigned char buf[CTX_BUF_SIZE];
 };
 
+int usbShellPrint(const char *data, int size);
+
 static void cb(struct prnt_ctx *ctx, int type)
 {
 	if(type == 0x200) 
@@ -30,7 +32,7 @@ static void cb(struct prnt_ctx *ctx, int type)
 	}
 	else if(type == 0x201)
 	{
-		sceIoWrite(ctx->fd, ctx->buf, ctx->len);
+		usbShellPrint((char *) ctx->buf, ctx->len);
 		ctx->len = 0;
 	}
 	else
@@ -43,18 +45,17 @@ static void cb(struct prnt_ctx *ctx, int type)
 		ctx->buf[ctx->len++] = type;
 		if(ctx->len == CTX_BUF_SIZE)
 		{
-			sceIoWrite(ctx->fd, ctx->buf, ctx->len);
+			usbShellPrint((const char *) ctx->buf, ctx->len);
 			ctx->len = 0;
 		}
 	}
 }
 
-int fdprintf(int fd, const char *fmt, ...)
+int shprintf(const char *fmt, ...)
 {
 	struct prnt_ctx ctx;
 	va_list opt;
 
-	ctx.fd = fd;
 	ctx.len = 0;
 
 	va_start(opt, fmt);

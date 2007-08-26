@@ -46,10 +46,10 @@ typedef unsigned int jmp_buf[12];
 int setjmp(jmp_buf jmp);
 int longjmp(jmp_buf jmp, int ret);
 
-int fdprintf(int fd, const char *fmt, ...);
-#define SHELL_PRINT_FD(fd, fmt, ...) fdprintf(fd, "\xff" fmt "\xfe", ## __VA_ARGS__)
-#define SHELL_PRINT(fmt, ...) SHELL_PRINT_FD(g_shellfd, fmt, ## __VA_ARGS__ )
-#define SHELL_PRINT_CMD(cmd, fmt, ...) fdprintf(g_shellfd, "\xff" "%c" fmt "\xfe", cmd, ## __VA_ARGS__)
+int shprintf(const char *fmt, ...);
+
+#define SHELL_PRINT(fmt, ...) shprintf("\xff" fmt "\xfe", ## __VA_ARGS__)
+#define SHELL_PRINT_CMD(cmd, fmt, ...) shprintf("\xff" "%c" fmt "\xfe", cmd, ## __VA_ARGS__)
 
 void psplinkReset(void);
 void psplinkStop(void);
