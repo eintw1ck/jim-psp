@@ -5894,19 +5894,19 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/fdman.c newlib-1.15.0/newlib/l
 +	memset(__psp_descriptormap,        0, sizeof(__psp_descriptormap_type*)*__PSP_FILENO_MAX);
 +
 +	scefd = sceKernelStdin();
-+	if ((scefd >= 0) && (scefd < __PSP_FILENO_MAX)) {
++	if (scefd >= 0) {
 +		__psp_descriptormap[0] = &__psp_descriptor_data_pool[0];
 +		__psp_descriptormap[0]->sce_descriptor = scefd;
 +		__psp_descriptormap[0]->type = __PSP_DESCRIPTOR_TYPE_TTY;
 +	}
 +	scefd = sceKernelStdout();
-+	if ((scefd >= 0) && (scefd < __PSP_FILENO_MAX)) {
++	if (scefd >= 0) {
 +		__psp_descriptormap[1] = &__psp_descriptor_data_pool[1];
 +		__psp_descriptormap[1]->sce_descriptor = scefd;
 +		__psp_descriptormap[1]->type = __PSP_DESCRIPTOR_TYPE_TTY;
 +	}
 +	scefd = sceKernelStderr();
-+	if ((scefd >= 0) && (scefd < __PSP_FILENO_MAX)) {
++	if (scefd >= 0) {
 +		__psp_descriptormap[2] = &__psp_descriptor_data_pool[2];
 +		__psp_descriptormap[2]->sce_descriptor = scefd;
 +		__psp_descriptormap[2]->type = __PSP_DESCRIPTOR_TYPE_TTY;
