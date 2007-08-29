@@ -50,22 +50,23 @@ libpspkernelinclude_HEADERS =	\
 	pspiofilemgr_kernel.h	\
 	pspkernel.h		\
 	psploadcore.h		\
-	psploadexec_kernel.h \
+	psploadexec_kernel.h	\
 	pspstdio_kernel.h	\
 	pspsysreg.h		\
-	psputilsforkernel.h \
-	pspkdebug.h			\
-	pspintrman_kernel.h  \
-	pspmodulemgr_kernel.h \
+	psputilsforkernel.h	\
+	pspkdebug.h		\
+	pspintrman_kernel.h	\
+	pspmodulemgr_kernel.h	\
 	pspsystimer.h		\
-	pspsysmem_kernel.h    \
-	pspthreadman_kernel.h \
-	pspsyscon.h			\
+	pspsysmem_kernel.h	\
+	pspthreadman_kernel.h	\
+	pspsyscon.h		\
 	pspsysevent.h		\
 	pspidstorage.h		\
 	pspexception.h 		\
-	pspsysclib.h
-	
+	pspsysclib.h		\
+	pspimpose_driver.h
+
 lib_LIBRARIES = libpspkernel.a
 
 libpspkernel_a_SOURCES =	\
@@ -77,15 +78,16 @@ libpspkernel_a_SOURCES =	\
 	sceSyscon_driver.S	\
 	sceSysreg_driver.S	\
 	UtilsForKernel.S	\
-	InterruptManagerForKernel.S  \
-	ThreadManForKernel.S         \
-	SysclibForKernel.S			\
-	LoadExecForKernel.S		\
-	SysMemForKernel.S 		\
+	InterruptManagerForKernel.S \
+	ThreadManForKernel.S	\
+	SysclibForKernel.S	\
+	LoadExecForKernel.S	\
+	SysMemForKernel.S 	\
 	SysTimerForKernel.S 	\
-	sceSysEventForKernel.S \
+	sceSysEventForKernel.S	\
 	ModuleMgrForKernel.S	\
-	sceIdStorage_driver.S
+	sceIdStorage_driver.S	\
+	sceImpose_driver.S
 
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
 						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS) \
