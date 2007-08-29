@@ -44,6 +44,8 @@ SYSTIMER_OBJS = SysTimerForKernel_0000.o SysTimerForKernel_0001.o SysTimerForKer
 
 SYSEVENT_OBJS = sceSysEventForKernel_0000.o sceSysEventForKernel_0001.o sceSysEventForKernel_0002.o sceSysEventForKernel_0003.o sceSysEventForKernel_0004.o sceSysEventForKernel_0005.o 
 
+IMPOSE_OBJS = sceImpose_driver_0000.o sceImpose_driver_0001.o sceImpose_driver_0002.o sceImpose_driver_0003.o sceImpose_driver_0004.o sceImpose_driver_0005.o sceImpose_driver_0006.o sceImpose_driver_0007.o sceImpose_driver_0008.o sceImpose_driver_0009.o sceImpose_driver_0010.o sceImpose_driver_0011.o sceImpose_driver_0012.o sceImpose_driver_0013.o sceImpose_driver_0014.o sceImpose_driver_0015.o sceImpose_driver_0016.o sceImpose_driver_0017.o sceImpose_driver_0018.o sceImpose_driver_0019.o sceImpose_driver_0020.o sceImpose_driver_0021.o sceImpose_driver_0022.o sceImpose_driver_0023.o 
+
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
@@ -92,7 +94,7 @@ libpspkernel_a_SOURCES =	\
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
 						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS) \
 						$(THREAD_OBJS) $(SYSCLIB_OBJS) $(LOADEXEC_OBJS) $(SYSMEM_OBJS) $(MODULE_OBJS) \
-						$(IDSTORAGE_OBJS) $(SYSTIMER_OBJS) $(SYSEVENT_OBJS)
+						$(IDSTORAGE_OBJS) $(SYSTIMER_OBJS) $(SYSEVENT_OBJS) $(IMPOSE_OBJS)
 
 $(EXCEPTION_OBJS): ExceptionManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -143,4 +145,7 @@ $(SYSTIMER_OBJS): SysTimerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(SYSEVENT_OBJS): sceSysEventForKernel.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(IMPOSE_OBJS): sceImpose_driver.S
 	$(COMPILE) -DF_$* $< -c -o $@
