@@ -39,10 +39,10 @@ libpspuserinclude_HEADERS =	\
 	pspkerneltypes.h	\
 	pspkerror.h		\
 	psploadexec.h		\
-	pspmscm.h			\
+	pspmscm.h		\
 	pspmoduleinfo.h		\
 	pspmodulemgr.h		\
-	pspsuspend.h    \
+	pspsuspend.h    	\
 	pspsysmem.h		\
 	pspthreadman.h		\
 	pspstdio.h		\
@@ -64,7 +64,8 @@ libpspuser_a_SOURCES =	\
 	ThreadManForUser.S	\
 	UtilsForUser.S		\
 	sceSuspendForUser.S	\
-	pspintrman.c
+	pspintrman.c		\
+	sceImpose.S
 
 libpspuser_a_LIBADD = \
 $(IO_OBJS) \
