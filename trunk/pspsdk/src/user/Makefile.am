@@ -30,6 +30,8 @@ INTERRUPT_OBJS = InterruptManager_0000.o InterruptManager_0001.o InterruptManage
 
 LOADEXEC_OBJS = LoadExecForUser_0000.o LoadExecForUser_0001.o LoadExecForUser_0002.o LoadExecForUser_0003.o LoadExecForUser_0004.o 
 
+IMPOSE_OBJS = sceImpose_0000.o sceImpose_0001.o sceImpose_0002.o sceImpose_0003.o sceImpose_0004.o sceImpose_0005.o sceImpose_0006.o sceImpose_0007.o sceImpose_0008.o sceImpose_0009.o sceImpose_0010.o sceImpose_0011.o sceImpose_0012.o sceImpose_0013.o sceImpose_0014.o sceImpose_0015.o 
+
 libpspuserincludedir = @PSPSDK_INCLUDEDIR@
 libpspuserinclude_HEADERS =	\
 	pspiofilemgr.h		\
@@ -77,7 +79,8 @@ $(SYSMEM_OBJS) \
 $(THREADMAN_OBJS) \
 $(UTILS_OBJS) \
 $(INTERRUPT_OBJS) \
-$(LOADEXEC_OBJS)
+$(LOADEXEC_OBJS) \
+$(IMPOSE_OBJS)
 
 $(IO_OBJS): IoFileMgrForUser.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -107,4 +110,7 @@ $(INTERRUPT_OBJS): InterruptManager.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(LOADEXEC_OBJS): LoadExecForUser.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(IMPOSE_OBJS): sceImpose.S
 	$(COMPILE) -DF_$* $< -c -o $@
