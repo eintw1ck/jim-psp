@@ -324,9 +324,9 @@ void gumScale(ScePspFMatrix4* m, const ScePspFVector3* v)
 	float x,y,z;
 
 	x = v->x; y = v->y; z = v->z;
-	m->x.x *= x; m->x.y *= y; m->x.z *= z;
-	m->y.x *= x; m->y.y *= y; m->y.z *= z;
-	m->z.x *= x; m->z.y *= y; m->z.z *= z;
+	m->x.x *= x; m->x.y *= x; m->x.z *= x;
+	m->y.x *= y; m->y.y *= y; m->y.z *= y;
+	m->z.x *= z; m->z.y *= z; m->z.z *= z;
 }
 #endif
 
