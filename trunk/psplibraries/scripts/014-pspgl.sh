@@ -3,7 +3,7 @@
 
  ## Download the latest source code.
  if test ! -d "pspgl"; then
-  svn checkout svn://svn.pspdev.org/psp/trunk/pspgl || { exit 1; }
+  svn checkout svn://svn.ps2dev.org/psp/trunk/pspgl || { exit 1; }
  else
   svn update pspgl || { exit 1; }
  fi

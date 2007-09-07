@@ -3,7 +3,7 @@
 
  ## Download the latest source code.
  if test ! -d "SDL_ttf"; then
-  svn checkout svn://svn.pspdev.org/psp/trunk/SDL_ttf || { exit 1; }
+  svn checkout svn://svn.ps2dev.org/psp/trunk/SDL_ttf || { exit 1; }
  else
   svn update SDL_ttf || { exit 1; }
  fi
