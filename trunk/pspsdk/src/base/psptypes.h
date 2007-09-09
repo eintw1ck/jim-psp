@@ -75,23 +75,6 @@ static __inline__ void _sh(u16 val, u32 addr) { *(vu16 *)addr = val; }
 static __inline__ void _sw(u32 val, u32 addr) { *(vu32 *)addr = val; }
 static __inline__ void _sd(u64 val, u32 addr) { *(vu64 *)addr = val; }
 
-/* Common integer types. */
-typedef unsigned char u_char8;
-typedef uint16_t u_short16;
-typedef uint16_t u_int16;
-typedef uint32_t u_int32;
-typedef uint64_t u_int64;
-typedef uint64_t u_long64;
-/*typedef unsigned int u_long128 __attribute__((mode(TI)));*/
-
-typedef char char8;
-typedef int16_t short16;
-typedef int16_t int16;
-typedef int32_t int32;
-typedef int64_t int64;
-typedef int64_t long64;
-/*typedef int long128 __attribute__((mode(TI)));*/
-
 /* SCE types. */
 typedef unsigned char SceUChar8;
 typedef uint16_t SceUShort16;
