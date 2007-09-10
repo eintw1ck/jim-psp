@@ -175,13 +175,18 @@ static void prepare_map_key_entry( struct MaptableEntry * result, char * text )
         if( ( text[0] == 'u' || text[0] == 'U' ) && text[1] == '+' )
         {
             int k;
-            for(k=2; k < length; k++ )
+            for(k=2; k < length; k += 2 )
             {
-                if( sscanf( text+k, "%x", &c ) )
-                {
-                    result->map[k-2] = c;
-                    result->length++;
-                }
+              /* Zx: bug fix */
+              char buf_uni[3];
+              buf_uni[0] = text[k];
+              buf_uni[1] = text[k+1];
+              buf_uni[2] = 0;
+              if( sscanf( buf_uni, "%x", &c ) )
+              {
+                result->map[(k-2)/2] = c;
+                result->length++;
+              }
             }
         }
     }
