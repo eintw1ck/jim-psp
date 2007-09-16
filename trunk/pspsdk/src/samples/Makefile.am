@@ -69,6 +69,7 @@ SAMPLES = \
 	template/elf_template \
 	template/prx_template \
 	template/lib_template \
+	template/kprx_template \
 	usb/storage \
 	utility/netconf \
 	utility/netdialog \
