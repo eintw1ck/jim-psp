@@ -858,16 +858,14 @@ int psplinkReferModule(SceUID uid, SceKernelModuleInfo *info)
 	return ret;
 }
 
-static int is_nan(float val)
+static int is_nan(float *val)
 {
-	void *p;
 	unsigned int conv;
 	int sign;
 	int exp;
 	int mantissa;
 
-	p = (void *) &val;
-	conv = *((unsigned int *) p);
+	conv = *((unsigned int *) val);
 	sign = (conv >> 31) & 1;
 
 	exp = (conv >> 23) & 0xff;
@@ -881,16 +879,14 @@ static int is_nan(float val)
 	return 0;
 }
 
-static int is_inf(float val)
+static int is_inf(float *val)
 {
-	void *p;
 	unsigned int conv;
 	int sign;
 	int exp;
 	int mantissa;
 
-	p = (void *) &val;
-	conv = *((unsigned int *) p);
+	conv = *((unsigned int *) val);
 	sign = (conv >> 31) & 1;
 
 	exp = (conv >> 23) & 0xff;
@@ -931,7 +927,7 @@ static char get_num(float *val, int *exp)
 	return ret;
 }
 
-void f_cvt(float val, char *buf, int bufsize, int precision, int mode)
+void f_cvt(float *val, char *buf, int bufsize, int precision, int mode)
 {
 	char conv_buf[128];
 	char *conv_p = conv_buf;
@@ -969,15 +965,15 @@ void f_cvt(float val, char *buf, int bufsize, int precision, int mode)
 		return;
 	}
 
-	if(val < 0.0f)
+	if(*val < 0.0f)
 	{
 		sign = 1;
-		normval -= val;
+		normval -= *val;
 	}
 	else
 	{
 		sign = 0;
-		normval = val;
+		normval = *val;
 	}
 
 	if(precision < 0)

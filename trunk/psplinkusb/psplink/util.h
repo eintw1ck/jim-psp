@@ -73,7 +73,7 @@ void enable_kprintf(int enable);
 #define MODE_GENERIC 0
 #define MODE_EXP 1
 #define MODE_FLOAT_ONLY 2
-void f_cvt(float val, char *buf, int bufsize, int precision, int mode);
+void f_cvt(float *val, char *buf, int bufsize, int precision, int mode);
 
 extern int (*g_QueryModuleInfo)(SceUID modid, SceKernelModuleInfo *info);
 extern int (*g_GetModuleIdList)(SceUID *readbuf, int readbufsize, int *idcount);

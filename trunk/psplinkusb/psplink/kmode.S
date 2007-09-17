@@ -188,7 +188,7 @@ _apiHookEntry:
 	addiu	$a1, $sp, 4		# Copy pointer to return values into second arg
 
 	lw		$v0, 4($sp)		# Restore return values
-	lw		$v1, 4($sp)
+	lw		$v1, 8($sp)
 
 1:
 	lw		$ra, 0($sp)		 # Restore $ra

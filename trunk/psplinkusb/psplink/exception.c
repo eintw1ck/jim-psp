@@ -285,8 +285,8 @@ void exceptionPrintFPURegs(float *pFpu, unsigned int fsr, unsigned int fir)
 	{
 		char left[64], right[64];
 
-		f_cvt(pFpu[i], left, sizeof(left), 6, MODE_GENERIC);
-		f_cvt(pFpu[i+1], right, sizeof(right), 6, MODE_GENERIC);
+		f_cvt(&pFpu[i], left, sizeof(left), 6, MODE_GENERIC);
+		f_cvt(&pFpu[i+1], right, sizeof(right), 6, MODE_GENERIC);
 		SHELL_PRINT("fpr%02d: %-20s - fpr%02d: %-20s\n", i, left, i+1, right);
 	}
 	SHELL_PRINT("fsr: %08X   - fir %08X\n", fsr, fir);
@@ -321,10 +321,10 @@ static void print_vfpu_row(char type, int m, int c, int r, float x, float y, flo
 {
 	char xs[64], ys[64], zs[64], ws[64];
 
-	f_cvt(x, xs, sizeof(xs), 6, MODE_GENERIC);
-	f_cvt(y, ys, sizeof(ys), 6, MODE_GENERIC);
-	f_cvt(z, zs, sizeof(zs), 6, MODE_GENERIC);
-	f_cvt(w, ws, sizeof(ws), 6, MODE_GENERIC);
+	f_cvt(&x, xs, sizeof(xs), 6, MODE_GENERIC);
+	f_cvt(&y, ys, sizeof(ys), 6, MODE_GENERIC);
+	f_cvt(&z, zs, sizeof(zs), 6, MODE_GENERIC);
+	f_cvt(&w, ws, sizeof(ws), 6, MODE_GENERIC);
 	if(type != 0)
 	{
 		SHELL_PRINT("%c%d%d%d: { %14s, %14s, %14s, %14s }\n", 
@@ -349,8 +349,8 @@ void exceptionPrintVFPURegs(float *pFpu, int mode)
 		{
 			char left[64], right[64];
 
-			f_cvt(pFpu[i], left, sizeof(left), 6, MODE_GENERIC);
-			f_cvt(pFpu[i+1], right, sizeof(right), 6, MODE_GENERIC);
+			f_cvt(&pFpu[i], left, sizeof(left), 6, MODE_GENERIC);
+			f_cvt(&pFpu[i+1], right, sizeof(right), 6, MODE_GENERIC);
 			SHELL_PRINT("S%d%d%d: %-20s - S%d%d%d: %-20s\n", 
 					MAT_NUM(i), COL_NUM(i), ROW_NUM(i), left, 
 					MAT_NUM(i+1), COL_NUM(i+1), ROW_NUM(i+1),  right);

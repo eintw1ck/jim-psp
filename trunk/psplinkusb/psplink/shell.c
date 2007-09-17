@@ -2646,7 +2646,7 @@ static int peekw_cmd(int argc, char **argv, unsigned int *vRet)
 
 							  pspSdkDisableFPUExceptions();
 							  pdata = (float *) addr;
-							  f_cvt(*pdata, floatbuf, sizeof(floatbuf), 6, MODE_GENERIC);
+							  f_cvt(pdata, floatbuf, sizeof(floatbuf), 6, MODE_GENERIC);
 							  SHELL_PRINT("0x%08X: %s\n", addr, floatbuf);
 						  }
 						  break;
@@ -3617,12 +3617,14 @@ static int power_cmd(int argc, char **argv, unsigned int *vRet)
 	SHELL_PRINT("%-14s: %s\n", "Battery", scePowerIsBatteryExist()? "present" : "absent ");
 
 	if (scePowerIsBatteryExist()) {
+		float batvolt;
 	    SHELL_PRINT("%-14s: %s\n", "Low Charge", scePowerIsLowBattery()? "yes" : "no ");
 	    SHELL_PRINT("%-14s: %s\n", "Charging", scePowerIsBatteryCharging()? "yes" : "no ");
 	    batteryLifeTime = scePowerGetBatteryLifeTime();
+		batvolt = (float) scePowerGetBatteryVolt() / 1000.0;
 	    SHELL_PRINT("%-14s: %d%% (%02dh%02dm)     \n", "Charge",
 		   scePowerGetBatteryLifePercent(), batteryLifeTime/60, batteryLifeTime-(batteryLifeTime/60*60));
-		f_cvt((float) scePowerGetBatteryVolt() / 1000.0, fbuf, sizeof(fbuf), 3, MODE_GENERIC);
+		f_cvt(&batvolt, fbuf, sizeof(fbuf), 3, MODE_GENERIC);
 	    SHELL_PRINT("%-14s: %sV\n", "Volts", fbuf);
 	    SHELL_PRINT("%-14s: %d deg C\n", "Battery Temp", scePowerGetBatteryTemp());
 	} else
