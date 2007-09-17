@@ -57,7 +57,8 @@ int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 	}
 
 	thread->handle = sceKernelCreateThread("SDL thread", ThreadEntry, 
-					       priority, 0x8000, 0, NULL);
+					       priority, 0x8000, 
+					       PSP_THREAD_ATTR_VFPU, NULL);
 	if (thread->handle < 0) {
 		SDL_SetError("sceKernelCreateThread() failed");
 		return -1;
