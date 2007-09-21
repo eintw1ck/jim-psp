@@ -3,7 +3,7 @@
 
  ## Download the source code.
  if test ! -d "psplinkusb"; then
-  svn checkout svn://svn.pspdev.org/psp/trunk/psplinkusb || { exit 1; }
+  svn checkout svn://svn.ps2dev.org/psp/trunk/psplinkusb || { exit 1; }
  else
   svn update psplinkusb || { exit 1; }
  fi
