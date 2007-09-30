@@ -48,6 +48,24 @@ void pspDebugScreenInitEx(void *vram_base, int mode, int setup);
   */
 void pspDebugScreenPrintf(const char *fmt, ...) __attribute__((format(printf,1,2)));
 
+/**
+  * Do a printf to the debug screen.
+  * @note This is for kernel mode only as it uses a kernel function
+  * to perform the printf instead of using vsnprintf, use normal printf for
+  * user mode.
+  *
+  * @param fmt - Format string to print
+  * @param ... - Arguments
+  */
+void pspDebugScreenKprintf(const char *format, ...) __attribute__((format(printf,1,2)));
+
+/**
+ * Enable or disable background colour writing (defaults to enabled)
+ * 
+ * @param enable - Set 1 to to enable background color, 0 for disable
+ */
+void pspDebugScreenEnableBackColor(int enable);
+
 /** 
   * Set the background color for the text
   * @note To reset the entire screens bg colour you need to call pspDebugScreenClear

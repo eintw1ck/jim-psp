@@ -15,6 +15,7 @@
 #include <psptypes.h>
 #include <pspkernel.h>
 #include <pspdisplay.h>
+#include <pspsysclib.h>
 #include <pspge.h>
 #include <stdarg.h>
 #include <pspdebug.h>
@@ -32,6 +33,7 @@ void  _pspDebugScreenClearLine( int Y);
 static int X = 0, Y = 0;
 static int MX=68, MY=34;
 static u32 bg_col = 0, fg_col = 0xFFFFFFFF;
+static int bg_enable = 1;
 static void* g_vram_base = (u32 *) 0x04000000;
 static int g_vram_offset = 0;
 static int g_vram_mode = PSP_DISPLAY_PIXEL_FORMAT_8888;
@@ -155,6 +157,11 @@ void pspDebugScreenInit()
    pspDebugScreenInitEx(NULL, PSP_DISPLAY_PIXEL_FORMAT_8888, 1);
 }
 
+void pspDebugScreenEnableBackColor(int enable) 
+{
+	bg_enable = enable;
+}
+
 void pspDebugScreenSetBackColor(u32 colour)
 {
    bg_col = colour;
@@ -200,7 +207,10 @@ void pspDebugScreenClear()
 	}
 
 	for(y=0;y<MY;y++)
+	{
 		_pspDebugScreenClearLine(y);
+	}
+
 	pspDebugScreenSetXY(0,0);
 	clear_screen(bg_col);
 }
@@ -227,7 +237,6 @@ static void debug_put_char_32(int x, int y, u32 color, u32 bgc, u8 ch)
 {
    int 	i,j, l;
    u8	*font;
-   u32  pixel;
    u32 *vram_ptr;
    u32 *vram;
 
@@ -247,11 +256,11 @@ static void debug_put_char_32(int x, int y, u32 color, u32 bgc, u8 ch)
       for (j=0; j < 8; j++)
 	{
           if ((*font & (128 >> j)))
-              pixel = color;
-          else
-              pixel = bgc;
+			  *vram_ptr = color; 
+          else if(bg_enable)
+			  *vram_ptr = bgc; 
 
-          *vram_ptr++ = pixel; 
+		  vram_ptr++;
 	}
       vram += PSP_LINE_SIZE;
    }
@@ -261,7 +270,6 @@ static void debug_put_char_16(int x, int y, u16 color, u16 bgc, u8 ch)
 {
    int 	i,j, l;
    u8	*font;
-   u16  pixel;
    u16 *vram_ptr;
    u16 *vram;
 
@@ -281,11 +289,11 @@ static void debug_put_char_16(int x, int y, u16 color, u16 bgc, u8 ch)
       for (j=0; j < 8; j++)
 	{
           if ((*font & (128 >> j)))
-              pixel = color;
-          else
-              pixel = bgc;
+			  *vram_ptr = color; 
+          else if(bg_enable)
+			  *vram_ptr = bgc; 
 
-          *vram_ptr++ = pixel; 
+		  vram_ptr++;
 	}
       vram += PSP_LINE_SIZE;
    }
@@ -320,9 +328,15 @@ pspDebugScreenPutChar( int x, int y, u32 color, u8 ch)
 
 void  _pspDebugScreenClearLine( int Y)
 {
-   int i;
-   for (i=0; i < MX; i++)
-    pspDebugScreenPutChar( i*7 , Y * 8, bg_col, 219);
+	int i;
+
+	if(bg_enable)
+	{
+		for (i=0; i < MX; i++)
+		{
+			pspDebugScreenPutChar( i*7 , Y * 8, bg_col, 219);
+		}
+	}
 }
 
 /* Print non-nul terminated strings */
@@ -388,6 +402,58 @@ void pspDebugScreenPrintf(const char *format, ...)
    va_start(opt, format);
    bufsz = vsnprintf( buff, (size_t) sizeof(buff), format, opt);
    (void) pspDebugScreenPrintData(buff, bufsz);
+}
+#endif
+
+/* Kernel screen printf, uses the prnt function instead of vsnprintf */
+#ifdef F_pspDebugScreenKprintf
+
+#define MAX_CLI 4096
+#define CTX_BUF_SIZE 128
+
+struct prnt_ctx 
+{
+	unsigned short len;
+	char buf[CTX_BUF_SIZE];
+};
+
+static void cb(struct prnt_ctx *ctx, int type)
+{
+	if(type == 0x200) 
+	{
+		ctx->len = 0;
+	}
+	else if(type == 0x201)
+	{ 
+		pspDebugScreenPrintData(ctx->buf, ctx->len);
+		ctx->len = 0;
+	}
+	else
+	{
+		if(type != '\r')
+		{
+			ctx->buf[ctx->len++] = type;
+			if(ctx->len == CTX_BUF_SIZE)
+			{
+				pspDebugScreenPrintData(ctx->buf, ctx->len);
+				ctx->len = 0;
+			}
+		}
+	}
+}
+
+void pspDebugScreenKprintf(const char *format, ...)
+{
+	struct prnt_ctx ctx;
+	va_list opt;
+
+	ctx.len = 0;
+
+	va_start(opt, format);
+
+	prnt((prnt_callback) cb, (void*) &ctx, format, opt);
+
+	va_end(opt);
 }
 #endif
 

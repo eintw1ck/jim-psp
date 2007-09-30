@@ -15,7 +15,7 @@ INCLUDES = -I$(top_srcdir)/src/base \
 CFLAGS = @PSPSDK_CFLAGS@
 CCASFLAGS = $(CFLAGS) $(INCLUDES)
 
-SCRPRINT_OBJS = pspDebugScreenInit.o pspDebugScreenPrintf.o
+SCRPRINT_OBJS = pspDebugScreenInit.o pspDebugScreenPrintf.o pspDebugScreenKprintf.o
 
 libpspdebugincludedir = @PSPSDK_INCLUDEDIR@
 libpspdebuginclude_HEADERS =	\

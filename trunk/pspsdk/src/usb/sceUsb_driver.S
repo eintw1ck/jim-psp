@@ -32,3 +32,6 @@
 #ifdef F_sceUsb_driver_0009
 	IMPORT_FUNC	"sceUsb_driver",0x1C360735,sceUsbWaitCancel
 #endif
+#ifdef F_sceUsb_driver_0010
+	IMPORT_FUNC	"sceUsb_driver",0xE20B23A6,sceUsb_E20B23A6
+#endif

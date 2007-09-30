@@ -12,7 +12,7 @@ CCASFLAGS = $(CFLAGS) $(INCLUDES)
 
 USB_OBJS = sceUsb_0000.o sceUsb_0001.o sceUsb_0002.o sceUsb_0003.o sceUsb_0004.o sceUsb_0005.o sceUsb_0006.o sceUsb_0007.o sceUsb_0008.o sceUsb_0009.o 
 
-USBDRIVER_OBJS= sceUsb_driver_0000.o sceUsb_driver_0001.o sceUsb_driver_0002.o sceUsb_driver_0003.o sceUsb_driver_0004.o sceUsb_driver_0005.o sceUsb_driver_0006.o sceUsb_driver_0007.o sceUsb_driver_0008.o sceUsb_driver_0009.o 
+USBDRIVER_OBJS= sceUsb_driver_0000.o sceUsb_driver_0001.o sceUsb_driver_0002.o sceUsb_driver_0003.o sceUsb_driver_0004.o sceUsb_driver_0005.o sceUsb_driver_0006.o sceUsb_driver_0007.o sceUsb_driver_0008.o sceUsb_driver_0009.o sceUsb_driver_0010.o
 
 USBBUSDRIVER_OBJS=sceUsbBus_driver_0000.o sceUsbBus_driver_0001.o sceUsbBus_driver_0002.o sceUsbBus_driver_0003.o sceUsbBus_driver_0004.o sceUsbBus_driver_0005.o sceUsbBus_driver_0006.o sceUsbBus_driver_0007.o sceUsbBus_driver_0008.o sceUsbBus_driver_0009.o 
 
