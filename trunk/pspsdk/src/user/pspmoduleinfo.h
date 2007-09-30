@@ -135,6 +135,10 @@ enum PspModuleInfoAttr
 #define PSP_HEAP_SIZE_KB(size_kb) \
 	unsigned int sce_newlib_heap_kb_size = (size_kb)
 
+/* Declare to allocate maximum heap area */
+#define PSP_HEAP_SIZE_MAX() \
+	PSP_HEAP_SIZE_KB(-1)
+
 /* Declare the name of the main thread */
 #define PSP_MAIN_THREAD_NAME(s) const char* sce_newlib_main_thread_name = (s)
 
