@@ -387,9 +387,13 @@ int load_start_module(const char *name, int argc, char **argv)
 
 void map_firmwarerev(void)
 {
-	unsigned int rev;
 
-	rev = sceKernelDevkitVersion();
+#if _PSP_FW_VERSION > 200
+	g_QueryModuleInfo = sceKernelQueryModuleInfo;
+	g_GetModuleIdList = sceKernelGetModuleIdList;
+	g_isv1 = 0;
+#else
+	unsigned int rev = sceKernelDevkitVersion();
 	/* Special case for version 1 firmware */
     if((rev & 0xFFFF0000) == 0x01000000)
 	{
@@ -403,7 +407,10 @@ void map_firmwarerev(void)
 		g_GetModuleIdList = sceKernelGetModuleIdList;
 		g_isv1 = 0;
 	}
+#endif
 }
+
+int sceUsb_E20B23A6(int pid, int power);
 
 int init_usbhost(const char *bootpath)
 {
@@ -438,6 +445,7 @@ int init_usbhost(const char *bootpath)
 		}
 
 		retVal = sceUsbActivate(g_context.pid);
+		//retVal = sceUsb_E20B23A6(g_context.pid, 0);
 
 		if(retVal == 0)
 		{

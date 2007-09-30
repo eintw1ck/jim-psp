@@ -112,19 +112,35 @@ SceUID load_gdb(const char *bootpath, int argc, char **argv)
 	return load_start_module(prx_path, argc, argv);
 }
 
+int reset_thread(SceSize args, void *argp)
+{
+	psplinkReset();
+
+	return 0;
+}
+
 void exit_reset(void)
 {
+	psplinkSetK1(0);
+
 	if(g_context.resetonexit)
 	{
-		psplinkReset();
+		/* Create a new thread to do the reset */
+		SceUID thid;
+
+		thid = sceKernelCreateThread("PspLinkReset", reset_thread, 8, 4*1024, 0, NULL);
+		if(thid >= 0)
+		{
+			sceKernelStartThread(thid, 0, NULL);
+		}
 	}
 	else
 	{
-		psplinkSetK1(0);
 		SHELL_PRINT("\nsceKernelExitGame caught!\n");
 		/* Kill the thread, bad idea to drop back to the program */
-		sceKernelExitThread(0);
 	}
+
+	sceKernelExitThread(0);
 }
 
 void psplinkStop(void)
