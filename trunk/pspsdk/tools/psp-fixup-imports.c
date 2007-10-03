@@ -61,6 +61,7 @@ static struct ElfSection *g_libstub = NULL;
 static struct ElfSection *g_stubtext = NULL;
 static struct ElfSection *g_nid = NULL;
 static struct ImportMap  *g_map = NULL;
+static int g_reversemap = 0;
 
 /* Specifies that the current usage is to the print the pspsdk path */
 static int g_verbose = 0;
@@ -68,6 +69,7 @@ static int g_verbose = 0;
 static struct option arg_opts[] = 
 {
 	{"output", required_argument, NULL, 'o'},
+	{"reverse", no_argument, NULL, 'r' },
 	{"map", required_argument, NULL, 'm'},
 	{"verbose", no_argument, NULL, 'v'},
 	{ NULL, 0, NULL, 0 }
@@ -82,7 +84,7 @@ int process_args(int argc, char **argv)
 	g_infile = NULL;
 	g_mapfile = NULL;
 
-	ch = getopt_long(argc, argv, "vo:m:", arg_opts, NULL);
+	ch = getopt_long(argc, argv, "vro:m:", arg_opts, NULL);
 	while(ch != -1)
 	{
 		switch(ch)
@@ -93,10 +95,12 @@ int process_args(int argc, char **argv)
 					   break;
 			case 'm' : g_mapfile = optarg;
 					   break;
+			case 'r' : g_reversemap = 1;
+					   break;
 			default  : break;
 		};
 
-		ch = getopt_long(argc, argv, "vo:m:", arg_opts, NULL);
+		ch = getopt_long(argc, argv, "vro:m:", arg_opts, NULL);
 	}
 
 	argc -= optind;
@@ -128,6 +132,7 @@ void print_help(void)
 	fprintf(stderr, "Options:\n");
 	fprintf(stderr, "-o, --output outfile    : Output to a different file\n");
 	fprintf(stderr, "-m, --map    mapfile    : Specify a firmware NID mapfile\n");
+	fprintf(stderr, "-r, --reverse           : Reverse the mapping\n");
 	fprintf(stderr, "-v, --verbose           : Verbose output\n");
 }
 
@@ -762,15 +767,27 @@ int fixup_nidmap(void)
 
 						for(i = 0; i < pMap->count; i++)
 						{
-							if(pMap->nids[i].oldnid == *pNid)
+							unsigned oldnid, newnid;
+
+							if(g_reversemap)
+							{
+								oldnid = pMap->nids[i].newnid;
+								newnid = pMap->nids[i].oldnid;
+							}
+							else
+							{
+								newnid = pMap->nids[i].newnid;
+								oldnid = pMap->nids[i].oldnid;
+							}
+
+							if(oldnid == *pNid)
 							{
 								if(g_verbose)
 								{
-									fprintf(stderr, "Mapping 0x%08X to 0x%08X\n", 
-											pMap->nids[i].oldnid, pMap->nids[i].newnid);
+									fprintf(stderr, "Mapping 0x%08X to 0x%08X\n", oldnid, newnid);
 								}
 
-								*pNid = pMap->nids[i].newnid;
+								*pNid = newnid;
 								break;
 							}
 						}
