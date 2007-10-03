@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <assert.h>
 #include <ctype.h>
+#include <errno.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -25,13 +26,32 @@
 #include "types.h"
 #include "elftypes.h"
 #include "prxtypes.h"
+#include "sha1.h"
 
 #define PRX_LIBSTUB_SECT  ".lib.stub"
 #define PRX_STUBTEXT_SECT ".sceStub.text"
 #define PRX_NID_SECT      ".rodata.sceNid"
 
+struct NidMap
+{
+	unsigned int oldnid;
+	unsigned int newnid;
+};
+
+#define MAX_MAPNIDS 1024
+
+struct ImportMap
+{
+	struct ImportMap *next;
+	char name[32];
+	int  count;
+	/* Could fail on things like PAF but who is going to want to remap 1000+ nids ? */
+	struct NidMap nids[MAX_MAPNIDS];
+};
+
 static const char *g_outfile;
 static const char *g_infile;
+static const char *g_mapfile;
 static unsigned char *g_elfdata = NULL;
 static unsigned int  g_elfsize;
 static struct ElfHeader g_elfhead = {0};
@@ -40,6 +60,7 @@ static struct ElfSection *g_modinfo = NULL;
 static struct ElfSection *g_libstub = NULL;
 static struct ElfSection *g_stubtext = NULL;
 static struct ElfSection *g_nid = NULL;
+static struct ImportMap  *g_map = NULL;
 
 /* Specifies that the current usage is to the print the pspsdk path */
 static int g_verbose = 0;
@@ -47,6 +68,7 @@ static int g_verbose = 0;
 static struct option arg_opts[] = 
 {
 	{"output", required_argument, NULL, 'o'},
+	{"map", required_argument, NULL, 'm'},
 	{"verbose", no_argument, NULL, 'v'},
 	{ NULL, 0, NULL, 0 }
 };
@@ -58,8 +80,9 @@ int process_args(int argc, char **argv)
 
 	g_outfile = NULL;
 	g_infile = NULL;
+	g_mapfile = NULL;
 
-	ch = getopt_long(argc, argv, "vo:", arg_opts, NULL);
+	ch = getopt_long(argc, argv, "vo:m:", arg_opts, NULL);
 	while(ch != -1)
 	{
 		switch(ch)
@@ -68,10 +91,12 @@ int process_args(int argc, char **argv)
 					   break;
 			case 'o' : g_outfile = optarg;
 					   break;
+			case 'm' : g_mapfile = optarg;
+					   break;
 			default  : break;
 		};
 
-		ch = getopt_long(argc, argv, "vo:", arg_opts, NULL);
+		ch = getopt_long(argc, argv, "vo:m:", arg_opts, NULL);
 	}
 
 	argc -= optind;
@@ -102,7 +127,39 @@ void print_help(void)
 	fprintf(stderr, "Usage: psp-fixup-imports [-v] [-o outfile.elf] infile.elf\n");
 	fprintf(stderr, "Options:\n");
 	fprintf(stderr, "-o, --output outfile    : Output to a different file\n");
+	fprintf(stderr, "-m, --map    mapfile    : Specify a firmware NID mapfile\n");
 	fprintf(stderr, "-v, --verbose           : Verbose output\n");
+}
+
+/* Scan through the sections trying to find this address */
+const unsigned char *find_data(unsigned int iAddr)
+{
+	int i;
+
+	for(i = 0; i < g_elfhead.iShnum; i++)
+	{
+		if((g_elfsections[i].iAddr <= iAddr) && ((g_elfsections[i].iAddr + g_elfsections[i].iSize) > iAddr))
+		{
+			return g_elfsections[i].pData + (iAddr - g_elfsections[i].iAddr);
+		}
+	}
+
+	return NULL;
+}
+
+struct ImportMap *find_map_by_name(const char *name)
+{
+	struct ImportMap *currmap = g_map;
+
+	while(currmap)
+	{
+		if(strcmp(name, currmap->name) == 0)
+		{
+			break;
+		}
+		currmap = currmap->next;
+	}
+	return currmap;
 }
 
 unsigned char *load_file(const char *file, unsigned int *size)
@@ -402,6 +459,156 @@ void free_data(void)
 	}
 }
 
+void strip_wsp(char *str)
+{
+	int len;
+	char *p;
+
+	len = strlen(str);
+	while((len > 0) && (isspace(str[len-1])))
+	{
+		str[--len] = 0;
+	}
+
+	p = str;
+	while(isspace(*p))
+	{
+		p++;
+		len--;
+	}
+
+	memmove(str, p, len);
+	str[len] = 0;
+}
+
+/* Load map file in 
+ * File format is :-
+ * @LibraryName followed by 0 or more
+ * OLDNID=NEWNID [ Comment ]
+ *
+ * Read in badly :P
+ */
+int load_mapfile(const char *mapfile)
+{
+	int ret = 1;
+	char buf[1024];
+	struct ImportMap *currmap = NULL;
+	int line = 0;
+
+	if(mapfile != NULL)
+	{
+		do
+		{
+			FILE *fp;
+
+			fp = fopen(mapfile, "r");
+			if(fp != NULL)
+			{
+				while(fgets(buf, sizeof(buf), fp))
+				{
+					line++;
+					strip_wsp(buf);
+					if((buf[0]) && (buf[0] != '#'))
+					{
+						if(buf[0] == '@')
+						{
+							struct ImportMap *temp;
+
+							temp = (struct ImportMap *) malloc(sizeof(struct ImportMap));
+							if(temp == NULL)
+							{
+								printf("Error allocating memory for import map\n");
+								ret = 0;
+								break;
+							}
+
+							memset(temp, 0, sizeof(struct ImportMap));
+							if(currmap == NULL)
+							{
+								g_map = temp;
+							}
+							else
+							{
+								temp->next = currmap;
+								g_map = temp;
+							}
+
+							currmap = temp;
+							if(buf[1])
+							{
+								strncpy(currmap->name, &buf[1], 32);
+								currmap->name[31] = 0;
+							}
+							else
+							{
+								printf("Invalid library name at line %d\n", line);
+								break;
+							}
+
+							if(g_verbose)
+							{
+								printf("Mapping library %s\n", currmap->name);
+							}
+						}
+						else
+						{
+							unsigned int oldnid;
+							unsigned int newnid;
+							char *endp;
+
+							if(currmap->count == MAX_MAPNIDS)
+							{
+								printf("Error, number of defined nids exceed maximum\n");
+								break;
+							}
+
+							/* Hex data should be prefixed with 0 */
+							if(buf[0] == '0')
+							{
+								errno = 0;
+								oldnid = strtoul(buf, &endp, 16);
+								if((errno != 0) || (*endp != ':'))
+								{
+									printf("Invalid NID entry on line %d\n", line);
+									continue;
+								}
+							}
+							else
+							{
+								unsigned char hash[SHA1_DIGEST_SIZE];
+
+								endp = strchr(buf, ':');
+								if(endp == NULL)
+								{
+									printf("Invalid NID entry on line %d\n", line);
+									continue;
+								}
+
+								sha1(hash, (unsigned char *) buf, endp-buf);
+								oldnid = hash[0] | (hash[1] << 8) | (hash[2] << 16) | (hash[3] << 24);
+							}
+
+							newnid = strtoul(endp+1, &endp, 16);
+							if(g_verbose)
+							{
+								fprintf(stderr, "NID Mapping 0x%08X to 0x%08X\n", oldnid, newnid);
+							}
+
+							currmap->nids[currmap->count].oldnid = oldnid;
+							currmap->nids[currmap->count].newnid = newnid;
+							currmap->count++;
+						}
+					}
+				}
+				fclose(fp);
+			}
+		}
+		while(0);
+	}
+
+	return ret;
+}
+
 #define MIPS_JR_31 0x03e00008
 #define MIPS_NOP   0x0
 
@@ -507,19 +714,76 @@ int fixup_imports(void)
 	/* Should indicate no error occurred */
 	if(count == 0)
 	{
-		FILE *fp;
+		if(g_verbose)
+		{
+			fprintf(stderr, "No libraries to fixup\n");
+		}
+	}
 
-		fp = fopen(g_outfile, "wb");
-		if(fp != NULL)
+	return 1;
+}
+
+int fixup_nidmap(void)
+{
+	struct PspModuleImport *pImport;
+	int size;
+
+	pImport = (struct PspModuleImport *) g_libstub->pData;
+	size = g_libstub->iSize;
+
+	while(size >= sizeof(struct PspModuleImport))
+	{
+		const char *str;
+
+		str = (const char*) find_data(LW(pImport->name));
+		if(str)
 		{
-			(void) fwrite(g_elfdata, 1, g_elfsize, fp);
-			fclose(fp);
+			struct ImportMap *pMap;
+
+			pMap = find_map_by_name(str);
+			if(pMap)
+			{
+				int count;
+				unsigned int *pNid;
+
+				pNid = (unsigned int*) find_data(LW(pImport->nids));
+				count = LH(pImport->func_count) + pImport->var_count;
+
+				if(pNid && (count > 0))
+				{
+					if(g_verbose)
+					{
+						fprintf(stderr, "Mapping library %s\n", str);
+					}
+
+					while(count > 0)
+					{
+						int i;
+
+						for(i = 0; i < pMap->count; i++)
+						{
+							if(pMap->nids[i].oldnid == *pNid)
+							{
+								if(g_verbose)
+								{
+									fprintf(stderr, "Mapping 0x%08X to 0x%08X\n", 
+											pMap->nids[i].oldnid, pMap->nids[i].newnid);
+								}
+
+								*pNid = pMap->nids[i].newnid;
+								break;
+							}
+						}
+
+						pNid++;
+						count--;
+					}
+				}
+			}
 		}
-		else
-		{
-			fprintf(stderr, "Error, couldn't open %s for writing\n", g_outfile);
-			return 0;
-		}
+
+		pImport++;
+		size -= sizeof(struct PspModuleImport);
 	}
 
 	return 1;
@@ -531,9 +795,25 @@ int main(int argc, char **argv)
 
 	if(process_args(argc, argv))
 	{
-		if(load_elf(g_infile))
+		if(load_mapfile(g_mapfile) && load_elf(g_infile))
 		{
-			if(!fixup_imports())
+			if(fixup_imports() && fixup_nidmap())
+			{
+				FILE *fp;
+
+				fp = fopen(g_outfile, "wb");
+				if(fp != NULL)
+				{
+					(void) fwrite(g_elfdata, 1, g_elfsize, fp);
+					fclose(fp);
+				}
+				else
+				{
+					fprintf(stderr, "Error, couldn't open %s for writing\n", g_outfile);
+					return 0;
+				}
+			}
+			else
 			{
 				ret = 1;
 			}

@@ -16,6 +16,6 @@ psp_build_exports_SOURCES = psp-build-exports.c getopt_long.c sha1.c
 
 psp_prxgen_SOURCES = psp-prxgen.c getopt_long.c
 
-psp_fixup_imports_SOURCES = psp-fixup-imports.c getopt_long.c
+psp_fixup_imports_SOURCES = psp-fixup-imports.c getopt_long.c sha1.c
 
 noinst_HEADERS = elftypes.h getopt.h prxtypes.h sha1.h types.h
