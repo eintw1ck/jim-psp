@@ -39,6 +39,7 @@ PSP_FW_VERSION=150
 endif
 
 CFLAGS += -D_PSP_FW_VERSION=$(PSP_FW_VERSION)
+CXXFLAGS += -D_PSP_FW_VERSION=$(PSP_FW_VERSION)
 
 ifeq ($(BUILD_PRX),1)
 LDFLAGS  := $(addprefix -L,$(LIBDIR)) -specs=$(PSPSDK)/lib/prxspecs -Wl,-q,-T$(PSPSDK)/lib/linkfile.prx $(LDFLAGS)
