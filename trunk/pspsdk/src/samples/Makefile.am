@@ -21,6 +21,7 @@ SAMPLES = \
 	gu/copy \
 	gu/cube \
 	gu/envmap \
+	gu/integerdrawing \
 	gu/lights \
 	gu/lines \
 	gu/logic \
