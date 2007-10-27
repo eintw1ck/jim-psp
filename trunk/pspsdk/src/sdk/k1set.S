@@ -15,6 +15,7 @@ pspSdkSetK1:
 	.global pspSdkGetK1
 	.ent    pspSdkGetK1
 
+pspSdkGetK1:
 	jr   $ra
 	move $v0, $k1
 
