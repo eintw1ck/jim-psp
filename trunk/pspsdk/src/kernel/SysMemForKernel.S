@@ -208,3 +208,6 @@
 #ifdef F_SysMemForKernel_0067
 	IMPORT_FUNC	"SysMemForKernel",0x95F5E8DA,SysMemForKernel_95F5E8DA
 #endif
+#ifdef F_SysMemForKernel_0068
+	IMPORT_FUNC "SysMemForKernel",0x6373995D,sceKernelGetModel
+#endif

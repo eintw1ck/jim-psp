@@ -125,9 +125,9 @@ inline void sh_le(u16 *data, u16 val)
 }
 
 #define SW_LE(x, v) (sw_le((x), (v)))
-#define SW_BE(x, v) ((x) = (v))
+#define SW_BE(x, v) (*(x) = (v))
 #define SH_LE(x, v) (sh_le((x), (v)))
-#define SH_BE(x, v) ((x) = (v))
+#define SH_BE(x, v) (*(x) = (v))
 
 #else
 

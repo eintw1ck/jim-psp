@@ -194,6 +194,13 @@ uidControlBlock* SysMemForKernel_536AD5E1(void);
  */
 int sceKernelDeleteUID(SceUID uid);
 
+/**
+ * Get the model of PSP
+ *
+ * @return <= 0 original, 1 slim
+ */
+int sceKernelGetModel(void);
+
 #ifdef __cplusplus
 }
 #endif

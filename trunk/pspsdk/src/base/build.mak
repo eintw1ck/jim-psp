@@ -34,6 +34,10 @@ CFLAGS   := $(addprefix -I,$(INCDIR)) $(CFLAGS)
 CXXFLAGS := $(CFLAGS) $(CXXFLAGS)
 ASFLAGS  := $(CFLAGS) $(ASFLAGS)
 
+ifeq ($(PSP_LARGE_MEMORY),1)
+MKSFO = mksfoex -d MEMSIZE=1
+endif
+
 ifeq ($(PSP_FW_VERSION),)
 PSP_FW_VERSION=150
 endif
