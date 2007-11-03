@@ -2003,13 +2003,13 @@ static int meminfo_cmd(int argc, char **argv, unsigned int *vRet)
 {
 	int i;
 	int pid = 1;
-	int max = 6;
+	int max = 11;
 
 	if(argc > 0)
 	{
 		pid = atoi(argv[0]);
 		SHELL_PRINT("pid: %d\n", pid);
-		if((pid <= 0) || (pid > 4))
+		if((pid < 1) || (pid > max))
 		{
 			SHELL_PRINT("Error, invalid partition number %d\n", pid);
 			return CMD_ERROR;
@@ -2018,21 +2018,23 @@ static int meminfo_cmd(int argc, char **argv, unsigned int *vRet)
 	}
 
 	SHELL_PRINT("Memory Partitions:\n");
-	SHELL_PRINT("N |    BASE    |   SIZE   | TOTALFREE |  MAXFREE  | ATTR |\n");
-	SHELL_PRINT("--|------------|----------|-----------|-----------|------|\n");
-	for(i = pid; i < max; i++)
+	SHELL_PRINT("N  |    BASE    |   SIZE   | TOTALFREE |  MAXFREE  | ATTR |\n");
+	SHELL_PRINT("---|------------|----------|-----------|-----------|------|\n");
+	for(i = pid; i <= max; i++)
 	{
 		SceSize total;
 		SceSize free;
 		PspSysmemPartitionInfo info;
 
-		free = sceKernelPartitionMaxFreeMemSize(i);
-		total = sceKernelPartitionTotalFreeMemSize(i);
 		memset(&info, 0, sizeof(info));
 		info.size = sizeof(info);
-		sceKernelQueryMemoryPartitionInfo(i, &info);
-		SHELL_PRINT("%d | 0x%08X | %8d | %9d | %9d | %04X |\n", 
-				i, info.startaddr, info.memsize, total, free, info.attr);
+		if(sceKernelQueryMemoryPartitionInfo(i, &info) == 0)
+		{
+			free = sceKernelPartitionMaxFreeMemSize(i);
+			total = sceKernelPartitionTotalFreeMemSize(i);
+			SHELL_PRINT("%-2d | 0x%08X | %8d | %9d | %9d | %04X |\n", 
+					i, info.startaddr, info.memsize, total, free, info.attr);
+		}
 	}
 
 	return CMD_OK;
