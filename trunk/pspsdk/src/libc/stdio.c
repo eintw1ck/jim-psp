@@ -340,6 +340,14 @@ int fgetpos(FILE *stream, fpos_t *pos)
   if ((n = ftell(stream)) >= 0) *pos = (fpos_t)n;
   return ((n >= 0) ? 0 : -1);
 }
+
+int fgetpos64(FILE *stream, int64_t *pos)
+{
+  int64_t n;
+
+  if ((n = ftello64(stream)) >= 0) *pos = n;
+  return ((n >= 0) ? 0 : -1);
+}
 #endif
 
 
@@ -408,7 +416,6 @@ char *fgets(char *buf, int n, FILE *stream)
 /* std I/O internal function. */
 int __stdio_get_fd_type(const char *);
 
-
 /*
 **
 **  [func] - fopen.
@@ -475,6 +482,11 @@ FILE *fopen(const char *fname, const char *mode)
   }
   return (ret);
 }
+
+FILE *fopen64(const char *fname, const char *mode) {
+	return fopen(fname, mode);
+}
+
 #endif
 
 #ifdef F_fdopen
@@ -639,6 +651,7 @@ size_t fread(void *buf, size_t r, size_t n, FILE *stream)
 
 
 #ifdef F_fseek
+
 /*
 **
 **  [func] - fseek.
@@ -654,7 +667,7 @@ size_t fread(void *buf, size_t r, size_t n, FILE *stream)
 **  [post] - the stream file pointer position is modified.
 **
 */
-int fseek(FILE *stream, long offset, int origin)
+int fseeko64(FILE *stream, int64_t offset, int origin)
 {
   int ret;
 
@@ -667,9 +680,14 @@ int fseek(FILE *stream, long offset, int origin)
       break;
     default:
       /* attempt to seek to offset from origin. */
-      ret = ((sceIoLseek(LOCAL_FILE(stream)->fd, (int)offset, origin) >= 0) ? 0 : -1);
+      ret = ((sceIoLseek(LOCAL_FILE(stream)->fd, offset, origin) >= 0) ? 0 : -1);
   }
   return (ret);
+}
+
+int fseek(FILE *stream, long offset, int origin)
+{
+	return fseeko64(stream, (int64_t)offset, origin);
 }
 #endif
 
@@ -727,6 +745,29 @@ long ftell(FILE *stream)
         ret = -1L;
       }
       else ret = (((n = sceIoLseek(LOCAL_FILE(stream)->fd, 0, SEEK_CUR)) >= 0) ? (long)n : -1L);
+  }
+  return (ret);
+}
+
+int64_t ftello64(FILE *stream)
+{
+  int64_t n, ret;
+
+  switch(LOCAL_FILE(stream)->type) {
+    case STD_IOBUF_TYPE_NONE:
+    case STD_IOBUF_TYPE_GE:
+    case STD_IOBUF_TYPE_STDOUTHOST:
+      /* stdout or stderr is an invalid seek stream argument. */
+      errno = EINVAL;
+      ret = -1L;
+      break;
+    default:
+      if (LOCAL_FILE(stream)->fd < 0) {
+        /* file is not open. */
+        errno = EBADF;
+        ret = -1L;
+      }
+      else ret = (((n = sceIoLseek(LOCAL_FILE(stream)->fd, 0, SEEK_CUR)) >= 0) ? (int64_t)n : -1);
   }
   return (ret);
 }
