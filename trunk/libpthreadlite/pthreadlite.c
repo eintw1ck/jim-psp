@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <pspkernel.h>
 #include <pspkerneltypes.h>
-#include "pthread.h"
+#include "pthreadlite.h"
 
 typedef struct
 {
