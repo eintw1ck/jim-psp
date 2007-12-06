@@ -12,8 +12,8 @@
  *
  * $Id: pspaudio.h 1095 2005-09-27 21:02:16Z jim $
  */
-#ifndef PSPAUDIO_H
-#define PSPAUDIO_H
+#ifndef PSPAUDIO_KERNEL_H
+#define PSPAUDIO_KERNEL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,4 +46,4 @@ int sceAudioSetFrequency(int frequency);
 }
 #endif
 
-#endif /* PSPAUDIO_H */
+#endif /* PSPAUDIO_KERNEL_H */
