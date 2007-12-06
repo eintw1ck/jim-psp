@@ -9,7 +9,7 @@
  * Copyright (c) 2007 cooleyes
  * Copyright (c) 2007 Alexander Berl <raphael@fx-world.org>
  *
- * $Id$
+ * $Id: $
  */
 
 #ifndef __SCELIBMPEGBASE_H__

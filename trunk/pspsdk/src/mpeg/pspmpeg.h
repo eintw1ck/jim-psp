@@ -8,7 +8,7 @@
  * Copyright (c) 2006 Sorin P. C. <magik@hypermagik.com>
  * Copyright (c) 2007 Alexander Berl <raphael@fx-world.org>
  *
- * $Id$
+ * $Id: $
  */
 
 #ifndef __SCELIBMPEG_H__
