@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2007 cooleyes
  *
- * $Id: $
+ * $Id$
  */
  
 #ifndef __SCELIBVIDEOCODEC_H__

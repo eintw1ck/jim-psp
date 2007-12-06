@@ -10,7 +10,7 @@
  * Copyright (c) 2007 cooleyes
  * Copyright (c) 2007 Alexander Berl <raphael@fx-world.org>
  *
- * $Id: $
+ * $Id$
  */
 #ifndef PSPAUDIO_KERNEL_H
 #define PSPAUDIO_KERNEL_H
