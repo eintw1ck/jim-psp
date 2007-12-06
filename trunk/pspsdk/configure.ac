@@ -108,6 +108,7 @@ AC_CONFIG_FILES([Makefile
                  src/user/Makefile
                  src/utility/Makefile
                  src/vfpu/Makefile
+                 src/video/Makefile
                  src/vsh/Makefile
                  src/wlan/Makefile
                  src/samples/Makefile

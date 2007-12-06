@@ -18,7 +18,7 @@
 	IMPORT_FUNC "sceMpegbase_driver",0x0530BE4E,sceMpegbase_driver_0530BE4E
 #endif
 #ifdef F_sceMpegbase_driver_0005
-	IMPORT_FUNC "sceMpegbase_driver",0x304882E1,sceMpegbase_304882E1
+	IMPORT_FUNC "sceMpegbase_driver",0x304882E1,sceMpegbase_driver_304882E1
 #endif
 #ifdef F_sceMpegbase_driver_0006
 	IMPORT_FUNC "sceMpegbase_driver",0x7AC0321A,sceMpegBaseYCrCbCopy
@@ -27,7 +27,7 @@
 	IMPORT_FUNC "sceMpegbase_driver",0x91929A21,sceMpegBaseCscAvc
 #endif
 #ifdef F_sceMpegbase_driver_0008
-	IMPORT_FUNC "sceMpegbase_driver",0xAC9E717E,sceMpegbase_AC9E717E
+	IMPORT_FUNC "sceMpegbase_driver",0xAC9E717E,sceMpegbase_driver_AC9E717E
 #endif
 #ifdef F_sceMpegbase_driver_0009
 	IMPORT_FUNC "sceMpegbase_driver",0xBEA18F91,sceMpegbase_BEA18F91

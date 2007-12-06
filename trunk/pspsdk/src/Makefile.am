@@ -28,6 +28,7 @@ SUBDIRS = \
 	user \
 	utility \
 	vfpu \
+	video \
 	vsh \
 	wlan \
 	samples

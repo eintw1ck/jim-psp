@@ -15,8 +15,13 @@ static int tsizecmd_tbl[8] = { 0xb8, 0xb9, 0xba, 0xbb, 0xbc, 0xbd, 0xbe, 0xbf };
 int getExp(int val)
 {
 	unsigned int i;
+	asm("clz %0, %1\n":"=r"(i):"r"(val&0x3FF));
+	return 31-i;
+/*
+	unsigned int i;
 	for (i = 9; (i > 0) && !((val >> i) & 1); --i);
 	return i;
+*/
 }
 
 void sceGuTexImage(int mipmap, int width, int height, int tbw, const void* tbp)
