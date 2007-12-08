@@ -66,6 +66,16 @@ int sceUmdCheckMedium(int a);
 int sceUmdActivate(int unit, const char *drive);
 
 /** 
+  * Deativates the UMD drive
+  * 
+  * @param unit - The unit to initialise (probably). Should be set to 1.
+  * @param drive - A prefix string for the fs device to mount the UMD on (e.g. "disc0:")
+  * @return < 0 on error
+  *
+  */
+int sceUmdDeactivate(int unit, const char *drive);
+
+/** 
   * Wait for a drive to reach a certain state
   *
   * @param stat - The drive stat to wait for.
