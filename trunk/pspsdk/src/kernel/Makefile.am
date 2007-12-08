@@ -46,6 +46,8 @@ SYSEVENT_OBJS = sceSysEventForKernel_0000.o sceSysEventForKernel_0001.o sceSysEv
 
 IMPOSE_OBJS = sceImpose_driver_0000.o sceImpose_driver_0001.o sceImpose_driver_0002.o sceImpose_driver_0003.o sceImpose_driver_0004.o sceImpose_driver_0005.o sceImpose_driver_0006.o sceImpose_driver_0007.o sceImpose_driver_0008.o sceImpose_driver_0009.o sceImpose_driver_0010.o sceImpose_driver_0011.o sceImpose_driver_0012.o sceImpose_driver_0013.o sceImpose_driver_0014.o sceImpose_driver_0015.o sceImpose_driver_0016.o sceImpose_driver_0017.o sceImpose_driver_0018.o sceImpose_driver_0019.o sceImpose_driver_0020.o sceImpose_driver_0021.o sceImpose_driver_0022.o sceImpose_driver_0023.o 
 
+INIT_OBJS = InitForKernel_0000.o InitForKernel_0001.o InitForKernel_0002.o InitForKernel_0003.o InitForKernel_0004.o InitForKernel_0005.o InitForKernel_0006.o InitForKernel_0007.o InitForKernel_0008.o InitForKernel_0009.o InitForKernel_0010.o InitForKernel_0011.o
+
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
@@ -67,7 +69,8 @@ libpspkernelinclude_HEADERS =	\
 	pspidstorage.h		\
 	pspexception.h 		\
 	pspsysclib.h		\
-	pspimpose_driver.h
+	pspimpose_driver.h	\
+	pspinit.h
 
 lib_LIBRARIES = libpspkernel.a
 
@@ -89,12 +92,13 @@ libpspkernel_a_SOURCES =	\
 	sceSysEventForKernel.S	\
 	ModuleMgrForKernel.S	\
 	sceIdStorage_driver.S	\
-	sceImpose_driver.S
+	sceImpose_driver.S	\
+	InitForKernel.S
 
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
 						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS) \
 						$(THREAD_OBJS) $(SYSCLIB_OBJS) $(LOADEXEC_OBJS) $(SYSMEM_OBJS) $(MODULE_OBJS) \
-						$(IDSTORAGE_OBJS) $(SYSTIMER_OBJS) $(SYSEVENT_OBJS) $(IMPOSE_OBJS)
+						$(IDSTORAGE_OBJS) $(SYSTIMER_OBJS) $(SYSEVENT_OBJS) $(IMPOSE_OBJS) $(INIT_OBJS)
 
 $(EXCEPTION_OBJS): ExceptionManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -148,4 +152,7 @@ $(SYSEVENT_OBJS): sceSysEventForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(IMPOSE_OBJS): sceImpose_driver.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(INIT_OBJS): InitForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
