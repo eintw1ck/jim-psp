@@ -185,6 +185,11 @@ typedef double FLOAT_T;
 #define LITTLE_ENDIAN
 #endif
 
+/* The person compiling DukeNukem 3D for the PSP pointed out another */
+/* problem - SDL_mixer/timidity/config.h needs added to it for the   */
+/* PSP or it won't play MIDI files correctly.                        */
+#define LITTLE_ENDIAN
+
 /* DEC MMS has 64 bit long words */
 #ifdef DEC
 typedef unsigned int uint32;
