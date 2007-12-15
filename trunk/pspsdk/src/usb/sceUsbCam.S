@@ -3,7 +3,7 @@
 #include "pspimport.s"
 
 #ifdef F_sceUsbCam_0000
-	IMPORT_START	"sceUsbCam",0x40010000
+	IMPORT_START	"sceUsbCam",0x40090000
 #endif
 #ifdef F_sceUsbCam_0001
 	IMPORT_FUNC	"sceUsbCam",0x03ED7A82,sceUsbCamSetupMic
