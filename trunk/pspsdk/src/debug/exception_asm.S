@@ -176,6 +176,7 @@ _pspDebugExceptionHandler:
 	lui		$a0, 0x2000
 	and		$a0, $a0, $v1
 	beq		$a0, $0, 1f
+	nop
 
 	swc1		$0, REG_FPR_0($v0)
 	swc1		$1, REG_FPR_1($v0)
@@ -245,6 +246,7 @@ _pspDebugExceptionResume:
 	lui		$a0, 0x2000
 	and		$a0, $a0, $v1
 	beq		$a0, $0, 1f
+	nop
 
 	lwc1		$0, REG_FPR_0($v0)
 	lwc1		$1, REG_FPR_1($v0)

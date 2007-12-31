@@ -45,9 +45,10 @@ int sceKernelVolatileMemTryLock(int unk, void **ptr, int *size);
 /**
  * Deallocate the extra 4 megs of RAM
  *
+ * @param unk - Set to 0, otherwise it fails in 3.52+, possibly earlier
  * @return 0 on success
  */
-int sceKernelVolatileMemUnlock(void);
+int sceKernelVolatileMemUnlock(int unk);
 
 #ifdef __cplusplus
 }
