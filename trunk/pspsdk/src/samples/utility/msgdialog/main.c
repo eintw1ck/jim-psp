@@ -6,6 +6,7 @@
  * main.c - Sample to demonstrate how to use the message dialog utility
  *
  * Copyright (c) 2005 Marcus Comstedt <marcus@mc.pp.se>
+ *			 (c) 2008 InsertWittyName <tias_dp@hotmail.com>
  *
  * $Id$
  */
@@ -192,6 +193,8 @@ static void DrawStuff(void)
 
 /* Utility dialog functions */
 
+pspUtilityMsgDialogParams dialog;
+
 static void ConfigureDialog(pspUtilityMsgDialogParams *dialog, size_t dialog_size)
 {
     memset(dialog, 0, dialog_size);
@@ -210,11 +213,10 @@ static void ConfigureDialog(pspUtilityMsgDialogParams *dialog, size_t dialog_siz
 
 static void ShowErrorDialog(const unsigned int error)
 {
-    pspUtilityMsgDialogParams dialog;
-
     ConfigureDialog(&dialog, sizeof(dialog));
-    dialog.unknown2[1] = 0;
-    dialog.unknown2[2] = error;
+    dialog.mode = PSP_UTILITY_MSGDIALOG_MODE_ERROR;
+	dialog.options = PSP_UTILITY_MSGDIALOG_OPTION_ERROR;
+    dialog.errorValue = error;
 
     sceUtilityMsgDialogInitStart(&dialog);
 
@@ -225,7 +227,7 @@ static void ShowErrorDialog(const unsigned int error)
 	switch(sceUtilityMsgDialogGetStatus()) {
 	    
 	case PSP_UTILITY_DIALOG_VISIBLE:
-	    sceUtilityMsgDialogUpdate(2);
+	    sceUtilityMsgDialogUpdate(1);
 	    break;
 	    
 	case PSP_UTILITY_DIALOG_QUIT:
@@ -242,12 +244,15 @@ static void ShowErrorDialog(const unsigned int error)
     }
 }
 
-static void ShowMessageDialog(const char *message)
+static void ShowMessageDialog(const char *message, int enableYesno)
 {
-    pspUtilityMsgDialogParams dialog;
-
     ConfigureDialog(&dialog, sizeof(dialog));
-    dialog.unknown2[1] = 1;
+    dialog.mode = PSP_UTILITY_MSGDIALOG_MODE_TEXT;
+	dialog.options = PSP_UTILITY_MSGDIALOG_OPTION_TEXT;
+	
+	if(enableYesno)
+		dialog.options |= PSP_UTILITY_MSGDIALOG_OPTION_YESNO_BUTTONS|PSP_UTILITY_MSGDIALOG_OPTION_DEFAULT_NO;		
+	
     strcpy(dialog.message, message);
 
     sceUtilityMsgDialogInitStart(&dialog);
@@ -259,7 +264,7 @@ static void ShowMessageDialog(const char *message)
 	switch(sceUtilityMsgDialogGetStatus()) {
 
 	case 2:
-	    sceUtilityMsgDialogUpdate(2);
+	    sceUtilityMsgDialogUpdate(1);
 	    break;
 	    
 	case 3:
@@ -281,16 +286,26 @@ int main(int argc, char *argv[])
 {
     SetupCallbacks();
     SetupGu();
+	
+	char string[256];
+	char button[12];
 
     ShowMessageDialog("This is a utility message dialog.\n"
 		      "After you acknowledge it, this program will\n"
-		      "show an error message dialog.");
+		      "show an error message dialog.", 1);
+			  
+	if(dialog.buttonPressed == PSP_UTILITY_MSGDIALOG_RESULT_YES)
+		sprintf(button, "Yes");
+	else if(dialog.buttonPressed == PSP_UTILITY_MSGDIALOG_RESULT_NO)
+		sprintf(button, "No");
+	else
+		sprintf(button, "Back");
 
     ShowErrorDialog(0x80020001);
+	
+	sprintf(string, "This is a utility message dialog.\nAfter you acknowledge it, this program will\nautomatically exit to the shell.\n\nBy the way, you selected '%s' on the first dialog.", button);
 
-    ShowMessageDialog("This is a utility message dialog.\n"
-		      "After you acknowledge it, this program will\n"
-		      "automatically exit to the shell.");
+    ShowMessageDialog(string, 0);
 
     sceKernelExitGame();
     return 0;

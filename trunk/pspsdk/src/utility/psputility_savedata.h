@@ -9,7 +9,7 @@
  * Copyright (c) 2005    Shine
  *                       weltall <weltall@consoleworld.org>
  *                       Marcus R. Brown <mrbrown@ocgnet.org>
- *						 InsertWittyName <tias_dp@hotmai.com>
+ *						 InsertWittyName <tias_dp@hotmail.com>
  *
  * $Id$
  */
