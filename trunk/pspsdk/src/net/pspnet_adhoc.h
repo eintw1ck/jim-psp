@@ -6,6 +6,7 @@
  * pspnet_adhoc.h - PSP Adhoc networking libraries.
  *
  * Copyright (c) 2006 James F.
+ * Copyright (c) 2008 InsertWittyName <tias_dp@hotmail.com>
  *
  * Based on the adhoc code in SMS Plus
  * 
@@ -110,6 +111,46 @@ typedef struct pdpStatStruct
  * @return 0 on success, < 0 on error
  */
 int sceNetAdhocGetPdpStat(int *size, pdpStatStruct *stat);
+
+/**
+ * Create own game object type data.
+ *
+ * @param data - A pointer to the game object data.
+ * @param size - Size of the game data.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocGameModeCreateMaster(void *data, int size);
+
+/**
+ * Create peer game object type data.
+ *
+ * @param mac - The mac address of the peer.
+ * @param data - A pointer to the game object data.
+ * @param size - Size of the game data.
+ *
+ * @return The id of the replica on success, < 0 on error.
+ */
+int sceNetAdhocGameModeCreateReplica(unsigned char *mac, void *data, int size);
+
+/**
+ * Update own game object type data.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocGameModeUpdateMaster(void);
+
+/**
+ * Update peer game object type data.
+ *
+ * @param id - The id of the replica returned by sceNetAdhocGameModeCreateReplica.
+ * @param unknown - Pass 0.
+ * @param unknown2 - Pass 0.
+ * @param unknown3 - Pass 0.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocGameModeUpdateReplica(int id, int unknown, int unknown2, int unknown3);
 
 #ifdef __cplusplus
 }

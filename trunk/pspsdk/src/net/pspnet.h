@@ -24,6 +24,8 @@ int sceNetTerm(void);
 
 int sceNetEtherNtostr(unsigned char *mac, char *name);
 
+int sceNetGetLocalEtherAddr(unsigned char *mac);
+
 #ifdef __cplusplus
 }
 #endif
