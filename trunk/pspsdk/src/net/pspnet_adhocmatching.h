@@ -44,7 +44,7 @@ int sceNetAdhocMatchingInit(int unk1);       // 0x20000 in lumines
 int sceNetAdhocMatchingTerm(void);
 
 /** Matching callback */
-typedef void (*MatchingCallback)(int unk1, int event, char *mac2, int optLen, char *optData);
+typedef void (*MatchingCallback)(int unk1, int event, unsigned char *mac2, int optLen, void *optData);
 
 // returns 1 in lumines, probably an ID for matching procs
 /**
@@ -107,7 +107,7 @@ int sceNetAdhocMatchingStop(int matchingId);
  *
  * @return 0 on success, < 0 on error.
  */
-int sceNetAdhocMatchingSelectTarget(int matchingId, char *mac, int unk3, int unk4);
+int sceNetAdhocMatchingSelectTarget(int matchingId, unsigned char *mac, int unk3, int unk4);
 
 /**
  * Cancel a matching target
@@ -117,7 +117,7 @@ int sceNetAdhocMatchingSelectTarget(int matchingId, char *mac, int unk3, int unk
  *
  * @return 0 on success, < 0 on error.
  */
-int sceNetAdhocMatchingCancelTarget(int matchingId, char *mac);
+int sceNetAdhocMatchingCancelTarget(int matchingId, unsigned char *mac);
 
 #ifdef __cplusplus
 }

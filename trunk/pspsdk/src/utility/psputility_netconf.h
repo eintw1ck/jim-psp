@@ -30,7 +30,11 @@ typedef struct _pspUtilityNetconfData
 {
 	pspUtilityDialogCommon base;
 	int action; /** One of pspUtilityNetconfActions */
-	u32 unknown3;
+	char name[8]; /** Adhoc only */
+	unsigned int timeout; /** Adhoc only */
+	int unknown1; 
+	int unknown2;
+	int unknown3;
 	
 } pspUtilityNetconfData;
 
