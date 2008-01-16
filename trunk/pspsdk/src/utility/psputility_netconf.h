@@ -26,12 +26,17 @@ enum pspUtilityNetconfActions
 	PSP_NETCONF_ACTION_CONNECT_ADHOC
 };
 
+struct pspUtilityNetconfAdhoc
+{
+	unsigned char name[8];
+	unsigned int timeout;
+};
+
 typedef struct _pspUtilityNetconfData
 {
 	pspUtilityDialogCommon base;
 	int action; /** One of pspUtilityNetconfActions */
-	char name[8]; /** Adhoc only */
-	unsigned int timeout; /** Adhoc only */
+	struct pspUtilityNetconfAdhoc *adhocparam; //* Adhoc only */
 	int unknown1; 
 	int unknown2;
 	int unknown3;
