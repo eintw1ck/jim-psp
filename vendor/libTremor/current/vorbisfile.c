@@ -61,7 +61,7 @@
 static long _get_data(OggVorbis_File *vf){
   errno=0;
   if(vf->datasource){
-    char *buffer=ogg_sync_bufferin(vf->oy,CHUNKSIZE);
+    unsigned char *buffer=ogg_sync_bufferin(vf->oy,CHUNKSIZE);
     long bytes=(vf->callbacks.read_func)(buffer,1,CHUNKSIZE,vf->datasource);
     if(bytes>0)ogg_sync_wrote(vf->oy,bytes);
     if(bytes==0 && errno)return(-1);
@@ -678,7 +678,7 @@ static int _ov_open1(void *f,OggVorbis_File *vf,char *initial,
      previously read data (as we may be reading from a non-seekable
      stream) */
   if(initial){
-    char *buffer=ogg_sync_bufferin(vf->oy,ibytes);
+    unsigned char *buffer=ogg_sync_bufferin(vf->oy,ibytes);
     memcpy(buffer,initial,ibytes);
     ogg_sync_wrote(vf->oy,ibytes);
   }
@@ -987,7 +987,7 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
     int lastblock=0;
     int accblock=0;
     int thisblock;
-    int eosflag;
+    int eosflag=0;
 
     work_os=ogg_stream_create(vf->current_serialno); /* get the memory ready */
     while(1){
@@ -1564,13 +1564,8 @@ long ov_read(OggVorbis_File *vf,char *buffer,int bytes_req,int *bitstream){
     
     long channels=ov_info(vf,-1)->channels;
 
-    if(channels==1){
-      if(samples>(bytes_req/2))
-        samples=bytes_req/2;      
-    }else{
-      if(samples>(bytes_req/4))
-        samples=bytes_req/4;
-    }
+    if(samples>(bytes_req/(2*channels)))
+      samples=bytes_req/(2*channels);      
     
     for(i=0;i<channels;i++) { /* It's faster in this order */
       ogg_int32_t *src=pcm[i];
