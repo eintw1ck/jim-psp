@@ -29,7 +29,7 @@ extern "C" {
 /**
  * Enumeration for the digital controller buttons.
  *
- * @note PSP_CTRL_NOTE, PSP_CTRL_SCREEN, PSP_CTRL_VOLUP, PSP_CTRL_VOLDOWN, PSP_CTRL_DISC, PSP_CTRL_WLAN_UP, PSP_CTRL_REMOTE, PSP_CTRL_MS can only be read in kernel mode
+ * @note PSP_CTRL_HOME, PSP_CTRL_NOTE, PSP_CTRL_SCREEN, PSP_CTRL_VOLUP, PSP_CTRL_VOLDOWN, PSP_CTRL_DISC, PSP_CTRL_WLAN_UP, PSP_CTRL_REMOTE, PSP_CTRL_MS can only be read in kernel mode
  */
 enum PspCtrlButtons
 {
@@ -57,7 +57,7 @@ enum PspCtrlButtons
 	PSP_CTRL_CROSS      = 0x004000,
 	/** Square button. */
 	PSP_CTRL_SQUARE     = 0x008000,
-	/** Home button. */
+	/** Home button. In user mode this bit is set if the exit dialog is visible. */
 	PSP_CTRL_HOME       = 0x010000,
 	/** Hold button. */
 	PSP_CTRL_HOLD       = 0x020000,
@@ -172,6 +172,30 @@ int sceCtrlReadBufferNegative(SceCtrlData *pad_data, int count);
 int sceCtrlPeekLatch(SceCtrlLatch *latch_data);
 
 int sceCtrlReadLatch(SceCtrlLatch *latch_data);
+
+/**
+ * Set analog threshold relating to the idle timer.
+ *
+ * @param idlerest - Movement needed by the analog to reset the idle timer.
+ * @param idleback - Movement needed by the analog to bring the PSP back from an idle state.
+ *
+ * Set to -1 for analog to not cancel idle timer.
+ * Set to 0 for idle timer to be cancelled even if the analog is not moved.
+ * Set between 1 - 128 to specify the movement on either axis needed by the analog to fire the event.
+ *
+ * @returns < 0 on error.
+ */
+int sceCtrlSetIdleCancelThreshold(int idlereset, int idleback);
+
+/**
+ * Get the idle threshold values.
+ *
+ * @param idlerest - Movement needed by the analog to reset the idle timer.
+ * @param idleback - Movement needed by the analog to bring the PSP back from an idle state.
+ *
+ * @returns < 0 on error.
+ */
+int sceCtrlGetIdleCancelThreshold(int *idlerest, int *idleback);
 
 /*@}*/
 

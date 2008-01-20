@@ -42,8 +42,14 @@
 	IMPORT_FUNC	"sceCtrl",0xAF5960F3,sceCtrl_AF5960F3
 #endif
 #ifdef F_sceCtrl_0013
-	IMPORT_FUNC	"sceCtrl",0xA68FD260,sceCtrl_A68FD260
+	IMPORT_FUNC	"sceCtrl",0xA68FD260,sceCtrlClearRapidFire
 #endif
 #ifdef F_sceCtrl_0014
-	IMPORT_FUNC	"sceCtrl",0x6841BE1A,sceCtrl_6841BE1A
+	IMPORT_FUNC	"sceCtrl",0x6841BE1A,sceCtrlSetRapidFire
+#endif
+#ifdef F_sceCtrl_0015
+	IMPORT_FUNC	"sceCtrl",0xA7144800,sceCtrlSetIdleCancelThreshold
+#endif
+#ifdef F_sceCtrl_0016
+	IMPORT_FUNC	"sceCtrl",0x687660FA,sceCtrlGetIdleCancelThreshold
 #endif

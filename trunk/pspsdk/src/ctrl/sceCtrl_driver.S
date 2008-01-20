@@ -51,10 +51,10 @@
 	IMPORT_FUNC	"sceCtrl_driver",0x0B588501,sceCtrlReadLatch
 #endif
 #ifdef F_sceCtrl_driver_0015
-	IMPORT_FUNC	"sceCtrl_driver",0xA88E8D22,sceCtrl_driver_A88E8D22
+	IMPORT_FUNC	"sceCtrl_driver",0xA88E8D22,sceCtrlSetIdleCancelKey
 #endif
 #ifdef F_sceCtrl_driver_0016
-	IMPORT_FUNC	"sceCtrl_driver",0xB7CEAED4,sceCtrl_driver_B7CEAED4
+	IMPORT_FUNC	"sceCtrl_driver",0xB7CEAED4,sceCtrlGetIdleCancelKey
 #endif
 #ifdef F_sceCtrl_driver_0017
 	IMPORT_FUNC	"sceCtrl_driver",0x348D99D4,sceCtrl_driver_348D99D4
@@ -63,10 +63,10 @@
 	IMPORT_FUNC	"sceCtrl_driver",0xAF5960F3,sceCtrl_driver_AF5960F3
 #endif
 #ifdef F_sceCtrl_driver_0019
-	IMPORT_FUNC	"sceCtrl_driver",0xA68FD260,sceCtrl_driver_A68FD260
+	IMPORT_FUNC	"sceCtrl_driver",0xA68FD260,sceCtrlClearRapidFire
 #endif
 #ifdef F_sceCtrl_driver_0020
-	IMPORT_FUNC	"sceCtrl_driver",0x6841BE1A,sceCtrl_driver_6841BE1A
+	IMPORT_FUNC	"sceCtrl_driver",0x6841BE1A,sceCtrlSetRapidFire
 #endif
 #ifdef F_sceCtrl_driver_0021
 	IMPORT_FUNC	"sceCtrl_driver",0x7CA723DC,sceCtrl_driver_7CA723DC
@@ -76,4 +76,10 @@
 #endif
 #ifdef F_sceCtrl_driver_0023
 	IMPORT_FUNC	"sceCtrl_driver",0x5C56C779,sceCtrl_driver_5C56C779
+#endif
+#ifdef F_sceCtrl_driver_0024
+	IMPORT_FUNC	"sceCtrl_driver",0xA7144800,sceCtrlSetIdleCancelThreshold
+#endif
+#ifdef F_sceCtrl_driver_0025
+	IMPORT_FUNC	"sceCtrl_driver",0x687660FA,sceCtrlGetIdleCancelThreshold
 #endif
