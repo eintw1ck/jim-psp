@@ -152,6 +152,108 @@ int sceNetAdhocGameModeUpdateMaster(void);
  */
 int sceNetAdhocGameModeUpdateReplica(int id, int unknown, int unknown2, int unknown3);
 
+/**
+ * Open a PTP connection
+ *
+ * @param srcmac - Local mac address.
+ * @param srcport - Local port.
+ * @param destmac - Destination mac.
+ * @param destport - Destination port
+ * @param bufsize - Socket buffer size
+ * @param delay - Interval between retrying (microseconds).
+ * @param count - Number of retries.
+ * @param unk1 - Pass 0.
+ *
+ * @return A socket ID on success, < 0 on error.
+ */
+int sceNetAdhocPtpOpen(unsigned char *srcmac, unsigned short srcport, unsigned char *destmac, unsigned short destport, unsigned int bufsize, unsigned int delay, int count, int unk1);
+
+/**
+ * Wait for connection created by sceNetAdhocPtpOpen()
+ *
+ * @param id - A socket ID.
+ * @param timeout - Timeout in microseconds.
+ * @param unk1 - Pass 0.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocPtpConnect(int id, unsigned int timeout, int unk1);
+
+/**
+ * Wait for an incoming PTP connection
+ *
+ * @param srcmac - Local mac address.
+ * @param srcport - Local port.
+ * @param bufsize - Socket buffer size
+ * @param delay - Interval between retrying (microseconds).
+ * @param count - Number of retries.
+ * @param queue - Connection queue length.
+ * @param unk2 - Pass 0.
+ *
+ * @return A socket ID on success, < 0 on error.
+ */
+int sceNetAdhocPtpListen(unsigned char *srcmac, unsigned short srcport, unsigned int bufsize, unsigned int delay, int count, int queue, int unk2);
+
+/**
+ * Accept an incoming PTP connection
+ *
+ * @param id - A socket ID.
+ * @param mac - Connecting peers mac.
+ * @param port - Connecting peers port.
+ * @param timeout - Timeout in microseconds.
+ * @param unk1 - Pass 0.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocPtpAccept(int id, unsigned char *mac, unsigned short *port, unsigned int timeout, int unk1);
+
+/**
+ * Send data
+ *
+ * @param id - A socket ID.
+ * @param data - Data to send.
+ * @param datasize - Size of the data.
+ * @param timeout - Timeout in microseconds.
+ * @param unk1 - Pass 0.
+ *
+ * @return 0 success, < 0 on error.
+ */
+int sceNetAdhocPtpSend(int id, void *data, int *datasize, unsigned int timeout, int unk1);
+
+/**
+ * Receive data
+ *
+ * @param id - A socket ID.
+ * @param data - Buffer for the received data.
+ * @param datasize - Size of the data received.
+ * @param timeout - Timeout in microseconds.
+ * @param unk1 - Pass 0.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocPtpRecv(int id, void *data, int *datasize, unsigned int timeout, int unk1);
+
+/**
+ * Wait for data in the buffer to be sent
+ *
+ * @param id - A socket ID.
+ * @param timeout - Timeout in microseconds.
+ * @param unk1 - Pass 0.
+ *
+ * @return A socket ID on success, < 0 on error.
+ */
+int sceNetAdhocPtpFlush(int id, unsigned int timeout, int unk1);
+
+/**
+ * Close a socket
+ *
+ * @param id - A socket ID.
+ * @param unk1 - Pass 0.
+ *
+ * @return A socket ID on success, < 0 on error.
+ */
+int sceNetAdhocPtpClose(int id, int unk1);
+
 #ifdef __cplusplus
 }
 #endif
