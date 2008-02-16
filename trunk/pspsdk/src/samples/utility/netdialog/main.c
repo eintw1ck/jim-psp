@@ -19,6 +19,9 @@
 #include <pspgu.h>
 #include <pspgum.h>
 #include <pspsdk.h>
+#include <pspnet.h>
+#include <pspnet_inet.h>
+#include <pspnet_apctl.h>
 
 #if _PSP_FW_VERSION >= 200
 PSP_MODULE_INFO("Net Dialog Sample", 0, 1, 1);
@@ -27,10 +30,12 @@ PSP_MODULE_INFO("Net Dialog Sample", 0x1000, 1, 1);
 PSP_MAIN_THREAD_ATTR(0);
 #endif
 
+static int running = 1;
+
 /* Exit callback */
 int exit_callback(int arg1, int arg2, void *common)
 {
-	sceKernelExitGame();
+	running = 0;
 	return 0;
 }
 
@@ -68,7 +73,7 @@ struct Vertex
 
 struct Vertex __attribute__((aligned(16))) vertices[12*3] =
 {
-	{0xff7f0000,-1,-1, 1}, // 0
+		{0xff7f0000,-1,-1, 1}, // 0
     	{0xff7f0000,-1, 1, 1}, // 4
     	{0xff7f0000, 1, 1, 1}, // 5
 
@@ -126,7 +131,7 @@ struct Vertex __attribute__((aligned(16))) vertices[12*3] =
 
 static void setupGu()
 {
-	sceGuInit();
+		sceGuInit();
 
     	sceGuStart(GU_DIRECT,list);
     	sceGuDrawBuffer(GU_PSM_8888,(void*)0,BUF_WIDTH);
@@ -194,14 +199,18 @@ int netDialog()
 	data.base.language = PSP_SYSTEMPARAM_LANGUAGE_ENGLISH;
 	data.base.buttonSwap = PSP_UTILITY_ACCEPT_CROSS;
 	data.base.graphicsThread = 17;
-	data.base.unknown = 19;
+	data.base.accessThread = 19;
 	data.base.fontThread = 18;
 	data.base.soundThread = 16;
 	data.action = PSP_NETCONF_ACTION_CONNECTAP;
+	
+	struct pspUtilityNetconfAdhoc adhocparam;
+	memset(&adhocparam, 0, sizeof(adhocparam));
+	data.adhocparam = &adhocparam;
 
 	sceUtilityNetconfInitStart(&data);
 	
-	while(!done)
+	while(running)
 	{
 		drawStuff();
 
@@ -217,6 +226,10 @@ int netDialog()
 			case PSP_UTILITY_DIALOG_QUIT:
 				sceUtilityNetconfShutdownStart();
 				break;
+				
+			case PSP_UTILITY_DIALOG_FINISHED:
+				done = 1;
+				break;
 
 			default:
 				break;
@@ -224,20 +237,43 @@ int netDialog()
 
 		sceDisplayWaitVblankStart();
 		sceGuSwapBuffers();
+		
+		if(done)
+			break;
 	}
 	
 	return 1;
 }
 
+void netInit(void)
+{
+	sceNetInit(128*1024, 42, 4*1024, 42, 4*1024);
+	
+	sceNetInetInit();
+	
+	sceNetApctlInit(0x8000, 48);
+}
+
+void netTerm(void)
+{
+	sceNetApctlTerm();
+	
+	sceNetInetTerm();
+	
+	sceNetTerm();
+}
+
 int user_thread(SceSize args, void *argp)
 {
-	pspSdkInetInit();
+	netInit();
 	
 	SetupCallbacks();
 	
 	setupGu();
 
 	netDialog();
+	
+	netTerm();
 	
 	return 0;
 }
@@ -245,18 +281,20 @@ int user_thread(SceSize args, void *argp)
 /* main routine */
 int main(int argc, char *argv[])
 {
-        #if _PSP_FW_VERSION >= 200
-        sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON);
+	#if _PSP_FW_VERSION >= 200
+	sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON);
 
 	sceUtilityLoadNetModule(PSP_NET_MODULE_INET);
 	
-	pspSdkInetInit();
+	netInit();
 	
 	SetupCallbacks();
 	
 	setupGu();
 
 	netDialog();
+	
+	netTerm();
 
 	#else
 

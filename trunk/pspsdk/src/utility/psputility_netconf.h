@@ -36,10 +36,10 @@ typedef struct _pspUtilityNetconfData
 {
 	pspUtilityDialogCommon base;
 	int action; /** One of pspUtilityNetconfActions */
-	struct pspUtilityNetconfAdhoc *adhocparam; //* Adhoc only */
-	int unknown1; 
-	int unknown2;
-	int unknown3;
+	struct pspUtilityNetconfAdhoc *adhocparam; //* Adhoc connection params */
+	int hotspot; /** Set to 1 to allow connections with the 'Internet Browser' option set to 'Start' (ie. hotspot connection) */
+	int hotspot_connected; /** Will be set to 1 when connected to a hotspot style connection */
+	int wifisp; /** Set to 1 to allow connections to Wifi service providers (WISP) */
 	
 } pspUtilityNetconfData;
 
