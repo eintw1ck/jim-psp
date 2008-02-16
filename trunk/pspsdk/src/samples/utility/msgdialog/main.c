@@ -206,7 +206,7 @@ static void ConfigureDialog(pspUtilityMsgDialogParams *dialog, size_t dialog_siz
 				&dialog->base.buttonSwap); // X/O button swap
 
     dialog->base.graphicsThread = 0x11;
-    dialog->base.unknown = 0x13;
+    dialog->base.accessThread = 0x13;
     dialog->base.fontThread = 0x12;
     dialog->base.soundThread = 0x10;
 }

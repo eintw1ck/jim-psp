@@ -224,7 +224,7 @@ void initSavedata(SceUtilitySavedataParam * savedata, int mode)
 	savedata->base.language = PSP_SYSTEMPARAM_LANGUAGE_ENGLISH;
 	savedata->base.buttonSwap = PSP_UTILITY_ACCEPT_CROSS;
 	savedata->base.graphicsThread = 0x11;
-	savedata->base.unknown = 0x13;
+	savedata->base.accessThread = 0x13;
 	savedata->base.fontThread = 0x12;
 	savedata->base.soundThread = 0x10;
 
