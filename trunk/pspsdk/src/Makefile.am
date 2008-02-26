@@ -15,6 +15,7 @@ SUBDIRS = \
 	mpeg \
 	nand \
 	net \
+	openpsid \
 	power \
 	prof \
 	registry \

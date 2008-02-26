@@ -95,6 +95,7 @@ AC_CONFIG_FILES([Makefile
                  src/mpeg/Makefile
                  src/nand/Makefile
                  src/net/Makefile
+                 src/openpsid/Makefile
                  src/power/Makefile
                  src/prof/Makefile
                  src/registry/Makefile
