@@ -515,11 +515,13 @@ static int PSP_AllocHWSurface(_THIS, SDL_Surface *surface)
 
 	surface->pitch = pitch;
 	surface->flags |= SDL_HWSURFACE;
+	surface->hwdata = (void*)1; /* Hack to make SDL realize it's a HWSURFACE when freeing */
 	return 0;
 }
 static void PSP_FreeHWSurface(_THIS, SDL_Surface *surface)
 {
 	vidmem_free(surface->pixels);
+	surface->pixels = NULL;
 	return;
 }
 
