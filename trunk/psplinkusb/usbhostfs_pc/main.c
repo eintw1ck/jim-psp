@@ -38,6 +38,11 @@
 #ifdef __CYGWIN__
 #include <sys/vfs.h>
 #define NO_UID_CHECK
+/* Define out set* and get* calls for cygwin as they are unnecessary and can cause issues */
+#define seteuid(x)
+#define setegid(x)
+#define getuid()
+#define getgid()
 #else
 #include <sys/statvfs.h>
 #endif
