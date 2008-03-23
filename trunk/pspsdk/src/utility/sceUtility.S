@@ -125,3 +125,6 @@
 #ifdef F_sceUtility_0040
 	IMPORT_FUNC	"sceUtility",0xF64910F0,sceUtilityUnloadUsbModule
 #endif
+#ifdef F_sceUtility_0041
+	IMPORT_FUNC	"sceUtility",0x4928BD96,sceUtilityMsgDialogAbort
+#endif

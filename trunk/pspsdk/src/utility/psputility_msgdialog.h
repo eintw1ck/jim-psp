@@ -91,6 +91,11 @@ int sceUtilityMsgDialogGetStatus(void);
  */
 void sceUtilityMsgDialogUpdate(int n);
 
+/**
+ * Abort a message dialog currently active
+ */
+int sceUtilityMsgDialogAbort(void);
+
 #ifdef __cplusplus
 }
 #endif
