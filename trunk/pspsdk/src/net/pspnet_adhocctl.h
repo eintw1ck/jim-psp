@@ -190,9 +190,28 @@ typedef void (*sceNetAdhocctlHandler)(int flag, int error, void *unknown);
  * @param handler - The event handler.
  * @param unknown - Pass NULL.
  *
- * @return 0 on success, < 0 on error.
+ * @return Handler id on success, < 0 on error.
  */
 int sceNetAdhocctlAddHandler(sceNetAdhocctlHandler handler, void *unknown);
+
+/**
+ * Delete an adhoc event handler
+ *
+ * @param id - The handler id as returned by sceNetAdhocctlAddHandler.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocctlDelHandler(int id);
+
+/**
+ * Get nickname from a mac address
+ *
+ * @param mac - The mac address.
+ * @param nickname - Pointer to a char buffer where the nickname will be stored.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocctlGetNameByAddr(unsigned char *mac, char *nickname);
 
 #ifdef __cplusplus
 }
