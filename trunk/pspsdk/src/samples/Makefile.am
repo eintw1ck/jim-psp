@@ -72,6 +72,7 @@ SAMPLES = \
 	template/lib_template \
 	template/kprx_template \
 	usb/storage \
+	utility/gamesharing \
 	utility/netconf \
 	utility/netdialog \
 	utility/msgdialog \
