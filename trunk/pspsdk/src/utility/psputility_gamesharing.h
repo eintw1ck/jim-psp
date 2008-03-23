@@ -7,7 +7,6 @@
  *
  * Copyright (c) 2008 InsertWittyName <tias_dp@hotmail.com>
  *
- * $Id: psputility_msgdialog.h 2353 2008-01-07 23:58:44Z iwn $
  */
 #ifndef __PSPUTILITY_GAMESHARING_H__
 #define __PSPUTILITY_GAMESHARING_H__
@@ -29,15 +28,6 @@ typedef enum
 	PSP_UTILITY_GAMESHARING_DATA_TYPE_MEMORY	= 2, /* EBOOT is in memory */
 	
 } pspUtilityGameSharingDataType;
-
-typedef enum
-{
-	PSP_UTILITY_MSGDIALOG_RESULT_UNKNOWN1 = 0,
-	PSP_UTILITY_MSGDIALOG_RESULT_YES,
-	PSP_UTILITY_MSGDIALOG_RESULT_NO,
-	PSP_UTILITY_MSGDIALOG_RESULT_BACK
-	
-} pspUtilityMsgDialogPressed;
 
 /**
  * Structure to hold the parameters for Game Sharing
