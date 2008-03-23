@@ -24,7 +24,8 @@ libpsputilityinclude_HEADERS = psputility.h \
                                psputility_osk.h \
                                psputility_netmodules.h \
                                psputility_avmodules.h \
-                               psputility_usbmodules.h
+                               psputility_usbmodules.h \
+                               psputility_gamesharing.h
 
 lib_LIBRARIES = libpsputility.a
 libpsputility_a_SOURCES = sceUtility.S sceUtility_netparam_internal.S
