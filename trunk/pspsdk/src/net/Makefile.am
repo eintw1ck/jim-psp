@@ -61,8 +61,8 @@ libpspnet_adhocctl_a_SOURCES = sceNetAdhocctl.S
 libpspnet_adhocctl_a_LIBADD = $(NET_ADHOCCTL_OBJS)
 libpspnet_adhocmatching_a_SOURCES = sceNetAdhocMatching.S
 libpspnet_adhocmatching_a_LIBADD = $(NET_ADHOCMATCHING_OBJS)
-libpspnet_http_a_SOURCES = sceHttp.S
-libpspnet_http_a_LIBADD = $(HTTP_OBJS)
+libpsphttp_a_SOURCES = sceHttp.S
+libpsphttp_a_LIBADD = $(HTTP_OBJS)
 
 $(NET_OBJS): sceNet.S
 	$(COMPILE) -DF_$* $< -c -o $@
