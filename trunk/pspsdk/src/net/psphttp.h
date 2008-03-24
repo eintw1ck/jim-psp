@@ -108,7 +108,7 @@ int sceHttpCreateRequest(int connectionid, PspHttpMethod method, char *path, Sce
  * @param contentlength - Length of the content (POST method only)
  * @returns A request ID on success, < 0 on error.
  */
-int sceHttpCreateRequestWithURL(int connectionid, int method, char *url, SceULong64 contentlength);
+int sceHttpCreateRequestWithURL(int connectionid, PspHttpMethod method, char *url, SceULong64 contentlength);
 
 /**
  * Delete a http request.
@@ -151,7 +151,7 @@ int sceHttpReadData(int requestid, void *data, unsigned int datasize);
  *
  * @param requestid - ID of the request created by sceHttpCreateRequest or sceHttpCreateRequestWithURL
  * @param contentlength - The size of the content
- * @returns The size read into the data buffer, 0 if there is no more data, < 0 on error.
+ * @returns 0 on success, < 0 on error.
  */
 int sceHttpGetContentLength(int requestid, SceULong64 *contentlength);
 
@@ -207,7 +207,7 @@ int sceHttpSetSendTimeOut(int id, unsigned int timeout);
  * @param timeout - Timeout value in microseconds
  * @returns 0 on success, < 0 on error.
  */
-int sceHttpSetRecvTimeOut(int id, unsigned int usec);
+int sceHttpSetRecvTimeOut(int id, unsigned int timeout);
 
 /**
  * Enable keep alive
@@ -304,7 +304,7 @@ int sceHttpDeleteHeader(int id, const char *name);
 int sceHttpsInit(int unknown1, int unknown2, int unknown3, int unknown4);
 
 /**
- * Terminate the http library
+ * Terminate the https library
  *
  * @returns 0 on success, < 0 on error.
 */
