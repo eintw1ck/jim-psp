@@ -136,6 +136,12 @@ int main(int argc, char *argv[]) {
       
       // Skip the file if empty
       if (!size) continue;
+
+      // Seek to the proper position in the file
+      if (fseek(infile, header.offset[loop0], SEEK_SET) != 0) {
+         printf("ERROR: Could not seek in the input file.\n");
+         return -1;
+      }
       
       // Open the output file
       outfile = fopen(filename[loop0], "wb");
