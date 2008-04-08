@@ -35,20 +35,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define STDOUT_FILE	"stdout.txt"
-#define STDERR_FILE	"stderr.txt"
-
 /* If application's main() is redefined as SDL_main, and libSDLmain is
    linked, then this file will create the standard exit callback,
-   define the PSP_* macros, add an exception handler, nullify device 
-   checks and exit back to the browser when the program is finished. */
+   define the PSP_* macros, exit back to the browser when the program
+   is finished. */
 
 extern int SDL_main(int argc, char *argv[]);
 
-static void cleanup_output(void);
-
-PSP_MODULE_INFO("SDL App", 0x1000, 1, 1);
+PSP_MODULE_INFO("SDL App", 0, 1, 1);
+PSP_HEAP_SIZE_MAX();
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
+PSP_MAIN_THREAD_STACK_SIZE_KB(32);
 
 int sdl_psp_exit_callback(int arg1, int arg2, void *common)
 {
@@ -76,108 +73,14 @@ int sdl_psp_setup_callbacks(void)
 	return thid;
 }
 
-void sdl_psp_exception_handler(PspDebugRegBlock *regs)
-{
-	pspDebugScreenInit();
-
-	pspDebugScreenSetBackColor(0x00FF0000);
-	pspDebugScreenSetTextColor(0xFFFFFFFF);
-	pspDebugScreenClear();
-
-	pspDebugScreenPrintf("I regret to inform you your psp has just crashed\n\n");
-	pspDebugScreenPrintf("Exception Details:\n");
-	pspDebugDumpException(regs);
-	pspDebugScreenPrintf("\nThe offending routine may be identified with:\n\n"
-		"\tpsp-addr2line -e target.elf -f -C 0x%x 0x%x 0x%x\n",
-		regs->epc, regs->badvaddr, regs->r[31]);
-}
-
-/* If this flag is set to 1, the _init() function was called and all
-   global/static constructors have been called. */
-static int init_was_called = 0;
-
-__attribute__ ((constructor))
-void loaderInit()
-{
-	int kmode_is_available = (sceKernelDevkitVersion() < 0x02000010);
-
-	if (kmode_is_available) {
-		pspKernelSetKernelPC();
-		pspSdkInstallNoDeviceCheckPatch();
-		pspDebugInstallErrorHandler(sdl_psp_exception_handler);
-	}
-
-	init_was_called = 1;
-}
-
-/* Remove the output files if there was no output written */
-static void cleanup_output(void)
-{
-#ifndef NO_STDIO_REDIRECT
-	FILE *file;
-	int empty;
-#endif
-
-	/* Flush the output in case anything is queued */
-	fclose(stdout);
-	fclose(stderr);
-
-#ifndef NO_STDIO_REDIRECT
-	/* See if the files have any output in them */
-	file = fopen(STDOUT_FILE, "rb");
-	if ( file ) {
-		empty = (fgetc(file) == EOF) ? 1 : 0;
-		fclose(file);
-		if ( empty ) {
-			remove(STDOUT_FILE);
-		}
-	}
-	file = fopen(STDERR_FILE, "rb");
-	if ( file ) {
-		empty = (fgetc(file) == EOF) ? 1 : 0;
-		fclose(file);
-		if ( empty ) {
-			remove(STDERR_FILE);
-		}
-	}
-#endif
-}
-
-extern void _init(void);
-extern void _fini(void);
-
 int main(int argc, char *argv[])
 {
-	/* Fanjita's EBOOT loader can be configured to skip the call to _init().
-	   Since we need _init() for C++, we check to see if _init() has been
-	   called.  If it hasn't we call it manually, after determining whether or
-	   not we can access the kernel. */
-	if (!init_was_called) {
-		_init();
-	}
-	
 	pspDebugScreenInit();
 	sdl_psp_setup_callbacks();
 
-#ifndef NO_STDIO_REDIRECT
-	/* Redirect standard output and standard error. */
-	/* TODO: Error checking. */
-	freopen(STDOUT_FILE, "w", stdout);
-	freopen(STDERR_FILE, "w", stderr);
-	setvbuf(stdout, NULL, _IOLBF, BUFSIZ);	/* Line buffered */
-	setbuf(stderr, NULL);					/* No buffering */
-#endif /* NO_STDIO_REDIRECT */
-
-	/* Functions registered with atexit() are called in reverse order, so make
-	   sure that we register sceKernelExitGame() first, so that it's called last. */
+	/* Register sceKernelExitGame() to be called when we exit */
 	atexit(sceKernelExitGame);
-	/* Make sure that _fini() is called before returning to the OS. */
-	atexit(_fini);
-	atexit(cleanup_output);
 
 	(void)SDL_main(argc, argv);
-
-	/* Delay 2.5 seconds before returning to the OS. */
-	sceKernelDelayThread(2500000);
 	return 0;
 }
