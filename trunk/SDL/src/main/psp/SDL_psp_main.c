@@ -37,15 +37,17 @@
 
 /* If application's main() is redefined as SDL_main, and libSDLmain is
    linked, then this file will create the standard exit callback,
-   define the PSP_* macros, exit back to the browser when the program
-   is finished. */
+   define the PSP_MODULE_INFO macro, and exit back to the browser when
+   the program is finished. 
+
+   You can still override other parameters in your own code if you
+   desire, such as PSP_HEAP_SIZE_KB, PSP_MAIN_THREAD_ATTR,
+   PSP_MAIN_THREAD_STACK_SIZE, etc.
+*/
 
 extern int SDL_main(int argc, char *argv[]);
 
 PSP_MODULE_INFO("SDL App", 0, 1, 1);
-PSP_HEAP_SIZE_KB(20480);
-PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
-PSP_MAIN_THREAD_STACK_SIZE_KB(32);
 
 int sdl_psp_exit_callback(int arg1, int arg2, void *common)
 {
