@@ -128,3 +128,15 @@
 #ifdef F_sceUtility_0041
 	IMPORT_FUNC	"sceUtility",0x4928BD96,sceUtilityMsgDialogAbort
 #endif
+#ifdef F_sceUtility_0042
+	IMPORT_FUNC	"sceUtility",0x05AFB9E4,sceUtilityHtmlViewerUpdate
+#endif
+#ifdef F_sceUtility_0043
+	IMPORT_FUNC	"sceUtility",0xBDA7D894,sceUtilityHtmlViewerGetStatus
+#endif
+#ifdef F_sceUtility_0044
+	IMPORT_FUNC	"sceUtility",0xCDC3AA41,sceUtilityHtmlViewerInitStart
+#endif
+#ifdef F_sceUtility_0045
+	IMPORT_FUNC	"sceUtility",0xF5CE1134,sceUtilityHtmlViewerShutdownStart
+#endif
