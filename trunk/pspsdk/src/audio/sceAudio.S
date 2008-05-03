@@ -39,13 +39,13 @@
 	IMPORT_FUNC	"sceAudio",0xB7E1D8E7,sceAudioChangeChannelVolume
 #endif
 #ifdef F_sceAudio_0012
-	IMPORT_FUNC	"sceAudio",0x38553111,sceAudio_38553111
+	IMPORT_FUNC	"sceAudio",0x38553111,sceAudioSRCChReserve
 #endif
 #ifdef F_sceAudio_0013
-	IMPORT_FUNC	"sceAudio",0x5C37C0AE,sceAudio_5C37C0AE
+	IMPORT_FUNC	"sceAudio",0x5C37C0AE,sceAudioSRCChRelease
 #endif
 #ifdef F_sceAudio_0014
-	IMPORT_FUNC	"sceAudio",0xE0727056,sceAudio_E0727056
+	IMPORT_FUNC	"sceAudio",0xE0727056,sceAudioSRCOutputBlocking
 #endif
 #ifdef F_sceAudio_0015
 	IMPORT_FUNC	"sceAudio",0x086E5895,sceAudioInputBlocking
@@ -66,7 +66,7 @@
 	IMPORT_FUNC	"sceAudio",0xA633048E,sceAudioPollInputEnd
 #endif
 #ifdef F_sceAudio_0021
-	IMPORT_FUNC	"sceAudio",0xB011922F,sceAudio_B011922F
+	IMPORT_FUNC	"sceAudio",0xB011922F,sceAudioGetChannelRestLength
 #endif
 #ifdef F_sceAudio_0022
 	IMPORT_FUNC	"sceAudio",0xE926D3FB,sceAudioInputInitEx
@@ -86,3 +86,4 @@
 #ifdef F_sceAudio_0027
 	IMPORT_FUNC	"sceAudio",0x647CEF33,sceAudioOutput2GetRestSample
 #endif
+
