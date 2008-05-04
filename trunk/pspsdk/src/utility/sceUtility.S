@@ -140,3 +140,9 @@
 #ifdef F_sceUtility_0045
 	IMPORT_FUNC	"sceUtility",0xF5CE1134,sceUtilityHtmlViewerShutdownStart
 #endif
+#ifdef F_sceUtility_0046
+	IMPORT_FUNC	"sceUtility",0x2A2B3DE0,sceUtilityLoadModule
+#endif
+#ifdef F_sceUtility_0047
+	IMPORT_FUNC	"sceUtility",0xE49BFE92,sceUtilityUnloadModule
+#endif

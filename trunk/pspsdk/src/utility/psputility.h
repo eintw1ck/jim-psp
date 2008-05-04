@@ -30,11 +30,14 @@ typedef struct
 #include <psputility_netconf.h>
 #include <psputility_netparam.h>
 #include <psputility_savedata.h>
+#include <psputility_gamesharing.h>
+#include <psputility_htmlviewer.h>
 #include <psputility_sysparam.h>
 #include <psputility_osk.h>
 #include <psputility_netmodules.h>
 #include <psputility_avmodules.h>
 #include <psputility_usbmodules.h>
+#include <psputility_modules.h>
 
 #define PSP_UTILITY_ACCEPT_CIRCLE 0
 #define PSP_UTILITY_ACCEPT_CROSS  1
