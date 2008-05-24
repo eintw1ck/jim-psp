@@ -134,17 +134,17 @@ void DumpBootBin(void)
 	int i;
 	int fd;
 
-	i = sceUmdCheckMedium(0);
+	i = sceUmdCheckMedium();
 	if(i == 0)
 	{
 		printf("Insert UMD\n");
-		i = sceUmdWaitDriveStat(UMD_WAITFORDISC);
+		i = sceUmdWaitDriveStat(PSP_UMD_PRESENT);
 	}
 
 	i = sceUmdActivate(1, "disc0:");
 	printf("Mounted disc\n");
 
-	i = sceUmdWaitDriveStat(UMD_WAITFORINIT);
+	i = sceUmdWaitDriveStat(PSP_UMD_READY);
 
 	/* Open the UMD_DATA.BIN */
 	fd = sceIoOpen("disc0:/UMD_DATA.BIN", PSP_O_RDONLY, 0777);
