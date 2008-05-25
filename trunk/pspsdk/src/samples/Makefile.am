@@ -78,6 +78,7 @@ SAMPLES = \
 	utility/netdialog \
 	utility/msgdialog \
 	utility/systemparam \
+	utility/osk \
 	me/basic \
 	wlan
 
