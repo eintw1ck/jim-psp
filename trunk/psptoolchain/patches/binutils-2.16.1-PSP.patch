@@ -2167,32 +2167,6 @@ diff -burN binutils-2.16.1/gas/testsuite/gas/mips/mips.exp binutils-psp/gas/test
  
  
  #
- diff -burN binutils-2.16.1/gprof/Makefile.am binutils-psp/gprof/Makefile.am
---- binutils-2.16.1/gprof/Makefile.am	2004-11-30 13:20:48.000000000 -0400
-+++ binutils-psp/gprof/Makefile.am	2008-05-27 15:00:15.000000000 -0300
-@@ -38,6 +38,9 @@
- 
- diststuff: $(BUILT_SOURCES) info $(man_MANS)
- 
-+# This empty rule is a hack against gmake patched by Apple.
-+%.o:%.m
-+
- .m.c:
- 	awk -f $(srcdir)/gen-c-prog.awk > ./$*.c \
- 	    FUNCTION=`(echo $*|sed -e 's,.*/,,g' -e 's/_bl//')`_blurb \
-diff -burN binutils-2.16.1/gprof/Makefile.in binutils-psp/gprof/Makefile.in
---- binutils-2.16.1/gprof/Makefile.in	2004-11-30 13:20:48.000000000 -0400
-+++ binutils-psp/gprof/Makefile.in	2008-05-27 15:00:15.000000000 -0300
-@@ -774,6 +774,9 @@
- 
- diststuff: $(BUILT_SOURCES) info $(man_MANS)
- 
-+# This empty rule is a hack against gmake patched by Apple.
-+%.o:%.m
-+
- .m.c:
- 	awk -f $(srcdir)/gen-c-prog.awk > ./$*.c \
- 	    FUNCTION=`(echo $*|sed -e 's,.*/,,g' -e 's/_bl//')`_blurb \
 diff -burN binutils-2.16.1/include/bin-bugs.h binutils-psp/include/bin-bugs.h
 --- binutils-2.16.1/include/bin-bugs.h	2004-07-23 16:40:19.000000000 +0100
 +++ binutils-psp/include/bin-bugs.h	2006-05-09 02:55:36.000000000 +0100
