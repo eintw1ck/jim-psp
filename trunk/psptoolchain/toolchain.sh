@@ -1,9 +1,6 @@
 #!/bin/bash
 # toolchain.sh by Dan Peori (danpeori@oopo.net)
 
- ## automake fails on MacOS X 10.5 with -g flag (MagerValp)
- export CFLAGS="-O2"
-
  ## Enter the psptoolchain directory.
  cd "`dirname $0`" || { echo "ERROR: Could not enter the psptoolchain directory."; exit 1; }
 
