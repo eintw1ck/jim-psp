@@ -16,5 +16,5 @@
  ## Configure the build.
  ../configure --prefix="$PSPDEV" --target="psp" --enable-install-libbfd || { exit 1; }
 
- ## Compile and install.
- make clean && make -j 2 && make install && make clean || { exit 1; }
+ ## Compile and install. ( -r is required for building under osx )
+ make clean && make -r -j 2 && make install && make clean || { exit 1; }
