@@ -43,6 +43,10 @@
 #define EVENT_RENDER_FRAME_2  3
 #define EVENT_DISABLE_SCREEN  4
 
+#ifndef SOL_TCP 
+   #define SOL_TCP IPPROTO_TCP 
+#endif
+
 #if defined BUILD_BIGENDIAN || defined _BIG_ENDIAN
 uint16_t swap16(uint16_t i)
 {

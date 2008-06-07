@@ -33,6 +33,10 @@
 #define MAX_AXES_NUM 32767
 #define DIGITAL_TOL   10000
 
+#ifndef SOL_TCP 
+   #define SOL_TCP IPPROTO_TCP 
+#endif
+
 #if defined BUILD_BIGENDIAN || defined _BIG_ENDIAN
 uint16_t swap16(uint16_t i)
 {
