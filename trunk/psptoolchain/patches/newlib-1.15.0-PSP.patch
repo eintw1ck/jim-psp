@@ -6041,7 +6041,7 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/libcglue.c newlib-1.15.0/newli
 +#define DEFAULT_PRX_HEAP_SIZE_KB 64
 +
 +/* If defined it specifies the desired size of the heap, in KB. */
-+extern unsigned int sce_newlib_heap_kb_size __attribute__((weak));
++extern int sce_newlib_heap_kb_size __attribute__((weak));
 +extern int __pspsdk_is_prx __attribute__((weak));
 +
 +/* UID of the memory block that represents the heap. */

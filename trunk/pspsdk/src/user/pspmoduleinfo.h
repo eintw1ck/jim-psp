@@ -133,7 +133,7 @@ enum PspModuleInfoAttr
 
 /* Declare the size of the heap (in KB) that the program wants to allocate from. */
 #define PSP_HEAP_SIZE_KB(size_kb) \
-	unsigned int sce_newlib_heap_kb_size = (size_kb)
+	int sce_newlib_heap_kb_size = (size_kb)
 
 /* Declare to allocate maximum heap area */
 #define PSP_HEAP_SIZE_MAX() \
