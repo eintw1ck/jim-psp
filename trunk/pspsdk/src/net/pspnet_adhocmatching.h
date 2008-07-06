@@ -60,7 +60,7 @@ enum pspAdhocMatchingModes
 	/** Host */
 	PSP_ADHOC_MATCHING_MODE_HOST =		1,
 	/** Client */
-	PSP_ADHOC_MATCHING_MODE_CHILD =		2,
+	PSP_ADHOC_MATCHING_MODE_CLIENT =	2,
 	/** Peer to peer */
 	PSP_ADHOC_MATCHING_MODE_PTP =		3
 };
