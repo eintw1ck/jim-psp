@@ -48,7 +48,7 @@ struct SceNetAdhocctlScanInfo
 	struct SceNetAdhocctlScanInfo *next;
 	/** Channel number */
 	int channel;
-	/** Name (alphanumeric chanracters only) */
+	/** Name of the connection (alphanumeric characters only) */
 	char name[8];
 	/** The BSSID */
 	unsigned char bssid[6];
@@ -58,16 +58,37 @@ struct SceNetAdhocctlScanInfo
 	int unknown2;
 };
 
+struct SceNetAdhocctlGameModeInfo
+{
+	/** Number of peers (including self) */
+	int count;
+	/** MAC addresses of peers (including self) */
+	unsigned char macs[16][6];
+};
+
+/** Params structure */
+struct SceNetAdhocctlParams
+{
+	/** Channel number */
+	int channel;
+	/** Name of the connection */
+	char name[8];
+	/** The BSSID */
+	unsigned char bssid[6];
+	/** Nickname */
+	char nickname[128];
+};
+
 /**
  * Initialise the Adhoc control library
  *
- * @param unk1 - Set to 0x2000
- * @param unk2 - Set to 0x30
+ * @param stacksize - Stack size of the adhocctl thread. Set to 0x2000
+ * @param priority - Priority of the adhocctl thread. Set to 0x30
  * @param product - Pass a filled in ::productStruct
  *
  * @return 0 on success, < 0 on error
  */
-int sceNetAdhocctlInit(int unk1, int unk2, struct productStruct *product);
+int sceNetAdhocctlInit(int stacksize, int priority, struct productStruct *product);
 
 /**
  * Terminate the Adhoc control library
@@ -79,11 +100,11 @@ int sceNetAdhocctlTerm(void);
 /**
  * Connect to the Adhoc control
  *
- * @param unk1 - Pass ""
+ * @param name - The name of the connection (maximum 8 alphanumeric characters).
  *
  * @return 0 on success, < 0 on error.
  */
-int sceNetAdhocctlConnect(char *unk1);
+int sceNetAdhocctlConnect(const char *name);
 
 /**
  * Disconnect from the Adhoc control
@@ -108,7 +129,7 @@ int sceNetAdhocctlGetState(int *event);
  *
  * @return 0 on success, < 0 on error.
  */
-int sceNetAdhocctlCreate(char *name);
+int sceNetAdhocctlCreate(const char *name);
 
 /**
  * Connect to the Adhoc control (as a client)
@@ -118,6 +139,15 @@ int sceNetAdhocctlCreate(char *name);
  * @return 0 on success, < 0 on error.
  */
 int sceNetAdhocctlJoin(struct SceNetAdhocctlScanInfo *scaninfo);
+
+/**
+ * Get the adhoc ID
+ *
+ * @param product - A pointer to a  ::productStruct
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocctlGetAdhocId(struct productStruct *product);
 
 /**
  * Connect to the Adhoc control game mode (as a host)
@@ -131,7 +161,7 @@ int sceNetAdhocctlJoin(struct SceNetAdhocctlScanInfo *scaninfo);
  *
  * @return 0 on success, < 0 on error.
  */
-int sceNetAdhocctlCreateEnterGameMode(char *name, int unknown, int num, unsigned char *macs, unsigned int timeout, int unknown2);
+int sceNetAdhocctlCreateEnterGameMode(const char *name, int unknown, int num, unsigned char *macs, unsigned int timeout, int unknown2);
 
 /**
  * Connect to the Adhoc control game mode (as a client)
@@ -140,9 +170,26 @@ int sceNetAdhocctlCreateEnterGameMode(char *name, int unknown, int num, unsigned
  * @param host - The mac address of the host.
  * @param timeout - Timeout in microseconds.
  * @param unknown - pass 0.
+ *
  * @return 0 on success, < 0 on error.
  */
-int sceNetAdhocctlJoinEnterGameMode(char *name, unsigned char *hostmac, unsigned int timeout, int unknown);
+int sceNetAdhocctlJoinEnterGameMode(const char *name, unsigned char *hostmac, unsigned int timeout, int unknown);
+
+/**
+ * Get game mode information
+ *
+ * @param gamemodeinfo - Pointer to store the info.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocctlGetGameModeInfo(struct SceNetAdhocctlGameModeInfo *gamemodeinfo);
+
+/**
+ * Exit game mode.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocctlExitGameMode(void);
 
 /**
  * Get a list of peers
@@ -176,7 +223,7 @@ int sceNetAdhocctlScan(void);
  * Get the results of a scan
  *
  * @param length - The length of the list.
- * @param host - An allocated area of size length.
+ * @param buf - An allocated area of size length.
  *
  * @return 0 on success, < 0 on error.
  */
@@ -212,6 +259,26 @@ int sceNetAdhocctlDelHandler(int id);
  * @return 0 on success, < 0 on error.
  */
 int sceNetAdhocctlGetNameByAddr(unsigned char *mac, char *nickname);
+
+/**
+ * Get mac address from nickname
+ *
+ * @param nickname - The nickname.
+ * @param length - The length of the list.
+ * @param buf - An allocated area of size length.
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocctlGetAddrByName(char *nickname, int *length, void *buf);
+
+/**
+ * Get Adhocctl parameter
+ *
+ * @param params - Pointer to a ::SceNetAdhocctlParams
+ *
+ * @return 0 on success, < 0 on error.
+ */
+int sceNetAdhocctlGetParameter(struct SceNetAdhocctlParams *params);
 
 #ifdef __cplusplus
 }

@@ -65,3 +65,6 @@
 #ifdef F_sceNetAdhocctl_0020
 	IMPORT_FUNC	"sceNetAdhocctl",0x5A014CE0,sceNetAdhocctlGetGameModeInfo
 #endif
+#ifdef F_sceNetAdhocctl_0021
+	IMPORT_FUNC	"sceNetAdhocctl",0x8DB83FDC,sceNetAdhocctlGetPeerInfo
+#endif

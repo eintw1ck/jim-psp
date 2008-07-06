@@ -41,3 +41,15 @@
 #ifdef F_sceNetAdhocMatching_0012
 	IMPORT_FUNC	"sceNetAdhocMatching",0x40F8F435,sceNetAdhocMatchingGetPoolMaxAlloc
 #endif
+#ifdef F_sceNetAdhocMatching_0013
+	IMPORT_FUNC	"sceNetAdhocMatching",0x8F58BEDF,sceNetAdhocMatchingCancelTargetWithOpt
+#endif
+#ifdef F_sceNetAdhocMatching_0014
+	IMPORT_FUNC	"sceNetAdhocMatching",0x9C5CFB7D,sceNetAdhocMatchingGetPoolStat
+#endif
+#ifdef F_sceNetAdhocMatching_0015
+	IMPORT_FUNC	"sceNetAdhocMatching",0xF79472D7,sceNetAdhocMatchingSendData
+#endif
+#ifdef F_sceNetAdhocMatching_0016
+	IMPORT_FUNC	"sceNetAdhocMatching",0xEC19337D,sceNetAdhocMatchingAbortSendData
+#endif
