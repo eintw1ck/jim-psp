@@ -2,7 +2,7 @@
 # zziplib.sh by Dan Peori (danpeori@oopo.net)
 
  ## Download the latest source code.
- if test ! -d "zlib"; then
+ if test ! -d "zziplib"; then
   svn checkout svn://svn.ps2dev.org/psp/trunk/zziplib || { exit 1; }
  else
   svn update zziplib || { exit 1; }
