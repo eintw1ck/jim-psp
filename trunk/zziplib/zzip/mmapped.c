@@ -185,7 +185,7 @@ static char* _zzip_restrict _zzip_strndup(char* p, int maxlen)
 #define _zzip_strcasecmp strcasecmp
 #else
 /* if your system does not have strcasecmp: */
-static int _zzip_strcasecmp(char* __zzip_restrict a, char* _zzip_restrict b)
+static int _zzip_strcasecmp(char* _zzip_restrict a, char* _zzip_restrict b)
 {
     if (! a) return (b) ? 1 : 0;
     if (! b) return -1;
