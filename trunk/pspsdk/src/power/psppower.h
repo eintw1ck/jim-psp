@@ -8,6 +8,7 @@
  * Copyright (c) 2005 Marcus R. Brown <mrbrown@ocgnet.org>
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
+ * Copyright (c) 2005 David Perru <tias_dp@hotmail.com>
  *
  * $Id$
  */
@@ -45,6 +46,16 @@ extern "C" {
 #define PSP_POWER_CB_BATTPOWER		0x0000007F
 
 /**
+ * Power tick flags
+ */
+/* All */
+#define PSP_POWER_TICK_ALL		0
+/* Suspend */
+#define PSP_POWER_TICK_SUSPEND	1
+/* Display */
+#define PSP_POWER_TICK_DISPLAY	6
+
+/**
  * Power Callback Function Definition
  *
  * @param unknown - unknown function, appears to cycle between 1,2 and 3
@@ -55,23 +66,40 @@ typedef void (*powerCallback_t)(int unknown, int powerInfo);
 /**
  * Register Power Callback Function
  *
- * @param slot - slot of the callback in the list
+ * @param slot - slot of the callback in the list, 0 to 15, pass -1 to get an auto assignment.
  * @param cbid - callback id from calling sceKernelCreateCallback
+ *
+ * @returns 0 on success, the slot number if -1 is passed, < 0 on error.
  */
 int scePowerRegisterCallback(int slot, SceUID cbid);
 
 /**
+ * Unregister Power Callback Function
+ *
+ * @param slot - slot of the callback
+ *
+ * @returns 0 on success, < 0 on error.
+ */
+int scePowerUnregisterCallback(int slot);
+
+/**
  * Check if unit is plugged in
+ *
+ * @returns 1 if plugged in, 0 if not plugged in, < 0 on error.
  */
 int scePowerIsPowerOnline(void);
 
 /**
  * Check if a battery is present
+ *
+ * @returns 1 if battery present, 0 if battery not present, < 0 on error.
  */
 int scePowerIsBatteryExist(void);
 
 /**
  * Check if the battery is charging
+ *
+ * @returns 1 if battery charging, 0 if battery not charging, < 0 on error.
  */
 int scePowerIsBatteryCharging(void);
 
@@ -82,17 +110,22 @@ int scePowerGetBatteryChargingStatus(void);
 
 /**
  * Check if the battery is low
+ *
+ * @returns 1 if the battery is low, 0 if the battery is not low, < 0 on error.
  */
 int scePowerIsLowBattery(void);
 
 /**
  * Get battery life as integer percent
- * @return battery charge percentage
+ *
+ * @returns Battery charge percentage (0-100), < 0 on error.
  */
 int scePowerGetBatteryLifePercent(void);
 
 /**
  * Get battery life as time
+ *
+ * @returns Battery life in minutes, < 0 on error.
  */
 int scePowerGetBatteryLifeTime(void);
 
@@ -181,6 +214,8 @@ int scePowerSetClockFrequency(int pllfreq, int cpufreq, int busfreq);
  * it will fire immediately after being unlocked.
  *
  * @param unknown - pass 0
+ *
+ * @returns 0 on success, < 0 on error.
  */
 int scePowerLock(int unknown);
 
@@ -188,6 +223,8 @@ int scePowerLock(int unknown);
  * Unlock power switch
  *
  * @param unknown - pass 0
+ *
+ * @returns 0 on success, < 0 on error.
  */
 int scePowerUnlock(int unknown);
 
@@ -195,9 +232,11 @@ int scePowerUnlock(int unknown);
  * Generate a power tick, preventing unit from 
  * powering off and turning off display.
  *
- * @param unknown - pass 0
+ * @param type - Either PSP_POWER_TICK_ALL, PSP_POWER_TICK_SUSPEND or PSP_POWER_TICK_DISPLAY
+ *
+ * @returns 0 on success, < 0 on error.
  */
-int scePowerTick(int unknown);
+int scePowerTick(int type);
 
 /**
  * Get Idle timer
