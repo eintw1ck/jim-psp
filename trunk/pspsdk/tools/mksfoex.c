@@ -228,6 +228,8 @@ int main(int argc, char **argv)
 	char *k;
 	char *d;
 	unsigned int align;
+	unsigned int keyofs;
+	unsigned int count;
 
 	if(!process_args(argc, argv)) 
 	{
@@ -276,10 +278,11 @@ int main(int argc, char **argv)
 	d = data;
 	SW(&h->magic, PSF_MAGIC);
 	SW(&h->version, PSF_VERSION);
+	count = 0;
 
 	for(i = 0; g_vals[i].name; i++)
 	{
-		SW(&h->count, h->count+1);
+		SW(&h->count, ++count);
 		SW(&e->nameofs, k-keys);
 		SW(&e->dataofs, d-data);
 		SW(&e->alignment, 4);
@@ -303,14 +306,16 @@ int main(int argc, char **argv)
 			totalsize = (valsize + 3) & ~3;
 			SW(&e->valsize, valsize);
 			SW(&e->totalsize, totalsize);
-			memset(d, 0, e->totalsize);
-			memcpy(d, g_vals[i].data, e->valsize);
+			memset(d, 0, totalsize);
+			memcpy(d, g_vals[i].data, valsize);
 			d += totalsize;
 		}
 		e++;
 	}
 
-	SW(&h->keyofs, (char*)e - head);
+
+	keyofs = (char*)e - head;
+	SW(&h->keyofs, keyofs);
 	align = 3 - ((unsigned int) (k-keys) & 3);
 	while(align < 3)
 	{
@@ -318,7 +323,7 @@ int main(int argc, char **argv)
 		align--;
 	}
 	
-	SW(&h->valofs, h->keyofs + (k-keys));
+	SW(&h->valofs, keyofs + (k-keys));
 
 	fp = fopen(g_filename, "wb");
 	if(fp == NULL)
