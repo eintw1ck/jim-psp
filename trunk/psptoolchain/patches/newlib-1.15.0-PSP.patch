@@ -6007,7 +6007,7 @@ diff -burN orig.newlib-1.15.0/newlib/libc/sys/psp/libcglue.c newlib-1.15.0/newli
 +#ifdef F__gettimeofday
 +int _gettimeofday(struct timeval *tp, struct timezone *tzp)
 +{
-+	return __psp_set_errno(sceKernelLibcGettimeofday(tp, tzp));
++	time_t t; sceKernelLibcTime(&t); tp->tv_sec = t; return __psp_set_errno(t);
 +}
 +
 +#endif
