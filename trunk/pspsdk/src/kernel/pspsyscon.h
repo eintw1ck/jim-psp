@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
- * pspsyscon.h - Interface to sceSysreg_driver.
+ * pspsyscon.h - Interface to sceSyscon_driver.
  *
  * Copyright (c) 2006 James F
  *
@@ -57,6 +57,13 @@ int sceSysconCtrlLED(int SceLED, int state);
  * @return < 0 on error
  */
 int sceSysconCtrlHRPower(int power);
+
+
+int	sceSysconGetHPConnect(void);
+
+int sceSysconSetHPConnectCallback( void (*)(int), int unk0 );
+
+int sceSysconSetHRPowerCallback( void (*)(int), int unk0 );
 
 /*@}*/
 

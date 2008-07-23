@@ -272,6 +272,9 @@ extern "C" {
 #define GU_SYNC_SIGNAL	(1)
 #define GU_SYNC_DONE	(2)
 
+#define GU_SYNC_WAIT	(0)
+#define GU_SYNC_NOWAIT	(1)
+
 /* Signals */
 #define GU_CALLBACK_SIGNAL	(1)
 #define GU_CALLBACK_FINISH	(4)

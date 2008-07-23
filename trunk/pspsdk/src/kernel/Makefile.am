@@ -48,6 +48,8 @@ IMPOSE_OBJS = sceImpose_driver_0000.o sceImpose_driver_0001.o sceImpose_driver_0
 
 INIT_OBJS = InitForKernel_0000.o InitForKernel_0001.o InitForKernel_0002.o InitForKernel_0003.o InitForKernel_0004.o InitForKernel_0005.o InitForKernel_0006.o InitForKernel_0007.o InitForKernel_0008.o InitForKernel_0009.o InitForKernel_0010.o InitForKernel_0011.o
 
+AUDIOROUTING_OBJS = sceAudioRouting_driver_0000.o sceAudioRouting_driver_0001.o sceAudioRouting_driver_0002.o sceAudioRouting_driver_0003.o sceAudioRouting_driver_0004.o
+
 libpspkernelincludedir = @PSPSDK_INCLUDEDIR@
 
 libpspkernelinclude_HEADERS =	\
@@ -70,7 +72,8 @@ libpspkernelinclude_HEADERS =	\
 	pspexception.h 		\
 	pspsysclib.h		\
 	pspimpose_driver.h	\
-	pspinit.h
+	pspinit.h			\
+	pspaudiorouting.h
 
 lib_LIBRARIES = libpspkernel.a
 
@@ -93,12 +96,14 @@ libpspkernel_a_SOURCES =	\
 	ModuleMgrForKernel.S	\
 	sceIdStorage_driver.S	\
 	sceImpose_driver.S	\
-	InitForKernel.S
+	InitForKernel.S		\
+	sceAudioRouting_driver.S
 
 libpspkernel_a_LIBADD = $(EXCEPTION_OBJS) $(KDEBUG_OBJS) $(LOADCORE_OBJS) $(IO_OBJS) \
 						$(STDIO_OBJS) $(SYSREG_OBJS) $(UTILS_OBJS) $(SYSCON_OBJS) $(INTR_OBJS) \
 						$(THREAD_OBJS) $(SYSCLIB_OBJS) $(LOADEXEC_OBJS) $(SYSMEM_OBJS) $(MODULE_OBJS) \
-						$(IDSTORAGE_OBJS) $(SYSTIMER_OBJS) $(SYSEVENT_OBJS) $(IMPOSE_OBJS) $(INIT_OBJS)
+						$(IDSTORAGE_OBJS) $(SYSTIMER_OBJS) $(SYSEVENT_OBJS) $(IMPOSE_OBJS) $(INIT_OBJS) \
+						$(AUDIOROUTING_OBJS)
 
 $(EXCEPTION_OBJS): ExceptionManagerForKernel.S
 	$(COMPILE) -DF_$* $< -c -o $@
@@ -155,4 +160,7 @@ $(IMPOSE_OBJS): sceImpose_driver.S
 	$(COMPILE) -DF_$* $< -c -o $@
 
 $(INIT_OBJS): InitForKernel.S
+	$(COMPILE) -DF_$* $< -c -o $@
+
+$(AUDIOROUTING_OBJS): sceAudioRouting_driver.S
 	$(COMPILE) -DF_$* $< -c -o $@
