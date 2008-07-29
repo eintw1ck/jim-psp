@@ -168,8 +168,7 @@ div_t div(int n, int d)
   /* calculate the quotient and remainder. */
   // duh... can't this be written with some asm "mfhi/mflo" ?
   ret.quot = (n / d);
-  ret.quot = (n % d);
-  ret.rem = 0; // set to 0 so it won't be uninitialized
+  ret.rem = (n % d);
   return (ret);
 }
 #endif
