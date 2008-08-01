@@ -335,7 +335,7 @@ void build_exports_output_extern(struct psp_export *pHead)
 	pExp = pHead;
 	while(pExp != NULL)
 	{
-		fprintf(stdout, "void extern %s;\n", pExp->name);
+		fprintf(stdout, "extern void %s;\n", pExp->name);
 		pExp = pExp->pNext;
 	}
 }
