@@ -54,6 +54,7 @@ SAMPLES = \
 	kernel/regenum \
 	kernel/systimer \
 	kernel/sysevent \
+	mp3 \
 	ms/callback \
 	nand/dumpipl \
 	net/simple \
