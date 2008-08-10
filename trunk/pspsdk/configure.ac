@@ -92,6 +92,7 @@ AC_CONFIG_FILES([Makefile
                  src/hprm/Makefile
                  src/kernel/Makefile
                  src/libc/Makefile
+                 src/mp3/Makefile
                  src/mpeg/Makefile
                  src/nand/Makefile
                  src/net/Makefile

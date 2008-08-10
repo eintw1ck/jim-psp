@@ -12,6 +12,7 @@ SUBDIRS = \
 	hprm \
 	kernel \
 	libc \
+	mp3 \
 	mpeg \
 	nand \
 	net \
