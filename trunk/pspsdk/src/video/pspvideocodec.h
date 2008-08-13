@@ -23,6 +23,12 @@ int sceVideocodecInit(unsigned long *Buffer, int Type);
 int sceVideocodecDecode(unsigned long *Buffer, int Type);
 int sceVideocodecReleaseEDRAM(unsigned long *Buffer);
 
+// sceVideocodecGetVersion
+// sceVideocodecScanHeader
+// sceVideocodecDelete
+// sceVideocodecSetMemory
+// sceVideocodecStop
+
 #ifdef __cplusplus
 }
 #endif

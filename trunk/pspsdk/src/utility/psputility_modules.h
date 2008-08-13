@@ -38,6 +38,20 @@ extern "C" {
 #define PSP_MODULE_AV_ATRAC3PLUS	0x0302
 #define PSP_MODULE_AV_MPEGBASE		0x0303
 #define PSP_MODULE_AV_MP3			0x0304
+#define PSP_MODULE_AV_VAUDIO		0x0305
+#define PSP_MODULE_AV_AAC			0x0306
+#define PSP_MODULE_AV_G729			0x0307
+
+/* NP */
+#define PSP_MODULE_NP_COMMON		0x0400
+#define PSP_MODULE_NP_SERVICE		0x0401
+#define PSP_MODULE_NP_MATCHING2		0x0402
+
+#define PSP_MODULE_NP_DRM			0x0500
+
+/* IrDA */
+#define PSP_MODULE_IRDA				0x0600
+
 
 /**
  * Load a module (PRX) from user mode.
