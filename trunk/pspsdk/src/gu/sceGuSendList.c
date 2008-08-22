@@ -11,13 +11,14 @@
 #include <pspkernel.h>
 #include <pspge.h>
 
+int buffer[512];
 void sceGuSendList(int mode, const void* list, PspGeContext* context)
 {
 	gu_settings.signal_offset = 0;
 
 	// TODO: figure out this structure
 	unsigned int s[2];
-	s[0] = 8;
+	s[0] = 8; // size of struct?
 	s[1] = (unsigned int)context;
 
 	int list_id = 0;

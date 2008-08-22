@@ -267,13 +267,23 @@ extern "C" {
 #define GU_TAIL			(0)
 #define GU_HEAD			(1)
 
-/* Sync behavior */
+/* Sync behavior (mode) */
 #define GU_SYNC_FINISH	(0)
 #define GU_SYNC_SIGNAL	(1)
 #define GU_SYNC_DONE	(2)
+#define GU_SYNC_LIST	(3)
+#define GU_SYNC_SEND	(4)
 
+/* behavior (what) */
 #define GU_SYNC_WAIT	(0)
 #define GU_SYNC_NOWAIT	(1)
+
+/* Sync behavior (what) [see pspge.h] */
+#define GU_SYNC_WHAT_DONE (0)
+#define GU_SYNC_WHAT_QUEUED (1)
+#define GU_SYNC_WHAT_DRAW (2)
+#define GU_SYNC_WHAT_STALL (3)
+#define GU_SYNC_WHAT_CANCEL (4)
 
 /* Signals */
 #define GU_CALLBACK_SIGNAL	(1)
@@ -572,16 +582,21 @@ void* sceGuSwapBuffers(void);
   * sceGuSync(0,0);
   * @endcode
   *
-  * Available modes are:
-  *   - GU_SYNC_WAIT
-  *   - GU_SYNC_NOWAIT
-  *
   * Available what are:
+  *   - GU_SYNC_WHAT_DONE
+  *   - GU_SYNC_WHAT_QUEUED
+  *   - GU_SYNC_WHAT_DRAW
+  *   - GU_SYNC_WHAT_STALL
+  *   - GU_SYNC_WHAT_CANCEL
+  *
+  * Available mode are:
   *   - GU_SYNC_FINISH - Wait until the last sceGuFinish command is reached
   *   - GU_SYNC_SIGNAL - Wait until the last (?) signal is executed
   *   - GU_SYNC_DONE - Wait until all commands currently in list are executed
+  *   - GU_SYNC_LIST - Wait for the currently executed display list (GU_DIRECT)
+  *   - GU_SYNC_SEND - Wait for the last send list
   *
-  * @param mode - Whether to wait or not
+  * @param mode - What to wait for
   * @param what - What to sync to
   * @returns Unknown at this time
 **/

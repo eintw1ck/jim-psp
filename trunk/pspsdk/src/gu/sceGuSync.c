@@ -16,8 +16,8 @@ int sceGuSync(int mode, int what)
 	switch (mode)
 	{
 		case 0: return sceGeDrawSync(what); break;
-		case 3: return sceGeDrawSync(ge_list_executed[0]);
-		case 4: return sceGeDrawSync(ge_list_executed[1]);
+		case 3: return sceGeListSync(ge_list_executed[0],what);
+		case 4: return sceGeListSync(ge_list_executed[1],what);
 		default: case 1: case 2: return 0;
 	}
 }
