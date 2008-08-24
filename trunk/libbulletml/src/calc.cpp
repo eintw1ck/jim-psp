@@ -17,6 +17,7 @@ typedef float NumType;
 #define YYSTYPE float
 #define YYERROR_VERBOSE
 
+#include <string.h>
 #include <cmath>
 #include <cctype>
 
