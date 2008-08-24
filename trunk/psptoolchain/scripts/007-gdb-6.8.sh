@@ -1,14 +1,14 @@
 #!/bin/sh
-# gdb-6.4.sh by Dan Peori (danpeori@oopo.net)
+# gdb-6.8.3.sh by Dan Peori (danpeori@oopo.net)
 
  ## Download the source code.
- wget --continue ftp://ftp.gnu.org/pub/gnu/gdb/gdb-6.4.tar.bz2 || { exit 1; }
+ wget --continue ftp://ftp.gnu.org/pub/gnu/gdb/gdb-6.8.tar.bz2 || { exit 1; }
 
  ## Unpack the source code.
- rm -Rf gdb-6.4 && tar xfvj gdb-6.4.tar.bz2 || { exit 1; }
+ rm -Rf gdb-6.8 && tar xfvj gdb-6.8.tar.bz2 || { exit 1; }
 
  ## Enter the source directory and patch the source code.
- cd gdb-6.4 && cat ../../patches/gdb-6.4-PSP.patch | patch -p1 || { exit 1; }
+ cd gdb-6.8 && cat ../../patches/gdb-6.8-PSP.patch | patch -p1 || { exit 1; }
 
  ## Create and enter the build directory.
  mkdir build-psp && cd build-psp || { exit 1; }

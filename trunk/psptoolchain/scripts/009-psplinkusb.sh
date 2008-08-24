@@ -9,7 +9,7 @@
  fi
 
  ## Enter the source directory.
- cd psplinkusb || { exit 1; }
+ cd psplinkusb && cat ../../patches/psplinkusb.patch | patch -p1 || { exit 1; }|| { exit 1; }
 
  ## Build and install.
  make -f Makefile.clients clean && make -f Makefile.clients && make -f Makefile.clients install && make -f Makefile.clients clean || { exit 1; }
