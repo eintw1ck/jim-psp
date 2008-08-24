@@ -1,6 +1,6 @@
-diff -burN gcc-4.3.0/config.sub gcc-4.3.0-psp/config.sub
---- gcc-4.3.0/config.sub	2008-01-23 04:37:40.000000000 +0200
-+++ gcc-4.3.0-psp/config.sub	2008-03-22 17:33:17.531250000 +0200
+diff -burN gcc-4.3.1/config.sub gcc-4.3.1-psp/config.sub
+--- gcc-4.3.1/config.sub	2008-01-23 04:37:40.000000000 +0200
++++ gcc-4.3.1-psp/config.sub	2008-03-22 17:33:17.531250000 +0200
 @@ -267,6 +267,7 @@
  	| mipsisa64sb1 | mipsisa64sb1el \
  	| mipsisa64sr71k | mipsisa64sr71kel \
@@ -28,9 +28,9 @@ diff -burN gcc-4.3.0/config.sub gcc-4.3.0-psp/config.sub
  	mips3*-*)
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
-diff -burN gcc-4.3.0/gcc/config/mips/allegrex.md gcc-4.3.0-psp/gcc/config/mips/allegrex.md
---- gcc-4.3.0/gcc/config/mips/allegrex.md	1970-01-01 02:00:00.000000000 +0200
-+++ gcc-4.3.0-psp/gcc/config/mips/allegrex.md	2008-03-12 22:35:31.421875000 +0200
+diff -burN gcc-4.3.1/gcc/config/mips/allegrex.md gcc-4.3.1-psp/gcc/config/mips/allegrex.md
+--- gcc-4.3.1/gcc/config/mips/allegrex.md	1970-01-01 02:00:00.000000000 +0200
++++ gcc-4.3.1-psp/gcc/config/mips/allegrex.md	2008-03-12 22:35:31.421875000 +0200
 @@ -0,0 +1,183 @@
 +;; Sony ALLEGREX instructions.
 +;; Copyright (C) 2005 Free Software Foundation, Inc.
@@ -215,9 +215,9 @@ diff -burN gcc-4.3.0/gcc/config/mips/allegrex.md gcc-4.3.0-psp/gcc/config/mips/a
 +  "round.w.s\t%0,%1"
 +  [(set_attr "type"	"fcvt")
 +   (set_attr "mode"	"SF")])
-diff -burN gcc-4.3.0/gcc/config/mips/mips-ftypes.def gcc-4.3.0-psp/gcc/config/mips/mips-ftypes.def
---- gcc-4.3.0/gcc/config/mips/mips-ftypes.def	2007-10-18 22:12:17.000000000 +0300
-+++ gcc-4.3.0-psp/gcc/config/mips/mips-ftypes.def	2008-03-22 17:37:03.703125000 +0200
+diff -burN gcc-4.3.1/gcc/config/mips/mips-ftypes.def gcc-4.3.1-psp/gcc/config/mips/mips-ftypes.def
+--- gcc-4.3.1/gcc/config/mips/mips-ftypes.def	2007-10-18 22:12:17.000000000 +0300
++++ gcc-4.3.1-psp/gcc/config/mips/mips-ftypes.def	2008-03-22 17:37:03.703125000 +0200
 @@ -53,9 +53,12 @@
  
  DEF_MIPS_FTYPE (2, (SI, DI, SI))
@@ -236,9 +236,9 @@ diff -burN gcc-4.3.0/gcc/config/mips/mips-ftypes.def gcc-4.3.0-psp/gcc/config/mi
  DEF_MIPS_FTYPE (2, (VOID, V2HI, V2HI))
  DEF_MIPS_FTYPE (2, (VOID, V4QI, V4QI))
 +DEF_MIPS_FTYPE (1, (VOID, VOID))
-diff -burN gcc-4.3.0/gcc/config/mips/mips.c gcc-4.3.0-psp/gcc/config/mips/mips.c
---- gcc-4.3.0/gcc/config/mips/mips.c	2008-01-31 21:28:03.000000000 +0200
-+++ gcc-4.3.0-psp/gcc/config/mips/mips.c	2008-03-22 18:56:52.203125000 +0200
+diff -burN gcc-4.3.1/gcc/config/mips/mips.c gcc-4.3.1-psp/gcc/config/mips/mips.c
+--- gcc-4.3.1/gcc/config/mips/mips.c	2008-01-31 21:28:03.000000000 +0200
++++ gcc-4.3.1-psp/gcc/config/mips/mips.c	2008-03-22 18:56:52.203125000 +0200
 @@ -197,6 +197,11 @@
    /* As above, but the instruction only sets a single $fcc register.  */
    MIPS_BUILTIN_CMP_SINGLE,
@@ -429,9 +429,9 @@ diff -burN gcc-4.3.0/gcc/config/mips/mips.c gcc-4.3.0-psp/gcc/config/mips/mips.c
  }
  
  /* Swap the register information for registers I and I + 1, which
-diff -burN gcc-4.3.0/gcc/config/mips/mips.h gcc-4.3.0-psp/gcc/config/mips/mips.h
---- gcc-4.3.0/gcc/config/mips/mips.h	2008-01-26 12:22:14.000000000 +0200
-+++ gcc-4.3.0-psp/gcc/config/mips/mips.h	2008-03-22 19:06:08.687500000 +0200
+diff -burN gcc-4.3.1/gcc/config/mips/mips.h gcc-4.3.1-psp/gcc/config/mips/mips.h
+--- gcc-4.3.1/gcc/config/mips/mips.h	2008-01-26 12:22:14.000000000 +0200
++++ gcc-4.3.1-psp/gcc/config/mips/mips.h	2008-03-22 19:06:08.687500000 +0200
 @@ -67,6 +67,7 @@
    PROCESSOR_SB1,
    PROCESSOR_SB1A,
@@ -545,9 +545,9 @@ diff -burN gcc-4.3.0/gcc/config/mips/mips.h gcc-4.3.0-psp/gcc/config/mips/mips.h
  #ifndef HAVE_AS_TLS
  #define HAVE_AS_TLS 0
  #endif
-diff -burN gcc-4.3.0/gcc/config/mips/mips.md gcc-4.3.0-psp/gcc/config/mips/mips.md
---- gcc-4.3.0/gcc/config/mips/mips.md	2008-01-31 21:28:03.000000000 +0200
-+++ gcc-4.3.0-psp/gcc/config/mips/mips.md	2008-03-22 18:39:09.359375000 +0200
+diff -burN gcc-4.3.1/gcc/config/mips/mips.md gcc-4.3.1-psp/gcc/config/mips/mips.md
+--- gcc-4.3.1/gcc/config/mips/mips.md	2008-01-31 21:28:03.000000000 +0200
++++ gcc-4.3.1-psp/gcc/config/mips/mips.md	2008-03-22 18:39:09.359375000 +0200
 @@ -209,6 +209,19 @@
     (UNSPEC_DPAQX_SA_W_PH	446)
     (UNSPEC_DPSQX_S_W_PH		447)
@@ -688,9 +688,9 @@ diff -burN gcc-4.3.0/gcc/config/mips/mips.md gcc-4.3.0-psp/gcc/config/mips/mips.
 +
 +; Sony ALLEGREX instructions.
 +(include "allegrex.md")
-diff -burN gcc-4.3.0/gcc/config/mips/mips.opt gcc-4.3.0-psp/gcc/config/mips/mips.opt
---- gcc-4.3.0/gcc/config/mips/mips.opt	2007-09-23 22:18:27.000000000 +0300
-+++ gcc-4.3.0-psp/gcc/config/mips/mips.opt	2008-03-22 17:57:57.125000000 +0200
+diff -burN gcc-4.3.1/gcc/config/mips/mips.opt gcc-4.3.1-psp/gcc/config/mips/mips.opt
+--- gcc-4.3.1/gcc/config/mips/mips.opt	2007-09-23 22:18:27.000000000 +0300
++++ gcc-4.3.1-psp/gcc/config/mips/mips.opt	2008-03-22 17:57:57.125000000 +0200
 @@ -271,3 +271,7 @@
  mxgot
  Target Report Var(TARGET_XGOT)
@@ -699,9 +699,9 @@ diff -burN gcc-4.3.0/gcc/config/mips/mips.opt gcc-4.3.0-psp/gcc/config/mips/mips
 +mpreferred-stack-boundary=
 +Target RejectNegative Joined Var(mips_preferred_stack_boundary_string)
 +Attempt to keep stack aligned to this power of 2
-diff -burN gcc-4.3.0/gcc/config/mips/psp.h gcc-4.3.0-psp/gcc/config/mips/psp.h
---- gcc-4.3.0/gcc/config/mips/psp.h	1970-01-01 02:00:00.000000000 +0200
-+++ gcc-4.3.0-psp/gcc/config/mips/psp.h	2008-03-12 22:35:31.453125000 +0200
+diff -burN gcc-4.3.1/gcc/config/mips/psp.h gcc-4.3.1-psp/gcc/config/mips/psp.h
+--- gcc-4.3.1/gcc/config/mips/psp.h	1970-01-01 02:00:00.000000000 +0200
++++ gcc-4.3.1-psp/gcc/config/mips/psp.h	2008-03-12 22:35:31.453125000 +0200
 @@ -0,0 +1,31 @@
 +/* Support for Sony's Playstation Portable (PSP).
 +   Copyright (C) 2005 Free Software Foundation, Inc.
@@ -734,9 +734,9 @@ diff -burN gcc-4.3.0/gcc/config/mips/psp.h gcc-4.3.0-psp/gcc/config/mips/psp.h
 +/* Get rid of the .pdr section. */
 +#undef SUBTARGET_ASM_SPEC
 +#define SUBTARGET_ASM_SPEC "-mno-pdr"
-diff -burN gcc-4.3.0/gcc/config/mips/t-allegrex gcc-4.3.0-psp/gcc/config/mips/t-allegrex
---- gcc-4.3.0/gcc/config/mips/t-allegrex	1970-01-01 02:00:00.000000000 +0200
-+++ gcc-4.3.0-psp/gcc/config/mips/t-allegrex	2008-03-12 22:35:31.453125000 +0200
+diff -burN gcc-4.3.1/gcc/config/mips/t-allegrex gcc-4.3.1-psp/gcc/config/mips/t-allegrex
+--- gcc-4.3.1/gcc/config/mips/t-allegrex	1970-01-01 02:00:00.000000000 +0200
++++ gcc-4.3.1-psp/gcc/config/mips/t-allegrex	2008-03-12 22:35:31.453125000 +0200
 @@ -0,0 +1,29 @@
 +# Suppress building libgcc1.a, since the MIPS compiler port is complete
 +# and does not need anything from libgcc1.a.
@@ -767,9 +767,9 @@ diff -burN gcc-4.3.0/gcc/config/mips/t-allegrex gcc-4.3.0-psp/gcc/config/mips/t-
 +
 +LIBGCC = stmp-multilib
 +INSTALL_LIBGCC = install-multilib
-diff -burN gcc-4.3.0/gcc/config.gcc gcc-4.3.0-psp/gcc/config.gcc
---- gcc-4.3.0/gcc/config.gcc	2008-01-29 18:28:10.000000000 +0200
-+++ gcc-4.3.0-psp/gcc/config.gcc	2008-03-22 17:58:46.625000000 +0200
+diff -burN gcc-4.3.1/gcc/config.gcc gcc-4.3.1-psp/gcc/config.gcc
+--- gcc-4.3.1/gcc/config.gcc	2008-01-29 18:28:10.000000000 +0200
++++ gcc-4.3.1-psp/gcc/config.gcc	2008-03-22 17:58:46.625000000 +0200
 @@ -1818,6 +1818,18 @@
  	tmake_file="mips/t-r3900 mips/t-libgcc-mips16"
  	use_fixproto=yes
@@ -789,9 +789,9 @@ diff -burN gcc-4.3.0/gcc/config.gcc gcc-4.3.0-psp/gcc/config.gcc
  mmix-knuth-mmixware)
  	need_64bit_hwint=yes
  	;;
-diff -burN gcc-4.3.0/libgcc/config.host gcc-4.3.0-psp/libgcc/config.host
---- gcc-4.3.0/libgcc/config.host	2008-01-25 22:49:04.000000000 +0200
-+++ gcc-4.3.0-psp/libgcc/config.host	2008-03-22 19:49:27.437500000 +0200
+diff -burN gcc-4.3.1/libgcc/config.host gcc-4.3.1-psp/libgcc/config.host
+--- gcc-4.3.1/libgcc/config.host	2008-01-25 22:49:04.000000000 +0200
++++ gcc-4.3.1-psp/libgcc/config.host	2008-03-22 19:49:27.437500000 +0200
 @@ -458,6 +458,8 @@
  	;;
  mipstx39-*-elf* | mipstx39el-*-elf*)

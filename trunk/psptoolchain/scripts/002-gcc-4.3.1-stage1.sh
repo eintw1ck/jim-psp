@@ -1,14 +1,14 @@
 #!/bin/sh
-# gcc-4.3.0-stage1.sh by Dan Peori (danpeori@oopo.net)
+# gcc-4.3.1-stage1.sh by Dan Peori (danpeori@oopo.net)
 
  ## Download the source code.
- wget --continue ftp://ftp.gnu.org/pub/gnu/gcc/gcc-4.3.0/gcc-4.3.0.tar.bz2 || { exit 1; }
+ wget --continue ftp://ftp.gnu.org/pub/gnu/gcc/gcc-4.3.1/gcc-4.3.1.tar.bz2 || { exit 1; }
 
  ## Unpack the source code.
- rm -Rf gcc-4.3.0 && tar xfvj gcc-4.3.0.tar.bz2 || { exit 1; }
+ rm -Rf gcc-4.3.1 && tar xfvj gcc-4.3.1.tar.bz2 || { exit 1; }
 
  ## Enter the source directory and patch the source code.
- cd gcc-4.3.0 && cat ../../patches/gcc-4.3.0-PSP.patch | patch -p1 || { exit 1; }
+ cd gcc-4.3.1 && cat ../../patches/gcc-4.3.1-PSP.patch | patch -p1 || { exit 1; }
 
  ## Create and enter the build directory.
  mkdir build-psp && cd build-psp || { exit 1; }
