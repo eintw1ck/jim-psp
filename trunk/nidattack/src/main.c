@@ -24,6 +24,13 @@ typedef unsigned int u32;
 SHA-1 based on Steve Reid SHA1 code <steve@edmweb.com>
 */
 
+// this was originally 64, but since ps3 adds 16 bytes
+// to every hash buffer it may need to be increased.
+// Note: The '128' size does not currently work -
+// would anyone like to fix it? :)
+#define MAX_HASH_BUFF		64
+//#define MAX_HASH_BUFF		128
+
 #define LITTLE_ENDIAN
 
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
@@ -47,7 +54,7 @@ SHA-1 based on Steve Reid SHA1 code <steve@edmweb.com>
 #define R4(v,w,x,y,z,i) z+=(w^x^y)+blk(i)+0xCA62C1D6+rol(v,5);w=rol(w,30);
 
 u32 fastSHA1(unsigned char *buffer,int len) {
-    u8 buf[64];
+    u8 buf[MAX_HASH_BUFF];
     s32 i;
     u32 a, b, c, d, e;
     u32 *block;
@@ -55,13 +62,13 @@ u32 fastSHA1(unsigned char *buffer,int len) {
     memcpy(buf, buffer, len);
     block=(u32 *)buf;
 
-    for(i=len+1; i<63; i++) {
+    for(i=len+1; i<MAX_HASH_BUFF-1; i++) {
       buf[i]=0x00;
     }
 
     buf[len]=0x80;
-    buf[62]=(len*8)>>8;
-    buf[63]=(len*8)&0xff;
+    buf[MAX_HASH_BUFF-2]=(len*8)>>8;
+    buf[MAX_HASH_BUFF-1]=(len*8)&0xff;
 
     a = 0x67452301;
     b = 0xEFCDAB89;
@@ -246,19 +253,37 @@ void fillsearchtable()
   }
 }
 
-int findhash(char *buffer, int size)
+int findhash(char *buffer, int size, int isPS3)
 {
   int h;
   unsigned int hashvalue;
   unsigned int index1;
   unsigned int index2;
   unsigned int index3;
-  //fastSHA1 doesn't support strings larger than 63 bytes
+  u8 int_buff[MAX_HASH_BUFF];
+  u8* buff_ptr;
+  const u8 ps3_key[16] = {
+  	0x67, 0x59, 0x65, 0x99, 0x04, 0x25, 0x04, 0x90,
+  	0x56, 0x64, 0x27, 0x49, 0x94, 0x89, 0x74, 0x1A };
+  
+  if(isPS3)
+  {
+  	buff_ptr = int_buff;
+  	memcpy(int_buff, buffer, size);
+  	memcpy(int_buff+size, ps3_key, 16);
+  	size += 16;
+  }
+  else
+  {
+  	buff_ptr = buffer;
+  }
+  
+  //fastSHA1 doesn't support strings larger than MAX_HASH_BUFF-1 bytes
   //and chances are unlikely that function names are that
   //long anyway so reject them before doing processing
-  if (size > 63)
+  if (size > MAX_HASH_BUFF-1)
   	return 0;
-  hashvalue = fastSHA1(buffer, size);
+  hashvalue = fastSHA1(buff_ptr, size);
   index1 = (hashvalue & 0xff000000)>>24;
   index2 = (hashvalue & 0x00ff0000)>>16;
   index3 = (hashvalue & 0x0000ff00)>>8;
@@ -296,17 +321,19 @@ int main(int argc, char **argv)
 	char buffer[0x200];
 	time_t start, end;
 	int colisiones;
-
+	int is_ps3_flag = 0;
+	
 	char *ptr, *ptr0, *ptr1, *ptr2, *ptr3; // , *ptr4;
 
 	char *prefix = "";
 	int prefixlen = 0;
 
-	printf("SHA1 hash dictionary attack v2.0 by adresd\n");
+	printf("SHA1 hash dictionary attack v2.1 by adresd\n");
 	printf("based on the original by djhuevo\n");
+	printf("PS3 support added by xorloser\n");
 
 	if (argc < 3) {
-		printf("usage:\n\t%s <hash_list> <dictionary> [prefix]\n", argv[0]);
+		printf("usage:\n\t%s <hash_list> <dictionary> [-ps3] [prefix]\n", argv[0]);
 		return 1;
 	}
 
@@ -321,9 +348,20 @@ int main(int argc, char **argv)
 	}
 
 	if (argc > 3) {
-		prefix = argv[3];
-		strcpy(buffer, prefix);
-		prefixlen = strlen(prefix);
+		if( !strcmp("-ps3", argv[3]) ) {
+			is_ps3_flag = 1;
+			if (argc > 4) {
+				prefix = argv[4];
+				strcpy(buffer, prefix);
+				prefixlen = strlen(prefix);
+			}
+		}
+		else
+		{
+			prefix = argv[3];
+			strcpy(buffer, prefix);
+			prefixlen = strlen(prefix);
+		}
 	}
 
 	if (hash_count < 1 || dict_count < 1) {
@@ -392,23 +430,23 @@ int main(int argc, char **argv)
 										*(ptr4++) = dict[z2][i];
 									}
 									*(ptr4) = 0x00;
-									findhash(buffer, ptr4 - buffer);
+									findhash(buffer, ptr4 - buffer, is_ps3_flag);
 								}
 							}
 #endif
 							*(ptr3) = 0x00;
-							findhash(buffer, ptr3 - buffer);
+							findhash(buffer, ptr3 - buffer, is_ps3_flag);
 						}
 					}
 					*(ptr2) = 0x00;
-					findhash(buffer, ptr2 - buffer);
+					findhash(buffer, ptr2 - buffer, is_ps3_flag);
 				}
 			}
 			*(ptr1) = 0x00;
-			findhash(buffer, ptr1 - buffer);
+			findhash(buffer, ptr1 - buffer, is_ps3_flag);
 		}
 		*(ptr0) = 0x00;
-		findhash(buffer, ptr0 - buffer);
+		findhash(buffer, ptr0 - buffer, is_ps3_flag);
 	}
 	time(&end);
 	printf("\n\nhash count : %d\n", hash_count);
