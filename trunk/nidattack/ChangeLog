@@ -1,6 +1,11 @@
+2008-08-26  xorloser
+
+	* src/main.c: Added PS3 support by way of an optional flag
+	"-ps3" passed on the command line before any optional prefix.
+
 2005-06-05  Marcus R. Brown  <mrbrown@0xd6.org>
 
-	* src/main.c: Remvoe the original SHA1 source and replace it with
+	* src/main.c: Remove the original SHA1 source and replace it with
 	the version used in djhuevo's attack02 source.
 
 	* ChangeLog: Rearrange this, as it was in the wrong order.
