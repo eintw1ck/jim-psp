@@ -39,6 +39,12 @@ typedef struct PspGeCallbackData
 	void *finish_arg;
 } PspGeCallbackData;
 
+typedef struct PspGeListArgs
+{
+	unsigned int	size;
+	PspGeContext*	context;
+} PspGeListArgs;
+
 /**
  * Get the size of VRAM.
  *
@@ -117,11 +123,11 @@ int sceGeRestoreContext(const PspGeContext *context);
   * @param stall - The stall address.
   * If NULL then no stall address set and the list is transferred immediately.
   * @param cbid - ID of the callback set by calling sceGeSetCallback
-  * @param arg - Probably a parameter to the callbacks (to be confirmed)
+  * @param arg - Structure containing GE context buffer address
   *
   * @return The ID of the queue.
   */
-int sceGeListEnQueue(const void *list, void *stall, int cbid, void *arg);
+int sceGeListEnQueue(const void *list, void *stall, int cbid, PspGeListArgs *arg);
 
 /**
   * Enqueue a display list at the head of the GE display list queue.
@@ -130,11 +136,11 @@ int sceGeListEnQueue(const void *list, void *stall, int cbid, void *arg);
   * @param stall - The stall address.
   * If NULL then no stall address set and the list is transferred immediately.
   * @param cbid - ID of the callback set by calling sceGeSetCallback
-  * @param arg - Probably a parameter to the callbacks (to be confirmed)
+  * @param arg - Structure containing GE context buffer address
   *
   * @return The ID of the queue.
   */
-int sceGeListEnQueueHead(const void *list, void *stall, int cbid, void *arg);
+int sceGeListEnQueueHead(const void *list, void *stall, int cbid, PspGeListArgs *arg);
 
 /**
  * Cancel a queued or running list.

@@ -50,17 +50,16 @@ void sceGuClear(int flags)
 	{
 		struct Vertex* curr;
 		unsigned int i;
-
-		vertices = (struct Vertex*)sceGuGetMemory(16 * sizeof(struct Vertex));
-		count = 16;
+		count = (gu_draw_buffer.width/64)*2;
+		vertices = (struct Vertex*)sceGuGetMemory(count * sizeof(struct Vertex));
 		curr = vertices;
 
-		for (i = 0; i < 16; ++i, ++curr)
+		for (i = 0; i < count; ++i, ++curr)
 		{
 			unsigned int j,k;
 
 			j = i >> 1;
-			k = i - (j << 1);
+			k = (i & 1);
 
 			curr->color = filter;
 			curr->x = (j+k) * 64;

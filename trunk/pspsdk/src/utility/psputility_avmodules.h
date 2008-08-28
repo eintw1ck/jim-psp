@@ -21,6 +21,10 @@ extern "C" {
 #define PSP_AV_MODULE_SASCORE		1
 #define PSP_AV_MODULE_ATRAC3PLUS	2 // Requires PSP_AV_MODULE_AVCODEC loading first
 #define PSP_AV_MODULE_MPEGBASE		3 // Requires PSP_AV_MODULE_AVCODEC loading first
+#define PSP_AV_MODULE_MP3			4
+#define PSP_AV_MODULE_VAUDIO		5
+#define PSP_AV_MODULE_AAC			6
+#define PSP_AV_MODULE_G729			7
 
 /**
  * Load an audio/video module (PRX) from user mode.
