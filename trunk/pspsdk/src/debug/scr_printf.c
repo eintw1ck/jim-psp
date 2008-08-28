@@ -356,6 +356,9 @@ int pspDebugScreenPrintData(const char *buff, int size)
 		c = buff[i];
 		switch (c)
 		{
+			case '\r':
+						X = 0;
+						break;
 			case '\n':
 						X = 0;
 						Y ++;

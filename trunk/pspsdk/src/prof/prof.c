@@ -79,7 +79,8 @@ extern int _ftext;
 extern int _etext;
 
 /* forward declarations */
-void gprof_cleanup();
+void gprof_cleanup(void);
+void __mcount(unsigned int, unsigned int);
 static SceUInt timer_handler(SceUID uid, SceKernelSysClock *c1, SceKernelSysClock *c2, void *common);
 
 /** Initializes pg library

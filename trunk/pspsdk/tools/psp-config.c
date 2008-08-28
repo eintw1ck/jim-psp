@@ -1,3 +1,6 @@
+#if defined(__MINGW32__) && !defined(__CYGWIN__)
+#include <windows.h>
+#endif
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
@@ -259,9 +262,24 @@ void print_path(char *name)
 
 int main(int argc, char **argv)
 {
+#if defined(__MINGW32__) && !defined(__CYGWIN__)
+	// this will store the fully-qualified path
+	char psp_config_path[MAX_PATH] = "";
+	
+	// fetch the path of the executable
+	if(GetModuleFileName(0, psp_config_path, sizeof(psp_config_path) - 1) == 0)
+	{
+	  // fall back
+	  strcpy(psp_config_path, argv[0]);
+	}
+#endif
 	if(process_args(argc, argv))
 	{
+	#if defined(__MINGW32__) && !defined(__CYGWIN__)
+		print_path(psp_config_path);
+	#else
 		print_path(argv[0]);
+	#endif
 	}
 	else
 	{
