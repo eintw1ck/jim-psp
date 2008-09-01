@@ -13,12 +13,14 @@
 
 void* sceGuSwapBuffers(void)
 {
-	void* temp = gu_draw_buffer.disp_buffer;
-	gu_draw_buffer.disp_buffer = gu_draw_buffer.frame_buffer;
-	gu_draw_buffer.frame_buffer = temp;
-
 	if (gu_settings.swapBuffersCallback)
-		gu_settings.swapBuffersCallback(&gu_draw_buffer.disp_buffer,gu_draw_buffer.frame_buffer);
+	{
+		gu_settings.swapBuffersCallback(&gu_draw_buffer.disp_buffer,&gu_draw_buffer.frame_buffer);
+	} else {
+		void* temp = gu_draw_buffer.disp_buffer;
+		gu_draw_buffer.disp_buffer = gu_draw_buffer.frame_buffer;
+		gu_draw_buffer.frame_buffer = temp;
+	}
 
 	if (gu_display_on)
 		sceDisplaySetFrameBuf((void*)((unsigned int)ge_edram_address + (unsigned int)gu_draw_buffer.disp_buffer), gu_draw_buffer.frame_width, gu_draw_buffer.pixel_size, gu_settings.swapBuffersBehaviour);

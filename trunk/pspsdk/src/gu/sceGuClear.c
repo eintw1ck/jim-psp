@@ -50,7 +50,7 @@ void sceGuClear(int flags)
 	{
 		struct Vertex* curr;
 		unsigned int i;
-		count = (gu_draw_buffer.width/64)*2;
+		count = ((gu_draw_buffer.width+63)/64)*2;
 		vertices = (struct Vertex*)sceGuGetMemory(count * sizeof(struct Vertex));
 		curr = vertices;
 
