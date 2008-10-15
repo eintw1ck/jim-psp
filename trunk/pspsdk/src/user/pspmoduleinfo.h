@@ -37,8 +37,11 @@ extern char _gp[];
 
 enum PspModuleInfoAttr
 {
-	PSP_MODULE_USER   = 0,
-	PSP_MODULE_KERNEL = 0x1000,
+	PSP_MODULE_USER			= 0,
+	PSP_MODULE_NO_STOP		= 0x0001,
+	PSP_MODULE_SINGLE_LOAD	= 0x0002,
+	PSP_MODULE_SINGLE_START	= 0x0004,
+	PSP_MODULE_KERNEL		= 0x1000,
 };
 
 #ifdef __cplusplus
