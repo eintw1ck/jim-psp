@@ -51,7 +51,7 @@ typedef int SceKernelSysMemAlloc_t;
  * @param size - Size of the memory block, in bytes.
  * @param addr - If type is PSP_SMEM_Addr, then addr specifies the lowest address allocate the block from.
  *
- * @returns The UID of the new block, or if less than 0 an error.
+ * @return The UID of the new block, or if less than 0 an error.
  */
 SceUID sceKernelAllocPartitionMemory(SceUID partitionid, const char *name, int type, SceSize size, void *addr);
 
@@ -60,7 +60,7 @@ SceUID sceKernelAllocPartitionMemory(SceUID partitionid, const char *name, int t
  *
  * @param blockid - UID of the block to free.
  *
- * @returns ? on success, less than 0 on error.
+ * @return ? on success, less than 0 on error.
  */
 int sceKernelFreePartitionMemory(SceUID blockid);
 
@@ -69,28 +69,28 @@ int sceKernelFreePartitionMemory(SceUID blockid);
  *
  * @param blockid - UID of the memory block.
  *
- * @returns The lowest address belonging to the memory block.
+ * @return The lowest address belonging to the memory block.
  */
 void * sceKernelGetBlockHeadAddr(SceUID blockid);
 
 /**
  * Get the total amount of free memory.
  *
- * @returns The total amount of free memory, in bytes.
+ * @return The total amount of free memory, in bytes.
  */
 SceSize sceKernelTotalFreeMemSize(void);
 
 /**
  * Get the size of the largest free memory block.
  *
- * @returns The size of the largest free memory block, in bytes.
+ * @return The size of the largest free memory block, in bytes.
  */
 SceSize sceKernelMaxFreeMemSize(void);
 
 /**
  * Get the firmware version.
  * 
- * @returns The firmware version.
+ * @return The firmware version.
  * 0x01000300 on v1.00 unit,
  * 0x01050001 on v1.50 unit,
  * 0x01050100 on v1.51 unit,

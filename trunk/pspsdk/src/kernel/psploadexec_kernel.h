@@ -56,7 +56,7 @@ struct SceKernelLoadExecVSHParam {
  * @param buf - Pointer to a buffer containing the module to execute.
  * @param param - Pointer to a ::SceKernelLoadExecParam structure, or NULL.
  *
- * @returns < 0 on some errors. 
+ * @return < 0 on some errors. 
 */
 int sceKernelLoadExecBufferPlain(SceSize bufsize, void *buf, struct SceKernelLoadExecParam *param);
 #endif
@@ -66,7 +66,7 @@ int sceKernelLoadExecBufferPlain(SceSize bufsize, void *buf, struct SceKernelLoa
  *
  * @param param - Pointer to a ::SceKernelLoadExecVSHParam structure, or NULL
  *
- * @returns < 0 on some errors.
+ * @return < 0 on some errors.
  *
  * @note - when called in game mode it will have the same effect that sceKernelExitGame
  *
@@ -79,7 +79,7 @@ int sceKernelExitVSHVSH(struct SceKernelLoadExecVSHParam *param);
  *
  * @param param - Pointer to a ::SceKernelLoadExecVSHParam structure, or NULL
  *
- * @returns < 0 on some errors.
+ * @return < 0 on some errors.
  *
  * @note - when called in game mode it will have the same effect that sceKernelExitGame
  * @note2: available since firmware 2.00.
@@ -94,7 +94,7 @@ int sceKernelExitVSHKernel(struct SceKernelLoadExecVSHParam *param);
  * @param file - The file to execute.
  * @param param - Pointer to a ::SceKernelLoadExecVSHParam structure, or NULL.
  *
- * @returns < 0 on some errors. 
+ * @return < 0 on some errors. 
 */
 int sceKernelLoadExecVSHDisc(const char *file, struct SceKernelLoadExecVSHParam *param);
 
@@ -105,7 +105,7 @@ int sceKernelLoadExecVSHDisc(const char *file, struct SceKernelLoadExecVSHParam 
  * @param file - The file to execute.
  * @param param - Pointer to a ::SceKernelLoadExecVSHParam structure, or NULL.
  *
- * @returns < 0 on some errors. 
+ * @return < 0 on some errors. 
 */
 int sceKernelLoadExecVSHDiscUpdater(const char *file, struct SceKernelLoadExecVSHParam *param);
 
@@ -116,7 +116,7 @@ int sceKernelLoadExecVSHDiscUpdater(const char *file, struct SceKernelLoadExecVS
  * @param file - The file to execute.
  * @param param - Pointer to a ::SceKernelLoadExecVSHParam structure, or NULL.
  *
- * @returns < 0 on some errors. 
+ * @return < 0 on some errors. 
 */
 int sceKernelLoadExecVSHMs1(const char *file, struct SceKernelLoadExecVSHParam *param);
 
@@ -127,7 +127,7 @@ int sceKernelLoadExecVSHMs1(const char *file, struct SceKernelLoadExecVSHParam *
  * @param file - The file to execute.
  * @param param - Pointer to a ::SceKernelLoadExecVSHParam structure, or NULL.
  *
- * @returns < 0 on some errors. 
+ * @return < 0 on some errors. 
 */
 int sceKernelLoadExecVSHMs2(const char *file, struct SceKernelLoadExecVSHParam *param);
 
@@ -138,7 +138,7 @@ int sceKernelLoadExecVSHMs2(const char *file, struct SceKernelLoadExecVSHParam *
  * @param file - The file to execute.
  * @param param - Pointer to a ::SceKernelLoadExecVSHParam structure, or NULL.
  *
- * @returns < 0 on some errors. 
+ * @return < 0 on some errors. 
 */
 int sceKernelLoadExecVSHMs3(const char *file, struct SceKernelLoadExecVSHParam *param);
 
@@ -150,7 +150,7 @@ int sceKernelLoadExecVSHMs3(const char *file, struct SceKernelLoadExecVSHParam *
  * @param file - The file to execute.
  * @param param - Pointer to a ::SceKernelLoadExecVSHParam structure, or NULL.
  *
- * @returns < 0 on some errors. 
+ * @return < 0 on some errors. 
  * @note - Available since firmware 3.00
 */
 int sceKernelLoadExecVSHMs4(const char *file, struct SceKernelLoadExecVSHParam *param);

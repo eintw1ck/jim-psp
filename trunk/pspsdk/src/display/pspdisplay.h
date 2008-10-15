@@ -58,7 +58,7 @@ enum PspDisplayErrorCodes
  * @param width - Width of screen in pixels.
  * @param height - Height of screen in pixels.
  *
- * @returns ???
+ * @return ???
  */
 int sceDisplaySetMode(int mode, int width, int height);
 

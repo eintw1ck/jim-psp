@@ -29,14 +29,14 @@ typedef enum
  * Init the http library.
  *
  * @param unknown1 - Memory pool size? Pass 20000
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpInit(unsigned int unknown1);
 
 /**
  * Terminate the http library.
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpEnd(void);
 
@@ -46,7 +46,7 @@ int sceHttpEnd(void);
  * @param agent - User agent
  * @param unknown1 - Pass 1
  * @param unknown2 - Pass 0
- * @returns A template ID on success, < 0 on error.
+ * @return A template ID on success, < 0 on error.
  */
 int sceHttpCreateTemplate(char *agent, int unknown1, int unknown2);
 
@@ -54,7 +54,7 @@ int sceHttpCreateTemplate(char *agent, int unknown1, int unknown2);
  * Delete a http template.
  *
  * @param templateid - ID of the template created by sceHttpCreateTemplate
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpDeleteTemplate(int templateid);
 
@@ -66,7 +66,7 @@ int sceHttpDeleteTemplate(int templateid);
  * @param unknown1 - Pass "http"
  * @param port - Port to connect on
  * @param unknown2 - Pass 0
- * @returns A connection ID on success, < 0 on error.
+ * @return A connection ID on success, < 0 on error.
  */
 int sceHttpCreateConnection(int templateid, char *host, char *unknown1, unsigned short port, int unknown2);
 
@@ -76,7 +76,7 @@ int sceHttpCreateConnection(int templateid, char *host, char *unknown1, unsigned
  * @param templateid - ID of the template created by sceHttpCreateTemplate
  * @param url - url to connect to
  * @param unknown1 - Pass 0
- * @returns A connection ID on success, < 0 on error.
+ * @return A connection ID on success, < 0 on error.
  */
 int sceHttpCreateConnectionWithURL(int templateid, const char *url, int unknown1);
 
@@ -84,7 +84,7 @@ int sceHttpCreateConnectionWithURL(int templateid, const char *url, int unknown1
  * Delete a http connection.
  *
  * @param connectionid - ID of the connection created by sceHttpCreateConnection or sceHttpCreateConnectionWithURL
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpDeleteConnection(int connectionid);
 
@@ -95,7 +95,7 @@ int sceHttpDeleteConnection(int connectionid);
  * @param method - One of ::PspHttpMethod
  * @param path - Path to access
  * @param contentlength - Length of the content (POST method only)
- * @returns A request ID on success, < 0 on error.
+ * @return A request ID on success, < 0 on error.
  */
 int sceHttpCreateRequest(int connectionid, PspHttpMethod method, char *path, SceULong64 contentlength);
 
@@ -106,7 +106,7 @@ int sceHttpCreateRequest(int connectionid, PspHttpMethod method, char *path, Sce
  * @param method - One of ::PspHttpMethod
  * @param url - url to access
  * @param contentlength - Length of the content (POST method only)
- * @returns A request ID on success, < 0 on error.
+ * @return A request ID on success, < 0 on error.
  */
 int sceHttpCreateRequestWithURL(int connectionid, PspHttpMethod method, char *url, SceULong64 contentlength);
 
@@ -114,7 +114,7 @@ int sceHttpCreateRequestWithURL(int connectionid, PspHttpMethod method, char *ur
  * Delete a http request.
  *
  * @param requestid - ID of the request created by sceHttpCreateRequest or sceHttpCreateRequestWithURL
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpDeleteRequest(int requestid);
 
@@ -124,7 +124,7 @@ int sceHttpDeleteRequest(int requestid);
  * @param requestid - ID of the request created by sceHttpCreateRequest or sceHttpCreateRequestWithURL
  * @param data - For POST methods specify a pointer to the post data, otherwise pass NULL
  * @param datasize - For POST methods specify the size of the post data, otherwise pass 0
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpSendRequest(int requestid, void *data, unsigned int datasize);
 
@@ -132,7 +132,7 @@ int sceHttpSendRequest(int requestid, void *data, unsigned int datasize);
  * Abort a http request.
  *
  * @param requestid - ID of the request created by sceHttpCreateRequest or sceHttpCreateRequestWithURL
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpAbortRequest(int requestid);
 
@@ -142,7 +142,7 @@ int sceHttpAbortRequest(int requestid);
  * @param requestid - ID of the request created by sceHttpCreateRequest or sceHttpCreateRequestWithURL
  * @param data - Buffer for the response data to be stored
  * @param datasize - Size of the buffer 
- * @returns The size read into the data buffer, 0 if there is no more data, < 0 on error.
+ * @return The size read into the data buffer, 0 if there is no more data, < 0 on error.
  */
 int sceHttpReadData(int requestid, void *data, unsigned int datasize);
 
@@ -151,7 +151,7 @@ int sceHttpReadData(int requestid, void *data, unsigned int datasize);
  *
  * @param requestid - ID of the request created by sceHttpCreateRequest or sceHttpCreateRequestWithURL
  * @param contentlength - The size of the content
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpGetContentLength(int requestid, SceULong64 *contentlength);
 
@@ -160,7 +160,7 @@ int sceHttpGetContentLength(int requestid, SceULong64 *contentlength);
  *
  * @param requestid - ID of the request created by sceHttpCreateRequest or sceHttpCreateRequestWithURL
  * @param statuscode - The status code from the host (200 is ok, 404 is not found etc)
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpGetStatusCode(int requestid, int *statuscode);
 
@@ -169,7 +169,7 @@ int sceHttpGetStatusCode(int requestid, int *statuscode);
  *
  * @param id - ID of the template or connection 
  * @param timeout - Timeout value in microseconds
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpSetResolveTimeOut(int id, unsigned int timeout);
 
@@ -178,7 +178,7 @@ int sceHttpSetResolveTimeOut(int id, unsigned int timeout);
  *
  * @param id - ID of the template or connection 
  * @param count - Number of retries
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpSetResolveRetry(int id, int count);
 
@@ -187,7 +187,7 @@ int sceHttpSetResolveRetry(int id, int count);
  *
  * @param id - ID of the template, connection or request 
  * @param timeout - Timeout value in microseconds
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpSetConnectTimeOut(int id, unsigned int timeout);
 
@@ -196,7 +196,7 @@ int sceHttpSetConnectTimeOut(int id, unsigned int timeout);
  *
  * @param id - ID of the template, connection or request 
  * @param timeout - Timeout value in microseconds
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpSetSendTimeOut(int id, unsigned int timeout);
 
@@ -205,7 +205,7 @@ int sceHttpSetSendTimeOut(int id, unsigned int timeout);
  *
  * @param id - ID of the template or connection 
  * @param timeout - Timeout value in microseconds
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpSetRecvTimeOut(int id, unsigned int timeout);
 
@@ -213,7 +213,7 @@ int sceHttpSetRecvTimeOut(int id, unsigned int timeout);
  * Enable keep alive
  *
  * @param id - ID of the template or connection 
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpEnableKeepAlive(int id);
 
@@ -221,7 +221,7 @@ int sceHttpEnableKeepAlive(int id);
  * Disable keep alive
  *
  * @param id - ID of the template or connection 
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpDisableKeepAlive(int id);
 
@@ -229,7 +229,7 @@ int sceHttpDisableKeepAlive(int id);
  * Enable redirect
  *
  * @param id - ID of the template or connection 
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpEnableRedirect(int id);
 
@@ -237,7 +237,7 @@ int sceHttpEnableRedirect(int id);
  * Disable redirect
  *
  * @param id - ID of the template or connection 
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpDisableRedirect(int id);
 
@@ -245,7 +245,7 @@ int sceHttpDisableRedirect(int id);
  * Enable cookie
  *
  * @param id - ID of the template or connection 
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpEnableCookie(int id);
 
@@ -253,21 +253,21 @@ int sceHttpEnableCookie(int id);
  * Disable cookie
  *
  * @param id - ID of the template or connection 
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpDisableCookie(int id);
 
 /**
  * Save cookie
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpSaveSystemCookie(void);
 
 /**
  * Load cookie
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpLoadSystemCookie(void);
 
@@ -278,7 +278,7 @@ int sceHttpLoadSystemCookie(void);
  * @param name - Name of the content
  * @param value - Value of the content
  * @param unknown1 - Pass 0
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpAddExtraHeader(int id, char *name, char *value, int unknown1);
 
@@ -287,7 +287,7 @@ int sceHttpAddExtraHeader(int id, char *name, char *value, int unknown1);
  *
  * @param id - ID of the template, connection or request 
  * @param name - Name of the content
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceHttpDeleteHeader(int id, const char *name);
 
@@ -299,14 +299,14 @@ int sceHttpDeleteHeader(int id, const char *name);
  * @param unknown3 - Pass 0
  * @param unknown4 - Pass 0
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
 */
 int sceHttpsInit(int unknown1, int unknown2, int unknown3, int unknown4);
 
 /**
  * Terminate the https library
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
 */
 int sceHttpsEnd(void);
 
@@ -315,7 +315,7 @@ int sceHttpsEnd(void);
  *
  * @param unknown1 - Pass 0
  * @param unknown2 - Pass 0
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
 */
 int sceHttpsLoadDefaultCert(int unknown1, int unknown2);
 

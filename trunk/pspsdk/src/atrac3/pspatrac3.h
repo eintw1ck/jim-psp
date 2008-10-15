@@ -24,7 +24,7 @@ extern "C" {
  * @param buf - the buffer holding the atrac3 data, including the RIFF/WAVE header.
  * @param bufsize - the size of the buffer pointed by buf
  *
- * @returns the new atrac ID, or < 0 on error 
+ * @return the new atrac ID, or < 0 on error 
 */
 int sceAtracSetDataAndGetID(void *buf, SceSize bufsize);
 
@@ -39,7 +39,7 @@ int sceAtracSetDataAndGetID(void *buf, SceSize bufsize);
  *  or the remaining (not decoded yet) frames at memory if not all at3 data is on memory
  *
  * 
- * @returns < 0 on error, otherwise 0
+ * @return < 0 on error, otherwise 0
  *
 */
 int sceAtracDecodeData(int atracID, u16 *outSamples, int *outN, int *outEnd, int *outRemainFrame);
@@ -51,7 +51,7 @@ int sceAtracDecodeData(int atracID, u16 *outSamples, int *outN, int *outEnd, int
  * @param outRemainFrame - pointer to a integer that receives either -1 if all at3 data is already on memory, 
  *  or the remaining (not decoded yet) frames at memory if not all at3 data is on memory 
  *
- * @returns < 0 on error, otherwise 0
+ * @return < 0 on error, otherwise 0
  *
 */
 int sceAtracGetRemainFrame(int atracID, int *outRemainFrame);
@@ -63,7 +63,7 @@ int sceAtracGetRemainFrame(int atracID, int *outRemainFrame);
  * @param availableBytes - Number of bytes available at the writePointer location
  * @param readOffset - Offset where to seek into the atrac file before reading
  *
- * @returns < 0 on error, otherwise 0
+ * @return < 0 on error, otherwise 0
  *
 */
 
@@ -74,7 +74,7 @@ int sceAtracGetStreamDataInfo(int atracID, u8** writePointer, u32* availableByte
  * @param atracID - the atrac ID
  * @param bytesToAdd - Number of bytes read into location given by sceAtracGetStreamDataInfo().
  *
- * @returns < 0 on error, otherwise 0
+ * @return < 0 on error, otherwise 0
 */
 int sceAtracAddStreamData(int atracID, unsigned int bytesToAdd);
 
@@ -84,7 +84,7 @@ int sceAtracAddStreamData(int atracID, unsigned int bytesToAdd);
  * @param atracID - the atracID
  * @param outBitrate - pointer to a integer that receives the bitrate in kbps
  *
- * @returns < 0 on error, otherwise 0
+ * @return < 0 on error, otherwise 0
  *
 */
 int sceAtracGetBitrate(int atracID, int *outBitrate);
@@ -95,7 +95,7 @@ int sceAtracGetBitrate(int atracID, int *outBitrate);
  * @param atracID - the atracID
  * @param nloops - the number of loops to set
  *
- * @returns < 0 on error, otherwise 0
+ * @return < 0 on error, otherwise 0
  *
 */
 int sceAtracSetLoopNum(int atracID, int nloops);
@@ -105,7 +105,7 @@ int sceAtracSetLoopNum(int atracID, int nloops);
  *
  * @param atracID - the atrac ID to release
  *
- * @returns < 0 on error
+ * @return < 0 on error
  *
 */
 int sceAtracReleaseAtracID(int atracID);
@@ -116,7 +116,7 @@ int sceAtracReleaseAtracID(int atracID);
  * @param atracID - the atrac ID
  * @param outN - pointer to receives the number of samples of the next frame.
  *
- * @returns < 0 on error, otherwise 0
+ * @return < 0 on error, otherwise 0
  *
  */
 int sceAtracGetNextSample(int atracID, int *outN);
@@ -127,7 +127,7 @@ int sceAtracGetNextSample(int atracID, int *outN);
  * @param atracID - the atrac ID
  * @param outMax  - pointer to a integer that receives the maximum number of samples.
  *
- * @returns < 0 on error, otherwise 0
+ * @return < 0 on error, otherwise 0
  *
  */
 int sceAtracGetMaxSample(int atracID, int *outMax); 

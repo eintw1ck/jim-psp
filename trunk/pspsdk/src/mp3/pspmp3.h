@@ -44,7 +44,7 @@ typedef struct SceMp3InitArg {
  *
  * @param args - Pointer to SceMp3InitArg structure
  *
- * @returns sceMp3 handle on success, < 0 on error.
+ * @return sceMp3 handle on success, < 0 on error.
  */
 SceInt32 sceMp3ReserveMp3Handle(SceMp3InitArg* args);
 
@@ -53,21 +53,21 @@ SceInt32 sceMp3ReserveMp3Handle(SceMp3InitArg* args);
  *
  * @param handle - sceMp3 handle
  *
- * @returns 0 if success, < 0 on error.
+ * @return 0 if success, < 0 on error.
  */
 SceInt32 sceMp3ReleaseMp3Handle(SceInt32 handle);
 
 /**
  * sceMp3InitResource
  *
- * @returns 0 if success, < 0 on error.
+ * @return 0 if success, < 0 on error.
  */
 SceInt32 sceMp3InitResource();
 
 /**
  * sceMp3TermResource
  *
- * @returns 0 if success, < 0 on error.
+ * @return 0 if success, < 0 on error.
  */
 SceInt32 sceMp3TermResource();
 
@@ -76,7 +76,7 @@ SceInt32 sceMp3TermResource();
  *
  * @param handle - sceMp3 handle
  *
- * @returns 0 if success, < 0 on error.
+ * @return 0 if success, < 0 on error.
  */
 SceInt32 sceMp3Init(SceInt32 handle);
 
@@ -86,7 +86,7 @@ SceInt32 sceMp3Init(SceInt32 handle);
  * @param handle - sceMp3 handle
  * @param dst - Pointer to destination pcm samples buffer
  *
- * @returns number of bytes in decoded pcm buffer, < 0 on error.
+ * @return number of bytes in decoded pcm buffer, < 0 on error.
  */
 SceInt32 sceMp3Decode(SceInt32 handle, SceShort16** dst);
 
@@ -98,7 +98,7 @@ SceInt32 sceMp3Decode(SceInt32 handle, SceShort16** dst);
  * @param towrite - Space remaining in stream data buffer
  * @param srcpos - Position in source stream to start reading from
  *
- * @returns 0 if success, < 0 on error.
+ * @return 0 if success, < 0 on error.
  */
 SceInt32 sceMp3GetInfoToAddStreamData(SceInt32 handle, SceUChar8** dst, SceInt32* towrite, SceInt32* srcpos);
 
@@ -108,7 +108,7 @@ SceInt32 sceMp3GetInfoToAddStreamData(SceInt32 handle, SceUChar8** dst, SceInt32
  * @param handle - sceMp3 handle
  * @param size - number of bytes added to the stream data buffer
  *
- * @returns 0 if success, < 0 on error.
+ * @return 0 if success, < 0 on error.
  */
 SceInt32 sceMp3NotifyAddStreamData(SceInt32 handle, SceInt32 size);
 
@@ -117,7 +117,7 @@ SceInt32 sceMp3NotifyAddStreamData(SceInt32 handle, SceInt32 size);
  *
  * @param handle - sceMp3 handle
  *
- * @returns 1 if more stream data is needed, < 0 on error.
+ * @return 1 if more stream data is needed, < 0 on error.
  */
 SceInt32 sceMp3CheckStreamDataNeeded(SceInt32 handle);
 
@@ -127,7 +127,7 @@ SceInt32 sceMp3CheckStreamDataNeeded(SceInt32 handle);
  * @param handle - sceMp3 handle
  * @param loop - Number of loops
  *
- * @returns 0 if success, < 0 on error.
+ * @return 0 if success, < 0 on error.
  */
 SceInt32 sceMp3SetLoopNum(SceInt32 handle, SceInt32 loop);
 
@@ -136,7 +136,7 @@ SceInt32 sceMp3SetLoopNum(SceInt32 handle, SceInt32 loop);
  *
  * @param handle - sceMp3 handle
  *
- * @returns Number of loops
+ * @return Number of loops
  */
 SceInt32 sceMp3GetLoopNum(SceInt32 handle);
 
@@ -145,7 +145,7 @@ SceInt32 sceMp3GetLoopNum(SceInt32 handle);
  *
  * @param handle - sceMp3 handle
  *
- * @returns Number of decoded samples
+ * @return Number of decoded samples
  */
 SceInt32 sceMp3GetSumDecodedSample(SceInt32 handle);
 
@@ -154,7 +154,7 @@ SceInt32 sceMp3GetSumDecodedSample(SceInt32 handle);
  *
  * @param handle - sceMp3 handle
  *
- * @returns Number of max samples to output
+ * @return Number of max samples to output
  */
 SceInt32 sceMp3GetMaxOutputSample(SceInt32 handle);
 
@@ -163,7 +163,7 @@ SceInt32 sceMp3GetMaxOutputSample(SceInt32 handle);
  *
  * @param handle - sceMp3 handle
  *
- * @returns Sampling rate of the mp3
+ * @return Sampling rate of the mp3
  */
 SceInt32 sceMp3GetSamplingRate(SceInt32 handle);
 
@@ -172,7 +172,7 @@ SceInt32 sceMp3GetSamplingRate(SceInt32 handle);
  *
  * @param handle - sceMp3 handle
  *
- * @returns Bitrate of the mp3
+ * @return Bitrate of the mp3
  */
 SceInt32 sceMp3GetBitRate(SceInt32 handle);
 
@@ -181,7 +181,7 @@ SceInt32 sceMp3GetBitRate(SceInt32 handle);
  *
  * @param handle - sceMp3 handle
  *
- * @returns Number of channels of the mp3
+ * @return Number of channels of the mp3
  */
 SceInt32 sceMp3GetMp3ChannelNum(SceInt32 handle);
 
@@ -190,7 +190,7 @@ SceInt32 sceMp3GetMp3ChannelNum(SceInt32 handle);
  *
  * @param handle - sceMp3 handle
  *
- * @returns < 0 on error
+ * @return < 0 on error
  */
 SceInt32 sceMp3ResetPlayPosition(SceInt32 handle); 
 

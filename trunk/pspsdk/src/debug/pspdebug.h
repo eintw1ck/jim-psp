@@ -54,7 +54,7 @@ void pspDebugScreenPrintf(const char *fmt, ...) __attribute__((format(printf,1,2
   * to perform the printf instead of using vsnprintf, use normal printf for
   * user mode.
   *
-  * @param fmt - Format string to print
+  * @param format - Format string to print
   * @param ... - Arguments
   */
 void pspDebugScreenKprintf(const char *format, ...) __attribute__((format(printf,1,2)));
@@ -161,7 +161,7 @@ int pspDebugScreenPuts(const char *str);
   * @param results - List of points to store the results of the trace, (up to max)
   * @param max - Maximum number of back traces
   *
-  * @returns The number of frames stored in results.
+  * @return The number of frames stored in results.
 */
 int pspDebugGetStackTrace(unsigned int* results, int max);
 

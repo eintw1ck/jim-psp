@@ -54,7 +54,7 @@ typedef struct _pspUtilityGameSharingParams
  * Init the game sharing
  *
  * @param params - game sharing parameters
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceUtilityGameSharingInitStart(pspUtilityGameSharingParams *params);
 

@@ -37,7 +37,7 @@ enum PspAudioFrequencies {
   *
   * @param frequency - Sampling frequency to set audio output to - either 44100 or 48000.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioSetFrequency(int frequency);
 /*@}*/

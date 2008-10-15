@@ -114,7 +114,7 @@ typedef struct SceCtrlLatch {
  *
  * @param cycle - Cycle.  Normally set to 0.
  *
- * @returns The previous cycle setting.
+ * @return The previous cycle setting.
  */
 int sceCtrlSetSamplingCycle(int cycle);
 
@@ -123,7 +123,7 @@ int sceCtrlSetSamplingCycle(int cycle);
  *
  * @param pcycle - Return value.
  *
- * @returns 0.
+ * @return 0.
  */
 int sceCtrlGetSamplingCycle(int *pcycle);
 
@@ -132,7 +132,7 @@ int sceCtrlGetSamplingCycle(int *pcycle);
  *
  * @param mode - One of ::PspCtrlMode.
  *
- * @returns The previous mode.
+ * @return The previous mode.
  */
 int sceCtrlSetSamplingMode(int mode);
 
@@ -141,7 +141,7 @@ int sceCtrlSetSamplingMode(int mode);
  *
  * @param pmode - Return value.
  *
- * @returns 0.
+ * @return 0.
  */
 int sceCtrlGetSamplingMode(int *pmode);
 
@@ -176,14 +176,14 @@ int sceCtrlReadLatch(SceCtrlLatch *latch_data);
 /**
  * Set analog threshold relating to the idle timer.
  *
- * @param idlerest - Movement needed by the analog to reset the idle timer.
+ * @param idlereset - Movement needed by the analog to reset the idle timer.
  * @param idleback - Movement needed by the analog to bring the PSP back from an idle state.
  *
  * Set to -1 for analog to not cancel idle timer.
  * Set to 0 for idle timer to be cancelled even if the analog is not moved.
  * Set between 1 - 128 to specify the movement on either axis needed by the analog to fire the event.
  *
- * @returns < 0 on error.
+ * @return < 0 on error.
  */
 int sceCtrlSetIdleCancelThreshold(int idlereset, int idleback);
 
@@ -193,7 +193,7 @@ int sceCtrlSetIdleCancelThreshold(int idlereset, int idleback);
  * @param idlerest - Movement needed by the analog to reset the idle timer.
  * @param idleback - Movement needed by the analog to bring the PSP back from an idle state.
  *
- * @returns < 0 on error.
+ * @return < 0 on error.
  */
 int sceCtrlGetIdleCancelThreshold(int *idlerest, int *idleback);
 

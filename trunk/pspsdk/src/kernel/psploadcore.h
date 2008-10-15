@@ -103,7 +103,7 @@ typedef struct SceLibraryStubTable {
  *
  * @param modname - The name of the module.
  *
- * @returns Pointer to the ::SceModule structure if found, otherwise NULL.
+ * @return Pointer to the ::SceModule structure if found, otherwise NULL.
  */
 SceModule * sceKernelFindModuleByName(const char *modname);
 
@@ -112,7 +112,7 @@ SceModule * sceKernelFindModuleByName(const char *modname);
  *
  * @param addr - Address somewhere within the module.
  *
- * @returns Pointer to the ::SceModule structure if found, otherwise NULL.
+ * @return Pointer to the ::SceModule structure if found, otherwise NULL.
  */
 SceModule * sceKernelFindModuleByAddress(unsigned int addr);
 
@@ -121,14 +121,14 @@ SceModule * sceKernelFindModuleByAddress(unsigned int addr);
  *
  * @param modid - The UID of the module.
  *
- * @returns Pointer to the ::SceModule structure if found, otherwise NULL.
+ * @return Pointer to the ::SceModule structure if found, otherwise NULL.
  */
 SceModule * sceKernelFindModuleByUID(SceUID modid);
 
 /**
  * Return the count of loaded modules.
  *
- * @returns The count of loaded modules.
+ * @return The count of loaded modules.
  */
 int sceKernelModuleCount(void);
 

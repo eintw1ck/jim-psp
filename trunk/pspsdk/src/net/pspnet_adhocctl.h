@@ -167,7 +167,7 @@ int sceNetAdhocctlCreateEnterGameMode(const char *name, int unknown, int num, un
  * Connect to the Adhoc control game mode (as a client)
  *
  * @param name - The name of the connection (maximum 8 alphanumeric characters).
- * @param host - The mac address of the host.
+ * @param hostmac - The mac address of the host.
  * @param timeout - Timeout in microseconds.
  * @param unknown - pass 0.
  *
@@ -195,7 +195,7 @@ int sceNetAdhocctlExitGameMode(void);
  * Get a list of peers
  *
  * @param length - The length of the list.
- * @param host - An allocated area of size length.
+ * @param buf - An allocated area of size length.
  *
  * @return 0 on success, < 0 on error.
  */

@@ -39,7 +39,7 @@ void sceCtrl_driver_7CA723DC(unsigned int mask, unsigned type);
 /**
  * Get button mask mode
  *
- * @mask - The bitmask to check
+ * @param mask - The bitmask to check
  *
  * @return 0 no setting, 1 set in button mask, 2 set in button set
  */

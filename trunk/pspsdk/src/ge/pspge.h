@@ -48,14 +48,14 @@ typedef struct PspGeListArgs
 /**
  * Get the size of VRAM.
  *
- * @returns The size of VRAM (in bytes).
+ * @return The size of VRAM (in bytes).
  */
 unsigned int sceGeEdramGetSize(void);
 
 /**
   * Get the address of VRAM.
   *
-  * @returns A pointer to the base of VRAM.
+  * @return A pointer to the base of VRAM.
   */
 void * sceGeEdramGetAddr(void);
 
@@ -64,7 +64,7 @@ void * sceGeEdramGetAddr(void);
  *
  * @param cmd - The GE command register to retrieve.
  *
- * @returns The value of the GE command.
+ * @return The value of the GE command.
  */
 unsigned int sceGeGetCmd(int cmd);
 
@@ -94,7 +94,7 @@ typedef enum PspGeMatrixTypes {
  * @param type - One of ::PspGeMatrixTypes.
  * @param matrix - Pointer to a variable to store the matrix.
  *
- * @returns ???
+ * @return ???
  */
 int sceGeGetMtx(int type, void *matrix);
 
@@ -103,7 +103,7 @@ int sceGeGetMtx(int type, void *matrix);
  *
  * @param context - Pointer to a ::PspGeContext.
  *
- * @returns ???
+ * @return ???
  */
 int sceGeSaveContext(PspGeContext *context);
 
@@ -112,7 +112,7 @@ int sceGeSaveContext(PspGeContext *context);
  *
  * @param context - Pointer to a ::PspGeContext.
  *
- * @returns ???
+ * @return ???
  */
 int sceGeRestoreContext(const PspGeContext *context);
 
@@ -147,7 +147,7 @@ int sceGeListEnQueueHead(const void *list, void *stall, int cbid, PspGeListArgs 
  *
  * @param qid - The ID of the queue.
  *
- * @returns ???
+ * @return ???
  */
 int sceGeListDeQueue(int qid);
 
@@ -177,7 +177,7 @@ typedef enum PspGeSyncType {
   * @param qid - The queue ID of the list to sync.
   * @param syncType - Specifies the condition to wait on.  One of ::PspGeSyncType.
   * 
-  * @returns ???
+  * @return ???
   */
 int sceGeListSync(int qid, int syncType);
 
@@ -186,7 +186,7 @@ int sceGeListSync(int qid, int syncType);
   * 
   * @param syncType - Specifies the condition to wait on.  One of ::PspGeSyncType.
   * 
-  * @returns ???
+  * @return ???
   */
 int sceGeDrawSync(int syncType);
 

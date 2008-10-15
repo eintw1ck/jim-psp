@@ -45,7 +45,7 @@ typedef struct _PspSysmemPartitionInfo
  * @param pid  - The partition id
  * @param info - Pointer to the ::PspSysmemPartitionInfo structure
  *
- * @returns 0 on success.
+ * @return 0 on success.
  */
 int sceKernelQueryMemoryPartitionInfo(int pid, PspSysmemPartitionInfo *info);
 
@@ -54,7 +54,7 @@ int sceKernelQueryMemoryPartitionInfo(int pid, PspSysmemPartitionInfo *info);
  *
  * @param pid - The partition id
  *
- * @returns The total amount of free memory, in bytes.
+ * @return The total amount of free memory, in bytes.
  */
 SceSize sceKernelPartitionTotalFreeMemSize(int pid);
 
@@ -63,7 +63,7 @@ SceSize sceKernelPartitionTotalFreeMemSize(int pid);
  *
  * @param pid - The partition id
  *
- * @returns The size of the largest free memory block, in bytes.
+ * @return The size of the largest free memory block, in bytes.
  */
 SceSize sceKernelPartitionMaxFreeMemSize(int pid);
 
@@ -101,7 +101,7 @@ int sceKernelSetDdrMemoryProtection(void *addr, int size, int prot);
  * @param unk - Unknown, probably some flag or type, pass 1.
  * @param name - Name assigned to the new heap.
  *
- * @returns The UID of the new heap, or if less than 0 an error. 
+ * @return The UID of the new heap, or if less than 0 an error. 
 */
 SceUID sceKernelCreateHeap(SceUID partitionid, SceSize size, int unk, const char *name);
 
@@ -111,7 +111,7 @@ SceUID sceKernelCreateHeap(SceUID partitionid, SceSize size, int unk, const char
  * @param heapid - The UID of the heap to allocate from.
  * @param size - The number of bytes to allocate.
  *
- * @returns The address of the allocated memory block, or NULL on error.
+ * @return The address of the allocated memory block, or NULL on error.
 */
 void *sceKernelAllocHeapMemory(SceUID heapid, SceSize size);
 
@@ -121,7 +121,7 @@ void *sceKernelAllocHeapMemory(SceUID heapid, SceSize size);
  * @param heapid - The UID of the heap where block belongs.
  * @param block - The block of memory to free from the heap.
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceKernelFreeHeapMemory(SceUID heapid, void *block);
 
@@ -130,7 +130,7 @@ int sceKernelFreeHeapMemory(SceUID heapid, void *block);
  *
  * @param heapid - The UID of the heap to delete.
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
 */
 int sceKernelDeleteHeap(SceUID heapid);
 
@@ -139,7 +139,7 @@ int sceKernelDeleteHeap(SceUID heapid);
  *
  * @param heapid - The UID of the heap
  *
- * @returns the free size of the heap, in bytes. < 0 on error.
+ * @return the free size of the heap, in bytes. < 0 on error.
 */
 SceSize sceKernelHeapTotalFreeSize(SceUID heapid);
 

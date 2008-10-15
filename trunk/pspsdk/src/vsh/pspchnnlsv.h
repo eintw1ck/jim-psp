@@ -48,7 +48,7 @@ typedef struct _pspChnnlsvContext2 {
  *
  * @param ctx - Context
  * @param mode - Cipher mode
- * @returns < 0 on error
+ * @return < 0 on error
  */
 int sceChnnlsv_E7833020(pspChnnlsvContext1 *ctx, int mode);
 	
@@ -58,7 +58,7 @@ int sceChnnlsv_E7833020(pspChnnlsvContext1 *ctx, int mode);
  * @param ctx - Context
  * @param data - Data (aligned to 0x10)
  * @param len - Length (aligned to 0x10)
- * @returns < 0 on error
+ * @return < 0 on error
  */
 int sceChnnlsv_F21A1FCA(pspChnnlsvContext1 *ctx, unsigned char *data, int len);
 
@@ -68,7 +68,7 @@ int sceChnnlsv_F21A1FCA(pspChnnlsvContext1 *ctx, unsigned char *data, int len);
  * @param ctx - Context
  * @param hash - Hash output (aligned to 0x10, 0x10 bytes long)
  * @param cryptkey - Crypt key or NULL.
- * @returns < 0 on error
+ * @return < 0 on error
  */
 int sceChnnlsv_C4C494F8(pspChnnlsvContext1 *ctx, 
 			unsigned char *hash, unsigned char *cryptkey);
@@ -81,7 +81,7 @@ int sceChnnlsv_C4C494F8(pspChnnlsvContext1 *ctx,
  * @param mode2 - Encrypt mode (1 = encrypting, 2 = decrypting)
  * @param hashkey - Key out
  * @param cipherkey - Key in
- * @returns < 0 on error
+ * @return < 0 on error
  */
 int sceChnnlsv_ABFDFC8B(pspChnnlsvContext2 *ctx, int mode1, int mode2,
 			unsigned char *hashkey, unsigned char *cipherkey);
@@ -92,7 +92,7 @@ int sceChnnlsv_ABFDFC8B(pspChnnlsvContext2 *ctx, int mode1, int mode2,
  * @param ctx - Context
  * @param data - Data (aligned to 0x10)
  * @param len - Length (aligned to 0x10)
- * @returns < 0 on error
+ * @return < 0 on error
  */
 int sceChnnlsv_850A7FA1(pspChnnlsvContext2 *ctx, unsigned char *data, int len);
 
@@ -100,7 +100,7 @@ int sceChnnlsv_850A7FA1(pspChnnlsvContext2 *ctx, unsigned char *data, int len);
  * Check integrity
  *
  * @param ctx - Context
- * @returns < 0 on error
+ * @return < 0 on error
  */
 int sceChnnlsv_21BE78B4(pspChnnlsvContext2 *ctx);
 

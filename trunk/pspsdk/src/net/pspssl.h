@@ -22,14 +22,14 @@ extern "C" {
  *
  * @param unknown1 - Memory size? Pass 0x28000
  *
- * @returns 0 on success
+ * @return 0 on success
 */
 int sceSslInit(int unknown1);
 
 /**
  * Terminate the ssl library.
  *
- * @returns 0 on success
+ * @return 0 on success
 */
 int sceSslEnd(void);
 
@@ -38,7 +38,7 @@ int sceSslEnd(void);
  *
  * @param memory - Pointer where the maximum memory used value will be stored.
  *
- * @returns 0 on success
+ * @return 0 on success
 */
 int sceSslGetUsedMemoryMax(unsigned int *memory);
 
@@ -47,7 +47,7 @@ int sceSslGetUsedMemoryMax(unsigned int *memory);
  *
  * @param memory - Pointer where the current memory used value will be stored.
  *
- * @returns 0 on success
+ * @return 0 on success
 */
 int sceSslGetUsedMemoryCurrent(unsigned int *memory);
 

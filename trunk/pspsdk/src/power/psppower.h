@@ -69,7 +69,7 @@ typedef void (*powerCallback_t)(int unknown, int powerInfo);
  * @param slot - slot of the callback in the list, 0 to 15, pass -1 to get an auto assignment.
  * @param cbid - callback id from calling sceKernelCreateCallback
  *
- * @returns 0 on success, the slot number if -1 is passed, < 0 on error.
+ * @return 0 on success, the slot number if -1 is passed, < 0 on error.
  */
 int scePowerRegisterCallback(int slot, SceUID cbid);
 
@@ -78,28 +78,28 @@ int scePowerRegisterCallback(int slot, SceUID cbid);
  *
  * @param slot - slot of the callback
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int scePowerUnregisterCallback(int slot);
 
 /**
  * Check if unit is plugged in
  *
- * @returns 1 if plugged in, 0 if not plugged in, < 0 on error.
+ * @return 1 if plugged in, 0 if not plugged in, < 0 on error.
  */
 int scePowerIsPowerOnline(void);
 
 /**
  * Check if a battery is present
  *
- * @returns 1 if battery present, 0 if battery not present, < 0 on error.
+ * @return 1 if battery present, 0 if battery not present, < 0 on error.
  */
 int scePowerIsBatteryExist(void);
 
 /**
  * Check if the battery is charging
  *
- * @returns 1 if battery charging, 0 if battery not charging, < 0 on error.
+ * @return 1 if battery charging, 0 if battery not charging, < 0 on error.
  */
 int scePowerIsBatteryCharging(void);
 
@@ -111,21 +111,21 @@ int scePowerGetBatteryChargingStatus(void);
 /**
  * Check if the battery is low
  *
- * @returns 1 if the battery is low, 0 if the battery is not low, < 0 on error.
+ * @return 1 if the battery is low, 0 if the battery is not low, < 0 on error.
  */
 int scePowerIsLowBattery(void);
 
 /**
  * Get battery life as integer percent
  *
- * @returns Battery charge percentage (0-100), < 0 on error.
+ * @return Battery charge percentage (0-100), < 0 on error.
  */
 int scePowerGetBatteryLifePercent(void);
 
 /**
  * Get battery life as time
  *
- * @returns Battery life in minutes, < 0 on error.
+ * @return Battery life in minutes, < 0 on error.
  */
 int scePowerGetBatteryLifeTime(void);
 
@@ -158,37 +158,37 @@ int scePowerSetBusClockFrequency(int busfreq);
 
 /**
  * Alias for scePowerGetCpuClockFrequencyInt
- * @returns frequency as int
+ * @return frequency as int
  */
 int scePowerGetCpuClockFrequency(void);
 
 /**
  * Get CPU Frequency as Integer
- * @returns frequency as int
+ * @return frequency as int
  */
 int scePowerGetCpuClockFrequencyInt(void);
 
 /**
  * Get CPU Frequency as Float
- * @returns frequency as float
+ * @return frequency as float
  */
 float scePowerGetCpuClockFrequencyFloat(void);
 
 /**
  * Alias for scePowerGetBusClockFrequencyInt
- * @returns frequency as int
+ * @return frequency as int
  */
 int scePowerGetBusClockFrequency(void);
 
 /**
  * Get Bus fequency as Integer
- * @returns frequency as int
+ * @return frequency as int
  */
 int scePowerGetBusClockFrequencyInt(void);
 
 /**
  * Get Bus frequency as Float
- * @returns frequency as float
+ * @return frequency as float
  */
 float scePowerGetBusClockFrequencyFloat(void);
 
@@ -215,7 +215,7 @@ int scePowerSetClockFrequency(int pllfreq, int cpufreq, int busfreq);
  *
  * @param unknown - pass 0
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int scePowerLock(int unknown);
 
@@ -224,7 +224,7 @@ int scePowerLock(int unknown);
  *
  * @param unknown - pass 0
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int scePowerUnlock(int unknown);
 
@@ -234,7 +234,7 @@ int scePowerUnlock(int unknown);
  *
  * @param type - Either PSP_POWER_TICK_ALL, PSP_POWER_TICK_SUSPEND or PSP_POWER_TICK_DISPLAY
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int scePowerTick(int type);
 

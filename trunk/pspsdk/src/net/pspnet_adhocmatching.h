@@ -240,7 +240,7 @@ int sceNetAdhocMatchingGetHelloOpt(int matchingid, int *optlen, void *optdata);
  *
  * @param matchingid - The ID returned from ::sceNetAdhocMatchingCreate
  * @param length - The length of the list.
- * @param host - An allocated area of size length.
+ * @param buf - An allocated area of size length.
  *
  * @return 0 on success, < 0 on error.
  */

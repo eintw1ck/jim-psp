@@ -58,7 +58,7 @@ int pspSdkGetModuleIdList(SceUID *readbuf, int readbufsize, int *idcount);
 /**
  * Patch the sceModuleManager module to nullify LoadDeviceCheck() calls.
  *
- * @returns 0 on success, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 on success, otherwise one of ::PspKernelErrorCodes.
  *
  * @note This function must be called while running in kernel mode.  The program
  * must also be linked against the pspkernel library.
@@ -70,7 +70,7 @@ int pspSdkInstallNoDeviceCheckPatch(void);
  *
  * @note This function must be called while running in kernel mode.
  *
- * @returns 0 on success, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 on success, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkInstallNoPlainModuleCheckPatch(void);
 
@@ -79,7 +79,7 @@ int pspSdkInstallNoPlainModuleCheckPatch(void);
  *
  * @note This function must be called while running in kernel mode
  *
- * @returns 0 on success
+ * @return 0 on success
  */
 int pspSdkInstallKernelLoadModulePatch(void);
 
@@ -89,7 +89,7 @@ int pspSdkInstallKernelLoadModulePatch(void);
  * @param filename - Path to the module.
  * @param mpid - Memory parition ID to use to load the module int.
  *
- * @returns - The UID of the module on success, otherwise one of ::PspKernelErrorCodes.
+ * @return - The UID of the module on success, otherwise one of ::PspKernelErrorCodes.
  */
 SceUID pspSdkLoadStartModule(const char *filename, int mpid);
 
@@ -101,7 +101,7 @@ SceUID pspSdkLoadStartModule(const char *filename, int mpid);
  * @param argc - Number of arguments to pass to start module
  * @param argv - Array of arguments
  *
- * @returns - The UID of the module on success, otherwise one of ::PspKernelErrorCodes.
+ * @return - The UID of the module on success, otherwise one of ::PspKernelErrorCodes.
  */
 SceUID pspSdkLoadStartModuleWithArgs(const char *filename, int mpid, int argc, char * const argv[]);
 
@@ -116,14 +116,14 @@ void pspSdkFixupImports(int moduleId);
  * Load Inet related modules.
  * @note You must be in kernel mode to execute this function.
  *
- * @returns - 0 on success, otherwise one of ::PspKernelErrorCodes.
+ * @return - 0 on success, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkLoadInetModules();
 
 /**
  * Initialize Inet related modules.
  *
- * @returns - 0 on success, otherwise one of ::PspKernelErrorCodes.
+ * @return - 0 on success, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkInetInit();
 
@@ -139,7 +139,7 @@ void pspSdkInetTerm();
  * @param pUID - If the thread with the given name is found, it's ::SceUID is stored here.
  * @param pInfo - If the thread with the given name is found, it's ::SceKernelThreadInfo data is stored here.
  *
- * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferThreadStatusByName(const char *name, SceUID *pUID, SceKernelThreadInfo *pInfo);
 
@@ -150,7 +150,7 @@ int pspSdkReferThreadStatusByName(const char *name, SceUID *pUID, SceKernelThrea
  * @param pUID - If the sema with the given name is found, it's ::SceUID is stored here.
  * @param pInfo - If the sema with the given name is found, it's ::SceKernelSemaInfo data is stored here.
  *
- * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferSemaStatusByName(const char *name, SceUID *pUID, SceKernelSemaInfo *pInfo);
 
@@ -161,7 +161,7 @@ int pspSdkReferSemaStatusByName(const char *name, SceUID *pUID, SceKernelSemaInf
  * @param pUID - If the event flag with the given name is found, it's ::SceUID is stored here.
  * @param pInfo - If the event flag with the given name is found, it's ::SceKernelEventFlagInfo data is stored here.
  *
- * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferEventFlagStatusByName(const char *name, SceUID *pUID, SceKernelEventFlagInfo *pInfo);
 
@@ -172,7 +172,7 @@ int pspSdkReferEventFlagStatusByName(const char *name, SceUID *pUID, SceKernelEv
  * @param pUID - If the message box with the given name is found, it's ::SceUID is stored here.
  * @param pInfo - If the message box with the given name is found, it's ::SceKernelMbxInfo data is stored here.
  *
- * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferMboxStatusByName(const char *name, SceUID *pUID, SceKernelMbxInfo *pInfo);
 
@@ -183,7 +183,7 @@ int pspSdkReferMboxStatusByName(const char *name, SceUID *pUID, SceKernelMbxInfo
  * @param pUID - If the given name is found, it's ::SceUID is stored here.
  * @param pInfo - If the given name is found, it's ::SceKernelVplInfo data is stored here.
  *
- * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferVplStatusByName(const char *name, SceUID *pUID, SceKernelVplInfo *pInfo);
 
@@ -194,7 +194,7 @@ int pspSdkReferVplStatusByName(const char *name, SceUID *pUID, SceKernelVplInfo 
  * @param pUID - If the given name is found, it's ::SceUID is stored here.
  * @param pInfo - If the given name is found, it's ::SceKernelFplInfo data is stored here.
  *
- * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferFplStatusByName(const char *name, SceUID *pUID, SceKernelFplInfo *pInfo);
 
@@ -205,7 +205,7 @@ int pspSdkReferFplStatusByName(const char *name, SceUID *pUID, SceKernelFplInfo 
  * @param pUID - If the given name is found, it's ::SceUID is stored here.
  * @param pInfo - If the given name is found, it's ::SceKernelMppInfo data is stored here.
  *
- * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferMppStatusByName(const char *name, SceUID *pUID, SceKernelMppInfo *pInfo);
 
@@ -216,7 +216,7 @@ int pspSdkReferMppStatusByName(const char *name, SceUID *pUID, SceKernelMppInfo 
  * @param pUID - If the given name is found, it's ::SceUID is stored here.
  * @param pInfo - If the given name is found, it's ::SceKernelMppInfo data is stored here.
  *
- * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferCallbackStatusByName(const char *name, SceUID *pUID, SceKernelCallbackInfo *pInfo);
 
@@ -227,7 +227,7 @@ int pspSdkReferCallbackStatusByName(const char *name, SceUID *pUID, SceKernelCal
  * @param pUID - If the given name is found, it's ::SceUID is stored here.
  * @param pInfo - If the given name is found, it's ::SceKernelVTimerInfo data is stored here.
  *
- * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferVTimerStatusByName(const char *name, SceUID *pUID, SceKernelVTimerInfo *pInfo);
 
@@ -238,7 +238,7 @@ int pspSdkReferVTimerStatusByName(const char *name, SceUID *pUID, SceKernelVTime
  * @param pUID - If the given name is found, it's ::SceUID is stored here.
  * @param pInfo - If the given name is found, it's ::SceKernelThreadEventHandlerInfo data is stored here.
  *
- * @returns 0 if successful, otherwise one of ::PspKernelErrorCodes.
+ * @return 0 if successful, otherwise one of ::PspKernelErrorCodes.
  */
 int pspSdkReferThreadEventHandlerStatusByName(const char *name, SceUID *pUID, SceKernelThreadEventHandlerInfo *pInfo);
 

@@ -145,7 +145,7 @@ typedef struct _SceUtilityOskParams
  *
  * @param params - OSK parameters.
  *
- * @returns < 0 on error.
+ * @return < 0 on error.
  */
 int sceUtilityOskInitStart(SceUtilityOskParams* params);
 
@@ -154,7 +154,7 @@ int sceUtilityOskInitStart(SceUtilityOskParams* params);
  *
  * poll sceUtilityOskGetStatus() until it returns PSP_UTILITY_DIALOG_NONE.
  *
- * @returns < 0 on error.
+ * @return < 0 on error.
  */
 int sceUtilityOskShutdownStart(void);
 
@@ -163,14 +163,14 @@ int sceUtilityOskShutdownStart(void);
  *
  * @param n - Unknown, pass 1.
  *
- * @returns < 0 on error.
+ * @return < 0 on error.
  */
 int sceUtilityOskUpdate(int n);
 
 /**
  * Get the status of a on-screen keyboard currently active.
  *
- * @returns the current status of the keyboard. See ::pspUtilityDialogState for details.
+ * @return the current status of the keyboard. See ::pspUtilityDialogState for details.
  */
 int sceUtilityOskGetStatus(void);
 

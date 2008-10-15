@@ -95,7 +95,7 @@ typedef struct SceMpegAvcMode
 /**
  * sceMpegInit
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegInit();
 
@@ -109,7 +109,7 @@ SceVoid sceMpegFinish();
  *
  * @param iPackets - number of packets in the ringbuffer
  *
- * @returns < 0 if error else ringbuffer data size.
+ * @return < 0 if error else ringbuffer data size.
  */
 SceInt32 sceMpegRingbufferQueryMemSize(SceInt32 iPackets);
 
@@ -123,7 +123,7 @@ SceInt32 sceMpegRingbufferQueryMemSize(SceInt32 iPackets);
  * @param Callback - ringbuffer callback
  * @param pCBparam - param passed to callback
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegRingbufferConstruct(SceMpegRingbuffer* Ringbuffer, SceInt32 iPackets, ScePVoid pData, SceInt32 iSize, sceMpegRingbufferCB Callback, ScePVoid pCBparam);
 
@@ -139,7 +139,7 @@ SceVoid sceMpegRingbufferDestruct(SceMpegRingbuffer* Ringbuffer);
  *
  * @param Ringbuffer - pointer to a sceMpegRingbuffer struct
  *
- * @returns < 0 if error else number of free packets in the ringbuffer.
+ * @return < 0 if error else number of free packets in the ringbuffer.
  */
 SceInt32 sceMpegRingbufferAvailableSize(SceMpegRingbuffer* Ringbuffer);
 
@@ -150,7 +150,7 @@ SceInt32 sceMpegRingbufferAvailableSize(SceMpegRingbuffer* Ringbuffer);
  * @param iNumPackets - num packets to put into the ringbuffer
  * @param iAvailable - free packets in the ringbuffer, should be sceMpegRingbufferAvailableSize()
  *
- * @returns < 0 if error else number of packets.
+ * @return < 0 if error else number of packets.
  */
 SceInt32 sceMpegRingbufferPut(SceMpegRingbuffer* Ringbuffer, SceInt32 iNumPackets, SceInt32 iAvailable);
 
@@ -159,7 +159,7 @@ SceInt32 sceMpegRingbufferPut(SceMpegRingbuffer* Ringbuffer, SceInt32 iNumPacket
  *
  * @param iUnk - Unknown, set to 0
  *
- * @returns < 0 if error else decoder data size.
+ * @return < 0 if error else decoder data size.
  */
 SceInt32 sceMpegQueryMemSize(int iUnk);
 
@@ -174,7 +174,7 @@ SceInt32 sceMpegQueryMemSize(int iUnk);
  * @param iUnk1 - unknown, set to 0
  * @param iUnk2 - unknown, set to 0
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegCreate(SceMpeg* Mpeg, ScePVoid pData, SceInt32 iSize, SceMpegRingbuffer* Ringbuffer, SceInt32 iFrameWidth, SceInt32 iUnk1, SceInt32 iUnk2);
 
@@ -192,7 +192,7 @@ SceVoid sceMpegDelete(SceMpeg* Mpeg);
  * @param pBuffer - pointer to file header
  * @param iOffset - will contain stream offset in bytes, usually 2048
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegQueryStreamOffset(SceMpeg* Mpeg, ScePVoid pBuffer, SceInt32* iOffset);
 
@@ -202,7 +202,7 @@ SceInt32 sceMpegQueryStreamOffset(SceMpeg* Mpeg, ScePVoid pBuffer, SceInt32* iOf
  * @param pBuffer - pointer to file header
  * @param iSize - will contain stream size in bytes
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegQueryStreamSize(ScePVoid pBuffer, SceInt32* iSize);
 
@@ -213,7 +213,7 @@ SceInt32 sceMpegQueryStreamSize(ScePVoid pBuffer, SceInt32* iSize);
  * @param iStreamID - stream id, 0 for video, 1 for audio
  * @param iUnk - unknown, set to 0
  *
- * @returns 0 if error.
+ * @return 0 if error.
  */
 SceMpegStream* sceMpegRegistStream(SceMpeg* Mpeg, SceInt32 iStreamID, SceInt32 iUnk);
 
@@ -228,14 +228,14 @@ SceVoid sceMpegUnRegistStream(SceMpeg Mpeg, SceMpegStream* pStream);
 /**
  * sceMpegFlushAllStreams
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegFlushAllStream(SceMpeg* Mpeg);
 
 /**
  * sceMpegMallocAvcEsBuf
  *
- * @returns 0 if error else pointer to buffer.
+ * @return 0 if error else pointer to buffer.
  */
 ScePVoid sceMpegMallocAvcEsBuf(SceMpeg* Mpeg);
 
@@ -252,7 +252,7 @@ SceVoid sceMpegFreeAvcEsBuf(SceMpeg* Mpeg, ScePVoid pBuf);
  * @param iEsSize - will contain size of Es
  * @param iOutSize - will contain size of decoded data
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegQueryAtracEsSize(SceMpeg* Mpeg, SceInt32* iEsSize, SceInt32* iOutSize);
 
@@ -263,7 +263,7 @@ SceInt32 sceMpegQueryAtracEsSize(SceMpeg* Mpeg, SceInt32* iEsSize, SceInt32* iOu
  * @param pEsBuffer - prevously allocated Es buffer
  * @param pAu - will contain pointer to Au
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegInitAu(SceMpeg* Mpeg, ScePVoid pEsBuffer, SceMpegAu* pAu);
 
@@ -275,7 +275,7 @@ SceInt32 sceMpegInitAu(SceMpeg* Mpeg, ScePVoid pEsBuffer, SceMpegAu* pAu);
  * @param pAu - will contain pointer to Au
  * @param iUnk - unknown
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegGetAvcAu(SceMpeg* Mpeg, SceMpegStream* pStream, SceMpegAu* pAu, SceInt32* iUnk);
 
@@ -284,7 +284,7 @@ SceInt32 sceMpegGetAvcAu(SceMpeg* Mpeg, SceMpegStream* pStream, SceMpegAu* pAu, 
  *
  * @param Mpeg - SceMpeg handle
  * @param pMode - pointer to SceMpegAvcMode struct defining the decode mode (pixelformat)
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegAvcDecodeMode(SceMpeg* Mpeg, SceMpegAvcMode* pMode);
 
@@ -297,7 +297,7 @@ SceInt32 sceMpegAvcDecodeMode(SceMpeg* Mpeg, SceMpegAvcMode* pMode);
  * @param pBuffer - buffer that will contain the decoded frame
  * @param iInit - will be set to 0 on first call, then 1
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegAvcDecode(SceMpeg* Mpeg, SceMpegAu* pAu, SceInt32 iFrameWidth, ScePVoid pBuffer, SceInt32* iInit);
 
@@ -307,9 +307,9 @@ SceInt32 sceMpegAvcDecode(SceMpeg* Mpeg, SceMpegAu* pAu, SceInt32 iFrameWidth, S
  * @param Mpeg - SceMpeg handle
  * @param iFrameWidth - output buffer width, set to 512 if writing to framebuffer
  * @param pBuffer - buffer that will contain the decoded frame
- * @param iFrameNum - frame number
+ * @param iStatus - frame number
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegAvcDecodeStop(SceMpeg* Mpeg, SceInt32 iFrameWidth, ScePVoid pBuffer, SceInt32* iStatus);
 
@@ -321,7 +321,7 @@ SceInt32 sceMpegAvcDecodeStop(SceMpeg* Mpeg, SceInt32 iFrameWidth, ScePVoid pBuf
  * @param pAu - will contain pointer to Au
  * @param pUnk - unknown
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegGetAtracAu(SceMpeg* Mpeg, SceMpegStream* pStream, SceMpegAu* pAu, ScePVoid pUnk);
 
@@ -333,7 +333,7 @@ SceInt32 sceMpegGetAtracAu(SceMpeg* Mpeg, SceMpegStream* pStream, SceMpegAu* pAu
  * @param pBuffer - buffer that will contain the decoded frame
  * @param iInit - set this to 1 on first call
  *
- * @returns 0 if success.
+ * @return 0 if success.
  */
 SceInt32 sceMpegAtracDecode(SceMpeg* Mpeg, SceMpegAu* pAu, ScePVoid pBuffer, SceInt32 iInit);
 

@@ -46,7 +46,7 @@ typedef enum
 /**
  * Structure to hold the parameters for a message dialog
 **/
-typedef struct _SceUtilityMsgDialogParams
+typedef struct _pspUtilityMsgDialogParams
 {
     pspUtilityDialogCommon base;
     int unknown;
@@ -54,7 +54,6 @@ typedef struct _SceUtilityMsgDialogParams
 	unsigned int errorValue;
     /** The message to display (may contain embedded linefeeds) */
     char message[512];
-	
 	int options; /* OR ::pspUtilityMsgDialogOption together for multiple options */
 	pspUtilityMsgDialogPressed buttonPressed;
 
@@ -64,7 +63,7 @@ typedef struct _SceUtilityMsgDialogParams
  * Create a message dialog
  *
  * @param params - dialog parameters
- * @returns 0 on success
+ * @return 0 on success
  */
 int sceUtilityMsgDialogInitStart(pspUtilityMsgDialogParams *params);
 

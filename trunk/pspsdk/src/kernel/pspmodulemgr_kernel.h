@@ -55,7 +55,7 @@ int sceKernelModuleCount(void);
  * @param flags - Unused, always 0.
  * @param option - Pointer to an optional ::SceKernelLMOption structure.
  *
- * @returns The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.
+ * @return The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.
  */
 SceUID sceKernelLoadModuleBuffer(void *buf, SceSize bufsize, int flags, SceKernelLMOption *option);
 

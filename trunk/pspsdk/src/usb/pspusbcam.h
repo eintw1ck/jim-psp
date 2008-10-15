@@ -251,7 +251,7 @@ typedef struct PspUsbCamSetupVideoExParam {
  *
  * @param param - pointer to a ::PspUsbCamSetupStillParam 
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetupStill(PspUsbCamSetupStillParam *param);
 
@@ -260,7 +260,7 @@ int sceUsbCamSetupStill(PspUsbCamSetupStillParam *param);
  *
  * @param param - pointer to a ::PspUsbCamSetupStillParamEx 
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetupStillEx(PspUsbCamSetupStillExParam *param);
 
@@ -271,7 +271,7 @@ int sceUsbCamSetupStillEx(PspUsbCamSetupStillExParam *param);
  * @param buf - The buffer that receives the image jpeg data
  * @param size - The size of the buffer.
  *
- * @returns size of acquired image on success, < 0 on error
+ * @return size of acquired image on success, < 0 on error
 */
 int sceUsbCamStillInputBlocking(u8 *buf, SceSize size);
 
@@ -283,21 +283,21 @@ int sceUsbCamStillInputBlocking(u8 *buf, SceSize size);
  * @param buf - The buffer that receives the image jpeg data
  * @param size - The size of the buffer.
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamStillInput(u8 *buf, SceSize size);
 
 /** 
  * Waits untils still input has been finished.
  *
- * @returns the size of the acquired image on sucess, < 0 on error
+ * @return the size of the acquired image on sucess, < 0 on error
 */
 int sceUsbCamStillWaitInputEnd(void);
 
 /**
  * Polls the status of still input completion.
  *
- * @returns the size of the acquired image if still input has ended, 
+ * @return the size of the acquired image if still input has ended, 
  * 0 if the input has not ended, < 0 on error.
 */
 int sceUsbCamStillPollInputEnd(void);
@@ -305,14 +305,14 @@ int sceUsbCamStillPollInputEnd(void);
 /** 
  * Cancels the still input.
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamStillCancelInput(void);
 
 /**
  * Gets the size of the acquired still image.
  *
- * @returns the size of the acquired image on success, < 0 on error
+ * @return the size of the acquired image on success, < 0 on error
 */
 int sceUsbCamStillGetInputLength(void);
 
@@ -323,7 +323,7 @@ int sceUsbCamStillGetInputLength(void);
  * @param workarea - Pointer to a buffer used as work area by the driver.
  * @param wasize - Size of the work area.
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetupVideo(PspUsbCamSetupVideoParam *param, void *workarea, int wasize);
 
@@ -334,21 +334,21 @@ int sceUsbCamSetupVideo(PspUsbCamSetupVideoParam *param, void *workarea, int was
  * @param workarea - Pointer to a buffer used as work area by the driver.
  * @param wasize - Size of the work area.
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetupVideoEx(PspUsbCamSetupVideoExParam *param, void *workarea, int wasize);
 
 /**
  * Starts video input from the camera.
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamStartVideo(void);
 
 /**
  * Stops video input from the camera.
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamStopVideo(void);
 
@@ -359,7 +359,7 @@ int sceUsbCamStopVideo(void);
  * @param buf - The buffer that receives the frame jpeg data
  * @param size - The size of the buffer.
  *
- * @returns size of acquired frame on success, < 0 on error
+ * @return size of acquired frame on success, < 0 on error
 */
 int sceUsbCamReadVideoFrameBlocking(u8 *buf, SceSize size);
 
@@ -371,21 +371,21 @@ int sceUsbCamReadVideoFrameBlocking(u8 *buf, SceSize size);
  * @param buf - The buffer that receives the frame jpeg data
  * @param size - The size of the buffer.
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamReadVideoFrame(u8 *buf, SceSize size);
 
 /** 
  * Waits untils the current frame has been read.
  *
- * @returns the size of the acquired frame on sucess, < 0 on error
+ * @return the size of the acquired frame on sucess, < 0 on error
 */
 int sceUsbCamWaitReadVideoFrameEnd(void);
 
 /**
  * Polls the status of video frame read completion.
  *
- * @returns the size of the acquired frame if it has been read, 
+ * @return the size of the acquired frame if it has been read, 
  * 0 if the frame has not yet been read, < 0 on error.
 */
 int sceUsbCamPollReadVideoFrameEnd(void);
@@ -393,7 +393,7 @@ int sceUsbCamPollReadVideoFrameEnd(void);
 /**
  * Gets the size of the acquired frame.
  *
- * @returns the size of the acquired frame on success, < 0 on error
+ * @return the size of the acquired frame on success, < 0 on error
 */
 int sceUsbCamGetReadVideoFrameSize(void);
 
@@ -402,7 +402,7 @@ int sceUsbCamGetReadVideoFrameSize(void);
  *
  * @param saturation - The saturation (0-255)
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetSaturation(int saturation);
 
@@ -411,7 +411,7 @@ int sceUsbCamSetSaturation(int saturation);
  *
  * @param brightness - The brightness (0-255)
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetBrightness(int brightness);
 
@@ -420,7 +420,7 @@ int sceUsbCamSetBrightness(int brightness);
  *
  * @param contrast - The contrast (0-255)
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetContrast(int contrast);
 
@@ -429,7 +429,7 @@ int sceUsbCamSetContrast(int contrast);
  *
  * @param sharpness - The sharpness (0-255)
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetSharpness(int sharpness);
 
@@ -438,7 +438,7 @@ int sceUsbCamSetSharpness(int sharpness);
  *
  * @param effectmode - The effect mode, one of ::PspUsbCamEffectMode
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetImageEffectMode(int effectmode);
 
@@ -447,7 +447,7 @@ int sceUsbCamSetImageEffectMode(int effectmode);
  *
  * @param ev - The exposure level, one of ::PspUsbCamEVLevel
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetEvLevel(int ev);
 
@@ -456,7 +456,7 @@ int sceUsbCamSetEvLevel(int ev);
  *
  * @param reverseflags - The reverse flags, zero or more of ::PspUsbCamReverseFlags
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamSetReverseMode(int reverseflags);
 
@@ -474,7 +474,7 @@ int sceUsbCamSetZoom(int zoom);
  *
  * @param saturation - pointer to a variable that receives the current saturation
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamGetSaturation(int *saturation);
 
@@ -483,7 +483,7 @@ int sceUsbCamGetSaturation(int *saturation);
  *
  * @param brightness - pointer to a variable that receives the current brightness
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamGetBrightness(int *brightness);
 
@@ -492,7 +492,7 @@ int sceUsbCamGetBrightness(int *brightness);
  *
  * @param contrast - pointer to a variable that receives the current contrast
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamGetContrast(int *contrast);
 
@@ -501,7 +501,7 @@ int sceUsbCamGetContrast(int *contrast);
  *
  * @param brightness - pointer to a variable that receives the current sharpness
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamGetSharpness(int *sharpness);
 
@@ -510,7 +510,7 @@ int sceUsbCamGetSharpness(int *sharpness);
  *
  * @param effectmode - pointer to a variable that receives the current effect mode
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamGetImageEffectMode(int *effectmode);
 
@@ -519,7 +519,7 @@ int sceUsbCamGetImageEffectMode(int *effectmode);
  *
  * @param ev - pointer to a variable that receives the current exposure level
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamGetEvLevel(int *ev);
 
@@ -528,7 +528,7 @@ int sceUsbCamGetEvLevel(int *ev);
  *
  * @param reverseflags - pointer to a variable that receives the current reverse mode flags
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamGetReverseMode(int *reverseflags);
 
@@ -537,7 +537,7 @@ int sceUsbCamGetReverseMode(int *reverseflags);
  *
  * @param zoom - pointer to a variable that receives the current zoom
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamGetZoom(int *zoom);
 
@@ -547,21 +547,21 @@ int sceUsbCamGetZoom(int *zoom);
  *
  * @param on - 1 to set the automatical reversal of the image, 0 to set it off
  *
- * @returns 0 on success, < 0 on error
+ * @return 0 on success, < 0 on error
 */
 int sceUsbCamAutoImageReverseSW(int on);
 
 /**
  * Gets the state of the autoreversal of the image.
  *
- * @returns 1 if it is set to automatic, 0 otherwise
+ * @return 1 if it is set to automatic, 0 otherwise
 */
 int sceUsbCamGetAutoImageReverseState(void);
 
 /**
  * Gets the direction of the camera lens
  *
- * @returns 1 if the camera is "looking to you", 0 if the camera
+ * @return 1 if the camera is "looking to you", 0 if the camera
  * is "looking to the other side".
 */
 int sceUsbCamGetLensDirection(void);

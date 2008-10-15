@@ -145,7 +145,7 @@ typedef struct SceUtilitySavedataParam
  * check if the operation is completed
  *
  * @param params - savedata parameters
- * @returns 0 on success
+ * @return 0 on success
  */
 int sceUtilitySavedataInitStart(SceUtilitySavedataParam * params);
 
@@ -153,7 +153,7 @@ int sceUtilitySavedataInitStart(SceUtilitySavedataParam * params);
  * Check the current status of the saving/loading/shutdown process
  * Continue calling this to check current status of the process
  * before calling this call also sceUtilitySavedataUpdate
- * @returns 2 if the process is still being processed.
+ * @return 2 if the process is still being processed.
  * 3 on save/load success, then you can call sceUtilitySavedataShutdownStart.
  * 4 on complete shutdown.
  */

@@ -160,7 +160,7 @@ typedef struct pspUtilityHtmlViewerParam
  *
  * @param params - html viewer parameters
  *
- * @returns 0 on success, < 0 on error.
+ * @return 0 on success, < 0 on error.
  */
 int sceUtilityHtmlViewerInitStart(pspUtilityHtmlViewerParam *params);
 

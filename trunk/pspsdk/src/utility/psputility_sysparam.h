@@ -102,7 +102,7 @@ extern "C" {
  *
  * @param id - which parameter to set
  * @param value - integer value to set
- * @returns 0 on success, PSP_SYSTEMPARAM_RETVAL_FAIL on failure
+ * @return 0 on success, PSP_SYSTEMPARAM_RETVAL_FAIL on failure
  */
 int sceUtilitySetSystemParamInt(int id, int value);
 
@@ -111,7 +111,7 @@ int sceUtilitySetSystemParamInt(int id, int value);
  *
  * @param id - which parameter to set
  * @param str - char * value to set
- * @returns 0 on success, PSP_SYSTEMPARAM_RETVAL_FAIL on failure
+ * @return 0 on success, PSP_SYSTEMPARAM_RETVAL_FAIL on failure
  */
 int sceUtilitySetSystemParamString(int id, const char *str);
 
@@ -120,7 +120,7 @@ int sceUtilitySetSystemParamString(int id, const char *str);
  *
  * @param id - which parameter to get
  * @param value - pointer to integer value to place result in
- * @returns 0 on success, PSP_SYSTEMPARAM_RETVAL_FAIL on failure
+ * @return 0 on success, PSP_SYSTEMPARAM_RETVAL_FAIL on failure
  */
 int sceUtilityGetSystemParamInt( int id, int *value );
 
@@ -130,7 +130,7 @@ int sceUtilityGetSystemParamInt( int id, int *value );
  * @param id - which parameter to get
  * @param str - char * buffer to place result in
  * @param len - length of str buffer
- * @returns 0 on success, PSP_SYSTEMPARAM_RETVAL_FAIL on failure
+ * @return 0 on success, PSP_SYSTEMPARAM_RETVAL_FAIL on failure
  */
 int sceUtilityGetSystemParamString(int id, char *str, int len);
 

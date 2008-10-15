@@ -368,7 +368,7 @@ void sceGuDrawBufferList(int psm, void* fbp, int fbw);
   *   - GU_FALSE (0) - Turns display off
   *
   * @param state - Turn display on or off
-  * @returns State of the display prior to this call
+  * @return State of the display prior to this call
 **/
 int sceGuDisplay(int state);
 
@@ -441,7 +441,7 @@ void sceGuContinue(void);
   *
   * @param signal - Signal index to install a handler for
   * @param callback - Callback to call when signal index is triggered
-  * @returns The old callback handler
+  * @return The old callback handler
 **/
 void* sceGuSetCallback(int signal, void (*callback)(int));
 
@@ -485,7 +485,7 @@ void sceGuSendCommandi(int cmd, int argument);
   * list again.
   *
   * @param size - How much memory to allocate
-  * @returns Memory-block ready for use
+  * @return Memory-block ready for use
 **/
 void* sceGuGetMemory(int size);
 
@@ -515,7 +515,7 @@ void sceGuStart(int cid, void* list);
   *
   * This also restores control back to whatever context that was active prior to this call.
   *
-  * @returns Size of finished display list
+  * @return Size of finished display list
 **/
 int sceGuFinish(void);
 
@@ -528,7 +528,7 @@ int sceGuFinish(void);
   * context-type.
   *
   * @param id - Finish callback id (16-bit)
-  * @returns Size of finished display list
+  * @return Size of finished display list
 **/
 int sceGuFinishId(unsigned int id);
 
@@ -550,7 +550,7 @@ void sceGuCallMode(int mode);
 /**
   * Check how large the current display-list is
   *
-  * @returns The size of the current display list
+  * @return The size of the current display list
 **/
 int sceGuCheckList(void);
 
@@ -570,7 +570,7 @@ void sceGuSendList(int mode, const void* list, PspGeContext* context);
 /**
   * Swap display and draw buffer
   *
-  * @returns Pointer to the new drawbuffer
+  * @return Pointer to the new drawbuffer
 **/
 void* sceGuSwapBuffers(void);
 
@@ -598,7 +598,7 @@ void* sceGuSwapBuffers(void);
   *
   * @param mode - What to wait for
   * @param what - What to sync to
-  * @returns Unknown at this time
+  * @return Unknown at this time
 **/
 int sceGuSync(int mode, int what);
 
@@ -712,7 +712,7 @@ void sceGuSetStatus(int state, int status);
   * Look at sceGuEnable() for a list of states
   *
   * @param state - Which state to query about
-  * @returns Wether state is enabled or not
+  * @return Wether state is enabled or not
 **/
 int sceGuGetStatus(int state);
 
@@ -730,7 +730,7 @@ void sceGuSetAllStatus(int status);
   *
   * Look at sceGuEnable() for a list of states
   *
-  * @returns Status of all 22 states as a bitmask (0-21)
+  * @return Status of all 22 states as a bitmask (0-21)
 **/
 int sceGuGetAllStatus(void);
 

@@ -55,7 +55,7 @@ typedef union {
  * Check existance of a Net Configuration
  *
  * @param id - id of net Configuration (1 to n)
- * @returns 0 on success, 
+ * @return 0 on success, 
  */
 int sceUtilityCheckNetParam(int id);
 
@@ -66,7 +66,7 @@ int sceUtilityCheckNetParam(int id);
  * (0 returns valid but seems to be a copy of the last config requested)
  * @param param - which parameter to get
  * @param data - parameter data
- * @returns 0 on success, 
+ * @return 0 on success, 
  */
 int sceUtilityGetNetParam(int conf, int param, netData *data);
 
@@ -95,7 +95,7 @@ int sceUtilitySetNetParam(int param, const void *val);
  * Copies a Network Configuration to another
  *
  * @param src - Source Net Configuration number (0 to n)
- * @param src - Destination Net Configuration number (0 to n)
+ * @param dest - Destination Net Configuration number (0 to n)
  *
  * @return 0 on success
  */

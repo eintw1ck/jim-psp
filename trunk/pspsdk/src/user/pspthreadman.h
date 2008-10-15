@@ -206,7 +206,7 @@ int sceKernelExitDeleteThread(int status);
  *
  * @param thid - UID of the thread to terminate.
  *
- * @returns Success if >= 0, an error if < 0.
+ * @return Success if >= 0, an error if < 0.
  */
 int sceKernelTerminateThread(SceUID thid);
 
@@ -215,7 +215,7 @@ int sceKernelTerminateThread(SceUID thid);
  *
  * @param thid - UID of the thread to terminate and delete.
  *
- * @returns Success if >= 0, an error if < 0.
+ * @return Success if >= 0, an error if < 0.
  */
 int sceKernelTerminateDeleteThread(SceUID thid);
 
@@ -259,7 +259,7 @@ int sceKernelSleepThreadCB(void);
  *
  * @param thid - UID of the thread to wake.
  *
- * @returns Success if >= 0, an error if < 0.
+ * @return Success if >= 0, an error if < 0.
  */
 int sceKernelWakeupThread(SceUID thid);
 
@@ -268,7 +268,7 @@ int sceKernelWakeupThread(SceUID thid);
  *
  * @param thid - UID of the thread to cancel.
  *
- * @returns Success if >= 0, an error if < 0.
+ * @return Success if >= 0, an error if < 0.
  */
 int sceKernelCancelWakeupThread(SceUID thid);
 
@@ -277,7 +277,7 @@ int sceKernelCancelWakeupThread(SceUID thid);
  *
  * @param thid - UID of the thread to suspend.
  *
- * @returns Success if >= 0, an error if < 0.
+ * @return Success if >= 0, an error if < 0.
  */
 int sceKernelSuspendThread(SceUID thid);
 
@@ -286,7 +286,7 @@ int sceKernelSuspendThread(SceUID thid);
  *
  * @param thid - UID of the thread to resume.
  *
- * @returns Success if >= 0, an error if < 0.
+ * @return Success if >= 0, an error if < 0.
  */
 int sceKernelResumeThread(SceUID thid);
 
@@ -359,7 +359,7 @@ int sceKernelDelaySysClockThreadCB(SceKernelSysClock *delay);
  * @param unknown - Set to 0.
  * @param attr - The thread attributes to modify.  One of ::PspThreadAttributes.
  *
- * @returns < 0 on error.
+ * @return < 0 on error.
  */
 int sceKernelChangeCurrentThreadAttr(int unknown, SceUInt attr);
 
@@ -463,7 +463,7 @@ int sceKernelReferThreadStatus(SceUID thid, SceKernelThreadInfo *info);
  * @param thid - UID of the thread to retrive status.
  * @param status - Pointer to a ::SceKernelThreadRunStatus struct to receive the runtime status.
  *
- * @returns 0 if successful, otherwise the error code.
+ * @return 0 if successful, otherwise the error code.
  */
 int sceKernelReferThreadRunStatus(SceUID thid, SceKernelThreadRunStatus *status);
 
@@ -586,7 +586,7 @@ int sceKernelPollSema(SceUID semaid, int signal);
  * @param semaid - UID of the semaphore to retrieve info for.
  * @param info - Pointer to a ::SceKernelSemaInfo struct to receive the info.
  *
- * @returns < 0 on error.
+ * @return < 0 on error.
  */
 int sceKernelReferSemaStatus(SceUID semaid, SceKernelSemaInfo *info);
 
@@ -881,7 +881,7 @@ int sceKernelCancelReceiveMbx(SceUID mbxid, int *pnum);
  * @param mbxid - UID of the messagebox to retrieve info for.
  * @param info - Pointer to a ::SceKernelMbxInfo struct to receive the info.
  *
- * @returns < 0 on error.
+ * @return < 0 on error.
  */
 int sceKernelReferMbxStatus(SceUID mbxid, SceKernelMbxInfo *info);
 
@@ -1719,9 +1719,9 @@ enum ThreadEvents
  * Register a thread event handler
  *
  * @param name - Name for the thread event handler
- * @param threadId - Thread ID to monitor
- * @param handler - Pointer to a ::SceKernelThreadEventHandler function
+ * @param threadID - Thread ID to monitor
  * @param mask - Bit mask for what events to handle (only lowest 4 bits valid)
+ * @param handler - Pointer to a ::SceKernelThreadEventHandler function
  * @param common - Common pointer
  *
  * @return The UID of the create event handler, < 0 on error

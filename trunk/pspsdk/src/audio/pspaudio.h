@@ -79,7 +79,7 @@ typedef struct
   *                      (use the ::PSP_AUDIO_SAMPLE_ALIGN macro to align it).
   * @param format - The output format to use for the channel.  One of ::PspAudioFormats.
   *
-  * @returns The channel number on success, an error code if less than 0.
+  * @return The channel number on success, an error code if less than 0.
   */
 int sceAudioChReserve(int channel, int samplecount, int format);
 
@@ -88,7 +88,7 @@ int sceAudioChReserve(int channel, int samplecount, int format);
   *
   * @param channel - The channel to release.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioChRelease(int channel);
 
@@ -101,7 +101,7 @@ int sceAudioChRelease(int channel);
   *
   * @param buf - Pointer to the PCM data to output.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioOutput(int channel, int vol, void *buf);
 
@@ -114,7 +114,7 @@ int sceAudioOutput(int channel, int vol, void *buf);
   *
   * @param buf - Pointer to the PCM data to output.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioOutputBlocking(int channel, int vol, void *buf);
 
@@ -129,7 +129,7 @@ int sceAudioOutputBlocking(int channel, int vol, void *buf);
   *
   * @param buf - Pointer to the PCM data to output.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioOutputPanned(int channel, int leftvol, int rightvol, void *buf);
 
@@ -144,7 +144,7 @@ int sceAudioOutputPanned(int channel, int leftvol, int rightvol, void *buf);
   *
   * @param buf - Pointer to the PCM data to output.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioOutputPannedBlocking(int channel, int leftvol, int rightvol, void *buf);
 
@@ -153,7 +153,7 @@ int sceAudioOutputPannedBlocking(int channel, int leftvol, int rightvol, void *b
   *
   * @param channel - The channel number.
   *
-  * @returns Number of samples to be played, an error if less than 0.
+  * @return Number of samples to be played, an error if less than 0.
   */
 int sceAudioGetChannelRestLen(int channel);
 
@@ -162,16 +162,17 @@ int sceAudioGetChannelRestLen(int channel);
   *
   * @param channel - The channel number.
   *
-  * @returns Number of samples to be played, an error if less than 0.
+  * @return Number of samples to be played, an error if less than 0.
   */
 int sceAudioGetChannelRestLength(int channel);
 
 /**
   * Change the output sample count, after it's already been reserved
   *
+  * @param channel - The channel number.
   * @param samplecount - The number of samples to output in one output call.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioSetChannelDataLen(int channel, int samplecount);
 
@@ -182,7 +183,7 @@ int sceAudioSetChannelDataLen(int channel, int samplecount);
   *
   * @param format - One of ::PspAudioFormats
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioChangeChannelConfig(int channel, int format);
 
@@ -195,7 +196,7 @@ int sceAudioChangeChannelConfig(int channel, int format);
   *
   * @param rightvol - The right volume.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioChangeChannelVolume(int channel, int leftvol, int rightvol);
 
@@ -206,14 +207,14 @@ int sceAudioChangeChannelVolume(int channel, int leftvol, int rightvol);
   *
   * @param samplecount - The number of samples to output in one output call (min 17, max 4111).
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioOutput2Reserve(int samplecount);
 
 /**
   * Release the audio output
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioOutput2Release(void);
 
@@ -222,7 +223,7 @@ int sceAudioOutput2Release(void);
   *
   * @param samplecount - The number of samples to output in one output call (min 17, max 4111).
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioOutput2ChangeLength(int samplecount);
 
@@ -233,14 +234,14 @@ int sceAudioOutput2ChangeLength(int samplecount);
   *
   * @param buf - Pointer to the PCM data.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioOutput2OutputBlocking(int vol, void *buf);
 
 /**
   * Get count of unplayed samples remaining
   *
-  * @returns Number of samples to be played, an error if less than 0.
+  * @return Number of samples to be played, an error if less than 0.
   */
 int sceAudioOutput2GetRestSample(void);
 
@@ -251,16 +252,16 @@ int sceAudioOutput2GetRestSample(void);
   *
   * @param freq - The frequency. One of 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11050, 8000.
   *
-  * @params channels - Number of channels. Pass 2 (stereo).
+  * @param channels - Number of channels. Pass 2 (stereo).
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioSRCChReserve(int samplecount, int freq, int channels);
 
 /**
   * Release the audio output
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioSRCChRelease(void);
 
@@ -271,7 +272,7 @@ int sceAudioSRCChRelease(void);
   *
   * @param buf - Pointer to the PCM data to output.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioSRCOutputBlocking(int vol, void *buf);
 
@@ -284,7 +285,7 @@ int sceAudioSRCOutputBlocking(int vol, void *buf);
   *
   * @param unknown2 - Unknown. Pass 0.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioInputInit(int unknown1, int gain, int unknown2);
 
@@ -293,7 +294,7 @@ int sceAudioInputInit(int unknown1, int gain, int unknown2);
   *
   * @param params - A pointer to a ::pspAudioInputParams struct.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioInputInitEx(pspAudioInputParams *params);
 
@@ -306,7 +307,7 @@ int sceAudioInputInitEx(pspAudioInputParams *params);
   *
   * @param buf - Pointer to where the audio data will be stored.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioInputBlocking(int samplecount, int freq, void *buf);
 
@@ -319,28 +320,28 @@ int sceAudioInputBlocking(int samplecount, int freq, void *buf);
   *
   * @param buf - Pointer to where the audio data will be stored.
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioInput(int samplecount, int freq, void *buf);
 
 /**
   * Get the number of samples that were acquired
   *
-  * @returns Number of samples acquired, an error if less than 0.
+  * @return Number of samples acquired, an error if less than 0.
   */
 int sceAudioGetInputLength(void);
 
 /**
   * Wait for non-blocking audio input to complete
   *
-  * @returns 0 on success, an error if less than 0.
+  * @return 0 on success, an error if less than 0.
   */
 int sceAudioWaitInputEnd(void);
 
 /**
   * Poll for non-blocking audio input status
   *
-  * @returns 0 if input has completed, 1 if not completed or an error if less than 0.
+  * @return 0 if input has completed, 1 if not completed or an error if less than 0.
   */
 int sceAudioPollInputEnd(void);
 

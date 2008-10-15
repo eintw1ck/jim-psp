@@ -100,7 +100,7 @@ int sceRegOpenCategory(REGHANDLE h, const char *name, int mode, REGHANDLE *hd);
 /**
  * Remove a registry dir
  *
- * @param hd - The open registry dir handle
+ * @param h - The open registry dir handle
  * @param name - The name of the key
  *
  * @return 0 on success, < 0 on error
@@ -222,7 +222,7 @@ int sceRegCreateKey(REGHANDLE hd, const char *name, int type, SceSize size);
 /**
  * Remove a registry (HONESTLY, DO NOT USE)
  *
- * @ret - Filled out registry parameter
+ * @param reg - Filled out registry parameter
  *
  * @return 0 on success, < 0 on error
  */

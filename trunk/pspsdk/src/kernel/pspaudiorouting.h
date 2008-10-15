@@ -17,14 +17,14 @@
  *
  * @param mode The routing mode to set (0 or 1)
  *
- * @returns the previous routing mode, or < 0 on error
+ * @return the previous routing mode, or < 0 on error
 */
 int sceAudioRoutingSetMode( int mode );
 
 /**
  * Get routing mode.
  *
- * @returns the current routing mode.
+ * @return the current routing mode.
 */
 int sceAudioRoutingGetMode();
 
