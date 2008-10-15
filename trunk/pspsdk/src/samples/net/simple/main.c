@@ -244,11 +244,12 @@ int net_thread(SceSize args, void *argp)
 		if(connect_to_apctl(1))
 		{
 			// connected, get my IPADDR and run test
-			char szMyIPAddr[32];
-			if (sceNetApctlGetInfo(8, szMyIPAddr) != 0)
-				strcpy(szMyIPAddr, "unknown IP address");
-
-			start_server(szMyIPAddr);
+			union SceNetApctlInfo info;
+			
+			if (sceNetApctlGetInfo(8, &info) != 0)
+				strcpy(info.ip, "unknown IP");
+			
+			start_server(info.ip);
 		}
 	}
 	while(0);
