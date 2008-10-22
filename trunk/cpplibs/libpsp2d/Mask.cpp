@@ -36,6 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // $Id$
 
 #include <malloc.h>
+#include <string.h>
 
 #include "Mask.h"
 

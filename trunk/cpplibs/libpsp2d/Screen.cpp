@@ -37,6 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <pspgu.h>
 #include <pspdisplay.h>
+#include <malloc.h>
 
 #include <png.h>
 
@@ -226,7 +227,7 @@ void Screen::init()
 
 u32* Screen::getList()
 {
-    return list;
+    return (u32*) list;
 }
 
 void Screen::accept(DrawableVisitor *v)
@@ -261,7 +262,7 @@ void Screen::_saveToPNG(const string& filename)
     u16* vram16;
     int bufferwidth;
     int pixelformat;
-    int unknown;
+    //int unknown;
     int i, x, y;
     png_structp png_ptr;
     png_infop info_ptr;
@@ -295,7 +296,7 @@ void Screen::_saveToPNG(const string& filename)
     png_write_info(png_ptr, info_ptr);
     line = (u8*) malloc(SCREEN_WIDTH * 3);
     sceDisplayWaitVblankStart();  // if framebuf was set with PSP_DISPLAY_SETBUF_NEXTFRAME, wait until it is changed
-    sceDisplayGetFrameBuf((void**)&vram32, &bufferwidth, &pixelformat, &unknown);
+    sceDisplayGetFrameBuf((void**)&vram32, &bufferwidth, &pixelformat, PSP_DISPLAY_SETBUF_IMMEDIATE);
     vram16 = (u16*) vram32;
     for (y = 0; y < SCREEN_HEIGHT; y++) {
        for (i = 0, x = 0; x < SCREEN_WIDTH; x++) {
