@@ -16,6 +16,8 @@
 // Includes                                                                   //
 //****************************************************************************//
 
+#include <string.h>
+
 #include "cal3d/error.h"
 #include "cal3d/renderer.h"
 #include "cal3d/coremodel.h"

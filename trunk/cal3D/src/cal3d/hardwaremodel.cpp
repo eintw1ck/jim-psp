@@ -12,6 +12,7 @@
 #include "config.h"
 #endif
 
+#include <string.h>
 
 #include "cal3d/error.h"
 #include "cal3d/hardwaremodel.h"
