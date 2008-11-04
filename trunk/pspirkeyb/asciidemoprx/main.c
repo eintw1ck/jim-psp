@@ -13,6 +13,8 @@
 #include <pspctrl.h>
 #include <pspdebug.h>
 #include <psppower.h>
+#include <kubridge.h>
+
 #include <stdio.h>
 #include <string.h>
 
@@ -23,11 +25,11 @@
 
 const char * g_prx_module = "ms0:/seplugins/irkeyb.prx";
 
-/* Define the module info section */
-PSP_MODULE_INFO("asciidemo", PSP_MODULE_USER, 1, 1);
 
-/* Define the main thread's attribute value (optional) */
-PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
+PSP_MODULE_INFO("asciidemo", PSP_MODULE_USER, 1, 1);
+PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
+PSP_HEAP_SIZE_KB(-256);
+
 
 /* Exit callback */
 int exit_callback(int arg1, int arg2, void *common)
@@ -79,6 +81,13 @@ int main(int argc, char *argv[])
     sceCtrlSetSamplingCycle(0);
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_DIGITAL);
 
+	if (sceKernelDevkitVersion() >= 0x03080010)
+	{
+        /* Load irda PRX for CFW >= 3.80 - Thanks, ZX81! */
+        u32 mod_id = sceKernelLoadModule("flash0:/kd/irda.prx", 0, NULL);
+        sceKernelStartModule(mod_id, 0, NULL, NULL, NULL);
+	}
+
     /* Start irkeyb.prx */
     SceUID mod = pspSdkLoadStartModule(g_prx_module, kernelmode ? \
         PSP_MEMORY_PARTITION_KERNEL : PSP_MEMORY_PARTITION_USER);
@@ -116,7 +125,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                sceKernelDelayThread(5*1000);
+                sceKernelDelayThread(10*1000);
                 sceCtrlReadBufferPositive(&pad, 1);
                 if (pad.Buttons != buttonsold)
                     break;

@@ -26,6 +26,8 @@
 #define     STATE_LEFT      2
 #define     STATE_RIGHT     3
 
+#define     KEY_PRESSED     1
+
 struct ModifierState
 {
     unsigned char shift;
@@ -38,6 +40,8 @@ struct ModifierState
 };
 
 struct ModifierState g_modifierState;
+
+extern int g_lastirkey;
 
 static void keymap_decode_raw(  unsigned char raw, unsigned char pressed, unsigned char * buffer, int *length );
 static void keymap_decode_maptable( int outputmode, unsigned char raw, unsigned char pressed, unsigned char * buffer, int *length );
@@ -63,6 +67,11 @@ void keymap_decode( int outputmode, unsigned char raw, unsigned char pressed, un
 {
     if( !buffer || !length )
         return;
+
+	if (pressed == KEY_PRESSED)
+		g_lastirkey = raw;
+	else
+		g_lastirkey = -1;
 
     switch ( outputmode )
     {

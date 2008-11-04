@@ -263,26 +263,130 @@ static unsigned short foldable_numlock[128] = {
 #endif
 
 /*
-    map based on Palm 3169WW IR Keyboard
-    codes read via IrDA Monitor
-*/
+ *  map based on Palm 3169WW IR Keyboard
+ *
+ *  9600 baud, 8N1
+ *
+ *  key down sends: 0xFF 0xC0 key ~key key' 0xC1
+ *  key up sends: 0xFF 0xC0 key+0x80 ~(key+0x80) key'+0x80 0xC1
+ *
+ */
+
 static unsigned short palmuw_normal[128] = {
-        0,  0,  KEY_COMPOSE,  KEY_LEFTMETA,  0,  0,  0,  0,//7
-        0,  0,  0,  0,  0,  KEY_TAB,  KEY_GRAVE,  0,//15
-        0,  KEY_LEFTALT,  KEY_LEFTSHIFT,  0,  KEY_LEFTCTRL,  KEY_Q,  KEY_1,  0,//23
-        0,  0,  KEY_Z,  KEY_S,  KEY_A,  KEY_W,  KEY_2,  KEY_DELETE,//31
-        0, KEY_C,  KEY_X,  KEY_D,  KEY_E,  KEY_4,  KEY_3,  0,  //39
-        KEY_UP,  KEY_SPACE,  KEY_V,  KEY_F,  KEY_T,  KEY_R,  KEY_5,  KEY_RIGHT,//47
-        KEY_RIGHTALT,  KEY_N,  KEY_B,  KEY_H,  KEY_G,  KEY_Y,  KEY_6,  0,//55
-        0,  0,  KEY_M,  KEY_J,  KEY_U,  KEY_7, KEY_8 , 0 , //63
-        0,  0,  KEY_K,  KEY_I,  KEY_O,  KEY_0,  KEY_9,  0,  //71
-        KEY_COMMA,  KEY_DOT,  KEY_SLASH,  KEY_L,  KEY_SEMICOLON,  KEY_P,  KEY_MINUS,  0,//79
-        0,  0,  KEY_APOSTROPHE,  0,  KEY_LEFTBRACE,  KEY_EQUAL,  0,  0, //87
-        KEY_CAPSLOCK,  KEY_RIGHTSHIFT,  KEY_ENTER,  KEY_RIGHTBRACE,  0,  KEY_BACKSLASH, KEY_LEFT,  0,
-        KEY_DOWN,  0,  0,  0,  0,  0,  KEY_BACKSPACE,  0,
-        0,  0,  0,  0,  0,  0,  0,  0,
-        0,  0,  0,  0,  0,  0,  0,  0,
-        0,  0,  0,  0,  0,  0,  0,  0};//
+        0,  0,  KEY_COMPOSE,  KEY_LEFTMETA,  0,  0,  0,  0, // 00 -07
+        0,  0,  0,  0,  0,  KEY_TAB,  KEY_GRAVE,  0, // 08 - 0F
+        0,  KEY_LEFTALT,  KEY_LEFTSHIFT,  0,  KEY_LEFTCTRL,  KEY_Q,  KEY_1,  0, // 10 - 17
+        0,  0,  KEY_Z,  KEY_S,  KEY_A,  KEY_W,  KEY_2,  KEY_DELETE, // 18 - 1F
+        0, KEY_C,  KEY_X,  KEY_D,  KEY_E,  KEY_4,  KEY_3,  0, // 20 - 27
+        KEY_UP,  KEY_SPACE,  KEY_V,  KEY_F,  KEY_T,  KEY_R,  KEY_5,  KEY_RIGHT, // 28 -2F
+        KEY_RIGHTALT,  KEY_N,  KEY_B,  KEY_H,  KEY_G,  KEY_Y,  KEY_6,  0, // 30 - 37
+        0,  0,  KEY_M,  KEY_J,  KEY_U,  KEY_7, KEY_8 , 0 , // 38 - 3F
+        0,  0,  KEY_K,  KEY_I,  KEY_O,  KEY_0,  KEY_9,  0,  // 40 - 47
+        KEY_COMMA,  KEY_DOT,  KEY_SLASH,  KEY_L,  KEY_SEMICOLON,  KEY_P,  KEY_MINUS,  0, // 48 - 4F
+        0,  0,  KEY_APOSTROPHE,  0,  KEY_LEFTBRACE,  KEY_EQUAL,  0,  0, // 50 - 57
+        KEY_CAPSLOCK,  KEY_RIGHTSHIFT,  KEY_ENTER,  KEY_RIGHTBRACE,  0,  KEY_BACKSLASH, KEY_LEFT,  0, // 58 - 5F
+        KEY_DOWN,  0,  0,  0,  0,  0,  KEY_BACKSPACE,  0, // 60 - 67
+        0,  0,  0,  0,  0,  0,  0,  0, // 68 - 6F
+        0,  0,  0,  0,  0,  0,  0,  0, // 70 - 77
+        0,  0,  0,  0,  0,  0,  0,  0  // 78 - 7F
+};
+
+/*
+ *  map based on Palm One P10946-PROMO IR Keyboard
+ *
+ *  9600 baud, 8N1
+ *
+ *  key down sends: 0xFF 0xC0 key code1 code2 0xC1
+ *  key up sends: 0xFF 0xC0 key+0x80 code3 code4 0xC1
+ *
+ */
+
+static unsigned short palm1_normal[128] = {
+        0,  0,  0,  KEY_Z,  0,  0,  0,  0, // 00 - 07
+        KEY_LEFTMETA,  KEY_Q,  KEY_W,  KEY_E,  KEY_R,  KEY_T,  KEY_Y,  0, // 08 - 0F
+        KEY_X,  KEY_A,  KEY_S,  KEY_D,  KEY_F,  KEY_G,  KEY_H,  KEY_SPACE, // 10 - 17
+        KEY_CAPSLOCK,  0,  KEY_LEFTCTRL,  KEY_TAB,  0,  0,  0,  0, // 18 - 1F
+        0,  0,  0,  KEY_LEFTALT,  0,  0,  0,  0, // 20 - 27
+        0,  0,  0,  0,  KEY_C,  KEY_V,  KEY_B,  KEY_N, // 28 - 2F
+        0,  0,  KEY_BACKSPACE,  0,  0,  0,  0,  KEY_SPACE, // 30 - 37
+        KEY_MINUS,  KEY_EQUAL,  KEY_SLASH,  0,  KEY_U,  KEY_I,  KEY_O,  KEY_P, // 38 - 3F
+        0,  0,  0,  0,  KEY_J,  KEY_K,  KEY_L,  KEY_SEMICOLON, // 40 - 47
+        KEY_UP,  0,  0,  0,  KEY_M,  KEY_COMMA,  KEY_DOT,  0, // 48 - 4F
+        KEY_DELETE,  KEY_LEFT,  KEY_DOWN,  KEY_RIGHT,  0,  0,  KEY_APOSTROPHE,  KEY_ENTER, // 50 - 57
+        KEY_LEFTSHIFT,  KEY_RIGHTSHIFT,  0,  0,  0,  0,  0,  0, // 58 - 5F
+        0,  0,  0,  0,  0,  0,  0,  0, // 60 - 67
+        0,  0,  0,  0,  0,  0,  0,  0, // 68 - 6F
+        0,  0,  0,  0,  0,  0,  0,  0, // 70 - 77
+        0,  0,  0,  0,  0,  0,  0,  0  // 78 - 7F
+};
+
+static unsigned short palm1_blue[128] = {
+        0,  0,  0,  KEY_Z,  0,  0,  0,  0, // 00 - 07
+        KEY_LEFTMETA,  KEY_1,  KEY_2,  KEY_3,  KEY_4,  KEY_5,  KEY_6,  0, // 08 - 0F
+        KEY_X,  KEY_A,  KEY_S,  KEY_D,  KEY_F,  KEY_G,  KEY_H,  KEY_SPACE, // 10 - 17
+        KEY_NUMLOCK,  0,  KEY_LEFTCTRL,  KEY_TAB,  0,  0,  0,  0, // 18 - 1F
+        0,  0,  0,  KEY_LEFTALT,  0,  0,  0,  0, // 20 - 27
+        0,  0,  0,  0,  KEY_C,  KEY_V,  KEY_B,  KEY_N, // 28 - 2F
+        0,  0,  KEY_BACKSPACE,  0,  0,  0,  0,  KEY_SPACE, // 30 - 37
+        KEY_LEFTBRACE,  KEY_RIGHTBRACE,  KEY_BACKSLASH,  0,  KEY_7,  KEY_8,  KEY_9,  KEY_0, // 38 - 3F
+        0,  0,  0,  0,  KEY_J,  KEY_K,  KEY_L,  KEY_SEMICOLON, // 40 - 47
+        KEY_PAGEUP,  0,  0,  0,  KEY_M,  KEY_COMMA,  KEY_DOT,  0, // 48 - 4F
+        KEY_DELETE,  KEY_HOME,  KEY_PAGEDOWN,  KEY_END,  0,  0,  KEY_GRAVE,  KEY_ENTER, // 50 - 57
+        KEY_LEFTSHIFT,  KEY_RIGHTSHIFT,  0,  0,  0,  0,  0,  0, // 58 - 5F
+        0,  0,  0,  0,  0,  0,  0,  0, // 60 - 67
+        0,  0,  0,  0,  0,  0,  0,  0, // 68 - 6F
+        0,  0,  0,  0,  0,  0,  0,  0, // 70 - 77
+        0,  0,  0,  0,  0,  0,  0,  0  // 78 - 7F
+};
+
+static unsigned short palm1_green[128] = {
+        0,  0,  0,  KEY_Z,  0,  0,  0,  0, // 00 - 07
+        KEY_RIGHTMETA,  KEY_F1,  KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5,  KEY_F6,  0, // 08 - 0F
+        KEY_X,  KEY_A,  KEY_S,  KEY_D,  KEY_F,  KEY_G,  KEY_H,  KEY_SPACE, // 10 - 17
+        KEY_CAPSLOCK,  0,  KEY_RIGHTCTRL,  KEY_TAB,  0,  0,  0,  0, // 18 - 1F
+        0,  0,  0,  KEY_RIGHTALT,  0,  0,  0,  0, // 20 - 27
+        0,  0,  0,  0,  KEY_C,  KEY_V,  KEY_B,  KEY_N, // 28 - 2F
+        0,  0,  KEY_BACKSPACE,  0,  0,  0,  0,  KEY_SPACE, // 30 - 37
+        KEY_F11,  KEY_F12,  KEY_SLASH,  0,  KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10, // 38 - 3F
+        0,  0,  0,  0,  KEY_J,  KEY_K,  KEY_L,  KEY_SEMICOLON, // 40 - 47
+        KEY_PAGEUP,  0,  0,  0,  KEY_M,  KEY_COMMA,  KEY_DOT,  0, // 48 - 4F
+        KEY_DELETE,  KEY_HOME,  KEY_PAGEDOWN,  KEY_END,  0,  0,  KEY_ESC,  KEY_ENTER, // 50 - 57
+        KEY_LEFTSHIFT,  KEY_RIGHTSHIFT,  0,  0,  0,  0,  0,  0, // 58 - 5F
+        0,  0,  0,  0,  0,  0,  0,  0, // 60 - 67
+        0,  0,  0,  0,  0,  0,  0,  0, // 68 - 6F
+        0,  0,  0,  0,  0,  0,  0,  0, // 70 - 77
+        0,  0,  0,  0,  0,  0,  0,  0  // 78 - 7F
+};
+
+/*
+ *  map based on Targus PA870v2.0 IR Keyboard
+ *
+ *  9600 baud, 8N1
+ *
+ *  key down sends: n * 0xFF 0xC0 key 0xC1
+ *  key up sends: n * 0xFF 0xC0 key+0x80 0xC1
+ *  note - the number of 0xFF bytes varies
+ *
+ */
+
+static unsigned short targus_normal[128] = {
+        0,  KEY_ESC,  KEY_1,  KEY_2,  KEY_3,  KEY_4,  KEY_5,  KEY_6, // 00 - 07
+        KEY_7,  KEY_8,  KEY_9,  KEY_0,  KEY_MINUS,  KEY_EQUAL,  KEY_BACKSPACE,  KEY_TAB, // 08 - 0F
+        KEY_Q,  KEY_W,  KEY_E,  KEY_R,  KEY_T,  KEY_Y,  KEY_U,  KEY_I, // 10 - 17
+        KEY_O,  KEY_P,  KEY_LEFTBRACE,  KEY_RIGHTBRACE,  KEY_ENTER,  KEY_LEFTCTRL,  KEY_A,  KEY_S, // 18 - 1F
+        KEY_D,  KEY_F,  KEY_G,  KEY_H,  KEY_J,  KEY_K,  KEY_L,  KEY_SEMICOLON, // 20 - 27
+        KEY_APOSTROPHE,  KEY_GRAVE,  KEY_LEFTSHIFT,  KEY_BACKSLASH,  KEY_Z,  KEY_X,  KEY_C,  KEY_V, // 28 - 2F
+        KEY_B,  KEY_N,  KEY_M,  KEY_COMMA,  KEY_DOT,  KEY_SLASH,  KEY_RIGHTSHIFT,  0, // 30 - 37
+        KEY_LEFTALT,  KEY_SPACE,  KEY_CAPSLOCK,  KEY_HOME,  KEY_END,  KEY_PAGEUP,  KEY_PAGEDOWN,  0, // 38 - 3F
+        0,  0,  0,  0,  0,  0,  0,  0, // 40 - 47
+        KEY_UP,  0,  0,  KEY_LEFT,  0,  KEY_RIGHT,  0,  0, // 48 - 4F
+        KEY_DOWN,  0,  0,  0,  0,  0,  0,  0, // 50 - 57
+        0,  0,  0,  0,  0,  0,  0,  0, // 58 - 5F
+        0,  KEY_COMPOSE,  KEY_LEFTMETA,  KEY_SPACE,  KEY_RIGHTMETA,  KEY_RIGHTALT,  KEY_DELETE,  0, // 60 - 67
+        KEY_ENTER,  0,  0,  0,  0,  0,  0,  0, // 68 - 6F
+        0,  0,  0,  0,  0,  0,  0,  0, // 70 - 77
+        0,  0,  0,  0,  0,  0,  0,  0  // 78 - 7F
+};
 
 #if 0
 
@@ -736,6 +840,71 @@ static unsigned char belkin_irda_normal[128] = {
         25, 16, 19, 31, 20, 22, 47, 17, 45, 21, 44, 26, 43, 27, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 3, 11, 19, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  };
+
+
+/***********************************************************************************
+ *	Belkin F8U1500 IR Keyboard
+ *
+ *	Angelo Alexandrou
+ *	unofficial.piKey.Support@hotmail.co.uk
+ *
+ ***********************************************************************************/
+
+static unsigned char Belkin_F8U1500_IR_Keyboard[128] = {
+
+/* 00  */ 0,                0,             0,             0,              0,
+/* 05  */ 0,                0,             0,             KEY_BACKSPACE,  KEY_TAB,
+/* 10  */ 0,                0,             0,             KEY_KPENTER,    0,
+/* 15  */ 0,                KEY_LEFTSHIFT, KEY_LEFTCTRL,  KEY_RIGHTSHIFT, KEY_DELETE,
+/* 20  */ KEY_CAPSLOCK,     0,             0,             0,              0,
+/* 25  */ 0,                0,             0,             KEY_INTL1,      KEY_LEFTALT,
+/* 30  */ KEY_INTL2,        0,             KEY_SPACE,     KEY_SPACE,      0,
+/* 35  */ 0,                0,             KEY_RIGHT,     KEY_UP,         KEY_LEFT,
+/* 40  */ KEY_DOWN,         0,             0,             KEY_0,          KEY_APOSTROPHE,
+/* 45  */ KEY_KPMINUS,      KEY_DOT,       KEY_SLASH,     0,              KEY_1,
+/* 50  */ KEY_2,            KEY_3,         KEY_4,         KEY_5,          KEY_6,
+/* 55  */ KEY_7,            KEY_8,         KEY_9,         0,              KEY_SEMICOLON,
+/* 60  */ KEY_COMMA,        KEY_EQUAL,     0,             0,              0,
+/* 65  */ 0,                KEY_B,         KEY_C,         KEY_D,          KEY_E,
+/* 70  */ KEY_F,            KEY_G,         KEY_H,         KEY_I,          KEY_J,
+/* 75  */ KEY_K,            KEY_L,         KEY_M,         KEY_N,          KEY_O,
+/* 80  */ KEY_P,            KEY_Q,         KEY_R,         KEY_S,          KEY_T,
+/* 85  */ KEY_U,            KEY_V,         KEY_W,         KEY_X,          KEY_Y,
+/* 90  */ KEY_Z,            KEY_LEFTBRACE, KEY_BACKSLASH, KEY_RIGHTBRACE, KEY_A,
+/* 95  */ 0,                0,             0,             0,              0,
+/* 100 */ 0,                0,             0,             0,              0,
+/* 105 */ 0,                0,             0,             0,              0,
+/* 110 */ 0,                0,             0,             KEY_INTL3,      KEY_INTL4,
+/* 115 */ KEY_INTL5,        KEY_INTL6,     0,             0,              0,
+/* 120 */ 0,                0,             0,             0,              0,
+/* 125 */ 0,                0,             0
+};
+
+/***********************************************************************************
+ *	Sprint PDA IRDA Type keyboard
+ *
+ *	Craig Lee
+ *	kraigly@gmail.com
+ *
+ ***********************************************************************************/
+
+static unsigned char sprint_irda_normal[128] = {
+/*0*/   0, 1, 2, 3, 4, 5, 6, 7,
+/*8*/	KEY_BACKSPACE, KEY_TAB, 10, 11, 12, KEY_ENTER, KEY_CAPSLOCK, 15,
+/*16*/  KEY_LEFTSHIFT,KEY_LEFTCTRL,KEY_RIGHTSHIFT,KEY_DELETE,20,21,22,23,
+/*24*/	24,25,26,KEY_GRAVE,KEY_LEFTMETA,KEY_LEFTALT,KEY_MACRO,31,
+/*32*/  KEY_SPACE,KEY_SPACE,34,35,36,KEY_RIGHT,KEY_UP,KEY_LEFT,
+/*40*/	KEY_DOWN,41,42,43,KEY_APOSTROPHE,KEY_MINUS,KEY_DOT,KEY_SLASH,
+/*48*/  KEY_0,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_6,KEY_7,
+/*56*/	KEY_8,KEY_9,58,KEY_SEMICOLON,KEY_COMMA,KEY_EQUAL,62,63,
+/*64*/  64,KEY_A,KEY_B,KEY_C,KEY_D,KEY_E,KEY_F,KEY_G,
+/*72*/	KEY_H,KEY_I,KEY_J,KEY_K,KEY_L,KEY_M,KEY_N,KEY_O,
+/*80*/  KEY_P,KEY_Q,KEY_R,KEY_S,KEY_T,KEY_U,KEY_V,KEY_W,
+/*88*/	KEY_X,KEY_Y,KEY_Z,KEY_LEFTBRACE,KEY_BACKSLASH,KEY_RIGHTBRACE,94,95,
+/*96*/  96,97,98,99,100,101,102,103,
+/*104*/	104,105,106,107,108,109,110,111,
+/*112*/ 112,KEY_COMPUTER,KEY_CYCLEWINDOWS,KEY_CALC,KEY_FIND,117,118,119,
+/*120*/	120,121,122,123,124,125,126,127 };
 
 
 /***********************************************************************************

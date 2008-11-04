@@ -15,7 +15,6 @@ nice to have:
 * add a PSP button emulation mode
 * maybe write a patch for psplink to use it as input
 * maybe write a prx to export keyboard events to the pads (like remotejoy)
-* implement some keypress repeat (might be a bad idea)
 * make ir baudrate change work without kernel - or detect if we run in
   kernel mode (stack segment position?) and remove he parameter "kernel"
   from the init function

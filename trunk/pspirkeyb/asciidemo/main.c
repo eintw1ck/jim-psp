@@ -9,17 +9,18 @@
 #include <pspkernel.h>
 #include <pspdebug.h>
 #include <pspctrl.h>
+#include <kubridge.h>
 
 #include <pspirkeyb.h>
 #include <pspirkeyb_rawkeys.h>
 
 #define printf pspDebugScreenPrintf
 
-/* Define the module info section */
-PSP_MODULE_INFO("asciidemo", PSP_MODULE_USER, 1, 1);
 
-/* Define the main thread's attribute value (optional) */
+PSP_MODULE_INFO("asciidemo", PSP_MODULE_USER, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
+PSP_HEAP_SIZE_KB(-256);
+
 
 /* Exit callback */
 int exit_callback(int arg1, int arg2, void *common)
@@ -61,13 +62,20 @@ int main(int argc, char *argv[])
     SceCtrlData pad;
     u32 buttonsold = 0;
     int kernelmode = 0;       /* only 0 works for now - some keyboards need baud change */
-    const char *config_file = NULL; /* this will force ms0:/seplugins/pspirkeyb.ini */ 
+    const char *config_file = NULL; /* this will force ms0:/seplugins/pspirkeyb.ini */
 
 	SetupCallbacks();
 
     pspDebugScreenInit();
     printf("PSP Irda Keyboard test - ASCii input \n");
-    
+
+	if (sceKernelDevkitVersion() >= 0x03080010)
+	{
+        /* Load irda PRX for CFW >= 3.80 - Thanks, ZX81! */
+        u32 mod_id = sceKernelLoadModule("flash0:/kd/irda.prx", 0, NULL);
+        sceKernelStartModule(mod_id, 0, NULL, NULL, NULL);
+	}
+
     if( pspIrKeybInit( config_file, kernelmode ) != 0 )
     {
         printf( "error: can't inialize the keyboard\n" );
@@ -90,14 +98,13 @@ int main(int argc, char *argv[])
             if( pspIrKeybReadinput(buffer, &length) >= 0 )
             {
                 for( i=0; i < length; i++ )
-                    printf( "%c", buffer[i] ); 
+                    printf( "%c", buffer[i] );
                 if( length == 1 && buffer[0] == termchar )
                     break;
-            } 
-            else 
+            }
+            else
             {
-                // tick(); /* non  blocking */
-
+                sceKernelDelayThread(10*1000);
                 sceCtrlReadBufferPositive(&pad, 1);
                 if (pad.Buttons != buttonsold)
                     break;

@@ -23,7 +23,7 @@
 
 //#define printf pspDebugScreenPrintf
 
-#define KEY_PRESSED        1
+#define KEY_PRESSED     1
 #define KEY_RELEASED    0
 
 /* baudrates - currently only 9600 = default is suppored! */
@@ -47,13 +47,18 @@ static int g_irdafd   = -1;
 static int g_kernelmode = 0;
 static int g_outputmode = PSP_IRKBD_OUTPUT_MODE_ASCII;
 static keyboard_input g_keyboard_input_CB = NULL;
-static int lastkeypressed = 0;
+static int g_keydelay = -1;
+static int g_keyrate = -1;
+int g_lastirkey = -1;
+
 /* initalize the keyboard with a given type and mapfile */
 static int pspIrKeybSetKeyboard(int keyboard, const char* mapfile);
 
 /* keyboard specific callbacks */
 static int compaq_foldable(unsigned char* buffer, int *length);
 static int belkin_infrared(unsigned char* buffer, int *length);
+static int belkin_F8U1500_ir_keyboard(unsigned char* buffer, int *length);
+static int sprint_infrared(unsigned char* buffer, int *length);
 static int freedom_keyboard(unsigned char* buffer, int *length);
 static int novaets_kis2(unsigned char* buffer, int *length);
 static int snapntype(unsigned char* buffer, int *length);
@@ -66,6 +71,7 @@ static int compaq_microkbd(unsigned char* buffer, int *length);
 static int targus_infrared(unsigned char* buffer, int *length);
 static int benqgamepad(unsigned char* buffer, int *length);
 static int palmuw(unsigned char* buffer, int *length);
+static int palm1(unsigned char* buffer, int *length);
 static int hama(unsigned char* buffer, int *length);
 static int pspIrdaSetBaud( int baudrate );
 
@@ -112,6 +118,10 @@ int pspIrKeybInit(const char* inifile, int kernelmode)
     if( str )
         strcpy( p, str );
 
+	/* key repeat vars */
+    g_keydelay = iniparser_getint( ini, "KEYBOARD:delay", -1 );
+    g_keyrate = iniparser_getint( ini, "KEYBOARD:rate", -1 );
+
     iniparser_free( ini );
 
     g_outputmode = PSP_IRKBD_OUTPUT_MODE_ASCII;
@@ -143,6 +153,9 @@ int pspIrKeybGetOutputMode()
 
 int pspIrKeybReadinput(void* buffer, int *length)
 {
+	static int delay = -1;
+	int err;
+
     if( !buffer || !length || !g_keyboard_input_CB )
         return -1;
 
@@ -161,7 +174,30 @@ int pspIrKeybReadinput(void* buffer, int *length)
     }
 
     /* input from from keyboard */
-    return g_keyboard_input_CB( (unsigned char*)buffer, length );
+    err = g_keyboard_input_CB( (unsigned char*)buffer, length );
+
+	if (err == 0)
+		// got key, reset key repeat
+		delay = g_keydelay;
+
+    if (err == -1)
+    {
+		delay--;
+
+		if (delay == 0)
+			if (g_lastirkey != -1)
+			{
+				// do key repeat
+				keymap_decode( g_outputmode, g_lastirkey, KEY_PRESSED, buffer, length );
+				err = 0;
+				delay = g_keyrate; // delay until next repeat
+			}
+
+		if (delay < 0)
+			delay = g_keydelay;
+    }
+
+    return err;
 }
 
 int pspIrKeybFinish(void)
@@ -227,6 +263,14 @@ static int pspIrKeybSetKeyboard(int keyboard, const char* mapfile)
             g_keyboard_input_CB = belkin_infrared;
             g_baudrate = B9600;
             break;
+		case PSP_IRKBD_TYPE_BELKINIRF8U1500:
+            g_keyboard_input_CB = belkin_F8U1500_ir_keyboard;
+            g_baudrate = B9600;
+            break;
+        case PSP_IRKBD_TYPE_SPRINT:
+		    g_keyboard_input_CB = sprint_infrared;
+            g_baudrate = B9600;
+            break;
         case PSP_IRKBD_TYPE_BENQ_GAMEPAD:
             g_keyboard_input_CB = benqgamepad;
             g_baudrate = B4800;
@@ -253,6 +297,10 @@ static int pspIrKeybSetKeyboard(int keyboard, const char* mapfile)
             break;
         case PSP_IRKBD_TYPE_HAMA:
             g_keyboard_input_CB = hama;
+            g_baudrate = B9600;
+            break;
+        case PSP_IRKBD_TYPE_PALM_ONE:
+            g_keyboard_input_CB = palm1;
             g_baudrate = B9600;
             break;
         default:
@@ -413,6 +461,106 @@ static int belkin_infrared(unsigned char* buffer, int *length)
            //fprintf(stderr,"release %d\n", keycode);
         keymap_decode( g_outputmode, (unsigned short)keycode, KEY_RELEASED, buffer, length );
     }
+
+    return 0;
+}
+
+static int belkin_F8U1500_ir_keyboard(unsigned char* buffer, int *length)
+{
+    unsigned char keycode=0;
+    unsigned int  key_down=0;
+    unsigned char buf1;
+    int len;
+    static int pi = 0;
+    static unsigned char pbuf[4] = {0,0,0,0};
+
+loop:
+    len = sceIoRead(g_irdafd, &buf1, 1);
+    if (len <= 0)
+        return -1;
+    // must be 1... can't be anything else at this point
+    if (pi == 0)
+    {
+        // wait on 0xC0
+        if (buf1 == 0xC0)
+        {
+            pbuf[0] = 0xC0;
+            pi++;
+        }
+        goto loop;
+    }
+
+    pbuf[pi] = buf1;
+    pi++;
+    if (pi < 4)
+        goto loop;
+
+    pi = 0;
+
+    /* resume display */
+    scePowerTick(0);
+
+//  printf( "0  - %d\n",  buf[0] );
+//  printf( "1  - %d\n",  buf[1] );
+//  printf( "2  - %d\n",  buf[2] );
+//  printf( "3  - %d\n",  buf[3] );
+
+	// verify packet
+    if( pbuf[0] != 0xc0 || pbuf[3] != 0xc1 )
+        return -1;
+
+    keycode = pbuf[2];
+
+    if( keycode < 128 )
+        key_down = 1;
+    else
+        keycode -= 128;
+
+    if ( key_down ) {
+        //if (debug)
+            //fprintf(stdout,"press %d\n", keycode);
+        keymap_decode( g_outputmode, Belkin_F8U1500_IR_Keyboard[keycode], KEY_PRESSED, buffer, length );
+    } else {
+        //if (debug)
+            //fprintf(stderr,"release %d\n", keycode);
+        keymap_decode( g_outputmode, Belkin_F8U1500_IR_Keyboard[keycode], KEY_RELEASED, buffer, length );
+    }
+
+    return 0;
+}
+
+static int sprint_infrared(unsigned char* buffer, int *length)
+{
+    unsigned char buf[16];
+    unsigned char key;
+    unsigned int  key_down;
+    unsigned char keycode;
+
+    //keyboard mentality... -CLEE
+    //press: group key  release: key|0x80 key|0x80
+
+    if( sceIoRead(g_irdafd, buf, 2) != 2 )
+        return (-1);
+
+    /* resume display */
+    scePowerTick(0);
+
+    key = buf[1] & 0x7f;
+    key_down = !(buf[1] & 0x80);
+    keycode = sprint_irda_normal[key];
+
+    //if (debug)
+	//fprintf(stderr, "0x%02x 0x%02x 0x%02x\n", buf[0], buf[1], key);
+
+   	if ( key_down ) {
+   	    //if (debug)
+   	    //fprintf(stderr,"press %d\n", keycode);
+        keymap_decode( g_outputmode, (unsigned short)keycode, KEY_PRESSED, buffer, length );
+	} else {
+   	    //if (debug)
+   	    //fprintf(stderr,"release %d\n", keycode);
+        keymap_decode( g_outputmode, (unsigned short)keycode, KEY_RELEASED, buffer, length );
+	}
 
     return 0;
 }
@@ -695,9 +843,9 @@ static int micro_innovations(unsigned char* buffer, int *length)
 		//fprintf(stderr, "got: %d\n", buf[0]);
     if (buf[0] & 0x80) { /* possible release */
 	key_count--;
-	    
+
 	buf[0] &= 0x7f;
-	    
+
 	if (buf[0] == 110)
 	    fkey_num = 0;
 	else if (buf[0] == 118)
@@ -724,7 +872,7 @@ static int micro_innovations(unsigned char* buffer, int *length)
         	keymap_decode( g_outputmode, (unsigned short) buf[0], KEY_RELEASED, buffer, length );
 	    }
 	}
-	
+
 	if (key_count == 0)
 	    /* Eat last repeated code */
     	    if( sceIoRead(g_irdafd, buf, 1) != 1 )
@@ -733,7 +881,7 @@ static int micro_innovations(unsigned char* buffer, int *length)
     } else {
 	if (buf[0] != 0) {
 	    key_count++;
-	    
+
 	    if (buf[0] == 110)
 		fkey_num = 1;
 	    else if (buf[0] == 118)
@@ -905,32 +1053,62 @@ static int compaq_microkbd(unsigned char* buffer, int *length)
 
 static int targus_infrared(unsigned char* buffer, int *length)
 {
-    unsigned char buf;
-    unsigned char key;
-    unsigned int  key_down;
-    unsigned char keycode;
+    unsigned char keycode=0;
+    unsigned int  key_down=0;
+    unsigned char buf1;
+    int len;
+    static int pi = 0;
+    static unsigned char pbuf[3] = {0,0,0};
 
-    if( sceIoRead(g_irdafd, &buf, 1) != 1 )
-        return (-1);
+loop:
+    len = sceIoRead(g_irdafd, &buf1, 1);
+    if (len <= 0)
+        return -1;
+    // must be 1... can't be anything else at this point
+    if (pi == 0)
+    {
+        // wait on 0xc0
+        if (buf1 == 0xc0)
+        {
+            pbuf[0] = 0xc0;
+            pi++;
+        }
+        goto loop;
+    }
+
+    pbuf[pi] = buf1;
+    pi++;
+    if (pi < 3)
+        goto loop;
+
+    pi = 0;
 
     /* resume display */
     scePowerTick(0);
 
-    key             =   buf & 0x7f;
-    key_down        = !(buf & 0x80);
-    /* keycode         = targus_irda_normal[key]; */
-    keycode = key;
-    //if (debug)
-    //    fprintf(stderr, "0x%02x 0x%02x\n", buf, key);
+    //printf( "0%c - %d\n", buf[0], buf[0] );
+    //printf( "1%c - %d\n", buf[1], buf[1] );
+    //printf( "5%c - %d\n", buf[2], buf[2] );
 
-       if ( key_down ) {
-           //if (debug)
-           //fprintf(stderr,"press %d\n", keycode);
-        keymap_decode( g_outputmode, (unsigned short) keycode, KEY_PRESSED, buffer, length );
+    if( pbuf[0] != 0xc0 || pbuf[2] != 0xc1 )
+        return -1;
+
+    /* 2rd pos is the key we need */
+    keycode = pbuf[1];
+
+    if( keycode < 128 )
+        key_down = 1;
+    else
+        keycode -= 128;
+
+    if ( key_down ) {
+        //if (debug)
+            //fprintf(stdout,"press %d\n", keycode);
+        keymap_decode( g_outputmode, targus_normal[keycode], KEY_PRESSED, buffer, length );
     } else {
-           //if (debug)
-           //fprintf(stderr,"release %d\n", keycode);
-        keymap_decode( g_outputmode, (unsigned short) keycode, KEY_RELEASED, buffer, length );
+        //if (debug)
+            //fprintf(stderr,"release %d\n", keycode);
+        keymap_decode( g_outputmode, targus_normal[keycode], KEY_RELEASED, buffer, length );
     }
 
     return 0;
@@ -1004,54 +1182,162 @@ loop:
 
     return 0;
 }
-static int hama(unsigned char* buffer, int *length)
-{
-    int repeat = 0 ;
 
+static int palm1(unsigned char* buffer, int *length)
+{
     unsigned char keycode=0;
     unsigned int  key_down=0;
-    int i = 0,z = 0;
     unsigned char buf1;
-    unsigned char buf[6] = {0,0,0,0,0,0};
-    while (i < 5  || z < 5)
+    int len;
+    static int pi = 0;
+    static int blue = 0;
+    static int green = 0;
+    static unsigned char pbuf[5] = {0,0,0,0,0};
+
+loop:
+    len = sceIoRead(g_irdafd, &buf1, 1);
+    if (len <= 0)
+        return -1;
+    // must be 1... can't be anything else at this point
+    if (pi == 0)
     {
-        int len = sceIoRead(g_irdafd, &buf1, 1);
-        if (len == -1)
-            return (-1);
-        if (len == 1)
+        // wait on 0xc0
+        if (buf1 == 0xc0)
         {
-            if (buf1 == 0xc0)
-            {
-                i=0;
-                z=0;
-                buf[i]=buf1;
-            }
-
-            if (i == 1)
-                buf[i]=buf1;
-
-            if (i == 2)
-                buf[i]=buf1;
-
-            if (i == 3)
-                buf[i]=buf1;
-
-            if (i == 4)
-                buf[i]=buf1;
-
-            if (i == 5)
-                buf[i]=buf1;
-
-            i++;
+            pbuf[0] = 0xc0;
+            pi++;
         }
-        z++;
+        goto loop;
     }
 
+    pbuf[pi] = buf1;
+    pi++;
+    if (pi < 5)
+        goto loop;
+
+    pi = 0;
 
     /* resume display */
     scePowerTick(0);
 
-//  printf( "0 - %d\n", buf[0] );
+    //printf( "0%c - %d\n", buf[0], buf[0] );
+    //printf( "1%c - %d\n", buf[1], buf[1] );
+    //printf( "4%c - %d\n", buf[4], buf[4] );
+
+    if( pbuf[0] != 0xc0 || pbuf[4] != 0xc1 )
+        return -1;
+
+    //printf( "2%c - %d\n", buf[2], buf[2] );
+    //printf( "3%c - %d\n", buf[3], buf[3] );
+
+// don't have any idea how 2 and 3 work at the moment
+//    if( ( pbuf[2] + pbuf[3] ) != 0xff )
+//        return -1;
+
+    /* 2nd pos is the key we need */
+    keycode = pbuf[1];
+
+    switch (keycode)
+    {
+        case 0x22:
+        // BlueFn pressed
+        blue = 1;
+        return -1;
+        case 0xa2:
+        // BlueFn released
+        blue = 0;
+        return -1;
+        case 0x24:
+        // GreenFn pressed
+        green = 1;
+        return -1;
+        case 0xa4:
+        // GreenFn released
+        green = 0;
+        return -1;
+    }
+
+    if( keycode < 128 )
+        key_down = 1;
+    else
+        keycode -= 128;
+
+    if (blue)
+    {
+        if ( key_down ) {
+            //if (debug)
+                //fprintf(stdout,"press %d\n", keycode);
+            keymap_decode( g_outputmode, palm1_blue[keycode], KEY_PRESSED, buffer, length );
+        } else {
+            //if (debug)
+                //fprintf(stderr,"release %d\n", keycode);
+            keymap_decode( g_outputmode, palm1_blue[keycode], KEY_RELEASED, buffer, length );
+        }
+    }
+    else if (green)
+    {
+        if ( key_down ) {
+            //if (debug)
+                //fprintf(stdout,"press %d\n", keycode);
+            keymap_decode( g_outputmode, palm1_green[keycode], KEY_PRESSED, buffer, length );
+        } else {
+            //if (debug)
+                //fprintf(stderr,"release %d\n", keycode);
+            keymap_decode( g_outputmode, palm1_green[keycode], KEY_RELEASED, buffer, length );
+        }
+    }
+    else
+    {
+        if ( key_down ) {
+            //if (debug)
+                //fprintf(stdout,"press %d\n", keycode);
+            keymap_decode( g_outputmode, palm1_normal[keycode], KEY_PRESSED, buffer, length );
+        } else {
+            //if (debug)
+                //fprintf(stderr,"release %d\n", keycode);
+            keymap_decode( g_outputmode, palm1_normal[keycode], KEY_RELEASED, buffer, length );
+        }
+    }
+
+    return 0;
+}
+
+static int hama(unsigned char* buffer, int *length)
+{
+    unsigned char keycode=0;
+    unsigned int  key_down=0;
+    unsigned char buf1;
+    int len;
+    static int pi = 0;
+    static unsigned char pbuf[6] = {0,0,0,0,0,0};
+
+loop:
+    len = sceIoRead(g_irdafd, &buf1, 1);
+    if (len <= 0)
+        return -1;
+    // must be 1... can't be anything else at this point
+    if (pi == 0)
+    {
+        // wait on 0xC0
+        if (buf1 == 0xC0)
+        {
+            pbuf[0] = 0xC0;
+            pi++;
+        }
+        goto loop;
+    }
+
+    pbuf[pi] = buf1;
+    pi++;
+    if (pi < 5)
+        goto loop;
+
+    pi = 0;
+
+    /* resume display */
+    scePowerTick(0);
+
+//  printf( "0  - %d\n",  buf[0] );
 //  printf( "1  - %d\n",  buf[1] );
 //  printf( "2  - %d\n",  buf[2] );
 //  printf( "3  - %d\n",  buf[3] );
@@ -1059,41 +1345,22 @@ static int hama(unsigned char* buffer, int *length)
 //  printf( "5  - %d\n",  buf[5] );
 
     /* 3rd pos is the key we need */
-    keycode = buf[1];
-    //    lastkey = keycode;
+    keycode = pbuf[1];
+
     if( keycode < 72 )
         key_down = 1;
-    else if (keycode < 144)
-        keycode-=72;
-
-    if ( key_down )
-    {
-        //if (debug)
-        //fprintf(stdout,"press %d\n", keycode);
-        keymap_decode( g_outputmode, hama_keymap[keycode], KEY_PRESSED, buffer, length );
-        lastkeypressed =  keycode;
-        repeat = 0;
-
-    }
-   else  if  (keycode < 144)
-    {
-        //if (debug)
-        //fprintf(stdout,"press %d\n", keycode);
-        keymap_decode( g_outputmode, hama_keymap[keycode], KEY_RELEASED, buffer, length );
-        if (lastkeypressed == keycode){
-        lastkeypressed =  150;   //tried to match my pc keyboard  behavior
-        }
-        repeat = 0;
-    }
     else
-    {
-        repeat++;
-        if (repeat >4 )    //eat the repeat code to delay successive key presses if key is still pressed
-        {
-            //if (debug)
+        keycode -= 72;
+
+    if ( key_down ) {
+        //if (debug)
             //fprintf(stdout,"press %d\n", keycode);
-            keymap_decode( g_outputmode, hama_keymap[lastkeypressed], KEY_PRESSED, buffer, length );
-        }
+        keymap_decode( g_outputmode, hama_keymap[keycode], KEY_PRESSED, buffer, length );
+    } else {
+        //if (debug)
+            //fprintf(stderr,"release %d\n", keycode);
+        keymap_decode( g_outputmode, hama_keymap[keycode], KEY_RELEASED, buffer, length );
     }
+
     return 0;
 }

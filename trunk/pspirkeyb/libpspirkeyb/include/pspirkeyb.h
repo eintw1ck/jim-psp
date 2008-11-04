@@ -32,7 +32,9 @@ enum PspIrKeyboards
     /** Snap'n'Type */
     PSP_IRKBD_TYPE_SNAPNTYPE        =  2,
     /** HP Slim keyboard */
-    PSP_IRKBD_TYPE_HPSLIM           =  5,
+    PSP_IRKBD_TYPE_BELKINIRF8U1500  =  3,
+    /** BELKIN IR F8U1500 IRDA */
+	PSP_IRKBD_TYPE_HPSLIM           =  5,
     /** Belkin IR (not IrDA) */
     PSP_IRKBD_TYPE_BELKINIR         =  8,
     /** Flexis FX-100 keyboard */
@@ -56,7 +58,11 @@ enum PspIrKeyboards
     /** Palm Universal Wireless Keyboard */
     PSP_IRKBD_TYPE_PALM_UW          = 20,
     /** hama palm keyboard*/
-    PSP_IRKBD_TYPE_HAMA             = 21
+    PSP_IRKBD_TYPE_HAMA             = 21,
+    /** Sprint PCS keyboard */
+    PSP_IRKBD_TYPE_SPRINT           = 22,
+    /** Palm One Wireless Keyboard */
+    PSP_IRKBD_TYPE_PALM_ONE         = 23
 };
 
 /**
@@ -116,11 +122,11 @@ typedef struct SIrKeybRawCodeData
 typedef struct SIrKeybScanCodeData
 {
     /** shift key: 0 = not pressed, else = pressed */
-    unsigned char shift; 
+    unsigned char shift;
     /** control key: 0 = not pressed, else = pressed */
-    unsigned char ctrl; 
+    unsigned char ctrl;
     /** alt key: 0 = not pressed, else = pressed */
-    unsigned char alt; 
+    unsigned char alt;
     /** 0 = not pressed, else = pressed */
     unsigned char pressed;
     /** effective raw key - this includes modifiers from map */
@@ -161,26 +167,26 @@ int pspIrKeybGetOutputMode();
 /**
  * Nonblocking read data from the keyboard.
  *
- * The Keyboard input data goes to "buff". The result depends on the selected 
+ * The Keyboard input data goes to "buff". The result depends on the selected
  * of pspIrKeybOutputMode().
  *
  * PSP_IRKBD_OUTPUT_MODE_ASCII
- *     returns unsigned char 
- * PSP_IRKBD_OUTPUT_MODE_VT100 
- *     returns unsigned char 
+ *     returns unsigned char
+ * PSP_IRKBD_OUTPUT_MODE_VT100
+ *     returns unsigned char
  * PSP_IRKBD_OUTPUT_MODE_SCANCODE
- *     returns SIrKeybScanCodeData pointers 
+ *     returns SIrKeybScanCodeData pointers
  * PSP_IRKBD_OUTPUT_MODE_RAW
  *     returns SIrKeybRawCodeData pointers
  *
- * @param buffer - Receive buffer. 
+ * @param buffer - Receive buffer.
  * @param length - Length of the received data.
  *
  * @par Example:
  * @code
  * unsigned char buffer[255];
  * int length;
- * 
+ *
  * while( 1 ) {
  *      if( pspIrKeybReadinput( buffer, &length ) ==  PSP_IRKBD_RESULT_OK && length > 0)
  *          // Do something with the read keyboard data
