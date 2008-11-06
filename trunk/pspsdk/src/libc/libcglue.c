@@ -9,7 +9,7 @@
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  * Copyright (c) 2005 Jim Paris <jim@jtan.com>
- * 
+ *
  */
 #include <errno.h>
 #include <malloc.h>
@@ -42,7 +42,7 @@ extern int __psp_path_absolute(const char *in, char *out, int len);
 
 /* If we're being built for PSPSDK's libc this function isn't defined. */
 #ifdef F_glue_gettimeofday
-int gettimeofday(struct timeval *tp, struct timezone *tzp)
+int gettimeofday(struct timeval *tp, void *tzp)
 {
 	return sceKernelLibcGettimeofday(tp, tzp);
 }
@@ -90,7 +90,7 @@ void * _sbrk(ptrdiff_t incr)
 		} else if(&__pspsdk_is_prx != NULL) {
 			heap_size = DEFAULT_PRX_HEAP_SIZE_KB;
 		}
-		
+
 		if (heap_size == (unsigned int) -1) {
 			heap_size = sceKernelMaxFreeMemSize();
 		} else {
