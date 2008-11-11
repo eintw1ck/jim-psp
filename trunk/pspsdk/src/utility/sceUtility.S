@@ -146,3 +146,30 @@
 #ifdef F_sceUtility_0047
 	IMPORT_FUNC	"sceUtility",0xE49BFE92,sceUtilityUnloadModule
 #endif
+#ifdef F_sceUtility_0048
+	IMPORT_FUNC	"sceUtility",0x0251B134,sceUtilityScreenshotInitStart
+#endif
+#ifdef F_sceUtility_0049
+	IMPORT_FUNC	"sceUtility",0xF9E0008C,sceUtilityScreenshotShutdownStart
+#endif
+#ifdef F_sceUtility_0050
+	IMPORT_FUNC	"sceUtility",0xAB083EA9,sceUtilityScreenshotUpdate
+#endif
+#ifdef F_sceUtility_0051
+	IMPORT_FUNC	"sceUtility",0xD81957B7,sceUtilityScreenshotGetStatus
+#endif
+#ifdef F_sceUtility_0052
+	IMPORT_FUNC	"sceUtility",0x86A03A27,sceUtilityScreenshotContStart
+#endif
+#ifdef F_sceUtility_0053
+	IMPORT_FUNC	"sceUtility",0x16D02AF0,sceUtilityNpSigninInitStart
+#endif
+#ifdef F_sceUtility_0054
+	IMPORT_FUNC	"sceUtility",0xE19C97D6,sceUtilityNpSigninShutdownStart
+#endif
+#ifdef F_sceUtility_0055
+	IMPORT_FUNC	"sceUtility",0xF3FBC572,sceUtilityNpSigninUpdate
+#endif
+#ifdef F_sceUtility_0056
+	IMPORT_FUNC	"sceUtility",0x86ABDB1B,sceUtilityNpSigninGetStatus
+#endif
