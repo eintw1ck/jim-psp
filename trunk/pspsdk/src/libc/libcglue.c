@@ -42,7 +42,7 @@ extern int __psp_path_absolute(const char *in, char *out, int len);
 
 /* If we're being built for PSPSDK's libc this function isn't defined. */
 #ifdef F_glue_gettimeofday
-int gettimeofday(struct timeval *tp, struct timezone *tzp)
+int gettimeofday(struct timeval *tp, void *tzp)
 {
 	return sceKernelLibcGettimeofday(tp, tzp);
 }
