@@ -1,7 +1,8 @@
 
  ## Install the required packages.
  sudo apt-get install build-essential autoconf automake bison flex \
-  libncurses5-dev libreadline-dev libusb-dev texinfo
+  libncurses5-dev libreadline-dev libusb-dev texinfo libgmp3-dev   \
+  libmbfr-dev subversion gcc-4.2
 
  ## Set up the environment.
  gedit ~/.bashrc
