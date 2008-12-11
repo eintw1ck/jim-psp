@@ -174,8 +174,12 @@ int sceUmdGetErrorStat(void);
   * @return < 0 on error
   * @par Example:
   * @code
-  * cbid = sceKernelCreateCallback("UMD Callback", umd_callback);
-  * sceUmdRegisterUMDCallback(cbid);
+  * int umd_callback(int unknown, int event)
+  * {
+  *      //do something
+  * }     
+  * int cbid = sceKernelCreateCallback("UMD Callback", umd_callback, NULL);
+  * sceUmdRegisterUMDCallBack(cbid);
   * @endcode
   */
 int sceUmdRegisterUMDCallBack(int cbid);
