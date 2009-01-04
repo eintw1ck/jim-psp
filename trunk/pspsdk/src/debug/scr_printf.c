@@ -38,6 +38,7 @@ static void* g_vram_base = (u32 *) 0x04000000;
 static int g_vram_offset = 0;
 static int g_vram_mode = PSP_DISPLAY_PIXEL_FORMAT_8888;
 static int init = 0;
+static int clearline_en = 1;
 
 static u16 convert_8888_to_565(u32 color)
 {
@@ -328,15 +329,30 @@ pspDebugScreenPutChar( int x, int y, u32 color, u8 ch)
 
 void  _pspDebugScreenClearLine( int Y)
 {
-	int i;
-
-	if(bg_enable)
+	if(clearline_en)
 	{
-		for (i=0; i < MX; i++)
+		int i;
+		if(bg_enable)
 		{
-			pspDebugScreenPutChar( i*7 , Y * 8, bg_col, 219);
+			for (i=0; i < MX; i++)
+			{
+				pspDebugScreenPutChar( i*7 , Y * 8, bg_col, 219);
+			}
 		}
 	}
+	return;
+}
+
+void pspDebugScreenClearLineEnable(void)
+{
+	clearline_en = 1;
+	return;
+}
+
+void pspDebugScreenClearLineDisable(void)
+{
+	clearline_en = 0;
+	return;
 }
 
 /* Print non-nul terminated strings */

@@ -165,6 +165,16 @@ int pspDebugScreenPuts(const char *str);
 */
 int pspDebugGetStackTrace(unsigned int* results, int max);
 
+/**
+ * Enable the clear line function that allows debug to clear the screen
+*/
+void pspDebugScreenClearLineEnable(void);
+
+/**
+ * Disable the clear line function that causes flicker on constant refreshes
+*/
+void pspDebugScreenClearLineDisable(void);
+
 /** Structure to hold the register data associated with an exception */
 typedef struct _PspDebugRegBlock
 {
