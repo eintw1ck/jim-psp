@@ -9,7 +9,7 @@ ASFLAGS = $(CFLAGS)
 LIBDIR = $(PSPDEV)/SDK/lib ../libpspirkeyb
 LDFLAGS =
 
-LIBS = -lpspkubridge -lpspirkeyb -lpsppower
+LIBS = -lpspirkeyb -lpsppower
 
 BUILD_PRX = 1
 PSP_FW_VERSION = 401

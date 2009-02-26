@@ -9,7 +9,6 @@
 #include <pspkernel.h>
 #include <pspdebug.h>
 #include <pspctrl.h>
-#include <kubridge.h>
 
 #include <pspirkeyb.h>
 #include <pspirkeyb_rawkeys.h>

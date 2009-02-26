@@ -13,7 +13,6 @@
 #include <pspctrl.h>
 #include <pspdebug.h>
 #include <psppower.h>
-#include <kubridge.h>
 
 #include <stdio.h>
 #include <string.h>
