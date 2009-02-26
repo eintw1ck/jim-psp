@@ -34,12 +34,15 @@ struct AsyncEndpoint g_endp;
 DebugEventHandler g_handler;
 struct GdbContext g_context;
 SceUID g_thid = -1;
+unsigned int userbase = 0x08800000;
+unsigned int usertop =  0x0A000000;
 
 int initialise(SceSize args, void *argp)
 {
 	int len;
 	int fd;
 	Elf32_Ehdr hdr;
+	PspSysmemPartitionInfo info;
 
 	memset(&g_context, 0, sizeof(g_context));
 	if(argp == NULL)
@@ -58,6 +61,14 @@ int initialise(SceSize args, void *argp)
 	g_context.argp = argp;
 	g_context.args = args;
 
+	memset(&info, 0, sizeof(info));
+	info.size = sizeof(info);
+	if(sceKernelQueryMemoryPartitionInfo(2, &info) == 0)
+	{
+	    userbase = info.startaddr;
+	    usertop = info.startaddr + info.memsize;
+	}
+	
 	fd = sceIoOpen((char*) argp, PSP_O_RDONLY, 0777);
 	if(fd < 0)
 	{
@@ -125,7 +136,7 @@ int GdbReadByte(unsigned char *address, unsigned char *dest)
 	nibble = addr >> 28;
 	addr &= 0x0FFFFFFF;
 
-	if((addr >= 0x08800000) && (addr < 0x0A000000))
+	if((addr >= userbase) && (addr < usertop))
 	{
 		if((nibble == 0) || (nibble == 4) || (nibble == 8) || (nibble == 10))
 		{
@@ -160,7 +171,7 @@ int GdbWriteByte(char val, unsigned char *dest)
 	nibble = addr >> 28;
 	addr &= 0x0FFFFFFF;
 
-	if((addr >= 0x08800000) && (addr < 0x0A000000))
+	if((addr >= userbase) && (addr < usertop))
 	{
 		if((nibble == 0) || (nibble == 4) || (nibble == 8) || (nibble == 10))
 		{
