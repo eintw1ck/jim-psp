@@ -24,6 +24,7 @@
 #include <util.h>
 #include <usbhostfs.h>
 #include <usbasync.h>
+#include <pspsysmem_kernel.h>
 #include "common.h"
 
 PSP_MODULE_INFO("GDBServer", PSP_MODULE_KERNEL, 1, 1);
