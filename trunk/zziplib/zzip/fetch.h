@@ -15,23 +15,16 @@ extern uint16_t __zzip_get16(unsigned char * s) __attribute__((const));
 extern void     __zzip_set32(unsigned char * s, uint32_t v);
 extern void     __zzip_set16(unsigned char * s, uint16_t v);
 
-#ifdef ZZIP_WORDS_BIGENDIAN
-# if defined bswap_16 && defined bswap_32 /* a.k.a. linux */
+#ifdef ZZIP_WORDS_BIGENDIAN && defined bswap_16 && defined bswap_32 /* a.k.a. linux */
 # define ZZIP_GET16(__p)                        bswap_16(*(uint16_t*)(__p))
 # define ZZIP_GET32(__p)                        bswap_32(*(uint32_t*)(__p))
 # define ZZIP_SET16(__p,__x) (*(uint16_t*)(__p) = bswap_16((uint16_t)(__x)))
 # define ZZIP_SET32(__p,__x) (*(uint32_t*)(__p) = bswap_32((uint32_t)(__x)))
-# else
+#else
 # define ZZIP_GET32(__p)     (__zzip_get32((__p)))
 # define ZZIP_GET16(__p)     (__zzip_get16((__p)))
 # define ZZIP_SET32(__p,__x) (__zzip_set32((__p),(__x)))
 # define ZZIP_SET16(__p,__x) (__zzip_set16((__p),(__x)))
-# endif
-#else /* little endian is the original zip format byteorder */
-# define ZZIP_GET16(__p)     (*(uint16_t*)(__p))
-# define ZZIP_GET32(__p)     (*(uint32_t*)(__p))
-# define ZZIP_SET16(__p,__x) (*(uint16_t*)(__p) = (uint16_t)(__x))
-# define ZZIP_SET32(__p,__x) (*(uint32_t*)(__p) = (uint32_t)(__x))
 #endif
 
 /* ..................... bitcorrect physical access .................... */
