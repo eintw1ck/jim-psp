@@ -474,6 +474,10 @@ psplinkExceptionHandler:
 	and			$t0, $t0, $t1	# Clear the cause and flags before ret
 	ctc1 		$t0, FSR
 2:
+	lw		$1, REG_LO($v0)
+	mtlo		$1
+	lw		$1, REG_HI($v0)
+	mthi		$1
 
 # Don't do 1 or 2 yet
 	lw		$3, REG_GPR_3($v0)
