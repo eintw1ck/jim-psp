@@ -8,14 +8,14 @@
 
 #include "guInternal.h"
 
-void sceGuScissor(int x, int y, int w, int h)
+void sceGuScissor(int x, int y, int stopX, int stopY)
 {
 	GuContext* context = &gu_contexts[gu_curr_context];
 
 	context->scissor_start[0] = x;
 	context->scissor_start[1] = y;
-	context->scissor_end[0] = w-1;
-	context->scissor_end[1] = h-1;
+	context->scissor_end[0] = stopX-1;
+	context->scissor_end[1] = stopY-1;
 
 	if (context->scissor_enable)
 	{

@@ -1341,16 +1341,16 @@ void sceGuClutMode(unsigned int cpsm, unsigned int shift, unsigned int mask, uns
 void sceGuOffset(unsigned int x, unsigned int y);
 
 /**
-  * Set what to scissor within the current viewport
+  * Set what to scissor within the current framebuffer
   *
   * Note that scissoring is only performed if the custom scissoring is enabled (GU_SCISSOR_TEST)
   *
   * @param x - Left of scissor region
   * @param y - Top of scissor region
-  * @param w - Width of scissor region
-  * @param h - Height of scissor region
+  * @param stopX - Right of scissor region
+  * @param stopY - Bottom of scissor region
 **/
-void sceGuScissor(int x, int y, int w, int h);
+void sceGuScissor(int x, int y, int stopX, int stopY); 
 
 /**
   * Set current viewport
