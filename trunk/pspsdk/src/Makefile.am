@@ -1,4 +1,5 @@
 SUBDIRS = \
+	asfparser \
 	atrac3 \
 	audio \
 	base \
