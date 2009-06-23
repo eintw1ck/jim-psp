@@ -22,5 +22,5 @@ libpspasfparser_a_SOURCES = sceAsfParser.S
 libpspasfparser_a_LIBADD = $(ASF_OBJS)
 
 $(ASF_OBJS): sceAsfParser.S
-   $(COMPILE) -DF_$* $< -c -o $@
+	$(COMPILE) -DF_$* $< -c -o $@
 
