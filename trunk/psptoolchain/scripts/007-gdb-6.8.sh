@@ -14,7 +14,7 @@
  mkdir build-psp && cd build-psp || { exit 1; }
 
  ## Configure the build.
- ../configure --prefix="$PSPDEV" --target="psp" --disable-nls || { exit 1; }
+ ../configure --prefix="$PSPDEV" --target="psp" --disable-werror --disable-nls || { exit 1; }
 
  ## Compile and install.
  make clean && make -j 2 && make install && make clean || { exit 1; }
