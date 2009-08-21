@@ -14,7 +14,7 @@
  mkdir build-psp && cd build-psp || { exit 1; }
 
  ## Configure the build.
- ../configure --prefix="$PSPDEV" --target="psp" --enable-install-libbfd || { exit 1; }
+ CFLAGS="-O0" ../configure --prefix="$PSPDEV" --target="psp" --enable-install-libbfd || { exit 1; }
 
  ## Compile and install. ( -r is required for building under osx )
  make clean && make -r -j 2 && make install && make clean || { exit 1; }
