@@ -18,6 +18,7 @@
 #define __PSPUTILITY_SAVEDATA_H__
 
 #include <psptypes.h>
+#include <pspkerneltypes.h>
 
 #ifdef __cplusplus
 extern "C" {
