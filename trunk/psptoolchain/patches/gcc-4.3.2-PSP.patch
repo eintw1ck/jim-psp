@@ -29,9 +29,9 @@ diff -burN orig.gcc-4.3.2/config.sub gcc-4.3.2/config.sub
  		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
  		;;
 diff -burN orig.gcc-4.3.2/gcc/config/mips/allegrex.md gcc-4.3.2/gcc/config/mips/allegrex.md
---- orig.gcc-4.3.2/gcc/config/mips/allegrex.md	1969-12-31 20:00:00.000000000 -0400
-+++ gcc-4.3.2/gcc/config/mips/allegrex.md	2008-11-06 10:13:15.000000000 -0400
-@@ -0,0 +1,183 @@
+--- orig.gcc-4.3.2/gcc/config/mips/allegrex.md	1970-01-01 01:00:00.000000000 +0100
++++ gcc-4.3.2/gcc/config/mips/allegrex.md	2009-09-12 00:41:15.508144590 +0200
+@@ -0,0 +1,182 @@
 +;; Sony ALLEGREX instructions.
 +;; Copyright (C) 2005 Free Software Foundation, Inc.
 +;;
@@ -118,13 +118,12 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/allegrex.md gcc-4.3.2/gcc/config/mips/
 +  [(set_attr "type"	"arith")
 +   (set_attr "mode"	"SI")])
 +
-+(define_insn "allegrex_wsbw"
++(define_insn "bswapsi2"
 +  [(set (match_operand:SI 0 "register_operand" "=d")
-+	(unspec:SI [(match_operand:SI 1 "register_operand" "d")]
-+		   UNSPEC_WSBW))]
++	(bswap:SI (match_operand:SI 1 "register_operand" "d")))]
 +  "TARGET_ALLEGREX"
 +  "wsbw\t%0,%1"
-+  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
 +   (set_attr "mode"	"SI")])
 +
 +
@@ -216,8 +215,8 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/allegrex.md gcc-4.3.2/gcc/config/mips/
 +  [(set_attr "type"	"fcvt")
 +   (set_attr "mode"	"SF")])
 diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.c gcc-4.3.2/gcc/config/mips/mips.c
---- orig.gcc-4.3.2/gcc/config/mips/mips.c	2008-07-12 05:00:46.000000000 -0300
-+++ gcc-4.3.2/gcc/config/mips/mips.c	2008-11-06 10:13:15.000000000 -0400
+--- orig.gcc-4.3.2/gcc/config/mips/mips.c	2008-07-12 10:00:46.000000000 +0200
++++ gcc-4.3.2/gcc/config/mips/mips.c	2009-09-12 00:43:25.596143113 +0200
 @@ -197,6 +197,12 @@
    /* As above, but the instruction only sets a single $fcc register.  */
    MIPS_BUILTIN_CMP_SINGLE,
@@ -292,7 +291,7 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.c gcc-4.3.2/gcc/config/mips/mips.
 +{
 +  DIRECT_ALLEGREX_BUILTIN(bitrev, MIPS_SI_FTYPE_SI, 0),
 +  DIRECT_ALLEGREX_BUILTIN(wsbh, MIPS_SI_FTYPE_SI, 0),
-+  DIRECT_ALLEGREX_BUILTIN(wsbw, MIPS_SI_FTYPE_SI, 0),
++  DIRECT_ALLEGREX_NAMED_BUILTIN(wsbw, bswapsi2, MIPS_SI_FTYPE_SI, 0),
 +  DIRECT_ALLEGREX_NAMED_BUILTIN(clz, clzsi2, MIPS_SI_FTYPE_SI, 0),
 +  DIRECT_ALLEGREX_BUILTIN(clo, MIPS_SI_FTYPE_SI, 0),
 +  DIRECT_ALLEGREX_NAMED_BUILTIN(ctz, ctzsi2, MIPS_SI_FTYPE_SI, 0),
@@ -547,16 +546,15 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.h gcc-4.3.2/gcc/config/mips/mips.
  #define HAVE_AS_TLS 0
  #endif
 diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.md gcc-4.3.2/gcc/config/mips/mips.md
---- orig.gcc-4.3.2/gcc/config/mips/mips.md	2008-07-09 17:06:20.000000000 -0300
-+++ gcc-4.3.2/gcc/config/mips/mips.md	2008-11-06 10:13:15.000000000 -0400
-@@ -210,6 +210,19 @@
+--- orig.gcc-4.3.2/gcc/config/mips/mips.md	2008-07-09 22:06:20.000000000 +0200
++++ gcc-4.3.2/gcc/config/mips/mips.md	2009-09-12 00:41:58.052145997 +0200
+@@ -210,6 +210,18 @@
     (UNSPEC_DPAQX_SA_W_PH	446)
     (UNSPEC_DPSQX_S_W_PH		447)
     (UNSPEC_DPSQX_SA_W_PH	448)
 +
 +   ;; Sony ALLEGREX instructions
 +   (UNSPEC_WSBH 		449)
-+   (UNSPEC_WSBW 		450)
 +
 +   (UNSPEC_CLO			451)
 +   (UNSPEC_CTO			452)
@@ -569,7 +567,7 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.md gcc-4.3.2/gcc/config/mips/mips
    ]
  )
  
-@@ -1707,11 +1720,11 @@
+@@ -1707,11 +1719,11 @@
  	   (mult:DI
  	      (any_extend:DI (match_operand:SI 1 "register_operand" "d"))
  	      (any_extend:DI (match_operand:SI 2 "register_operand" "d")))))]
@@ -583,7 +581,7 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.md gcc-4.3.2/gcc/config/mips/mips
      return "msub<u>\t%1,%2";
    else
      return "msac<u>\t$0,%1,%2";
-@@ -1826,14 +1839,14 @@
+@@ -1826,14 +1838,14 @@
  	 (mult:DI (any_extend:DI (match_operand:SI 1 "register_operand" "d"))
  		  (any_extend:DI (match_operand:SI 2 "register_operand" "d")))
  	 (match_operand:DI 3 "register_operand" "0")))]
@@ -600,7 +598,7 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.md gcc-4.3.2/gcc/config/mips/mips
      return "madd<u>\t%1,%2";
    else
      /* See comment in *macc.  */
-@@ -2117,6 +2130,32 @@
+@@ -2117,6 +2129,32 @@
  ;;
  ;;  ....................
  ;;
@@ -633,7 +631,7 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.md gcc-4.3.2/gcc/config/mips/mips
  ;;	NEGATION and ONE'S COMPLEMENT
  ;;
  ;;  ....................
-@@ -2167,6 +2206,25 @@
+@@ -2167,6 +2205,25 @@
    [(set_attr "type" "logical")
     (set_attr "mode" "<MODE>")])
  
@@ -659,7 +657,7 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.md gcc-4.3.2/gcc/config/mips/mips
  ;;
  ;;  ....................
  ;;
-@@ -6031,7 +6089,7 @@
+@@ -6031,7 +6088,7 @@
  		 (const_int 0)])
  	 (match_operand:GPR 2 "reg_or_0_operand" "dJ,0")
  	 (match_operand:GPR 3 "reg_or_0_operand" "0,dJ")))]
@@ -668,7 +666,7 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.md gcc-4.3.2/gcc/config/mips/mips
    "@
      mov%T4\t%0,%z2,%1
      mov%t4\t%0,%z3,%1"
-@@ -6061,8 +6119,12 @@
+@@ -6061,8 +6118,12 @@
  	(if_then_else:GPR (match_dup 5)
  			  (match_operand:GPR 2 "reg_or_0_operand")
  			  (match_operand:GPR 3 "reg_or_0_operand")))]
@@ -682,7 +680,7 @@ diff -burN orig.gcc-4.3.2/gcc/config/mips/mips.md gcc-4.3.2/gcc/config/mips/mips
    mips_expand_conditional_move (operands);
    DONE;
  })
-@@ -6203,3 +6265,6 @@
+@@ -6203,3 +6264,6 @@
  
  ; MIPS fixed-point instructions.
  (include "mips-fixed.md")
