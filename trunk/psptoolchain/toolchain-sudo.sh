@@ -4,9 +4,6 @@
  ## Enter the psptoolchain directory.
  cd "`dirname $0`" || { echo "ERROR: Could not enter the psptoolchain directory."; exit 1; }
 
- ## Temporary workaround for gcc.
- export CC=gcc-4.2
-
  ## Set up the environment.
  export PSPDEV=/usr/local/pspdev
  export PATH=$PATH:$PSPDEV/bin
