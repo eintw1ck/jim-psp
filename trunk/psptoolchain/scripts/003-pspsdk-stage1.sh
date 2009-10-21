@@ -1,21 +1,26 @@
 #!/bin/sh
 # pspsdk-stage1.sh by Dan Peori (danpeori@oopo.net)
 
+ ## Exit on errors
+ set -e
+
  ## Download the source code.
  if test ! -d "pspsdk"; then
-  svn checkout svn://svn.ps2dev.org/psp/trunk/pspsdk || { exit 1; }
+  svn checkout svn://svn.ps2dev.org/psp/trunk/pspsdk
  else
-  svn update pspsdk || { exit 1; }
+  svn update pspsdk
  fi
 
  ## Enter the source directory.
- cd pspsdk || { exit 1; }
+ cd pspsdk
 
  ## Bootstrap the source.
- ./bootstrap || { exit 1; }
+ ./bootstrap
 
  ## Configure the build.
- ./configure --with-pspdev="$PSPDEV" || { exit 1; }
+ ./configure --with-pspdev="$PSPDEV"
 
  ## Build and install.
- make clean && make install-data && make clean || { exit 1; }
+ make clean
+ make install-data
+ make clean
