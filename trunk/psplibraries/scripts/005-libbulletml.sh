@@ -1,15 +1,21 @@
 #!/bin/sh
 # libbulletml.sh by Dan Peori (danpeori@oopo.net)
 
+ ## Exit on errors
+ set -e
+
  ## Download the latest source code.
  if test ! -d "libbulletml"; then
-  svn checkout svn://svn.ps2dev.org/psp/trunk/libbulletml || { exit 1; }
+  svn checkout svn://svn.ps2dev.org/psp/trunk/libbulletml
  else
-  svn update libbulletml || { exit 1; }
+  svn update libbulletml
  fi
 
  ## Enter the source directory.
- cd libbulletml/src || { exit 1; }
+ cd libbulletml/src
 
  ## Compile and install.
- make clean && make -j2 && make install && make clean || { exit 1; }
+ make clean
+ make -j2
+ make install
+ make clean

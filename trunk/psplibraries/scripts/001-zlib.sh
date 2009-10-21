@@ -1,15 +1,21 @@
 #!/bin/sh
 # zlib.sh by Dan Peori (danpeori@oopo.net)
 
+ ## Exit on errors
+ set -e
+
  ## Download the latest source code.
  if test ! -d "zlib"; then
-  svn checkout svn://svn.ps2dev.org/psp/trunk/zlib || { exit 1; }
+  svn checkout svn://svn.ps2dev.org/psp/trunk/zlib
  else
-  svn update zlib || { exit 1; }
+  svn update zlib
  fi
 
  ## Enter the source directory.
- cd zlib || { exit 1; }
+ cd zlib
 
  ## Compile and install.
- make clean && make -j2 && make install && make clean || { exit 1; }
+ make clean
+ make -j2
+ make install
+ make clean
