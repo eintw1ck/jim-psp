@@ -6,7 +6,7 @@ Building
 
 PSPDEV environment variable must be set.
 
-$ LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" \
+$ LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
   ./configure --host=psp --disable-readline --disable-tcl \
   --prefix=$(psp-config --psp-prefix)
 $ make

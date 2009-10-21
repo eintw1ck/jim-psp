@@ -16,7 +16,7 @@ the point in which cppunit can be used on psp.
 
 To attempt building use the following commands:
 
- $ CXXFLAGS="-G0" LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" \
+ $ CXXFLAGS="-G0" LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
 	./configure --host psp --prefix=$(psp-config --psp-prefix)
 
  $ make

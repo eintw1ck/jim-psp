@@ -7,7 +7,7 @@ Requirements (from README.CVS):
 To build and install:
 
    sh autogen.sh
-   LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" \
+   LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" \
       ./configure --host psp --prefix=$(psp-config --psp-prefix)
    make
    make install

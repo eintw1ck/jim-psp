@@ -15,7 +15,7 @@
  sh autogen.sh || { exit 1; }
 
  ## Configure the build.
- AR=psp-ar LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" ./configure --host psp --with-sdl-prefix=$(psp-config --psp-prefix) --prefix=$(psp-config --psp-prefix) --disable-mmx --disable-shared || { exit 1; }
+ AR=psp-ar LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" ./configure --host psp --with-sdl-prefix=$(psp-config --psp-prefix) --prefix=$(psp-config --psp-prefix) --disable-mmx --disable-shared || { exit 1; }
 
  ## Compile and install.
  make clean && make -j2 && make install && make clean || { exit 1; }

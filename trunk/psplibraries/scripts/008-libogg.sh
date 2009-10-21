@@ -12,7 +12,7 @@
  cd libogg || { exit 1; }
 
  ## Bootstrap the source.
- LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" ./autogen.sh --host psp --prefix=$(psp-config --psp-prefix) || { exit 1; }
+ LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" ./autogen.sh --host psp --prefix=$(psp-config --psp-prefix) || { exit 1; }
 
  ## Compile and install.
  make clean && make -j2 && make install && make clean || { exit 1; }

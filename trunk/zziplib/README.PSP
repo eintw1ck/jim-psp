@@ -1,6 +1,6 @@
 Configure with:
 
-LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" ./configure --host=psp --prefix=$(psp-config --psp-prefix)
+LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" ./configure --host=psp --prefix=$(psp-config --psp-prefix)
 
 Build with:
 

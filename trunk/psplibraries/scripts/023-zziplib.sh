@@ -12,7 +12,7 @@
  cd zziplib || { exit 1; }
 
  ## Configure the build.
- LDFLAGS="-L$(psp-config --pspsdk-path)/lib -lc -lpspuser" ./configure --host=psp --prefix=$(psp-config --psp-prefix)
+ LDFLAGS="-L$(psp-config --pspsdk-path)/lib" LIBS="-lc -lpspuser" ./configure --host=psp --prefix=$(psp-config --psp-prefix)
 
  ## Compile and install.
  make clean && make -j2 && make install && make clean || { exit 1; }
