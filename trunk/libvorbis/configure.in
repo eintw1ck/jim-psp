@@ -206,7 +206,7 @@ then
   dnl fall back to the old school test
   XIPH_PATH_OGG(, AC_MSG_ERROR(must have Ogg installed!))
   libs_save=$LIBS
-  LIBS="$OGG_LIBS $VORBIS_LIBS -lc"
+  LIBS="$OGG_LIBS $VORBIS_LIBS -lc $LIBS"
   AC_CHECK_FUNC(oggpack_writealign, , AC_MSG_ERROR(Ogg >= 1.0 required !))
   LIBS=$libs_save
 fi
