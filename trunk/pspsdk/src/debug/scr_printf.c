@@ -188,6 +188,16 @@ void pspDebugScreenSetColorMode(int mode)
 	g_vram_mode = mode;
 }
 
+void pspDebugScreenSetMaxX(unsigned int maxx)
+{
+       MX = maxx;
+}
+
+void pspDebugScreenSetMaxY(unsigned int maxy)
+{
+       MY = maxy;
+}
+
 int pspDebugScreenGetX()
 {
 	return X;

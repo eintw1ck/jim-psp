@@ -117,6 +117,21 @@ void pspDebugScreenSetOffset(int offset);
  */
 void pspDebugScreenSetBase(u32* base);
 
+/**
+ * Set the X maximum coordinate (in character units)
+ * @note Thus line length will be X + 1 characters.
+ *
+ * @param maxx - The X maximum coordinate 
+ */
+void pspDebugScreenSetMaxX(unsigned int maxx);
+
+/**
+ * Set the Y maximum coordinate (in character units)
+ *
+ * @param maxx - The X maximum coordinate 
+ */
+void pspDebugScreenSetMaxY(unsigned int maxy);
+
 /** 
   * Get the current X co-ordinate (in character units)
   *
