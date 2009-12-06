@@ -16,7 +16,7 @@
 #define __MEM_START 0x04000000
 
 // Configure the block size the memory gets subdivided into (page size)
-// __MEM_SIZE/__BLOCK_SIZE may not exceed 2^15 = 32768
+// __MEM_SIZE/__BLOCK_SIZE may not exceed 2^16-1 = 65535
 // The block size also defines the alignment of allocations
 // Larger block sizes perform better, because the blocktable is smaller and therefore fits better into cache
 // however the overhead is also bigger and more memory is wasted
@@ -27,15 +27,15 @@
 
 
 // A MEMORY BLOCK ENTRY IS MADE UP LIKE THAT:
-// bit:  31     32    30 - 15    14-0
+// bit:  31     30    29 - 15    14-0
 //		free   block    prev     size
 //
 // bit 31: free bit, indicating if block is allocated or not
 // bit 30: blocked bit, indicating if block is part of a larger block (0) - used for error resilience
-// bit 30-15: block index of previous block
+// bit 29-15: block index of previous block
 // bit 14- 0: size of current block
 //
-// This management can handle a max amount of 2^15 = 32768 blocks, which resolves to 32MB at blocksize of 1024 bytes
+// This management can handle a max amount of 2^16-1 = 65535 blocks, which resolves to 64MB at blocksize of 1024 bytes
 //
 #define __BLOCK_GET_SIZE(x)    ((x & 0x7FFF))
 #define __BLOCK_GET_PREV(x)    ((x >> 15) & 0x7FFF)
