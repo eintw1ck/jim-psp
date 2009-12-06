@@ -57,6 +57,7 @@ void sceGuStart(int cid, void* list)
 	{
 		if (gu_draw_buffer.frame_width)
 		{
+			sendCommandi(210, (unsigned int)gu_draw_buffer.pixel_size);
 			sendCommandi(156, ((unsigned int)gu_draw_buffer.frame_buffer) & 0xffffff);
 			sendCommandi(157, ((((unsigned int)gu_draw_buffer.frame_buffer) & 0xff000000) >> 8) | gu_draw_buffer.frame_width);
 		}
