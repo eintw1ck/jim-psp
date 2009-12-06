@@ -1,3 +1,13 @@
+/*
+ * Helper for use with the PSP Software Development Kit - http://www.pspdev.org
+ * -----------------------------------------------------------------------
+ * Licensed as 'free to use and modify as long as credited appropriately'
+ *
+ * valloc.c - Standard C library VRAM allocation routines.
+ *
+ * Copyright (c) 2006 Alexander Berl <a.berl@gmx.de>
+ *
+ */
 #ifndef _VALLOC_H
 #define _VALLOC_H
 
