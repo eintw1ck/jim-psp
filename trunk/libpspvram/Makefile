@@ -29,11 +29,12 @@ pspvram:
 	make TARGET_LIB=$(TARGET_LIB_VRAM) OBJS=$(VRAM_OBJS) $(TARGET_LIB_VRAM)
 
 PSPSDK=$(shell psp-config --pspsdk-path)
+PSPDIR=$(shell psp-config --psp-prefix)
 include $(PSPSDK)/lib/build.mak
 
 install: pspvalloc pspvram
-	@cp -v $(TARGET_LIB_VRAM) $(TARGET_LIB_VALLOC) `psp-config --psp-prefix`/lib
-	@cp -v *.h `psp-config --psp-prefix`/include
+	@cp -v $(TARGET_LIB_VRAM) $(TARGET_LIB_VALLOC) $(PSPDIR)/lib
+	@cp -v *.h $(PSPDIR)/include
 	@echo "Done."
 
 clobber:
