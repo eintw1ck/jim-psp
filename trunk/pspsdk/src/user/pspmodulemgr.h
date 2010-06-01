@@ -209,6 +209,12 @@ int sceKernelQueryModuleInfo(SceUID modid, SceKernelModuleInfo *info);
   */
 int sceKernelGetModuleIdList(SceUID *readbuf, int readbufsize, int *idcount);
 
+/**
+  * Get module ID from the module that called the API. 
+  *
+  * @return >= 0 on success
+  */
+int sceKernelGetModuleId(void);
 /*@}*/
 
 #ifdef __cplusplus
